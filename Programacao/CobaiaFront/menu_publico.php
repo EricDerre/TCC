@@ -41,6 +41,8 @@ $row_tipos = $lista_tipos->fetch_all();
                     </li>
                     <li><a href="index.php#destaques">DESTAQUES</a></li>
                     <li><a href="index.php#produtos">PRODUTOS</a></li>
+                    <!-- ! Alteração de IA - Revisar -->
+                    <li><a href="produtos_api.php">PRODUTOS (API)</a></li>
 
                     <!-- dropdown -->
                     <li class="dropdown">
