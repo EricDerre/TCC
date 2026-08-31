@@ -34,11 +34,20 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     except Exception:
         pass
 
-REPO_ROOT = Path(__file__).resolve().parent
+if getattr(sys, "frozen", False):
+    # Rodando como .exe compilado (PyInstaller onefile): __file__ apontaria
+    # pra a pasta TEMPORÁRIA de extração (sys._MEIPASS), não pra onde o .exe
+    # realmente está — confirmado ao vivo (o instalador procurava os SQL/PHP
+    # dentro de %TEMP%\_MEIxxxxx\Programacao\... e não achava nada).
+    # sys.executable, nesse caso, é o caminho real do .exe.
+    REPO_ROOT = Path(sys.executable).resolve().parent
+else:
+    REPO_ROOT = Path(__file__).resolve().parent
 COBAIA_FRONT = REPO_ROOT / "Programacao" / "CobaiaFront"
 COBAIA_API = REPO_ROOT / "Programacao" / "CobaiaAPI"
 DB_NAME = "ti93phpdb01"
 OS_NAME = platform.system()  # "Windows" | "Linux" | "Darwin"
+IS_FROZEN = getattr(sys, "frozen", False)
 
 _mariadbd_proc: subprocess.Popen | None = None
 
@@ -118,6 +127,53 @@ def php_extension_flags(php_path: str) -> list[str]:
         "-d", "extension=mbstring",
         "-d", "output_buffering=4096",
     ]
+
+
+# --------------------------------------------------------------------------
+# Python "de verdade" (só usado a partir de um .exe compilado)
+# --------------------------------------------------------------------------
+
+def find_or_install_real_python() -> str:
+    """Retorna um python.exe de instalação normal, nunca o interpretador
+    embutido no .exe compilado. Necessário só pra CRIAR o venv da
+    CobaiaAPI — confirmado ao vivo que `venv.EnvBuilder` roda de dentro de
+    um binário frozen do PyInstaller falha (o interpretador embutido não
+    tem o layout de uma instalação Python normal: faltam
+    venvlauncher.exe/venvwlauncher.exe no caminho relativo esperado).
+    No fluxo normal (`python install.py`), isso nunca é chamado —
+    sys.executable já É um Python de verdade nesse caso."""
+    for cmd in ("python", "python3", "py"):
+        found = which_any(cmd)
+        if found:
+            return found
+
+    log("Python (instalação normal) não encontrado — instalando "
+        "(necessário só pra criar o venv da CobaiaAPI)...")
+    if OS_NAME == "Windows":
+        run([
+            "winget", "install", "--id", "Python.Python.3.14", "-e",
+            "--accept-package-agreements", "--accept-source-agreements",
+        ])
+        found = find_by_glob(
+            os.path.expandvars(r"%LOCALAPPDATA%\Programs\Python\Python3*\python.exe"),
+            r"C:\Program Files\Python3*\python.exe",
+            r"C:\Python3*\python.exe",
+        )
+    elif OS_NAME == "Linux":
+        run(["sudo", "apt-get", "update"])
+        run(["sudo", "apt-get", "install", "-y", "python3", "python3-venv", "python3-pip"])
+        found = which_any("python3")
+    elif OS_NAME == "Darwin":
+        run(["brew", "install", "python3"])
+        found = which_any("python3")
+    else:
+        found = None
+
+    if not found:
+        log("Não foi possível localizar/instalar um Python de verdade. "
+            "Instale manualmente (python.org) e rode o instalador de novo.")
+        sys.exit(1)
+    return found
 
 
 # --------------------------------------------------------------------------

@@ -13,15 +13,16 @@ garantem que existe um Python 3 disponível antes de chegar aqui.
 """
 import subprocess
 import sys
-import venv
 
 from _env_common import (
     COBAIA_API,
     COBAIA_FRONT,
+    IS_FROZEN,
     OS_NAME,
     ensure_mariadb_running,
     ensure_root_no_password,
     find_mysql_cli,
+    find_or_install_real_python,
     find_php,
     log,
     run,
@@ -113,7 +114,14 @@ def setup_cobaia_api() -> None:
     venv_dir = COBAIA_API / ".venv"
     if not venv_dir.exists():
         log("Criando venv da CobaiaAPI...")
-        venv.EnvBuilder(with_pip=True).create(str(venv_dir))
+        # Cria via subprocesso de um Python "de verdade" (nunca via
+        # venv.EnvBuilder in-process nem com o interpretador embutido no
+        # .exe compilado) — confirmado ao vivo que o interpretador congelado
+        # do PyInstaller não consegue criar venvs (falta o layout normal de
+        # instalação). No fluxo por script, sys.executable já é real; só
+        # busca/instala um Python separado quando rodando como .exe.
+        base_python = find_or_install_real_python() if IS_FROZEN else sys.executable
+        run([base_python, "-m", "venv", str(venv_dir)])
     else:
         log("venv da CobaiaAPI já existe.")
 
@@ -144,8 +152,8 @@ def main() -> None:
 
     log("")
     log("Instalação concluída. Para rodar o site, use:")
-    log("  Windows:      .\\run.ps1")
-    log("  Linux/macOS:  ./run.sh")
+    log("  Windows (clique duplo ou terminal):  run.cmd")
+    log("  Linux/macOS:                          ./run.sh")
 
 
 if __name__ == "__main__":

@@ -6,7 +6,12 @@ rodando) e CobaiaAPI (uvicorn) juntos. Ctrl+C encerra tudo.
 
 Não instala nada — isso é papel do install.py (rode install.ps1/install.sh
 primeiro se ainda não rodou).
+
+As funções start_services/wait_until_ready/wait_and_cleanup são reutilizadas
+por Cobaia.py (launcher combinado instalação+run+abrir navegador, compilado
+em .exe via PyInstaller — ver build_exe.ps1).
 """
+import socket
 import subprocess
 import sys
 import time
@@ -27,7 +32,9 @@ FRONT_PORT = 8080
 API_PORT = 8000
 
 
-def main() -> None:
+def start_services() -> tuple[subprocess.Popen, subprocess.Popen]:
+    """Garante PHP/MariaDB disponíveis e sobe CobaiaFront + CobaiaAPI. Encerra
+    o processo (sys.exit) se algo obrigatório estiver faltando."""
     php = find_php()
     if not php:
         log("PHP não encontrado. Rode install.ps1 (Windows) ou install.sh (Linux/macOS) primeiro.")
@@ -53,11 +60,30 @@ def main() -> None:
         [str(uvicorn), "app.main:app", "--port", str(API_PORT)],
         cwd=str(COBAIA_API),
     )
+    return front_proc, api_proc
 
-    log(f"CobaiaFront: http://localhost:{FRONT_PORT}")
-    log(f"CobaiaAPI:   http://localhost:{API_PORT}/docs")
-    log("Ctrl+C encerra tudo.")
 
+def _port_responds(port: int) -> bool:
+    try:
+        with socket.create_connection(("localhost", port), timeout=1):
+            return True
+    except OSError:
+        return False
+
+
+def wait_until_ready(timeout_s: int = 30) -> bool:
+    """Espera as portas do CobaiaFront e da CobaiaAPI aceitarem conexão."""
+    deadline = time.time() + timeout_s
+    while time.time() < deadline:
+        if _port_responds(FRONT_PORT) and _port_responds(API_PORT):
+            return True
+        time.sleep(0.5)
+    return False
+
+
+def wait_and_cleanup(front_proc: subprocess.Popen, api_proc: subprocess.Popen) -> None:
+    """Bloqueia até Ctrl+C (ou um dos processos cair sozinho), depois encerra
+    tudo de forma limpa."""
     try:
         while True:
             time.sleep(1)
@@ -70,6 +96,14 @@ def main() -> None:
             if proc.poll() is None:
                 proc.terminate()
         stop_managed_mariadbd()
+
+
+def main() -> None:
+    front_proc, api_proc = start_services()
+    log(f"CobaiaFront: http://localhost:{FRONT_PORT}")
+    log(f"CobaiaAPI:   http://localhost:{API_PORT}/docs")
+    log("Ctrl+C encerra tudo.")
+    wait_and_cleanup(front_proc, api_proc)
 
 
 if __name__ == "__main__":
