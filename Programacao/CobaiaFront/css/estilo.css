@@ -1,0 +1,53 @@
+/* Definindo nosso estilo */
+@charset "utf8";
+
+.fundofixo{
+    background: url("../images/churrascaria.jpg") no-repeat fixed;
+    background-size: cover;
+    -webkit-background-size: cover;
+}
+
+.fundocadastro{
+    background: url("../images/fundo-vermelho.png") no-repeat fixed;
+    background-size: cover;
+    -webkit-background-size: cover;
+}
+
+.fundovermelho{
+    background-color: rgb(255, 0, 0);
+}
+
+.fundoadm{
+    background-color: rgb(16, 3, 65);
+}
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+}
+
+.mt-3{
+    margin-top: 3%;
+}
+
+.texto{
+    font-size: 15px;
+    color: black;
+}
+
+.preco{
+    font-size: 25px;
+}
+
+.tamanho_img{
+    width: 350px;
+}
+
+.link_registro{
+    cursor: pointer;
+    font-size: 10pt;
+}
+
+.texto_negrito{
+    font-weight: bold;
+}

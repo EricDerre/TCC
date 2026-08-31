@@ -1,0 +1,85 @@
+/* Resetando o estilo */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #cb1111, #ff6f0e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    color: #fff;
+  }
+  
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .login-form {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 1.2s ease-out;
+  }
+  
+  h2 {
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+  
+  .input-group {
+    margin-bottom: 25px;
+    text-align: left;
+  }
+  
+  label {
+    display: block;
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 8px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #222;
+    color: #fff;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus {
+    border-color: #fc2525;
+    outline: none;
+    box-shadow: 0 0 8px rgba(143, 5, 5, 0.6);
+  }
+  
+  .login-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #fc2525;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
