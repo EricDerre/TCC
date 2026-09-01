@@ -1,4 +1,9 @@
-# ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: rotas de reserva que gravam na mesma tabela
+# tbpedido_reserva e usam o mesmo status inicial 'Em Análise' que o site PHP usa.
+# ! Motivo: espelhar exatamente as operações de cliente/registrar_reserva.php e
+# cliente/cliente_cancelar.php (que gravam status 'Em Análise' e 'Cancelado') é o
+# que faz uma reserva criada pela API aparecer na área do cliente do CobaiaFront —
+# é a prova de que o banco é único e compartilhado entre os dois alvos.
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session

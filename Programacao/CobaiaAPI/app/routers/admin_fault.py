@@ -1,4 +1,9 @@
-# ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: endpoint de controle da injeção de falhas, fora da
+# documentação pública (include_in_schema=False) e exigindo o header X-Admin-Token.
+# ! Motivo: é ferramenta do harness de experimentos, não parte do contrato que o
+# agente deve descobrir sozinho — se aparecesse em /docs, poluiria a superfície da
+# API que está sendo testada e o agente poderia "aprender" a existência da falha
+# pela própria documentação, invalidando o cenário.
 from typing import Optional
 
 from fastapi import APIRouter, Header, HTTPException

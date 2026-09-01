@@ -1,3 +1,8 @@
+# ! Alteração de IA - Revisar: dependências de desenvolvimento; inclui as de execução
+# via -r em vez de repetir a lista.
+# ! Motivo: é este arquivo que o install.py instala (não o requirements.txt), porque o
+# ambiente é cobaia de teste, não produção — pytest e ruff precisam estar disponíveis
+# assim que alguém clona, sem passo manual extra.
 -r requirements.txt
 pytest>=8.3
 httpx>=0.28

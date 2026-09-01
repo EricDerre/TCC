@@ -52,7 +52,13 @@ via HTTP) do agente, complementar ao restante do site (que fica intocado).
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script>
-    // ! Alteração de IA - Revisar
+    // ! Alteração de IA - Revisar: monta os cards de produto no navegador, a partir de
+    // fetch() na CobaiaAPI, em vez de receber o HTML já pronto do servidor.
+    // ! Motivo: o restante do site monta os cards no PHP com consulta SQL direta, o que
+    // não gera nenhuma requisição JSON para interceptar. Aqui a resposta chega como JSON
+    // por HTTP, que é o sinal que o agente precisa observar para detectar quebra de
+    // contrato. A base aponta para a porta 8000 (o PHP serve na 8080), ou seja, origem
+    // diferente — é por isso que a CobaiaAPI habilita CORS.
     var COBAIA_API_BASE = "http://localhost:8000";
 
     function formatarPreco(preco) {

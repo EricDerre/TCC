@@ -41,7 +41,12 @@ $row_tipos = $lista_tipos->fetch_all();
                     </li>
                     <li><a href="index.php#destaques">DESTAQUES</a></li>
                     <li><a href="index.php#produtos">PRODUTOS</a></li>
-                    <!-- ! Alteração de IA - Revisar -->
+                    <!-- ! Alteração de IA - Revisar: acrescenta o item de menu "PRODUTOS (API)". -->
+                    <!-- ! Motivo: é a ÚNICA alteração feita em arquivo pré-existente do CobaiaFront
+                         (o resto do site legado é mantido intocado de propósito). A aba nova precisa
+                         ser alcançável pelo mesmo menu para que o agente exercite o alvo moderno
+                         (produtos_api.php, que busca dados por HTTP na CobaiaAPI) dentro do mesmo
+                         layout e da mesma navegação do site legado. -->
                     <li><a href="produtos_api.php">PRODUTOS (API)</a></li>
 
                     <!-- dropdown -->

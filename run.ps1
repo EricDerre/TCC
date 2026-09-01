@@ -1,5 +1,8 @@
-# ! Alteração de IA - Revisar
-# Bootstrap fino (Windows) para run.py.
+# ! Alteração de IA - Revisar: bootstrap fino (Windows) que localiza o Python e chama
+# run.py, sem nenhuma lógica de subida de serviço aqui.
+# ! Motivo: run.py precisa gerenciar três processos (MariaDB, php -S e uvicorn) e
+# encerrá-los juntos no Ctrl+C — controlar isso em PowerShell e em Bash separadamente
+# duplicaria a parte mais frágil do projeto. O shell fica só como porta de entrada.
 $ErrorActionPreference = "Stop"
 
 $py = $null

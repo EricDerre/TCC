@@ -1,4 +1,9 @@
-# ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: configuração da CobaiaAPI lida do .env, com os defaults
+# de banco iguais aos de Programacao/CobaiaFront/conn/connect.php.
+# ! Motivo: os dois alvos (site PHP e API) compartilham o MESMO banco ti93phpdb01 de
+# propósito, para que uma reserva criada por um apareça no outro. O connect.php é
+# intocado e espera root sem senha — se os defaults daqui divergissem dele, a API
+# apontaria para outro banco e os dois alvos mostrariam dados diferentes.
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

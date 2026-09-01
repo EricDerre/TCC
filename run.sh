@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# ! Alteração de IA - Revisar
-# Bootstrap fino (Linux/macOS) para run.py.
+# ! Alteração de IA - Revisar: bootstrap fino (Linux/macOS) que localiza o Python e
+# chama run.py, sem nenhuma lógica de subida de serviço aqui.
+# ! Motivo: mesmo papel do run.ps1 no Windows — a orquestração dos três processos
+# (MariaDB, php -S e uvicorn) e o encerramento conjunto ficam só no run.py, para não
+# duplicar a parte mais frágil do projeto em duas linguagens de shell.
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

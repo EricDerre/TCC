@@ -1,3 +1,9 @@
+# ! Alteração de IA - Revisar: configuração de lint (ruff) e de teste (pytest) da CobaiaAPI.
+# ! Motivo: o ruff cobre lint e formatação num binário só, evitando instalar black/flake8
+# separados num projeto que precisa ser leve de instalar. As regras E/F/I ficam propositalmente
+# sem as de nomenclatura (N) porque a convenção aqui é PEP8 snake_case e não há necessidade
+# de reforço automático; testpaths aponta para tests/ porque a suíte roda contra o banco
+# real compartilhado e não deve varrer o restante do repositório.
 [tool.ruff]
 line-length = 100
 target-version = "py312"

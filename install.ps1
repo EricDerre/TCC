@@ -1,5 +1,9 @@
-# ! Alteração de IA - Revisar
-# Bootstrap fino (Windows): garante que existe Python 3, depois delega tudo pra install.py.
+# ! Alteração de IA - Revisar: bootstrap fino (Windows) que só garante a existência de
+# um Python 3 e então delega toda a instalação para install.py.
+# ! Motivo: resolve o ovo-e-galinha do instalador — install.py concentra a lógica real,
+# mas precisa de um Python que pode não existir na máquina de quem clonou. Manter aqui
+# apenas essa checagem evita reescrever a mesma lógica de instalação em PowerShell, Bash
+# e Python; quando ela muda, muda num lugar só.
 $ErrorActionPreference = "Stop"
 
 function Get-PythonCmd {

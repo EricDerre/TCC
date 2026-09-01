@@ -1,3 +1,10 @@
+<!-- ! Alteração de IA - Revisar: documento inteiro gerado por IA (arquitetura, instalação,
+     uso, decisões técnicas e problemas conhecidos do ambiente cobaia).
+     ! Motivo: o repositório não tinha nenhuma documentação — quem clonasse não teria como
+     saber que o CobaiaFront depende das extensões mbstring/output_buffering do PHP, que o
+     banco é compartilhado entre os dois alvos, nem quais bugs foram deixados de propósito.
+     Cada afirmação técnica aqui foi verificada executando, não deduzida do código. -->
+
 # TCC — Agente de QA E2E Autônomo — Ambiente "Cobaia"
 
 Este repositório contém o ambiente-alvo ("cobaia") usado para validar o

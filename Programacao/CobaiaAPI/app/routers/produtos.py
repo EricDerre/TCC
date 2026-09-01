@@ -1,4 +1,10 @@
-# ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: rotas de produto que montam um dict puro, aplicam a
+# injeção de falha por último e devolvem JSONResponse explícito.
+# ! Motivo: se a resposta saísse pelo response_model do FastAPI, o Pydantic
+# revalidaria e desfaria a alteração antes de a resposta ir para a rede — o modo
+# type_drift (preco de número para texto) nunca chegaria ao cliente, e é justamente
+# esse o sinal de quebra de contrato que o agente precisa interceptar. O
+# response_model segue declarado só para gerar a documentação do contrato normal.
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session

@@ -1,3 +1,10 @@
+# ! Alteração de IA - Revisar: dependências de execução da CobaiaAPI, com piso de versão
+# (>=) em vez de versão travada (==).
+# ! Motivo: os 9 integrantes instalam em datas e máquinas diferentes; travar o patch de
+# hoje faria a resolução falhar ou envelhecer sozinha. O piso do fastapi é 0.119.1 porque
+# é a versão que passou a suportar o Python 3.14 usado aqui. pymysql (driver Python puro)
+# foi escolhido no lugar do mysqlclient para o instalador não exigir compilador C em
+# nenhum sistema operacional.
 fastapi>=0.119.1
 uvicorn[standard]>=0.34
 pydantic>=2.9

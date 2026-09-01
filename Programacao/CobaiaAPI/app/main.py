@@ -1,4 +1,9 @@
-# ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: aplicação FastAPI da CobaiaAPI — registra os routers de
+# produto, pedido e controle de falhas, e libera CORS para qualquer origem.
+# ! Motivo: a página produtos_api.php é servida pelo PHP na porta 8080 e consome esta API
+# na 8000 — origem diferente, então sem CORS liberado o navegador bloquearia o fetch e o
+# alvo "moderno" não geraria tráfego nenhum para o agente interceptar. Sem restrição de
+# origem porque é ambiente de teste sem dado real, não um serviço exposto.
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 

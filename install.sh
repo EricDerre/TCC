@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# ! Alteração de IA - Revisar
-# Bootstrap fino (Linux/macOS): garante que existe Python 3, depois delega tudo pra install.py.
+# ! Alteração de IA - Revisar: bootstrap fino (Linux/macOS) que só garante a existência
+# de um Python 3 e então delega toda a instalação para install.py.
+# ! Motivo: mesmo papel do install.ps1 no Windows — install.py concentra a lógica real,
+# mas precisa de um Python que pode não existir na máquina. Manter aqui só essa checagem
+# evita duplicar a instalação em três linguagens de shell diferentes.
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
