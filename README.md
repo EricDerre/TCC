@@ -200,6 +200,11 @@ sem duplicar nada):
    `seed.sql`.
 6. Cria o venv em `Programacao/CobaiaAPI/.venv` e instala as dependências
    (`requirements-dev.txt`, que já inclui as de produção).
+7. **Se o `AgenteCore` já estiver implementado**, prepara também o ambiente
+   do agente: venv próprio, dependências, o Chromium do Playwright, o Ollama
+   e o download do modelo. Enquanto o `AgenteCore` estiver vazio, esse passo
+   é pulado com uma mensagem — de propósito, para que quem só quer rodar o
+   site não baixe alguns GB de navegador e modelo sem precisar.
 
 Se algo faltar automatizar no seu SO específico, o script imprime uma
 mensagem clara em vez de travar silenciosamente.

@@ -45,6 +45,7 @@ else:
     REPO_ROOT = Path(__file__).resolve().parent
 COBAIA_FRONT = REPO_ROOT / "Programacao" / "CobaiaFront"
 COBAIA_API = REPO_ROOT / "Programacao" / "CobaiaAPI"
+AGENTE_CORE = REPO_ROOT / "Programacao" / "AgenteCore"
 DB_NAME = "ti93phpdb01"
 OS_NAME = platform.system()  # "Windows" | "Linux" | "Darwin"
 IS_FROZEN = getattr(sys, "frozen", False)
@@ -174,6 +175,29 @@ def find_or_install_real_python() -> str:
             "Instale manualmente (python.org) e rode o instalador de novo.")
         sys.exit(1)
     return found
+
+
+# --------------------------------------------------------------------------
+# Ollama (runtime do LLM local usado pelo AgenteCore)
+# --------------------------------------------------------------------------
+
+def find_ollama() -> str | None:
+    """! Alteração de IA - Revisar: localiza o executável do Ollama.
+    ! Motivo: mesma situação já confirmada com PHP e MariaDB — logo após um
+    `winget install` o PATH do processo atual ainda não foi atualizado, então
+    depender só do PATH faria o instalador achar que não instalou nada. Os
+    caminhos de instalação do Windows não foram verificados ao vivo (o Ollama
+    ainda não foi instalado nesta máquina), por isso há mais de um padrão."""
+    found = which_any("ollama")
+    if found:
+        return found
+    if OS_NAME == "Windows":
+        return find_by_glob(
+            os.path.expandvars(r"%LOCALAPPDATA%\Programs\Ollama\ollama.exe"),
+            os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\WinGet\Packages\Ollama.Ollama*\ollama.exe"),
+            r"C:\Program Files\Ollama\ollama.exe",
+        )
+    return None
 
 
 # --------------------------------------------------------------------------

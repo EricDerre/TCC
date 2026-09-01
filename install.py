@@ -11,10 +11,12 @@ Idempotente: seguro rodar mais de uma vez na mesma máquina.
 Chamado por install.ps1 (Windows) ou install.sh (Linux/macOS), que só
 garantem que existe um Python 3 disponível antes de chegar aqui.
 """
+import os
 import subprocess
 import sys
 
 from _env_common import (
+    AGENTE_CORE,
     COBAIA_API,
     COBAIA_FRONT,
     IS_FROZEN,
@@ -22,6 +24,7 @@ from _env_common import (
     ensure_mariadb_running,
     ensure_root_no_password,
     find_mysql_cli,
+    find_ollama,
     find_or_install_real_python,
     find_php,
     log,
@@ -136,6 +139,80 @@ def setup_cobaia_api() -> None:
     run([str(pip), "install", "-r", str(req)])
 
 
+def ensure_ollama() -> str | None:
+    """! Alteração de IA - Revisar: instala o Ollama (runtime do LLM local) se ainda
+    não existir, e devolve o caminho do executável.
+    ! Motivo: a inferência do agente roda inteiramente na máquina do usuário — sem
+    isso instalado, o AgenteCore não tem como produzir diagnóstico. Segue o mesmo
+    padrão dos demais componentes (gerenciador de pacotes nativo por sistema
+    operacional, e busca em caminho conhecido porque o PATH não atualiza na sessão
+    atual logo após a instalação)."""
+    ollama = find_ollama()
+    if ollama:
+        log(f"Ollama já instalado: {ollama}")
+        return ollama
+
+    log("Ollama não encontrado — instalando...")
+    if OS_NAME == "Windows":
+        run([
+            "winget", "install", "--id", "Ollama.Ollama", "-e",
+            "--accept-package-agreements", "--accept-source-agreements",
+        ])
+    elif OS_NAME == "Linux":
+        log("No Linux o Ollama é instalado pelo script oficial:")
+        log("  curl -fsSL https://ollama.com/install.sh | sh")
+        log("Rode o comando acima e execute o instalador de novo.")
+        return None
+    elif OS_NAME == "Darwin":
+        run(["brew", "install", "--cask", "ollama"])
+
+    ollama = find_ollama()
+    if not ollama:
+        log("Ollama foi instalado mas não foi localizado nesta sessão. "
+            "Feche e reabra o terminal e rode o instalador de novo.")
+    return ollama
+
+
+def setup_agente_core() -> None:
+    """! Alteração de IA - Revisar: prepara o ambiente do AgenteCore — venv,
+    dependências, navegador do Playwright, Ollama e download do modelo.
+    ! Motivo: são as dependências mais pesadas do projeto (o navegador e o modelo
+    somam alguns GB), então só são baixadas quando o AgenteCore de fato existe. Isso
+    mantém a instalação do ambiente cobaia leve para quem só quer rodar o site, e
+    passa a valer automaticamente assim que o agente for implementado."""
+    req = AGENTE_CORE / "requirements.txt"
+    if not req.exists():
+        log("AgenteCore ainda não implementado — pulando Ollama, modelo e Playwright.")
+        return
+
+    venv_dir = AGENTE_CORE / ".venv"
+    if not venv_dir.exists():
+        log("Criando venv do AgenteCore...")
+        base_python = find_or_install_real_python() if IS_FROZEN else sys.executable
+        run([base_python, "-m", "venv", str(venv_dir)])
+    else:
+        log("venv do AgenteCore já existe.")
+
+    bin_dir = "Scripts" if OS_NAME == "Windows" else "bin"
+    pip = venv_dir / bin_dir / ("pip.exe" if OS_NAME == "Windows" else "pip")
+    python_venv = venv_dir / bin_dir / ("python.exe" if OS_NAME == "Windows" else "python")
+    run([str(pip), "install", "-r", str(req)])
+
+    # Chromium do próprio Playwright (não o Chrome/Edge do sistema): a versão fica
+    # travada pela versão do Playwright, o que é o que torna as medições de MTTR e
+    # Task Success reproduzíveis entre as máquinas dos integrantes e ao longo do tempo.
+    run([str(python_venv), "-m", "playwright", "install", "chromium"])
+
+    ollama = ensure_ollama()
+    if ollama:
+        # Porte provisório: o menor da família, para a primeira instalação ser barata.
+        # A escolha definitiva sai da comparação entre 1.5b/3b/7b prevista na
+        # metodologia (seção 3.2 do projeto de pesquisa).
+        modelo = os.environ.get("COBAIA_MODELO_LLM", "qwen2.5-coder:1.5b")
+        log(f"Baixando o modelo {modelo} (pode demorar na primeira vez)...")
+        run([ollama, "pull", modelo])
+
+
 def main() -> None:
     log(f"Sistema operacional detectado: {OS_NAME}")
 
@@ -149,6 +226,7 @@ def main() -> None:
     apply_sql_files(cli)
 
     setup_cobaia_api()
+    setup_agente_core()
 
     log("")
     log("Instalação concluída. Para rodar o site, use:")
