@@ -1,1 +1,68 @@
+# ! Alteração de IA - Revisar
+#
+# Filosofia deste repositório: "hit and run" — quem clonar deve conseguir
+# rodar com o mínimo de passos. Por isso versionamos MUITO mais do que o
+# normal (inclusive o Cobaia.exe pronto e todo o vendor do CobaiaFront).
+#
+# O que fica de fora é só o que NÃO funcionaria na máquina de outra pessoa,
+# ou o que é puramente derivado e se regenera sozinho. Versionar essas
+# coisas atrapalharia o "hit and run" em vez de ajudar.
+
+# ---------------------------------------------------------------------------
+# Config local do Claude Code — não faz parte do projeto
+# ---------------------------------------------------------------------------
 .claude/
+
+# ---------------------------------------------------------------------------
+# venv da CobaiaAPI — NÃO versionar.
+# Verificado: pyvenv.cfg grava caminhos absolutos DESTA máquina
+#   (home = C:\Python314 / executable = C:\Python314\python.exe)
+# e a pasta tem 16 .exe + 14 .pyd (binários só de Windows) e nenhum bin/.
+# Ou seja: é inutilizável no Linux e quebra em qualquer outra máquina
+# Windows que não tenha o Python no mesmo caminho. São 67 MB que enganam
+# quem clona. O install.py/Cobaia.exe recria a venv correta para o SO de
+# cada um em ~30s (testado ao vivo, apagando e recriando do zero).
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+
+# ---------------------------------------------------------------------------
+# Cache de bytecode do Python — derivado, regenerado automaticamente,
+# muda a cada execução e polui o diff sem nenhum ganho.
+# ---------------------------------------------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+
+# ---------------------------------------------------------------------------
+# Configuração local (credenciais/portas). O .env.example ESTÁ versionado
+# e serve de template — ver Programacao/CobaiaAPI/.env.example
+# ---------------------------------------------------------------------------
+.env
+.env.local
+
+# ---------------------------------------------------------------------------
+# Artefatos transitórios de build do PyInstaller.
+# Cobaia.exe e Cobaia.spec continuam VERSIONADOS de propósito: o .exe é o
+# próprio entregável "hit and run" do Windows (duplo clique e roda, sem
+# precisar de Python instalado), e o .spec é a receita de recompilação.
+# Ver "Cobaia.exe" no README.
+# ---------------------------------------------------------------------------
+build/
+dist/
+
+# ---------------------------------------------------------------------------
+# AgenteCore (trabalho futuro) — dependências que serão baixadas por
+# instalador, não versionadas: node_modules e os binários de navegador que
+# o Playwright baixa (centenas de MB, específicos de cada SO).
+# ---------------------------------------------------------------------------
+node_modules/
+ms-playwright/
+.playwright/
+
+# ---------------------------------------------------------------------------
+# Ruído de SO/editor
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.log

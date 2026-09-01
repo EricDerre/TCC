@@ -24,6 +24,7 @@ não foi implementado.
 - [CobaiaFront — detalhes](#cobaiafront--detalhes)
 - [CobaiaAPI — detalhes](#cobaiaapi--detalhes)
 - [Testes e lint](#testes-e-lint)
+- [O que é versionado e por quê](#o-que-é-versionado-e-por-quê)
 - [Decisões técnicas e problemas resolvidos](#decisões-técnicas-e-problemas-resolvidos)
 - [Problemas conhecidos (deixados de propósito)](#problemas-conhecidos-deixados-de-propósito)
 - [Segurança](#segurança)
@@ -276,31 +277,48 @@ automatizar (via Playwright) pra interceptar rede/coletar erros — não afeta
 o CobaiaFront/CobaiaAPI em si, que funcionam em qualquer navegador
 (Bootstrap 3 + jQuery + `fetch()`, nada específico de motor).
 
-**Recomendação: Chromium — de preferência pilotando o Microsoft Edge já
-instalado na máquina, em vez do Chromium separado que o Playwright baixa
-por padrão.**
+**Recomendação: o Chromium que o próprio Playwright baixa e fixa
+(`playwright install chromium`), rodando headless — não o Chrome/Edge
+instalado no sistema.**
 
-Motivos, considerando o objetivo do agente (documentação, seção 3.1: rodar
-em segundo plano, interceptando rede, em máquina corporativa com pouco
-recurso):
+O motor é Chromium em qualquer um dos casos; a diferença é *qual build*.
+Motivos, considerando que o projeto precisa rodar em Windows **e Linux**, de
+graça e localmente:
+
+- **Reprodutibilidade dos resultados (o argumento decisivo pra um TCC).** A
+  pesquisa mede MTTR e Task Success. O Chrome/Edge do sistema se
+  autoatualiza sozinho e é diferente na máquina de cada um dos 9
+  integrantes — dois runs do mesmo experimento podem cair em versões
+  diferentes do navegador. O Playwright **fixa uma build exata de Chromium
+  por versão do Playwright**: todo mundo (e a banca, meses depois) roda
+  exatamente o mesmo motor.
+- **Mesmo comando nos dois SOs.** `playwright install chromium` é idêntico
+  em Windows e Linux e cabe direto no instalador. Usar o Chrome do sistema
+  exigiria um caminho de instalação por SO (winget no Windows, repositório
+  `.deb`/`.rpm` no Linux) — mais peças pra dar errado no "hit and run".
+  No Linux, `playwright install --with-deps chromium` ainda instala
+  sozinho as libs de sistema que o headless precisa (libnss3, libgbm1 etc.).
+- **Não depende do que está instalado.** Máquina corporativa pode ter
+  Chrome antigo, travado por política, ou nenhum.
 - **Profundidade de interceptação:** o Chromium é o motor "de origem" do
-  Playwright (a equipe do Playwright vem em boa parte do Puppeteer/Chrome
-  DevTools) — os hooks de rede (`page.on('request'/'response')`,
-  `route()`, corpo de resposta via `response.body()`) são os mais maduros e
-  ricos ali, comparado ao wrapper que o Playwright usa pra Firefox (Juggler)
-  ou WebKit (protocolo próprio da Apple).
-- **Modo headless (processo em segundo plano):** headless Chromium é o modo
-  mais testado/otimizado do mercado inteiro de automação de navegador —
-  exatamente o que o agente precisa pra rodar sem janela visível.
-- **Pegada em máquina corporativa:** em vez de baixar o Chromium próprio do
-  Playwright (~150-300MB extra), dá pra apontar o Playwright pro Edge que
-  **já vem instalado em todo Windows moderno**
-  (`browser_type.launch(channel="msedge")`) — Edge é Chromium por baixo do
-  capô desde 2020, mesma fidelidade de interceptação, sem download extra e
-  sem precisar instalar nada não homologado pelo TI da empresa.
-- **WebKit** não agrega nada aqui (não há necessidade de validar
-  comportamento específico do Safari) e tem suporte historicamente menos
-  polido no Windows dentro do Playwright.
+  Playwright (boa parte da equipe veio do Puppeteer/Chrome DevTools) — os
+  hooks de rede (`page.on('request'/'response')`, `route()`, corpo via
+  `response.body()`) são os mais maduros ali, comparado ao wrapper usado
+  para Firefox (Juggler) ou WebKit.
+- **Headless** é o modo mais testado do mercado inteiro de automação —
+  exatamente o que o agente precisa pra rodar em segundo plano.
+
+**Alternativa (uma linha de diferença):** se em alguma máquina o download
+de ~150 MB for um problema, ou se a política de TI só permitir binário já
+homologado, dá pra apontar pro Chrome instalado com
+`browser_type.launch(channel="chrome")` — funciona em Windows e Linux e não
+muda mais nada no código. Só perde a garantia de versão fixa. (`channel="msedge"`
+existe também, mas aí a portabilidade pro Linux fica pior, já que o Edge não
+é padrão lá — por isso não é a recomendação.)
+
+**WebKit/Firefox** não agregam aqui: não há necessidade de validar
+comportamento de Safari, e o Firefox tem hooks de rede menos ricos no
+Playwright.
 
 Detalhe à parte: o navegador que o `webbrowser.open()` do `Cobaia.exe` abre
 (nesta máquina, Firefox — o seu padrão) é só conveniência pra você olhar o
@@ -392,6 +410,33 @@ cd Programacao\CobaiaAPI
 Os testes rodam contra o **banco real** (não há banco de testes isolado —
 é um ambiente cobaia, não produção), então rode `install.ps1`/`install.sh`
 pelo menos uma vez antes.
+
+## O que é versionado e por quê
+
+O repositório é deliberadamente "hit and run": versionamos **muito mais que
+o normal** para que quem clonar precise do mínimo de passos. Fica de fora só
+o que não funcionaria na máquina de outra pessoa, ou o que se regenera
+sozinho — versionar essas coisas atrapalharia o "hit and run" em vez de
+ajudar.
+
+| Item | Versionado? | Por quê |
+|---|---|---|
+| `Cobaia.exe` (8.6 MB) | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou — sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
+| `Cobaia.spec` | **Sim** | Receita de recompilação (arquivo texto pequeno). |
+| `Programacao/CobaiaFront/` inteiro (16 MB, sendo 13 MB de imagens) | **Sim** | Imagens, CSS/JS do Bootstrap e PHPMailer são carregados localmente pelo site — sem eles o CobaiaFront não renderiza. Não há passo de build/download que os recupere. |
+| `banco/*.sql` | **Sim** | Schema + seed. É o que faz o site funcionar de verdade. |
+| `.env.example` | **Sim** | Template de configuração (o `.env` real fica de fora). |
+| `Programacao/CobaiaAPI/.venv/` (67 MB) | **Não** | Verificado: o `pyvenv.cfg` grava caminhos absolutos desta máquina (`home = C:\Python314`) e a pasta tem 16 `.exe` + 14 `.pyd` (binários Windows) e nenhum `bin/`. É **inutilizável no Linux** e quebra em outra máquina Windows. São 67 MB que enganam quem clona — e o instalador recria a venv correta pra cada SO em ~30s. |
+| `__pycache__/`, `*.pyc` | **Não** | Cache de bytecode: derivado, regenerado sozinho, muda a cada execução e polui o diff. |
+| `.env` | **Não** | Configuração local. Use o `.env.example` como base. |
+| `build/`, `dist/` | **Não** | Artefatos transitórios do PyInstaller (o `.exe` final é gravado na raiz, esses ficam no `%TEMP%`). |
+| `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore — centenas de MB, específicos de cada SO, baixados por instalador. |
+| `.claude/` | **Não** | Config local do Claude Code, não faz parte do projeto. |
+
+O "hit and run" continua íntegro sem a venv, porque os dois caminhos a
+recriam automaticamente:
+- **Windows:** duplo clique em `Cobaia.exe` → instala (inclui criar a venv) → sobe tudo → abre o navegador.
+- **Linux/macOS:** `./install.sh && ./run.sh` → mesma coisa.
 
 ## Decisões técnicas e problemas resolvidos
 
