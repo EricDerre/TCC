@@ -1,0 +1,80 @@
+[
+  {
+    "modelo": "qwen2.5-coder:1.5b",
+    "tarefa": "diagnostico",
+    "segundos_mediana": 10.24,
+    "segundos_min": 8.36,
+    "segundos_max": 11.04,
+    "tokens_entrada": 479,
+    "tokens_saida": 172,
+    "memoria_mb": 1116,
+    "vram_mb": 0,
+    "somente_cpu": true,
+    "resposta": "CAUSA RAIZ: A função formatarPreco() em produtos_api.php converte o campo preco com Number() antes de exibir, mas o campo preco vem da coluna valor_produto (DECIMAL 9,2) da tabela tbprodutos, que não é compatível com o formato Number().\n\nCAMPO: O campo preco.\n\nIMPACTO: Os cartões de produto exibem \"R$ NaN\" no lugar do valor, pois o campo preco não é um número válido para Number().\n\nCONHECIMENTO PRÉVIO DO SISTEMA:\n- A função formatarPreco() em produtos_api.php converte o campo preco com Number() antes de exibir.\n- O campo preco vem da coluna valor_produto (DECIMAL 9,2) da tabela tbprodutos."
+  },
+  {
+    "modelo": "qwen2.5-coder:1.5b",
+    "tarefa": "seletor",
+    "segundos_mediana": 2.49,
+    "segundos_min": 2.3,
+    "segundos_max": 2.5,
+    "tokens_entrada": 369,
+    "tokens_saida": 10,
+    "memoria_mb": 1116,
+    "vram_mb": 0,
+    "somente_cpu": true,
+    "resposta": "button.btn-info btn-xs saiba-mais"
+  },
+  {
+    "modelo": "qwen2.5-coder:3b",
+    "tarefa": "diagnostico",
+    "segundos_mediana": 5.98,
+    "segundos_min": 5.68,
+    "segundos_max": 6.16,
+    "tokens_entrada": 479,
+    "tokens_saida": 52,
+    "memoria_mb": 2064,
+    "vram_mb": 0,
+    "somente_cpu": true,
+    "resposta": "CAUSA RAIZ: A conversão de número para string no PHP não está funcionando corretamente.\n\nCAMPO: preco_v2\n\nIMPACTO: Os cartões de produto exibem \"R$ NaN\" no lugar do valor."
+  },
+  {
+    "modelo": "qwen2.5-coder:3b",
+    "tarefa": "seletor",
+    "segundos_mediana": 3.94,
+    "segundos_min": 3.8,
+    "segundos_max": 3.99,
+    "tokens_entrada": 369,
+    "tokens_saida": 24,
+    "memoria_mb": 2064,
+    "vram_mb": 0,
+    "somente_cpu": true,
+    "resposta": "button.btn-info.btn-xs.saiba-mais\nbutton.btn-detalhes\nbutton.btn-xs.saiba-mais"
+  },
+  {
+    "modelo": "qwen2.5-coder:7b",
+    "tarefa": "diagnostico",
+    "segundos_mediana": 16.08,
+    "segundos_min": 15.63,
+    "segundos_max": 18.5,
+    "tokens_entrada": 479,
+    "tokens_saida": 86,
+    "memoria_mb": 4828,
+    "vram_mb": 0,
+    "somente_cpu": true,
+    "resposta": "1. **CAUSA RAIZ**: A função `formatarPreco()` está convertendo o campo `preco` usando `Number()`, que não é compatível com valores decimais e resulta em `NaN`.\n2. **CAMPO**: `preco`\n3. **IMPACTO**: O usuário vê \"R$ NaN\" no lugar do valor do preço nos cartões de produto."
+  },
+  {
+    "modelo": "qwen2.5-coder:7b",
+    "tarefa": "seletor",
+    "segundos_mediana": 6.45,
+    "segundos_min": 5.39,
+    "segundos_max": 6.55,
+    "tokens_entrada": 369,
+    "tokens_saida": 22,
+    "memoria_mb": 4828,
+    "vram_mb": 0,
+    "somente_cpu": true,
+    "resposta": "button.btn-info.btn-xs.saiba-mais\nbutton[data-id=\"1\"]\nbutton.btn-detalhes"
+  }
+]

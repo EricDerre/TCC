@@ -28,6 +28,8 @@ from _env_common import (
     find_or_install_real_python,
     find_php,
     log,
+    modelo_llm_ja_baixado,
+    playwright_chromium_instalado,
     run,
 )
 
@@ -201,16 +203,24 @@ def setup_agente_core() -> None:
     # Chromium do próprio Playwright (não o Chrome/Edge do sistema): a versão fica
     # travada pela versão do Playwright, o que é o que torna as medições de MTTR e
     # Task Success reproduzíveis entre as máquinas dos integrantes e ao longo do tempo.
-    run([str(python_venv), "-m", "playwright", "install", "chromium"])
+    if playwright_chromium_instalado():
+        log("Chromium do Playwright já baixado.")
+    else:
+        run([str(python_venv), "-m", "playwright", "install", "chromium"])
 
     ollama = ensure_ollama()
     if ollama:
-        # Porte provisório: o menor da família, para a primeira instalação ser barata.
-        # A escolha definitiva sai da comparação entre 1.5b/3b/7b prevista na
-        # metodologia (seção 3.2 do projeto de pesquisa).
-        modelo = os.environ.get("COBAIA_MODELO_LLM", "qwen2.5-coder:1.5b")
-        log(f"Baixando o modelo {modelo} (pode demorar na primeira vez)...")
-        run([ollama, "pull", modelo])
+        # Porte escolhido pela comparação medida em
+        # Programacao/AgenteCore/experimentos/RESULTADO_FASE2.md: o 3b diagnostica
+        # corretamente (quando recebe a divergência de contrato já calculada em código),
+        # responde em ~7s só em CPU e ocupa ~2 GB, contra ~19s e ~4,8 GB do 7b. O 1.5b
+        # foi descartado por gerar CSS inválido na cura de seletor e errar o diagnóstico.
+        modelo = os.environ.get("COBAIA_MODELO_LLM", "qwen2.5-coder:3b")
+        if modelo_llm_ja_baixado(ollama, modelo):
+            log(f"Modelo {modelo} já baixado.")
+        else:
+            log(f"Baixando o modelo {modelo} (pode demorar na primeira vez)...")
+            run([ollama, "pull", modelo])
 
 
 def main() -> None:

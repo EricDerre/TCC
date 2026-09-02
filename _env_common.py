@@ -200,6 +200,34 @@ def find_ollama() -> str | None:
     return None
 
 
+def playwright_chromium_instalado() -> bool:
+    """! Alteração de IA - Revisar: verifica se o Chromium do Playwright já foi baixado,
+    olhando o diretório de cache do próprio Playwright.
+    ! Motivo: evita gastar rede e tempo repetindo um download de centenas de MB a cada
+    execução do instalador. O `playwright install` já é idempotente por conta própria,
+    mas checar antes evita até o custo de subir o processo."""
+    if OS_NAME == "Windows":
+        base = os.path.expandvars(r"%LOCALAPPDATA%\ms-playwright")
+    elif OS_NAME == "Darwin":
+        base = os.path.expanduser("~/Library/Caches/ms-playwright")
+    else:
+        base = os.path.expanduser("~/.cache/ms-playwright")
+    return bool(glob.glob(os.path.join(base, "chromium-*")))
+
+
+def modelo_llm_ja_baixado(ollama: str, modelo: str) -> bool:
+    """! Alteração de IA - Revisar: consulta `ollama list` para saber se o modelo já
+    está na máquina antes de mandar baixar.
+    ! Motivo: o modelo é o download mais pesado do projeto (de 1 GB a quase 5 GB
+    conforme o porte). Sem essa checagem, cada execução do instalador dispararia um
+    `ollama pull` — que até reaproveita camadas já baixadas, mas ainda assim faz
+    tráfego de rede e não deixa claro no log que nada precisava ser baixado."""
+    resultado = subprocess.run([ollama, "list"], capture_output=True, text=True)
+    if resultado.returncode != 0:
+        return False
+    return modelo in resultado.stdout
+
+
 # --------------------------------------------------------------------------
 # MariaDB
 # --------------------------------------------------------------------------
