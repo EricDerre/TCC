@@ -1,0 +1,6 @@
+# ! Alteração de IA - Revisar: dependências do AgenteCore.
+# ! Motivo: só o matplotlib é externo — os gráficos precisam sair em PNG/SVG para entrar no
+# documento do TCC. Todo o resto (cliente do Ollama, banco de casos, avaliação) usa apenas
+# biblioteca padrão de propósito, para o instalador não ganhar dependências novas.
+# O Playwright entra aqui na Fase 3, quando o interceptador for implementado.
+matplotlib>=3.9
