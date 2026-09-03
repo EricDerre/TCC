@@ -449,6 +449,7 @@ não há outro modelo residente, e toda inferência é forçada para CPU
 | 3 | `executar_bateria.py --modelos M --condicao A0..A5` | Roda os 90 casos; `A0` sem biblioteca (Fase 2-A), `A1` inteira, `A2` top-3 recuperada, `A3` só o verbete certo, `A4` distratores, `A5` verbete errado. Resumível: grava JSONL por caso. |
 | 4 | `avaliar.py` | Pontua pelos gabaritos; Δ contra A0, McNemar pareado, IC de Wilson, ancoragem, flips de quantização. |
 | 5 | `gerar_graficos.py` / `gerar_relatorio.py` | PNG/SVG para o documento e `relatorio.html` navegável, tudo a partir do JSONL. |
+| — | `rodar_fase2b.ps1` | Orquestra a Fase 2-B inteira (passos 3 a 5, ~15–20 h), um modelo por vez, resumível: `powershell -ExecutionPolicy Bypass -File .\rodar_fase2b.ps1`. |
 
 A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e em
 [`Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md`](Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md)
