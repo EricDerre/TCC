@@ -43,7 +43,11 @@ class FaultState:
         self.probability = probability
 
 
-state = FaultState(mode=settings.fault_mode)
+# ! Alteração de IA - Revisar: o estado inicial passa a receber também o campo-alvo do .env.
+# ! Motivo: sem isso, FAULT_MODE=type_drift/field_missing/field_renamed no .env não tinha
+# efeito nenhum — apply_fault() só altera a resposta quando target_field está definido, e
+# ele só podia ser definido pelo endpoint admin em tempo de execução.
+state = FaultState(mode=settings.fault_mode, target_field=settings.fault_target_field)
 
 
 class ErrorFault(Exception):

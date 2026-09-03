@@ -91,3 +91,16 @@ com o navegador automatizado, o MariaDB, o PHP e o uvicorn durante os experiment
   produziu um seletor único, mas custa 2,7× mais tempo (16 s contra 6 s) e 2,3× mais memória.
 
 O porte pode ser trocado sem alterar código, pela variável de ambiente `COBAIA_MODELO_LLM`.
+
+<!-- ! Alteração de IA - Revisar: nota de superação acrescentada na Fase 2-B.
+     ! Motivo: a decisão acima foi tomada com 2 casos e 3 portes de uma família; a bateria
+     ampliada mudou o quadro e o leitor precisa saber antes de citar este documento. -->
+
+## Nota de superação (Fase 2-A, 03/09/2026)
+
+A decisão de adotar `qwen2.5-coder:3b` como padrão foi tomada com **2 casos** e uma única
+família de modelo. A bateria ampliada da Fase 2-A (90 casos × 3 estratégias × 6 modelos,
+`resumo_metricas.json`) mediu acerto de causa raiz de **27,0%** para o 3b, contra **50,0%**
+dos dois modelos de 7B e **67,8%** do `granite4.2:8b` (braço linear). O padrão de produção
+será redecidido ao fim da Fase 2-B, com acerto × tempo × biblioteca; até lá, o valor em
+`install.py` permanece por compatibilidade, não por evidência.

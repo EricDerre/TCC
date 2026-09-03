@@ -225,7 +225,18 @@ def modelo_llm_ja_baixado(ollama: str, modelo: str) -> bool:
     resultado = subprocess.run([ollama, "list"], capture_output=True, text=True)
     if resultado.returncode != 0:
         return False
-    return modelo in resultado.stdout
+    # ! Alteração de IA - Revisar: compara com o nome exato da primeira coluna de cada linha,
+    # em vez de procurar a string em qualquer lugar da saída.
+    # ! Motivo: `modelo in stdout` casava por substring — "qwen2.5:7b" era dado como baixado
+    # se só "qwen2.5:7b-instruct-q8_0" existisse na máquina, e o `ollama pull` do modelo
+    # certo nunca acontecia. Um nome sem tag ("qwen2.5-coder") aparece na lista como
+    # "qwen2.5-coder:latest", por isso a normalização.
+    alvo = modelo if ":" in modelo else f"{modelo}:latest"
+    for linha in resultado.stdout.splitlines()[1:]:  # a primeira linha é o cabeçalho
+        partes = linha.split()
+        if partes and partes[0] == alvo:
+            return True
+    return False
 
 
 # --------------------------------------------------------------------------
@@ -253,6 +264,23 @@ def find_mariadbd_server() -> str | None:
         return find_by_glob(
             r"C:\Program Files\MariaDB*\bin\mariadbd.exe",
             r"C:\Program Files\MariaDB*\bin\mysqld.exe",
+        )
+    return None
+
+
+def find_mariadb_admin() -> str | None:
+    """! Alteração de IA - Revisar: localiza o utilitário de administração do servidor
+    (mariadb-admin/mysqladmin), usado só para desligar o banco de forma limpa.
+    ! Motivo: ver stop_managed_mariadbd(). Mesma busca por caminho conhecido que os
+    demais binários, porque o PATH pode não incluir a pasta bin do MariaDB no Windows
+    (confirmado nesta máquina que mariadb-admin.exe existe ao lado do mariadbd.exe)."""
+    found = which_any("mariadb-admin", "mysqladmin")
+    if found:
+        return found
+    if OS_NAME == "Windows":
+        return find_by_glob(
+            r"C:\Program Files\MariaDB*\bin\mariadb-admin.exe",
+            r"C:\Program Files\MariaDB*\bin\mysqladmin.exe",
         )
     return None
 
@@ -344,6 +372,21 @@ def ensure_root_no_password(cli: str) -> bool:
 
 
 def stop_managed_mariadbd() -> None:
+    """! Alteração de IA - Revisar: pede o desligamento pelo protocolo do próprio servidor
+    (mariadb-admin shutdown) e só recorre a terminate() se ele não encerrar em 15 s.
+    ! Motivo: terminate() sozinho é TerminateProcess no Windows — o servidor morre sem
+    gravar o que estava em memória, e na próxima subida o InnoDB entra em recuperação de
+    falha (demora mais e enche o log de avisos). Como o run.py/Cobaia.exe sobe e derruba
+    o banco a cada uso, isso acontecia em toda execução."""
     global _mariadbd_proc
-    if _mariadbd_proc and _mariadbd_proc.poll() is None:
-        _mariadbd_proc.terminate()
+    if not (_mariadbd_proc and _mariadbd_proc.poll() is None):
+        return
+    admin = find_mariadb_admin()
+    if admin:
+        subprocess.run([admin, "-u", "root", "shutdown"], capture_output=True, timeout=30)
+        try:
+            _mariadbd_proc.wait(timeout=15)
+            return
+        except subprocess.TimeoutExpired:
+            log("MariaDB não encerrou pelo shutdown limpo — forçando.")
+    _mariadbd_proc.terminate()

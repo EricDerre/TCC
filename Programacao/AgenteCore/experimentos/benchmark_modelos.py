@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# NOTA (Fase 2-B): script CONGELADO como registro da primeira leva (RESULTADO_FASE2.md);
+# o cliente do Ollama em uso pelos experimentos atuais esta em cliente_ollama.py.
 # ! Alteração de IA - Revisar: compara os portes do Qwen2.5-Coder (1.5B/3B/7B) nas duas
 # tarefas reais do agente, forçando inferência em CPU.
 # ! Motivo: a metodologia (seção 3.2 do projeto de pesquisa) exige escolher o porte do

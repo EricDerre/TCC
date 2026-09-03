@@ -13,9 +13,11 @@ projeto de pesquisa do curso de Ciência da Computação da UNICID. A
 fundamentação teórica completa está em
 [`Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V3.md`](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md).
 
-Este README documenta apenas o **ambiente cobaia** (`Programacao/CobaiaFront`
-+ `Programacao/CobaiaAPI`) — o agente em si (`Programacao/AgenteCore`) ainda
-não foi implementado.
+Este README documenta o **ambiente cobaia** (`Programacao/CobaiaFront`
++ `Programacao/CobaiaAPI`) e, na seção "AgenteCore — experimentos", a
+biblioteca de documentação e a bateria de avaliação dos modelos locais que
+já existem em `Programacao/AgenteCore`. O agente em si (interceptador,
+poda da árvore de acessibilidade, cura de seletor) ainda não foi implementado.
 
 ## Índice
 
@@ -123,7 +125,12 @@ TCC/
 ├── .claude/CLAUDE.md                       # regras de colaboração com IA neste repo
 ├── Documentacao/                           # projeto de pesquisa (ABNT) do TCC
 └── Programacao/
-    ├── AgenteCore/                         # (vazio — trabalho futuro)
+    ├── AgenteCore/
+    │   ├── base_conhecimento/              # biblioteca de documentação do cobaia (Fase 2-B)
+    │   │   ├── negocio/ contratos/ erros/ falhas_injetadas/ defeitos_conhecidos/
+    │   │   └── INDICE.md                   # gerado por validar_banco.py --indice
+    │   ├── experimentos/                   # bateria de avaliação dos modelos locais (ver seção abaixo)
+    │   └── requirements.txt
     ├── CobaiaFront/                        # site PHP legado ("Churrascaria Fornalha")
     │   ├── banco/
     │   │   ├── bancoatualizado.sql         # schema original (tipos, produtos, usuários)
@@ -398,6 +405,18 @@ Modos disponíveis (`mode`):
 `probability` (0.0–1.0, default 1.0) controla a chance da falha disparar
 por requisição — útil pra simular intermitência.
 
+<!-- ! Alteração de IA - Revisar: documenta o modo de ativação por variável de ambiente.
+     ! Motivo: só FAULT_MODE era lido do .env; sem FAULT_TARGET_FIELD os modos com
+     campo-alvo não faziam nada no boot. Corrigido em app/config.py, e o README precisa
+     dizer como usar, porque é o caminho das execuções determinísticas da Fase 5. -->
+Para subir a API **já em modo de falha** (execuções determinísticas, sem
+chamar o endpoint admin), defina no `.env`:
+
+```
+FAULT_MODE=type_drift
+FAULT_TARGET_FIELD=preco
+```
+
 O token (`X-Admin-Token`) vem de `ADMIN_TOKEN` no `.env` (veja
 `.env.example`); sem o header correto, o endpoint responde 403.
 
@@ -409,6 +428,33 @@ dependessem do `response_model` normal, o Pydantic validaria e filtraria
 silenciosamente qualquer campo alterado antes de sair pela rede.
 `response_model` continua declarado nas rotas só pra gerar a documentação
 OpenAPI do contrato "normal".
+
+## AgenteCore — experimentos com os modelos locais
+
+<!-- ! Alteração de IA - Revisar: seção nova descrevendo a bateria de experimentos e a
+     biblioteca de documentação da Fase 2-B.
+     ! Motivo: o README ainda dizia que o AgenteCore estava vazio; sem esta seção os
+     integrantes não sabem a ordem dos scripts nem que nada deve rodar com outro modelo
+     residente no Ollama. -->
+Tudo em `Programacao/AgenteCore/experimentos/`, rodando com o Python da venv
+do AgenteCore (`Programacao/AgenteCore/.venv`, criada pelo instalador).
+**Regra de ouro: um modelo por vez** — os scripts conferem em `/api/ps` que
+não há outro modelo residente, e toda inferência é forçada para CPU
+(`num_gpu=0`) porque a tese afirma operar sob restrição de hardware local.
+
+| Ordem | Script | O que faz |
+|---|---|---|
+| 1 | `validar_banco.py --indice` | Valida os 90 casos e a biblioteca (`base_conhecimento/`), mede a recuperação BM25 offline e regrava o `INDICE.md`. Não chama o Ollama. |
+| 2 | `verificar_cache_prefixo.py` | Mede se o Ollama reaproveita o cache de KV com prefixo idêntico (decide o custo do braço "biblioteca inteira"). |
+| 3 | `executar_bateria.py --modelos M --condicao A0..A5` | Roda os 90 casos; `A0` sem biblioteca (Fase 2-A), `A1` inteira, `A2` top-3 recuperada, `A3` só o verbete certo, `A4` distratores, `A5` verbete errado. Resumível: grava JSONL por caso. |
+| 4 | `avaliar.py` | Pontua pelos gabaritos; Δ contra A0, McNemar pareado, IC de Wilson, ancoragem, flips de quantização. |
+| 5 | `gerar_graficos.py` / `gerar_relatorio.py` | PNG/SVG para o documento e `relatorio.html` navegável, tudo a partir do JSONL. |
+
+A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e em
+[`Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md`](Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md)
+(Fase 2-A, 90 casos × 3 estratégias × 6 modelos); a Fase 2-B ganha o seu ao terminar.
+Decisões, pesquisa e fontes estão em `Documentacao/Memorial de Desenvolvimento.md`
+(índice) e na pasta `Documentacao/memorial/`.
 
 ## Testes e lint
 

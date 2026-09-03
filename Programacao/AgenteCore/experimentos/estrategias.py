@@ -93,6 +93,38 @@ Verifique, brevemente, nesta ordem:
 {_FORMATO}"""
 
 
+_FORMATO_COM_FONTE = _FORMATO.replace(
+    "termine com estas três linhas", "termine com estas quatro linhas"
+).replace(
+    "IMPACTO: <uma frase sobre o que o usuário vê>",
+    "IMPACTO: <uma frase sobre o que o usuário vê>\n"
+    'FONTE: <identificadores da documentação que usou, entre colchetes, ou "nenhum">',
+)
+
+
+def linear_com_biblioteca(caso: dict, contexto: str) -> str:
+    """! Alteração de IA - Revisar: o prompt linear da Fase 2-A precedido pela documentação
+    do sistema, com uma quarta linha de saída (FONTE) para o modelo citar o verbete usado.
+    ! Motivo: a Fase 2-A mostrou que linear vence as estratégias em estágios (37,4% contra
+    29,7% e 31,1%), então a Fase 2-B fixa esse prompt e varia só a biblioteca. A
+    documentação vem ANTES do caso por duas razões medidas na literatura (Memorial §6.3):
+    o começo do contexto é uma das duas posições em que modelos pequenos ainda acham a
+    informação (Lost in the Middle), e prefixo idêntico entre chamadas é o único arranjo
+    em que o cache de KV do Ollama pode reaproveitar o prefill. A linha FONTE é o que
+    permite medir ancoragem — se a resposta se apoiou de fato no verbete recebido."""
+    return f"""{contexto}
+
+=====
+
+Você analisa falhas de integração entre uma interface web e sua API.
+
+Leia os dados abaixo, consulte a documentação acima quando ajudar, explique em no máximo 3 frases o que deu errado, e então responda no formato pedido.
+
+{_dados_do_caso(caso)}
+
+{_FORMATO_COM_FONTE}"""
+
+
 ESTRATEGIAS = {
     "linear": linear,
     "compilador": estagiada_compilador,

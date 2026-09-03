@@ -1,4 +1,6 @@
 # ! Alteração de IA - Revisar: experimento A/B — o mesmo cenário de quebra de contrato,
+# NOTA (Fase 2-B): script CONGELADO como registro da primeira leva (RESULTADO_FASE2.md);
+# o cliente do Ollama em uso pelos experimentos atuais esta em cliente_ollama.py.
 # uma vez com o JSON cru e outra com a divergência já calculada em código.
 # ! Motivo: no benchmark, os três portes erraram a causa raiz do campo renomeado
 # (preco -> preco_v2), culpando a conversão numérica. A hipótese é que comparar chaves

@@ -13,9 +13,20 @@
 # de contexto alocam cache KV proporcional e estouram a RAM antes do peso do modelo);
 # e think=False nos modelos com raciocínio embutido (multiplicaria a latência por até 10x).
 import json
+import sys
 import time
 import urllib.error
 import urllib.request
+
+# ! Alteração de IA - Revisar: força UTF-8 na saída do console, igual ao _env_common.py.
+# ! Motivo: no Windows o console pode estar em cp1252, que não representa símbolos usados
+# nos relatórios (≈, Δ, →) — o script inteiro abortava com UnicodeEncodeError ao imprimir.
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 
 OLLAMA = "http://localhost:11434"
 NUM_CTX = 8192
@@ -65,12 +76,35 @@ def gerar(modelo: str, prompt: str, max_tokens: int = 400) -> dict:
     inicio = time.perf_counter()
     r = _post("/api/generate", corpo)
     segundos = time.perf_counter() - inicio
+    # ! Alteração de IA - Revisar: passa a gravar a decomposição de tempo que o Ollama já
+    # devolve (carga do modelo, prefill do prompt e geração, em nanossegundos), além do
+    # tempo de parede.
+    # ! Motivo: na Fase 2-B a biblioteca de documentação entra no prompt e infla o PREFILL,
+    # não a geração. Só com o tempo total não dá para dizer quanto custou a documentação,
+    # nem se o cache de prefixo do Ollama está reaproveitando o KV entre chamadas — e os
+    # quatro campos já vinham em toda resposta, estavam sendo descartados.
     return {
         "segundos": round(segundos, 2),
         "tokens_entrada": r.get("prompt_eval_count", 0),
         "tokens_saida": r.get("eval_count", 0),
+        "carga_ms": round(r.get("load_duration", 0) / 1e6),
+        "prefill_ms": round(r.get("prompt_eval_duration", 0) / 1e6),
+        "geracao_ms": round(r.get("eval_duration", 0) / 1e6),
+        "total_ms": round(r.get("total_duration", 0) / 1e6),
         "resposta": r.get("response", "").strip(),
     }
+
+
+def embed(modelo: str, texto: str) -> list[float]:
+    """! Alteração de IA - Revisar: gera um vetor de embedding pelo endpoint /api/embed
+    do Ollama, sempre em CPU.
+    ! Motivo: a ablação de recuperação da Fase 2-B compara BM25 com embedding denso
+    (embeddinggemma:300m, o melhor porte pequeno em pt-BR na MTEB-BR). Pedir ao próprio
+    Ollama evita instalar sentence-transformers/torch — mais de 2 GB de dependência que
+    quebraria a instalação leve ("hit and run") do repositório."""
+    r = _post("/api/embed", {"model": modelo, "input": texto, "options": {"num_gpu": 0}})
+    vetores = r.get("embeddings") or []
+    return vetores[0] if vetores else []
 
 
 def residentes() -> list[dict]:
