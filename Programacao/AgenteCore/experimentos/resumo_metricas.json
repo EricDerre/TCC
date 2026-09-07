@@ -1850,6 +1850,28 @@
       "geracao_ms_mediana": null
     },
     {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "n": 48,
+      "erros_infra": 0,
+      "causa_correta_pct": 12.5,
+      "causa_correta_ic95": [
+        5.9,
+        24.7
+      ],
+      "campo_correto_pct": 14.6,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 87.5,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 8.3,
+      "segundos_medio": 9.17,
+      "segundos_mediana": 8.6,
+      "tokens_saida_medio": 63,
+      "tokens_entrada_mediana": 533.0,
+      "prefill_ms_mediana": 3374.5,
+      "geracao_ms_mediana": 2867.0
+    },
+    {
       "modelo": "qwen2.5-coder:3b",
       "condicao": "A0",
       "n": 90,
@@ -2330,6 +2352,144 @@
       "tokens_entrada_mediana": 560,
       "prefill_ms_mediana": null,
       "geracao_ms_mediana": null
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "classe": 1,
+      "n": 12,
+      "erros_infra": 0,
+      "causa_correta_pct": 33.3,
+      "causa_correta_ic95": [
+        13.8,
+        60.9
+      ],
+      "campo_correto_pct": 25.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 66.7,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 33.3,
+      "segundos_medio": 9.35,
+      "segundos_mediana": 8.2,
+      "tokens_saida_medio": 68,
+      "tokens_entrada_mediana": 512.5,
+      "prefill_ms_mediana": 3353.0,
+      "geracao_ms_mediana": 2606.0
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "classe": 2,
+      "n": 15,
+      "erros_infra": 0,
+      "causa_correta_pct": 0.0,
+      "causa_correta_ic95": [
+        -0.0,
+        20.4
+      ],
+      "campo_correto_pct": 0.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 100.0,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 8.96,
+      "segundos_mediana": 8.2,
+      "tokens_saida_medio": 63,
+      "tokens_entrada_mediana": 529,
+      "prefill_ms_mediana": 3303,
+      "geracao_ms_mediana": 2873
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "classe": 3,
+      "n": 6,
+      "erros_infra": 0,
+      "causa_correta_pct": 16.7,
+      "causa_correta_ic95": [
+        3.0,
+        56.4
+      ],
+      "campo_correto_pct": 33.3,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 83.3,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 8.39,
+      "segundos_mediana": 8.5,
+      "tokens_saida_medio": 51,
+      "tokens_entrada_mediana": 538.5,
+      "prefill_ms_mediana": 3160.0,
+      "geracao_ms_mediana": 2971.0
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "classe": 4,
+      "n": 5,
+      "erros_infra": 0,
+      "causa_correta_pct": 0.0,
+      "causa_correta_ic95": [
+        -0.0,
+        43.4
+      ],
+      "campo_correto_pct": 40.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 100.0,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 9.54,
+      "segundos_mediana": 8.5,
+      "tokens_saida_medio": 64,
+      "tokens_entrada_mediana": 566,
+      "prefill_ms_mediana": 3437,
+      "geracao_ms_mediana": 2762
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "classe": 5,
+      "n": 5,
+      "erros_infra": 0,
+      "causa_correta_pct": 20.0,
+      "causa_correta_ic95": [
+        3.6,
+        62.4
+      ],
+      "campo_correto_pct": 0.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 80.0,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 9.4,
+      "segundos_mediana": 9.1,
+      "tokens_saida_medio": 61,
+      "tokens_entrada_mediana": 467,
+      "prefill_ms_mediana": 3392,
+      "geracao_ms_mediana": 3232
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "classe": 6,
+      "n": 5,
+      "erros_infra": 0,
+      "causa_correta_pct": 0.0,
+      "causa_correta_ic95": [
+        -0.0,
+        43.4
+      ],
+      "campo_correto_pct": 0.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 100.0,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 9.73,
+      "segundos_mediana": 9.3,
+      "tokens_saida_medio": 67,
+      "tokens_entrada_mediana": 560,
+      "prefill_ms_mediana": 3915,
+      "geracao_ms_mediana": 2839
     },
     {
       "modelo": "qwen2.5-coder:3b",
@@ -2955,6 +3115,75 @@
       "geracao_ms_mediana": null
     },
     {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "nivel": 1,
+      "n": 14,
+      "erros_infra": 0,
+      "causa_correta_pct": 14.3,
+      "causa_correta_ic95": [
+        4.0,
+        39.9
+      ],
+      "campo_correto_pct": 0.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 85.7,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 21.4,
+      "segundos_medio": 9.51,
+      "segundos_mediana": 8.6,
+      "tokens_saida_medio": 69,
+      "tokens_entrada_mediana": 501.0,
+      "prefill_ms_mediana": 3304.5,
+      "geracao_ms_mediana": 3178.0
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "nivel": 2,
+      "n": 17,
+      "erros_infra": 0,
+      "causa_correta_pct": 17.6,
+      "causa_correta_ic95": [
+        6.2,
+        41.0
+      ],
+      "campo_correto_pct": 29.4,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 82.4,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 5.9,
+      "segundos_medio": 9.16,
+      "segundos_mediana": 8.7,
+      "tokens_saida_medio": 67,
+      "tokens_entrada_mediana": 529,
+      "prefill_ms_mediana": 3320,
+      "geracao_ms_mediana": 3106
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "nivel": 3,
+      "n": 17,
+      "erros_infra": 0,
+      "causa_correta_pct": 5.9,
+      "causa_correta_ic95": [
+        1.0,
+        27.0
+      ],
+      "campo_correto_pct": 11.8,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 94.1,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 8.91,
+      "segundos_mediana": 8.2,
+      "tokens_saida_medio": 55,
+      "tokens_entrada_mediana": 571,
+      "prefill_ms_mediana": 3514,
+      "geracao_ms_mediana": 2628
+    },
+    {
       "modelo": "qwen2.5-coder:3b",
       "condicao": "A0",
       "nivel": 1,
@@ -3302,6 +3531,52 @@
       "geracao_ms_mediana": null
     },
     {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "defeito_documentado": false,
+      "n": 41,
+      "erros_infra": 0,
+      "causa_correta_pct": 14.6,
+      "causa_correta_ic95": [
+        6.9,
+        28.4
+      ],
+      "campo_correto_pct": 17.1,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 85.4,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 9.8,
+      "segundos_medio": 9.13,
+      "segundos_mediana": 8.5,
+      "tokens_saida_medio": 65,
+      "tokens_entrada_mediana": 529,
+      "prefill_ms_mediana": 3328,
+      "geracao_ms_mediana": 2873
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "defeito_documentado": true,
+      "n": 7,
+      "erros_infra": 0,
+      "causa_correta_pct": 0.0,
+      "causa_correta_ic95": [
+        0.0,
+        35.4
+      ],
+      "campo_correto_pct": 0.0,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 100.0,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 9.43,
+      "segundos_mediana": 9.3,
+      "tokens_saida_medio": 54,
+      "tokens_entrada_mediana": 617,
+      "prefill_ms_mediana": 4665,
+      "geracao_ms_mediana": 2839
+    },
+    {
       "modelo": "qwen2.5-coder:3b",
       "condicao": "A0",
       "defeito_documentado": false,
@@ -3443,26 +3718,41 @@
   "por_condicao": [
     {
       "condicao": "A0",
-      "n": 540,
+      "n": 588,
       "erros_infra": 0,
-      "causa_correta_pct": 37.4,
+      "causa_correta_pct": 35.4,
       "causa_correta_ic95": [
-        33.4,
-        41.6
+        31.6,
+        39.3
       ],
-      "campo_correto_pct": 60.2,
-      "formato_valido_pct": 99.6,
-      "formato_ok_conteudo_errado_pct": 62.2,
-      "fora_do_conjunto_pct": 4.4,
+      "campo_correto_pct": 56.5,
+      "formato_valido_pct": 99.7,
+      "formato_ok_conteudo_errado_pct": 64.3,
+      "fora_do_conjunto_pct": 4.1,
       "diagnostico_errado_pct": 9.4,
-      "segundos_medio": 19.18,
-      "segundos_mediana": 15.0,
-      "tokens_saida_medio": 88,
+      "segundos_medio": 18.37,
+      "segundos_mediana": 11.6,
+      "tokens_saida_medio": 86,
       "tokens_entrada_mediana": 530.0,
-      "prefill_ms_mediana": null,
-      "geracao_ms_mediana": null
+      "prefill_ms_mediana": 3374.5,
+      "geracao_ms_mediana": 2867.0
     }
   ],
   "comparacoes": [],
-  "quantizacao": []
+  "quantizacao": [
+    {
+      "modelo_base": "qwen2.5-coder:1.5b",
+      "variante": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "condicao": "A0",
+      "estrategia": "linear",
+      "n": 48,
+      "acerto_base_pct": 8.3,
+      "acerto_variante_pct": 12.5,
+      "flips_certo_para_errado": 0,
+      "flips_errado_para_certo": 2,
+      "respostas_diferentes_pct": 6.2,
+      "segundos_base": 5.3,
+      "segundos_variante": 8.6
+    }
+  ]
 }

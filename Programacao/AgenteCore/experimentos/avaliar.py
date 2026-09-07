@@ -24,10 +24,11 @@ from collections import defaultdict
 from pathlib import Path
 
 import biblioteca as bib
+import caminhos
 from taxonomia import CAUSAS_RAIZ
 
 AQUI = Path(__file__).resolve().parent
-SAIDA = AQUI / "resultados"
+SAIDA = caminhos.RESULTADOS
 
 
 def _normalizar(texto: str) -> str:
@@ -291,7 +292,7 @@ def main() -> None:
     except FileNotFoundError:
         causas_com_defeito = set()
     avaliados = [avaliar_registro(r, causas_com_defeito) for r in brutos]
-    (AQUI / "avaliacao.json").write_text(
+    caminhos.AVALIACAO.write_text(
         json.dumps(avaliados, ensure_ascii=False, indent=2), encoding="utf-8")
 
     # Cortes da Fase 2-A, restritos a A0 e ao modelo Q4_K_M padrão: continuam produzindo
@@ -319,10 +320,10 @@ def main() -> None:
     resumo.update({nome: agregar(linear, *ch) for nome, ch in cortes_2b.items()})
     resumo["comparacoes"] = comparar_com_base(avaliados)
     resumo["quantizacao"] = flips_quantizacao(avaliados)
-    (AQUI / "resumo_metricas.json").write_text(
+    caminhos.RESUMO.write_text(
         json.dumps(resumo, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print(f"{len(brutos)} inferências avaliadas\n")
+    print(f"{len(brutos)} inferências avaliadas — {caminhos.descricao()}\n")
     print(f"{'modelo':34} {'cond':5} {'n':>4} {'causa%':>7} {'IC95':>14} {'campo%':>7} "
           f"{'cita%':>6} {'ouro%':>6} {'prefill ms':>11} {'seg':>6}")
     for r in resumo["por_modelo_condicao"]:

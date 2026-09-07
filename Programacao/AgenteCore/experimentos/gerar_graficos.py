@@ -21,6 +21,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 
+import caminhos
+
 # ! Alteração de IA - Revisar: força UTF-8 na saída do console, igual ao _env_common.py.
 # ! Motivo: no Windows o console pode estar em cp1252; os nomes de gráfico e as mensagens
 # têm acentos e o script abortava ou imprimia lixo ao exibi-los.
@@ -31,7 +33,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
         pass
 
 AQUI = Path(__file__).resolve().parent
-GRAFICOS = AQUI / "graficos"
+GRAFICOS = caminhos.GRAFICOS
 
 SUPERFICIE = "#fcfcfb"
 TINTA = "#0b0b0b"
@@ -384,7 +386,7 @@ def ancoragem(resumo):
 
 
 def main() -> None:
-    arq = AQUI / "resumo_metricas.json"
+    arq = caminhos.RESUMO
     if not arq.exists():
         print("resumo_metricas.json não encontrado. Rode avaliar.py primeiro.")
         return

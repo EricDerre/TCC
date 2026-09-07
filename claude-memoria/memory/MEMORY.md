@@ -1,0 +1,3 @@
+- [Comentar alterações de IA com o motivo](feedback-comentar-alteracoes-ia-motivo.md) — a tag nunca vem sozinha: sempre o que foi feito + por quê (naming CamelCase/húngaro é só do ERP)
+- [Nunca commitar por conta própria](feedback-eric-nunca-commitar.md) — alterações ficam no working tree; Eric revisa e commita
+- [Decisões de arquitetura do TCC](project-tcc-agente-qa-decisoes.md) — LLM local em vez de Colab, self-healing só de seletor, dois alvos de teste, Chromium do Playwright, máquina-alvo i5 (tempos válidos só lá; resultados em `resultados_alvo/`), um modelo por vez em CPU

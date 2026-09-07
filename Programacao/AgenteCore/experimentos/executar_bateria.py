@@ -8,10 +8,12 @@
 # Ollama mantém o anterior residente e as medições de memória e latência ficam contaminadas.
 import argparse
 import json
+import platform
 import time
 from pathlib import Path
 
 import biblioteca as bib
+import caminhos
 import cliente_ollama as oll
 import recuperacao as rec
 from banco_casos import CASOS
@@ -19,7 +21,9 @@ from banco_casos_extra import CASOS_EXTRA
 from estrategias import ESTRATEGIAS, linear_com_biblioteca
 
 AQUI = Path(__file__).resolve().parent
-SAIDA = AQUI / "resultados"
+# Pasta de saída decidida por caminhos.py (RESULTADOS_DIR): a máquina-alvo grava em
+# resultados_alvo/ sem sobrescrever os resultados do Ryzen em resultados/.
+SAIDA = caminhos.RESULTADOS
 TODOS_OS_CASOS = CASOS + CASOS_EXTRA
 
 
@@ -120,6 +124,9 @@ def rodar_modelo(modelo: str, casos: list[dict], estrategias: list[str],
             residentes = oll.residentes()
             registro = {
                 "modelo": modelo, "digest": digest,
+                # nome da máquina em cada registro: os resultados de máquinas diferentes
+                # não podem ser comparados em tempo nem pareados por caso.
+                "maquina": platform.node(),
                 "caso": caso["id"], "classe": caso["classe"], "nivel": caso["nivel"],
                 "estrategia": nome_estrategia,
                 "condicao": condicao,
@@ -176,6 +183,7 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=3, help="verbetes recuperados em A2/A4")
     args = ap.parse_args()
 
+    print(caminhos.descricao())
     casos = TODOS_OS_CASOS[:args.casos] if args.casos else TODOS_OS_CASOS
     max_tokens = args.max_tokens or (900 if args.condicao == "A0" else 600)
     estrategias = args.estrategias

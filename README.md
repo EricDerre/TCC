@@ -122,8 +122,9 @@ TCC/
 ├── install.cmd / install.ps1 / install.sh / install.py   # instalador (chamado por Cobaia.exe também)
 ├── run.cmd / run.ps1 / run.sh / run.py                   # sobe CobaiaFront + CobaiaAPI juntos
 ├── _env_common.py                          # helpers compartilhados por install.py/run.py/Cobaia.py
-├── .claude/CLAUDE.md                       # regras de colaboração com IA neste repo
-├── Documentacao/                           # projeto de pesquisa (ABNT) do TCC
+├── .claude/CLAUDE.md                       # regras de colaboração com IA neste repo (fora do git)
+├── claude-memoria/                         # memória do Claude + CLAUDE.md portáteis, com importar/exportar.ps1
+├── Documentacao/                           # projeto de pesquisa (ABNT) do TCC e memorial de desenvolvimento
 └── Programacao/
     ├── AgenteCore/
     │   ├── base_conhecimento/              # biblioteca de documentação do cobaia (Fase 2-B)
@@ -442,6 +443,15 @@ do AgenteCore (`Programacao/AgenteCore/.venv`, criada pelo instalador).
 não há outro modelo residente, e toda inferência é forçada para CPU
 (`num_gpu=0`) porque a tese afirma operar sob restrição de hardware local.
 
+**Duas máquinas, duas pastas de resultado.** A Fase 2-A foi medida no Ryzen
+de desenvolvimento (`resultados/`, `graficos/`, `relatorio.html` na raiz de
+`experimentos/`). A Fase 2-B roda na **máquina-alvo** (notebook corporativo
+i5-1235U, 16 GB, sem GPU) e grava em `resultados_alvo/` — é a variável de
+ambiente `RESULTADOS_DIR` (lida por `caminhos.py`) que decide onde cada
+script grava e lê, para os dois conjuntos nunca se sobrescreverem. Cada
+registro leva o nome da máquina, e `maquina.json` guarda CPU, RAM, sistema e
+versão do Ollama. Tempos só são comparáveis dentro da mesma pasta.
+
 | Ordem | Script | O que faz |
 |---|---|---|
 | 1 | `validar_banco.py --indice` | Valida os 90 casos e a biblioteca (`base_conhecimento/`), mede a recuperação BM25 offline e regrava o `INDICE.md`. Não chama o Ollama. |
@@ -449,13 +459,25 @@ não há outro modelo residente, e toda inferência é forçada para CPU
 | 3 | `executar_bateria.py --modelos M --condicao A0..A5` | Roda os 90 casos; `A0` sem biblioteca (Fase 2-A), `A1` inteira, `A2` top-3 recuperada, `A3` só o verbete certo, `A4` distratores, `A5` verbete errado. Resumível: grava JSONL por caso. |
 | 4 | `avaliar.py` | Pontua pelos gabaritos; Δ contra A0, McNemar pareado, IC de Wilson, ancoragem, flips de quantização. |
 | 5 | `gerar_graficos.py` / `gerar_relatorio.py` | PNG/SVG para o documento e `relatorio.html` navegável, tudo a partir do JSONL. |
-| — | `rodar_fase2b.ps1` | Orquestra a Fase 2-B inteira (passos 3 a 5, ~15–20 h), um modelo por vez, resumível: `powershell -ExecutionPolicy Bypass -File .\rodar_fase2b.ps1`. |
+| — | `rodar_fase2b.ps1` | Orquestra a Fase 2-B inteira **na máquina-alvo**: confere Python/Ollama/RAM/disco, baixa os 8 modelos que faltarem, grava `maquina.json`, refaz a linha de base A0 lá, roda A1–A5 e a avaliação — tudo em `resultados_alvo/`. Um modelo por vez, resumível (Ctrl+C e relançar), ~30–45 h: `powershell -ExecutionPolicy Bypass -File .\rodar_fase2b.ps1`. |
 
 A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e em
 [`Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md`](Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md)
 (Fase 2-A, 90 casos × 3 estratégias × 6 modelos); a Fase 2-B ganha o seu ao terminar.
 Decisões, pesquisa e fontes estão em `Documentacao/Memorial de Desenvolvimento.md`
 (índice) e na pasta `Documentacao/memorial/`.
+
+## Memória do Claude Code entre máquinas
+
+<!-- ! Alteração de IA - Revisar: seção nova apontando para a pasta claude-memoria/.
+     ! Motivo: a memória do Claude e o .claude/CLAUDE.md não viajam pelo git (ficam fora do
+     repositório ou no .gitignore); quem for usar o Claude na máquina-alvo precisa saber
+     que existe um importador. -->
+O que o Claude Code sabe deste projeto (decisões, regra de comentário, regra de
+commit) fica fora do repositório. A pasta [`claude-memoria/`](claude-memoria/)
+carrega tudo pelo git: na máquina de destino, rode
+`powershell -ExecutionPolicy Bypass -File claude-memoria\importar.ps1` uma vez e
+abra o Claude Code na pasta do repositório. Detalhes no README de lá.
 
 ## Testes e lint
 

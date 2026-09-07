@@ -11,6 +11,8 @@ import json
 import sys
 from pathlib import Path
 
+import caminhos
+
 # ! Alteração de IA - Revisar: força UTF-8 na saída do console, igual ao _env_common.py.
 # ! Motivo: no Windows o console pode estar em cp1252; os nomes de gráfico e as mensagens
 # têm acentos e o script abortava ou imprimia lixo ao exibi-los.
@@ -21,7 +23,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
         pass
 
 AQUI = Path(__file__).resolve().parent
-SAIDA = AQUI / "resultados"
+SAIDA = caminhos.RESULTADOS
 
 CAMPOS_TABELA = [("modelo", "modelo"), ("condicao", "cond."), ("n", "n"),
                  ("causa_correta_pct", "causa %"), ("causa_correta_ic95", "IC 95%"),
@@ -109,8 +111,8 @@ def _tabela(resumo: dict) -> str:
 
 
 def main() -> None:
-    avaliacao = json.loads((AQUI / "avaliacao.json").read_text(encoding="utf-8"))
-    resumo = json.loads((AQUI / "resumo_metricas.json").read_text(encoding="utf-8"))
+    avaliacao = json.loads(caminhos.AVALIACAO.read_text(encoding="utf-8"))
+    resumo = json.loads(caminhos.RESUMO.read_text(encoding="utf-8"))
 
     # As respostas cruas e o sintoma ficam só no JSONL; junta pela chave do registro.
     brutos = {}
@@ -136,7 +138,7 @@ def main() -> None:
 
     pagina = (_MODELO.replace("__TABELA__", _tabela(resumo))
               .replace("__DADOS__", json.dumps(dados, ensure_ascii=False)))
-    destino = AQUI / "relatorio.html"
+    destino = caminhos.RELATORIO
     destino.write_text(pagina, encoding="utf-8")
     print(f"{destino} ({len(dados)} registros, {round(destino.stat().st_size / 1024)} KB)")
 
