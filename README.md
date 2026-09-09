@@ -463,7 +463,9 @@ versão do Ollama. Tempos só são comparáveis dentro da mesma pasta.
 
 A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e em
 [`Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md`](Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md)
-(Fase 2-A, 90 casos × 3 estratégias × 6 modelos); a Fase 2-B ganha o seu ao terminar.
+(Fase 2-A, 90 casos × 3 estratégias × 6 modelos) e em
+[`fase-2b-relatorio-por-modelo.md`](Documentacao/memorial/3-resultados-e-analises/fase-2b-relatorio-por-modelo.md)
+(Fase 2-B, biblioteca de documentação, 2.610 inferências na máquina-alvo).
 Decisões, pesquisa e fontes estão em `Documentacao/Memorial de Desenvolvimento.md`
 (índice) e na pasta `Documentacao/memorial/`.
 

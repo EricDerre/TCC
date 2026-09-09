@@ -4,7 +4,7 @@
      referências; separado por tema, cada assunto é revisável sozinho e o índice mostra onde
      está cada coisa. Conteúdo MOVIDO sem reescrita; a numeração das seções é a do memorial
      original porque o próprio texto se refere a ela ("ver 4.12", "decisão 19"). -->
-# Achados experimentais — modelos e experimentos (4.12 a 4.20)
+# Achados experimentais — modelos e experimentos (4.12 a 4.28)
 
 Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md) — sumário e demais tópicos lá.
 
@@ -68,5 +68,26 @@ Verificação 0 da Fase 2-B, medida com `verificar_cache_prefixo.py` no `qwen2.5
 | E — prefixo + caso 1, depois de D | 5.723 | 5.762 ms |
 
 Três conclusões. (1) **O cache funciona**: a repetição exata custa 0,1% do prefill original, e um prompt que só muda no fim custa só o prefill do fim (~600 tokens em 6 s) — a biblioteca é paga uma vez por modelo e o braço "biblioteca inteira" é viável sem encolher. (2) O **`prompt_eval_count` não serve de diagnóstico**: o Ollama reporta o tamanho do prompt (5.723) mesmo quando reaproveitou 99,9% dele; o script foi corrigido para decidir pelo `prompt_eval_duration`. Sem essa medição, o veredito impresso teria sido "não funciona" e a biblioteca teria sido cortada à toa. (3) A contagem real do tokenizador do Qwen dá **5.230 tokens** para a biblioteca (a estimativa por caracteres, calibrada pelo pior tokenizador, dizia 6.582) e **~108 tokens/s** de prefill sem cache neste modelo e CPU — o prompt de A1 fica em 5.723 tokens, com 1.869 de folga para a resposta de 600.
+
+### 4.22 A biblioteca recuperada sobe o acerto em todos os modelos; a inteira, não (Fase 2-B)
+Na máquina-alvo (i5-1235U), 2.610 inferências: com 3 verbetes recuperados (A2), **três modelos cruzam 70%** — Granite 76,7%, `qwen2.5-coder:7b` 72,2%, `qwen2.5:7b` 70,0% — e o `qwen2.5-coder:3b` salta **de 23,3% para 63,3%** (+40 pp, 36 casos ganhos e nenhum perdido, p < 0,001). Com a biblioteca inteira no prompt (A1, ~5,8 mil tokens), o Granite **piora** 5,6 pp mesmo com o verbete certo presente em 100% dos casos — a sintática cai de 93% para 53%. É o *Context Rot* (6.3) medido no próprio experimento: presença não basta, quantidade e posição importam. Relatório completo em [fase-2b-relatorio-por-modelo.md](fase-2b-relatorio-por-modelo.md).
+
+### 4.23 O teto é a recuperação
+Com só o verbete certo (A3), o Granite acerta **100% dos 90 casos** e o 3B, 92,2%. Em A2 o verbete certo está entre os três em 78,9% dos casos (o hit@3 medido offline em 4.19, idêntico porque a recuperação é determinística); quando está, o Granite acerta 91,5%; quando não está, 21,1%. A diferença entre 76,7% e 100% é quase toda do recuperador. A classe de tradução é onde ele mais falha (verbete certo no top-3 em 46,7%) — e é a única classe que quase não ganha com a biblioteca (+4,5 pp), embora em A3 o Granite acerte 100% dela.
+
+### 4.24 Adesão cega: documentação errada é veneno, não ruído
+Três verbetes plausíveis mas errados (A4) derrubam o Granite de 66,7% para **22,2%** — abaixo de sem documentação — e ele responde a causa de um distrator em 73% dos casos. Um verbete errado com um "registro de incidente" falso (A5) leva Granite e 3B a repetir a causa plantada em **93–96%** das respostas. Quanto melhor o modelo lê documentação, mais a obedece: o `phi4-mini`, que não a lê (cita verbete em 0–12% das respostas), é o menos afetado (30%). Consequência direta para a Fase 3: a gestão da biblioteca pelo modelo só pode existir atrás de validação por código.
+
+### 4.25 O 3B com documentação alcança o 8B sem documentação, a um quarto do custo
+`qwen2.5-coder:3b` + A2: 63,3% em 29,7 s por caso e 2,3 GB. `granite4.2:8b` sem biblioteca: 66,7% em 83 s e 6,6 GB, na mesma máquina. Para a máquina corporativa, saber do sistema substitui porte de modelo — a lição que junta as duas fases: raciocinar em etapas não ajudou (4.16); conhecer o sistema ajudou.
+
+### 4.26 A acurácia reproduz entre máquinas; o tempo não
+A0 refeito no i5 contra o do Ryzen, pareado caso a caso: nenhuma diferença significativa de acerto; respostas idênticas em 91–98% dos casos, exceto `qwen2.5-coder:7b` (68,9%, o mais prolixo). Tempo 1,6–2,3× maior no i5. A decisão 25 (refazer A0 na máquina-alvo) custou 540 inferências e comprou o pareamento correto e a evidência de que os resultados da 2-A não eram artefato da máquina.
+
+### 4.27 Quantização não explica o piso do 1,5B
+`qwen2.5-coder:1.5b` em q8_0 e fp16: 8,9% contra 5,6% do Q4_K_M, 4 respostas diferentes em 90, nenhum caso perdido, e o dobro do tempo. O piso é capacidade do modelo. Q4_K_M confirmado para todos os portes.
+
+### 4.28 A biblioteca inteira custa mais no que gera, não no que lê
+Com o cache de prefixo, o prefill de A1 ficou em 1,5–1,8× o de A0 (não 10×); mas A1 faz os modelos escreverem mais (Granite: geração de 47 s para 114 s; `coder:7b` cortou 6 respostas no teto). A2 tem prefill maior que A1 (o prefixo muda a cada caso e não é reaproveitado) e ainda assim é mais barata no total. Documentação demais não só distrai — alonga a resposta.
 
 

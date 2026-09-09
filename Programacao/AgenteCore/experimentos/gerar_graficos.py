@@ -12,6 +12,7 @@
 # Onde seriam necessárias mais de três cores (6 modelos x 6 classes), usa-se mapa de calor
 # de matiz única em vez de multiplicar matizes.
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -234,6 +235,8 @@ def formato_valido_conteudo_errado(resumo):
 # eixo. Mesmas regras de legibilidade: até três matizes por gráfico, rótulo direto em
 # cada barra, "sem dado" explícito onde a condição não rodou, legenda abaixo do eixo.
 
+_SUFIXO_QUANT = re.compile(r"-instruct-(q8_0|fp16|q6_k|q5_k_m|q4_k_m|q4_0)$", re.IGNORECASE)
+
 ROTULO_CONDICAO = {"A0": "Sem biblioteca", "A1": "Biblioteca inteira", "A2": "Recuperada (top-3)",
                    "A3": "Só o verbete certo", "A4": "Distratores plausíveis",
                    "A5": "Verbete errado + registro falso"}
@@ -254,7 +257,9 @@ def _barras_por_condicao(resumo, condicoes, nome, titulo, subtitulo, campo="caus
                          base_como_traco=False):
     """Barras agrupadas: um grupo por modelo, uma barra por condição (máx. 3 matizes).
     Com base_como_traco, A0 vira um traço horizontal em cada grupo em vez de barra."""
-    linhas = resumo.get("por_modelo_condicao", [])
+    # Só os modelos-base: as variantes de quantização (…-instruct-q8_0/-fp16) rodam apenas A0 e
+    # apareciam aqui como colunas cheias de "sem dado"; elas têm o gráfico 10 só para elas.
+    linhas = [r for r in resumo.get("por_modelo_condicao", []) if not _SUFIXO_QUANT.search(r["modelo"])]
     modelos = sorted({r["modelo"] for r in linhas if r["condicao"] in condicoes},
                      key=lambda m: -((_valor(linhas, modelo=m, condicao="A0") or {}).get(campo, 0)))
     if not modelos:
@@ -283,7 +288,9 @@ def _barras_por_condicao(resumo, condicoes, nome, titulo, subtitulo, campo="caus
         ax.plot([], [], color=TINTA, linestyle="--", label="Sem biblioteca (linha de base)")
     ax.set_xticks(range(len(modelos)))
     ax.set_xticklabels([_curto(m) for m in modelos], rotation=20, ha="right")
-    ax.set_ylim(0, 100)
+    # Folga acima de 100%: o rótulo de uma barra cheia (100%) colidia com o subtítulo.
+    ax.set_ylim(0, 112)
+    ax.set_yticks(range(0, 101, 20))
     ax.yaxis.set_major_formatter(PercentFormatter())
     leg = ax.legend(frameon=False, fontsize=9, ncols=min(4, len(condicoes) + 1),
                     loc="upper center", bbox_to_anchor=(0.5, -0.22))
@@ -311,14 +318,21 @@ def prefill_versus_acerto(resumo):
     if not linhas:
         print("  09-prefill-versus-acerto: sem dado (registros sem prefill_ms)")
         return
-    fig, ax = _base(8.8, 5.2)
+    fig, ax = _base(9.6, 5.6)
     ax.grid(color=GRADE, linewidth=0.8, zorder=0)
-    for r in linhas:
+    # Só modelos-base e só as condições que a leitura compara (A0/A1/A2/A3): os braços
+    # adversariais e as variantes de quantização amontoavam rótulos perto da origem.
+    linhas = sorted((r for r in linhas if not _SUFIXO_QUANT.search(r["modelo"])
+                     and r["condicao"] in ("A0", "A1", "A2", "A3")),
+                    key=lambda r: (r["prefill_ms_mediana"], r["causa_correta_pct"]))
+    for i, r in enumerate(linhas):
         ax.scatter(r["prefill_ms_mediana"] / 1000, r["causa_correta_pct"], s=90,
                    color=SERIES[0], edgecolor=SUPERFICIE, linewidth=2, zorder=3)
+        # rótulos alternando acima/abaixo do ponto, para vizinhos não se cobrirem
         ax.annotate(f"{_curto(r['modelo'])} · {r['condicao']}",
                     (r["prefill_ms_mediana"] / 1000, r["causa_correta_pct"]),
-                    textcoords="offset points", xytext=(7, 3), fontsize=7.5, color=TINTA_2)
+                    textcoords="offset points", xytext=(7, 4 if i % 2 == 0 else -11),
+                    fontsize=7, color=TINTA_2)
     ax.set_xlabel("prefill por inferência (segundos, mediana, só CPU)", color=TINTA_2, fontsize=9)
     ax.set_ylabel("acerto da causa raiz", color=TINTA_2, fontsize=9)
     ax.set_ylim(0, 100)
@@ -359,7 +373,8 @@ def quantizacao_flips(resumo):
 
 
 def ancoragem(resumo):
-    linhas = [r for r in resumo.get("por_modelo_condicao", []) if r["condicao"] == "A2"]
+    linhas = [r for r in resumo.get("por_modelo_condicao", [])
+              if r["condicao"] == "A2" and not _SUFIXO_QUANT.search(r["modelo"])]
     if not linhas:
         print("  11-ancoragem-e-recuperacao: sem dado")
         return
@@ -374,7 +389,8 @@ def ancoragem(resumo):
                         width=0.26, color=cor, zorder=3, label=rotulo)
         _rotular(ax, barras)
     ax.set_xticks(list(x), [_curto(r["modelo"]) for r in linhas], rotation=20, ha="right")
-    ax.set_ylim(0, 100)
+    ax.set_ylim(0, 112)
+    ax.set_yticks(range(0, 101, 20))
     ax.yaxis.set_major_formatter(PercentFormatter())
     leg = ax.legend(frameon=False, fontsize=9, ncols=3, loc="upper center",
                     bbox_to_anchor=(0.5, -0.22))

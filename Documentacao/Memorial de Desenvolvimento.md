@@ -9,7 +9,7 @@
 
 **Projeto:** Agente de QA End-to-End Autônomo com Capacidades de Self-Healing — UNICID, Ciência da Computação.
 **Finalidade:** servir de insumo para a redação do relatório final. Reúne decisões tomadas e por quem, achados experimentais, correções feitas no projeto de pesquisa e as referências levantadas. As alterações de código aparecem apenas resumidas e referenciadas por commit.
-**Período coberto:** 31/08/2026 a 03/09/2026.
+**Período coberto:** 31/08/2026 a 09/09/2026.
 
 O conteúdo está dividido por tema na pasta [`memorial/`](memorial/). A numeração das seções é a do memorial original: "4.12" é sempre o mesmo achado, esteja em que arquivo estiver.
 
@@ -32,9 +32,10 @@ Duas frentes, ambas com o objetivo de evitar decisão por intuição.
 ### 3. Resultados e análises — [`memorial/3-resultados-e-analises/`](memorial/3-resultados-e-analises/)
 Resultados obtidos executando, não deduções.
 - [Achados — ambiente cobaia](memorial/3-resultados-e-analises/achados-do-ambiente-cobaia.md) — §4.1 a 4.11: o que a montagem do ambiente revelou.
-- [Achados — modelos e experimentos](memorial/3-resultados-e-analises/achados-dos-modelos.md) — §4.12 a 4.21: diff pré-calculado, prolixidade, linear × estágios, tokenizador, recuperação, cache de prefixo.
+- [Achados — modelos e experimentos](memorial/3-resultados-e-analises/achados-dos-modelos.md) — §4.12 a 4.28: diff pré-calculado, prolixidade, linear × estágios, tokenizador, recuperação, cache de prefixo, e os achados da 2-B (recuperada × inteira, teto da recuperação, adesão cega, 3B ≈ 8B, máquinas, quantização).
 - [Validação da hipótese de uso de Cython](memorial/3-resultados-e-analises/validacao-cython.md) — §7.
 - [**Fase 2-A — relatório por modelo**](memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md) — protocolo, quadro geral, estratégias, classes × níveis, modos de falha, perfil de cada um dos 6 modelos, custo, ameaças à validade e as hipóteses registradas para a 2-B.
+- [**Fase 2-B — biblioteca de documentação: relatório por modelo**](memorial/3-resultados-e-analises/fase-2b-relatorio-por-modelo.md) — máquina-alvo, linha de base em duas máquinas, recuperada × inteira, teto da recuperação, efeito por classe, adesão cega, quantização, custo no i5, perfil dos 6 modelos, comparação com a 2-A e as decisões a tomar.
 
 ### 4. Projeto de pesquisa (ABNT) — [`memorial/4-projeto-de-pesquisa-abnt/`](memorial/4-projeto-de-pesquisa-abnt/)
 - [Correções aplicadas](memorial/4-projeto-de-pesquisa-abnt/correcoes-aplicadas.md) — §5: trecho, antes, depois e motivo de cada correção.

@@ -19,14 +19,15 @@ O que o Claude Code sabe deste projeto fica **fora do repositório**: na pasta d
 | `memory\feedback-eric-nunca-commitar.md` | Nunca commitar por conta própria; sem comando git destrutivo sem confirmação. |
 | `CLAUDE.md` | As regras do projeto que o Claude lê ao abrir o repositório. |
 | `plano-aprovado-fase-2b.md` | O plano da Fase 2-B aprovado em 03/09/2026 (desenho experimental, biblioteca, métricas, revisão de código). |
+| `contexto\` | **Passagem de bastão entre sessões/máquinas**: o que não cabe na memória — como o harness está montado, armadilhas já pagas, estado das fases, próximas fases e o jeito de trabalhar. Um arquivo por sessão encerrada. O Claude deve ler o mais recente na primeira sessão numa máquina nova. |
 
-## Na máquina-alvo (importar)
+## Na máquina de destino (importar — **adiciona, não substitui**)
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File claude-memoria\importar.ps1
 ```
 
-O script descobre o caminho do repositório nesta máquina, calcula o `<slug>` que o Claude Code usa (o caminho com `:` e `\` trocados por `-`) e copia a memória para lá e o `CLAUDE.md` para `.claude\`. Depois, abra o Claude Code na pasta do repositório.
+O script descobre o caminho do repositório nesta máquina, calcula o `<slug>` que o Claude Code usa (o caminho com `:` e `\` trocados por `-`) e **mescla** com o que já existe lá: arquivo novo é copiado; arquivo idêntico é ignorado; o índice `MEMORY.md` recebe só as linhas que faltam; qualquer outro arquivo que exista com conteúdo diferente é **preservado**, e a versão recebida fica ao lado como `<nome>.recebido-<data>.md` para o Claude ou o Eric conciliarem. O mesmo vale para o `CLAUDE.md` em `.claude\`. Depois, abra o Claude Code na pasta do repositório e peça para ele ler `claude-memoria\contexto\`.
 
 ## Na máquina de desenvolvimento (exportar, quando a memória mudar)
 
