@@ -1,0 +1,13 @@
+﻿{
+    "hostname":  "TARGET_TSP030",
+    "cpu":  "12th Gen Intel(R) Core(TM) i5-1235U",
+    "nucleos":  10,
+    "threads":  12,
+    "ram_gb":  15.7,
+    "ram_livre_no_inicio_gb":  7.2,
+    "sistema":  "Microsoft Windows 11 Pro 10.0.26200",
+    "ollama":  "ollama version is 0.33.3",
+    "python":  "Python 3.14.7",
+    "inicio":  "2026-09-07T09:18:30",
+    "resultados_dir":  "resultados_alvo"
+}
