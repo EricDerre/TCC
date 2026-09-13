@@ -3,7 +3,7 @@
      ! Motivo: o modelo recebe os verbetes renderizados, não este arquivo — ele existe
      para quem revisa a biblioteca enxergar cobertura e tipos num lugar só. -->
 
-# Índice da biblioteca base
+# Índice da biblioteca (base_conhecimento)
 
 36 verbetes. 36 verbetes {'contratos': 2, 'defeitos_conhecidos': 3, 'erros': 24, 'falhas_injetadas': 1, 'negocio': 6}; biblioteca inteira: 17113 caracteres ≈ 6582 tokens
 

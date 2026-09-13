@@ -6,6 +6,16 @@
 # CobaiaAPI, porque o mesmo caso precisa ser idêntico entre modelos e entre rodadas — com
 # chamada ao vivo, latência e estado do banco virariam variáveis de confusão.
 #
+# ! Alteração de IA - Revisar: acrescenta o aviso de que, a partir da Fase 3, os casos
+# sin-1, sin-2 (neste arquivo) e semt-13, efe-13 (banco_casos_extra.py) têm
+# sintoma/observação diferentes dos usados nas Fases 2-A/2-B.
+# ! Motivo: achado 4.20 do Memorial — produtos_api.php:64-67 (formatarPreco) nunca produz
+# "R$ NaN" (Number(preco) inválido devolve String(preco) sem concatenar "R$") e
+# produtos_api.php:104 (innerHTML) nunca duplica cartões (o grid é substituído inteiro a
+# cada resposta). Os 4 fixtures antigos descreviam sintomas que o código real não gera;
+# a partir daqui a comparação caso a caso com as fases anteriores nesses 4 casos deixa de
+# ser direta, e isso fica registrado no Memorial, não neste comentário.
+#
 # Todos os dados vêm do cobaia real: contratos conferidos em CobaiaAPI/app/schemas.py e
 # colunas em CobaiaFront/banco/schema_completo.sql. Vários cenários correspondem
 # exatamente aos modos que app/fault_injection.py já implementa.
@@ -83,18 +93,29 @@ CASOS += [
 
 # ---------------------------------------------------------- CLASSE 2: sintatica
 CASOS += [
+    # ! Alteração de IA - Revisar: corrige o sintoma do achado 4.20 do Memorial -- com o
+    # campo preco ausente, o botao mostra "undefined", nao "R$ NaN".
+    # ! Motivo: produtos_api.php:64-67 (formatarPreco) faz Number(preco); com preco
+    # ausente, Number(undefined) = NaN, e a funcao devolve String(preco) SEM concatenar
+    # "R$" antes -- String(undefined) = "undefined". "R$ NaN" nunca sai do codigo real.
     _c("sin-1", 2, 1, "campo_ausente", "preco",
        ["preco", "ausente", "falta"], ["tipo", "renomead"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
        corpo='[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", '
              '"tipo": "Carnes", "imagem": "picanha_alho.jpg", "destaque": true}]',
-       sintoma="Os cartoes exibem 'R$ NaN' no lugar do valor."),
+       sintoma="O botao de preco de cada cartao mostra a palavra 'undefined', sem 'R$'."),
+    # ! Alteração de IA - Revisar: corrige o sintoma do achado 4.20 do Memorial -- campo
+    # renomeado (preco -> preco_v2) tambem produz "undefined" no botao, nao "R$ NaN".
+    # ! Motivo: preco_v2 nao esta no contrato que produtos_api.php le; a leitura de
+    # p.preco fica undefined e formatarPreco devolve String(undefined) = "undefined"
+    # (mesma funcao e linhas do sin-1, produtos_api.php:64-67).
     _c("sin-2", 2, 2, "campo_renomeado", "preco",
        ["renomead", "preco_v2"], ["decimal", "conversao numerica"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
        corpo='[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", '
              '"tipo": "Carnes", "preco_v2": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}]',
-       sintoma="Os cartoes exibem 'R$ NaN' no lugar do valor."),
+       sintoma="O botao de preco de cada cartao mostra a palavra 'undefined', sem 'R$'; "
+               "o restante do cartao esta correto."),
     _c("sin-3", 2, 2, "estrutura_aninhada_divergente", "tipo",
        ["objeto", "aninhad", "tipo"], ["ausente", "nulo"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,

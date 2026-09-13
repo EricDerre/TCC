@@ -27,20 +27,42 @@ SAIDA = caminhos.RESULTADOS
 TODOS_OS_CASOS = CASOS + CASOS_EXTRA
 
 
-def _ja_feitos(arquivo: Path, condicao: str) -> set[tuple[str, str]]:
-    """Chaves (caso, estratégia) já gravadas NESTA condição, para retomar de onde parou.
-    Registros da Fase 2-A não têm o campo 'condicao' e contam como A0."""
+def ler_jsonl(arquivo: Path) -> list[dict]:
+    """! Alteração de IA - Revisar: leitura linha a linha do JSONL extraída de _ja_feitos
+    para função de módulo (Tarefa 3), reutilizável pelo executor da Fase 3
+    (executar_fase3.py, tarefa futura).
+    ! Motivo: _ja_feitos já ignorava a linha que não parseia (json.JSONDecodeError) — a
+    linha truncada por uma interrupção no meio da gravação, que fica incompleta no
+    arquivo — e devolvia set()/[] quando o arquivo não existe. Duplicar esse laço em
+    executar_fase3.py faria as duas leituras de JSONL divergirem com o tempo."""
     if not arquivo.exists():
-        return set()
-    feitos = set()
+        return []
+    registros = []
     with open(arquivo, encoding="utf-8") as f:
         for linha in f:
             try:
-                r = json.loads(linha)
-                if r.get("condicao", "A0") == condicao:
-                    feitos.add((r["caso"], r["estrategia"]))
-            except (json.JSONDecodeError, KeyError):
+                registros.append(json.loads(linha))
+            except json.JSONDecodeError:
                 continue  # linha truncada por interrupção: será refeita
+    return registros
+
+
+def _ja_feitos(arquivo: Path, condicao: str) -> set[tuple[str, str]]:
+    """Chaves (caso, estratégia) já gravadas NESTA condição, para retomar de onde parou.
+    Registros da Fase 2-A não têm o campo 'condicao' e contam como A0.
+
+    ! Alteração de IA - Revisar: passa a ler com ler_jsonl() em vez de repetir o laço
+    linha a linha aqui.
+    ! Motivo: mesma regra de antes — aqui só sobra o KeyError de r["caso"]/r["estrategia"]
+    (linha sem esses campos é ignorada); o parseio malformado já foi filtrado dentro de
+    ler_jsonl()."""
+    feitos = set()
+    for r in ler_jsonl(arquivo):
+        try:
+            if r.get("condicao", "A0") == condicao:
+                feitos.add((r["caso"], r["estrategia"]))
+        except KeyError:
+            continue  # linha sem 'caso'/'estrategia': será refeita
     return feitos
 
 
@@ -52,6 +74,68 @@ def _arquivo_saida(modelo: str, condicao: str) -> Path:
     linha de base sairia de registros misturados."""
     nome = modelo.replace(":", "_")
     return SAIDA / (f"{nome}.jsonl" if condicao == "A0" else f"{nome}__{condicao}.jsonl")
+
+
+def guarda_estimativa(maior_chars: int, max_tokens: int, rotulo: str) -> int:
+    """! Alteração de IA - Revisar: guarda estimada por chars/token extraída de
+    rodar_modelo para função de módulo (Tarefa 3), reutilizável pelo executor da Fase 3
+    (executar_fase3.py, tarefa futura).
+    ! Motivo: confere ANTES de inferir que o maior prompt cabe no num_ctx junto com a
+    resposta, usando o pior chars/token medido na Fase 2-A (bib.CHARS_POR_TOKEN) — quando
+    o prompt excede num_ctx o Ollama descarta em silêncio os tokens do COMEÇO, que é
+    justamente a biblioteca; o caso rodaria "com biblioteca" no registro e sem biblioteca
+    de fato, sem nenhum erro para acusar. Repetir a conta em dois arquivos faria as duas
+    guardas divergirem com o tempo."""
+    estimado = round(maior_chars / bib.CHARS_POR_TOKEN) + max_tokens
+    if estimado > oll.NUM_CTX:
+        raise SystemExit(f"maior prompt de {rotulo} estimado em {estimado} tokens "
+                         f"(com resposta) > num_ctx {oll.NUM_CTX} — encurtar a biblioteca")
+    print(f"maior prompt estimado: {estimado - max_tokens} tokens + {max_tokens} de resposta")
+    return estimado
+
+
+def guarda_tokens_reais(tokens_entrada: int, max_tokens: int, rotulo: str) -> None:
+    """! Alteração de IA - Revisar: guarda com a contagem real do tokenizador extraída de
+    rodar_modelo para função de módulo (Tarefa 3), reutilizável pelo executor da Fase 3.
+    ! Motivo: a estimativa por chars/token (guarda_estimativa) é aproximada; só depois da
+    primeira inferência de cada condição a contagem REAL do tokenizador do modelo confirma
+    se o prompt encostou em num_ctx — e o Ollama pode já ter descartado o começo (a
+    biblioteca) sem avisar. `rotulo` (a condição) é recebido para manter a mesma
+    assinatura de guarda_estimativa, mesmo não entrando na mensagem: a mensagem abaixo é a
+    mesma de antes da extração, que já não citava a condição."""
+    if tokens_entrada and tokens_entrada + max_tokens >= oll.NUM_CTX - 16:
+        raise SystemExit(
+            f"prompt avaliado em {tokens_entrada} tokens + {max_tokens} de resposta "
+            f"encosta em num_ctx {oll.NUM_CTX}: provável truncamento do prefixo — "
+            "encurtar a biblioteca ou reduzir --max-tokens (registro NÃO gravado)")
+
+
+def ambiente_residente() -> dict:
+    """! Alteração de IA - Revisar: resumo dos modelos residentes no Ollama extraído de
+    rodar_modelo para função de módulo (Tarefa 3), reutilizável pelo executor da Fase 3.
+    ! Motivo: são as mesmas três chaves finais que rodar_modelo grava em todo registro
+    (somente_cpu, modelos_residentes, memoria_mb) — servem para descartar da análise
+    qualquer registro medido com GPU ou com mais de um modelo residente disputando
+    memória."""
+    residentes = oll.residentes()
+    return {
+        "somente_cpu": all(m["vram_mb"] == 0 for m in residentes),
+        "modelos_residentes": len(residentes),
+        "memoria_mb": residentes[0]["memoria_mb"] if residentes else None,
+    }
+
+
+def inferir_seguro(modelo: str, prompt: str, max_tokens: int) -> dict:
+    """! Alteração de IA - Revisar: o try/except em torno de oll.gerar extraído de
+    rodar_modelo para função de módulo (Tarefa 3), reutilizável pelo executor da Fase 3.
+    ! Motivo: falha de rede/timeout do Ollama não pode derrubar a bateria inteira — são
+    centenas de inferências, de horas de duração; o executor da Fase 3 precisa do mesmo
+    dicionário de erro para gravar o caso como falho e seguir para o próximo."""
+    try:
+        return oll.gerar(modelo, prompt, max_tokens=max_tokens)
+    except Exception as e:  # falha de rede/timeout não deve derrubar a bateria
+        return {"segundos": None, "tokens_entrada": 0, "tokens_saida": 0,
+                "resposta": "", "erro": f"{type(e).__name__}: {e}"}
 
 
 def rodar_modelo(modelo: str, casos: list[dict], estrategias: list[str],
@@ -79,20 +163,17 @@ def rodar_modelo(modelo: str, casos: list[dict], estrategias: list[str],
     if not pendentes:
         return
 
-    # ! Alteração de IA - Revisar: confere ANTES de inferir que o maior prompt cabe no
-    # num_ctx junto com a resposta, usando o pior chars/token medido na Fase 2-A.
-    # ! Motivo: quando o prompt excede num_ctx o Ollama descarta os tokens do COMEÇO em
-    # silêncio — e o começo é justamente a biblioteca. O caso rodaria "com biblioteca" no
-    # registro e sem biblioteca de fato, sem nenhum erro para acusar.
+    # ! Alteração de IA - Revisar (Tarefa 3): a guarda passa a chamar guarda_estimativa()
+    # (extraída para função de módulo), em vez de repetir a conta e o SystemExit aqui.
+    # ! Motivo: confere ANTES de inferir que o maior prompt cabe no num_ctx junto com a
+    # resposta, usando o pior chars/token medido na Fase 2-A — quando o prompt excede
+    # num_ctx o Ollama descarta os tokens do COMEÇO em silêncio, e o começo é justamente a
+    # biblioteca. Mesma conta e mesma mensagem de antes; ver guarda_estimativa() acima.
     if condicao != "A0":
         maior = max(len(linear_com_biblioteca(c, rec.contexto(verbetes, indice, c,
                                                                 condicao, k)["texto"]))
                     for c, _ in pendentes)
-        estimado = round(maior / bib.CHARS_POR_TOKEN) + max_tokens
-        if estimado > oll.NUM_CTX:
-            raise SystemExit(f"maior prompt de {condicao} estimado em {estimado} tokens "
-                             f"(com resposta) > num_ctx {oll.NUM_CTX} — encurtar a biblioteca")
-        print(f"maior prompt estimado: {estimado - max_tokens} tokens + {max_tokens} de resposta")
+        guarda_estimativa(maior, max_tokens, condicao)
 
     inicio_lote = time.time()
     with open(arquivo, "a", encoding="utf-8") as f:
@@ -104,24 +185,23 @@ def rodar_modelo(modelo: str, casos: list[dict], estrategias: list[str],
             else:
                 ctx = rec.contexto(verbetes, indice, caso, condicao, k)
                 prompt = linear_com_biblioteca(caso, ctx["texto"])
-            try:
-                r = oll.gerar(modelo, prompt, max_tokens=max_tokens)
-            except Exception as e:  # falha de rede/timeout não deve derrubar a bateria
-                r = {"segundos": None, "tokens_entrada": 0, "tokens_saida": 0,
-                     "resposta": "", "erro": f"{type(e).__name__}: {e}"}
+            # ! Alteração de IA - Revisar (Tarefa 3): a inferência passa a chamar
+            # inferir_seguro() (extraída para função de módulo), que já embute o
+            # try/except abaixo.
+            # ! Motivo: mesmo comportamento de antes — falha de rede/timeout não deve
+            # derrubar a bateria — reaproveitado sem duplicar o try/except; ver
+            # inferir_seguro() acima.
+            r = inferir_seguro(modelo, prompt, max_tokens)
 
-            # Segunda guarda, agora com a contagem REAL do tokenizador do modelo: se o
-            # prompt encostou em num_ctx menos a resposta, o Ollama já pode ter descartado
-            # o começo (a biblioteca) sem avisar. A primeira inferência de cada condição
-            # decide; não vale gastar horas para descobrir no fim.
-            if (condicao != "A0" and i == 1 and r.get("tokens_entrada")
-                    and r["tokens_entrada"] + max_tokens >= oll.NUM_CTX - 16):
-                raise SystemExit(
-                    f"prompt avaliado em {r['tokens_entrada']} tokens + {max_tokens} de resposta "
-                    f"encosta em num_ctx {oll.NUM_CTX}: provável truncamento do prefixo — "
-                    "encurtar a biblioteca ou reduzir --max-tokens (registro NÃO gravado)")
+            # ! Alteração de IA - Revisar (Tarefa 3): a segunda guarda passa a chamar
+            # guarda_tokens_reais() (extraída para função de módulo).
+            # ! Motivo: mesma checagem de antes, agora com a contagem REAL do tokenizador
+            # do modelo: se o prompt encostou em num_ctx menos a resposta, o Ollama já pode
+            # ter descartado o começo (a biblioteca) sem avisar. Só a primeira inferência
+            # de cada condição decide; não vale gastar horas para descobrir no fim.
+            if condicao != "A0" and i == 1:
+                guarda_tokens_reais(r.get("tokens_entrada", 0), max_tokens, condicao)
 
-            residentes = oll.residentes()
             registro = {
                 "modelo": modelo, "digest": digest,
                 # nome da máquina em cada registro: os resultados de máquinas diferentes
@@ -137,9 +217,12 @@ def rodar_modelo(modelo: str, casos: list[dict], estrategias: list[str],
                 "gabarito": caso["gabarito"],
                 "teto_tokens": max_tokens,
                 **r,
-                "somente_cpu": all(m["vram_mb"] == 0 for m in residentes),
-                "modelos_residentes": len(residentes),
-                "memoria_mb": residentes[0]["memoria_mb"] if residentes else None,
+                # ! Alteração de IA - Revisar (Tarefa 3): as três chaves finais passam a
+                # vir de ambiente_residente() (extraída para função de módulo), em vez de
+                # montar o dicionário com oll.residentes() aqui.
+                # ! Motivo: mesmas três chaves e mesmos valores de antes (somente_cpu,
+                # modelos_residentes, memoria_mb); ver ambiente_residente() acima.
+                **ambiente_residente(),
             }
             f.write(json.dumps(registro, ensure_ascii=False) + "\n")
             f.flush()  # grava já: interromper aqui não perde o caso

@@ -8,7 +8,14 @@
 #   powershell -ExecutionPolicy Bypass -File claude-memoria\exportar.ps1
 $ErrorActionPreference = "Stop"
 $repo = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path.TrimEnd("\")
-$slug = $repo -replace '[:\\/]', '-'
+# ! Alteração de IA - Revisar: troca a regex do slug de '[:\\/]' para '[^A-Za-z0-9]', igual ao
+# importar.ps1.
+# ! Motivo: o Claude Code troca TODO caractere nao alfanumerico por '-' ao nomear a pasta do
+# projeto em %USERPROFILE%\.claude\projects\; a regex antiga so cobria ':' e '\' e deixava o
+# '.' de "Eric.Derre" intacto, calculando um slug (`c--Users-Eric.Derre-Documents-TCC`)
+# diferente do real (`c--Users-Eric-Derre-Documents-TCC`) - a memoria exportada por este
+# script saia da pasta errada. Confirmado em 11/09/2026.
+$slug = $repo -replace '[^A-Za-z0-9]', '-'
 $slug = $slug.Substring(0, 1).ToLower() + $slug.Substring(1)
 
 $origemMemoria = Join-Path $env:USERPROFILE ".claude\projects\$slug\memory"

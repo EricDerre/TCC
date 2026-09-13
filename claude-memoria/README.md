@@ -27,7 +27,14 @@ O que o Claude Code sabe deste projeto fica **fora do repositório**: na pasta d
 powershell -ExecutionPolicy Bypass -File claude-memoria\importar.ps1
 ```
 
-O script descobre o caminho do repositório nesta máquina, calcula o `<slug>` que o Claude Code usa (o caminho com `:` e `\` trocados por `-`) e **mescla** com o que já existe lá: arquivo novo é copiado; arquivo idêntico é ignorado; o índice `MEMORY.md` recebe só as linhas que faltam; qualquer outro arquivo que exista com conteúdo diferente é **preservado**, e a versão recebida fica ao lado como `<nome>.recebido-<data>.md` para o Claude ou o Eric conciliarem. O mesmo vale para o `CLAUDE.md` em `.claude\`. Depois, abra o Claude Code na pasta do repositório e peça para ele ler `claude-memoria\contexto\`.
+<!-- ! Alteração de IA - Revisar: corrigidos o exemplo de `<slug>` e a explicação de como ele é
+     calculado, para bater com a regex corrigida em `importar.ps1`/`exportar.ps1`.
+     ! Motivo: a explicação antiga dizia que só `:` e `\` viravam `-`; o Claude Code troca TODO
+     caractere que não seja letra ou número, inclusive o `.` de "Eric.Derre" — a conta antiga
+     dava `c--Users-Eric.Derre-Documents-TCC`, uma pasta que o Claude Code nunca cria nem lê.
+     O slug real desta máquina é `c--Users-Eric-Derre-Documents-TCC`. Corrigido em 11/09/2026
+     junto com os dois scripts. -->
+O script descobre o caminho do repositório nesta máquina, calcula o `<slug>` que o Claude Code usa (o caminho com todo caractere que não seja letra ou número trocado por `-`; ex.: `c--Users-Eric-Derre-Documents-TCC`) e **mescla** com o que já existe lá: arquivo novo é copiado; arquivo idêntico é ignorado; o índice `MEMORY.md` recebe só as linhas que faltam; qualquer outro arquivo que exista com conteúdo diferente é **preservado**, e a versão recebida fica ao lado como `<nome>.recebido-<data>.md` para o Claude ou o Eric conciliarem. O mesmo vale para o `CLAUDE.md` em `.claude\`. Depois, abra o Claude Code na pasta do repositório e peça para ele ler `claude-memoria\contexto\`.
 
 ## Na máquina de desenvolvimento (exportar, quando a memória mudar)
 

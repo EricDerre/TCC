@@ -30,6 +30,26 @@ RELATORIO = RAIZ_SAIDA / "relatorio.html"
 MAQUINA = RESULTADOS / "maquina.json"
 
 
+# ! Alteração de IA - Revisar: caminhos de saída da Fase 3, todos dentro de uma subpasta
+# própria (resultados/fase3/ ou <RESULTADOS_DIR>/fase3/), menos os gráficos da corrida
+# oficial.
+# ! Motivo: avaliar.carregar() varre os JSONL com glob("*.jsonl") NÃO recursivo e
+# gerar_relatorio.py lê avaliacao.json/resumo_metricas.json da raiz — se os arquivos da
+# Fase 3 caíssem lá junto, os resultados da Fase 2-B (que estão fechados e não podem mudar)
+# passariam a ser reprocessados junto com os novos. Os gráficos vão para a pasta comum
+# porque a numeração das figuras do TCC é uma sequência só, que continua do 12 em diante;
+# a exceção é o piloto, descartável, que leva os gráficos dele para dentro da própria pasta.
+def fase3(nome: str = "fase3") -> dict[str, Path]:
+    raiz = RESULTADOS / nome
+    return {"raiz": raiz, "bibliotecas": raiz / "bibliotecas", "particao": raiz / "particao.json",
+            "maquina": raiz / "maquina.json", "log": raiz / "fase3.log",
+            "avaliacao": raiz / "avaliacao_fase3.json", "resumo": raiz / "resumo_fase3.json",
+            "comparacao": raiz / "comparacao_fases.json",
+            "comparacao_md": raiz / "comparacao_fases.md",
+            "relatorio": raiz / "relatorio_fase3.html",
+            "graficos": GRAFICOS if nome == "fase3" else raiz / "graficos"}
+
+
 def descricao() -> str:
     origem = f"RESULTADOS_DIR={_ENV}" if _ENV else "RESULTADOS_DIR não definida (padrão)"
     return f"resultados em {RESULTADOS} — {origem}"

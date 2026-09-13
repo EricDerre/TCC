@@ -12,6 +12,17 @@
 # Config local do Claude Code — não faz parte do projeto
 # ---------------------------------------------------------------------------
 .claude/
+# ! Alteração de IA - Revisar: pasta de trabalho do processo de execução por subagentes
+# (livro-razão, briefs, pacotes de revisão da Fase 3) fora do versionamento.
+# ! Motivo: é rascunho de sessão do Claude Code, igual a .claude/; versionar poluiria o
+# histórico com arquivos que só fazem sentido durante a sessão em que foram gerados.
+.superpowers/
+# ! Alteração de IA - Revisar: resultados do piloto da Fase 3 (1 modelo, 10 casos, 1 época)
+# fora do versionamento.
+# ! Motivo: o piloto existe só para calibrar tempo e conferir o encanamento antes das
+# ~60 h de bateria; seus JSONL e snapshots são descartáveis e confundiriam a leitura de
+# resultados_alvo/fase3/, que é o que vale.
+Programacao/AgenteCore/experimentos/resultados_alvo/fase3_piloto/
 
 # ---------------------------------------------------------------------------
 # venv da CobaiaAPI — NÃO versionar.

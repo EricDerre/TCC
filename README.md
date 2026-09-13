@@ -16,8 +16,23 @@ fundamentação teórica completa está em
 Este README documenta o **ambiente cobaia** (`Programacao/CobaiaFront`
 + `Programacao/CobaiaAPI`) e, na seção "AgenteCore — experimentos", a
 biblioteca de documentação e a bateria de avaliação dos modelos locais que
-já existem em `Programacao/AgenteCore`. O agente em si (interceptador,
-poda da árvore de acessibilidade, cura de seletor) ainda não foi implementado.
+já existem em `Programacao/AgenteCore`.
+
+<!-- ! Alteração de IA - Revisar: a frase sobre o agente ainda não implementado passa a apontar
+     para a Fase 4 (nome oficial da etapa, decisão nº 29 do plano aprovado da Fase 3).
+     ! Motivo: a frase antiga ("ainda não foi implementado", sem mais contexto) ficou
+     desatualizada depois que a Fase 3 (biblioteca gerida pelo próprio modelo) começou a ser
+     implementada em cima da Fase 2-B; sem apontar a fase certa, o README dava a entender que
+     nada tinha avançado desde a Fase 2-B. -->
+<!-- ! Alteração de IA - Revisar: em 12/09/2026 "em implementação (Fase 3)" passou a "implementado,
+     com piloto executado e bateria por rodar (Fase 3)".
+     ! Motivo: os oito scripts da Fase 3 foram concluídos e revisados em 11–12/09/2026 e o piloto
+     `rodar_fase3.ps1 -Piloto` rodou em 12/09; "em implementação" passou a descrever um estado
+     que não existe mais, e o que ainda falta é a bateria completa (~60 h), não código. -->
+O agente em si (interceptador, poda da árvore de acessibilidade, cura de
+seletor) é a **Fase 4** do projeto, ainda não iniciada — ver a seção
+"AgenteCore — experimentos com os modelos locais" para o que já está pronto
+(Fase 2-B) e implementado, com piloto executado e bateria por rodar (Fase 3).
 
 ## Índice
 
@@ -469,6 +484,87 @@ A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e
 Decisões, pesquisa e fontes estão em `Documentacao/Memorial de Desenvolvimento.md`
 (índice) e na pasta `Documentacao/memorial/`.
 
+### Fase 3 — biblioteca gerida pelo modelo
+
+<!-- ! Alteração de IA - Revisar: subseção nova descrevendo a Fase 3 (biblioteca editada pelo
+     próprio modelo, por modelo e por época) e os scripts que a implementam.
+     ! Motivo: a Fase 3 só estava descrita no plano aprovado
+     (`claude-memoria/plano-aprovado-fase-3.md`); sem esta subseção, quem abrisse o repositório
+     não saberia que existe uma bateria nova em implementação, o que cada script novo faz, nem
+     como rodar o piloto antes de comprometer a máquina pela bateria completa (~60 h). -->
+A Fase 2-B mostrou que a biblioteca **recuperada** (top-3) sobe o acerto em
+todos os modelos e que documentação errada é seguida em 93–96% dos casos. A
+Fase 3 testa se o próprio modelo consegue **melhorar** essa documentação: em
+cada "época", ele diagnostica os 90 casos com a biblioteca atual e, só nos
+casos de aprendizado (54 dos 90, com gabarito), propõe acréscimos — nunca
+reescreve nem apaga — que passam por validação em código antes de entrar.
+Cada modelo evolui a **sua própria cópia** da biblioteca (a original em
+`base_conhecimento/` nunca é escrita pela Fase 3); a cópia intocada continua
+disponível como L0, o ponto de comparação de todas as épocas seguintes.
+
+<!-- ! Alteração de IA - Revisar: em 12/09/2026 a tabela deixou de marcar seis scripts como
+     "(em implementação)", passou a dizer "30 códigos de rejeição em 26 checagens" e registra o
+     piloto `-Piloto` executado; a árvore de `resultados_alvo/fase3/` ganhou os arquivos que a
+     implementação de fato grava (`maquina.json`, `fase3.log`, `diff__E<n>*`,
+     `revisao_edicoes__<slug>.md`, gráficos 12–17 na pasta comum) e o parágrafo de custo cita a
+     projeção do executor.
+     ! Motivo: todos os scripts existem, foram revisados e rodaram juntos no piloto de
+     12/09/2026 (1 modelo, 10 casos, 1 época, 00h13; retomada com hash idêntico) — a marca
+     "(em implementação)" estava obsoleta. `CODIGOS_REJEICAO` em `evolucao_biblioteca.py` tem
+     30 códigos (26 é o número de checagens). E a árvore omitia arquivos que existem em
+     `resultados_alvo/fase3_piloto/` (conferida em 12/09/2026): os diffs de época são irmãos
+     de `epoca-n/`, fora do snapshot (decisão registrada no livro-razão), e os gráficos da
+     corrida oficial vão para `resultados_alvo/graficos/`, não para `fase3/`
+     (`caminhos.fase3()`). O custo de ~60 h era só o do plano; o executor projeta 67,18 h. -->
+| Script | O que faz | Como rodar |
+|---|---|---|
+| `evolucao_biblioteca.py` | Parser das propostas de edição do modelo, validador com 30 códigos de rejeição em 26 checagens de ordem fixa (cópia do caso, estouro de teto, vocabulário fora do padrão etc.), aplicação só por acréscimo, hash/diff/fechamento de cada época. | Usado pelos scripts abaixo; não é chamado direto. |
+| `executar_fase3.py` | Laço por modelo e por época: diagnóstico com a biblioteca da época anterior, proposta de edição nos casos de aprendizado, validação e aplicação na época seguinte. Resumível por `(modelo, época, caso, tipo)`. | `python executar_fase3.py --modelos M --epocas 3 --saida fase3` |
+| `avaliar_fase3.py` | Pontua por modelo × versão da biblioteca (L0..L3) × partição (aprendizado/avaliação/geral); McNemar pareado, Cochran Q entre as 4 épocas, IC de Wilson, flips de acerto↔erro entre épocas. | `python avaliar_fase3.py` |
+| `comparar_fases.py` | Junta 2-A, 2-B e Fase 3 num só `comparacao_fases.json`/`.md`, com os pareamentos que fazem sentido entre fases. | `python comparar_fases.py` |
+| `gerar_graficos_fase3.py` | Figuras 12–17: acerto por época, recuperação por época, motivos de rejeição das propostas, crescimento da biblioteca, comparação entre as três fases. | `python gerar_graficos_fase3.py` (venv com matplotlib) |
+| `gerar_relatorio_fase3.py` | `relatorio_fase3.html` navegável por modelo/época/partição, com cada proposta de edição (prompt, resposta crua, decisão do validador). | `python gerar_relatorio_fase3.py` |
+| `testar_fase3.py` | Testes em Python puro (sem pytest) do parser, do validador, da aplicação de edição e do hash/diff — sem chamar o Ollama, < 30 s. | `python testar_fase3.py` |
+| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash — validação do encanamento feita; a bateria completa ainda não rodou. | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
+
+Cada modelo grava em `resultados_alvo/fase3/`:
+
+```
+fase3/
+  maquina.json               máquina, versão do Ollama, RAM e horário de início (relances são acrescentados, não sobrescrevem)
+  particao.json              divisão determinística dos 90 casos em aprendizado (54) e avaliação (36)
+  fase3.log                  registro corrido da execução, gravado pelo rodar_fase3.ps1 (*.log está no .gitignore)
+  bibliotecas/<slug>/
+    epoca-0..3/               snapshot completo da biblioteca do modelo ao fechar cada época (verbetes + INDICE.md + fechamento.json)
+    diff__E<n>.{json,md}      o que a época n acrescentou em relação à anterior (irmão de epoca-n/, fora do snapshot)
+    diff__E<n>__vs_original.{json,md}   idem, em relação à biblioteca original
+    historico.jsonl           uma linha por edição aceita
+  <slug>/
+    diagnosticos__L0..L3.jsonl   diagnóstico dos 90 casos com cada versão da biblioteca
+    propostas__E1..E3.jsonl      propostas de edição e a decisão do validador, por época
+  avaliacao_fase3.json, resumo_fase3.json      métricas por modelo/época/partição
+  comparacao_fases.json/.md                    2-A × 2-B × Fase 3 lado a lado
+  revisao_edicoes__<slug>.md                   amostra de até 30 edições aceitas por modelo, para o Eric marcar Correta/Parcial/Errada
+  relatorio_fase3.html                         relatório navegável
+../graficos/12-…17-…          figuras 12–17 na pasta comum de gráficos (resultados_alvo/graficos/); só o piloto grava em fase3_piloto/graficos/
+```
+
+<!-- ! Alteração de IA - Revisar: segunda passada de 12/09/2026 — o comando da projeção
+     ganhou `--modelos` com os quatro modelos.
+     ! Motivo: `python executar_fase3.py --so-projecao` sozinho encerra com "the following
+     arguments are required: --modelos" (`required=True` no argparse de `executar_fase3.py`);
+     o 67,18 h só se reproduz com os quatro modelos na linha de comando, que é o que
+     `rodar_fase3.ps1` faz antes da corrida (saída conferida em 12/09/2026). -->
+Estimativa de custo: **~60 h de máquina** para os 4 modelos × 3 épocas no
+plano; a projeção que o executor imprime (`python executar_fase3.py
+--so-projecao --modelos granite4.2:8b qwen2.5:7b qwen2.5-coder:7b
+qwen2.5-coder:3b` — `--modelos` é obrigatório; é o comando que `rodar_fase3.ps1`
+roda antes da corrida —, com os ms/token medidos na 2-B) dá **67,18 h**. O piloto de 10
+casos (`-Piloto`) rodou em 12/09/2026 em 00h13 — `qwen2.5-coder:3b`, 1 época,
+0 de 6 propostas aceitas — e valida o encanamento, não o custo dos quatro
+modelos. A bateria é **retomável**: interromper com Ctrl+C e rodar de novo
+continua da mesma época e do mesmo caso, sem repetir trabalho já fechado.
+
 ## Memória do Claude Code entre máquinas
 
 <!-- ! Alteração de IA - Revisar: seção nova apontando para a pasta claude-memoria/.
@@ -480,6 +576,17 @@ commit) fica fora do repositório. A pasta [`claude-memoria/`](claude-memoria/)
 carrega tudo pelo git: na máquina de destino, rode
 `powershell -ExecutionPolicy Bypass -File claude-memoria\importar.ps1` uma vez e
 abra o Claude Code na pasta do repositório. Detalhes no README de lá.
+
+<!-- ! Alteração de IA - Revisar: nota sobre a correção do cálculo do `<slug>` usado por
+     `importar.ps1`/`exportar.ps1` (a pasta de memória do Claude Code para este projeto).
+     ! Motivo: até 10/09/2026 a regex do slug só trocava `:` e `\` por `-`, deixando o `.` de
+     "Eric.Derre" intacto e apontando para uma pasta de memória que o Claude Code nunca usa
+     (`c--Users-Eric.Derre-Documents-TCC`); o slug real desta máquina é
+     `c--Users-Eric-Derre-Documents-TCC` (todo caractere fora de letra/número vira `-`).
+     Corrigido em 11/09/2026 nos dois scripts — ver `claude-memoria/README.md`. -->
+Quem já rodou `importar.ps1`/`exportar.ps1` antes de 11/09/2026 deve rodar de
+novo depois de atualizar: o slug calculado mudou (era
+`c--Users-Eric.Derre-Documents-TCC`, agora é `c--Users-Eric-Derre-Documents-TCC`).
 
 ## Testes e lint
 
@@ -502,6 +609,11 @@ o que não funcionaria na máquina de outra pessoa, ou o que se regenera
 sozinho — versionar essas coisas atrapalharia o "hit and run" em vez de
 ajudar.
 
+<!-- ! Alteração de IA - Revisar: em 12/09/2026 a tabela ganhou as duas linhas de `.superpowers/`
+     e de `resultados_alvo/fase3_piloto/`, que já estavam no `.gitignore` (linhas 19 e 25).
+     ! Motivo: as duas regras entraram no `.gitignore` em 11/09/2026 com comentário lá, mas esta
+     tabela — que é onde o README explica o que fica fora do git e por quê — não as citava, e
+     quem procurasse aqui o motivo de o piloto não estar versionado não achava. -->
 | Item | Versionado? | Por quê |
 |---|---|---|
 | `Cobaia.exe` (8.6 MB) | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou — sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
@@ -515,6 +627,8 @@ ajudar.
 | `build/`, `dist/` | **Não** | Artefatos transitórios do PyInstaller (o `.exe` final é gravado na raiz, esses ficam no `%TEMP%`). |
 | `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore — centenas de MB, específicos de cada SO, baixados por instalador. |
 | `.claude/` | **Não** | Config local do Claude Code, não faz parte do projeto. |
+| `.superpowers/` | **Não** | Rascunho de sessão do Claude Code (livro-razão, briefs e relatórios de tarefa da Fase 3); mesma natureza de `.claude/`. |
+| `Programacao/AgenteCore/experimentos/resultados_alvo/fase3_piloto/` | **Não** | Piloto da Fase 3 (1 modelo, 10 casos, 1 época): existe para conferir o encanamento e calibrar o tempo antes das ~60 h; seus JSONL e snapshots confundiriam a leitura de `resultados_alvo/fase3/`, que é o que vale. |
 
 O "hit and run" continua íntegro sem a venv, porque os dois caminhos a
 recriam automaticamente:

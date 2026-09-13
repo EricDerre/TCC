@@ -22,10 +22,34 @@ PESO_ENDPOINT, PESO_ENTIDADE, PESO_STATUS = 2.0, 1.0, 1.0
 CONDICOES = ("A0", "A1", "A2", "A3", "A4", "A5")
 
 
+# ! Alteração de IA - Revisar: o texto indexado pelo BM25 passa a ser montado com as quatro
+# seções originais do verbete mais o TEXTO de cada nota do modelo — a seção "## Notas do
+# modelo" inteira não entra mais como bloco.
+# ! Motivo: se a seção entrasse inteira (era o efeito de `*v["secoes"].values()`), o BM25
+# indexaria também o "Motivo:" de cada nota, que cita o caso que a originou ("o caso mostrou
+# o botão com undefined") — o verbete passaria a ser recuperado pelo texto do próprio caso e
+# a medição viraria busca de par, exatamente o que a checagem de sobreposição de validar()
+# existe para impedir. Filtrando por nome de seção (e não montando as quatro na marra com
+# .get) o texto de um verbete SEM notas sai idêntico ao de antes, caractere por caractere:
+# nenhum verbete da biblioteca original tem "## Como confirmar" e um deles só tem "## Resumo"
+# — com .get("", ...) entrariam espaços a mais e o hit@k da Fase 2-B deixaria de ser
+# reproduzível.
+# ! Alteração de IA - Revisar: as quatro seções escritas à mão viraram tupla explícita, em
+# vez de "bib.SECOES menos 'Notas do modelo'" — onda final de correções.
+# ! Motivo: derivar por subtração faria qualquer seção nova acrescentada a bib.SECOES entrar
+# no texto indexado pelo BM25 sem ninguém decidir isso, e o hit@k da Fase 2-B (medido com
+# exatamente estas quatro) deixaria de ser reproduzível. A tupla é conferida contra
+# bib.SECOES logo abaixo, para as duas listas nunca divergirem em silêncio.
+_SECOES_BASE = ("Resumo", "Sinais", "Causa", "Como confirmar")
+assert all(s in bib.SECOES for s in _SECOES_BASE), "seção base fora de bib.SECOES"
+
+
 def _texto_indexavel(v: dict) -> str:
     m = v["meta"]
     return " ".join([
-        m.get("titulo", ""), *v["secoes"].values(),
+        m.get("titulo", ""),
+        *[texto for sec, texto in v["secoes"].items() if sec in _SECOES_BASE],
+        *[n["texto"] for n in bib.notas(v)],
         " ".join(m.get("palavras_chave", [])), " ".join(m.get("sintomas", [])),
         " ".join(m.get("endpoints", [])), m.get("entidade_principal", ""),
     ])
@@ -221,8 +245,21 @@ def recuperar(indice: Indice, caso: dict, k: int = 3) -> list[dict]:
     return [v for _, v in pontuar(indice, caso)[:k]]
 
 
+# ! Alteração de IA - Revisar: o KeyError de por_causa vira LookupError dizendo qual causa
+# raiz ficou sem verbete dedicado.
+# ! Motivo: na Fase 3 cada modelo roda contra a SUA cópia da biblioteca; se a cópia estiver
+# incompleta, o erro que aparecia era só `KeyError: 'campo_ausente'` vindo de dentro de
+# avaliar_recuperacao/contexto, sem dizer que biblioteca era, e a suspeita caía sobre o
+# gabarito do caso. Como a Fase 3 só permite acréscimo (nenhum verbete é removido), causa
+# sem verbete significa cópia errada — a mensagem manda conferir a cópia em uso.
 def verbete_ouro(verbetes: list[dict], caso: dict) -> dict:
-    return bib.por_causa(verbetes)[caso["gabarito"]["causa_raiz"]]
+    causa = caso["gabarito"]["causa_raiz"]
+    try:
+        return bib.por_causa(verbetes)[causa]
+    except KeyError:
+        raise LookupError(f"biblioteca sem verbete dedicado (tipo: erro) para a causa "
+                          f"'{causa}' — a Fase 3 nunca remove verbetes; conferir o "
+                          f"snapshot em uso") from None
 
 
 def _errados_plausiveis(indice: Indice, caso: dict) -> list[dict]:

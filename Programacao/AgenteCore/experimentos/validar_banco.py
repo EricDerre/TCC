@@ -56,13 +56,19 @@ def pontuador_embedding(verbetes: list[dict], modelo: str):
     return pontuar
 
 
-def escrever_indice(verbetes: list[dict]) -> Path:
+# ! Alteração de IA - Revisar: escrever_indice recebe a raiz da biblioteca, grava o
+# INDICE.md dentro dela e põe o nome dessa pasta no título do índice.
+# ! Motivo: a Fase 3 dá a cada modelo uma cópia da biblioteca em pasta própria; com o
+# destino fixo em base_conhecimento/, gerar o índice da cópia de um modelo sobrescreveria o
+# índice da biblioteca original — que não pode ser tocada pela Fase 3. O título com o nome
+# da pasta é para quem abre um INDICE.md solto saber de qual cópia ele é.
+def escrever_indice(verbetes: list[dict], raiz: Path = bib.BASE) -> Path:
     linhas = [
         "<!-- ! Alteração de IA - Revisar: índice humano da biblioteca, GERADO por",
         "     validar_banco.py --indice a partir do frontmatter dos verbetes; não editar à mão.",
         "     ! Motivo: o modelo recebe os verbetes renderizados, não este arquivo — ele existe",
         "     para quem revisa a biblioteca enxergar cobertura e tipos num lugar só. -->",
-        "", "# Índice da biblioteca base", "",
+        "", f"# Índice da biblioteca ({raiz.name})", "",
         f"{len(verbetes)} verbetes. {bib.resumo(verbetes)}", "",
         "| Pasta | Id | Título | Tipo | Causas |", "|---|---|---|---|---|",
     ]
@@ -71,7 +77,7 @@ def escrever_indice(verbetes: list[dict]) -> Path:
         causas = [m["causa_raiz"]] if m.get("causa_raiz") else m.get("causas_relacionadas", [])
         linhas.append(f"| {v['pasta']} | `{v['id']}` | {m.get('titulo', '')} | {m.get('tipo', '')} "
                       f"| {', '.join(causas)} |")
-    destino = bib.BASE / "INDICE.md"
+    destino = raiz / "INDICE.md"
     destino.write_text("\n".join(linhas) + "\n", encoding="utf-8")
     return destino
 
@@ -80,7 +86,20 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--embedding", metavar="MODELO",
                     help="também avalia a recuperação por embedding denso (ex.: embeddinggemma:300m)")
-    ap.add_argument("--indice", action="store_true", help="regrava base_conhecimento/INDICE.md")
+    # ! Alteração de IA - Revisar: acrescenta --raiz (valida e mede a recuperação de uma
+    # cópia da biblioteca, a da Fase 3, em vez de base_conhecimento/, com o teto global
+    # desligado) e corrige a ajuda de --indice, que agora depende de --raiz.
+    # ! Motivo: sem isso não havia como conferir a biblioteca de um modelo depois das épocas
+    # — a única saída seria apontar bib.BASE para a cópia, o que arriscaria gravar o
+    # INDICE.md dentro da biblioteca original. O teto global de 6.700 tokens sai porque o
+    # braço "biblioteca inteira" não roda na Fase 3: a cópia cresce a cada época e o
+    # orçamento que importa é o dos 3 verbetes recuperados, checado verbete a verbete.
+    ap.add_argument("--indice", action="store_true",
+                    help="regrava o INDICE.md da biblioteca validada (base_conhecimento/ "
+                         "ou a pasta de --raiz)")
+    ap.add_argument("--raiz", metavar="PASTA",
+                    help="valida a biblioteca desta pasta (cópia da Fase 3) em vez de "
+                         "base_conhecimento/; com --indice, grava o INDICE.md nela")
     args = ap.parse_args()
 
     print("== casos ==")
@@ -88,9 +107,13 @@ def main() -> None:
     print(f"  {len(TODOS)} casos, {e_casos} problema(s)")
 
     print("\n== biblioteca ==")
-    verbetes = bib.carregar()
+    raiz = Path(args.raiz) if args.raiz else bib.BASE
+    if args.raiz:
+        print(f"  raiz: {raiz}")
+    verbetes = bib.carregar(raiz)
     print(f"  {bib.resumo(verbetes)}")
-    probs = bib.validar(verbetes, TODOS)
+    probs = bib.validar(verbetes, TODOS,
+                        teto_global=None if args.raiz else bib.TETO_TOKENS_BIBLIOTECA)
     for p in probs:
         print("  -", p)
     print(f"  {len(probs)} problema(s)")
@@ -115,7 +138,7 @@ def main() -> None:
         print("  " + "  ".join(f"{k}={v}" for k, v in r2.items() if k != "posicao_por_caso"))
 
     if args.indice:
-        print(f"\nINDICE.md regravado em {escrever_indice(verbetes)}")
+        print(f"\nINDICE.md regravado em {escrever_indice(verbetes, raiz)}")
 
     if e_casos or probs:
         sys.exit(1)

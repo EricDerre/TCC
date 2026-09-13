@@ -4,7 +4,33 @@
      referências; separado por tema, cada assunto é revisável sozinho e o índice mostra onde
      está cada coisa. Conteúdo MOVIDO sem reescrita; a numeração das seções é a do memorial
      original porque o próprio texto se refere a ela ("ver 4.12", "decisão 19"). -->
-# Achados experimentais — modelos e experimentos (4.12 a 4.28)
+<!-- ! Alteração de IA - Revisar: em 11/09/2026 o achado 4.20 ganhou o parágrafo de
+     fechamento (os 4 fixtures corrigidos, o efeito na recuperação e o achado colateral da
+     biblioteca original) e foi acrescentado o 4.29, com o pré-registro da Fase 3.
+     ! Motivo: 4.20 estava aberto desde a 2-B ("a correção fica registrada como pendência
+     para depois da 2-B") e a correção foi feita antes de rodar a Fase 3 — sem o fechamento,
+     quem lê não sabe o que mudou nos casos nem o que isso fez com o recuperador. O 4.29
+     precisa existir ANTES da bateria: hipótese escrita depois de ver o resultado não é
+     hipótese, e a Fase 3 é a que decide o modelo final do TCC. -->
+<!-- ! Alteração de IA - Revisar: em 12/09/2026 as duas citações de relatórios de tarefa no
+     fechamento do 4.20 (`task-1-report.md`, `task-4-report.md`) passaram a dizer onde esses
+     arquivos ficam e que estão fora do git, e o 4.21 passou a nomear as versões do Ollama
+     posteriores à Verificação 0. As hipóteses H1–H6 do 4.29 não mudaram.
+     ! Motivo: `.superpowers/` está na linha 19 do `.gitignore`; quem clonar o repositório não
+     acha esses relatórios e precisa saber que o reproduzível é o comando ao lado. E o 4.21
+     dizia só "Ollama 0.33.2": a 2-B rodou em 0.33.3 e a Fase 3 roda em 0.34.0 (atualização
+     automática em 12/09/2026), diferença que o relatório da Fase 3 declara em §11. -->
+<!-- ! Alteração de IA - Revisar: segunda passada de 12/09/2026 — o 4.21 passou a dizer em que
+     máquina e em que dia a Verificação 0 da tabela foi medida (Ryzen, 03/09/2026) e que na
+     máquina-alvo a 2-B inteira, inclusive a Verificação 0 repetida nela, rodou em 0.33.3.
+     ! Motivo: o relatório da Fase 3 (§1 e §11), a comparação entre fases (§1) e a §6.5 passaram
+     a remeter ao 4.21 como "a Verificação 0 medida no Ryzen em 0.33.2", e o 4.21 não dizia a
+     máquina. A tabela e o "0.33.2" entraram no commit 603c423 (03/09/2026), antes da decisão 25
+     (07/09) que fez do i5 a máquina-alvo — o `verificar_cache_prefixo.py` desse commit registra
+     "medido nesta máquina (Ollama 0.33.2, CPU): a repetição exata levou 105 ms", a linha B da
+     tabela; na máquina-alvo o `fase2b.log` mostra a mesma verificação em 07/09/2026 09:29, com
+     o `maquina.json` em 0.33.3. -->
+# Achados experimentais — modelos e experimentos (4.12 a 4.29)
 
 Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md) — sumário e demais tópicos lá.
 
@@ -56,8 +82,23 @@ Com BM25 apenas sobre o texto do sintoma, o verbete certo ficou entre os 3 recup
 ### 4.20 Documentar o sistema expôs divergências entre os casos e o código
 Escrever verbetes fiéis ao código revelou que alguns *fixtures* do banco descrevem sintomas que o código real não produz: `produtos_api.php` imprime o preço cru ou `undefined` quando o campo não converte — nunca "R$ NaN", que aparece em três casos —, e substitui o grid por `innerHTML` a cada carga, o que torna impossível a duplicação de cartões do caso `efe-13`. A biblioteca segue o código (é a fonte da verdade); os casos foram **mantidos como estão** para não quebrar a comparabilidade com a Fase 2-A, e a correção fica registrada como pendência para depois da 2-B. É também um resultado: em três casos a documentação vai *contradizer* a evidência apresentada, e o comportamento do modelo nesses casos é informativo sobre adesão à documentação.
 
+**Fechamento (11/09/2026).** Os quatro casos foram corrigidos para o que `produtos_api.php` faz de verdade: em `sin-1` e `sin-2` o botão de preço passa a mostrar a palavra `undefined`, sem "R$" (`formatarPreco` devolve `String(preco)` quando `Number(preco)` não converte); em `semt-13` o preço aparece cru — `89,90`, sem "R$" e sem formatação —, porque o separador decimal veio como vírgula; e `efe-13` deixou de falar em cartões duplicados: como o grid é substituído inteiro a cada resposta, o sintoma real é a tela mostrar o preço antigo, porque a primeira resposta chegou depois da segunda. `id`, classe, nível, causa e campo dos quatro casos não mudaram — só o texto do sintoma, da observação, do corpo e da requisição. Efeito na recuperação offline, medido antes de qualquer inferência (números do relatório da tarefa de correção, `task-1-report.md` — relatório interno em `.superpowers/`, fora do git, `.gitignore` l. 19 —, reproduzíveis pela saída de `validar_banco.py --indice` e de `recuperacao.avaliar_recuperacao` sobre os 90 casos):
+
+| Recuperação nos 90 casos (BM25 + sinais em código) | Antes | Depois |
+|---|---|---|
+| hit@1 | 37,8 | **38,9** |
+| hit@3 | 78,9 | **80,0** |
+| hit@5 | 90,0 | **91,1** |
+| MRR | 0,584 | **0,596** |
+
+Posição do verbete de ouro nos quatro casos, na mesma medição: `sin-1` 4 → **2**, `sin-2` 3 → **4**, `semt-13` 2 → **2**, `efe-13` 24 → **1**. O ganho agregado é quase todo de `efe-13`: com o sintoma antigo, nada divergia no fio de JSON e o recuperador não tinha sinal estrutural para acrescentar à consulta; com o novo, o caso cai no caminho de "nada divergiu, então a falha é de tela ou de lógica" e casa com o verbete `estado_da_tela_divergente`. `sin-2` perdeu uma posição (3 → 4, ainda dentro do hit@5): o texto do sintoma alimenta a consulta do BM25 e ficou um pouco menos parecido com o verbete `campo_renomeado`.
+
+**O que isso faz com a comparação entre fases.** Os quatro casos caíram na partição de **aprendizado** da Fase 3 (sorteio por hash, decisão 31; conferido no relatório da tarefa da partição, `task-4-report.md` — relatório interno em `.superpowers/`, fora do git, `.gitignore` l. 19 —, e reproduzível por `resultados_alvo/fase3/particao.json` e por `evolucao_biblioteca.particionar`), de modo que os **36 casos de avaliação da Fase 3 são os mesmos 36 que a 2-B rodou, texto por texto** — o pareamento 2-B A2 × Fase 3 L0 nesses 36 não tem ressalva de fixture. Nos 90, o pareamento com as fases anteriores exclui os quatro: sobram 86 casos comparáveis. Daqui em diante, toda tabela que compare fases diz em qual dos dois conjuntos está.
+
+**Achado colateral: a imprecisão também está na biblioteca.** O verbete `negocio/pagina-produtos-api.md` da biblioteca original lista `R$ NaN` entre os `sintomas` do frontmatter — a mesma descrição que o código não produz, agora dentro da documentação que o modelo consulta, e não nos casos de teste. Foi **mantida de propósito**: a biblioteca original é a versão L0 que os quatro modelos recebem na Fase 3 e é a mesma com que a 2-B rodou; corrigi-la agora tiraria o ponto de partida comum e a comparabilidade com a 2-B. Além disso, o campo `sintomas` do frontmatter não entra na checagem de sobreposição de 5-gramas do validador, que só olha o corpo do verbete — é uma imprecisão que nenhuma validação em código pega. Ela é alvo natural de uma `retificacao` na Fase 3, e fica registrada aqui para ser observada: se algum modelo apontar esse trecho, é o caso em que o modelo corrige a documentação contra o código, e não o contrário.
+
 ### 4.21 O cache de prefixo do Ollama funciona em CPU — e `prompt_eval_count` não é o sinal
-Verificação 0 da Fase 2-B, medida com `verificar_cache_prefixo.py` no `qwen2.5-coder:3b` (Ollama 0.33.2, só CPU), biblioteca inteira como prefixo:
+Verificação 0 da Fase 2-B, medida com `verificar_cache_prefixo.py` no `qwen2.5-coder:3b`, no Ryzen de desenvolvimento em 03/09/2026 (Ollama 0.33.2, só CPU — na máquina-alvo a 2-B inteira rodou em 0.33.3, inclusive a Verificação 0 repetida nela em 07/09/2026 e registrada no `fase2b.log`, e a Fase 3 roda em 0.34.0; ver o relatório da Fase 3, §11), biblioteca inteira como prefixo:
 
 | Chamada | Tokens reportados | Prefill |
 |---|---|---|
@@ -91,3 +132,27 @@ A0 refeito no i5 contra o do Ryzen, pareado caso a caso: nenhuma diferença sign
 Com o cache de prefixo, o prefill de A1 ficou em 1,5–1,8× o de A0 (não 10×); mas A1 faz os modelos escreverem mais (Granite: geração de 47 s para 114 s; `coder:7b` cortou 6 respostas no teto). A2 tem prefill maior que A1 (o prefixo muda a cada caso e não é reaproveitado) e ainda assim é mais barata no total. Documentação demais não só distrai — alonga a resposta.
 
 
+
+### 4.29 Pré-registro da Fase 3
+Escrito em 11/09/2026, **antes** de a bateria rodar. A Fase 3 ("teste 3", decisão 29) dá a cada modelo uma cópia da biblioteca e deixa que ele a edite, por acréscimo e atrás de validação em código, ao longo de três épocas; a pergunta é se o modelo melhora a documentação que consulta sem estragá-la. O desenho está em `claude-memoria/plano-aprovado-fase-3.md`. Os vereditos de cada hipótese entram **aqui**, depois da bateria, com os números que o avaliador produzir.
+
+**Hipóteses, como foram registradas no plano (§4.4):**
+
+- **H1** — Nos 36 de avaliação, acerto com L3 > L0 nos modelos de 7–8B (McNemar exato, α = 0,05).
+- **H2** — O ganho concentra-se nas classes em que a recuperação é fraca (tradução: hit@3 = 46,7%), via aumento do hit@3 da biblioteca do modelo.
+- **H3** — Nos 54 de aprendizado o ganho é maior que nos 36; a diferença quantifica a memorização.
+- **H4** — A taxa de aceitação das propostas cresce com o porte; o 3B tem mais rejeições por formato.
+- **H5** — Autoenvenenamento (casos certos em L(n) que viram errados em L(n+1), nos 36) fica abaixo de 10%; se superar o ganho, o modelo é vetado.
+- **H6** — A curva não é monótona: reportar o melhor L e o L3, nunca só o último.
+
+**Partição (decisão 31).** Em cada uma das 18 células classe×nível, os 5 casos são ordenados pelo hash `sha256("fase3:" + id)`; os 3 primeiros vão para **aprendizado** (54 no total) e os 2 últimos para **avaliação** (36). Só nos 54 o modelo vê a causa correta e propõe edição; os 36 nunca recebem feedback nem geram proposta. A partição é gravada em `fase3/particao.json` e reconferida a cada execução — divergência aborta a bateria.
+
+**Protocolo, por modelo:**
+
+1. **Época 0**, sem inferência: `L0` é a cópia intocada da biblioteca original, a mesma para os quatro modelos (o hash é conferido entre eles).
+2. **Épocas 1 a 3**: os 90 casos na mesma ordem; o diagnóstico lê a biblioteca da época anterior, já fechada, na condição **A2** (3 verbetes recuperados), com o prompt de diagnóstico byte a byte igual ao da 2-B e teto de 600 tokens de resposta.
+3. Nos 54 de aprendizado, logo depois do diagnóstico vem a **proposta de edição**, com a causa correta e o verbete dedicado à vista; o que a validação em código aceitar (decisão 33) é aplicado na pasta da época seguinte, de modo que os 90 casos de uma mesma época vejam sempre a mesma biblioteca.
+4. **Fechamento da época**: a biblioteca inteira é validada, a conferência de somente-acréscimo tem de vir vazia, o índice é regerado e os diffs contra a época anterior e contra a original são gravados ao lado da pasta da época.
+5. **Passada final**: os 90 casos diagnosticados com `L3`, sem proposta. São **4 × 90 diagnósticos + 3 × 54 propostas = 522 inferências por modelo**, e a passada com `L0` é a própria linha de base.
+
+**O que já se sabe que vai limitar a leitura.** Os 54 de aprendizado são exatamente os casos cujas lacunas o modelo teve chance de documentar, então o ganho ali mistura aprender e decorar — é para isso que servem os 36. E a biblioteca de cada modelo passa a ser diferente, então o hit@k vira uma variável do experimento, não mais a constante de 78,9% comum aos seis modelos que a 2-B tinha (4.23).

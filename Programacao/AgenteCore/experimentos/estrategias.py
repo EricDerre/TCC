@@ -125,6 +125,79 @@ Leia os dados abaixo, consulte a documentação acima quando ajudar, explique em
 {_FORMATO_COM_FONTE}"""
 
 
+# ! Alteração de IA - Revisar: nova constante de módulo com o texto fixo do segundo prompt
+# da Fase 3 (bloco de correção do caso + instruções de proposta de edição), usada por
+# proposta_de_edicao logo abaixo.
+# ! Motivo: evolucao_biblioteca.parsear_propostas espera exatamente este formato de bloco
+# (CAMPOS_PROPOSTA lista os mesmos nomes de campo -- OPERACAO, VERBETE, TRECHO, TITULO,
+# SISTEMA, ENTIDADE, CAUSAS, ARQUIVOS, PALAVRAS_CHAVE, SINTOMAS, TEXTO, MOTIVO); manter o
+# texto como constante, fora da função, é o que deixa claro que só os sete valores
+# passados a .format() variam por caso -- o restante do texto é fixo, palavra por palavra.
+_FORMATO_PROPOSTA = """=====
+
+CORREÇÃO DESTE CASO
+CAUSA_RAIZ CORRETA: {causa_correta}
+CAMPO AFETADO: {campo_afetado}
+SEU DIAGNÓSTICO: {causa_respondida} — {veredito}
+
+VERBETE DEDICADO A ESSA CAUSA (pode não ter aparecido antes):
+{verbete_ouro_renderizado}
+
+Agora você pode melhorar a documentação para que um PRÓXIMO caso parecido — não este — seja diagnosticado certo. Regras:
+- A documentação nunca é apagada nem reescrita: você só ACRESCENTA. "nota" acrescenta uma observação a um verbete; "retificacao" acrescenta uma correção apontando o trecho errado; "novo_verbete" cria um verbete novo.
+- Escreva sobre o sistema e o tipo de falha, em termos gerais. Não copie o sintoma, a observação nem o corpo deste caso; não cite o identificador do caso.
+- No MOTIVO, diga com suas palavras qual evidência do caso mostrou a lacuna.
+- Só cite arquivos, endpoints e tabelas que apareçam na documentação acima.
+- Só use como VERBETE os identificadores que apareceram acima entre colchetes: {ids_visiveis}.
+- TEXTO com 60 a 280 caracteres, uma ou duas frases, sem lista. MOTIVO com 20 a 240 caracteres.
+- No máximo 2 propostas. Se a documentação já bastava, responda só a palavra: NENHUMA
+
+Formato, exatamente assim, um bloco por proposta:
+
+PROPOSTA 1
+OPERACAO: nota | retificacao | novo_verbete
+VERBETE: <id entre colchetes; em novo_verbete, um id novo em minusculas-com-hifens>
+TRECHO: <so em retificacao: trecho curto do verbete que esta errado, copiado igual>
+TITULO: <so em novo_verbete>
+SISTEMA: <so em novo_verbete: CobaiaFront | CobaiaAPI | Infraestrutura | Ambos>
+ENTIDADE: <so em novo_verbete: Produto | Tipo | Usuario | Pedido | Interface | Infraestrutura>
+CAUSAS: <so em novo_verbete: 1 a 3 valores de CAUSA_RAIZ separados por virgula>
+ARQUIVOS: <opcional: caminhos citados na documentacao acima, ou "nenhum">
+PALAVRAS_CHAVE: <ate 5 termos novos separados por virgula, ou "nenhuma">
+SINTOMAS: <ate 3 sintomas novos separados por virgula, ou "nenhum">
+TEXTO: <o que acrescentar>
+MOTIVO: <por que isso faria o proximo diagnostico acertar, e qual evidencia deste caso mostrou a lacuna>
+FIM
+
+Valores permitidos para CAUSAS:
+{lista_causas}"""
+
+
+def proposta_de_edicao(prompt_diagnostico: str, resposta_diagnostico: str, caso: dict,
+                       acertou: bool, causa_respondida: str | None,
+                       verbete_ouro_renderizado: str, ids_visiveis: list[str]) -> str:
+    """! Alteração de IA - Revisar: segundo prompt da Fase 3 (aprendizado) -- devolve a
+    CONTINUAÇÃO LITERAL do prompt de diagnóstico (prompt_diagnostico) mais a resposta que
+    o modelo deu (resposta_diagnostico), seguida do bloco de correção do caso e das
+    instruções de proposta de edição (_FORMATO_PROPOSTA).
+    ! Motivo: nos 54 casos de aprendizado, mandar os dois prompts como mensagens separadas
+    ou reescrever qualquer trecho do primeiro invalidaria o cache de prefixo do Ollama --
+    só um prefixo byte a byte idêntico entre as duas chamadas reaproveita o prefill
+    (achado 4.21 do Memorial: a bateria em CPU nesta máquina fica em ~60h com o cache,
+    contra ~75h sem ele)."""
+    gabarito = caso["gabarito"]
+    campo_afetado = gabarito["campo_afetado"] or "nenhum"
+    causa_respondida_txt = causa_respondida or "(sem CAUSA_RAIZ)"
+    veredito = "correto" if acertou else "incorreto"
+    ids_visiveis_txt = ", ".join(f"[{i}]" for i in ids_visiveis)
+    correcao_e_instrucoes = _FORMATO_PROPOSTA.format(
+        causa_correta=gabarito["causa_raiz"], campo_afetado=campo_afetado,
+        causa_respondida=causa_respondida_txt, veredito=veredito,
+        verbete_ouro_renderizado=verbete_ouro_renderizado,
+        ids_visiveis=ids_visiveis_txt, lista_causas=_LISTA_CAUSAS)
+    return f"{prompt_diagnostico}\n\n{resposta_diagnostico}\n\n{correcao_e_instrucoes}"
+
+
 ESTRATEGIAS = {
     "linear": linear,
     "compilador": estagiada_compilador,

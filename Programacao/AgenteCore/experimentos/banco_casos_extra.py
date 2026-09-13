@@ -147,12 +147,18 @@ CASOS_EXTRA += [
        corpo='[{"id_pedido": 7, "pessoas": 4, "data_pedido": 1789084800, '
              '"status": "Em Analise", "nome": "Cliente Teste", "cpf": "11122233344"}]',
        sintoma="A data da reserva aparece como 1789084800 na listagem."),
+    # ! Alteração de IA - Revisar: corrige o sintoma do achado 4.20 do Memorial -- preco
+    # com virgula decimal ("89,90") aparece cru no botao, nao como "R$ NaN".
+    # ! Motivo: Number("89,90") tambem resulta em NaN (virgula nao e separador decimal em
+    # JS), e formatarPreco devolve String(preco) sem concatenar "R$" -- ou seja, devolve a
+    # propria string "89,90" que veio na resposta (produtos_api.php:64-67).
     _c("semt-13", 3, 3, "tipo_divergente", "preco", ["preco", "tipo", "virgula"], ["ausente"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
        corpo='[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", '
              '"tipo": "Carnes", "preco": "89,90", "imagem": "picanha_alho.jpg", "destaque": true}]',
-       sintoma="O cartao mostra 'R$ NaN'. Outros produtos com preco inteiro aparecem certos.",
-       observacao="O separador decimal veio como virgula, no formato brasileiro."),
+       sintoma="O botao de preco mostra '89,90' cru, sem 'R$' e sem formatacao.",
+       observacao="O separador decimal veio como virgula, no formato brasileiro; precos "
+                  "com ponto decimal aparecem formatados como 'R$ 89,90'."),
     _c("semt-14", 3, 3, "nulo_inesperado", "tipo", ["nulo", "tipo", "categoria"], ["ausente do contrato"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
        corpo='[' + PRODUTO_OK + ', {"id": 8, "nome": "Agua Mineral", "resumo": "500ml", '
@@ -313,11 +319,26 @@ CASOS_EXTRA += [
        contrato="n/a", corpo="(nenhuma requisicao falhou)", arvore=ARVORE_CARTOES,
        seletor_quebrado="button[disabled]",
        sintoma="O roteiro falha porque o seletor casou com dois botoes de preco."),
-    _c("efe-13", 6, 3, "estado_da_tela_divergente", None, ["tela", "duplicad", "acumul"], ["500", "cache"],
-       requisicao="GET /api/produtos (chamado duas vezes)", status=200, contrato=CONTRATO_PRODUTO,
-       corpo='(14 itens em cada uma das duas respostas)',
-       sintoma="A listagem mostra 28 cartoes, com cada produto repetido duas vezes.",
-       observacao="A pagina nao limpa o container antes de renderizar a segunda resposta."),
+    # ! Alteração de IA - Revisar: corrige o cenario do achado 4.20 do Memorial -- duas
+    # respostas em sequencia nao duplicam cartoes; a tela fica com o conteudo da resposta
+    # que chegou por ultimo, mesmo que seja a mais antiga. Termos do gabarito ajustados de
+    # ["tela", "duplicad", "acumul"] / ["500", "cache"] para ["tela", "sobrescr", "antig"] /
+    # ["500", "cache", "duplicad"], porque agora "duplicad" e o termo que o modelo deve
+    # EVITAR, nao o esperado.
+    # ! Motivo: produtos_api.php:104 faz grid.innerHTML =
+    # produtos.map(cartaoProduto).join("") a cada resposta, substituindo o grid inteiro --
+    # nunca soma cartoes de respostas diferentes.
+    _c("efe-13", 6, 3, "estado_da_tela_divergente", None,
+       ["tela", "sobrescr", "antig"], ["500", "cache", "duplicad"],
+       requisicao="GET /api/produtos (chamado duas vezes em sequencia; a primeira "
+                  "resposta chegou depois da segunda)",
+       status=200, contrato=CONTRATO_PRODUTO,
+       corpo='(primeira resposta: 14 itens, produto 3 a 69.9; segunda resposta: 14 itens, '
+             'produto 3 a 74.9, apos alteracao no cadastro)',
+       sintoma="A tela mostra o preco antigo (R$ 69,90) do produto 3, embora a ultima "
+               "resposta da API traga 74.9; nenhum erro no console.",
+       observacao="A pagina substitui o grid inteiro a cada resposta recebida; a resposta "
+                  "mais antiga chegou por ultimo e sobrescreveu a mais nova."),
     _c("efe-14", 6, 3, "localizador_quebrado", None, ["seletor", "ordem", "posic", "indice"], ["500"],
        requisicao="(sem falha de rede) passo: clicar no botao do segundo cartao", status=200,
        contrato="n/a", corpo="(nenhuma requisicao falhou)", arvore=ARVORE_CARTOES,
