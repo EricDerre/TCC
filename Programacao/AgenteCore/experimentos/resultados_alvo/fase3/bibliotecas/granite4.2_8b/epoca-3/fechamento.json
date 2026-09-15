@@ -1,0 +1,14 @@
+{
+  "modelo": "granite4.2:8b",
+  "epoca": 3,
+  "hash": "3196327e7fd5",
+  "n_verbetes": 36,
+  "n_verbetes_novos": 0,
+  "n_notas": 0,
+  "n_retificacoes": 0,
+  "chars": 17113,
+  "tokens_estimados": 6582,
+  "aceitas_na_epoca": 0,
+  "versao_ollama": "0.34.0",
+  "fechado_em": "2026-09-15T15:10:12"
+}

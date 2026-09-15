@@ -1,0 +1,53 @@
+{
+  "arquivos_novos": [
+    "aprendidos/estado_da_tela_divergente-correto.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "contratos/contrato-pedido.md",
+    "erros/estrutura_aninhada_divergente.md"
+  ],
+  "linhas_acrescentadas": 30,
+  "linhas_removidas": 4,
+  "chars_antes": 50963,
+  "chars_depois": 52901,
+  "chars_acrescentados": 1938,
+  "tokens_estimados_acrescentados": 745,
+  "por_verbete": {
+    "contrato-pedido": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "contrato de pedidos",
+        "chave de juncao"
+      ],
+      "sintomas_novos": [
+        "status fora dos dois valores"
+      ]
+    },
+    "estrutura_aninhada_divergente": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "estrutura aninhada divergente",
+        "contrato produto"
+      ],
+      "sintomas_novos": [
+        "campo como objeto no lugar de texto"
+      ]
+    },
+    "estado_da_tela_divergente-correto": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "tela divergente",
+        "fetch",
+        "innerhtml"
+      ],
+      "sintomas_novos": [
+        "tela mostra conteudo anterior",
+        "recarregar nao corrige"
+      ]
+    }
+  }
+}

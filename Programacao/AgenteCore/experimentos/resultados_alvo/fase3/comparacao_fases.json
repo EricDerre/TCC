@@ -1,0 +1,2097 @@
+{
+  "metadados": {
+    "gerado_em": "2026-09-15T18:44:39",
+    "fontes": {
+      "2a": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\AgenteCore\\experimentos\\avaliacao.json",
+      "2b": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\AgenteCore\\experimentos\\resultados_alvo\\avaliacao.json",
+      "f3": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\AgenteCore\\experimentos\\resultados_alvo\\fase3\\avaliacao_fase3.json"
+    },
+    "casos_alterados_na_fase3": [
+      "sin-1",
+      "sin-2",
+      "semt-13",
+      "efe-13"
+    ],
+    "n_avaliacao": 36
+  },
+  "por_modelo": {
+    "granite4.2:8b": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 90,
+          "acerto_pct": 67.8,
+          "ic95": [
+            57.6,
+            76.5
+          ],
+          "acuracia_balanceada_pct": 74.7,
+          "segundos_mediana": 45.7,
+          "tokens_saida_medio": 192,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 32.2,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 66.7,
+          "ic95": [
+            56.4,
+            75.5
+          ],
+          "acuracia_balanceada_pct": 72.3,
+          "segundos_mediana": 83.0,
+          "tokens_saida_medio": 197,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 33.3,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 90,
+          "acerto_pct": 76.7,
+          "ic95": [
+            66.9,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 79.9,
+          "segundos_mediana": 123.9,
+          "tokens_saida_medio": 214,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 23.3,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": {
+          "n": 90,
+          "acerto_pct": 100.0,
+          "ic95": [
+            95.9,
+            100.0
+          ],
+          "acuracia_balanceada_pct": 100.0,
+          "segundos_mediana": 95.5,
+          "tokens_saida_medio": 196,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 0.0,
+          "hit3_pct": 100.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "F3_L0": {
+          "n": 90,
+          "acerto_pct": 76.7,
+          "ic95": [
+            66.9,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 79.6,
+          "segundos_mediana": 131.3,
+          "tokens_saida_medio": 233,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 23.3,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 90,
+          "acerto_pct": 77.8,
+          "ic95": [
+            68.2,
+            85.1
+          ],
+          "acuracia_balanceada_pct": 80.2,
+          "segundos_mediana": 130.9,
+          "tokens_saida_medio": 223,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 90,
+          "acerto_pct": 74.4,
+          "ic95": [
+            64.6,
+            82.3
+          ],
+          "acuracia_balanceada_pct": 78.0,
+          "segundos_mediana": 132.3,
+          "tokens_saida_medio": 217,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 25.6,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 90,
+          "acerto_pct": 75.6,
+          "ic95": [
+            65.8,
+            83.3
+          ],
+          "acuracia_balanceada_pct": 78.7,
+          "segundos_mediana": 132.6,
+          "tokens_saida_medio": 225,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 24.4,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 1,
+          "n": 90,
+          "acerto_pct": 77.8,
+          "ic95": [
+            68.2,
+            85.1
+          ],
+          "acuracia_balanceada_pct": 80.2,
+          "segundos_mediana": 130.9,
+          "tokens_saida_medio": 223,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 36,
+          "acerto_pct": 75.0,
+          "ic95": [
+            58.9,
+            86.2
+          ],
+          "acuracia_balanceada_pct": 72.9,
+          "segundos_mediana": 47.1,
+          "tokens_saida_medio": 194,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 25.0,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 72.2,
+          "ic95": [
+            56.0,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 70.8,
+          "segundos_mediana": 85.4,
+          "tokens_saida_medio": 181,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.3,
+          "segundos_mediana": 131.5,
+          "tokens_saida_medio": 207,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 19.4,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": {
+          "n": 36,
+          "acerto_pct": 100.0,
+          "ic95": [
+            90.4,
+            100.0
+          ],
+          "acuracia_balanceada_pct": 100.0,
+          "segundos_mediana": 101.7,
+          "tokens_saida_medio": 195,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 0.0,
+          "hit3_pct": 100.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "F3_L0": {
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.3,
+          "segundos_mediana": 129.4,
+          "tokens_saida_medio": 213,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 19.4,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.3,
+          "segundos_mediana": 133.2,
+          "tokens_saida_medio": 206,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 19.4,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.3,
+          "segundos_mediana": 131.2,
+          "tokens_saida_medio": 209,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 19.4,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.3,
+          "segundos_mediana": 134.4,
+          "tokens_saida_medio": 212,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 19.4,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.3,
+          "segundos_mediana": 129.4,
+          "tokens_saida_medio": 213,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 19.4,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "adesao_cega_2B_A5_pct": 93.3,
+      "teto_2B_A3_pct": 100.0,
+      "tentativas_de_decorar_F3": {
+        "total": 0,
+        "por_epoca": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "autoenvenenamento_F3": {
+        "L0→L1": 0.0,
+        "L1→L2": 0.0,
+        "L2→L3": 0.0
+      }
+    },
+    "qwen2.5-coder:3b": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 90,
+          "acerto_pct": 25.6,
+          "ic95": [
+            17.7,
+            35.4
+          ],
+          "acuracia_balanceada_pct": 36.2,
+          "segundos_mediana": 8.4,
+          "tokens_saida_medio": 50,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 74.4,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 23.3,
+          "ic95": [
+            15.8,
+            33.1
+          ],
+          "acuracia_balanceada_pct": 33.4,
+          "segundos_mediana": 17.1,
+          "tokens_saida_medio": 51,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 76.7,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 90,
+          "acerto_pct": 63.3,
+          "ic95": [
+            53.0,
+            72.6
+          ],
+          "acuracia_balanceada_pct": 70.2,
+          "segundos_mediana": 29.7,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 36.7,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 97.8,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": {
+          "n": 90,
+          "acerto_pct": 92.2,
+          "ic95": [
+            84.8,
+            96.2
+          ],
+          "acuracia_balanceada_pct": 94.7,
+          "segundos_mediana": 19.6,
+          "tokens_saida_medio": 57,
+          "fora_do_conjunto_pct": 2.2,
+          "formato_ok_conteudo_errado_pct": 7.8,
+          "hit3_pct": 100.0,
+          "citou_verbete_pct": 95.6,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "F3_L0": {
+          "n": 90,
+          "acerto_pct": 65.6,
+          "ic95": [
+            55.3,
+            74.6
+          ],
+          "acuracia_balanceada_pct": 71.5,
+          "segundos_mediana": 30.8,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 34.4,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 98.9,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 90,
+          "acerto_pct": 66.7,
+          "ic95": [
+            56.4,
+            75.5
+          ],
+          "acuracia_balanceada_pct": 72.6,
+          "segundos_mediana": 16.6,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 33.3,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 98.9,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 90,
+          "acerto_pct": 66.7,
+          "ic95": [
+            56.4,
+            75.5
+          ],
+          "acuracia_balanceada_pct": 72.0,
+          "segundos_mediana": 17.8,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 33.3,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 98.9,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 90,
+          "acerto_pct": 67.8,
+          "ic95": [
+            57.6,
+            76.5
+          ],
+          "acuracia_balanceada_pct": 72.6,
+          "segundos_mediana": 18.4,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 2.2,
+          "formato_ok_conteudo_errado_pct": 32.2,
+          "hit3_pct": 81.1,
+          "citou_verbete_pct": 98.9,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 1,
+          "n": 90,
+          "acerto_pct": 66.7,
+          "ic95": [
+            56.4,
+            75.5
+          ],
+          "acuracia_balanceada_pct": 72.6,
+          "segundos_mediana": 16.6,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 33.3,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 98.9,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 36,
+          "acerto_pct": 19.4,
+          "ic95": [
+            9.8,
+            35.0
+          ],
+          "acuracia_balanceada_pct": 23.3,
+          "segundos_mediana": 8.5,
+          "tokens_saida_medio": 49,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 80.6,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 19.4,
+          "ic95": [
+            9.8,
+            35.0
+          ],
+          "acuracia_balanceada_pct": 23.3,
+          "segundos_mediana": 17.4,
+          "tokens_saida_medio": 50,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 80.6,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 36,
+          "acerto_pct": 69.4,
+          "ic95": [
+            53.1,
+            82.0
+          ],
+          "acuracia_balanceada_pct": 68.8,
+          "segundos_mediana": 31.2,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 30.6,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 97.2,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": {
+          "n": 36,
+          "acerto_pct": 97.2,
+          "ic95": [
+            85.8,
+            99.5
+          ],
+          "acuracia_balanceada_pct": 97.5,
+          "segundos_mediana": 20.5,
+          "tokens_saida_medio": 57,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 2.8,
+          "hit3_pct": 100.0,
+          "citou_verbete_pct": 94.4,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "F3_L0": {
+          "n": 36,
+          "acerto_pct": 69.4,
+          "ic95": [
+            53.1,
+            82.0
+          ],
+          "acuracia_balanceada_pct": 68.8,
+          "segundos_mediana": 32.2,
+          "tokens_saida_medio": 57,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 30.6,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 36,
+          "acerto_pct": 72.2,
+          "ic95": [
+            56.0,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 70.4,
+          "segundos_mediana": 17.8,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 36,
+          "acerto_pct": 72.2,
+          "ic95": [
+            56.0,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 71.2,
+          "segundos_mediana": 18.8,
+          "tokens_saida_medio": 57,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 36,
+          "acerto_pct": 72.2,
+          "ic95": [
+            56.0,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 71.2,
+          "segundos_mediana": 20.9,
+          "tokens_saida_medio": 57,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 2,
+          "n": 36,
+          "acerto_pct": 72.2,
+          "ic95": [
+            56.0,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 71.2,
+          "segundos_mediana": 18.8,
+          "tokens_saida_medio": 57,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "adesao_cega_2B_A5_pct": 95.6,
+      "teto_2B_A3_pct": 92.2,
+      "tentativas_de_decorar_F3": {
+        "total": 0,
+        "por_epoca": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "autoenvenenamento_F3": {
+        "L0→L1": 0.0,
+        "L1→L2": 2.8,
+        "L2→L3": 2.8
+      }
+    },
+    "qwen2.5-coder:7b": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 90,
+          "acerto_pct": 48.9,
+          "ic95": [
+            38.8,
+            59.0
+          ],
+          "acuracia_balanceada_pct": 54.9,
+          "segundos_mediana": 25.9,
+          "tokens_saida_medio": 106,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 48.9,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 50.0,
+          "ic95": [
+            39.9,
+            60.1
+          ],
+          "acuracia_balanceada_pct": 56.9,
+          "segundos_mediana": 51.3,
+          "tokens_saida_medio": 107,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 48.9,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 90,
+          "acerto_pct": 72.2,
+          "ic95": [
+            62.2,
+            80.4
+          ],
+          "acuracia_balanceada_pct": 75.2,
+          "segundos_mediana": 66.6,
+          "tokens_saida_medio": 87,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": null,
+        "F3_L0": {
+          "n": 90,
+          "acerto_pct": 71.1,
+          "ic95": [
+            61.0,
+            79.5
+          ],
+          "acuracia_balanceada_pct": 75.8,
+          "segundos_mediana": 68.7,
+          "tokens_saida_medio": 82,
+          "fora_do_conjunto_pct": 3.3,
+          "formato_ok_conteudo_errado_pct": 28.9,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 90,
+          "acerto_pct": 74.4,
+          "ic95": [
+            64.6,
+            82.3
+          ],
+          "acuracia_balanceada_pct": 78.9,
+          "segundos_mediana": 67.4,
+          "tokens_saida_medio": 87,
+          "fora_do_conjunto_pct": 2.2,
+          "formato_ok_conteudo_errado_pct": 23.3,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 90,
+          "acerto_pct": 73.3,
+          "ic95": [
+            63.4,
+            81.4
+          ],
+          "acuracia_balanceada_pct": 77.8,
+          "segundos_mediana": 65.5,
+          "tokens_saida_medio": 84,
+          "fora_do_conjunto_pct": 2.2,
+          "formato_ok_conteudo_errado_pct": 25.6,
+          "hit3_pct": 77.8,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 90,
+          "acerto_pct": 72.2,
+          "ic95": [
+            62.2,
+            80.4
+          ],
+          "acuracia_balanceada_pct": 75.4,
+          "segundos_mediana": 49.8,
+          "tokens_saida_medio": 90,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 24.4,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 1,
+          "n": 90,
+          "acerto_pct": 74.4,
+          "ic95": [
+            64.6,
+            82.3
+          ],
+          "acuracia_balanceada_pct": 78.9,
+          "segundos_mediana": 67.4,
+          "tokens_saida_medio": 87,
+          "fora_do_conjunto_pct": 2.2,
+          "formato_ok_conteudo_errado_pct": 23.3,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 36,
+          "acerto_pct": 44.4,
+          "ic95": [
+            29.5,
+            60.4
+          ],
+          "acuracia_balanceada_pct": 50.4,
+          "segundos_mediana": 25.7,
+          "tokens_saida_medio": 103,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 50.0,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 41.7,
+          "ic95": [
+            27.1,
+            57.8
+          ],
+          "acuracia_balanceada_pct": 48.3,
+          "segundos_mediana": 52.1,
+          "tokens_saida_medio": 102,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 55.6,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 36,
+          "acerto_pct": 72.2,
+          "ic95": [
+            56.0,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 77.5,
+          "segundos_mediana": 66.8,
+          "tokens_saida_medio": 81,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 27.8,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": null,
+        "F3_L0": {
+          "n": 36,
+          "acerto_pct": 75.0,
+          "ic95": [
+            58.9,
+            86.2
+          ],
+          "acuracia_balanceada_pct": 80.0,
+          "segundos_mediana": 70.7,
+          "tokens_saida_medio": 77,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 25.0,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 36,
+          "acerto_pct": 75.0,
+          "ic95": [
+            58.9,
+            86.2
+          ],
+          "acuracia_balanceada_pct": 80.0,
+          "segundos_mediana": 65.8,
+          "tokens_saida_medio": 79,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 25.0,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 36,
+          "acerto_pct": 75.0,
+          "ic95": [
+            58.9,
+            86.2
+          ],
+          "acuracia_balanceada_pct": 80.0,
+          "segundos_mediana": 66.8,
+          "tokens_saida_medio": 69,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 25.0,
+          "hit3_pct": 83.3,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 36,
+          "acerto_pct": 77.8,
+          "ic95": [
+            61.9,
+            88.3
+          ],
+          "acuracia_balanceada_pct": 84.2,
+          "segundos_mediana": 56.6,
+          "tokens_saida_medio": 80,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 3,
+          "n": 36,
+          "acerto_pct": 77.8,
+          "ic95": [
+            61.9,
+            88.3
+          ],
+          "acuracia_balanceada_pct": 84.2,
+          "segundos_mediana": 56.6,
+          "tokens_saida_medio": 80,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": {
+        "total": 0,
+        "por_epoca": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "autoenvenenamento_F3": {
+        "L0→L1": 0.0,
+        "L1→L2": 2.8,
+        "L2→L3": 2.8
+      }
+    },
+    "qwen2.5:7b": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 90,
+          "acerto_pct": 53.3,
+          "ic95": [
+            43.1,
+            63.3
+          ],
+          "acuracia_balanceada_pct": 60.1,
+          "segundos_mediana": 17.1,
+          "tokens_saida_medio": 52,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 46.7,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 57.8,
+          "ic95": [
+            47.5,
+            67.5
+          ],
+          "acuracia_balanceada_pct": 64.5,
+          "segundos_mediana": 38.0,
+          "tokens_saida_medio": 54,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 42.2,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 90,
+          "acerto_pct": 70.0,
+          "ic95": [
+            59.9,
+            78.5
+          ],
+          "acuracia_balanceada_pct": 74.9,
+          "segundos_mediana": 61.1,
+          "tokens_saida_medio": 63,
+          "fora_do_conjunto_pct": 3.3,
+          "formato_ok_conteudo_errado_pct": 30.0,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": null,
+        "F3_L0": {
+          "n": 90,
+          "acerto_pct": 71.1,
+          "ic95": [
+            61.0,
+            79.5
+          ],
+          "acuracia_balanceada_pct": 75.7,
+          "segundos_mediana": 66.8,
+          "tokens_saida_medio": 62,
+          "fora_do_conjunto_pct": 3.3,
+          "formato_ok_conteudo_errado_pct": 28.9,
+          "hit3_pct": 80.0,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 90,
+          "acerto_pct": 76.7,
+          "ic95": [
+            66.9,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 83.0,
+          "segundos_mediana": 78.2,
+          "tokens_saida_medio": 63,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 23.3,
+          "hit3_pct": 77.8,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 90,
+          "acerto_pct": 74.4,
+          "ic95": [
+            64.6,
+            82.3
+          ],
+          "acuracia_balanceada_pct": 78.1,
+          "segundos_mediana": 77.6,
+          "tokens_saida_medio": 63,
+          "fora_do_conjunto_pct": 4.4,
+          "formato_ok_conteudo_errado_pct": 25.6,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 90,
+          "acerto_pct": 77.8,
+          "ic95": [
+            68.2,
+            85.1
+          ],
+          "acuracia_balanceada_pct": 80.7,
+          "segundos_mediana": 47.0,
+          "tokens_saida_medio": 63,
+          "fora_do_conjunto_pct": 3.3,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 1,
+          "n": 90,
+          "acerto_pct": 76.7,
+          "ic95": [
+            66.9,
+            84.2
+          ],
+          "acuracia_balanceada_pct": 83.0,
+          "segundos_mediana": 78.2,
+          "tokens_saida_medio": 63,
+          "fora_do_conjunto_pct": 1.1,
+          "formato_ok_conteudo_errado_pct": 23.3,
+          "hit3_pct": 77.8,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 36,
+          "acerto_pct": 63.9,
+          "ic95": [
+            47.6,
+            77.5
+          ],
+          "acuracia_balanceada_pct": 65.0,
+          "segundos_mediana": 17.7,
+          "tokens_saida_medio": 53,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 36.1,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 66.7,
+          "ic95": [
+            50.3,
+            79.8
+          ],
+          "acuracia_balanceada_pct": 66.7,
+          "segundos_mediana": 40.2,
+          "tokens_saida_medio": 56,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 33.3,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 36,
+          "acerto_pct": 77.8,
+          "ic95": [
+            61.9,
+            88.3
+          ],
+          "acuracia_balanceada_pct": 81.2,
+          "segundos_mediana": 65.3,
+          "tokens_saida_medio": 64,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": null,
+        "F3_L0": {
+          "n": 36,
+          "acerto_pct": 77.8,
+          "ic95": [
+            61.9,
+            88.3
+          ],
+          "acuracia_balanceada_pct": 81.2,
+          "segundos_mediana": 69.5,
+          "tokens_saida_medio": 64,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 22.2,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L1": {
+          "n": 36,
+          "acerto_pct": 88.9,
+          "ic95": [
+            74.7,
+            95.6
+          ],
+          "acuracia_balanceada_pct": 91.7,
+          "segundos_mediana": 79.5,
+          "tokens_saida_medio": 65,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 11.1,
+          "hit3_pct": 83.3,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L2": {
+          "n": 36,
+          "acerto_pct": 83.3,
+          "ic95": [
+            68.1,
+            92.1
+          ],
+          "acuracia_balanceada_pct": 84.2,
+          "segundos_mediana": 80.6,
+          "tokens_saida_medio": 65,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 16.7,
+          "hit3_pct": 83.3,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_L3": {
+          "n": 36,
+          "acerto_pct": 86.1,
+          "ic95": [
+            71.3,
+            93.9
+          ],
+          "acuracia_balanceada_pct": 86.2,
+          "segundos_mediana": 53.9,
+          "tokens_saida_medio": 65,
+          "fora_do_conjunto_pct": 2.8,
+          "formato_ok_conteudo_errado_pct": 13.9,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        },
+        "F3_melhor": {
+          "biblioteca_epoca": 1,
+          "n": 36,
+          "acerto_pct": 88.9,
+          "ic95": [
+            74.7,
+            95.6
+          ],
+          "acuracia_balanceada_pct": 91.7,
+          "segundos_mediana": 79.5,
+          "tokens_saida_medio": 65,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 11.1,
+          "hit3_pct": 83.3,
+          "citou_verbete_pct": 100.0,
+          "maquina": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel"
+        }
+      },
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": {
+        "total": 0,
+        "por_epoca": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "autoenvenenamento_F3": {
+        "L0→L1": 0.0,
+        "L1→L2": 5.6,
+        "L2→L3": 2.8
+      }
+    },
+    "phi4-mini:3.8b": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 90,
+          "acerto_pct": 23.3,
+          "ic95": [
+            15.8,
+            33.1
+          ],
+          "acuracia_balanceada_pct": 30.5,
+          "segundos_mediana": 9.8,
+          "tokens_saida_medio": 41,
+          "fora_do_conjunto_pct": 25.6,
+          "formato_ok_conteudo_errado_pct": 76.7,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 23.3,
+          "ic95": [
+            15.8,
+            33.1
+          ],
+          "acuracia_balanceada_pct": 31.4,
+          "segundos_mediana": 22.6,
+          "tokens_saida_medio": 42,
+          "fora_do_conjunto_pct": 23.3,
+          "formato_ok_conteudo_errado_pct": 76.7,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 90,
+          "acerto_pct": 25.6,
+          "ic95": [
+            17.7,
+            35.4
+          ],
+          "acuracia_balanceada_pct": 30.2,
+          "segundos_mediana": 35.6,
+          "tokens_saida_medio": 77,
+          "fora_do_conjunto_pct": 15.6,
+          "formato_ok_conteudo_errado_pct": 64.4,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 12.2,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": {
+          "n": 90,
+          "acerto_pct": 51.1,
+          "ic95": [
+            41.0,
+            61.2
+          ],
+          "acuracia_balanceada_pct": 56.7,
+          "segundos_mediana": 28.0,
+          "tokens_saida_medio": 70,
+          "fora_do_conjunto_pct": 14.4,
+          "formato_ok_conteudo_errado_pct": 35.6,
+          "hit3_pct": 100.0,
+          "citou_verbete_pct": 15.6,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 36,
+          "acerto_pct": 25.0,
+          "ic95": [
+            13.8,
+            41.1
+          ],
+          "acuracia_balanceada_pct": 35.8,
+          "segundos_mediana": 9.8,
+          "tokens_saida_medio": 42,
+          "fora_do_conjunto_pct": 25.0,
+          "formato_ok_conteudo_errado_pct": 75.0,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 22.2,
+          "ic95": [
+            11.7,
+            38.1
+          ],
+          "acuracia_balanceada_pct": 30.8,
+          "segundos_mediana": 23.0,
+          "tokens_saida_medio": 43,
+          "fora_do_conjunto_pct": 25.0,
+          "formato_ok_conteudo_errado_pct": 77.8,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 36,
+          "acerto_pct": 25.0,
+          "ic95": [
+            13.8,
+            41.1
+          ],
+          "acuracia_balanceada_pct": 28.3,
+          "segundos_mediana": 37.4,
+          "tokens_saida_medio": 85,
+          "fora_do_conjunto_pct": 19.4,
+          "formato_ok_conteudo_errado_pct": 66.7,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 8.3,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": {
+          "n": 36,
+          "acerto_pct": 44.4,
+          "ic95": [
+            29.5,
+            60.4
+          ],
+          "acuracia_balanceada_pct": 44.2,
+          "segundos_mediana": 31.0,
+          "tokens_saida_medio": 66,
+          "fora_do_conjunto_pct": 22.2,
+          "formato_ok_conteudo_errado_pct": 41.7,
+          "hit3_pct": 100.0,
+          "citou_verbete_pct": 19.4,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "adesao_cega_2B_A5_pct": 30.0,
+      "teto_2B_A3_pct": 51.1,
+      "tentativas_de_decorar_F3": null,
+      "autoenvenenamento_F3": null
+    },
+    "qwen2.5-coder:1.5b": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 90,
+          "acerto_pct": 5.6,
+          "ic95": [
+            2.4,
+            12.4
+          ],
+          "acuracia_balanceada_pct": 4.3,
+          "segundos_mediana": 5.2,
+          "tokens_saida_medio": 90,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 94.4,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 5.6,
+          "ic95": [
+            2.4,
+            12.4
+          ],
+          "acuracia_balanceada_pct": 4.3,
+          "segundos_mediana": 8.3,
+          "tokens_saida_medio": 112,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 94.4,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 90,
+          "acerto_pct": 16.7,
+          "ic95": [
+            10.4,
+            25.7
+          ],
+          "acuracia_balanceada_pct": 17.4,
+          "segundos_mediana": 25.3,
+          "tokens_saida_medio": 228,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 83.3,
+          "hit3_pct": 78.9,
+          "citou_verbete_pct": 57.8,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": null,
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 36,
+          "acerto_pct": 0.0,
+          "ic95": [
+            0.0,
+            9.6
+          ],
+          "acuracia_balanceada_pct": 0.0,
+          "segundos_mediana": 5.2,
+          "tokens_saida_medio": 52,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 100.0,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 0.0,
+          "ic95": [
+            0.0,
+            9.6
+          ],
+          "acuracia_balanceada_pct": 0.0,
+          "segundos_mediana": 8.2,
+          "tokens_saida_medio": 75,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 100.0,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": {
+          "n": 36,
+          "acerto_pct": 11.1,
+          "ic95": [
+            4.4,
+            25.3
+          ],
+          "acuracia_balanceada_pct": 10.0,
+          "segundos_mediana": 27.3,
+          "tokens_saida_medio": 245,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 88.9,
+          "hit3_pct": 86.1,
+          "citou_verbete_pct": 52.8,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A3": null,
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": null,
+      "autoenvenenamento_F3": null
+    },
+    "qwen2.5-coder:1.5b-instruct-fp16": {
+      "nos_90": {
+        "2A_linear_ryzen": null,
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 8.9,
+          "ic95": [
+            4.6,
+            16.6
+          ],
+          "acuracia_balanceada_pct": 10.9,
+          "segundos_mediana": 17.0,
+          "tokens_saida_medio": 74,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 91.1,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": null,
+        "2B_A3": null,
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": null,
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 2.8,
+          "ic95": [
+            0.5,
+            14.2
+          ],
+          "acuracia_balanceada_pct": 5.0,
+          "segundos_mediana": 16.9,
+          "tokens_saida_medio": 72,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 97.2,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": null,
+        "2B_A3": null,
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": null,
+      "autoenvenenamento_F3": null
+    },
+    "qwen2.5-coder:1.5b-instruct-q8_0": {
+      "nos_90": {
+        "2A_linear_ryzen": {
+          "n": 48,
+          "acerto_pct": 12.5,
+          "ic95": [
+            5.9,
+            24.7
+          ],
+          "acuracia_balanceada_pct": 13.6,
+          "segundos_mediana": 8.6,
+          "tokens_saida_medio": 63,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 87.5,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 90,
+          "acerto_pct": 8.9,
+          "ic95": [
+            4.6,
+            16.6
+          ],
+          "acuracia_balanceada_pct": 10.9,
+          "segundos_mediana": 15.9,
+          "tokens_saida_medio": 95,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 91.1,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": null,
+        "2B_A3": null,
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "nos_36_avaliacao": {
+        "2A_linear_ryzen": {
+          "n": 24,
+          "acerto_pct": 0.0,
+          "ic95": [
+            0.0,
+            13.8
+          ],
+          "acuracia_balanceada_pct": 0.0,
+          "segundos_mediana": 8.2,
+          "tokens_saida_medio": 55,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 100.0,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "Ryzen 7 5800H"
+        },
+        "2B_A0": {
+          "n": 36,
+          "acerto_pct": 2.8,
+          "ic95": [
+            0.5,
+            14.2
+          ],
+          "acuracia_balanceada_pct": 5.0,
+          "segundos_mediana": 15.1,
+          "tokens_saida_medio": 94,
+          "fora_do_conjunto_pct": 0.0,
+          "formato_ok_conteudo_errado_pct": 97.2,
+          "hit3_pct": null,
+          "citou_verbete_pct": null,
+          "maquina": "12th Gen Intel(R) Core(TM) i5-1235U"
+        },
+        "2B_A2": null,
+        "2B_A3": null,
+        "F3_L0": null,
+        "F3_L1": null,
+        "F3_L2": null,
+        "F3_L3": null,
+        "F3_melhor": {
+          "biblioteca_epoca": null
+        }
+      },
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": null,
+      "autoenvenenamento_F3": null
+    }
+  },
+  "pareamentos": [
+    {
+      "modelo": "granite4.2:8b",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 67.8,
+      "acerto_b_pct": 66.7,
+      "delta_pp": -1.1,
+      "b_so_b": 2,
+      "c_so_a": 3,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    },
+    {
+      "modelo": "granite4.2:8b",
+      "a": "2B_A0",
+      "b": "2B_A2",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 66.7,
+      "acerto_b_pct": 76.7,
+      "delta_pp": 10.0,
+      "b_so_b": 18,
+      "c_so_a": 9,
+      "p_mcnemar": 0.1221,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "granite4.2:8b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "86",
+      "n_comuns": 86,
+      "acerto_a_pct": 77.9,
+      "acerto_b_pct": 77.9,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "granite4.2:8b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 80.6,
+      "acerto_b_pct": 80.6,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "granite4.2:8b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 80.6,
+      "acerto_b_pct": 80.6,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "granite4.2:8b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "54",
+      "n_comuns": 54,
+      "acerto_a_pct": 74.1,
+      "acerto_b_pct": 72.2,
+      "delta_pp": -1.9,
+      "b_so_b": 0,
+      "c_so_a": 1,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 25.6,
+      "acerto_b_pct": 23.3,
+      "delta_pp": -2.3,
+      "b_so_b": 0,
+      "c_so_a": 2,
+      "p_mcnemar": 0.5,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "a": "2B_A0",
+      "b": "2B_A2",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 23.3,
+      "acerto_b_pct": 63.3,
+      "delta_pp": 40.0,
+      "b_so_b": 36,
+      "c_so_a": 0,
+      "p_mcnemar": 0.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "86",
+      "n_comuns": 86,
+      "acerto_a_pct": 65.1,
+      "acerto_b_pct": 65.1,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 69.4,
+      "acerto_b_pct": 69.4,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 69.4,
+      "acerto_b_pct": 72.2,
+      "delta_pp": 2.8,
+      "b_so_b": 1,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "54",
+      "n_comuns": 54,
+      "acerto_a_pct": 63.0,
+      "acerto_b_pct": 64.8,
+      "delta_pp": 1.8,
+      "b_so_b": 2,
+      "c_so_a": 1,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 48.9,
+      "acerto_b_pct": 50.0,
+      "delta_pp": 1.1,
+      "b_so_b": 8,
+      "c_so_a": 7,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "a": "2B_A0",
+      "b": "2B_A2",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 50.0,
+      "acerto_b_pct": 72.2,
+      "delta_pp": 22.2,
+      "b_so_b": 26,
+      "c_so_a": 6,
+      "p_mcnemar": 0.0005,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "86",
+      "n_comuns": 86,
+      "acerto_a_pct": 73.3,
+      "acerto_b_pct": 72.1,
+      "delta_pp": -1.2,
+      "b_so_b": 2,
+      "c_so_a": 3,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 72.2,
+      "acerto_b_pct": 75.0,
+      "delta_pp": 2.8,
+      "b_so_b": 1,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 75.0,
+      "acerto_b_pct": 77.8,
+      "delta_pp": 2.8,
+      "b_so_b": 3,
+      "c_so_a": 2,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "54",
+      "n_comuns": 54,
+      "acerto_a_pct": 68.5,
+      "acerto_b_pct": 68.5,
+      "delta_pp": 0.0,
+      "b_so_b": 6,
+      "c_so_a": 6,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 53.3,
+      "acerto_b_pct": 57.8,
+      "delta_pp": 4.5,
+      "b_so_b": 4,
+      "c_so_a": 0,
+      "p_mcnemar": 0.125,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "a": "2B_A0",
+      "b": "2B_A2",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 57.8,
+      "acerto_b_pct": 70.0,
+      "delta_pp": 12.2,
+      "b_so_b": 21,
+      "c_so_a": 10,
+      "p_mcnemar": 0.0708,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "86",
+      "n_comuns": 86,
+      "acerto_a_pct": 72.1,
+      "acerto_b_pct": 72.1,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "a": "2B_A2",
+      "b": "F3_L0",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 77.8,
+      "acerto_b_pct": 77.8,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "36",
+      "n_comuns": 36,
+      "acerto_a_pct": 77.8,
+      "acerto_b_pct": 86.1,
+      "delta_pp": 8.3,
+      "b_so_b": 3,
+      "c_so_a": 0,
+      "p_mcnemar": 0.25,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "a": "F3_L0",
+      "b": "F3_L3",
+      "conjunto": "54",
+      "n_comuns": 54,
+      "acerto_a_pct": 66.7,
+      "acerto_b_pct": 72.2,
+      "delta_pp": 5.5,
+      "b_so_b": 5,
+      "c_so_a": 2,
+      "p_mcnemar": 0.4531,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "phi4-mini:3.8b",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 23.3,
+      "acerto_b_pct": 23.3,
+      "delta_pp": 0.0,
+      "b_so_b": 1,
+      "c_so_a": 1,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    },
+    {
+      "modelo": "phi4-mini:3.8b",
+      "a": "2B_A0",
+      "b": "2B_A2",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 23.3,
+      "acerto_b_pct": 25.6,
+      "delta_pp": 2.3,
+      "b_so_b": 8,
+      "c_so_a": 6,
+      "p_mcnemar": 0.7905,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 5.6,
+      "acerto_b_pct": 5.6,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b",
+      "a": "2B_A0",
+      "b": "2B_A2",
+      "conjunto": "90",
+      "n_comuns": 90,
+      "acerto_a_pct": 5.6,
+      "acerto_b_pct": 16.7,
+      "delta_pp": 11.1,
+      "b_so_b": 10,
+      "c_so_a": 0,
+      "p_mcnemar": 0.002,
+      "mesma_maquina": true,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo sim"
+    },
+    {
+      "modelo": "qwen2.5-coder:1.5b-instruct-q8_0",
+      "a": "2A_linear_ryzen",
+      "b": "2B_A0",
+      "conjunto": "90",
+      "n_comuns": 48,
+      "acerto_a_pct": 12.5,
+      "acerto_b_pct": 12.5,
+      "delta_pp": 0.0,
+      "b_so_b": 0,
+      "c_so_a": 0,
+      "p_mcnemar": 1.0,
+      "mesma_maquina": false,
+      "mesmos_fixtures": true,
+      "pareavel": "acerto sim; tempo não (máquina diferente)"
+    }
+  ]
+}

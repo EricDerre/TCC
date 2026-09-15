@@ -1,0 +1,97 @@
+{
+  "arquivos_novos": [
+    "aprendidos/arredondamento_incorreto.md",
+    "aprendidos/soma_inconsistente.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "erros/campo_ausente.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/limite_de_requisicoes.md",
+    "erros/tempo_de_resposta_excedido.md",
+    "erros/tipo_divergente.md"
+  ],
+  "linhas_acrescentadas": 64,
+  "linhas_removidas": 6,
+  "chars_antes": 76836,
+  "chars_depois": 81481,
+  "chars_acrescentados": 4645,
+  "tokens_estimados_acrescentados": 1787,
+  "por_verbete": {
+    "campo_ausente": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "front-end",
+        "json",
+        "campo ausente",
+        "formatacao"
+      ],
+      "sintomas_novos": [
+        "undefined no botao de preco"
+      ]
+    },
+    "soma_inconsistente": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "soma",
+        "tipo",
+        "juncao"
+      ],
+      "sintomas_novos": [
+        "soma_total_incorreta",
+        "campos_nulos",
+        "juncao_incorreta"
+      ]
+    },
+    "limite_de_requisicoes": {
+      "notas": 1,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "limitador",
+        "excesso_de_requisicoes"
+      ],
+      "sintomas_novos": []
+    },
+    "tempo_de_resposta_excedido": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "tempo limite",
+        "atraso",
+        "conexao encerrada"
+      ],
+      "sintomas_novos": []
+    },
+    "tipo_divergente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "destaque"
+      ],
+      "sintomas_novos": [
+        "categoria errada"
+      ]
+    },
+    "arredondamento_incorreto": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "arredondamento",
+        "fator",
+        "conversao"
+      ],
+      "sintomas_novos": [
+        "arredondamento errado",
+        "valor_fora_do_dominio"
+      ]
+    },
+    "corpo_nao_e_json": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    }
+  }
+}

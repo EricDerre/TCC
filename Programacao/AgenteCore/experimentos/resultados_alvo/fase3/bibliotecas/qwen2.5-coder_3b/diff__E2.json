@@ -1,0 +1,52 @@
+{
+  "arquivos_novos": [],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "contratos/contrato-pedido.md",
+    "erros/dado_desatualizado.md",
+    "erros/resposta_truncada.md"
+  ],
+  "linhas_acrescentadas": 16,
+  "linhas_removidas": 6,
+  "chars_antes": 49429,
+  "chars_depois": 50963,
+  "chars_acrescentados": 1534,
+  "tokens_estimados_acrescentados": 590,
+  "por_verbete": {
+    "resposta_truncada": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "json parsing",
+        "api falha"
+      ],
+      "sintomas_novos": [
+        "parse falha",
+        "json invalido"
+      ]
+    },
+    "contrato-pedido": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "pedido",
+        "api"
+      ],
+      "sintomas_novos": [
+        "status fora dos valores"
+      ]
+    },
+    "dado_desatualizado": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "leitura defasada",
+        "banco de dados"
+      ],
+      "sintomas_novos": [
+        "leitura defasada",
+        "dados nao atualizados na api"
+      ]
+    }
+  }
+}

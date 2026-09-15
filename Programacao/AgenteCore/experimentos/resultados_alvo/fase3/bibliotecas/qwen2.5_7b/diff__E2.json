@@ -1,0 +1,112 @@
+{
+  "arquivos_novos": [
+    "aprendidos/rendezvous_hasta.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "contratos/contrato-produto.md",
+    "erros/contagem_inconsistente.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/dado_desatualizado.md",
+    "erros/erro_interno_do_servidor.md",
+    "erros/localizador_quebrado.md",
+    "erros/resposta_truncada.md",
+    "negocio/entidade-produto.md"
+  ],
+  "linhas_acrescentadas": 53,
+  "linhas_removidas": 9,
+  "chars_antes": 69963,
+  "chars_depois": 76836,
+  "chars_acrescentados": 6873,
+  "tokens_estimados_acrescentados": 2643,
+  "por_verbete": {
+    "erro_interno_do_servidor": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "injecao de falha",
+        "excecao nao tratada"
+      ],
+      "sintomas_novos": []
+    },
+    "rendezvous_hasta": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "rendezvous",
+        "sincronizacao",
+        "estado_da_tela"
+      ],
+      "sintomas_novos": [
+        "estado da tela divergente",
+        "contagem inconsistente"
+      ]
+    },
+    "contrato-produto": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "convercao"
+      ],
+      "sintomas_novos": [
+        "nulo_inesperado",
+        "valor_fora_do_dominio"
+      ]
+    },
+    "localizador_quebrado": {
+      "notas": 1,
+      "retificacoes": 1,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    },
+    "resposta_truncada": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    },
+    "entidade-produto": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [],
+      "sintomas_novos": [
+        "incorreto",
+        "tipo errado"
+      ]
+    },
+    "contagem_inconsistente": {
+      "notas": 1,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "renderizacao",
+        "home"
+      ],
+      "sintomas_novos": [
+        "contagem de destaques incorreta",
+        "renderizacao de cartoes"
+      ]
+    },
+    "dado_desatualizado": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "leitura_defasada",
+        "atualizacao_em_tempo_real"
+      ],
+      "sintomas_novos": []
+    },
+    "corpo_nao_e_json": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "aviso",
+        "parse falho"
+      ],
+      "sintomas_novos": [
+        "pagina de erro html em vez de json",
+        "aviso antes do json",
+        "parse falho no primeiro caractere"
+      ]
+    }
+  }
+}

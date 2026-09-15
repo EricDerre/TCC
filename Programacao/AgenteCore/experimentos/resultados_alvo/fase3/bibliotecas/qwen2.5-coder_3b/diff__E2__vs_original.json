@@ -1,0 +1,82 @@
+{
+  "arquivos_novos": [],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "contratos/contrato-pedido.md",
+    "erros/campo_renomeado.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/dado_desatualizado.md",
+    "erros/resposta_truncada.md"
+  ],
+  "linhas_acrescentadas": 34,
+  "linhas_removidas": 10,
+  "chars_antes": 47502,
+  "chars_depois": 50963,
+  "chars_acrescentados": 3461,
+  "tokens_estimados_acrescentados": 1331,
+  "por_verbete": {
+    "contrato-pedido": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "pedido",
+        "api"
+      ],
+      "sintomas_novos": [
+        "status fora dos valores"
+      ]
+    },
+    "corpo_nao_e_json": {
+      "notas": 0,
+      "retificacoes": 2,
+      "palavras_chave_novas": [
+        "parse falha",
+        "primeiro caractere"
+      ],
+      "sintomas_novos": [
+        "resposta html",
+        "texto legivel antes do json",
+        "xml ou aviso em texto"
+      ]
+    },
+    "campo_renomeado": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "campo renomeado",
+        "contrato mudado"
+      ],
+      "sintomas_novos": [
+        "campos ausentes ou renomeados"
+      ]
+    },
+    "resposta_truncada": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "json parsing",
+        "api falha"
+      ],
+      "sintomas_novos": [
+        "parse falha",
+        "json invalido"
+      ]
+    },
+    "dado_desatualizado": {
+      "notas": 0,
+      "retificacoes": 2,
+      "palavras_chave_novas": [
+        "api",
+        "leitura",
+        "atualizacao",
+        "leitura defasada",
+        "banco de dados"
+      ],
+      "sintomas_novos": [
+        "carga de dados nao atualizada",
+        "leitura defasada",
+        "dados nao atualizados na api"
+      ]
+    }
+  }
+}

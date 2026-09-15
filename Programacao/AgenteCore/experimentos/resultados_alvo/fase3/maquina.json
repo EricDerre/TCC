@@ -1,0 +1,25 @@
+{
+  "hostname": "TARGET_TSP030",
+  "cpu": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "cpus_logicas": 12,
+  "ram_mb": 16069,
+  "sistema": "Windows-11-10.0.26200-SP0",
+  "ollama": "0.34.0",
+  "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+  "inicio": "2026-09-13T08:46:00",
+  "saida": "fase3",
+  "relances": [
+    {
+      "inicio": "2026-09-13T13:47:31",
+      "ollama": "0.34.0"
+    },
+    {
+      "inicio": "2026-09-14T03:40:03",
+      "ollama": "0.34.0"
+    },
+    {
+      "inicio": "2026-09-14T15:46:26",
+      "ollama": "0.34.0"
+    }
+  ]
+}

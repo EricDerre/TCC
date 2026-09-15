@@ -1,0 +1,88 @@
+{
+  "arquivos_novos": [],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "erros/contagem_inconsistente.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/escala_ou_unidade_errada.md",
+    "erros/localizador_quebrado.md",
+    "erros/tipo_divergente.md",
+    "negocio/entidade-produto.md"
+  ],
+  "linhas_acrescentadas": 28,
+  "linhas_removidas": 10,
+  "chars_antes": 59878,
+  "chars_depois": 63449,
+  "chars_acrescentados": 3571,
+  "tokens_estimados_acrescentados": 1373,
+  "por_verbete": {
+    "localizador_quebrado": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "order by"
+      ],
+      "sintomas_novos": [
+        "tempo de resposta excedido",
+        "localizador quebrado"
+      ]
+    },
+    "tipo_divergente": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "destaque"
+      ],
+      "sintomas_novos": [
+        "destaque como numero"
+      ]
+    },
+    "contagem_inconsistente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "consulta de produtos",
+        "contagem de itens",
+        "inconsistencia"
+      ],
+      "sintomas_novos": [
+        "total e lista com numeros diferentes",
+        "renderizacao incorreta de destaques"
+      ]
+    },
+    "escala_ou_unidade_errada": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "float"
+      ],
+      "sintomas_novos": [
+        "precisao na comanda"
+      ]
+    },
+    "corpo_nao_e_json": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "erro de memoria",
+        "php",
+        "conexao",
+        "resposta html",
+        "erro de integracao"
+      ],
+      "sintomas_novos": [
+        "fatal error",
+        "memoria esgotada",
+        "resposta html",
+        "falha ao acessar de fora da rede local",
+        "resposta html em vez de json"
+      ]
+    },
+    "entidade-produto": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    }
+  }
+}

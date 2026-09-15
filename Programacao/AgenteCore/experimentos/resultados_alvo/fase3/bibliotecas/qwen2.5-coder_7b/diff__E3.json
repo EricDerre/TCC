@@ -1,0 +1,100 @@
+{
+  "arquivos_novos": [],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "erros/campo_renomeado.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/corpo_vazio.md",
+    "erros/erro_interno_do_servidor.md",
+    "erros/estado_da_tela_divergente.md",
+    "erros/localizador_quebrado.md",
+    "erros/tempo_de_resposta_excedido.md"
+  ],
+  "linhas_acrescentadas": 29,
+  "linhas_removidas": 13,
+  "chars_antes": 63449,
+  "chars_depois": 67040,
+  "chars_acrescentados": 3591,
+  "tokens_estimados_acrescentados": 1381,
+  "por_verbete": {
+    "erro_interno_do_servidor": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "falhas de banco de dados",
+        "injetores de erros"
+      ],
+      "sintomas_novos": [
+        "erro interno do servidor",
+        "banco fora"
+      ]
+    },
+    "estado_da_tela_divergente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "carregamento de dados",
+        "interface do usuario"
+      ],
+      "sintomas_novos": [
+        "tela nao reflete dados atualizados",
+        "estado inconsistente"
+      ]
+    },
+    "localizador_quebrado": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": [
+        "botoes de preco desabilitados"
+      ]
+    },
+    "corpo_nao_e_json": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "ambiente externo",
+        "erro 500"
+      ],
+      "sintomas_novos": [
+        "falha em ambientes externos"
+      ]
+    },
+    "campo_renomeado": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "renomeacao",
+        "campo-alvo",
+        "injeccao de falha"
+      ],
+      "sintomas_novos": [
+        "titulo vazio",
+        "preco e categoria corretos"
+      ]
+    },
+    "corpo_vazio": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "erro interno",
+        "rota errada"
+      ],
+      "sintomas_novos": [
+        "pagina de carregamento indefinido",
+        "dados nao retornados"
+      ]
+    },
+    "tempo_de_resposta_excedido": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "tempo limite",
+        "atraso"
+      ],
+      "sintomas_novos": [
+        "tempo de resposta excedido"
+      ]
+    }
+  }
+}
