@@ -137,7 +137,8 @@ TCC/
 ├── install.cmd / install.ps1 / install.sh / install.py   # instalador (chamado por Cobaia.exe também)
 ├── run.cmd / run.ps1 / run.sh / run.py                   # sobe CobaiaFront + CobaiaAPI juntos
 ├── _env_common.py                          # helpers compartilhados por install.py/run.py/Cobaia.py
-├── .claude/CLAUDE.md                       # regras de colaboração com IA neste repo (fora do git)
+├── .claude/                                # CLAUDE.md, settings.json (hooks, permissões), rules/ e skills/ do Claude Code — versionados; só settings.local.json fica fora
+├── ferramentas/                            # scripts locais de apoio ao trabalho com IA: medição de tokens, resumo de saídas, conferência da documentação, pesquisa
 ├── claude-memoria/                         # memória do Claude + CLAUDE.md portáteis, com importar/exportar.ps1
 ├── Documentacao/                           # projeto de pesquisa (ABNT) do TCC e memorial de desenvolvimento
 └── Programacao/
@@ -565,10 +566,58 @@ casos (`-Piloto`) rodou em 12/09/2026 em 00h13 — `qwen2.5-coder:3b`, 1 época,
 modelos. A bateria é **retomável**: interromper com Ctrl+C e rodar de novo
 continua da mesma época e do mesmo caso, sem repetir trabalho já fechado.
 
+<!-- ! Alteração de IA - Revisar: em 21/09/2026 entraram o parágrafo "Resultado da Fase 3", a subseção "Fase 3-B" e a seção "Ferramentas de apoio".
+     ! Motivo: a bateria da Fase 3 rodou em 13–15/09/2026 e o README ainda descrevia só a preparação; a Fase 3-B (executor próprio, sem tocar nos scripts oficiais) e a pasta `ferramentas/` são novas no repositório e ninguém saberia para que servem sem esta descrição. Números só com origem: `resultados_alvo/fase3/fase3.log` e `comparacao_fases.md`. -->
+**Resultado da Fase 3 (13–15/09/2026).** A bateria rodou na máquina-alvo de
+13/09 08:45 a 15/09 18:44 (`FIM da Fase 3 - duracao total 58h59 - modelos com
+falha: nenhum`, Ollama 0.34.0), 2.088 inferências, e os resultados estão em
+`resultados_alvo/fase3/` (commit `b9f9ad9`). As tabelas por modelo e fase estão
+em `resultados_alvo/fase3/comparacao_fases.md`; a leitura e a decisão do modelo
+ficam no Memorial (`Documentacao/memorial/3-resultados-e-analises/`), em
+preenchimento pelo plano complementar de 21/09/2026.
+
+### Fase 3-B — ponte de versão e testes complementares
+
+Depois da bateria o Ollama atualizou sozinho de 0.34.0 para 0.34.1. Qualquer
+inferência nova passa antes por uma **ponte de versão** (L0 nos 36 casos de
+avaliação, 4 modelos) que mede se o runtime novo reproduz o antigo; só então os
+testes complementares que o Eric escolher (casos inéditos, troca cruzada de
+bibliotecas entre modelos, granite com o teto de texto relaxado, verbete errado
+plantado nas bibliotecas finais). Tudo roda por um executor **próprio**, que
+lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
+`estrategias.py`, `evolucao_biblioteca.py` nem `resultados_alvo/fase3/`.
+
+| Script | O que faz | Como rodar |
+|---|---|---|
+| `executar_fase3b.py` | Modos `ponte`, `cruzada` (`--doador`, `--versoes`), `texto_max` (`--texto-max`, só granite), `a5` e `ineditos`; copia o snapshot pedido para a pasta da saída, grava `condicoes_3b.json` e `maquina.json` e chama a "passada final" de `executar_fase3.rodar_epoca` (só diagnóstico). | `python executar_fase3b.py --modo ponte --saida fase3b_ponte --modelos …` |
+| `avaliar_fase3b.py` | Avalia a saída de um modo: os quatro primeiros delegam a `avaliar_fase3.avaliar_saida`; `ineditos` agrega com o gabarito de cada registro. | `python avaliar_fase3b.py --saida fase3b_ponte` |
+| `testar_fase3b.py` | Testes sem LLM (cópia preserva o hash, modos aplicam e restauram `TEXTO_MAX`/`CONDICAO`, área oficial intocada antes e depois da suíte). | `python testar_fase3b.py` |
+| `rodar_fase3b.ps1` | Orquestrador: testes, um modelo por vez com checagem de RAM (pula e lista o modelo se faltar memória; relançar retoma), avaliação ao fim. | `powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo ponte -Saida fase3b_ponte` |
+
+Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
+copiados em `bibliotecas/<slug>/`, `diagnosticos__L<n>.jsonl` por modelo,
+`avaliacao_fase3.json`, `resumo_fase3.json`) mais `condicoes_3b.json` (modo, doador,
+versões, teto de texto, condição, versão do Ollama). A ponte de 21/09/2026 rodou só
+para o `qwen2.5-coder:3b` (os modelos maiores foram pulados por falta de RAM livre
+durante o dia); relançar o mesmo comando retoma os que faltam.
+
+## Ferramentas de apoio ao trabalho com IA (`ferramentas/`)
+
+Scripts em Python padrão, sem dependência, que fazem localmente o que antes se
+pedia a agentes (regra registrada no `CLAUDE.md`: primeiro a máquina, depois o
+modelo):
+
+| Script | O que faz |
+|---|---|
+| `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). |
+| `resumir_saida.py` / `gancho_pre_bash.py` | Hook `PreToolUse` do Claude Code (`.claude/settings.json`) que encurta a saída de comandos longos (testes, baterias, `git diff`) antes de ela entrar no contexto. |
+| `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
+| `extrair_pesquisa.py`, `render_levantamento.py`, `integrar_pesquisa.py` | Fecham a pesquisa bibliográfica por script: extraem os artefatos verificados, geram as subseções no formato do Memorial (com `--check`) e integram texto, referências (com dedup) e mapa de decisões. |
+
 ## Memória do Claude Code entre máquinas
 
 <!-- ! Alteração de IA - Revisar: seção nova apontando para a pasta claude-memoria/.
-     ! Motivo: a memória do Claude e o .claude/CLAUDE.md não viajam pelo git (ficam fora do
+     ! Motivo (nota de 21/09/2026: desde então `.claude/` é versionada, menos `settings.local.json`; a memória em `~/.claude/projects/` continua fora): a memória do Claude e o .claude/CLAUDE.md não viajavam pelo git (ficavam fora do
      repositório ou no .gitignore); quem for usar o Claude na máquina-alvo precisa saber
      que existe um importador. -->
 O que o Claude Code sabe deste projeto (decisões, regra de comentário, regra de
@@ -626,7 +675,7 @@ ajudar.
 | `.env` | **Não** | Configuração local. Use o `.env.example` como base. |
 | `build/`, `dist/` | **Não** | Artefatos transitórios do PyInstaller (o `.exe` final é gravado na raiz, esses ficam no `%TEMP%`). |
 | `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore — centenas de MB, específicos de cada SO, baixados por instalador. |
-| `.claude/` | **Não** | Config local do Claude Code, não faz parte do projeto. |
+| `.claude/` (menos `settings.local.json`) | **Sim** | Configuração do projeto para o Claude Code: `CLAUDE.md`, `settings.json` (hook que resume saídas longas, permissões de leitura, plugin de estilo desligado), `rules/` por tipo de arquivo e `skills/` copiadas — precisa chegar à outra máquina pelo git (decisão do Eric, 21/09/2026). Só `settings.local.json` (permissões concedidas nesta máquina) fica de fora. |
 | `.superpowers/` | **Não** | Rascunho de sessão do Claude Code (livro-razão, briefs e relatórios de tarefa da Fase 3); mesma natureza de `.claude/`. |
 | `Programacao/AgenteCore/experimentos/resultados_alvo/fase3_piloto/` | **Não** | Piloto da Fase 3 (1 modelo, 10 casos, 1 época): existe para conferir o encanamento e calibrar o tempo antes das ~60 h; seus JSONL e snapshots confundiriam a leitura de `resultados_alvo/fase3/`, que é o que vale. |
 

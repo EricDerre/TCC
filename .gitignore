@@ -9,9 +9,14 @@
 # coisas atrapalharia o "hit and run" em vez de ajudar.
 
 # ---------------------------------------------------------------------------
-# Config local do Claude Code — não faz parte do projeto
+# Config local do Claude Code — só o que é desta máquina fica de fora
 # ---------------------------------------------------------------------------
-.claude/
+# ! Alteração de IA - Revisar: em 21/09/2026 a regra `.claude/` (pasta inteira) virou
+# `.claude/settings.local.json`; `settings.json`, `rules/` e `skills/` do projeto passam a ser versionados.
+# ! Motivo: decisão do Eric (21/09/2026): as regras por tipo de arquivo, as 5 skills copiadas e
+# os hooks de economia de tokens são configuração do PROJETO e precisam chegar à outra máquina
+# pelo git; só `settings.local.json` (permissões concedidas nesta máquina) continua local.
+.claude/settings.local.json
 # ! Alteração de IA - Revisar: pasta de trabalho do processo de execução por subagentes
 # (livro-razão, briefs, pacotes de revisão da Fase 3) fora do versionamento.
 # ! Motivo: é rascunho de sessão do Claude Code, igual a .claude/; versionar poluiria o

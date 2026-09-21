@@ -1,0 +1,15 @@
+{
+  "modo": "ponte",
+  "doador": null,
+  "versoes": [
+    0
+  ],
+  "texto_max": null,
+  "condicao": "A2",
+  "modelos": [
+    "qwen2.5-coder:3b"
+  ],
+  "versao_ollama": "0.34.1",
+  "origem": "resultados_alvo/fase3",
+  "criado_em": "2026-09-21T14:25:08"
+}

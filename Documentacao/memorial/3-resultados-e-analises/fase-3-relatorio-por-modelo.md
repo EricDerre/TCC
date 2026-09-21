@@ -38,7 +38,11 @@
 
 Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md). Leitura das fases anteriores em [fase-2a-relatorio-por-modelo.md](fase-2a-relatorio-por-modelo.md) e [fase-2b-relatorio-por-modelo.md](fase-2b-relatorio-por-modelo.md); a leitura das três juntas está em [comparacao-entre-fases.md](comparacao-entre-fases.md). Gráficos em `Programacao/AgenteCore/experimentos/resultados_alvo/graficos/12…17`; respostas cruas, propostas de edição caso a caso e diffs de cada época em `resultados_alvo/fase3/relatorio_fase3.html`. **Nenhum número deste arquivo foi digitado à mão**: todos saem de `avaliar_fase3.py` (`avaliacao_fase3.json`, `resumo_fase3.json`) e de `comparar_fases.py`, com o corte citado em cada seção.
 
-> **Estado em 12/09/2026: pré-registrado, bateria não executada.** A implementação do harness está concluída e revisada; o piloto de 10 casos do orquestrador (`rodar_fase3.ps1 -Piloto`) rodou em 12/09/2026 e os números dele entram em §9; a bateria completa (~60 h) aguarda a decisão do Eric. As seções 1, 2 e 11 valem como estão — descrevem o desenho. As demais estão marcadas com *(a preencher…)* e só recebem número depois da bateria.
+<!-- ! Alteração de IA - Revisar: linha de estado nova (21/09/2026); a anterior fica como histórico, sem negrito.
+     ! Motivo: a bateria rodou de 13/09 08:45 a 15/09 18:44 (`resultados_alvo/fase3/fase3.log`, `FIM … 58h59`, 0 falhas, Ollama 0.34.0) e o cabeçalho ainda dizia "bateria não executada"; as seções §2–§8 e §12 são preenchidas pelo plano complementar de 21/09. -->
+> **Estado em 21/09/2026: bateria concluída (13–15/09/2026, 2.088 inferências, 0 falhas, Ollama 0.34.0); resultados em `resultados_alvo/fase3/` (commit b9f9ad9); relatório em preenchimento pelo plano complementar de 21/09/2026.**
+>
+> Estado anterior (12/09/2026): pré-registrado; a bateria ainda não tinha rodado. A implementação do harness está concluída e revisada; o piloto de 10 casos do orquestrador (`rodar_fase3.ps1 -Piloto`) rodou em 12/09/2026 e os números dele entram em §9; a bateria completa (~60 h) aguarda a decisão do Eric. As seções 1, 2 e 11 valem como estão — descrevem o desenho. As demais estão marcadas com *(a preencher…)* e só recebem número depois da bateria.
 
 ## 1. O que foi medido
 

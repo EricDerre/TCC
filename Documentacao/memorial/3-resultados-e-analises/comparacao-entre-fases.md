@@ -27,7 +27,11 @@
 
 Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md). Relatórios de cada fase em [fase-2a-relatorio-por-modelo.md](fase-2a-relatorio-por-modelo.md), [fase-2b-relatorio-por-modelo.md](fase-2b-relatorio-por-modelo.md) e [fase-3-relatorio-por-modelo.md](fase-3-relatorio-por-modelo.md). As tabelas deste arquivo são coladas de `resultados_alvo/fase3/comparacao_fases.md`, gerado por `comparar_fases.py` a partir de `experimentos/avaliacao.json` (2-A), `resultados_alvo/avaliacao.json` (2-B) e `resultados_alvo/fase3/avaliacao_fase3.json`. **Nenhum número é digitado à mão.** Gráficos 16 `comparacao-entre-fases` e 17 `custo-versus-acerto-tres-fases`.
 
-> **Estado em 12/09/2026: pré-registrado, bateria não executada** (implementação concluída e revisada; piloto de 10 casos rodado em 12/09/2026). As seções 1 e 2 valem como estão. As demais estão marcadas com *(a preencher…)*.
+<!-- ! Alteração de IA - Revisar: linha de estado nova (21/09/2026); a anterior fica como histórico, sem negrito.
+     ! Motivo: a bateria da Fase 3 rodou em 13–15/09/2026 e `comparacao_fases.md` já existe em `resultados_alvo/fase3/`; o cabeçalho dizia "bateria não executada". §3–§6 são preenchidas pelo plano complementar de 21/09. -->
+> **Estado em 21/09/2026: bateria concluída (13–15/09/2026); `comparacao_fases.md` gerada em 15/09 18:44; §3–§6 em preenchimento pelo plano complementar de 21/09/2026.**
+>
+> Estado anterior (12/09/2026): pré-registrado; a bateria ainda não tinha rodado (implementação concluída e revisada; piloto de 10 casos rodado em 12/09/2026). As seções 1 e 2 valem como estão. As demais estão marcadas com *(a preencher…)*.
 
 ## 1. O que é comparável, e o que não é
 

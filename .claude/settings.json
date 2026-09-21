@@ -1,0 +1,47 @@
+{
+  "_comentario": "! Alteração de IA - Revisar: configuração do projeto criada em 21/09/2026 (hook de economia de tokens; plugin de estilo explicativo desligado neste projeto). ! Motivo: decisões do Eric no plano complementar de 21/09/2026 — saídas longas de testes/baterias passam por ferramentas/resumir_saida.py antes de entrar no contexto, e o plugin explanatory-output-style acrescentava blocos de explicação em toda resposta.",
+  "enabledPlugins": {
+    "explanatory-output-style@claude-plugins-official": false
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"C:/Users/Eric.Derre/Documents/TCC/ferramentas/gancho_pre_bash.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(sed -n:*)",
+      "Bash(find:*)",
+      "Bash(python ferramentas/medir_tokens.py:*)",
+      "Bash(python ferramentas/conferir_docs.py:*)",
+      "Bash(python ferramentas/resumir_saida.py:*)",
+      "Bash(PYTHONIOENCODING=utf-8 python testar_fase3.py:*)",
+      "Bash(PYTHONIOENCODING=utf-8 python testar_fase3b.py:*)",
+      "Bash(curl -s http://localhost:11434/api/ps:*)",
+      "Bash(curl -s http://localhost:11434/api/version:*)",
+      "Bash(ollama ps:*)",
+      "Bash(ollama list:*)"
+    ]
+  },
+  "_comentario_permissoes": "! Alteração de IA - Revisar: lista de comandos só de leitura liberados sem confirmação (21/09/2026). ! Motivo: são os comandos que toda sessão repete dezenas de vezes (git status/diff, ls, grep, testes sem LLM, medição de tokens); nenhum deles altera arquivo ou índice do git."
+}

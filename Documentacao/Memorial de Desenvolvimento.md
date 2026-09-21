@@ -24,7 +24,9 @@
 
 **Projeto:** Agente de QA End-to-End Autônomo com Capacidades de Self-Healing — UNICID, Ciência da Computação.
 **Finalidade:** servir de insumo para a redação do relatório final. Reúne decisões tomadas e por quem, achados experimentais, correções feitas no projeto de pesquisa e as referências levantadas. As alterações de código aparecem apenas resumidas e referenciadas por commit.
-**Período coberto:** 31/08/2026 a 12/09/2026.
+<!-- ! Alteração de IA - Revisar: período coberto estendido a 21/09/2026 (bateria da Fase 3 de 13–15/09 e plano complementar de 21/09).
+     ! Motivo: o Memorial dizia cobrir até 12/09 e a bateria inteira (58 h) ficou fora de qualquer registro narrativo; a data acompanha a última sessão documentada. -->
+**Período coberto:** 31/08/2026 a 21/09/2026.
 
 O conteúdo está dividido por tema na pasta [`memorial/`](memorial/). A numeração das seções é a do memorial original: "4.12" é sempre o mesmo achado, esteja em que arquivo estiver.
 
@@ -45,7 +47,10 @@ Duas frentes, ambas com o objetivo de evitar decisão por intuição.
 - [Memória gerida pelo próprio modelo](memorial/2-pesquisa-e-literatura/memoria-gerida-pelo-modelo.md) — §6.6: o que a literatura mostra sobre modelo que escreve a própria documentação — escrita aditiva, portão de validação, curvas que sobem e caem.
 - [Tokenização e arquitetura](memorial/2-pesquisa-e-literatura/tokenizacao-e-arquitetura.md) — §6.7: como o texto vira token, o que isso custa em contexto e por que a estimativa por caracteres erra.
 - [Métricas e desenho experimental](memorial/2-pesquisa-e-literatura/metricas-e-desenho-experimental.md) — §6.8: acurácia balanceada, Q de Cochran, Holm, poder de teste e partição — amplia a §6.5.
-- [Levantamento de 11/09/2026 para a Fase 3](memorial/2-pesquisa-e-literatura/levantamento-2026-09-11-fase-3.md) — §6.9: as sínteses verificadas e as lacunas da rodada de pesquisa que sustentou o plano da Fase 3.
+<!-- ! Alteração de IA - Revisar: em 21/09/2026 a linha do levantamento passou a descrever as duas rodadas (§6.9.1–6.9.17) e entrou a linha do mapa de decisões (§6.10).
+     ! Motivo: a rodada 2 da pesquisa (oito temas: conflito contexto × conhecimento, validação em código de artefatos, estágios em modelos pequenos, qualidade de documentação, aprender sem atualizar pesos, taxonomia e rótulos-ouro, agentes autônomos de QA, recuperação em corpus pequeno) foi integrada em 21/09 e o mapa é o arquivo que a análise decisória da Fase 3 cita; sem as linhas o índice não os alcançaria. -->
+- [Levantamento bibliográfico para a Fase 3 (rodadas de 11/09 e 21/09/2026)](memorial/2-pesquisa-e-literatura/levantamento-2026-09-11-fase-3.md) — §6.9: as sínteses verificadas das duas rodadas (§6.9.1–6.9.8 os oito tópicos do plano; §6.9.9–6.9.16 as oito lacunas fechadas em 21/09), as afirmações rejeitadas com o motivo (§6.9.17) e as lacunas que restam.
+- [Mapa de decisões — o que a literatura previa para a Fase 3](memorial/2-pesquisa-e-literatura/mapa-de-decisoes-fase-3.md) — §6.10: achado → número → fonte → critério de leitura dos resultados, riscos com mitigação, métricas sustentadas pela literatura e os capítulos do livro-guia por seção.
 - [Referências levantadas](memorial/2-pesquisa-e-literatura/referencias.md) — §9: todas as fontes, por tema.
 
 ### 3. Resultados e análises — [`memorial/3-resultados-e-analises/`](memorial/3-resultados-e-analises/)
@@ -55,11 +60,18 @@ Resultados obtidos executando, não deduções.
 - [Validação da hipótese de uso de Cython](memorial/3-resultados-e-analises/validacao-cython.md) — §7.
 - [**Fase 2-A — relatório por modelo**](memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md) — protocolo, quadro geral, estratégias, classes × níveis, modos de falha, perfil de cada um dos 6 modelos, custo, ameaças à validade e as hipóteses registradas para a 2-B.
 - [**Fase 2-B — biblioteca de documentação: relatório por modelo**](memorial/3-resultados-e-analises/fase-2b-relatorio-por-modelo.md) — máquina-alvo, linha de base em duas máquinas, recuperada × inteira, teto da recuperação, efeito por classe, adesão cega, quantização, custo no i5, perfil dos 6 modelos, comparação com a 2-A e as decisões a tomar.
-- [**Fase 3 — biblioteca gerida pelo próprio modelo: relatório por modelo**](memorial/3-resultados-e-analises/fase-3-relatorio-por-modelo.md) — protocolo, partição 54/36, hipóteses pré-registradas, curva por versão da biblioteca, recuperação por biblioteca, documentação produzida, revisão humana das edições, perfil por modelo, custo e ameaças à validade. *Pré-registrado em 11/09/2026; os números entram depois da bateria.*
+- [**Fase 3 — biblioteca gerida pelo próprio modelo: relatório por modelo**](memorial/3-resultados-e-analises/fase-3-relatorio-por-modelo.md) — protocolo, partição 54/36, hipóteses pré-registradas, curva por versão da biblioteca, recuperação por biblioteca, documentação produzida, revisão humana das edições, perfil por modelo, custo e ameaças à validade. *Pré-registrado em 11/09/2026; bateria executada em 13–15/09/2026; preenchimento em andamento pelo plano complementar de 21/09/2026.*
 - [**Comparação entre as fases**](memorial/3-resultados-e-analises/comparacao-entre-fases.md) — o que é comparável entre 2-A, 2-B e Fase 3 (máquina, fixtures, prompts), as tabelas que o `comparar_fases.py` gera, ganhos/riscos/perdas por fase e a decisão do modelo final.
 
 ### 4. Projeto de pesquisa (ABNT) — [`memorial/4-projeto-de-pesquisa-abnt/`](memorial/4-projeto-de-pesquisa-abnt/)
 - [Correções aplicadas](memorial/4-projeto-de-pesquisa-abnt/correcoes-aplicadas.md) — §5: trecho, antes, depois e motivo de cada correção.
+
+<!-- ! Alteração de IA - Revisar: seção 5 nova no índice (21/09/2026) para a pasta `memorial/5-metodo-e-ferramental/`.
+     ! Motivo: o plano complementar de 21/09/2026 documenta o ferramental do agente de apoio (Claude Code) e das LLMs locais — avaliado, adotado e descartado com motivo — como insumo do documento final; sem a seção o índice não alcança os dois arquivos. -->
+### 5. Método e ferramental — [`memorial/5-metodo-e-ferramental/`](memorial/5-metodo-e-ferramental/)
+Como o trabalho é feito e com que ferramentas, para que a banca saiba o que foi decidido por método e não por acaso.
+- [Ferramental do agente de apoio (Claude Code)](memorial/5-metodo-e-ferramental/ferramental-do-claude-code.md) — §7.1 a 7.6: a máquina e seus limites, os dois repositórios indicados (avaliação e decisão), os outros complementos com o motivo de cada adoção ou descarte, as práticas de economia de tokens e a medição de consumo antes e depois.
+- [Ferramental das LLMs locais](memorial/5-metodo-e-ferramental/ferramental-das-llms-locais.md) — §7.7 a 7.9: o que os mesmos repositórios significam para o agente local, o artigo sobre cache de respostas (o que já existe, o que entra, o que foi descartado) e a pesquisa específica de melhorias.
 
 ### Pendências
 - [Pendências e questões em aberto](memorial/pendencias.md) — §8.

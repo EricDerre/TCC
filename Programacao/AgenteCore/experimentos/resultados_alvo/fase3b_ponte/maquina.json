@@ -1,0 +1,11 @@
+{
+  "hostname": "TARGET_TSP030",
+  "cpu": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "cpus_logicas": 12,
+  "ram_mb": 16069,
+  "sistema": "Windows-11-10.0.26200-SP0",
+  "ollama": "0.34.1",
+  "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+  "inicio": "2026-09-21T14:25:06",
+  "saida": "fase3b_ponte"
+}

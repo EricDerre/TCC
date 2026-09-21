@@ -19,6 +19,9 @@
 
 **Aprovado pelo Eric em 11/09/2026.**
 
+> <!-- ! Alteração de IA - Revisar: linha de estado de 21/09/2026 acrescentada acima da de 13/09. ! Motivo: a bateria rodou (13–15/09, 58h59, 0 falhas) e o texto abaixo ainda dizia "aguardando decisão do Eric"; o fechamento (relatórios, pesquisa, Fase 3-B) segue o plano complementar de 21/09/2026. -->
+> **Estado em 21/09/2026: bateria completa executada em 13–15/09/2026 (`FIM … 58h59`, 0 falhas, Ollama 0.34.0; resultados no commit b9f9ad9); o que resta (relatórios, rodada 2 da pesquisa, revisão humana, Fase 3-B) está no plano complementar de 21/09/2026.**
+>
 > Estado em 13/09/2026: implementação concluída, revisada e corrigida na onda final (revisão da T12 + duas lentes por onda; 60 testes em `testar_fase3.py`); piloto de 10 casos executado duas vezes (`rodar_fase3.ps1 -Piloto`: v1 em 12/09, 00h13, 0 de 6 propostas aceitas antes da decisão 41; v2 em 13/09, 00h15, 2 de 6 aceitas — §9 do relatório da Fase 3); bateria completa aguardando decisão do Eric (~60 h no plano; 67,18 h na projeção do executor). Ver `README.md` (seção "AgenteCore — experimentos com os modelos locais") para os scripts e o **anexo ao final deste arquivo** para os desvios do plano.
 
 ---

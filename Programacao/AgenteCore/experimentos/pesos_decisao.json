@@ -1,0 +1,13 @@
+{
+  "limiar_autoenvenenamento_pct": 10.0,
+  "pesos": {
+    "acuracia_balanceada_36": 0.5,
+    "acerto_36": 0.1,
+    "custo_segundos": 0.2,
+    "risco": 0.2
+  },
+  "n_bootstrap": 2000,
+  "semente": 20260921,
+  "_nota": "pesos declarados antes da leitura dos resultados; a varredura de sensibilidade mostra onde o vencedor muda",
+  "_comentario": "! Alteração de IA - Revisar: cria pesos_decisao.json (Tarefa P2.1) com o limiar de veto por autoenvenenamento, os pesos do escore ponderado de decidir_modelo.py e a semente do bootstrap. ! Motivo: brief-p2-decidir-modelo.md exige que os pesos sejam declarados ANTES da leitura de comparacao_fases.json/resumo_fase3.json, para a varredura de sensibilidade (decidir_modelo.py --saida fase3) mostrar se o vencedor é estável ou um artefato da escolha de pesos, em vez de pesos ajustados depois de ver o resultado."
+}

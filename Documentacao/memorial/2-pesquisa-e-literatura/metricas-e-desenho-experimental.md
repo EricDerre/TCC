@@ -68,3 +68,9 @@ Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md)
 8. **Manifesto de reprodutibilidade por época** (em todo registro JSONL: modelo, digest sha256 — que identifica o arquivo baixado e, com ele, a quantização da tag —, máquina e, pela decisão 44, versão do Ollama; em `fechamento.json`: hash da biblioteca de cada época e versão do Ollama; `num_ctx` = 8192 é constante do harness, `NUM_CTX` em `cliente_ollama.py`, não campo gravado; nenhuma semente é passada ao Ollama), sem assumir determinismo a 0,1 (HE; THINKING MACHINES LAB, 2025; BALTES et al., 2025).
 9. **Curva época a época, com a cópia da biblioteca de cada época guardada**, e não só a última época (LIN, 2026).
 10. **Recall@k e MRR@k do recuperador a cada época**, porque a biblioteca muda e o recuperador é o teto do sistema — achado 4.23 (AKARSU; KARAMAN; MIERBACH, 2026).
+
+<!-- ! Alteração de IA - Revisar: parágrafo-ponte para as subseções da rodada 2 da pesquisa (21/09/2026), acrescentado ao fim da seção.
+     ! Motivo: a rodada 2 fechou as lacunas que esta seção apontava; sem o ponteiro, quem lê a seção não sabe que o levantamento cresceu (§6.9.9–6.9.17) nem que existe o mapa de decisões (§6.10). Nenhum número novo é digitado aqui: os números ficam nas subseções citadas. -->
+## Complemento da rodada 2 da pesquisa (21/09/2026)
+
+O [mapa de decisões](mapa-de-decisoes-fase-3.md) (§6.10), gerado das 16 sínteses verificadas, lista os achados da literatura que fundamentam cada critério de leitura dos resultados da Fase 3 (acurácia balanceada como métrica primária, leitura de L1 e não só de L3, autoenvenenamento como veto, efeito mínimo detectável declarado antes do p-valor) e os capítulos do livro-guia que ancoram cada seção. A §6.9.15 do [levantamento](levantamento-2026-09-11-fase-3.md) acrescenta a validação da taxonomia (ortogonalidade e kappa) e a §6.9.11 as métricas de qualidade de documentação que a análise decisória pode usar.
