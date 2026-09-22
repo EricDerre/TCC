@@ -130,11 +130,23 @@ Pesos declarados em pesos_decisao.json (normalização mín-máx por critério; 
 
 ## 6. Fase 3-B
 
-Sem 3-B: nenhuma das saídas em `--saidas-3b` tinha `avaliacao_fase3.json` no momento desta corrida.
+### fase3b_ponte (modo `ponte`)
+
+| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | b | c | p (McNemar) | p (Holm) | g de Cohen |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:3b | L0 | 36 | 69,4% | 68,8% | 36 | 0 | 0 | 1,0000 | 1,0000 | — |
+| qwen2.5-coder:7b | L0 | 36 | 75,0% | 80,0% | 36 | 0 | 0 | 1,0000 | 1,0000 | — |
+| qwen2.5:7b | L0 | 36 | 77,8% | 78,8% | 36 | 1 | 1 | 1,0000 | 1,0000 | 0,0 |
 
 ## 7. Revisão humana
 
-Nenhuma edição foi revisada manualmente até esta corrida -- a planilha revisao_edicoes__<slug>.md (avaliar_fase3.gerar_planilha_revisao) está vazia ou não foi preenchida.
+Fonte: planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida.
+
+| Modelo | n | Correta | Parcial | Errada | Sem avaliação |
+|---|---|---|---|---|---|
+| qwen2.5-coder:3b | 10 | 40,0% | 20,0% | 40,0% | 0,0% |
+| qwen2.5-coder:7b | 24 | 41,7% | 29,2% | 29,2% | 0,0% |
+| qwen2.5:7b | 29 | 31,0% | 27,6% | 41,4% | 0,0% |
 
 ## Frase da decisão
 

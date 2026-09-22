@@ -572,9 +572,16 @@ continua da mesma época e do mesmo caso, sem repetir trabalho já fechado.
 13/09 08:45 a 15/09 18:44 (`FIM da Fase 3 - duracao total 58h59 - modelos com
 falha: nenhum`, Ollama 0.34.0), 2.088 inferências, e os resultados estão em
 `resultados_alvo/fase3/` (commit `b9f9ad9`). As tabelas por modelo e fase estão
-em `resultados_alvo/fase3/comparacao_fases.md`; a leitura e a decisão do modelo
-ficam no Memorial (`Documentacao/memorial/3-resultados-e-analises/`), em
-preenchimento pelo plano complementar de 21/09/2026.
+em `resultados_alvo/fase3/comparacao_fases.md`; a leitura está no Memorial
+(`Documentacao/memorial/3-resultados-e-analises/`, relatório e comparação
+preenchidos em 22/09/2026). **Decisão do modelo (22/09/2026, decisão 52):
+`qwen2.5:7b` com a biblioteca no estado L1** — pela regra pré-registrada
+(`decidir_modelo.py` → `resultados_alvo/fase3/decisao_modelo.md`: 91,7% de
+acurácia balanceada nos 36 casos de avaliação, sem veto por autoenvenenamento;
+P(top-1) de 77,6% no bootstrap); análise completa em
+`Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md`.
+As tabelas do Memorial saem de `gerar_tabelas_relatorio_fase3.py` como blocos
+conferidos por `--check` (`resultados_alvo/fase3/tabelas_relatorio.md`).
 
 ### Fase 3-B — ponte de versão e testes complementares
 
@@ -593,13 +600,18 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `avaliar_fase3b.py` | Avalia a saída de um modo: os quatro primeiros delegam a `avaliar_fase3.avaliar_saida`; `ineditos` agrega com o gabarito de cada registro. | `python avaliar_fase3b.py --saida fase3b_ponte` |
 | `testar_fase3b.py` | Testes sem LLM (cópia preserva o hash, modos aplicam e restauram `TEXTO_MAX`/`CONDICAO`, área oficial intocada antes e depois da suíte). | `python testar_fase3b.py` |
 | `rodar_fase3b.ps1` | Orquestrador: testes, um modelo por vez com checagem de RAM (pula e lista o modelo se faltar memória; relançar retoma), avaliação ao fim. | `powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo ponte -Saida fase3b_ponte` |
+| `decidir_modelo.py` (+ `pesos_decisao.json`, `gerar_graficos_decisao.py`) | Decide modelo e estado da biblioteca pela regra pré-registrada (decisão 36) e mede a robustez (bootstrap, estabilidade, Pareto, escore ponderado com sensibilidade), pareia as saídas da 3-B com a Fase 3 e apura a revisão das edições; grava `decisao_modelo.json/.md` (documento derivado) e a figura 18. | `python decidir_modelo.py --saida fase3 --saidas-3b fase3b_ponte` (`--check` confere) |
+| `gerar_tabelas_relatorio_fase3.py` | Tabelas do relatório da Fase 3, da comparação entre fases e da análise decisória (Memorial) a partir de `resumo_fase3.json`, `comparacao_fases.md`, `decisao_modelo.md` e `fase3.log`, como blocos `<!-- tabela:NOME -->`; `--check` acusa qualquer bloco colado que difira do regerado. | `python gerar_tabelas_relatorio_fase3.py --saida fase3 [--check]` |
+| `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados — nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
 copiados em `bibliotecas/<slug>/`, `diagnosticos__L<n>.jsonl` por modelo,
 `avaliacao_fase3.json`, `resumo_fase3.json`) mais `condicoes_3b.json` (modo, doador,
-versões, teto de texto, condição, versão do Ollama). A ponte de 21/09/2026 rodou só
-para o `qwen2.5-coder:3b` (os modelos maiores foram pulados por falta de RAM livre
-durante o dia); relançar o mesmo comando retoma os que faltam.
+versões, teto de texto, condição, versão do Ollama). A ponte de 21/09/2026 cobriu
+`qwen2.5-coder:3b`, `qwen2.5:7b` e `qwen2.5-coder:7b` (b/c 0/0, 1/1 e 0/0 nos 36:
+pareáveis com a Fase 3); o `granite4.2:8b` foi pulado duas vezes por RAM (8 GB
+exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52). Os testes complementares
+a escolher estão no §10 da análise decisória.
 
 ## Ferramentas de apoio ao trabalho com IA (`ferramentas/`)
 
@@ -612,7 +624,7 @@ modelo):
 | `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). |
 | `resumir_saida.py` / `gancho_pre_bash.py` | Hook `PreToolUse` do Claude Code (`.claude/settings.json`) que encurta a saída de comandos longos (testes, baterias, `git diff`) antes de ela entrar no contexto. |
 | `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
-| `extrair_pesquisa.py`, `render_levantamento.py`, `integrar_pesquisa.py` | Fecham a pesquisa bibliográfica por script: extraem os artefatos verificados, geram as subseções no formato do Memorial (com `--check`) e integram texto, referências (com dedup) e mapa de decisões. |
+| `extrair_pesquisa.py`, `render_levantamento.py`, `integrar_pesquisa.py`, `integrar_pesquisa_llms.py` | Fecham as pesquisas bibliográficas por script: extraem os artefatos verificados, geram as subseções no formato do Memorial (com `--check`) e integram texto, referências (com dedup), mapa de decisões (Fase 3) e mapa adotado/adiado/descartado (LLMs locais, §6.12 e §7.9). |
 
 ## Memória do Claude Code entre máquinas
 
@@ -677,6 +689,7 @@ ajudar.
 | `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore — centenas de MB, específicos de cada SO, baixados por instalador. |
 | `.claude/` (menos `settings.local.json`) | **Sim** | Configuração do projeto para o Claude Code: `CLAUDE.md`, `settings.json` (hook que resume saídas longas, permissões de leitura, plugin de estilo desligado), `rules/` por tipo de arquivo e `skills/` copiadas — precisa chegar à outra máquina pelo git (decisão do Eric, 21/09/2026). Só `settings.local.json` (permissões concedidas nesta máquina) fica de fora. |
 | `.superpowers/` | **Não** | Rascunho de sessão do Claude Code (livro-razão, briefs e relatórios de tarefa da Fase 3); mesma natureza de `.claude/`. |
+| `.mcp.json`, `.cbmignore` | **Sim, se o Eric mantiver** | Registro do servidor `codebase-memory-mcp` em escopo de projeto e as exclusões do índice (22/09/2026, decisão 49); ficam só se a regra de permanência (≥ 20% de economia de tokens em três tarefas fixas, sem incidente) for cumprida na primeira sessão com o servidor ativo — senão os dois saem junto com o pacote npm. |
 | `Programacao/AgenteCore/experimentos/resultados_alvo/fase3_piloto/` | **Não** | Piloto da Fase 3 (1 modelo, 10 casos, 1 época): existe para conferir o encanamento e calibrar o tempo antes das ~60 h; seus JSONL e snapshots confundiriam a leitura de `resultados_alvo/fase3/`, que é o que vale. |
 
 O "hit and run" continua íntegro sem a venv, porque os dois caminhos a

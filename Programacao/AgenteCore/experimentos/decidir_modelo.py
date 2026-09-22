@@ -23,6 +23,7 @@ import argparse
 import json
 import math
 import random
+import re  # 22/09/2026: _modelo_por_slug (slug da pasta a partir do nome do modelo)
 import sys
 from collections import defaultdict
 from datetime import datetime
@@ -615,16 +616,39 @@ def comparar_3b(nome: str, c3_saida: dict, avaliados_f3: list[dict]) -> dict | N
 
 # ---------------------------------------------------------------------- passo 7: revisão humana
 
-def resumo_revisao_humana(resumo_f3: dict) -> dict:
+def _modelo_por_slug(avaliados_f3: list[dict] | None) -> dict[str, str]:
+    """! Alteração de IA - Revisar: mapa slug -> nome do modelo a partir dos registros avaliados
+    (22/09/2026): 'qwen2.5:7b' vira 'qwen2.5_7b', que é o nome da subpasta e da planilha.
+    ! Motivo: avaliar_fase3.revisao_humana precisa do nome do modelo para rotular as contagens,
+    e a mesma troca de ':' e '/' por '_' é a que o executor usa ao criar a pasta do modelo;
+    derivar dos registros evita ler os JSONL de diagnóstico inteiros só para achar o nome."""
+    modelos = {r["modelo"] for r in (avaliados_f3 or []) if r.get("modelo")}
+    return {re.sub(r"[^A-Za-z0-9._-]", "_", m): m for m in modelos}
+
+
+def resumo_revisao_humana(resumo_f3: dict, c3: dict | None = None,
+                          avaliados_f3: list[dict] | None = None) -> dict:
     """! Alteração de IA - Revisar: brief P2.1, passo 7 -- proporções Correta/Parcial/Errada/
     sem_avaliacao por modelo, somando as linhas de resumo_fase3.json['revisao_humana'] (uma
     por operação -- avaliar_fase3.revisao_humana já agrupa por modelo ali); 'sem_avaliacao'
-    com a frase padrão quando a lista está vazia ou ausente.
+    com a frase padrão quando a lista está vazia ou ausente. Desde 22/09/2026, quando o
+    resumo oficial não traz a revisão e `c3` é dado, lê as planilhas
+    revisao_edicoes__<slug>.md direto da pasta da corrida (avaliar_fase3.revisao_humana) e
+    registra a fonte em 'fonte'.
     ! Motivo: é o único número do trabalho que não sai de regra automática
     (avaliar_fase3.revisao_humana lê uma planilha preenchida à mão); sem essa marcação
     explícita, uma tabela vazia no Markdown pareceria um bug do script, não um passo do
-    processo (a revisão humana) que ainda não aconteceu."""
+    processo (a revisão humana) que ainda não aconteceu. A leitura direta das planilhas
+    existe porque resumo_fase3.json é registro oficial da bateria de 13-15/09/2026 e não é
+    regravado por este script (regra em .claude/rules/experimentos.md); as planilhas foram
+    preenchidas depois da bateria e a decisão precisa enxergá-las sem tocar no resumo."""
     linhas = resumo_f3.get("revisao_humana") or []
+    fonte = "resumo_fase3.json"
+    if not linhas and c3 is not None:
+        nomes = _modelo_por_slug(avaliados_f3)
+        for slug in avaliar_fase3.slugs_da_saida(c3):
+            linhas += avaliar_fase3.revisao_humana(c3, slug, nomes.get(slug, slug))
+        fonte = "planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida"
     if not linhas:
         return {"status": "sem_avaliacao", "frase": _FRASE_REVISAO_VAZIA}
     por_modelo: dict[str, dict] = {}
@@ -639,13 +663,14 @@ def resumo_revisao_humana(resumo_f3: dict) -> dict:
         proporcoes[modelo] = {"n": total, **{
             v: (round(100 * contagem[v] / total, 1) if total else None)
             for v in ("Correta", "Parcial", "Errada", "sem_avaliacao")}}
-    return {"status": "avaliada", "por_modelo": proporcoes}
+    return {"status": "avaliada", "fonte": fonte, "por_modelo": proporcoes}
 
 
 # ------------------------------------------------------------------------- orquestração
 
 def montar_decisao(comparacao: dict, resumo_f3: dict, avaliados_f3: list[dict],
-                   pesos_cfg: dict, saidas_3b: dict[str, dict] | None = None) -> dict:
+                   pesos_cfg: dict, saidas_3b: dict[str, dict] | None = None,
+                   c3: dict | None = None) -> dict:
     """! Alteração de IA - Revisar: roda os 7 passos do brief P2.1 na ordem em que o
     Markdown os usa (regra 36, bootstrap, estabilidade, Pareto, escore ponderado +
     sensibilidade, 3-B, revisão humana) e devolve o dicionário completo de
@@ -677,7 +702,8 @@ def montar_decisao(comparacao: dict, resumo_f3: dict, avaliados_f3: list[dict],
         "escore_ponderado": escore_ponderado(candidatos, pesos),
         "sensibilidade": sensibilidade(candidatos, pesos),
         "tres_b": tres_b if tres_b is not None else "sem 3-B",
-        "revisao_humana": resumo_revisao_humana(resumo_f3),
+        # c3 (22/09/2026): permite ler as planilhas de revisão direto da pasta da corrida
+        "revisao_humana": resumo_revisao_humana(resumo_f3, c3, avaliados_f3),
         "metadados": {
             "pesos": pesos_cfg,
             "gerado_em": datetime.now().isoformat(timespec="seconds"),
@@ -838,20 +864,24 @@ def _secao_3b(tres_b) -> list[str]:
                   "no momento desta corrida.", ""]
         return linhas
     for nome, dados in tres_b.items():
+        # ! Alteração de IA - Revisar: colunas b (só a 3-B acertou) e c (só a Fase 3 acertou) na tabela (22/09/2026).
+        # ! Motivo: o critério da decisão 47 para a ponte de versão é b + c <= 2 por modelo; sem as duas
+        # contagens o leitor via só p = 1,0 e não conseguia aplicar a regra a partir do Markdown.
         linhas += [f"### {nome} (modo `{dados['modo']}`)", "",
-                  "| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | "
+                  "| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | b | c | "
                   "p (McNemar) | p (Holm) | g de Cohen |",
-                  "|---|---|---|---|---|---|---|---|---|"]
+                  "|---|---|---|---|---|---|---|---|---|---|---|"]
         for l in dados["linhas"]:
             par = l.get("pareado_vs_f3")
             if par:
-                n_comuns, p_mc, p_ho, g = (str(par["n_comuns"]), _p(par["p_mcnemar"]),
-                                          _p(par.get("p_holm")), _n(par["g_cohen"]))
+                n_comuns, b, c, p_mc, p_ho, g = (
+                    str(par["n_comuns"]), _n(par["b"]), _n(par["c"]), _p(par["p_mcnemar"]),
+                    _p(par.get("p_holm")), _n(par["g_cohen"]))
             else:
-                n_comuns, p_mc, p_ho, g = "—", "—", "—", "—"
+                n_comuns, b, c, p_mc, p_ho, g = "—", "—", "—", "—", "—", "—"
             linhas.append(f"| {l['modelo']} | L{l['biblioteca_epoca']} | {_n(l['n'])} | "
                           f"{_pct(l['acerto_pct'])} | {_pct(l['acuracia_balanceada_pct'])} | "
-                          f"{n_comuns} | {p_mc} | {p_ho} | {g} |")
+                          f"{n_comuns} | {b} | {c} | {p_mc} | {p_ho} | {g} |")
         linhas.append("")
         if dados.get("matriz_doador_leitor"):
             linhas += ["Matriz doador × leitor:", "",
@@ -871,7 +901,9 @@ def _secao_revisao(revisao: dict) -> list[str]:
     linhas = ["## 7. Revisão humana", ""]
     if revisao["status"] == "sem_avaliacao":
         return linhas + [revisao["frase"], ""]
-    linhas += ["| Modelo | n | Correta | Parcial | Errada | Sem avaliação |",
+    # fonte (22/09/2026): diz se as contagens vieram do resumo oficial ou das planilhas
+    linhas += [f"Fonte: {revisao.get('fonte', 'resumo_fase3.json')}.", "",
+              "| Modelo | n | Correta | Parcial | Errada | Sem avaliação |",
               "|---|---|---|---|---|---|"]
     for modelo, p in sorted(revisao["por_modelo"].items()):
         linhas.append(f"| {modelo} | {p['n']} | {_pct(p['Correta'])} | {_pct(p['Parcial'])} | "
@@ -1050,7 +1082,7 @@ def main() -> None:
             else:
                 print(f"sem 3-B em {nome}: {c3_b['avaliacao']} não existe")
 
-    decisao = montar_decisao(comparacao, resumo_f3, avaliados_f3, pesos_cfg, saidas_3b)
+    decisao = montar_decisao(comparacao, resumo_f3, avaliados_f3, pesos_cfg, saidas_3b, c3)
     decisao["metadados"]["saida"] = args.saida
     decisao["metadados"]["fontes"] = {
         "comparacao": str(c3["comparacao"]), "resumo": str(c3["resumo"]),

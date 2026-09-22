@@ -1978,10 +1978,84 @@
       "mudancas_de_vencedor": []
     }
   },
-  "tres_b": "sem 3-B",
+  "tres_b": {
+    "fase3b_ponte": {
+      "modo": "ponte",
+      "linhas": [
+        {
+          "modelo": "qwen2.5-coder:3b",
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 69.4,
+          "acuracia_balanceada_pct": 68.8,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 0,
+            "c": 0,
+            "p_mcnemar": 1.0,
+            "g_cohen": null,
+            "p_holm": 1.0
+          }
+        },
+        {
+          "modelo": "qwen2.5-coder:7b",
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 75.0,
+          "acuracia_balanceada_pct": 80.0,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 0,
+            "c": 0,
+            "p_mcnemar": 1.0,
+            "g_cohen": null,
+            "p_holm": 1.0
+          }
+        },
+        {
+          "modelo": "qwen2.5:7b",
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 77.8,
+          "acuracia_balanceada_pct": 78.8,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 1,
+            "c": 1,
+            "p_mcnemar": 1.0,
+            "g_cohen": 0.0,
+            "p_holm": 1.0
+          }
+        }
+      ]
+    }
+  },
   "revisao_humana": {
-    "status": "sem_avaliacao",
-    "frase": "Nenhuma edição foi revisada manualmente até esta corrida -- a planilha revisao_edicoes__<slug>.md (avaliar_fase3.gerar_planilha_revisao) está vazia ou não foi preenchida."
+    "status": "avaliada",
+    "fonte": "planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida",
+    "por_modelo": {
+      "qwen2.5-coder:3b": {
+        "n": 10,
+        "Correta": 40.0,
+        "Parcial": 20.0,
+        "Errada": 40.0,
+        "sem_avaliacao": 0.0
+      },
+      "qwen2.5-coder:7b": {
+        "n": 24,
+        "Correta": 41.7,
+        "Parcial": 29.2,
+        "Errada": 29.2,
+        "sem_avaliacao": 0.0
+      },
+      "qwen2.5:7b": {
+        "n": 29,
+        "Correta": 31.0,
+        "Parcial": 27.6,
+        "Errada": 41.4,
+        "sem_avaliacao": 0.0
+      }
+    }
   },
   "metadados": {
     "pesos": {
@@ -1997,7 +2071,7 @@
       "_nota": "pesos declarados antes da leitura dos resultados; a varredura de sensibilidade mostra onde o vencedor muda",
       "_comentario": "! Alteração de IA - Revisar: cria pesos_decisao.json (Tarefa P2.1) com o limiar de veto por autoenvenenamento, os pesos do escore ponderado de decidir_modelo.py e a semente do bootstrap. ! Motivo: brief-p2-decidir-modelo.md exige que os pesos sejam declarados ANTES da leitura de comparacao_fases.json/resumo_fase3.json, para a varredura de sensibilidade (decidir_modelo.py --saida fase3) mostrar se o vencedor é estável ou um artefato da escolha de pesos, em vez de pesos ajustados depois de ver o resultado."
     },
-    "gerado_em": "2026-09-21T15:30:16",
+    "gerado_em": "2026-09-22T12:33:54",
     "saida": "fase3",
     "fontes": {
       "comparacao": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\AgenteCore\\experimentos\\resultados_alvo\\fase3\\comparacao_fases.json",

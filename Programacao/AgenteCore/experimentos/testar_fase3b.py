@@ -615,6 +615,37 @@ def teste_decidir_revisao_humana_vazia() -> None:
     assert resultado_ausente["status"] == "sem_avaliacao", resultado_ausente
 
 
+def teste_decidir_revisao_humana_le_planilha_da_pasta() -> None:
+    """! Alteração de IA - Revisar: com o resumo oficial sem revisão e `c3` apontando para uma
+    pasta com a planilha revisao_edicoes__<slug>.md preenchida, resumo_revisao_humana lê a
+    planilha direto e devolve as proporções por modelo (22/09/2026).
+    ! Motivo: resumo_fase3.json da Fase 3 não é regravado depois da bateria; as planilhas
+    foram preenchidas em 22/09/2026 e a decisão precisa enxergá-las sem tocar no resumo."""
+    tmp = _pasta_temporaria()
+    pasta = tmp / "modelo_x"
+    pasta.mkdir(parents=True)
+    (pasta / "diagnosticos__L0.jsonl").write_text('{"modelo": "modelo:x"}\n', encoding="utf-8")
+    cabecalho = "| # | Época | Caso | Verbete | Operação | Texto | Motivo | Avaliação | Comentário |"
+    linhas = [cabecalho, "|---|---|---|---|---|---|---|---|---|",
+              "| 1 | 1 | lex-1 | v | nota | t | m | Correta | ok |",
+              "| 2 | 1 | lex-2 | v | nota | t | m | Errada | não |",
+              "| 3 | 2 | lex-3 | v | retificacao | t | m |  |  |"]
+    (tmp / "revisao_edicoes__modelo_x.md").write_text("\n".join(linhas) + "\n", encoding="utf-8")
+    c3 = {"raiz": tmp}
+    resultado = decidir_modelo.resumo_revisao_humana(
+        {"revisao_humana": []}, c3, [{"modelo": "modelo:x"}])
+    assert resultado["status"] == "avaliada", resultado
+    assert "planilhas" in resultado["fonte"], resultado
+    p = resultado["por_modelo"]["modelo:x"]
+    assert p["n"] == 3 and p["Correta"] == 33.3 and p["Errada"] == 33.3 \
+        and p["sem_avaliacao"] == 33.3 and p["Parcial"] == 0.0, p
+    # o resumo oficial, quando traz a revisão, continua tendo prioridade
+    com_resumo = decidir_modelo.resumo_revisao_humana(
+        {"revisao_humana": [{"modelo": "outro", "operacao": "nota", "Correta": 2,
+                             "Parcial": 0, "Errada": 0, "sem_avaliacao": 0}]}, c3, [])
+    assert com_resumo["fonte"] == "resumo_fase3.json" and "outro" in com_resumo["por_modelo"]
+
+
 def teste_decidir_grafico_18() -> None:
     """fig_18 (dispersão acurácia balanceada x segundos, IC do bootstrap e não dominados
     destacados) roda sobre um decisao_modelo.json sintético e grava PNG+SVG > 0 bytes; pulado

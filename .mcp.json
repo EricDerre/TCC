@@ -1,0 +1,9 @@
+{
+  "_comentario": "! Alteração de IA - Revisar: servidor MCP codebase-memory-mcp registrado em escopo de PROJETO em 22/09/2026 (P4 do plano complementar; decisão 49), instalado via npm (codebase-memory-mcp@0.11.0, binário em %AppData%\\npm\\node_modules\\codebase-memory-mcp\\bin), sem o install.ps1 do repositório e sem alterar o PATH (conferido antes/depois). Exclusões em .cbmignore. ! Motivo: o Eric decidiu instalar com salvaguardas; a regra de permanência (fica só se cortar >= 20% dos tokens em três tarefas fixas, sem incidente) é avaliada na primeira sessão em que o servidor estiver ativo — este arquivo só entra em vigor na próxima abertura do Claude Code, que pede confirmação do servidor de projeto.",
+  "mcpServers": {
+    "codebase-memory": {
+      "command": "codebase-memory-mcp",
+      "args": []
+    }
+  }
+}

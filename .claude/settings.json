@@ -1,7 +1,9 @@
 {
   "_comentario": "! Alteração de IA - Revisar: configuração do projeto criada em 21/09/2026 (hook de economia de tokens; plugin de estilo explicativo desligado neste projeto). ! Motivo: decisões do Eric no plano complementar de 21/09/2026 — saídas longas de testes/baterias passam por ferramentas/resumir_saida.py antes de entrar no contexto, e o plugin explanatory-output-style acrescentava blocos de explicação em toda resposta.",
+  "_comentario_plugins": "! Alteração de IA - Revisar: pyright-lsp ligado no projeto em 22/09/2026 (P4 do plano complementar); instala do marketplace oficial na próxima abertura da sessão. ! Motivo: o harness de experimentos é Python puro e o servidor de linguagem dá ao Claude erros de tipo e referências sem grep; php-lsp fica de fora até o PHP legado entrar na Fase 4.",
   "enabledPlugins": {
-    "explanatory-output-style@claude-plugins-official": false
+    "explanatory-output-style@claude-plugins-official": false,
+    "pyright-lsp@claude-plugins-official": true
   },
   "hooks": {
     "PreToolUse": [

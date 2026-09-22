@@ -1,0 +1,22 @@
+# ! Alteração de IA - Revisar: exclusões do índice do codebase-memory-mcp (sintaxe do .gitignore), 22/09/2026.
+# ! Motivo: o servidor indexa o repositório inteiro por padrão; sem isto entrariam as venvs, os JSONL das
+# baterias (centenas de MB em resultados_alvo/), a biblioteca de conhecimento (que nunca deve ser lida como
+# código) e o PHPMailer, poluindo o grafo e o cache local (~/.cache/codebase-memory-mcp). Decisão 49.
+.venv/
+**/.venv/
+node_modules/
+__pycache__/
+.superpowers/
+Programacao/AgenteCore/experimentos/resultados*/
+Programacao/AgenteCore/base_conhecimento/
+Programacao/CobaiaFront/PHPMailer/
+Programacao/CobaiaFront/images/
+Programacao/CobaiaFront/js/
+Programacao/CobaiaFront/css/
+Documentacao/
+claude-memoria/
+*.jsonl
+*.log
+*.png
+*.svg
+*.exe

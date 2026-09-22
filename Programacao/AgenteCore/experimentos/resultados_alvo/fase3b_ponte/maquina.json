@@ -7,5 +7,19 @@
   "ollama": "0.34.1",
   "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
   "inicio": "2026-09-21T14:25:06",
-  "saida": "fase3b_ponte"
+  "saida": "fase3b_ponte",
+  "relances": [
+    {
+      "inicio": "2026-09-21T17:04:00",
+      "ollama": "0.34.1"
+    },
+    {
+      "inicio": "2026-09-21T17:04:18",
+      "ollama": "0.34.1"
+    },
+    {
+      "inicio": "2026-09-21T17:46:18",
+      "ollama": "0.34.1"
+    }
+  ]
 }
