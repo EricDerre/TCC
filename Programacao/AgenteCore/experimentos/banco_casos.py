@@ -261,12 +261,23 @@ CASOS += [
        contrato=CONTRATO_PEDIDO,
        corpo='A API devolveu {"id_pedido": 7, "status": "Cancelado"}',
        sintoma="A tela continua exibindo a reserva 7 como 'Em Analise' apos o cancelamento."),
+    # ! Alteração de IA - Revisar: corrige o sintoma de efe-3 (28/09/2026, decisão 58 -- achado
+    # 4.36): sem o campo imagem o cartao aparece SEM foto nenhuma, nao com icone de imagem
+    # quebrada; termos esperados de ["imagem", "ausente", "quebrad"] para
+    # ["imagem", "ausente", "sem imagem"].
+    # ! Motivo: produtos_api.php:74 so escreve a tag <img> quando p.imagem existe
+    # ((p.imagem ? '<img ...>' : '')); com o campo ausente nao ha <img> e portanto nao ha
+    # icone quebrado -- o sintoma antigo descrevia o que o codigo real nao gera, o mesmo defeito
+    # dos quatro fixtures do achado 4.20, achado agora pelo agente que escreveu os casos
+    # ineditos. O caso esta nos 36 de avaliacao (partição da Fase 3): a comparacao caso a caso
+    # com a Fase 3 e com a ponte de versao neste caso deixa de ser direta.
     _c("efe-3", 6, 2, "campo_ausente", "imagem",
-       ["imagem", "ausente", "quebrad"], ["preco", "timeout"],
+       ["imagem", "ausente", "sem imagem"], ["preco", "timeout"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
        corpo='[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", '
              '"tipo": "Carnes", "preco": 89.9, "destaque": true}]',
-       sintoma="Os cartoes aparecem com o icone de imagem quebrada, mas nome e preco corretos."),
+       sintoma="Os cartoes aparecem sem foto nenhuma (nem o espaco da imagem e desenhado), "
+               "mas nome e preco corretos."),
     _c("efe-4", 6, 3, "estado_da_tela_divergente", None,
        ["vazia", "lista", "filtro", "tela"], ["500", "timeout", "truncad"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,

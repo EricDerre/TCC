@@ -1,0 +1,28 @@
+{
+  "arquivos_novos": [
+    "aprendidos/atualizacao-da-interface.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [],
+  "linhas_acrescentadas": 19,
+  "linhas_removidas": 0,
+  "chars_antes": 69963,
+  "chars_depois": 70758,
+  "chars_acrescentados": 795,
+  "tokens_estimados_acrescentados": 306,
+  "por_verbete": {
+    "atualizacao-da-interface": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "atualizacao",
+        "interface",
+        "sincronismo"
+      ],
+      "sintomas_novos": [
+        "interface desatualizada",
+        "divergencia entre api e interface"
+      ]
+    }
+  }
+}

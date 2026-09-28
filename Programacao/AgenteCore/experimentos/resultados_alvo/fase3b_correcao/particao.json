@@ -1,0 +1,20 @@
+{
+  "regra": "Fase 3-B (sonda de detecção de correção): só os casos corrigidos, todos em 'aprendizado' — o modelo vê a causa correta e propõe edições sobre uma cópia do snapshot de origem.",
+  "semente": null,
+  "n_aprendizado": 2,
+  "n_avaliacao": 0,
+  "casos": {
+    "efe-3": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-10": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    }
+  }
+}

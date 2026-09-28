@@ -305,11 +305,29 @@ CASOS_EXTRA += [
        contrato="n/a", corpo="(nenhuma requisicao falhou)", arvore=ARVORE_CARTOES,
        seletor_quebrado="button[data-produto='1']",
        sintoma="O roteiro nao localiza o botao; o atributo presente na pagina e data-id."),
-    _c("efe-10", 6, 2, "estado_da_tela_divergente", "preco", ["tela", "preco", "divergen"], ["ausente"],
-       requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
-       corpo='[' + PRODUTO_OK + ']',
-       sintoma="A API devolveu preco 89.9, mas o cartao exibe 'R$ 0,00'.",
-       observacao="Nao ha erro no console; o dado chegou correto na rede."),
+    # ! Alteração de IA - Revisar: corrige o cenario de efe-10 (28/09/2026, decisão 58 -- achado
+    # 4.36): a tela mostra o preco de uma carga anterior enquanto a API, consultada agora, ja
+    # devolve o preco novo; "cache" entra nos termos proibidos (a causa nao e cache -- e a
+    # grade, que so e redesenhada quando carregarProdutos() roda).
+    # ! Motivo: formatarPreco (produtos_api.php:64-67) nunca produz "R$ 0,00" a partir de 89.9
+    # -- o sintoma antigo nao existe no codigo (mesmo defeito dos fixtures do achado 4.20). A
+    # grade so e reescrita no then() do fetch de carregarProdutos(); uma pagina carregada antes
+    # de o cadastro mudar continua mostrando o valor antigo ate ser recarregada, embora
+    # GET /api/produtos ja devolva o novo. Caso de aprendizado da Fase 3: a retificacao e o
+    # verbete que o qwen2.5:7b escreveu a partir dele (E1) ficaram desatualizados de proposito,
+    # para a sonda de deteccao de correcao (sonda_correcao.py).
+    _c("efe-10", 6, 2, "estado_da_tela_divergente", "preco", ["tela", "preco", "divergen"],
+       ["ausente", "cache"],
+       requisicao="GET /api/produtos (consultado agora, com a pagina aberta desde antes da "
+                  "alteracao do cadastro)",
+       status=200, contrato=CONTRATO_PRODUTO,
+       corpo='[{"id": 4, "nome": "Costelona", "resumo": "Costela assada lentamente por horas", '
+             '"tipo": "Carnes", "preco": 84.9, "imagem": "costelona.jpg", "destaque": true}]',
+       sintoma="A API, consultada agora, devolve preco 84.9 para a Costelona, mas o cartao na "
+               "tela continua exibindo 'R$ 79,90'; nenhum erro no console.",
+       observacao="A pagina foi carregada antes de o administrador alterar o preco no cadastro "
+                  "e nao foi recarregada; a grade so e redesenhada quando carregarProdutos() "
+                  "roda."),
     _c("efe-11", 6, 2, "estado_da_tela_divergente", None, ["ordem", "tela", "divergen"], ["500"],
        requisicao="GET /api/produtos", status=200, contrato=CONTRATO_PRODUTO,
        corpo='(14 itens, na ordem de id 1 a 14)',

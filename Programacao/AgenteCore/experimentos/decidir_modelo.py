@@ -193,19 +193,26 @@ def regra_36(candidatos: list[dict]) -> dict:
 # ! Alteração de IA - Revisar: licença de cada modelo e ordem de preferência para o desempate da
 # decisão 36 ("licença como desempate"), acrescentados em 21/09/2026 depois da revisão da P2.1.
 # ! Motivo: o implementador não tinha como saber o que "licença" significava na regra; a decisão 36
-# (plano da Fase 3) manda preferir a licença mais permissiva em empate de acurácia balanceada. Os 4
-# modelos da Fase 3 são Apache-2.0 (Qwen2.5 e Granite 4.2 pelos model cards no Ollama), então o
-# critério não muda o resultado hoje — mas fica implementado para valer se um modelo MIT ou de
-# licença restritiva entrar na comparação.
+# (plano da Fase 3) manda preferir a licença mais permissiva em empate de acurácia balanceada.
+# ! Alteração de IA - Revisar: em 23/09/2026 a licença do qwen2.5-coder:3b passou de "Apache-2.0"
+# para "Qwen Research License", e a frase da seção 1 do decisao_modelo.md passou a listar as
+# licenças a partir do JSON em vez de afirmar que "os quatro modelos são Apache-2.0".
+# ! Motivo: o model card do Qwen2.5-Coder-3B-Instruct (huggingface.co/Qwen/Qwen2.5-Coder-3B-Instruct,
+# campo "License: qwen-research", conferido em 23/09/2026) põe o 3B sob a Qwen Research License,
+# que não permite uso comercial; só o 7B, o qwen2.5:7b e o granite4.2:8b são Apache-2.0 — e o
+# próprio Memorial (pendencias.md, relatório da 2-B) já dizia "licença de pesquisa" para o 3b. O
+# ranking não muda: o único empate exato entre modelos diferentes nos 36 (qwen2.5:7b em L2 e
+# qwen2.5-coder:7b em L3, 84,2%) é entre dois Apache-2.0 e se resolve pela época mais baixa; mas
+# o documento gerado afirmava um fato falso sobre a licença.
 LICENCAS = {
     "granite4.2:8b": "Apache-2.0",
     "qwen2.5:7b": "Apache-2.0",
     "qwen2.5-coder:7b": "Apache-2.0",
-    "qwen2.5-coder:3b": "Apache-2.0",
+    "qwen2.5-coder:3b": "Qwen Research License",
     "phi4-mini:3.8b": "MIT",
     "qwen2.5-coder:1.5b": "Apache-2.0",
 }
-ORDEM_LICENCA = {"Apache-2.0": 0, "MIT": 1}
+ORDEM_LICENCA = {"Apache-2.0": 0, "MIT": 1, "Qwen Research License": 2}
 
 
 # ! Alteração de IA - Revisar: ordem única de desempate (licença, L, nome) usada pela regra 36 e pelo P(top-1) do bootstrap (P2.1, 21/09/2026).
@@ -730,8 +737,9 @@ def _tabela_regra_36(regra: dict, limiar: float) -> list[str]:
         f"Ranking por acurácia balanceada nos 36 casos de avaliação; veto quando o "
         f"autoenvenenamento máximo do modelo (qualquer transição, nos 36) passa de "
         f"{_pct(limiar)}. Em empate, prevalece a licença mais permissiva (Apache-2.0 antes de "
-        "MIT, antes das demais — decisão 36; os quatro modelos da Fase 3 são Apache-2.0, então o "
-        "critério não separa ninguém hoje) e, persistindo o empate, a época (L) mais baixa -- "
+        "MIT, antes das demais — decisão 36; licenças declaradas em `LICENCAS`: "
+        + "; ".join(f"{m} = {lic}" for m, lic in sorted((regra.get("licencas") or {}).items()))
+        + ") e, persistindo o empate, a época (L) mais baixa -- "
         "mesmo critério de `comparar_fases._melhor_f3`: a ordem de iteração é L0..L3 e o máximo "
         "preserva o primeiro encontrado, porque afirmar que uma época mais tardia é melhor sem "
         "uma diferença medida não é uma alegação que o número sustenta; em empate remanescente "

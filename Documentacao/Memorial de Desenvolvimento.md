@@ -24,9 +24,9 @@
 
 **Projeto:** Agente de QA End-to-End Autônomo com Capacidades de Self-Healing — UNICID, Ciência da Computação.
 **Finalidade:** servir de insumo para a redação do relatório final. Reúne decisões tomadas e por quem, achados experimentais, correções feitas no projeto de pesquisa e as referências levantadas. As alterações de código aparecem apenas resumidas e referenciadas por commit.
-<!-- ! Alteração de IA - Revisar: período coberto estendido a 21/09/2026 (bateria da Fase 3 de 13–15/09 e plano complementar de 21/09).
+<!-- ! Alteração de IA - Revisar: período coberto estendido a 23/09/2026 (bateria da Fase 3 de 13–15/09, plano complementar de 21/09, decisão do modelo em 22/09 e fechamento das pendências em 23/09).
      ! Motivo: o Memorial dizia cobrir até 12/09 e a bateria inteira (58 h) ficou fora de qualquer registro narrativo; a data acompanha a última sessão documentada. -->
-**Período coberto:** 31/08/2026 a 22/09/2026.
+**Período coberto:** 31/08/2026 a 28/09/2026.
 
 O conteúdo está dividido por tema na pasta [`memorial/`](memorial/). A numeração das seções é a do memorial original: "4.12" é sempre o mesmo achado, esteja em que arquivo estiver.
 
@@ -67,6 +67,8 @@ Resultados obtidos executando, não deduções.
 <!-- ! Alteração de IA - Revisar: linha nova no índice (22/09/2026) para a análise decisória; a faixa dos achados passou a 4.12–4.35 e o período a 22/09.
      ! Motivo: os três documentos foram preenchidos ou criados em 22/09/2026 com a decisão do modelo; sem a linha, o índice do Memorial não leva ao resultado central do TCC. -->
 - [**Análise decisória — o modelo final e o estado da biblioteca**](memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md) — pergunta, regra pré-registrada (decisões 36 e 46), resultado (`qwen2.5:7b` com a biblioteca L1), robustez (bootstrap, estabilidade, Pareto, sensibilidade), custo, riscos, o que a literatura previa, decisão (52), limitações e o menu da Fase 3-B com recomendação.
+<!-- ! Alteração de IA - Revisar: linha nova no índice (28/09/2026) para o painel interativo dos testes. ! Motivo: o Eric pediu um dashboard com os números, gráficos e a avaliação de cada modelo; sem a linha o índice não leva a ele. -->
+- [**Painel interativo dos testes**](dashboard/dashboard-fase3.html) — gráficos, tabelas oficiais e o veredito de cada modelo nas Fases 2-A, 2-B e 3, num HTML único gerado por `ferramentas/gerar_dashboard.py` (com `--check`).
 
 ### 4. Projeto de pesquisa (ABNT) — [`memorial/4-projeto-de-pesquisa-abnt/`](memorial/4-projeto-de-pesquisa-abnt/)
 - [Correções aplicadas](memorial/4-projeto-de-pesquisa-abnt/correcoes-aplicadas.md) — §5: trecho, antes, depois e motivo de cada correção.
@@ -80,3 +82,5 @@ Como o trabalho é feito e com que ferramentas, para que a banca saiba o que foi
 
 ### Pendências
 - [Pendências e questões em aberto](memorial/pendencias.md) — §8.
+<!-- ! Alteração de IA - Revisar: linha nova no índice (28/09/2026) para o roadmap. ! Motivo: o Eric pediu um roadmap de onde estamos e o que falta rodar, para arquitetar o novo plano; o documento fica ao lado das pendências. -->
+- [Roadmap — onde estamos e o que falta rodar](memorial/roadmap.md) — estado por fase em 28/09/2026, corridas pendentes com comando e duração, esqueleto das Fases 4 e 5 (inclusive o ciclo de correção da biblioteca) e a tabela para encaixar pontos novos.

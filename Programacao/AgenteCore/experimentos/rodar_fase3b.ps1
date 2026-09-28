@@ -34,10 +34,23 @@ param(
     [string]$Saida,
     [string[]]$Modelos = @("qwen2.5-coder:3b", "qwen2.5:7b", "qwen2.5-coder:7b", "granite4.2:8b"),
     [string]$Doador,
-    [int[]]$Versoes,
+    [string[]]$Versoes,
     [int]$TextoMax = 600,
     [string]$Resultados = "resultados_alvo"
 )
+# ! Alteracao de IA - Revisar: -Modelos e -Versoes passam a ser divididos por virgula aqui, e
+# -Versoes deixou de ser [int[]] (e convertido depois da divisao).
+# ! Motivo: conferido em 23/09/2026 com um script de teste: chamado por "powershell -File", o
+# Windows PowerShell 5.1 entrega "-Modelos a,b" como UMA string "a,b" ($Modelos.Count = 1) e
+# "-Versoes 1,3" num [int[]] virava o inteiro 13 (a virgula lida como separador de milhar); a
+# forma com espaco ("-Modelos a b") vincula so o primeiro valor. A ponte de 21/09 nao passou por
+# isso porque usou os -Modelos padrao; a troca cruzada exige -Modelos e -Versoes explicitos, e sem
+# esta normalizacao o Python receberia um modelo chamado "qwen2.5-coder:7b,qwen2.5-coder:3b" e a
+# versao 13 ("sem epoca-13 do doador").
+$Modelos = @($Modelos | ForEach-Object { "$_" -split "," } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+if ($Versoes) {
+    $Versoes = @($Versoes | ForEach-Object { "$_" -split "," } | ForEach-Object { $_.Trim() } | Where-Object { $_ } | ForEach-Object { [int]$_ })
+}
 $ErrorActionPreference = "Continue"
 $env:PYTHONIOENCODING = "utf-8"
 # PYTHONUNBUFFERED=1 e o OutputEncoding do console: mesma razao de rodar_fase3.ps1 (o Python

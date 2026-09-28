@@ -337,23 +337,61 @@ def teste_a5_aplica_e_restaura() -> None:
 # --------------------------------------------------------------------------- 5. ineditos
 
 def teste_ineditos_sem_modulo_para_com_systemexit_2() -> None:
-    """Sem banco_casos_ineditos.py no repositório (situação atual — o módulo é preparado numa
-    tarefa futura), modo_ineditos para ANTES de tocar em disco ou no Ollama, com SystemExit de
-    código 2 e uma mensagem clara no stderr."""
-    assert "banco_casos_ineditos" not in sys.modules, (
-        "banco_casos_ineditos já foi importado nesta sessão — este teste presume que o "
-        "módulo não existe no repositório")
+    """Sem banco_casos_ineditos.py, modo_ineditos para ANTES de tocar em disco ou no Ollama,
+    com SystemExit de código 2 e uma mensagem clara no stderr.
+
+    ! Alteração de IA - Revisar: a ausência do módulo passou a ser SIMULADA (sys.modules com
+    None faz o import falhar com ImportError) e restaurada ao fim, em vez de exigir que o
+    arquivo não exista no repositório.
+    ! Motivo: banco_casos_ineditos.py foi criado em 23/09/2026 (P3.6 do plano complementar) e
+    o teste, que verificava a ausência real do arquivo, passou a falhar por construção; a
+    guarda do executor continua valendo para quem clonar o repositório sem o módulo, e é isso
+    que o teste precisa continuar cobrindo."""
+    anterior = sys.modules.get("banco_casos_ineditos")
+    sys.modules["banco_casos_ineditos"] = None  # import levanta ImportError
     args = argparse.Namespace(
         saida="fase3b_ineditos_teste", modelos=[_MODELO_TESTE], versoes=None, casos=0, k=3,
         max_tokens_diagnostico=600, max_tokens_proposta=700)
     erro = io.StringIO()
     try:
-        with contextlib.redirect_stderr(erro):
-            executar_fase3b.modo_ineditos(args)
-        assert False, "modo_ineditos deveria ter parado sem banco_casos_ineditos.py"
-    except SystemExit as e:
-        assert e.code == 2, e.code
-    assert "banco_casos_ineditos" in erro.getvalue(), erro.getvalue()
+        try:
+            with contextlib.redirect_stderr(erro):
+                executar_fase3b.modo_ineditos(args)
+            assert False, "modo_ineditos deveria ter parado sem banco_casos_ineditos.py"
+        except SystemExit as e:
+            assert e.code == 2, e.code
+        assert "banco_casos_ineditos" in erro.getvalue(), erro.getvalue()
+    finally:
+        if anterior is None:
+            sys.modules.pop("banco_casos_ineditos", None)
+        else:
+            sys.modules["banco_casos_ineditos"] = anterior
+
+
+def teste_ineditos_banco_real_tem_36_casos_validos() -> None:
+    """! Alteração de IA - Revisar: teste novo (23/09/2026) — o banco real de casos inéditos tem 36
+    casos, 2 por célula classe × nível, ids 16–21 por classe, nenhum id dos 90 antigos e todos
+    válidos para taxonomia.validar_caso; a partição do modo 'ineditos' põe os 36 em avaliação.
+    ! Motivo: a corrida (a) da Fase 3-B lê esse módulo pelo executor; um caso fora do padrão
+    (célula vazia, id repetido, causa fora do conjunto) só apareceria no meio da corrida."""
+    import banco_casos
+    import banco_casos_extra
+    import taxonomia
+    from collections import Counter
+
+    casos = executar_fase3b._casos_ineditos()
+    assert len(casos) == 36, len(casos)
+    celulas = Counter((c["classe"], c["nivel"]) for c in casos)
+    assert len(celulas) == 18 and set(celulas.values()) == {2}, celulas
+    ids = [c["id"] for c in casos]
+    assert len(set(ids)) == 36, ids
+    antigos = {c["id"] for c in banco_casos.CASOS + banco_casos_extra.CASOS_EXTRA}
+    assert not set(ids) & antigos, set(ids) & antigos
+    assert all(16 <= int(i.split("-")[1]) <= 21 for i in ids), ids
+    problemas = {c["id"]: taxonomia.validar_caso(c) for c in casos if taxonomia.validar_caso(c)}
+    assert not problemas, problemas
+    particao = executar_fase3b._particao_tudo_avaliacao(casos)
+    assert particao["n_avaliacao"] == 36 and particao["n_aprendizado"] == 0, particao
 
 
 # ------------------------------------------------------------------- 6. avaliar_fase3b

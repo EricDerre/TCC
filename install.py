@@ -210,12 +210,16 @@ def setup_agente_core() -> None:
 
     ollama = ensure_ollama()
     if ollama:
-        # Porte escolhido pela comparação medida em
-        # Programacao/AgenteCore/experimentos/RESULTADO_FASE2.md: o 3b diagnostica
-        # corretamente (quando recebe a divergência de contrato já calculada em código),
-        # responde em ~7s só em CPU e ocupa ~2 GB, contra ~19s e ~4,8 GB do 7b. O 1.5b
-        # foi descartado por gerar CSS inválido na cura de seletor e errar o diagnóstico.
-        modelo = os.environ.get("COBAIA_MODELO_LLM", "qwen2.5-coder:3b")
+        # ! Alteração de IA - Revisar: o modelo padrão passa de qwen2.5-coder:3b para qwen2.5:7b
+        # (decisão 52 do Memorial, 22/09/2026); a variável COBAIA_MODELO_LLM continua mandando.
+        # ! Motivo: o 3b era o padrão provisório da comparação de porte da Fase 2
+        # (RESULTADO_FASE2.md: ~7 s e ~2 GB contra ~19 s e ~4,8 GB do 7b) "até a decisão sair".
+        # A decisão saiu da Fase 3 (13–15/09/2026): pela regra pré-registrada, qwen2.5:7b com a
+        # biblioteca L1 fez 91,7% de acurácia balanceada nos 36 casos de avaliação, contra 71,2%
+        # na melhor versão do 3b (resultados_alvo/fase3/decisao_modelo.md, seção 1). Custa mais
+        # (mediana de 66,8 s por diagnóstico com a biblioteca original na máquina-alvo i5,
+        # relatório da Fase 3 §9) e é o modelo que o agente das próximas fases usa.
+        modelo = os.environ.get("COBAIA_MODELO_LLM", "qwen2.5:7b")
         if modelo_llm_ja_baixado(ollama, modelo):
             log(f"Modelo {modelo} já baixado.")
         else:

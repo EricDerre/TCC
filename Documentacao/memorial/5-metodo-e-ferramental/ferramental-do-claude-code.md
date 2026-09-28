@@ -47,6 +47,10 @@ Consequência para a regra do Eric ("tudo que a máquina resolve, roda na máqui
 
 *(Estado: instalado e registrado; **regra de permanência a aplicar na primeira sessão com o servidor ativo** — repetir as três tarefas pelas ferramentas MCP e comparar os tokens com `medir_tokens.py`. Leitura preliminar pela CLI: ganho pequeno em busca de símbolo, nenhum em busca textual, e o PHP legado fica fora do grafo — a tendência é sair, salvo se a Fase 4 usar `trace_path` com frequência.)*
 
+<!-- ! Alteração de IA - Revisar: conferência de 23/09/2026 — o servidor não subiu na sessão seguinte e o plugin não instalou sozinho; o que falta é ação do Eric.
+     ! Motivo: a seção dizia que o `.mcp.json` "entra em vigor na próxima abertura"; na abertura de 23/09 nenhuma ferramenta `codebase-memory` apareceu, e a causa é o mecanismo de aprovação de servidores de projeto, não a instalação. -->
+**Conferência de 23/09/2026 (sessão seguinte).** O servidor **não subiu**: `claude mcp list` (binário nativo 2.1.278 da extensão do VS Code) mostra `codebase-memory: codebase-memory-mcp - ⏸ Pending approval`, e em `~/.claude.json` o projeto tem `enabledMcpjsonServers: []` e `hasTrustDialogAccepted: false` — um servidor de escopo de projeto só carrega depois que o Eric o aprova (`/mcp` na sessão interativa, ou `"enableAllProjectMcpServers": true` em `.claude/settings.json`). A regra de permanência continua pendente por isso. O `pyright-lsp` **também não instalou sozinho**: não consta em `~/.claude/plugins/installed_plugins.json` nem no cache do marketplace (`enabledPlugins` do projeto liga um plugin que não está instalado) — precisa de `/plugin install pyright-lsp@claude-plugins-official`. O atalho do npm continua quebrado (`@anthropic-ai/claude-code@2.1.245` ainda listado em `npm ls -g`, mas o `claude.exe` que ele chama não existe); a extensão usa o próprio binário, então isso só afeta `claude …` no terminal.
+
 ### `mattpocock/skills`
 
 | Campo | Valor |
@@ -148,7 +152,7 @@ Leitura honesta: as duas sessões do plano complementar geraram 627 mil tokens d
 2. **`codebase-memory-mcp`** instalado com as salvaguardas e registrado em escopo de projeto (7.2); regra de permanência a aplicar na primeira sessão com o servidor ativo.
 3. **Levantamento de complementos**: dois agentes de leitura (Sonnet) sobre "MCP, plugins e skills para Claude Code em 2026" e "economia de tokens e memória persistente" — resultado em 7.7, com o veredito de cada item.
 4. **Medição "depois"** em 7.5; atualização do Claude Code feita pelo Eric em 22/09 (o atalho antigo do npm ficou quebrado — ver `pendencias.md`).
-5. Fica: aplicar a regra de permanência do servidor MCP; confirmar a instalação do `pyright-lsp`; repetir a medição ao fim da Fase 4.
+5. Fica: o Eric aprovar o servidor (`/mcp`) e instalar o `pyright-lsp` (`/plugin`), porque nenhum dos dois entrou sozinho na abertura de 23/09/2026 (7.2, "Conferência de 23/09/2026"); depois, aplicar a regra de permanência; repetir a medição ao fim da Fase 4.
 
 ## 7.10 Levantamento de complementos (22/09/2026): adotado, adiado e descartado
 

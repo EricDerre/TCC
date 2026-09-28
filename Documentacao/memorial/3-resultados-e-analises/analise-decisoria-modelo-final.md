@@ -11,7 +11,9 @@
 
 Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md). Números de `resultados_alvo/fase3/decisao_modelo.md` (gerado por `decidir_modelo.py`; `--check` limpo em 22/09/2026), de `resumo_fase3.json` e de `comparacao_fases.md`, citados pelo campo; leitura completa da bateria em [fase-3-relatorio-por-modelo.md](fase-3-relatorio-por-modelo.md) e das três fases em [comparacao-entre-fases.md](comparacao-entre-fases.md); o que a literatura previa está no [mapa de decisões](../2-pesquisa-e-literatura/mapa-de-decisoes-fase-3.md) (§6.10). Decisões 36, 46, 47 e 52 em [decisoes.md](../1-decisoes-e-historico/decisoes.md).
 
-> **Estado em 22/09/2026: decisão tomada — `qwen2.5:7b` com a biblioteca no estado L1 — pela regra pré-registrada, confirmada pelo Eric (decisão 52). Ponte de versão feita em três modelos; Granite sem ponte. Revisão das edições em primeira passada por IA. Testes da Fase 3-B a escolher (§10).**
+<!-- ! Alteração de IA - Revisar: linha de estado atualizada em 23/09/2026 (revisão aceita, 3-B escolhida, veredito por modelo em 8.1).
+     ! Motivo: o Eric fechou as três pontas em 23/09; a linha dizia "a escolher" e "primeira passada por IA" sem dizer que a passada foi aceita. -->
+> **Estado em 23/09/2026: decisão tomada — `qwen2.5:7b` com a biblioteca no estado L1 — pela regra pré-registrada, confirmada pelo Eric (decisão 52). Ponte de versão feita em três modelos; Granite sem ponte. Revisão das 63 edições aceita pelo Eric em 23/09 (vereditos da primeira passada por IA mantidos). Testes da Fase 3-B escolhidos em 23/09 (decisão 56): troca cruzada, depois casos inéditos (§10). Veredito de cada candidato em §8.1.**
 
 ## 1. A pergunta
 
@@ -30,7 +32,7 @@ Os quatro candidatos são os modelos da Fase 3 — `granite4.2:8b`, `qwen2.5:7b`
 ## 3. O resultado da regra
 
 <!-- tabela:dm_regra_36 -->
-Ranking por acurácia balanceada nos 36 casos de avaliação; veto quando o autoenvenenamento máximo do modelo (qualquer transição, nos 36) passa de 10,0%. Em empate, prevalece a licença mais permissiva (Apache-2.0 antes de MIT, antes das demais — decisão 36; os quatro modelos da Fase 3 são Apache-2.0, então o critério não separa ninguém hoje) e, persistindo o empate, a época (L) mais baixa -- mesmo critério de `comparar_fases._melhor_f3`: a ordem de iteração é L0..L3 e o máximo preserva o primeiro encontrado, porque afirmar que uma época mais tardia é melhor sem uma diferença medida não é uma alegação que o número sustenta; em empate remanescente (mesma época, modelos diferentes), o nome do modelo desempata só para o ranking sair sempre igual entre corridas.
+Ranking por acurácia balanceada nos 36 casos de avaliação; veto quando o autoenvenenamento máximo do modelo (qualquer transição, nos 36) passa de 10,0%. Em empate, prevalece a licença mais permissiva (Apache-2.0 antes de MIT, antes das demais — decisão 36; licenças declaradas em `LICENCAS`: granite4.2:8b = Apache-2.0; qwen2.5-coder:3b = Qwen Research License; qwen2.5-coder:7b = Apache-2.0; qwen2.5:7b = Apache-2.0) e, persistindo o empate, a época (L) mais baixa -- mesmo critério de `comparar_fases._melhor_f3`: a ordem de iteração é L0..L3 e o máximo preserva o primeiro encontrado, porque afirmar que uma época mais tardia é melhor sem uma diferença medida não é uma alegação que o número sustenta; em empate remanescente (mesma época, modelos diferentes), o nome do modelo desempata só para o ranking sair sempre igual entre corridas.
 
 | Modelo | L | Acurácia balanceada (36) | Acerto (36) | n | Autoenvenenamento máx. (36) | Vetado |
 |---|---|---|---|---|---|---|
@@ -54,7 +56,9 @@ Ranking por acurácia balanceada nos 36 casos de avaliação; veto quando o auto
 **Vencedor da regra 36:** qwen2.5:7b / L1 (91,7% de acurácia balanceada).
 <!-- /tabela:dm_regra_36 -->
 
-**`qwen2.5:7b` em L1** vence por 5,5 pontos sobre a própria L3 e por 8,4 sobre o Granite (que é o mesmo número em L0..L3 porque não editou a biblioteca). Nenhum veto: o autoenvenenamento máximo é 5,6% no vencedor e 0,0–2,8% nos demais. A licença não separa ninguém (os quatro são Apache-2.0).
+<!-- ! Alteração de IA - Revisar: a frase sobre a licença passou de "os quatro são Apache-2.0" para a situação real, em 23/09/2026.
+     ! Motivo: o model card do Qwen2.5-Coder-3B-Instruct (Hugging Face, campo "License: qwen-research") põe o 3B sob a Qwen Research License; a tabela `LICENCAS` de `decidir_modelo.py` o dava como Apache-2.0 e a frase gerada repetia o erro. O ranking não muda, porque o único empate exato entre modelos diferentes é entre dois Apache-2.0. -->
+**`qwen2.5:7b` em L1** vence por 5,5 pontos sobre a própria L3 e por 8,4 sobre o Granite (que é o mesmo número em L0..L3 porque não editou a biblioteca). Nenhum veto: o autoenvenenamento máximo é 5,6% no vencedor e 0,0–2,8% nos demais. O desempate por licença não foi acionado: o único empate exato entre modelos diferentes (`qwen2.5:7b` em L2 e `qwen2.5-coder:7b` em L3, 84,2%) é entre dois Apache-2.0 e se resolveu pela época mais baixa. O `qwen2.5-coder:3b` está sob a Qwen Research License (uso não comercial) — corrigido em 23/09/2026, porque `decidir_modelo.py` o dava como Apache-2.0 —, o que só pesaria contra ele num empate que não houve.
 
 ## 4. Robustez
 
@@ -229,6 +233,19 @@ A fronteira de Pareto (passo 4) tem 4 combinação(ões) não dominada(s). A var
 
 **O que a decisão não diz.** Não diz que a biblioteca escrita pelo modelo é melhor que a original por conter conhecimento verdadeiro — diz que, medida nos 36 casos nunca vistos, a versão L1 produziu 4 acertos a mais e nenhum a menos, com custo de prefill maior e notas de qualidade duvidosa. E não diz que o `qwen2.5:7b` é melhor que o Granite em geral: sem edição, o Granite acerta mais e é mais estável entre cortes; com edição, só o `qwen2.5:7b` conseguiu escrever no formato exigido.
 
+<!-- ! Alteração de IA - Revisar: subseção 8.1 nova (23/09/2026) com o veredito de cada candidato — o melhor resultado medido, por que não é o padrão e onde está o registro completo.
+     ! Motivo: com a decisão tomada, o Eric pediu que os outros modelos fiquem só como registro histórico (resultados, gráficos e o motivo da recusa) para o relatório final; a análise dizia por que o vencedor venceu, mas o motivo de cada recusa estava espalhado pelo relatório, pelos achados e pela 2-B. Números das tabelas `dm_*` deste arquivo, do relatório da Fase 3 (§9) e do relatório da 2-B, citados pelo campo. -->
+### 8.1 Veredito por modelo — o que cada candidato mostrou e por que não é o padrão
+
+| Modelo | Melhor resultado medido | Por que não é o padrão | Onde está o registro |
+|---|---|---|---|
+| `granite4.2:8b` | 83,3% de acurácia balanceada e 80,6% de acerto nos 36, iguais em L0..L3 (`dm_regra_36`); primeiro em 16 dos 36 cortes de estabilidade (`dm_estabilidade`) — o melhor modelo **sem** edição | Não editou a biblioteca: 0 de 181 propostas aceitas, 133 barradas por `texto_longo` (achado 4.30); fica 8,4 pp abaixo do vencedor com L1; o mais caro (131,3 s por diagnóstico e 26h58 de bateria, relatório §9) e o único que a máquina-alvo não sustenta com folga (8 GB de RAM mínimos; ficou sem ponte de versão); dominado no Pareto (`dm_pareto`) | Relatório §3–§4 e §9; achados 4.30 e 4.31; gráficos 12–17; `decisao_modelo.md`; decisão 52 |
+| `qwen2.5-coder:7b` | 84,2% em L3 e 80,0% em L0..L2 nos 36 (`dm_regra_36`); 39 edições aceitas; 10 corretas, 7 parciais e 7 erradas nas 24 revisadas (`dm_revisao`) | Acurácia menor que a do `qwen2.5:7b` em todas as versões nos 36 e sem ganho até L3; regressão nos 90 depois de L1 (achado 4.34); dominado no Pareto — mais lento sem ser mais certeiro (`dm_pareto`, `dm_escore`) | Relatório §3–§7; achado 4.34; `decisao_modelo.md` §1–§5; planilha `revisao_edicoes__qwen2.5-coder_7b.md` |
+| `qwen2.5-coder:3b` | 71,2% em L2 e L3 nos 36 (`dm_regra_36`); o mais barato (17,8–18,8 s por diagnóstico nos 36, `dm_pareto`; 05h02 de bateria, relatório §9); não dominado no Pareto só pelo custo | 20,5 pp abaixo do vencedor; 10 edições aceitas em três épocas (4 corretas, 2 parciais, 4 erradas, `dm_revisao`); adesão cega de 95,6% a documentação errada em A5 na 2-B (risco 31,6 no Pareto); Qwen Research License, de uso não comercial — o desempate por licença pesaria contra ele | Relatório §3–§7; comparação entre fases §3–§4; `decisao_modelo.md`; relatório da 2-B (adesão cega) |
+| `phi4-mini:3.8b` e `qwen2.5-coder:1.5b` (fora antes da Fase 3) | 2-B: o `phi4-mini` não aproveita documentação nenhuma (cita o verbete recebido em 0% das respostas em A1 e em 12% em A2); o `1.5b` sobe de 5,6% para 16,7% com biblioteca, mas responde `corpo_nao_e_json` em 78% dos casos | Não seguem a instrução nem fazem a tarefa; excluídos do desenho da Fase 3 em 11/09/2026 (plano aprovado, linha "Escala") | `fase-2b-relatorio-por-modelo.md` (tabelas e leitura por modelo); `fase-2a-relatorio-por-modelo.md`; `claude-memoria/plano-aprovado-fase-3.md` |
+
+O que fica de cada um: os resultados brutos e os snapshots das bibliotecas em `resultados_alvo/`, os gráficos, as tabelas geradas por script e este veredito. Os pesos dos modelos no Ollama só interessam enquanto a 3-B precisar deles como leitores (troca cruzada: os dois Coder; casos inéditos: o 3B).
+
 ## 9. Limitações
 
 1. **Amostra**: 36 casos de avaliação; efeito mínimo detectável de 19,4 pp; a decisão é por convergência de critérios, sob incerteza declarada (P(top-1) 77,6%).
@@ -252,6 +269,15 @@ Menu do plano complementar (decisão 45), com o que a análise mostrou. O Granit
 | (e) Réplicas com temperatura alta | — | — | — | Descartado no plano (o cliente não fixa semente; b = c = 0 já mede o determinismo prático) |
 
 Ordem recomendada: **(b) numa noite; (a) depois da autoria; (c) só se sobrar máquina**. Cada item roda por `executar_fase3b.py` sobre cópias dos snapshots oficiais (nada em `resultados_alvo/fase3/` muda) e entra em `decisao_modelo.md` §6 por `--saidas-3b`.
+
+<!-- ! Alteração de IA - Revisar: parágrafo abaixo com a escolha do Eric (23/09/2026) e os comandos na forma que o `-File` do Windows PowerShell aceita.
+     ! Motivo: a seção terminava em "para o Eric escolher"; a escolha saiu (decisão 56), e o comando da cruzada registrado nas pendências trazia a lista de modelos separada por espaço, que o PowerShell vincula errado (conferido em 23/09 com um script de teste; `rodar_fase3b.ps1` passou a dividir as listas por vírgula). -->
+**Escolha do Eric (23/09/2026, decisão 56): (b) e depois (a), na ordem recomendada.** Comandos, com as listas separadas por vírgula:
+
+- Troca cruzada (144 inferências, ~2,5 h): `powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo cruzada -Saida fase3b_cruzada_qwen -Doador qwen2.5:7b -Versoes 1,3 -Modelos qwen2.5-coder:7b,qwen2.5-coder:3b`
+- Casos inéditos, depois da autoria de `banco_casos_ineditos.py` (36 casos, 2 por célula, escritos por agente que leu só o código do cobaia; 6 conferidos pelo Eric) — numa corrida só, com os dois modelos em L0, L1 e L3 (216 inferências, ~3 h; são 36 diagnósticos a mais que o menu, o L3 do 3B, para não partir a corrida em duas): `powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo ineditos -Saida fase3b_ineditos -Versoes 0,1,3 -Modelos qwen2.5:7b,qwen2.5-coder:3b`
+
+A cruzada entra em `decisao_modelo.md` §6 por `--saidas-3b fase3b_ponte fase3b_cruzada_qwen`; os inéditos são avaliados por `avaliar_fase3b.py --saida fase3b_ineditos` e lidos no relatório §11 e aqui, em §9 (limitação 2).
 
 ## 11. Rastreabilidade
 

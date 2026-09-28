@@ -526,8 +526,10 @@ disponível como L0, o ponto de comparação de todas as épocas seguintes.
 | `gerar_graficos_fase3.py` | Figuras 12–17: acerto por época, recuperação por época, motivos de rejeição das propostas, crescimento da biblioteca, comparação entre as três fases. | `python gerar_graficos_fase3.py` (venv com matplotlib) |
 | `gerar_relatorio_fase3.py` | `relatorio_fase3.html` navegável por modelo/época/partição, com cada proposta de edição (prompt, resposta crua, decisão do validador). | `python gerar_relatorio_fase3.py` |
 | `testar_fase3.py` | Testes em Python puro (sem pytest) do parser, do validador, da aplicação de edição e do hash/diff — sem chamar o Ollama, < 30 s. | `python testar_fase3.py` |
-| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash — validação do encanamento feita; a bateria completa ainda não rodou. | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
+| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash — validação do encanamento feita; a bateria completa rodou em 13–15/09/2026 (58h59, 0 falhas — ver "Resultado da Fase 3" abaixo). | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
 
+<!-- ! Alteração de IA - Revisar: na tabela acima, a linha de `rodar_fase3.ps1` deixou de dizer que "a bateria completa ainda não rodou".
+     ! Motivo: a bateria rodou em 13–15/09/2026 (58h59, 0 falhas; parágrafo "Resultado da Fase 3" abaixo) e a frase, esquecida na revisão de 21/09, contradizia o resto da seção. -->
 Cada modelo grava em `resultados_alvo/fase3/`:
 
 ```
@@ -602,6 +604,7 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `rodar_fase3b.ps1` | Orquestrador: testes, um modelo por vez com checagem de RAM (pula e lista o modelo se faltar memória; relançar retoma), avaliação ao fim. | `powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo ponte -Saida fase3b_ponte` |
 | `decidir_modelo.py` (+ `pesos_decisao.json`, `gerar_graficos_decisao.py`) | Decide modelo e estado da biblioteca pela regra pré-registrada (decisão 36) e mede a robustez (bootstrap, estabilidade, Pareto, escore ponderado com sensibilidade), pareia as saídas da 3-B com a Fase 3 e apura a revisão das edições; grava `decisao_modelo.json/.md` (documento derivado) e a figura 18. | `python decidir_modelo.py --saida fase3 --saidas-3b fase3b_ponte` (`--check` confere) |
 | `gerar_tabelas_relatorio_fase3.py` | Tabelas do relatório da Fase 3, da comparação entre fases e da análise decisória (Memorial) a partir de `resumo_fase3.json`, `comparacao_fases.md`, `decisao_modelo.md` e `fase3.log`, como blocos `<!-- tabela:NOME -->`; `--check` acusa qualquer bloco colado que difira do regerado. | `python gerar_tabelas_relatorio_fase3.py --saida fase3 [--check]` |
+| `sonda_correcao.py` | Sonda de **detecção de correção** (28/09/2026, decisão 58): roda uma época de aprendizado do executor oficial sobre uma cópia de um snapshot fechado, só com os casos corrigidos, e imprime o que o modelo diagnosticou e propôs ao rever um caso cuja documentação (escrita por ele mesmo) ficou desatualizada; saída em `resultados_alvo/<saida>/`. | `RESULTADOS_DIR=resultados_alvo python sonda_correcao.py --saida fase3b_correcao --modelo qwen2.5:7b --versao 1 --casos efe-3 efe-10` |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados — nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
@@ -610,8 +613,23 @@ copiados em `bibliotecas/<slug>/`, `diagnosticos__L<n>.jsonl` por modelo,
 versões, teto de texto, condição, versão do Ollama). A ponte de 21/09/2026 cobriu
 `qwen2.5-coder:3b`, `qwen2.5:7b` e `qwen2.5-coder:7b` (b/c 0/0, 1/1 e 0/0 nos 36:
 pareáveis com a Fase 3); o `granite4.2:8b` foi pulado duas vezes por RAM (8 GB
-exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52). Os testes complementares
-a escolher estão no §10 da análise decisória.
+exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52).
+
+<!-- ! Alteração de IA - Revisar: parágrafo abaixo com os testes da 3-B escolhidos pelo Eric em 23/09/2026, os comandos na forma que o Windows PowerShell aceita por -File (listas separadas por vírgula) e o efeito da decisão do modelo no instalador.
+     ! Motivo: o texto anterior dizia "testes a escolher"; a escolha saiu (decisão 56) e o comando registrado antes nas pendências, com a lista separada por espaço, falha na vinculação de parâmetros do PowerShell (conferido em 23/09/2026 com um script de teste). O `install.py` passou a baixar o `qwen2.5:7b` e os outros modelos ficam só como registro. -->
+**Testes da 3-B escolhidos (23/09/2026, decisão 56).** Primeiro a **troca cruzada** — as bibliotecas L1 e L3 do `qwen2.5:7b` lidas pelos dois Coder nos 36 casos de avaliação:
+
+```
+powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo cruzada -Saida fase3b_cruzada_qwen -Doador qwen2.5:7b -Versoes 1,3 -Modelos qwen2.5-coder:7b,qwen2.5-coder:3b
+```
+
+Depois os **casos inéditos** (`banco_casos_ineditos.py`: 36 casos novos, 2 por célula classe × nível, escritos só a partir do código do cobaia, ids `lex-16` a `efe-21`), com o `qwen2.5:7b` e o 3B em L0, L1 e L3:
+
+```
+powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo ineditos -Saida fase3b_ineditos -Versoes 0,1,3 -Modelos qwen2.5:7b,qwen2.5-coder:3b
+```
+
+As listas vão separadas por **vírgula** (`-File` do Windows PowerShell 5.1 vincula `a b` como dois argumentos e falha). Com a decisão tomada, o `install.py` passou a baixar o `qwen2.5:7b` por padrão; os outros modelos ficam só como registro histórico — resultados, gráficos e o veredito de cada um em `Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md` §8. O painel interativo com todos os números está em `Documentacao/dashboard/dashboard-fase3.html` (gerado por `ferramentas/gerar_dashboard.py`) e o estado por fase, com o que falta rodar, em `Documentacao/memorial/roadmap.md`.
 
 ## Ferramentas de apoio ao trabalho com IA (`ferramentas/`)
 
@@ -621,6 +639,7 @@ modelo):
 
 | Script | O que faz |
 |---|---|
+| `gerar_dashboard.py` | Painel interativo dos testes (`Documentacao/dashboard/dashboard-fase3.html`, HTML único): lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18 e monta gráficos (Chart.js) e tabelas com a avaliação de cada modelo; `--check` regera e compara, como os outros documentos derivados. |
 | `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). |
 | `resumir_saida.py` / `gancho_pre_bash.py` | Hook `PreToolUse` do Claude Code (`.claude/settings.json`) que encurta a saída de comandos longos (testes, baterias, `git diff`) antes de ela entrar no contexto. |
 | `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
