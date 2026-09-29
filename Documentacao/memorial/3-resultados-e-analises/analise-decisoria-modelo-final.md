@@ -180,7 +180,7 @@ Na máquina-alvo (i5-1235U, só CPU; relatório §9): o `qwen2.5:7b` custa 66,8 
 - **Qualidade das edições** (revisão em primeira passada por IA, decisão 53; relatório §7): 23 corretas, 17 parciais e 23 erradas em 63; no vencedor, 12 de 29 erradas (41,4%) e nenhuma correta que o verbete já não dissesse; nas 10 edições da época 1 — a L1 escolhida — 3 erradas. O ganho de L1 não pode ser creditado à verdade do conteúdo (achado 4.35), e a cópia de produção precisa de curadoria (§8).
 
 <!-- tabela:dm_revisao -->
-Fonte: planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida.
+Fonte: resumo_fase3.json.
 
 | Modelo | n | Correta | Parcial | Errada | Sem avaliação |
 |---|---|---|---|---|---|

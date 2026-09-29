@@ -8,12 +8,14 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
 
 ## Abertas em 23/09/2026 (fechamento das pontas soltas antes do novo plano)
 
+**Decidido pelo Eric em 29/09/2026:** todas as fichas responderam (1 a 11, 14 e 15): opção (a) em todas as que tinham opções; na 10, itens 3 a 8 aprovados (6 com ressalva), 9 a 11 pré-aprovados como versão beta e 1 e 2 à espera do comparativo qwen × coder; na 11, "faça tudo agora". O que foi feito está na Decisão de cada ficha.
+
 **Decidido pelo Eric em 23/09/2026:** os testes complementares da Fase 3-B são os recomendados — troca cruzada e casos inéditos (decisão 56); os 63 vereditos da revisão das edições, dados pela IA, valem como estão; a cópia L1 "está ok"; o trabalho de 22/09 foi commitado (`f86e65d`).
 
 **Fechado pela sessão de 23/09/2026:** o instalador (`install.py`) passou a baixar o `qwen2.5:7b`; a licença do `qwen2.5-coder:3b` foi corrigida para Qwen Research License nos arquivos da decisão (decisão 57); o script das corridas da 3-B (`rodar_fase3b.ps1`) passou a aceitar listas separadas por vírgula; os 36 casos inéditos foram escritos por um agente que só leu o código do sistema-cobaia; a análise decisória ganhou o veredito por modelo (§8.1); o projeto de pesquisa ABNT foi revisado ponto a ponto (`4-projeto-de-pesquisa-abnt/correcoes-aplicadas.md` §5.1); as cinco referências sem endereço foram localizadas; o servidor de memória do código foi diagnosticado (ficha 5).
 
 ### 1. Regravar o resumo oficial da Fase 3 com a revisão das edições
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 22/09/2026
 - **O que é:** O arquivo `resumo_fase3.json` (em `Programacao/AgenteCore/experimentos/resultados_alvo/fase3/`) é o resumo oficial da bateria da Fase 3: todas as tabelas do Memorial saem dele. Ele foi gravado antes de existir a revisão das 63 edições que os modelos fizeram na biblioteca, então o bloco `revisao_humana` dentro dele está vazio; por enquanto o script da decisão (`decidir_modelo.py`) lê a revisão direto das três planilhas `revisao_edicoes__*.md`. Regravar o resumo é rodar `python avaliar_fase3.py --saida fase3` (com a variável `RESULTADOS_DIR=resultados_alvo`). O ensaio feito em 23/09 numa cópia mostrou que só esse arquivo muda — e nele só a data de geração e o bloco da revisão; o arquivo caso a caso (`avaliacao_fase3.json`) sai idêntico.
@@ -22,10 +24,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Autorizar: o Claude roda o comando e o `git diff` mostra só essa mudança.
   - (b) Deixar como está e registrar que a revisão vive nas planilhas.
 - **Recomendação:** (a).
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feito em 29/09/2026: `avaliar_fase3.py --saida fase3` regravou `resumo_fase3.json` (só `metadados.gerado_em` e o bloco `revisao_humana`; 82 linhas no `git diff`); `decisao_modelo.json/.md`, `tabelas_relatorio.md` e os blocos colados no relatório da Fase 3, na comparação entre fases e na análise decisória foram regerados (a fonte da revisão passou a ser o resumo); todos os `--check` limpos.
 
 ### 2. O que fazer com a cópia L1 do qwen2.5:7b antes da Fase 4
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 22/09/2026
 - **O que é:** "L1" é a biblioteca de conhecimento depois da primeira rodada de edições feitas pelo próprio modelo — a versão escolhida para produção (decisão 52). Nessa rodada o `qwen2.5:7b` fez 40 edições; a revisão leu 10 delas (amostra) e achou 3 erradas; somando as outras épocas, 12 edições do modelo estão marcadas como erradas, e as 30 restantes da época 1 nunca foram lidas. Em 23/09 você disse que a cópia L1 "está ok". Falta saber o que isso significa: usar a pasta `epoca-1` exatamente como está (com as edições erradas dentro), ou o Claude ler as 30 restantes, retirar as reprovadas numa **cópia** (por exemplo `Programacao/AgenteCore/biblioteca_producao/`) e registrar o código de verificação (hash) dessa cópia. A pasta oficial `resultados_alvo/fase3/bibliotecas/qwen2.5_7b/epoca-1/` não muda em nenhum dos casos. **Atualização de 28/09 (23:15):** nos 36 casos inéditos a L1 não repetiu o ganho (perdeu 1 caso contra L0 e não ganhou nenhum) e a L3 ficou 2 casos acima de L0 — tudo dentro do ruído de 36 casos (`roadmap.md` §2.1). Qual versão levar para a Fase 4 (L1 curada ou L3) volta a ser pergunta e será recalculada na integração da 3-B, depois da troca cruzada; a curadoria continua valendo para a versão que for escolhida.
@@ -34,10 +36,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) O Claude faz a primeira passada das 30 edições restantes e grava a cópia curada, com o hash registrado; você confere o que quiser.
   - (b) Usar a `epoca-1` como está.
 - **Recomendação:** (a), antes de a Fase 4 começar.
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feita em 29/09/2026. `curar_biblioteca.py --listar` gerou a planilha `resultados_alvo/fase3/curadoria_L1__qwen2.5_7b.md` (as 40 edições da época 1: 10 vereditos vindos da planilha oficial e 30 dados pela IA contra o código, com o mesmo critério). `--curar` conferiu que reaplicar as 40 edições a partir da época 0 reproduz o hash oficial (3394d203cab9) e gravou a cópia de produção em `Programacao/AgenteCore/biblioteca_producao/` (hash 1fca10f1a6f6; 40 verbetes; 23 edições mantidas, 17 removidas — todas as marcadas *Errada*, 3 da planilha oficial e 14 da curadoria; as parciais ficaram), com `curadoria.json` listando o que saiu e por quê. Você confere o que quiser na planilha; se mudar um veredito, apague a pasta e rode `--curar` de novo. A pesquisa de literatura sobre os filtros é a rodada 4 do levantamento (`2-pesquisa-e-literatura/levantamento-2026-09-29-documentacao-autogerida.md`, §6.13). Qual versão vai para a Fase 4 (L1 curada ou L3) continua a ser recalculada na integração da 3-B — e o teste `teste_curar_reaplicar_todas_reproduz_hash_oficial` fixa a reconstrução fiel.
 
 ### 3. Apagar do Ollama os modelos que não voltam
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 23/09/2026
 - **O que é:** O `ollama list` de 23/09 mostra 24,8 GB de modelos no disco. Os que não têm mais uso no projeto: `granite4.2:8b` (5,3 GB), `phi4-mini:3.8b` (2,5), `qwen2.5-coder:1.5b` (1,0), `qwen2.5-coder:1.5b-instruct-fp16` (3,1) e `qwen2.5-coder:1.5b-instruct-q8_0` (1,6) — 13,5 GB. Os dois Coder (`qwen2.5-coder:7b` e `qwen2.5-coder:3b`, 6,6 GB) ainda servem de leitores nas corridas da 3-B (troca cruzada e casos inéditos) e podem sair depois delas. `ollama rm <modelo>` apaga o arquivo; voltar atrás é baixar de novo.
@@ -46,10 +48,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Apagar os cinco agora e os dois Coder depois das corridas da 3-B.
   - (b) Manter tudo até o fim do TCC.
 - **Recomendação:** (a). O Claude só roda o `ollama rm` com a sua confirmação por escrito, modelo a modelo.
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feito em 29/09/2026: `ollama rm` de `granite4.2:8b`, `phi4-mini:3.8b`, `qwen2.5-coder:1.5b`, `qwen2.5-coder:1.5b-instruct-fp16` e `qwen2.5-coder:1.5b-instruct-q8_0` (13,5 GB liberados). Ficam `qwen2.5:7b`, `qwen2.5-coder:7b` e `qwen2.5-coder:3b` (os dois Coder saem depois da troca cruzada). Entraram para os experimentos da ficha 11: `qwen2.5:0.5b-base` e `qwen2.5:0.5b-instruct` (0,8 GB, ablação) e `embeddinggemma:300m` (0,6 GB, recuperador) — podem sair quando os experimentos fecharem.
 
 ### 4. Quem lança a troca cruzada, e quando
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 23/09/2026
 - **O que é:** A troca cruzada faz os dois Coder lerem a biblioteca escrita pelo `qwen2.5:7b` (versões L1 e L3) nos 36 casos de avaliação; responde se o ganho medido é da biblioteca ou de quem a escreveu. São 144 diagnósticos, cerca de 2,5 h. O script espera até 6,5 GB de RAM livre para carregar o Coder 7B; com a sessão do VS Code aberta há cerca de 5 GB, então de dia ele tende a pular esse modelo (e retoma de onde parou quando é relançado). Comando, na pasta `Programacao/AgenteCore/experimentos`: `powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo cruzada -Saida fase3b_cruzada_qwen -Doador qwen2.5:7b -Versoes 1,3 -Modelos qwen2.5-coder:7b,qwen2.5-coder:3b`.
@@ -58,10 +60,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Você lança à noite, com a máquina livre (tempos medidos limpos).
   - (b) O Claude lança de dia, em segundo plano, e relança quando a RAM liberar.
 - **Recomendação:** (a). Os casos inéditos (ficha 12) rodaram em 28/09 das 20:13 às 23:15, com o 3B primeiro e o 7B na sequência, sem pulo; a cruzada pode ir na próxima noite com a máquina livre.
-- **Decisão:** em aberto.
+- **Decisão:** (a) — o Eric lança a troca cruzada à noite com o comando do roadmap (corrida 1). A análise comparativa `qwen2.5:7b` × `qwen2.5-coder:7b` foi feita em 29/09/2026: `comparar_qwen_coder.py` (tabelas, confronto caso a caso e a lista de toda célula em que o Coder fica à frente) e o documento `3-resultados-e-analises/comparativo-qwen25-7b-vs-coder-7b.md`. Em resumo: o Coder fica à frente em 26 células, todas pequenas, concentradas nos 54 casos de aprendizado da Fase 3 e nas classes léxica, runtime e efeito; nos 36 casos nunca vistos o qwen vence em todas as versões da biblioteca; como escritor da biblioteca o Coder é mais contido e um pouco mais certo; a decisão 52 se mantém. O que fecharia a pergunta: a troca cruzada e, opcionalmente, o Coder 7B nos 36 inéditos (corrida 7 do roadmap).
 
 ### 5. Servidor de memória do código (codebase-memory-mcp) e o plugin pyright-lsp
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 22/09/2026
 - **O que é:** Em 21/09 foi instalado o `codebase-memory-mcp`, um servidor que indexa o código para o Claude consultar a estrutura do projeto sem ler arquivo por arquivo (economia de tokens). Ele está registrado no arquivo `.mcp.json` do projeto, mas o Claude Code não o liga sem a sua aprovação: `claude mcp list` mostra "Pending approval" e a configuração do projeto está com a lista de servidores permitidos vazia. A regra de permanência (decisão 49) diz que ele só fica se cortar 20% ou mais dos tokens em três tarefas fixas — medição que ainda não pôde ser feita. Também ficou faltando o plugin `pyright-lsp` (o verificador de tipos do Python; ajuda o Claude a achar erros sem rodar o código), que não instalou sozinho.
@@ -71,10 +73,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (b) Desistir já: `npm uninstall -g codebase-memory-mcp`, apagar `.mcp.json` e `.cbmignore` e registrar no ferramental §7.2.
   - (c) Para o pyright, em qualquer caso: `/plugin install pyright-lsp@claude-plugins-official` numa sessão sua.
 - **Recomendação:** (b) para o servidor e (c) para o pyright.
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feito pelo Claude em 29/09/2026: `"enableAllProjectMcpServers": true` em `.claude/settings.json` (backup em `.superpowers/sdd/fase3b-e-fechamento/backups-p4/`) e o servidor registrado como aprovado no `~/.claude.json` deste projeto (`enabledMcpjsonServers: ["codebase-memory"]`; backup `.claude.json.bak-2026-09-29`); o `pyright-lsp@claude-plugins-official` foi instalado pela linha de comando (escopo usuário). **Tarde:** o servidor continuava "Pending approval"; o seu `claude` no PowerShell respondeu "não é reconhecido" porque o comando não está no PATH desta máquina (só existe o programa dentro da extensão do VS Code), e o que faltava era a confiança na pasta, que o Claude não pode ligar — você ligou pelo PowerShell. **Noite:** o servidor subiu e a regra de permanência foi medida com as três tarefas fixas, cada uma feita duas vezes só com busca de texto (grep) e duas só com o servidor, e as respostas conferidas contra um gabarito tirado do código. O servidor gastou 8,6% a mais de tokens no total e 4,3% a menos nos tokens novos, longe dos 20% exigidos, com acerto praticamente igual. Por isso ele **saiu**, como a regra manda: `.mcp.json` e `.cbmignore` apagados, a chave que aprovava servidores de projeto retirada do `.claude/settings.json`, pacote desinstalado (`npm uninstall -g codebase-memory-mcp`) e cache do índice apagado; o PATH ficou igual ao de antes da instalação e o Defender não acusou nada. O `pyright-lsp` fica. Números e método no ferramental §7.2; decisão 62.
 
 ### 6. Remover o atalho quebrado do Claude instalado pelo npm
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 22/09/2026
 - **O que é:** Existe um atalho antigo, instalado pelo npm (`%AppData%\npm\claude.ps1`, do pacote `@anthropic-ai/claude-code` 2.1.245), que aponta para um programa que não existe mais. A extensão do VS Code usa o próprio binário (2.1.278) e não depende dele. Remover: `npm uninstall -g @anthropic-ai/claude-code`.
@@ -83,10 +85,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Remover.
   - (b) Deixar.
 - **Recomendação:** (a).
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feito em 29/09/2026: `npm uninstall -g @anthropic-ai/claude-code` removeu o atalho (não há mais `claude*` em `%AppData%\npm`); o `codebase-memory-mcp` instalado pelo npm continua lá.
 
 ### 7. Guardar no git os registros corridos das baterias (os logs)
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 21/09/2026
 - **O que é:** Os arquivos `fase3.log` (bateria da Fase 3) e `fase2b.log` (Fase 2-B) são o único registro linha a linha das execuções (horários, projeções de tempo, relances, abortos). A regra `*.log` do `.gitignore` os deixa fora do commit; `git add -f` inclui os dois uma vez, sem mudar a regra. Você decidiu versioná-los em 21/09; falta rodar o comando: `git add -f Programacao/AgenteCore/experimentos/resultados_alvo/fase3/fase3.log Programacao/AgenteCore/experimentos/resultados_alvo/fase2b.log`. Os logs das corridas da 3-B (`fase3b.log` em cada pasta de saída) entram do mesmo jeito.
@@ -95,10 +97,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Rodar o comando junto do próximo commit.
   - (b) Tirar `*.log` do `.gitignore` só para `experimentos/resultados_alvo/`.
 - **Recomendação:** (a).
-- **Decisão:** em aberto.
+- **Decisão:** (a) e depois (b) — em 29/09/2026 você colocou os seis logs no índice com `git add -f` e, na mesma noite, pediu para não precisar mais disso: o `.gitignore` ganhou uma exceção ao `*.log` para `Programacao/AgenteCore/experimentos/resultados_alvo/**/*.log`. Conferido com `git check-ignore`: os logs das próximas corridas (como o `fase3b_cruzada_qwen/fase3b.log` desta noite) entram no `git add` normal; o log do piloto continua fora, porque a pasta `fase3_piloto/` inteira é ignorada, e logs fora de `resultados_alvo/` também. Decisão 63.
 
 ### 8. Corrigir a gravação do log no script da Fase 2-B
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 12/09/2026
 - **O que é:** `rodar_fase2b.ps1` grava o log com `Tee-Object`, que no Windows PowerShell 5.1, quando o script é chamado por `-File`, escreve em UTF-16 — o `fase2b.log` já gravado tem trechos com bytes nulos. O mesmo defeito foi corrigido em `rodar_fase3.ps1` no piloto de 12/09 (trocado por `ForEach-Object` + `Add-Content -Encoding utf8`). A Fase 2-B está fechada e seus resultados não mudam: o patch só vale para corridas futuras.
@@ -107,10 +109,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Aplicar o mesmo patch, com tag e motivo.
   - (b) Só registrar.
 - **Recomendação:** (a).
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feito em 29/09/2026: em `rodar_fase2b.ps1` os três pipes com `Tee-Object` passaram a `ForEach-Object` + `Add-Content -Encoding utf8` e o console passou a decodificar a saída dos processos em UTF-8 (`[Console]::OutputEncoding`), com tag e motivo; BOM e CRLF preservados; `conferir_docs.py` limpo. Os resultados da 2-B não mudam.
 
 ### 9. Padronizar os três scripts PowerShell da raiz (BOM e travessão)
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 22/09/2026
 - **O que é:** `build_exe.ps1`, `install.ps1` e `run.ps1` são anteriores à regra do CLAUDE.md: não têm a marca de UTF-8 no início do arquivo (o BOM) e usam travessão em comentários. O `conferir_docs.py` avisa disso a cada conferência. Conferido em 21/09: como os travessões estão em comentários e não dentro de textos, os scripts rodam normalmente.
@@ -119,7 +121,7 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Padronizar (gravar com BOM e trocar o travessão por `-`), com tag e motivo.
   - (b) Manter e conviver com o aviso.
 - **Recomendação:** (a).
-- **Decisão:** em aberto.
+- **Decisão:** (a) — feito em 29/09/2026: `build_exe.ps1`, `install.ps1` e `run.ps1` gravados em UTF-8 com BOM, travessões dos comentários trocados por hífen, tag e motivo acrescentados (o `build_exe.ps1` ganhou a linha de motivo que faltava); a lista de exceções de `ferramentas/conferir_docs.py` esvaziou — daqui em diante qualquer `.ps1` sem BOM ou com travessão é falha, não aviso.
 
 ### 10. Aprovar as 11 modificações propostas para o projeto de pesquisa (ABNT)
 - **Estado:** aberta
@@ -129,7 +131,7 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
 - **Por que importa:** O projeto de pesquisa ainda descreve o plano de antes da Fase 3; sem as mudanças, ele contradiz o Memorial.
 - **Opções:** Aprovar item a item; o Claude aplica os aprovados, com tag e motivo, e deixa os demais registrados como não aplicados.
 - **Recomendação:** Aprovar 1 a 8 agora; 9, 10 e 11 ficam para a entrega.
-- **Decisão:** em aberto.
+- **Decisão:** Registrada em 29/09/2026 e aplicada no documento com marcação: itens 3 (linha "Mês 2 (continuação)" no cronograma), 4 (parágrafo de abertura da §3 ligando as fases aos objetivos), 5 (revisão em primeira passada por IA, ratificada por um revisor), 7 (frase sobre a reprodutibilidade da Fase 3) e 8 (endereços em BISWAS, JÚNIOR, SHI e ZHANG, J.; a entrada MACIAK virou INSTATUNNEL, porque a página é assinada "InstaTunnel" e não mostra nenhum Maciak — se você tiver a origem do nome, a entrada volta); item 6 aplicado com a sua ressalva (injeção determinística dominante; Fuzzing reservado a fases de teste posteriores, também na linha do Mês 5). Pré-aprovados como versão beta: 11 gerou `Projeto de Pesquisa - ABNT 15287_2025 - V4-beta.pdf` (`ferramentas/gerar_pdf_abnt.py`, pelo Edge; as marcações saem só da cópia, o `.md` continua com elas); 9 depende do exemplar do Faceli; 10 não muda o projeto (as fontes das rodadas 2, 3 e 4 entram no TCC final). **Itens 1 e 2 aguardam você:** o comparativo qwen × coder (ficha 4) manteve a decisão 52, e os textos propostos em 23/09 (modelo da família Qwen2.5 com a variante definida experimentalmente; critério da decisão 36 no lugar de "o menor modelo que atenda") continuam válidos — aplico com o seu ok.
 
 ### 11. Pendências antigas que continuam de pé
 - **Estado:** aberta
@@ -139,7 +141,7 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
 - **Por que importa:** Pendência sem decisão reaparece em toda conferência; cada uma precisa de "faz agora", "fica para o TCC final", "limitação declarada" ou "descartada, com motivo".
 - **Opções:** Para cada letra: fazer agora, deixar para o TCC final, manter como limitação declarada, ou descartar.
 - **Recomendação:** (a) TCC final; (b) limitação declarada; (c) fechar como feita; (d) manter "só se a banca pedir"; (e) você diz se o exemplar está em mãos; (f) entra na Fase 4; (g) entrega.
-- **Decisão:** em aberto.
+- **Decisão:** "Faça tudo agora" (29/09/2026), feito o que era possível: (a) fichamento formal das 7 referências originais em `2-pesquisa-e-literatura/fichamento-referencias-projeto.md` (fontes lidas pela web; BISWAS só por busca, o ResearchGate bloqueia); (b) validação em Linux: esta máquina não tem WSL nem Docker — continua como limitação declarada; (c) fechada: os critérios quantitativos estão na §3.4 desde 12/09; (d) ablação base × instruct feita (29/09, 11:38–13:55; `qwen2.5:0.5b-base` × `qwen2.5:0.5b-instruct`, A0 e A2 nos 90; `resultados_alvo/ablacao_base_instruct/`): o modelo base acerta 0 de 90 nas duas condições e inventa o rótulo em 87,8% dos casos quando recebe a biblioteca; o instruct de 0,5B fica em 4,4% e 1,1% — o piso está medido, leitura no roadmap §2.2 e achado 4.41; (e) Faceli no exemplar: só você; (f) experimento offline do recuperador (`experimento_recuperador.py`, `resultados_alvo/recuperador/`): o BM25 com sinais em código da Fase 3 continua muito à frente do embedding denso (`embeddinggemma:300m`) e do híbrido por fusão de posições — a recuperação híbrida da decisão 55 não se sustenta com este modelo de embedding (números no roadmap §2.2); (g) PDF beta gerado (ficha 10). Fica aberta só pelo item (e).
 
 ### 12. Casos inéditos — conferir 6 antes da corrida, ou rodar
 - **Estado:** fechada em 28/09/2026
@@ -166,7 +168,7 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
 - **Decisão:** (a) — corrigidos em 28/09 (decisão 58; achado 4.36); os registros oficiais da Fase 3 não mudam; a sonda de detecção de correção rodou sobre os dois (`sonda_correcao.py`, saída em `resultados_alvo/fase3b_correcao/`; leitura em `roadmap.md` §3).
 
 ### 14. Ciclo de correção da biblioteca — o que a sonda mostrou e o que entra na Fase 4
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 28/09/2026
 - **O que é:** Você definiu o requisito em 28/09: quando um erro que o agente documentou na biblioteca é corrigido no sistema — com a sugestão dele ou não —, o agente deve perceber e registrar que foi corrigido, sem apagar o histórico (erro + solução sugerida + solução aplicada). A sonda de 28/09 apresentou os dois casos corrigidos ao `qwen2.5:7b` lendo a própria biblioteca L1 e mostrou que, com o prompt congelado da Fase 3, ele **não percebe**: repete as edições antigas, só os limites do validador impedem o texto de entrar de novo, e diagnostica o `efe-10` corrigido com a causa errada. O desenho do que falta (uma operação de edição "correção", um estado por verbete, recuperação das notas pelo id do caso e validação em código) está em `roadmap.md` §4.2.
@@ -175,10 +177,10 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Encaixar o desenho do §4.2 no plano da Fase 4 e guardar a saída da sonda (`resultados_alvo/fase3b_correcao/`) no commit como primeira medição.
   - (b) Encaixar na Fase 4 sem versionar a sonda.
 - **Recomendação:** (a).
-- **Decisão:** em aberto.
+- **Decisão:** (a) — o desenho do §4.2 do roadmap entra no plano da Fase 4 e a saída da sonda (`resultados_alvo/fase3b_correcao/`) entra no commit (você adiciona). A rodada 4 do levantamento (§6.13, tópico "manutenção e atualização de documentação por LLM") traz a literatura que fundamenta o ciclo de correção.
 
 ### 15. O registro das condições da 3-B guarda só o último modelo quando o script roda vários
-- **Estado:** aberta
+- **Estado:** fechada em 29/09/2026
 - **Quem decide:** Eric
 - **Aberta em:** 28/09/2026
 - **O que é:** `rodar_fase3b.ps1` chama `executar_fase3b.py` uma vez por modelo, e cada chamada regrava `condicoes_3b.json` na pasta de saída com a própria lista de modelos — ao fim fica só o último. Em `resultados_alvo/fase3b_ineditos/condicoes_3b.json` consta `"modelos": ["qwen2.5:7b"]`, embora o `qwen2.5-coder:3b` também tenha rodado (achado ao fechar a corrida, 28/09 23:15). Os resultados não são afetados: `resumo_fase3.json` (`metadados.modelos`) e os JSONL por modelo estão completos; a ponte de 21/09 tem o mesmo comportamento.
@@ -187,6 +189,19 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
   - (a) Corrigir `executar_fase3b.py` para juntar a lista de modelos já gravada à nova ao regravar o arquivo (com teste em `testar_fase3b.py`), e regravar o arquivo de `fase3b_ineditos/` e o de `fase3b_ponte/` pela mesma função, com a lista completa.
   - (b) Só registrar aqui.
 - **Recomendação:** (a) — a correção é pequena e vale para a troca cruzada, que também roda dois modelos.
+- **Decisão:** (a) — feito em 29/09/2026: `_gravar_condicoes` (`executar_fase3b.py`) passou a juntar a lista de modelos de chamadas sucessivas na mesma pasta, mantendo o `criado_em` da primeira, e a recusar um modo diferente na mesma saída; a opção `--completar-condicoes` refez os arquivos de `fase3b_ineditos` (`['qwen2.5:7b', 'qwen2.5-coder:3b']`) e `fase3b_ponte` (`['qwen2.5-coder:7b', 'qwen2.5-coder:3b', 'qwen2.5:7b']`) a partir dos JSONL de diagnóstico; dois testes novos em `testar_fase3b.py` (21 ok).
+
+### 16. Quais filtros da documentação autogerida entram no plano da Fase 4
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 29/09/2026
+- **O que é:** A rodada 4 do levantamento (`2-pesquisa-e-literatura/levantamento-2026-09-29-documentacao-autogerida.md`, §6.13: 8 tópicos, 121 afirmações verificadas — 100 confirmadas e 21 parciais — por 8 pesquisadores e 8 verificadores céticos, 3 rejeitadas) terminou num mapa de 26 filtros (§6.13.10): 14 adotados, 6 adiados, 6 descartados, com o motivo e a fonte de cada um. Os adotados, em resumo: (1) reordenar os campos do bloco de edição para a evidência (TRECHO e id do caso) vir antes do texto; (2) proposta decomposta em alegações curtas, cada uma amarrada a um trecho; (3) retificação só com TRECHO e id do caso preenchidos e cruzados; (5) uma segunda chamada ao modelo com a opção explícita de "nenhuma edição" (custa uma inferência a mais por proposta); (6) abstenção premiada — "NENHUMA" válida e pontuada; (8) checagem em código de nome de arquivo, endpoint e mensagem citados contra o sistema, antes dos 30 motivos; (10) dois tipos de saída para o mesmo trecho — "sinalizar" e "retificar"; (11) peso por tipo de edição na admissão (retificação exige mais); (12) redundância por n-gramas contra o próprio verbete, em código; (13) proveniência por edição (id do caso, data, solução sugerida e aplicada) — é o ciclo de correção da ficha 14; (14) auditoria separada de admissão e de atualização; (15) resolução determinística de conflito entre edições no mesmo trecho; (22) métricas de qualidade calculadas a cada rodada sem humano; (23) revisão humana amostral como porta final. Adiados (dependem de medir custo ou de mais dados): decodificação restrita por gramática (9), verificador de fidelidade pequeno (16), verificação por execução (17), consolidação periódica (18), juiz pequeno especializado (20), classificador de vacuidade (25). Descartados: confiança verbalizada como corte (4), segunda passada de autocrítica do próprio modelo (7 e 19), juiz genérico por LLM (21), detector por estado interno (24), grafo de propagação entre verbetes (26).
+- **Por que importa:** É a resposta da literatura à sua pergunta de 29/09 (filtros na geração e na gestão da documentação, mantendo a revisão humana); o que você aprovar vira requisito do plano da Fase 4, junto com o ciclo de correção (ficha 14) e a cópia curada (ficha 2).
+- **Opções:**
+  - (a) Aprovar os 14 adotados como requisitos do plano, marcando o 5 (segunda chamada) como "medir o custo no i5 antes".
+  - (b) Aprovar só os que rodam em código puro (1, 2, 3, 6, 8, 10, 11, 12, 13, 14, 15, 22, 23) e deixar o 5 para depois da medição.
+  - (c) Rever linha a linha na hora de arquitetar o plano.
+- **Recomendação:** (b) — tudo o que roda em código entra já; a segunda chamada (5) só depois de medida, porque cada inferência do 7B custa de 47 a 78 segundos nesta máquina.
 - **Decisão:** em aberto.
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)

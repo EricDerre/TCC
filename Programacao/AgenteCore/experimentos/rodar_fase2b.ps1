@@ -52,8 +52,19 @@ function Falha($texto) {
     Add-Content -Path $Log -Value "ERRO: $texto" -Encoding utf8
     exit 1
 }
+# ! Alteracao de IA - Revisar: Rodar (e os dois outros pipes de log abaixo) trocam Tee-Object por
+# ForEach-Object + Add-Content -Encoding utf8, e o console passa a decodificar a saida dos processos
+# em UTF-8 - mesmo patch do orquestrador da Fase 3 (ficha 8 de pendencias.md, decidida pelo Eric em 29/09/2026).
+# ! Motivo: chamado por 'powershell -File', o Windows PowerShell 5.1 faz o Tee-Object gravar o log em
+# UTF-16 (o fase2b.log de 07-09/09 tem trechos com bytes nulos) e decodifica a saida do Python pela
+# codepage OEM (acentos trocados). A Fase 2-B esta fechada e seus resultados nao mudam: o patch vale
+# so para corridas futuras deste script.
+try { [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false) } catch { }
 function Rodar($argumentos) {
-    & python @argumentos 2>&1 | Tee-Object -FilePath $Log -Append
+    & python @argumentos 2>&1 | ForEach-Object {
+        Write-Host $_
+        Add-Content -Path $Log -Value $_ -Encoding utf8
+    }
 }
 function RamLivreGB {
     return [math]::Round((Get-CimInstance Win32_OperatingSystem).FreePhysicalMemory / 1MB, 1)
@@ -122,7 +133,7 @@ if ($faltando.Count -gt 0 -and $discoLivreGB -lt 30) {
 }
 foreach ($tag in $faltando) {
     Marco "baixando $tag"
-    & ollama pull $tag 2>&1 | Tee-Object -FilePath $Log -Append
+    & ollama pull $tag 2>&1 | ForEach-Object { Write-Host $_; Add-Content -Path $Log -Value $_ -Encoding utf8 }
 }
 if (-not (Test-Path $Venv)) {
     Marco "criando a venv do AgenteCore (matplotlib, para os graficos)"
@@ -177,7 +188,7 @@ foreach ($m in $Ablacoes) {
 # ---------- 6. avaliacao, graficos e relatorio (tudo dentro de resultados_alvo\) ----------
 Marco "avaliacao final"
 Rodar @("avaliar.py")
-& $Venv gerar_graficos.py 2>&1 | Tee-Object -FilePath $Log -Append
+& $Venv gerar_graficos.py 2>&1 | ForEach-Object { Write-Host $_; Add-Content -Path $Log -Value $_ -Encoding utf8 }
 Rodar @("gerar_relatorio.py")
 $duracao = (Get-Date) - $Inicio
 Marco ("FIM da Fase 2-B - duracao total {0:d2}h{1:d2}" -f [int]$duracao.TotalHours, $duracao.Minutes)

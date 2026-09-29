@@ -75,6 +75,12 @@ def conferir_tags(arqs: list[Path]) -> list[str]:
             continue
         if "resultados_alvo" in a.as_posix() or ".superpowers" in a.as_posix():
             continue
+        # ! Alteração de IA - Revisar: o fechamento.json da cópia curada (biblioteca_producao/) fica fora da
+        # cobrança de tag (29/09/2026).
+        # ! Motivo: ele é gravado por evolucao_biblioteca.fechar_snapshot, no formato congelado da Fase 3, sem
+        # campo de comentário; a tag e o motivo estão em curar_biblioteca.py e no curadoria.json ao lado.
+        if a.name == "fechamento.json" and "biblioteca_producao" in a.as_posix():
+            continue
         t = a.read_text(encoding="utf-8", errors="replace")
         tags = len(re.findall(r"de IA - Revisar", t))
         motivos = len(re.findall(r"! Motivo", t))
@@ -88,7 +94,9 @@ def conferir_tags(arqs: list[Path]) -> list[str]:
 # Planos aprovados são artefatos congelados: o texto original fica e o anexo registra os desvios.
 CONGELADOS = ("plano-aprovado-",)
 # Scripts anteriores à regra do BOM (raiz do repositório, Cobaia): reportados como aviso, não como falha.
-PS1_PRE_EXISTENTES = ("build_exe.ps1", "install.ps1", "run.ps1")
+# ! Alteração de IA - Revisar: lista esvaziada em 29/09/2026 — os três scripts da raiz ganharam BOM e perderam o travessão (ficha 9).
+# ! Motivo: sem exceção, qualquer .ps1 que voltar a ficar sem BOM ou com travessão vira falha, não aviso.
+PS1_PRE_EXISTENTES: tuple[str, ...] = ()
 
 
 def conferir_obsoletas(frases: list[str]) -> list[str]:

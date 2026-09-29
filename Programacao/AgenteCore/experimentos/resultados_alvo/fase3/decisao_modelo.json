@@ -2032,7 +2032,7 @@
   },
   "revisao_humana": {
     "status": "avaliada",
-    "fonte": "planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida",
+    "fonte": "resumo_fase3.json",
     "por_modelo": {
       "qwen2.5-coder:3b": {
         "n": 10,
@@ -2071,7 +2071,7 @@
       "_nota": "pesos declarados antes da leitura dos resultados; a varredura de sensibilidade mostra onde o vencedor muda",
       "_comentario": "! Alteração de IA - Revisar: cria pesos_decisao.json (Tarefa P2.1) com o limiar de veto por autoenvenenamento, os pesos do escore ponderado de decidir_modelo.py e a semente do bootstrap. ! Motivo: brief-p2-decidir-modelo.md exige que os pesos sejam declarados ANTES da leitura de comparacao_fases.json/resumo_fase3.json, para a varredura de sensibilidade (decidir_modelo.py --saida fase3) mostrar se o vencedor é estável ou um artefato da escolha de pesos, em vez de pesos ajustados depois de ver o resultado."
     },
-    "gerado_em": "2026-09-23T10:04:20",
+    "gerado_em": "2026-09-29T11:09:07",
     "saida": "fase3",
     "fontes": {
       "comparacao": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\AgenteCore\\experimentos\\resultados_alvo\\fase3\\comparacao_fases.json",

@@ -163,11 +163,50 @@ def _gravar_condicoes(c3b: dict, *, modo: str, doador: str | None, versoes: list
     'modo' daqui para decidir se agrega pela via simples (avaliar_saida) ou pela via própria
     do modo 'ineditos'."""
     dado = {"modo": modo, "doador": doador, "versoes": list(versoes), "texto_max": texto_max,
-            "condicao": condicao, "modelos": modelos, "versao_ollama": versao_ollama,
+            "condicao": condicao, "modelos": list(modelos or []), "versao_ollama": versao_ollama,
             "origem": "resultados_alvo/fase3",
             "criado_em": datetime.now().isoformat(timespec="seconds")}
-    (c3b["raiz"] / "condicoes_3b.json").write_text(
-        json.dumps(dado, ensure_ascii=False, indent=2), encoding="utf-8")
+    caminho = c3b["raiz"] / "condicoes_3b.json"
+    # ! Alteração de IA - Revisar: se o arquivo já existe (o rodar_fase3b.ps1 chama este executor
+    # uma vez por modelo, na mesma pasta de saída), a lista de modelos gravada é JUNTADA à nova,
+    # na ordem em que rodaram, e o criado_em original é mantido (a regravação ganha atualizado_em).
+    # Um modo diferente do já gravado interrompe: seria outra corrida na mesma pasta.
+    # ! Motivo: cada chamada regravava o arquivo inteiro com a própria lista, e a pasta acabava
+    # dizendo que a corrida teve um modelo só — em fase3b_ineditos/ ficou ["qwen2.5:7b"] embora o
+    # qwen2.5-coder:3b tenha rodado antes (ficha 15 de pendencias.md, 29/09/2026).
+    if caminho.exists():
+        antigo = json.loads(caminho.read_text(encoding="utf-8"))
+        if antigo.get("modo") != modo:
+            raise SystemExit(f"{caminho} já registra o modo {antigo.get('modo')!r}; esta corrida "
+                             f"é {modo!r} — use outra --saida")
+        vistos = list(antigo.get("modelos") or [])
+        dado["modelos"] = vistos + [m for m in dado["modelos"] if m not in vistos]
+        dado["criado_em"] = antigo.get("criado_em") or dado["criado_em"]
+        dado["atualizado_em"] = datetime.now().isoformat(timespec="seconds")
+    caminho.write_text(json.dumps(dado, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def completar_condicoes(raiz: Path) -> list[str]:
+    """! Alteração de IA - Revisar: completa a lista de modelos de um condicoes_3b.json já gravado
+    lendo o campo 'modelo' dos JSONL de diagnóstico de cada subpasta da saída; devolve a lista.
+    ! Motivo: as saídas gravadas antes da correção acima (fase3b_ponte, fase3b_ineditos) ficaram
+    só com o último modelo; a lista verdadeira está nos registros, e é de lá que ela é refeita —
+    nenhum resultado é tocado, só este arquivo de condições (CLI --completar-condicoes)."""
+    caminho = raiz / "condicoes_3b.json"
+    dado = json.loads(caminho.read_text(encoding="utf-8"))
+    vistos = list(dado.get("modelos") or [])
+    for arq in sorted(raiz.glob("*/diagnosticos__L*.jsonl")):
+        with arq.open(encoding="utf-8") as f:
+            primeira = f.readline().strip()
+        if not primeira:
+            continue
+        modelo = json.loads(primeira).get("modelo")
+        if modelo and modelo not in vistos:
+            vistos.append(modelo)
+    dado["modelos"] = vistos
+    dado["atualizado_em"] = datetime.now().isoformat(timespec="seconds")
+    caminho.write_text(json.dumps(dado, ensure_ascii=False, indent=2), encoding="utf-8")
+    return vistos
 
 
 def _diagnosticar_versao(modelo: str, versao: int, casos: list[dict], particao: dict,
@@ -532,9 +571,15 @@ def main() -> None:
     ap = argparse.ArgumentParser(
         description="Executor da Fase 3-B: diagnósticos complementares (ponte, cruzada, "
                     "texto_max, a5, ineditos) sobre cópias dos snapshots da Fase 3 oficial.")
-    ap.add_argument("--modo", required=True, choices=MODOS)
+    ap.add_argument("--modo", choices=MODOS, default=None, help="obrigatório, salvo com --completar-condicoes")
     ap.add_argument("--saida", required=True,
                     help="subpasta nova dos resultados (nunca 'fase3', a corrida oficial)")
+    # ! Alteração de IA - Revisar: --completar-condicoes refaz a lista de modelos do condicoes_3b.json de
+    # uma saída já gravada a partir dos JSONL de diagnóstico (ver completar_condicoes) e sai.
+    # ! Motivo: fase3b_ponte e fase3b_ineditos foram gravadas antes da correção de _gravar_condicoes e
+    # ficaram com um modelo só na lista (ficha 15, 29/09/2026); nenhuma inferência é refeita.
+    ap.add_argument("--completar-condicoes", action="store_true", dest="completar_condicoes",
+                    help="só completa a lista de modelos de condicoes_3b.json da --saida e sai")
     ap.add_argument("--modelos", nargs="+", default=None,
                     help="modelos a rodar (ignorado no modo texto_max, que é só granite)")
     ap.add_argument("--doador", default=None, help="modelo doador da biblioteca (modo cruzada)")
@@ -553,6 +598,13 @@ def main() -> None:
     args = ap.parse_args()
 
     print(caminhos.descricao())
+    if args.completar_condicoes:
+        raiz = caminhos.fase3(args.saida)["raiz"]
+        modelos = completar_condicoes(raiz)
+        print(f"condicoes_3b.json de {raiz.name}: modelos = {modelos}")
+        return
+    if not args.modo:
+        ap.error("--modo é obrigatório (salvo com --completar-condicoes)")
     falhas = _FUNCOES_POR_MODO[args.modo](args)
 
     c3b = caminhos.fase3(args.saida)

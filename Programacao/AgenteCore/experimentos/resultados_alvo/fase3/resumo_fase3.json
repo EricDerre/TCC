@@ -8740,7 +8740,7 @@
         "hit@1": 37.8,
         "hit@3": 80.0,
         "hit@5": 92.2,
-        "mrr": 0.591,
+        "mrr": 0.593,
         "n": 90
       },
       "avaliacao": {
@@ -8813,9 +8813,9 @@
       "n_verbetes_novos": 0,
       "todos": {
         "hit@1": 37.8,
-        "hit@3": 80.0,
+        "hit@3": 81.1,
         "hit@5": 90.0,
-        "mrr": 0.587,
+        "mrr": 0.588,
         "n": 90
       },
       "avaliacao": {
@@ -8838,9 +8838,9 @@
       "n_verbetes_novos": 0,
       "todos": {
         "hit@1": 36.7,
-        "hit@3": 77.8,
+        "hit@3": 78.9,
         "hit@5": 90.0,
-        "mrr": 0.581,
+        "mrr": 0.582,
         "n": 90
       },
       "avaliacao": {
@@ -8863,9 +8863,9 @@
       "n_verbetes_novos": 0,
       "todos": {
         "hit@1": 37.8,
-        "hit@3": 78.9,
+        "hit@3": 80.0,
         "hit@5": 90.0,
-        "mrr": 0.589,
+        "mrr": 0.59,
         "n": 90
       },
       "avaliacao": {
@@ -10023,7 +10023,71 @@
       "ok": 10
     }
   ],
-  "revisao_humana": [],
+  "revisao_humana": [
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "operacao": "novo_verbete",
+      "Correta": 0,
+      "Parcial": 0,
+      "Errada": 1,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    },
+    {
+      "modelo": "qwen2.5-coder:3b",
+      "operacao": "retificacao",
+      "Correta": 4,
+      "Parcial": 2,
+      "Errada": 3,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "operacao": "nota",
+      "Correta": 9,
+      "Parcial": 5,
+      "Errada": 2,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "operacao": "retificacao",
+      "Correta": 1,
+      "Parcial": 2,
+      "Errada": 5,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "operacao": "nota",
+      "Correta": 7,
+      "Parcial": 5,
+      "Errada": 2,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "operacao": "novo_verbete",
+      "Correta": 0,
+      "Parcial": 1,
+      "Errada": 4,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "operacao": "retificacao",
+      "Correta": 2,
+      "Parcial": 2,
+      "Errada": 6,
+      "sem_avaliacao": 0,
+      "valores_nao_reconhecidos": []
+    }
+  ],
   "metadados": {
     "saida": "fase3",
     "modelos": [
@@ -10032,7 +10096,7 @@
       "qwen2.5-coder:7b",
       "qwen2.5:7b"
     ],
-    "gerado_em": "2026-09-15T18:44:38",
+    "gerado_em": "2026-09-29T11:04:10",
     "n_diagnosticos": 1440,
     "n_propostas": 648,
     "versoes_sem_snapshot": []

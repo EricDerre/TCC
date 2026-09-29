@@ -1,0 +1,190 @@
+{
+  "_comentario": "! Alteração de IA - Revisar: registro da curadoria, gravado por curar_biblioteca.py --curar junto com a cópia de produção da biblioteca (reconstruída da epoca-0 sem as edições reprovadas). ! Motivo: diz de que snapshot a cópia veio, o que saiu e por quê, e os dois hashes — sem isso a pasta seria uma biblioteca sem origem rastreável; o fechamento.json ao lado é o do próprio evolucao_biblioteca (formato congelado da Fase 3, sem campo de comentário).",
+  "origem": "resultados_alvo/fase3/bibliotecas/qwen2.5_7b/epoca-1",
+  "modelo": "qwen2.5:7b",
+  "epoca": 1,
+  "hash_oficial": "3394d203cab9",
+  "hash_curada": "1fca10f1a6f6",
+  "politica": {
+    "remover": [
+      "Errada"
+    ]
+  },
+  "planilha": "curadoria_L1__qwen2.5_7b.md",
+  "edicoes_na_epoca": 40,
+  "mantidas": 23,
+  "removidas": [
+    {
+      "numero": 4,
+      "caso": "sin-1",
+      "verbete": "entidade-produto",
+      "operacao": "retificacao",
+      "texto": "Corrigir a conversão do preço e destaque no _to_dict de produtos.py.",
+      "avaliacao": "Errada",
+      "comentario": "_to_dict (produtos.py:22-31) converte preço e destaque corretamente; o \"undefined\" de sin-1 vem do modo field_missing apagando a chave preco depois do _to_dict (fault_injection.py), não de conversão errada.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 7,
+      "caso": "efe-4",
+      "verbete": "estado_da_tela_divergente",
+      "operacao": "retificacao",
+      "texto": "Corrigir a lógica de cancelamento para não depender de redirect, garantindo a atualização do estado da tela.",
+      "avaliacao": "Errada",
+      "comentario": "efe-4 é um GET /api/produtos comum (sem nenhum cancelamento), com um filtro de categoria preso em 'Bebidas'; a retificação fala de cancelamento/redirect, outro fluxo (cliente_cancelar.php), sem relação com o caso.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 10,
+      "caso": "sin-6",
+      "verbete": "contrato-produto",
+      "operacao": "retificacao",
+      "texto": "Corrigir \"preco número\" para \"preco Decimal\" para refletir o tipo correto em valor_produto.",
+      "avaliacao": "Errada",
+      "comentario": "schemas.py declara Decimal só para a doc OpenAPI; a rota devolve float(p.valor_produto) (produtos.py:28) via JSONResponse — número no fio. Trocar para \"Decimal\" contradiz o que sai; sin-6 nem é sobre preço, é nome ausente.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 11,
+      "caso": "sin-8",
+      "verbete": "colecao_no_lugar_de_objeto",
+      "operacao": "retificacao",
+      "texto": "Corrigir que GET /api/produtos/{id} deve devolver um objeto, não uma lista.",
+      "avaliacao": "Errada",
+      "comentario": "Inverte o caso: sin-8 é GET /api/produtos (lista) devolvendo um objeto solto; a retificação descreve o oposto, GET /api/produtos/{id} devolvendo lista, que é o caso sin-4.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 13,
+      "caso": "sin-12",
+      "verbete": "pedido-reserva",
+      "operacao": "retificacao",
+      "texto": "Corrigir a renderização para não exibir linhas com campos nulos quando o cliente não reservou.",
+      "avaliacao": "Errada",
+      "comentario": "sin-12 é a API (pedidos.py, sem LEFT JOIN) omitindo o campo cpf de uma reserva real via field_missing, não a linha nula de cliente sem reserva da vw_tbpedidos; esconder essa linha reintroduziria o bug do INNER JOIN documentado em schema_completo.sql.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 15,
+      "caso": "sin-13",
+      "verbete": "contrato-produto",
+      "operacao": "retificacao",
+      "texto": "Adicionar observação sobre possíveis nomes diferentes para o campo tipo no verbete.",
+      "avaliacao": "Errada",
+      "comentario": "Em sin-13 o campo tipo mantém o nome; o que muda é a forma (objeto em vez de texto) em parte dos itens.",
+      "origem_do_veredito": "planilha oficial"
+    },
+    {
+      "numero": 18,
+      "caso": "semt-13",
+      "verbete": "tipo_divergente",
+      "operacao": "retificacao",
+      "texto": "Corrigir que destaque booleano saia literal, garantindo que seja convertido corretamente para True ou False.",
+      "avaliacao": "Errada",
+      "comentario": "semt-13 é o campo preco vindo como texto com vírgula (\"89,90\"); destaque não aparece no caso, e produtos.py converte destaque com == \"Sim\" sem nenhum modo de falha envolvido aqui.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 20,
+      "caso": "semt-15",
+      "verbete": "pedido-reserva",
+      "operacao": "retificacao",
+      "texto": "Adicionar validação no backend para verificar se o status está dentro do domínio permitido.",
+      "avaliacao": "Errada",
+      "comentario": "semt-15 tem status \"Em Analise\" normal; o campo fora do domínio é pessoas=0, já coberto em valor_fora_do_dominio.md (\"pessoas ≥ 1 é só min= do HTML\"). Não há problema de status aqui.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 21,
+      "caso": "semt-15",
+      "verbete": "pedido-reserva",
+      "operacao": "retificacao",
+      "texto": "Corrigir a lógica do LEFT JOIN para evitar linhas nulas quando o cliente não tem reserva.",
+      "avaliacao": "Errada",
+      "comentario": "semt-15 não tem LEFT JOIN nem cliente sem reserva envolvido — é uma reserva real com pessoas=0; a causa é valor fora do domínio, não linha nula da vw_tbpedidos.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 22,
+      "caso": "tra-6",
+      "verbete": "escala_ou_unidade_errada",
+      "operacao": "retificacao",
+      "texto": "Corrigir a conversão do valor_produto para float, aplicando o fator correto.",
+      "avaliacao": "Errada",
+      "comentario": "produtos.py:28 faz float(valor_produto) direto, sem nenhum fator; pedir para \"aplicar o fator correto\" inventa uma conversão que o código não faz (mesmo erro já apontado na linha 23 para o verbete novo).",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 23,
+      "caso": "tra-6",
+      "verbete": "conversao-de-unidade",
+      "operacao": "novo_verbete",
+      "texto": "Adicionar instruções sobre a necessidade de aplicar o fator correto na conversão do valor_produto.",
+      "avaliacao": "Errada",
+      "comentario": "Verbete novo manda 'aplicar o fator correto' em valor_produto; produtos.py não aplica fator nenhum (float direto) e o 0.899 de tra-6 veio de fora da API: induz ao diagnóstico errado.",
+      "origem_do_veredito": "planilha oficial"
+    },
+    {
+      "numero": 24,
+      "caso": "tra-9",
+      "verbete": "formato_de_data_divergente",
+      "operacao": "retificacao",
+      "texto": "Adicione que o formato ISO 8601 é obrigatório e que datas devem ser passadas no formato AAAA-MM-DD, sem hora ou fuso horário. Corrija que o timestamp deve ser convertido para o formato ISO 8601 antes de ser devolvido.",
+      "avaliacao": "Errada",
+      "comentario": "tra-9 é o dia deslocado (escala_ou_unidade_errada; \"formato invalido\" é justamente o termo proibido do caso); pedidos.py:23 já faz data_pedido.isoformat(), sempre AAAA-MM-DD — não há timestamp nem formato para \"corrigir\".",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 26,
+      "caso": "tra-12",
+      "verbete": "conversao-de-valor",
+      "operacao": "novo_verbete",
+      "texto": "Adicionar regra para conversão correta de valor DECIMAL para float no _to_dict.",
+      "avaliacao": "Errada",
+      "comentario": "float(Decimal('89.90')) não arredonda para 90 — produtos.py:28 não tem bug de conversão; pedir uma \"regra de conversão correta\" em _to_dict inventa um defeito que o código não tem (mesmo problema do verbete novo já julgado errado na linha 23).",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 30,
+      "caso": "run-11",
+      "verbete": "dado_desatualizado",
+      "operacao": "retificacao",
+      "texto": "Adicionar \"A leitura defasada indica que a API está lendo dados antigos do banco, enquanto o painel PHP atualiza em tempo real.\"",
+      "avaliacao": "Errada",
+      "comentario": "A CobaiaAPI consulta o banco a cada requisição (database.py, sem cache); não 'lê dados antigos do banco'; a defasagem vem de proxy ou cache do navegador.",
+      "origem_do_veredito": "planilha oficial"
+    },
+    {
+      "numero": 32,
+      "caso": "efe-8",
+      "verbete": "estado_da_tela_divergente",
+      "operacao": "retificacao",
+      "texto": "Corrigir a implementação do cancelamento para que não dependa apenas do redirect, mas também limpe o estado da tela corretamente.",
+      "avaliacao": "Errada",
+      "comentario": "efe-8 não tem cancelamento — é GET /api/produtos com sucesso e a tela presa em \"Carregando...\"; a causa já documentada é produtos_api.php só limpar esse texto no then() do fetch, não a lógica de cancelar.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 33,
+      "caso": "efe-10",
+      "verbete": "estado_da_tela_divergente",
+      "operacao": "retificacao",
+      "texto": "Corrigir a lógica de cancelamento para não depender do redirect, garantindo que a interface seja atualizada corretamente.",
+      "avaliacao": "Errada",
+      "comentario": "efe-10 também não envolve cancelamento: é o preço antigo preso na tela porque o grid só é redesenhado quando carregarProdutos() roda de novo, não por depender de redirect.",
+      "origem_do_veredito": "curadoria"
+    },
+    {
+      "numero": 35,
+      "caso": "efe-11",
+      "verbete": "estrutura_aninhada_divergente",
+      "operacao": "retificacao",
+      "texto": "Corrigir a estrutura da resposta da API para ser consistente, evitando envelopes ou campos simples aninhados, para padronizar o desenpacotamento dos dados.",
+      "avaliacao": "Errada",
+      "comentario": "efe-11 é ordem aleatória dos cartões a cada recarregamento (produtos.py:38 não tem ORDER BY), não envelope nem campo aninhado; a retificação ataca uma estrutura que não é o defeito do caso.",
+      "origem_do_veredito": "curadoria"
+    }
+  ],
+  "n_verbetes": 40,
+  "curado_em": "2026-09-29T11:51:15"
+}

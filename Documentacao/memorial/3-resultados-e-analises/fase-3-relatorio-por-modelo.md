@@ -272,16 +272,16 @@ Origem: `resumo_fase3.json` → `recuperacao` (por modelo × L: `hit@1`, `hit@3`
 | `granite4.2:8b` | L2 | 36 (0) | 6582 | 38,9 / 80,0 / 91,1 / 0,596 | 38,9 / 86,1 / 94,4 / 0,621 | 0 | 0 |
 | `granite4.2:8b` | L3 | 36 (0) | 6582 | 38,9 / 80,0 / 91,1 / 0,596 | 38,9 / 86,1 / 94,4 / 0,621 | 0 | 0 |
 | `qwen2.5-coder:7b` | L0 | 36 (0) | 6582 | 38,9 / 80,0 / 91,1 / 0,596 | 38,9 / 86,1 / 94,4 / 0,621 | 0 | — |
-| `qwen2.5-coder:7b` | L1 | 36 (0) | 7977 | 37,8 / 80,0 / 90,0 / 0,587 | 38,9 / 86,1 / 91,7 / 0,616 | 0 | 0 |
-| `qwen2.5-coder:7b` | L2 | 36 (0) | 8369 | 36,7 / 77,8 / 90,0 / 0,581 | 36,1 / 83,3 / 91,7 / 0,600 | 0 | 1 |
-| `qwen2.5-coder:7b` | L3 | 36 (0) | 8765 | 37,8 / 78,9 / 90,0 / 0,589 | 36,1 / 86,1 / 91,7 / 0,603 | 0 | 0 |
+| `qwen2.5-coder:7b` | L1 | 36 (0) | 7977 | 37,8 / 81,1 / 90,0 / 0,588 | 38,9 / 86,1 / 91,7 / 0,616 | 0 | 0 |
+| `qwen2.5-coder:7b` | L2 | 36 (0) | 8369 | 36,7 / 78,9 / 90,0 / 0,582 | 36,1 / 83,3 / 91,7 / 0,600 | 0 | 1 |
+| `qwen2.5-coder:7b` | L3 | 36 (0) | 8765 | 37,8 / 80,0 / 90,0 / 0,590 | 36,1 / 86,1 / 91,7 / 0,603 | 0 | 0 |
 | `qwen2.5:7b` | L0 | 36 (0) | 6582 | 38,9 / 80,0 / 91,1 / 0,596 | 38,9 / 86,1 / 94,4 / 0,621 | 0 | — |
 | `qwen2.5:7b` | L1 | 42 (6) | 9820 | 36,7 / 77,8 / 92,2 / 0,580 | 38,9 / 83,3 / 94,4 / 0,609 | 0 | 1 |
 | `qwen2.5:7b` | L2 | 43 (7) | 10806 | 36,7 / 78,9 / 90,0 / 0,583 | 38,9 / 83,3 / 91,7 / 0,607 | 0 | 0 |
 | `qwen2.5:7b` | L3 | 45 (9) | 11377 | 36,7 / 78,9 / 88,9 / 0,579 | 38,9 / 86,1 / 88,9 / 0,604 | 0 | 0 |
 | `qwen2.5-coder:3b` | L0 | 36 (0) | 6582 | 38,9 / 80,0 / 91,1 / 0,596 | 38,9 / 86,1 / 94,4 / 0,621 | 0 | — |
 | `qwen2.5-coder:3b` | L1 | 36 (0) | 6831 | 38,9 / 80,0 / 92,2 / 0,595 | 38,9 / 86,1 / 94,4 / 0,621 | 0 | 0 |
-| `qwen2.5-coder:3b` | L2 | 36 (0) | 7037 | 37,8 / 80,0 / 92,2 / 0,591 | 36,1 / 86,1 / 94,4 / 0,607 | 0 | 0 |
+| `qwen2.5-coder:3b` | L2 | 36 (0) | 7037 | 37,8 / 80,0 / 92,2 / 0,593 | 36,1 / 86,1 / 94,4 / 0,607 | 0 | 0 |
 | `qwen2.5-coder:3b` | L3 | 37 (1) | 7236 | 37,8 / 81,1 / 93,3 / 0,591 | 36,1 / 86,1 / 94,4 / 0,609 | 0 | 0 |
 <!-- /tabela:recuperacao -->
 
@@ -358,7 +358,7 @@ Amostra determinística de até 30 edições aceitas por modelo (10 por época, 
 | `qwen2.5-coder:7b` | 24 | 41,7% | 29,2% | 29,2% | 0,0% |
 | `qwen2.5:7b` | 29 | 31,0% | 27,6% | 41,4% | 0,0% |
 
-_Fonte: planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida._
+_Fonte: resumo_fase3.json._
 <!-- /tabela:revisao -->
 
 Leitura. Das 63 edições, 23 são corretas, 17 parciais e 23 erradas — e **21 das 23 corretas repetem o que o verbete original já dizia** (as duas exceções são do Coder 7B: a nota sobre `Allowed memory size exhausted` em `lex-12` e a nota sobre a resposta antiga sobrescrever a nova em `efe-13`). No vencedor, `qwen2.5:7b`, 12 das 29 (41,4%) afirmam algo que o código não faz — "a API lê dados antigos do banco", "aplicar o fator correto na conversão de `valor_produto`", "corrigir a lógica do LEFT JOIN" — e nas 10 da época 1 (a biblioteca L1 escolhida) o placar é 3 corretas, 4 parciais e 3 erradas. Duas consequências: o ganho de L1 (§3) coexiste com notas erradas e não pode ser creditado à verdade do que foi escrito — é coerente com ZHAO, W. et al. (2026), agentes que não usam a experiência que escreveram (mapa §6.10, linha 17), e com o fato de as notas alterarem `sintomas` e `palavras_chave` do frontmatter, que alimentam a recuperação; e a biblioteca de produção precisa de curadoria humana antes de ir para a Fase 4 (§12; achado 4.35). Um único revisor, sem medida de concordância (§11).

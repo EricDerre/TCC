@@ -82,3 +82,14 @@ ms-playwright/
 .DS_Store
 Thumbs.db
 *.log
+
+# ---------------------------------------------------------------------------
+# Logs das baterias do TCC: exceção ao `*.log` acima
+# ---------------------------------------------------------------------------
+# ! Alteração de IA - Revisar: exceção ao `*.log` para os logs das baterias em `resultados_alvo/` (29/09/2026):
+# `fase2b.log`, `fase3/fase3.log`, `fase3b_*/fase3b.log`, `fase3b_correcao/sonda*.log` e os das próximas corridas.
+# ! Motivo: esses logs são o único registro linha a linha das baterias (início e fim de cada modelo, relances,
+# falhas, versão do Ollama) e, com o `*.log` genérico, cada log novo precisava de `git add -f`; com a exceção,
+# o `git add` normal já os pega. O log do piloto continua fora porque a pasta `fase3_piloto/` inteira é ignorada
+# acima, e o git não reinclui arquivo de pasta ignorada.
+!Programacao/AgenteCore/experimentos/resultados_alvo/**/*.log

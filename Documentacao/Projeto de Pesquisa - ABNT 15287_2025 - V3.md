@@ -144,7 +144,10 @@ Disso decorre a distinção entre a janela nominal e a janela efetivamente útil
 <!-- ! Alteração de IA - Revisar: subseção nova, citando MACIAK et al. (2026).
      ! Motivo: a referência constava na lista sem citação no corpo, e o Contract Drift — que é o objeto central do trabalho — não tinha nenhuma subseção própria no referencial, aparecendo apenas como definição solta na introdução e no glossário. -->
 
-A verificação automatizada de contratos entre cliente e servidor é discutida por Maciak et al. (2026), que caracterizam a deriva de contrato (*API drift*) como uma classe de falha que escapa aos testes unitários de cada lado isoladamente, por se manifestar apenas na fronteira de integração. Os autores destacam que alterações silenciosas de tipo, remoção de campos e renomeações são detectáveis por comparação estrutural da resposta observada contra o contrato esperado — princípio que fundamenta o gatilho de erro adotado neste projeto, no qual a interceptação de rede compara a forma (chaves e tipos) do dado recebido com a esperada pela interface consumidora.
+<!-- ! Alteração de IA - Revisar: a chamada "Maciak et al. (2026)" passou a "InstaTunnel (2026)", com a entrada correspondente na lista de referências (modificação 8 da revisão de 23/09/2026, aprovada pelo Eric em 29/09/2026 com a autoria a confirmar).
+     ! Motivo: conferido em 29/09/2026 — a página do Medium com esse título é assinada "InstaTunnel" (abr. 2026) e não mostra nenhum autor chamado Maciak; a NBR 6023 manda citar a entidade responsável quando não há autor pessoal identificado. Se o Eric tiver a origem do nome Maciak, a entrada volta. -->
+
+A verificação automatizada de contratos entre cliente e servidor é discutida em texto técnico da InstaTunnel (2026), que caracteriza a deriva de contrato (*API drift*) como uma classe de falha que escapa aos testes unitários de cada lado isoladamente, por se manifestar apenas na fronteira de integração. O texto destaca que alterações silenciosas de tipo, remoção de campos e renomeações são detectáveis por comparação estrutural da resposta observada contra o contrato esperado — princípio que fundamenta o gatilho de erro adotado neste projeto, no qual a interceptação de rede compara a forma (chaves e tipos) do dado recebido com a esperada pela interface consumidora.
 
 ## **2.6 Recuperação de Conhecimento Prévio Aplicada à Localização de Falhas**
 
@@ -164,7 +167,12 @@ Uma extensão natural dessa base é deixar que o próprio modelo a mantenha, acr
 
 # **3 METODOLOGIA**
 
-A pesquisa caracteriza-se como um projeto prático e aplicado (Pesquisa-Ação), voltado para a construção e validação de uma arquitetura de software escalável. A infraestrutura baseia-se nas seguintes camadas:
+A pesquisa caracteriza-se como um projeto prático e aplicado (Pesquisa-Ação), voltado para a construção e validação de uma arquitetura de software escalável.
+
+<!-- ! Alteração de IA - Revisar: acrescentado o parágrafo abaixo, que nomeia as etapas do trabalho e liga cada uma a um objetivo específico da seção 1.4 (modificação 4 da revisão de 23/09/2026, aprovada pelo Eric em 29/09/2026).
+     ! Motivo: o texto só nomeava a "Fase 3" (seção 3.2), e o leitor não sabia que etapas a antecedem nem o que vem depois; as Fases 1, 2-A, 2-B e 3 já foram executadas e as 4 e 5 são o que falta. -->
+
+A execução organiza-se em etapas numeradas, cada uma ligada a um objetivo específico da seção 1.4: a Fase 1 prepara o ambiente e as duas aplicações-alvo (primeiro objetivo); as Fases 2-A, 2-B e 3 comparam os modelos de linguagem locais — primeiro sem documentação, depois com uma base de conhecimento recuperada e, por fim, com a base editada pelo próprio modelo — e decidem o modelo e o estado da base a adotar (segundo objetivo); a Fase 4 implementa a filtragem de contexto, a interceptação de rede e a autocura de localizadores (terceiro e quarto objetivos); e a Fase 5 mede o MTTR e o Task Success contra a linha de base manual (quinto objetivo). A infraestrutura baseia-se nas seguintes camadas:
 
 ## **3.1 Infraestrutura e Orquestração Local**
 
@@ -197,7 +205,10 @@ O truncamento observará uma restrição específica: reduz-se o **volume** do d
 
 ## **3.4 Validação e Avaliação**
 
-A avaliação evitará a subjetividade inerente às análises feitas puramente por IAs, adotando aplicações-alvo determinísticas. Aplicar-se-á técnicas de Fuzzing (injeção de dados anômalos e imprevistos) e Mutação Dinâmica para simular quebras de contrato reais em APIs. O sucesso do agente será avaliado quantitativamente por duas métricas principais: Tempo Médio de Reparo (MTTR) e Task Success (Sucesso da Tarefa), verificando na prática se a sugestão refatorada consegue restaurar a estabilidade do teste.
+<!-- ! Alteração de IA - Revisar: no parágrafo abaixo, "Fuzzing e Mutação Dinâmica" deixam de ser o modo de simular as quebras de contrato: a injeção determinística de falhas por modo, com casos fixos gravados, passa a ser a forma dominante, e o Fuzzing fica reservado a fases de teste posteriores, como complemento (modificação 6 da revisão de 23/09/2026, aprovada pelo Eric em 29/09/2026 com essa ressalva).
+     ! Motivo: o que existe e foi medido é injeção determinística (7 modos de falha na API-alvo e 90 casos fixos escolhidos por classe e nível); nada é aleatório, e é isso que permite que o mesmo caso seja idêntico entre modelos e rodadas. O Eric quer manter o Fuzzing para fases futuras, então o termo continua, mas no lugar certo. -->
+
+A avaliação evitará a subjetividade inerente às análises feitas puramente por IAs, adotando aplicações-alvo determinísticas. As quebras de contrato serão simuladas, de forma dominante, por injeção determinística de falhas por modo: a aplicação-alvo expõe modos de falha fixos, e cada cenário é gravado como caso fixo, de modo que o mesmo caso seja idêntico entre modelos e entre rodadas; técnicas de Fuzzing (injeção de dados anômalos e imprevistos) e Mutação Dinâmica ficam reservadas a fases de teste posteriores, como complemento, e não como base da comparação. O sucesso do agente será avaliado quantitativamente por duas métricas principais: Tempo Médio de Reparo (MTTR) e Task Success (Sucesso da Tarefa), verificando na prática se a sugestão refatorada consegue restaurar a estabilidade do teste.
 
 <!-- ! Alteração de IA - Revisar: acrescentadas as definições operacionais das métricas, o grupo de controle, o volume de execuções e as condições de determinismo.
      ! Motivo: o texto original comprometia-se com MTTR e Task Success sem definir fórmula, linha de base, critério de sucesso ou número de repetições, e os resultados esperados falavam em reduzir o MTTR "significativamente" — sem esses parâmetros, o Mês 5 chegaria sem protocolo e nenhum resultado seria defensável perante a banca. -->
@@ -208,7 +219,10 @@ A avaliação evitará a subjetividade inerente às análises feitas puramente p
 
 **Linha de base.** Como grupo de controle, os mesmos cenários serão resolvidos manualmente por integrantes do grupo, com o tempo cronometrado desde a apresentação da falha até a correção do teste. A comparação entre esse tempo e o MTTR do agente constitui o resultado central da avaliação.
 
-**Volume e determinismo.** Cada configuração será submetida a cerca de dez cenários distintos, com cinco repetições cada, cobrindo os modos de falha injetados e a quebra de localizador. Para assegurar a reprodutibilidade, o banco de dados da aplicação-alvo é restaurado ao estado inicial entre execuções, o modo de falha é fixado por cenário, e a versão do navegador é mantida constante pelo próprio orquestrador, evitando variação decorrente de atualizações automáticas.
+<!-- ! Alteração de IA - Revisar: acrescentada ao fim do parágrafo abaixo a frase sobre como a Fase 3 mediu a reprodutibilidade (modificação 7 da revisão de 23/09/2026, aprovada pelo Eric em 29/09/2026).
+     ! Motivo: o protocolo de dez cenários com cinco repetições é o da Fase 5; a Fase 3, já executada, mediu o determinismo de outro jeito — uma execução por condição e a comparação caso a caso entre versões do runtime —, e o documento não dizia como. O número vem do achado 4.31 do Memorial de Desenvolvimento. -->
+
+**Volume e determinismo.** Cada configuração será submetida a cerca de dez cenários distintos, com cinco repetições cada, cobrindo os modos de falha injetados e a quebra de localizador. Para assegurar a reprodutibilidade, o banco de dados da aplicação-alvo é restaurado ao estado inicial entre execuções, o modo de falha é fixado por cenário, e a versão do navegador é mantida constante pelo próprio orquestrador, evitando variação decorrente de atualizações automáticas. Na Fase 3, cuja unidade de medida é o diagnóstico e não a reexecução de um roteiro, a reprodutibilidade foi medida de outro modo: uma execução por condição, com temperatura 0,1 e sem semente fixa, e a comparação caso a caso entre versões do runtime de inferência, em que nenhum rótulo trocou em seis dos oito pareamentos realizados (achado 4.31 do Memorial de Desenvolvimento do projeto).
 
 <!-- ! Alteração de IA - Revisar: acrescentado o bloco abaixo com as métricas e os testes da Fase 3 — acurácia balanceada como métrica primária, intervalo de confiança de Wilson, McNemar pareado, Q de Cochran com correção de Holm sobre as versões L0 a L3 da base, g de Cohen, contagem de casos que trocam de rótulo (*flips*), revisão humana por rubrica e a regra de só comparar etapas com prompts idênticos.
      ! Motivo: a seção definia MTTR e Task Success, que medem a etapa de autocura, e nada sobre a classificação da causa raiz, que é o resultado da Fase 3. Faltavam também o intervalo de confiança e o teste pareado: com cerca de noventa casos, reportar a taxa de acerto como ponto ou com intervalo de Wald entregaria cobertura menor que a declarada, e comparar quatro versões da base par a par sem teste conjunto e sem correção faria aparecer diferença apenas pelo número de comparações feitas. -->
@@ -220,7 +234,10 @@ A avaliação evitará a subjetividade inerente às análises feitas puramente p
 <!-- ! Alteração de IA - Revisar: (revisão 2, 12/09/2026) no parágrafo abaixo, a amostra revista por pessoas passou de "diagnósticos produzidos" para "edições aceitas na base de conhecimento", com o tamanho (até trinta por modelo), a planilha por modelo, a rubrica (correta, parcial ou errada) e o fato de haver um único revisor. Na segunda passada da mesma data, o nome do arquivo (`revisao_edicoes__<modelo>.md`) e os rótulos em fonte monoespaçada saíram do corpo do parágrafo, que ficou em prosa com os rótulos em itálico; o nome do arquivo fica no Memorial (§7 do relatório da Fase 3).
      ! Motivo: o que o harness da Fase 3 manda para revisão humana é a edição que o modelo escreveu e a validação em código aceitou (`avaliar_fase3.py --gerar-revisao`), porque a validação diz se a edição pode entrar e só a leitura humana diz se ela está certa sobre o sistema; os diagnósticos são pontuados pelo gabarito, sem revisão. E com um só revisor não há medida de concordância a reportar. O marcador voltou à forma fixa do CLAUDE.md, com os dois-pontos logo depois de "Revisar", porque um filtro por "Revisar:" não achava a variante com o parêntese antes dos dois-pontos; e o parágrafo era a única linha do corpo do documento com trechos em crase — o resto marca termos técnicos em itálico (*flips*, *Accessibility Tree*), e na conversão para PDF a fonte monoespaçada e o `<modelo>` destoavam do padrão. -->
 
-**Métrica de risco e revisão humana.** Além do acerto agregado, será contabilizado o número de trocas de rótulo (*flips*): casos individuais que mudam de resposta entre duas condições ainda que a média se mantenha. Dutta et al. (2024) medem que até 13,6% das respostas individuais trocam de rótulo entre esquemas de quantização do mesmo modelo com diferença de acurácia de até dois pontos percentuais, o que torna a média insuficiente como critério de aceitação de uma versão da base. Uma amostra das edições aceitas na base de conhecimento — até trinta por modelo, sorteadas de forma determinística e gravadas em uma planilha por modelo — será ainda revista por um único revisor do grupo segundo rubrica escrita previamente (*correta*, *parcial* ou *errada*), com os critérios fixados antes da leitura dos resultados; por haver um só revisor, o resultado é reportado como proporção, sem medida de concordância.
+<!-- ! Alteração de IA - Revisar: no parágrafo abaixo, a revisão da amostra de edições passa a ser descrita como foi feita — rubrica aplicada em primeira passada por um assistente de IA, contra o código da aplicação-alvo, e ratificada por um único revisor do grupo (modificação 5 da revisão de 23/09/2026, aprovada pelo Eric em 29/09/2026).
+     ! Motivo: os 63 vereditos da Fase 3 foram dados em primeira passada pela IA (decisão 53 do Memorial) e ratificados pelo Eric em 23/09/2026 sem alteração; o texto dizia só "um único revisor", e o relatório final precisa dizer como foi. -->
+
+**Métrica de risco e revisão humana.** Além do acerto agregado, será contabilizado o número de trocas de rótulo (*flips*): casos individuais que mudam de resposta entre duas condições ainda que a média se mantenha. Dutta et al. (2024) medem que até 13,6% das respostas individuais trocam de rótulo entre esquemas de quantização do mesmo modelo com diferença de acurácia de até dois pontos percentuais, o que torna a média insuficiente como critério de aceitação de uma versão da base. Uma amostra das edições aceitas na base de conhecimento — até trinta por modelo, sorteadas de forma determinística e gravadas em uma planilha por modelo — será ainda avaliada segundo rubrica escrita previamente (*correta*, *parcial* ou *errada*), com os critérios fixados antes da leitura dos resultados: a rubrica é aplicada em primeira passada por um assistente de inteligência artificial, que confere cada edição contra o código da aplicação-alvo, e ratificada por um único revisor do grupo; por haver um só revisor, o resultado é reportado como proporção, sem medida de concordância.
 
 **Comparabilidade entre etapas.** A comparação entre as etapas experimentais só será feita com prompts idênticos, byte a byte. Sclar et al. (2024), avaliando 320 formatos semanticamente equivalentes em cerca de 53 tarefas, medem variação de até 76 pontos de acurácia e amplitude mediana de 6,4 pontos decorrentes apenas do formato do prompt — variação que não é eliminada por exemplos no prompt, por escala do modelo nem por ajuste por instrução. Diferenças entre etapas menores que essa amplitude não seriam atribuíveis ao desenho experimental; por isso o que não for comparável será apresentado lado a lado, e nunca como diferença testada.
 
@@ -233,13 +250,17 @@ Espera-se que o Agente de QA Autônomo reduza significativamente o Tempo Médio 
 
 # **5 CRONOGRAMA DE ATIVIDADES**
 
+<!-- ! Alteração de IA - Revisar: linha nova "Mês 2 (continuação)" para a comparação experimental em três fases, e a linha do Mês 5 passa a dizer que os testes práticos usam injeção determinística de falhas, com Fuzzing como complemento (modificações 3 e 6 da revisão de 23/09/2026, aprovadas pelo Eric em 29/09/2026; o texto do Mês 2 aguarda a modificação 1).
+     ! Motivo: o cronograma pulava do Mês 2 para o Mês 3 sem nenhuma linha para a etapa mais longa do trabalho até aqui (Fases 2-A, 2-B e 3: cerca de 60 horas de máquina, análise decisória e três rodadas de pesquisa), que a seção 3.2 já descreve; e "Fuzzing" sozinho não descrevia o que foi feito. -->
+
 | Etapa / Mês | Atividade Prevista |
 | :---- | :---- |
 | Mês 1 | Revisão bibliográfica (LLMs, DOM Pruning, Contract Drift). |
 | Mês 2 | Configuração do ambiente local e da camada de inferência (Ollama com Qwen2.5-Coder quantizado), incluindo a comparação entre portes de modelo. |
+| Mês 2 (continuação) | Comparação experimental dos modelos em três fases: prompts sem documentação (2-A), biblioteca de documentação recuperada (2-B) e biblioteca editada pelo próprio modelo em épocas atrás de validação em código (3), com análise decisória do modelo final. |
 | Mês 3 | Desenvolvimento do Módulo de Filtragem de Contexto e extração da Accessibility Tree via Playwright. |
 | Mês 4 | Codificação do fluxo de Self-Healing e lógica de interceptação do Agente. |
-| Mês 5 | Testes práticos (Fuzzing) em aplicações-alvo e coleta de métricas (MTTR e Task Success). |
+| Mês 5 | Testes práticos em aplicações-alvo (injeção determinística de falhas, com Fuzzing como complemento) e coleta de métricas (MTTR e Task Success). |
 | Mês 6 | Redação, formatação ABNT e revisão dos capítulos do TCC. |
 | Mês 7 | Finalização do documento e Defesa Final perante a banca. |
 
@@ -248,7 +269,10 @@ Espera-se que o Agente de QA Autônomo reduza significativamente o Tempo Médio 
 <!-- ! Alteração de IA - Revisar: FACELI et al. passa da 2. ed. (2021) para a 3. ed. (2025) e foram acrescentadas 15 referências, em ordem alfabética, correspondentes às citações incluídas nas seções 2.2, 2.4, 2.6, 3.2 e 3.4.
      ! Motivo: a edição citada não era a adotada pelo projeto, e a NBR 6023 exige que a lista contenha exatamente as obras citadas no corpo — as citações novas ficariam sem entrada, repetindo o defeito já corrigido antes com JOSEPH, MACIAK e SHI, que constavam na lista sem aparecer no texto. As entradas novas seguem o mesmo formato das sete já existentes (sobrenome em caixa-alta, iniciais do prenome, destaque no título do periódico, do evento ou da obra), e todas as entradas cujo endereço eletrônico consta de `Documentacao/memorial/2-pesquisa-e-literatura/referencias.md` — as novas e as antigas — receberam `Disponível em` e `Acesso em`, porque a maioria é de material só publicado na internet (preprints do arXiv, atas em repositório, uma issue do GitHub e um texto no Medium), que sem endereço não se localiza. Continuam sem endereço as cinco entradas cuja URL não existe em nenhum arquivo do repositório: BISWAS, JÚNIOR, MACIAK, SHI e ZHANG, J. -->
 
-BISWAS, S. Enhancing End-to-End Test Stability Through AI-Assisted Self-Healing: A Case Study of Playwright Healer Agent Implementation. **International Journal of Scientific Engineering and Research**, v. 14, n. 1, p. 1-12, jan. 2026\.
+<!-- ! Alteração de IA - Revisar: entradas BISWAS, JÚNIOR, SHI e ZHANG, J. receberam "Disponível em … Acesso em" (ZHANG, J. com o veículo, volume, número e páginas); a entrada MACIAK, T. et al. foi substituída por INSTATUNNEL, em ordem alfabética (modificação 8 da revisão de 23/09/2026, aprovada pelo Eric em 29/09/2026).
+     ! Motivo: os endereços foram localizados em 23/09/2026 (busca na web; BISWAS só no ResearchGate, a página da revista não foi encontrada) e a autoria de MACIAK foi conferida em 29/09/2026 — a página é assinada "InstaTunnel". -->
+
+BISWAS, S. Enhancing End-to-End Test Stability Through AI-Assisted Self-Healing: A Case Study of Playwright Healer Agent Implementation. **International Journal of Scientific Engineering and Research**, v. 14, n. 1, p. 1-12, jan. 2026\. Disponível em: https://www.researchgate.net/publication/399515915. Acesso em: 23 set. 2026\.
 
 BOWYER, S.; AITCHISON, L.; IVANOVA, D. R. Position: Don't Use the CLT in LLM Evals With Fewer Than a Few Hundred Datapoints. In: **International Conference on Machine Learning (ICML)**, 42., 2025\. Disponível em: https://arxiv.org/abs/2503.01747. Acesso em: 11 set. 2026\.
 
@@ -266,9 +290,11 @@ FACELI, K.; LORENA, A. C.; GAMA, J.; ALMEIDA, T. A.; CARVALHO, A. C. P. L. F. **
 
 GARCÍA, S.; HERRERA, F. An Extension on "Statistical Comparisons of Classifiers over Multiple Data Sets" for all Pairwise Comparisons. **Journal of Machine Learning Research**, v. 9, p. 2677-2694, 2008\. Disponível em: https://www.jmlr.org/papers/volume9/garcia08a/garcia08a.pdf. Acesso em: 11 set. 2026\.
 
+INSTATUNNEL. Automated Contract Testing: How to Detect API Drift Before It Reaches Production. **Medium**, abr. 2026\. Disponível em: https://medium.com/@instatunnel/automated-contract-testing-how-to-detect-api-drift-before-it-reaches-production-6c2a77baa2a3. Acesso em: 29 set. 2026\.
+
 JOSEPH, R. N. Beyond LLM-Based Test Automation: A Zero-Cost Self-Healing Approach Using DOM Accessibility Tree Extraction. **Preprint**, mar. 2026\. Disponível em: https://arxiv.org/abs/2603.20358. Acesso em: 11 set. 2026\.
 
-JÚNIOR, E.; VALEJO, A. D. B.; VALVERDE-REBAZA, J.; NEVES, V. GenIA-E2ETest: A Generative AI-Based Approach for End-to-End Test Automation. In: **Simpósio Brasileiro de Engenharia de Software (SBES)**, Recife, PE, set. 2025\.
+JÚNIOR, E.; VALEJO, A. D. B.; VALVERDE-REBAZA, J.; NEVES, V. GenIA-E2ETest: A Generative AI-Based Approach for End-to-End Test Automation. In: **Simpósio Brasileiro de Engenharia de Software (SBES)**, Recife, PE, set. 2025\. Disponível em: https://sol.sbc.org.br/index.php/sbes/article/view/37006. Acesso em: 23 set. 2026\.
 
 KULIGOWSKI, A. Chat History and Embedding Truncation Happens Silently with No User-Visible Indication. **Issue n. 14259, repositório ollama/ollama, GitHub**, fev. 2026\. Disponível em: https://github.com/ollama/ollama/issues/14259. Acesso em: 11 set. 2026\.
 

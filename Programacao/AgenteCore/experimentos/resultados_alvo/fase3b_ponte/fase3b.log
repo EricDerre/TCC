@@ -1,0 +1,697 @@
+﻿== checagens de ambiente  21/09 14:24:30 ==
+== RAM livre 5,9 GB; modo ponte; saida fase3b_ponte  21/09 14:24:31 ==
+== testes automatizados da Fase 3 e da Fase 3-B (sem LLM)  21/09 14:24:31 ==
+teste_fixtures_corrigidos ok
+teste_render_original_inalterado ok
+teste_notas_render_e_validacao ok
+teste_verbete_aprendido ok
+teste_caminhos_fase3 ok
+teste_escrever_indice_raiz ok
+teste_ler_jsonl_tolerante ok
+maior prompt estimado: 1000 tokens + 600 de resposta
+teste_guardas_num_ctx ok
+teste_ambiente_residente ok
+teste_inferir_seguro ok
+teste_particao ok
+teste_parser_propostas ok
+teste_parser_campo_fechado ok
+teste_parser_fim_ausente ok
+teste_parser_proposta_nova_fecha_anterior_sem_fim ok
+teste_particao_exige_18_celulas ok
+teste_arquivos_md_ignora_indice_sem_case ok
+teste_hash_copia_diff_fechamento ok
+teste_validar_proposta_aceita ok
+teste_motivos_de_rejeicao ok
+teste_arquivos_citados_resolvidos ok
+teste_aplicar_e_somente_acrescimo ok
+teste_frontmatter_preservado ok
+teste_notas_um_unico_cabecalho ok
+teste_abrir_epoca_reconstroi ok
+teste_registrar_historico ok
+teste_orcamento_prompt ok
+teste_fechar_epoca ok
+teste_prompt_proposta ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_epoca_completa ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  2 caso(s) completos, 4 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  2 caso(s) completos, 4 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  4/4 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_retomada ok
+teste_projecao_tempo ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+     lex-1 · diagnóstico: tentativa 3 deu certo
+  lex-2 · 0/0 aceitas · NENHUMA
+  2/2 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  2/2 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 3 de 3 falhou — ConnectionError: Connection refused (de mentira)
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_repete_inferencia_com_erro ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  1 caso(s) completos, 1 pendentes
+maior prompt estimado: 1013 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_confere_contexto_do_orfao ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 3 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 3 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  lex-2 · 0/0 aceitas · NENHUMA
+  lex-3 · 0/0 aceitas · NENHUMA
+  3/3 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 3 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  3/3 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_epoca_fechada_confere_cobertura ok
+teste_cochran_holm_quiquadrado ok
+teste_acuracia_balanceada_e_distribuicao ok
+teste_avaliar_fase3_sintetico ok
+teste_comparar_fases_sintetico ok
+teste_comparar_fases_negrito_e_p ok
+teste_graficos_fase3: pulado (sem matplotlib nesta venv)
+teste_graficos_fase3 ok
+C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste__zilb1b5\fase3_aval\relatorio_fase3.html (12 diagnóstico(s), 4 proposta(s), 30 KB)
+teste_relatorio_fase3_sintetico ok
+teste_notas_malformadas_e_secoes_base ok
+teste_parser_truncada_so_no_ultimo_bloco ok
+teste_somente_acrescimo_arquivo_novo_qualquer ok
+teste_resolver_arquivo_exige_arquivo_e_ignora_resultados ok
+teste_trecho_com_aspas_delimitadoras ok
+teste_endpoint_citado_com_query_string ok
+teste_titulo_sistema_e_tbody_do_piloto ok
+teste_gravacao_atomica_e_versao_no_fechamento ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 3 de 3 falhou — ConnectionError: Connection refused (de mentira)
+  aviso: não deu para descarregar/conferir o modelo residente (ConnectionError: Ollama fora do ar (de mentira)) — confira 'ollama ps' antes do próximo modelo
+teste_executor_finally_nao_mascara_a_parada ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 0/0 aceitas · NENHUMA
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_campo_mostrado_e_versao_ollama ok
+teste_atualizar_maquina_preserva_inicio ok
+teste_projecao_por_epocas ok
+teste_amostra_revisao_por_epoca_e_holm ok
+teste_avaliar_versao_sem_snapshot_e_conferidos ok
+C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste_7ky7wl3z\fase3_aval\relatorio_fase3.html (12 diagnóstico(s), 4 proposta(s), 30 KB)
+teste_relatorio_placeholder_literal_no_texto_do_modelo ok
+teste_comparar_fases_media_por_coluna_e_balanceada ok
+teste_graficos_rotulos_fig17_nao_se_sobrepoem: pulado (sem matplotlib)
+teste_graficos_rotulos_fig17_nao_se_sobrepoem ok
+teste_graficos_fig15_le_tamanho_renderizado: pulado (sem matplotlib)
+teste_graficos_fig15_le_tamanho_renderizado ok
+60 testes ok
+teste_area_oficial_hash_antes ok
+teste_copia_snapshot_preserva_hash ok
+teste_ponte_prepara_saida_e_chama_rodar_epoca ok
+teste_texto_max_aplica_e_restaura ok
+teste_a5_aplica_e_restaura ok
+teste_ineditos_sem_modulo_para_com_systemexit_2 ok
+
+12 diagnósticos avaliados — C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste_m2f69rd1\fase3_aval
+
+modelo                      L    particao    n  acerto%          IC95  balanc%  cita%  ouro%  nota%   s med
+modelo:avaliado             0 aprendizado    4     50.0     15.0–85.0     50.0  100.0  100.0    0.0    40.0
+modelo:avaliado             0   avaliacao    2     50.0      9.5–90.5     50.0   50.0   50.0    0.0    40.0
+modelo:avaliado             0       todos    6     50.0     18.8–81.2     50.0   83.3   83.3    0.0    40.0
+modelo:avaliado             1 aprendizado    4     75.0     30.1–95.4     75.0  100.0  100.0   50.0    40.0
+modelo:avaliado             1   avaliacao    2     50.0      9.5–90.5     50.0   50.0   50.0    0.0    40.0
+modelo:avaliado             1       todos    6     66.7     30.0–90.3     80.0   83.3   83.3   33.3    40.0
+
+Δ contra a L0 (pareado por caso; McNemar exato, * = p ajustado por Holm < 0,05):
+  modelo:avaliado            L1 aprendizado:  50.0 →  75.0 (+25.0 pp) b= 2 c= 1 p=1.0     holm=1.0     g=0.167 
+  modelo:avaliado            L1   avaliacao:  50.0 →  50.0 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  modelo:avaliado            L1       todos:  50.0 →  66.7 (+16.7 pp) b= 2 c= 1 p=1.0     holm=1.0     g=0.167 
+
+Cochran Q (as versões da biblioteca lado a lado, mesmos casos):
+  modelo:avaliado            aprendizado: Q=0.3333   gl=1 p=0.5637 (n=4)
+  modelo:avaliado              avaliacao: Q=0.0      gl=1 p=1.0 (n=2)
+  modelo:avaliado                  todos: Q=0.3333   gl=1 p=0.5637 (n=6)
+
+Flips entre épocas (autoenvenenamento = certo → errado):
+  modelo:avaliado            L0→L1 aprendizado: ✓→✗  1, ✗→✓  2 de   4 casos — autoenvenenamento 25.0%
+  modelo:avaliado            L0→L1   avaliacao: ✓→✗  0, ✗→✓  0 de   2 casos — autoenvenenamento 0.0%
+  modelo:avaliado            L0→L1       todos: ✓→✗  1, ✗→✓  2 de   6 casos — autoenvenenamento 16.7%
+
+Documentação escrita pelo modelo, por época:
+  modelo:avaliado            E1: 2/3 aceitas (66.7%), 1 NENHUMA, 1 sem FIM, +615 chars (md) — copia_do_caso 1
+
+!! arquivos com menos registros do que a corrida oficial prevê:
+   modelo_avaliado/diagnosticos__L0.jsonl: 6 de 90
+   modelo_avaliado/diagnosticos__L1.jsonl: 6 de 90
+   modelo_avaliado/propostas__E1.jsonl: 4 de 54
+teste_avaliar_fase3b_modo_simples_pasta_sintetica ok
+teste_rodar_fase3b_ps1_bom_e_sem_travessao ok
+teste_area_oficial_hash_depois ok
+9 testes ok
+== qwen2.5-coder:3b: modo ponte  (RAM livre 5,9 GB)  21/09 14:25:04 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+-- qwen2.5-coder:3b · passada final · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 36 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  10/36 — 5.9 min decorridos, ~15.4 min restantes
+  20/36 — 11.7 min decorridos, ~9.4 min restantes
+  30/36 — 17.2 min decorridos, ~3.4 min restantes
+  36/36 — 20.4 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte
+== PULADO qwen2.5:7b: RAM livre 5,9 GB menor que 6,5 GB. Libere memoria e relance o script - ele retoma daqui  21/09 14:50:47 ==
+== PULADO qwen2.5-coder:7b: RAM livre 5,9 GB menor que 6,5 GB. Libere memoria e relance o script - ele retoma daqui  21/09 14:55:52 ==
+== PULADO granite4.2:8b: RAM livre 6,2 GB menor que 8 GB. Libere memoria e relance o script - ele retoma daqui  21/09 15:00:57 ==
+== avaliacao  21/09 15:00:57 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+36 diagnósticos avaliados — C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte
+
+modelo                      L    particao    n  acerto%          IC95  balanc%  cita%  ouro%  nota%   s med
+qwen2.5-coder:3b            0   avaliacao   36     69.4     53.1–82.0     68.8  100.0   86.1    0.0    32.3
+qwen2.5-coder:3b            0       todos   36     69.4     53.1–82.0     68.8  100.0   86.1    0.0    32.3
+
+Cochran Q (as versões da biblioteca lado a lado, mesmos casos):
+  qwen2.5-coder:3b             avaliacao: Q=0.0      gl=0 p=1.0 (n=36)
+  qwen2.5-coder:3b                 todos: Q=0.0      gl=0 p=1.0 (n=36)
+
+!! qwen2.5-coder:3b: nenhum contexto conferido (sem diagnósticos contra a época 1 ou sem a pasta epoca-1 fechada)
+
+!! arquivos com menos registros do que a corrida oficial prevê:
+   qwen2.5-coder_3b/diagnosticos__L0.jsonl: 36 de 90
+
+Avaliação em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte\avaliacao_fase3.json
+Resumo em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte\resumo_fase3.json
+== FIM da Fase 3-B (ponte) - duracao total 01h36 - modelos com falha: qwen2.5:7b, qwen2.5-coder:7b, granite4.2:8b  21/09 15:00:57 ==
+== checagens de ambiente  21/09 17:03:24 ==
+== RAM livre 4,8 GB; modo ponte; saida fase3b_ponte  21/09 17:03:25 ==
+== testes automatizados da Fase 3 e da Fase 3-B (sem LLM)  21/09 17:03:25 ==
+teste_fixtures_corrigidos ok
+teste_render_original_inalterado ok
+teste_notas_render_e_validacao ok
+teste_verbete_aprendido ok
+teste_caminhos_fase3 ok
+teste_escrever_indice_raiz ok
+teste_ler_jsonl_tolerante ok
+maior prompt estimado: 1000 tokens + 600 de resposta
+teste_guardas_num_ctx ok
+teste_ambiente_residente ok
+teste_inferir_seguro ok
+teste_particao ok
+teste_parser_propostas ok
+teste_parser_campo_fechado ok
+teste_parser_fim_ausente ok
+teste_parser_proposta_nova_fecha_anterior_sem_fim ok
+teste_particao_exige_18_celulas ok
+teste_arquivos_md_ignora_indice_sem_case ok
+teste_hash_copia_diff_fechamento ok
+teste_validar_proposta_aceita ok
+teste_motivos_de_rejeicao ok
+teste_arquivos_citados_resolvidos ok
+teste_aplicar_e_somente_acrescimo ok
+teste_frontmatter_preservado ok
+teste_notas_um_unico_cabecalho ok
+teste_abrir_epoca_reconstroi ok
+teste_registrar_historico ok
+teste_orcamento_prompt ok
+teste_fechar_epoca ok
+teste_prompt_proposta ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_epoca_completa ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  2 caso(s) completos, 4 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  2 caso(s) completos, 4 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  4/4 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_retomada ok
+teste_projecao_tempo ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+     lex-1 · diagnóstico: tentativa 3 deu certo
+  lex-2 · 0/0 aceitas · NENHUMA
+  2/2 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  2/2 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 3 de 3 falhou — ConnectionError: Connection refused (de mentira)
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_repete_inferencia_com_erro ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  1 caso(s) completos, 1 pendentes
+maior prompt estimado: 1013 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_confere_contexto_do_orfao ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 3 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 3 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  lex-2 · 0/0 aceitas · NENHUMA
+  lex-3 · 0/0 aceitas · NENHUMA
+  3/3 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 3 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  3/3 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_epoca_fechada_confere_cobertura ok
+teste_cochran_holm_quiquadrado ok
+teste_acuracia_balanceada_e_distribuicao ok
+teste_avaliar_fase3_sintetico ok
+teste_comparar_fases_sintetico ok
+teste_comparar_fases_negrito_e_p ok
+teste_graficos_fase3: pulado (sem matplotlib nesta venv)
+teste_graficos_fase3 ok
+C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste__h2d_ls7\fase3_aval\relatorio_fase3.html (12 diagnóstico(s), 4 proposta(s), 30 KB)
+teste_relatorio_fase3_sintetico ok
+teste_notas_malformadas_e_secoes_base ok
+teste_parser_truncada_so_no_ultimo_bloco ok
+teste_somente_acrescimo_arquivo_novo_qualquer ok
+teste_resolver_arquivo_exige_arquivo_e_ignora_resultados ok
+teste_trecho_com_aspas_delimitadoras ok
+teste_endpoint_citado_com_query_string ok
+teste_titulo_sistema_e_tbody_do_piloto ok
+teste_gravacao_atomica_e_versao_no_fechamento ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 3 de 3 falhou — ConnectionError: Connection refused (de mentira)
+  aviso: não deu para descarregar/conferir o modelo residente (ConnectionError: Ollama fora do ar (de mentira)) — confira 'ollama ps' antes do próximo modelo
+teste_executor_finally_nao_mascara_a_parada ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 0/0 aceitas · NENHUMA
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_campo_mostrado_e_versao_ollama ok
+teste_atualizar_maquina_preserva_inicio ok
+teste_projecao_por_epocas ok
+teste_amostra_revisao_por_epoca_e_holm ok
+teste_avaliar_versao_sem_snapshot_e_conferidos ok
+C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste_pcckc9xr\fase3_aval\relatorio_fase3.html (12 diagnóstico(s), 4 proposta(s), 30 KB)
+teste_relatorio_placeholder_literal_no_texto_do_modelo ok
+teste_comparar_fases_media_por_coluna_e_balanceada ok
+teste_graficos_rotulos_fig17_nao_se_sobrepoem: pulado (sem matplotlib)
+teste_graficos_rotulos_fig17_nao_se_sobrepoem ok
+teste_graficos_fig15_le_tamanho_renderizado: pulado (sem matplotlib)
+teste_graficos_fig15_le_tamanho_renderizado ok
+60 testes ok
+teste_area_oficial_hash_antes ok
+teste_copia_snapshot_preserva_hash ok
+teste_ponte_prepara_saida_e_chama_rodar_epoca ok
+teste_texto_max_aplica_e_restaura ok
+teste_a5_aplica_e_restaura ok
+teste_ineditos_sem_modulo_para_com_systemexit_2 ok
+
+12 diagnósticos avaliados — C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste_ba2spgce\fase3_aval
+
+modelo                      L    particao    n  acerto%          IC95  balanc%  cita%  ouro%  nota%   s med
+modelo:avaliado             0 aprendizado    4     50.0     15.0–85.0     50.0  100.0  100.0    0.0    40.0
+modelo:avaliado             0   avaliacao    2     50.0      9.5–90.5     50.0   50.0   50.0    0.0    40.0
+modelo:avaliado             0       todos    6     50.0     18.8–81.2     50.0   83.3   83.3    0.0    40.0
+modelo:avaliado             1 aprendizado    4     75.0     30.1–95.4     75.0  100.0  100.0   50.0    40.0
+modelo:avaliado             1   avaliacao    2     50.0      9.5–90.5     50.0   50.0   50.0    0.0    40.0
+modelo:avaliado             1       todos    6     66.7     30.0–90.3     80.0   83.3   83.3   33.3    40.0
+
+Δ contra a L0 (pareado por caso; McNemar exato, * = p ajustado por Holm < 0,05):
+  modelo:avaliado            L1 aprendizado:  50.0 →  75.0 (+25.0 pp) b= 2 c= 1 p=1.0     holm=1.0     g=0.167 
+  modelo:avaliado            L1   avaliacao:  50.0 →  50.0 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  modelo:avaliado            L1       todos:  50.0 →  66.7 (+16.7 pp) b= 2 c= 1 p=1.0     holm=1.0     g=0.167 
+
+Cochran Q (as versões da biblioteca lado a lado, mesmos casos):
+  modelo:avaliado            aprendizado: Q=0.3333   gl=1 p=0.5637 (n=4)
+  modelo:avaliado              avaliacao: Q=0.0      gl=1 p=1.0 (n=2)
+  modelo:avaliado                  todos: Q=0.3333   gl=1 p=0.5637 (n=6)
+
+Flips entre épocas (autoenvenenamento = certo → errado):
+  modelo:avaliado            L0→L1 aprendizado: ✓→✗  1, ✗→✓  2 de   4 casos — autoenvenenamento 25.0%
+  modelo:avaliado            L0→L1   avaliacao: ✓→✗  0, ✗→✓  0 de   2 casos — autoenvenenamento 0.0%
+  modelo:avaliado            L0→L1       todos: ✓→✗  1, ✗→✓  2 de   6 casos — autoenvenenamento 16.7%
+
+Documentação escrita pelo modelo, por época:
+  modelo:avaliado            E1: 2/3 aceitas (66.7%), 1 NENHUMA, 1 sem FIM, +615 chars (md) — copia_do_caso 1
+
+!! arquivos com menos registros do que a corrida oficial prevê:
+   modelo_avaliado/diagnosticos__L0.jsonl: 6 de 90
+   modelo_avaliado/diagnosticos__L1.jsonl: 6 de 90
+   modelo_avaliado/propostas__E1.jsonl: 4 de 54
+teste_avaliar_fase3b_modo_simples_pasta_sintetica ok
+teste_rodar_fase3b_ps1_bom_e_sem_travessao ok
+teste_decidir_regra_36_veto_e_vencedor ok
+teste_decidir_bootstrap_reprodutivel_e_top1_soma_1 ok
+teste_decidir_pareto_um_dominado ok
+teste_decidir_sensibilidade_pesos_extremos ok
+--check: decisao_modelo.json e decisao_modelo.md batem com os dados atuais
+--check: decisao_modelo.json e decisao_modelo.md batem com os dados atuais
+--check: decisao_modelo.md DIFERE
+teste_decidir_check_detecta_alteracao_no_md ok
+teste_decidir_revisao_humana_vazia ok
+teste_decidir_grafico_18: pulado (sem matplotlib nesta venv)
+teste_decidir_grafico_18 ok
+teste_decidir_desempate_por_licenca ok
+teste_area_oficial_hash_depois ok
+17 testes ok
+== qwen2.5-coder:3b: modo ponte  (RAM livre 6,8 GB)  21/09 17:03:58 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+-- qwen2.5-coder:3b · passada final · lê epoca-0 (hash 3196327e7fd5) --
+  36 caso(s) completos, 0 pendentes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte
+== qwen2.5:7b: modo ponte  (RAM livre 6,9 GB)  21/09 17:04:16 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+-- qwen2.5:7b · passada final · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 36 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  10/36 — 11.6 min decorridos, ~30.2 min restantes
+  20/36 — 23.5 min decorridos, ~18.8 min restantes
+  30/36 — 35.1 min decorridos, ~7.0 min restantes
+  36/36 — 41.7 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte
+== qwen2.5-coder:7b: modo ponte  (RAM livre 8 GB)  21/09 17:46:15 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+-- qwen2.5-coder:7b · passada final · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 36 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  10/36 — 12.5 min decorridos, ~32.4 min restantes
+  20/36 — 24.5 min decorridos, ~19.6 min restantes
+  30/36 — 37.1 min decorridos, ~7.4 min restantes
+  36/36 — 43.5 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte
+== PULADO granite4.2:8b: RAM livre 7,8 GB menor que 8 GB. Libere memoria e relance o script - ele retoma daqui  21/09 18:35:09 ==
+== avaliacao  21/09 18:35:09 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+108 diagnósticos avaliados — C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte
+
+modelo                      L    particao    n  acerto%          IC95  balanc%  cita%  ouro%  nota%   s med
+qwen2.5-coder:3b            0   avaliacao   36     69.4     53.1–82.0     68.8  100.0   86.1    0.0    32.3
+qwen2.5-coder:3b            0       todos   36     69.4     53.1–82.0     68.8  100.0   86.1    0.0    32.3
+qwen2.5-coder:7b            0   avaliacao   36     75.0     58.9–86.2     80.0   97.2   86.1    0.0    70.7
+qwen2.5-coder:7b            0       todos   36     75.0     58.9–86.2     80.0   97.2   86.1    0.0    70.7
+qwen2.5:7b                  0   avaliacao   36     77.8     61.9–88.3     78.8  100.0   86.1    0.0    67.9
+qwen2.5:7b                  0       todos   36     77.8     61.9–88.3     78.8  100.0   86.1    0.0    67.9
+
+Cochran Q (as versões da biblioteca lado a lado, mesmos casos):
+  qwen2.5-coder:3b             avaliacao: Q=0.0      gl=0 p=1.0 (n=36)
+  qwen2.5-coder:3b                 todos: Q=0.0      gl=0 p=1.0 (n=36)
+  qwen2.5-coder:7b             avaliacao: Q=0.0      gl=0 p=1.0 (n=36)
+  qwen2.5-coder:7b                 todos: Q=0.0      gl=0 p=1.0 (n=36)
+  qwen2.5:7b                   avaliacao: Q=0.0      gl=0 p=1.0 (n=36)
+  qwen2.5:7b                       todos: Q=0.0      gl=0 p=1.0 (n=36)
+
+!! qwen2.5-coder:3b: nenhum contexto conferido (sem diagnósticos contra a época 1 ou sem a pasta epoca-1 fechada)
+
+!! qwen2.5-coder:7b: nenhum contexto conferido (sem diagnósticos contra a época 1 ou sem a pasta epoca-1 fechada)
+
+!! qwen2.5:7b: nenhum contexto conferido (sem diagnósticos contra a época 1 ou sem a pasta epoca-1 fechada)
+
+!! arquivos com menos registros do que a corrida oficial prevê:
+   qwen2.5-coder_3b/diagnosticos__L0.jsonl: 36 de 90
+   qwen2.5-coder_7b/diagnosticos__L0.jsonl: 36 de 90
+   qwen2.5_7b/diagnosticos__L0.jsonl: 36 de 90
+
+Avaliação em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte\avaliacao_fase3.json
+Resumo em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_ponte\resumo_fase3.json
+== FIM da Fase 3-B (ponte) - duracao total 02h31 - modelos com falha: granite4.2:8b  21/09 18:35:09 ==

@@ -737,6 +737,74 @@ def teste_decidir_desempate_por_licenca() -> None:
         decidir_modelo.LICENCAS.clear(); decidir_modelo.LICENCAS.update(original)
 
 
+# ----------------------------------------------------------------------------- 7. condições (ficha 15)
+
+def teste_gravar_condicoes_junta_modelos_de_chamadas_sucessivas() -> None:
+    """! Alteração de IA - Revisar: duas chamadas de _gravar_condicoes na mesma saída (o .ps1 roda um
+    modelo por vez) deixam os DOIS modelos na lista, mantêm o criado_em da primeira e recusam um modo
+    diferente na mesma pasta.
+    ! Motivo: ficha 15 (29/09/2026) — fase3b_ineditos ficou com um modelo só na lista porque cada
+    chamada regravava o arquivo inteiro."""
+    tmp = Path(tempfile.mkdtemp(prefix="cond3b_"))
+    _TEMPORARIOS.append(tmp)
+    c3b = {"raiz": tmp}
+    executar_fase3b._gravar_condicoes(c3b, modo="ineditos", doador=None, versoes=[0, 1, 3], texto_max=None,
+                                      condicao="A2", modelos=["a:1b"], versao_ollama="0.34.1")
+    primeiro = json.loads((tmp / "condicoes_3b.json").read_text(encoding="utf-8"))
+    executar_fase3b._gravar_condicoes(c3b, modo="ineditos", doador=None, versoes=[0, 1, 3], texto_max=None,
+                                      condicao="A2", modelos=["b:7b"], versao_ollama="0.34.1")
+    segundo = json.loads((tmp / "condicoes_3b.json").read_text(encoding="utf-8"))
+    assert segundo["modelos"] == ["a:1b", "b:7b"], segundo
+    assert segundo["criado_em"] == primeiro["criado_em"] and "atualizado_em" in segundo, segundo
+    try:
+        executar_fase3b._gravar_condicoes(c3b, modo="ponte", doador=None, versoes=[0], texto_max=None,
+                                          condicao="A2", modelos=["c:3b"], versao_ollama="0.34.1")
+    except SystemExit as e:
+        assert "outra --saida" in str(e), e
+    else:
+        raise AssertionError("modo diferente na mesma saída não foi recusado")
+
+
+def teste_completar_condicoes_le_modelos_dos_jsonl() -> None:
+    """completar_condicoes junta à lista gravada os modelos que aparecem nos JSONL de diagnóstico."""
+    tmp = Path(tempfile.mkdtemp(prefix="cond3b_"))
+    _TEMPORARIOS.append(tmp)
+    (tmp / "condicoes_3b.json").write_text(json.dumps({"modo": "ineditos", "modelos": ["b:7b"]}),
+                                           encoding="utf-8")
+    for slug, modelo in (("a_1b", "a:1b"), ("b_7b", "b:7b")):
+        (tmp / slug).mkdir()
+        (tmp / slug / "diagnosticos__L0.jsonl").write_text(
+            json.dumps({"modelo": modelo, "caso": "x"}) + "\n", encoding="utf-8")
+    assert executar_fase3b.completar_condicoes(tmp) == ["b:7b", "a:1b"]
+    dado = json.loads((tmp / "condicoes_3b.json").read_text(encoding="utf-8"))
+    assert dado["modelos"] == ["b:7b", "a:1b"] and "atualizado_em" in dado, dado
+
+
+# ----------------------------------------------------------------------------- 8. curadoria (ficha 2)
+
+def teste_curar_reaplicar_todas_reproduz_hash_oficial() -> None:
+    """! Alteração de IA - Revisar: reconstrói a epoca-1 oficial do qwen2.5:7b a partir da epoca-0
+    reaplicando as 40 edições aceitas, na ordem, e exige o hash gravado em fechamento.json; depois
+    reconstrói sem a primeira edição e exige hash diferente. Só roda com a corrida oficial presente.
+    ! Motivo: curar_biblioteca.py só retira uma edição NÃO a reaplicando; a curadoria só é confiável
+    se a reconstrução completa for byte a byte a mesma biblioteca da bateria (ficha 2, 29/09/2026)."""
+    import curar_biblioteca
+    c3 = caminhos.fase3("fase3")
+    raiz_l1 = c3["bibliotecas"] / "qwen2.5_7b" / "epoca-1"
+    if not (raiz_l1 / "fechamento.json").exists():
+        print("teste_curar_reaplicar_todas_reproduz_hash_oficial: pulado (sem a corrida oficial)")
+        return
+    oficial = json.loads((raiz_l1 / "fechamento.json").read_text(encoding="utf-8"))["hash"]
+    edicoes = curar_biblioteca.edicoes_aceitas(c3, "qwen2.5:7b", 1)
+    assert len(edicoes) == 40, len(edicoes)
+    tmp = Path(tempfile.mkdtemp(prefix="cura_"))
+    _TEMPORARIOS.append(tmp)
+    h_todas = curar_biblioteca.reconstruir(c3["bibliotecas"] / "qwen2.5_7b" / "epoca-0", tmp / "todas", edicoes)
+    assert h_todas == oficial, (h_todas, oficial)
+    h_menos = curar_biblioteca.reconstruir(c3["bibliotecas"] / "qwen2.5_7b" / "epoca-0", tmp / "menos", edicoes[1:])
+    assert h_menos != oficial
+
+
 def teste_area_oficial_hash_depois() -> None:
     """Repete o hash de teste_area_oficial_hash_antes ao fim da suíte — precisa ser o ÚLTIMO
     teste definido no arquivo, para rodar depois de todos os outros."""

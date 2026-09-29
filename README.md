@@ -532,11 +532,13 @@ disponível como L0, o ponto de comparação de todas as épocas seguintes.
      ! Motivo: a bateria rodou em 13–15/09/2026 (58h59, 0 falhas; parágrafo "Resultado da Fase 3" abaixo) e a frase, esquecida na revisão de 21/09, contradizia o resto da seção. -->
 Cada modelo grava em `resultados_alvo/fase3/`:
 
+<!-- ! Alteração de IA - Revisar: na árvore abaixo, o fase3.log passou a "versionado" (29/09/2026).
+     ! Motivo: desde 29/09 o .gitignore tem uma exceção ao *.log para resultados_alvo/**/*.log, a pedido do Eric (decisão 63); a nota antiga dizia que o log ficava fora do git. -->
 ```
 fase3/
   maquina.json               máquina, versão do Ollama, RAM e horário de início (relances são acrescentados, não sobrescrevem)
   particao.json              divisão determinística dos 90 casos em aprendizado (54) e avaliação (36)
-  fase3.log                  registro corrido da execução, gravado pelo rodar_fase3.ps1 (*.log está no .gitignore)
+  fase3.log                  registro corrido da execução, gravado pelo rodar_fase3.ps1 (versionado: exceção ao *.log no .gitignore)
   bibliotecas/<slug>/
     epoca-0..3/               snapshot completo da biblioteca do modelo ao fechar cada época (verbetes + INDICE.md + fechamento.json)
     diff__E<n>.{json,md}      o que a época n acrescentou em relação à anterior (irmão de epoca-n/, fora do snapshot)
@@ -605,6 +607,9 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `decidir_modelo.py` (+ `pesos_decisao.json`, `gerar_graficos_decisao.py`) | Decide modelo e estado da biblioteca pela regra pré-registrada (decisão 36) e mede a robustez (bootstrap, estabilidade, Pareto, escore ponderado com sensibilidade), pareia as saídas da 3-B com a Fase 3 e apura a revisão das edições; grava `decisao_modelo.json/.md` (documento derivado) e a figura 18. | `python decidir_modelo.py --saida fase3 --saidas-3b fase3b_ponte` (`--check` confere) |
 | `gerar_tabelas_relatorio_fase3.py` | Tabelas do relatório da Fase 3, da comparação entre fases e da análise decisória (Memorial) a partir de `resumo_fase3.json`, `comparacao_fases.md`, `decisao_modelo.md` e `fase3.log`, como blocos `<!-- tabela:NOME -->`; `--check` acusa qualquer bloco colado que difira do regerado. | `python gerar_tabelas_relatorio_fase3.py --saida fase3 [--check]` |
 | `sonda_correcao.py` | Sonda de **detecção de correção** (28/09/2026, decisão 58): roda uma época de aprendizado do executor oficial sobre uma cópia de um snapshot fechado, só com os casos corrigidos, e imprime o que o modelo diagnosticou e propôs ao rever um caso cuja documentação (escrita por ele mesmo) ficou desatualizada; saída em `resultados_alvo/<saida>/`. | `RESULTADOS_DIR=resultados_alvo python sonda_correcao.py --saida fase3b_correcao --modelo qwen2.5:7b --versao 1 --casos efe-3 efe-10` |
+| `curar_biblioteca.py` | Curadoria da biblioteca L1 do `qwen2.5:7b` (29/09/2026, ficha 2): `--listar` escreve a planilha `resultados_alvo/fase3/curadoria_L1__qwen2.5_7b.md` (40 edições da época 1, 10 com veredito da planilha oficial); `--curar --destino ../biblioteca_producao` reconstrói a cópia de produção a partir da época 0 reaplicando só o que não for *Errada*, depois de conferir que reaplicar tudo reproduz o hash oficial; grava `curadoria.json`. | `RESULTADOS_DIR=resultados_alvo python curar_biblioteca.py --listar` |
+| `comparar_qwen_coder.py` | Comparativo `qwen2.5:7b` × `qwen2.5-coder:7b` em todas as fases (29/09/2026, ficha 4): tabelas, confronto caso a caso (McNemar exato) e a lista de toda célula em que o Coder fica à frente; grava `resultados_alvo/fase3/comparativo_qwen_coder.{json,md}`; `--colar` cola os blocos em `Documentacao/memorial/3-resultados-e-analises/comparativo-qwen25-7b-vs-coder-7b.md`; `--check`. | `RESULTADOS_DIR=resultados_alvo python comparar_qwen_coder.py` |
+| `experimento_recuperador.py` | Experimento offline do recuperador (29/09/2026, ficha 11f): BM25 com sinais × embedding denso (`embeddinggemma:300m`, consulta por termos e por texto) × híbrido RRF, k = 1/3/5, nos 90 oficiais e nos 36 inéditos, bibliotecas L0/L1/L3; saída em `resultados_alvo/recuperador/` (`.json` registro, `.md` derivado com `--check`). | `RESULTADOS_DIR=resultados_alvo python experimento_recuperador.py --embedding embeddinggemma:300m` |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados — nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
@@ -637,11 +642,15 @@ Scripts em Python padrão, sem dependência, que fazem localmente o que antes se
 pedia a agentes (regra registrada no `CLAUDE.md`: primeiro a máquina, depois o
 modelo):
 
+<!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `medir_tokens.py` ganhou a opção `--agentes` (29/09/2026).
+     ! Motivo: a regra de permanência do servidor MCP comparou a mesma tarefa feita por subagentes com ferramentas diferentes, e o agregado por dia, modelo e tipo misturava todos os subagentes da sessão. -->
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único): abas Início (estado por fase, o que depende do Eric, corridas), Pendências (um cartão por ficha de `pendencias.md`, com filtro) e Roadmap (fases e corridas de `roadmap.md`, com o comando pronto), seguidas das abas dos testes — lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18 e monta gráficos (Chart.js) e tabelas com a avaliação de cada modelo; `--check` regera e compara, como os outros documentos derivados. |
+| `integrar_pesquisa_documentacao.py` | Rodada 4 do levantamento (29/09/2026, qualidade da documentação autogerida): `--montar` junta pesquisa + verificação + síntese de `.superpowers/sdd/fase3b-e-fechamento/pesquisa/r4/` em `r4-final.json`; a integração grava `levantamento-2026-09-29-documentacao-autogerida.md` (§6.13), o bloco de referências e a linha no índice do Memorial; `--check`. |
+| `gerar_pdf_abnt.py` | PDF (versão beta) do projeto de pesquisa a partir do Markdown, sem as marcações de IA (retiradas só da cópia), com folha de estilo ABNT e impressão pelo Microsoft Edge em modo sem janela; grava `Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V4-beta.pdf`. |
 | `painel_textos.py` (+ `testar_painel_textos.py`) | Leitura das fichas de `pendencias.md` (`### N. Título` + campos Estado / Quem decide / O que é / Por que importa / Opções / Recomendação / Decisão) e das tabelas de `roadmap.md` (estado por fase; corridas com a coluna Estado) para o painel, e conversão do resto dos dois documentos em HTML; o teste confere o formato dos arquivos reais. |
-| `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). |
+| `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). `--agentes rótulo=id,...` soma só os subagentes pedidos (usado na regra de permanência do servidor MCP, 29/09/2026). |
 | `resumir_saida.py` / `gancho_pre_bash.py` | Hook `PreToolUse` do Claude Code (`.claude/settings.json`) que encurta a saída de comandos longos (testes, baterias, `git diff`) antes de ela entrar no contexto. |
 | `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
 | `extrair_pesquisa.py`, `render_levantamento.py`, `integrar_pesquisa.py`, `integrar_pesquisa_llms.py` | Fecham as pesquisas bibliográficas por script: extraem os artefatos verificados, geram as subseções no formato do Memorial (com `--check`) e integram texto, referências (com dedup), mapa de decisões (Fase 3) e mapa adotado/adiado/descartado (LLMs locais, §6.12 e §7.9). |
@@ -695,6 +704,8 @@ ajudar.
      ! Motivo: as duas regras entraram no `.gitignore` em 11/09/2026 com comentário lá, mas esta
      tabela — que é onde o README explica o que fica fora do git e por quê — não as citava, e
      quem procurasse aqui o motivo de o piloto não estar versionado não achava. -->
+<!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `.mcp.json`/`.cbmignore` passou a "Não — removidos" (29/09/2026).
+     ! Motivo: a linha dizia que os dois ficavam se a regra de permanência fosse cumprida; ela foi medida e o servidor saiu. -->
 | Item | Versionado? | Por quê |
 |---|---|---|
 | `Cobaia.exe` (8.6 MB) | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou — sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
@@ -709,7 +720,7 @@ ajudar.
 | `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore — centenas de MB, específicos de cada SO, baixados por instalador. |
 | `.claude/` (menos `settings.local.json`) | **Sim** | Configuração do projeto para o Claude Code: `CLAUDE.md`, `settings.json` (hook que resume saídas longas, permissões de leitura, plugin de estilo desligado), `rules/` por tipo de arquivo e `skills/` copiadas — precisa chegar à outra máquina pelo git (decisão do Eric, 21/09/2026). Só `settings.local.json` (permissões concedidas nesta máquina) fica de fora. |
 | `.superpowers/` | **Não** | Rascunho de sessão do Claude Code (livro-razão, briefs e relatórios de tarefa da Fase 3); mesma natureza de `.claude/`. |
-| `.mcp.json`, `.cbmignore` | **Sim, se o Eric mantiver** | Registro do servidor `codebase-memory-mcp` em escopo de projeto e as exclusões do índice (22/09/2026, decisão 49); ficam só se a regra de permanência (≥ 20% de economia de tokens em três tarefas fixas, sem incidente) for cumprida na primeira sessão com o servidor ativo — senão os dois saem junto com o pacote npm. |
+| `.mcp.json`, `.cbmignore` | **Não — removidos em 29/09/2026** | Registro do servidor `codebase-memory-mcp` em escopo de projeto e as exclusões do índice (22/09/2026, decisão 49). A regra de permanência foi medida em 29/09 com três tarefas fixas (grep × servidor, duas vezes cada): o servidor gastou 8,6% a mais de tokens no total e 4,3% a menos nos novos, sem chegar aos 20% de corte, e saiu junto com o pacote npm (decisão 62; ferramental §7.2). |
 | `Programacao/AgenteCore/experimentos/resultados_alvo/fase3_piloto/` | **Não** | Piloto da Fase 3 (1 modelo, 10 casos, 1 época): existe para conferir o encanamento e calibrar o tempo antes das ~60 h; seus JSONL e snapshots confundiriam a leitura de `resultados_alvo/fase3/`, que é o que vale. |
 
 O "hit and run" continua íntegro sem a venv, porque os dois caminhos a

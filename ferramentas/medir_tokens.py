@@ -4,6 +4,7 @@
 # são interativos e não guardam histórico por dia, e o `ccusage` (npm) faria a mesma leitura destes arquivos — é
 # processamento local, sem custo de tokens, como o Eric pediu.
 """Uso: python ferramentas/medir_tokens.py [--projeto SLUG] [--desde AAAA-MM-DD] [--ate AAAA-MM-DD] [--json saida.json]
+                                         [--agentes ROTULO=ID,ROTULO=ID,...]
 
 Cada linha `assistant` de um transcrito traz `message.usage` (input, cache_creation, cache_read, output). A mesma
 resposta aparece em várias linhas (uma por bloco de conteúdo), com o mesmo `message.id`: conta-se uma vez por id.
@@ -41,11 +42,14 @@ def _tipo(arquivo: Path) -> str:
     return "principal"
 
 
-def ler_usos(pasta: Path) -> list[dict]:
+# ! Alteração de IA - Revisar: `ler_usos` aceita uma lista de arquivos (29/09/2026); sem ela, lê a pasta inteira como antes.
+# ! Motivo: a soma por subagente (`--agentes`) precisa ler só os transcritos `agent-<id>.jsonl` pedidos, com a mesma
+# regra de contar cada resposta uma vez por message.id, em vez de duplicar a leitura noutra função.
+def ler_usos(pasta: Path, arquivos: list[Path] | None = None) -> list[dict]:
     """Uma entrada por resposta do modelo (deduplicada por message.id)."""
     usos: list[dict] = []
     vistos: set[str] = set()
-    for arquivo in sorted(pasta.rglob("*.jsonl")):
+    for arquivo in sorted(arquivos if arquivos is not None else pasta.rglob("*.jsonl")):
         tipo = _tipo(arquivo)
         try:
             linhas = arquivo.read_text(encoding="utf-8", errors="replace").splitlines()
@@ -104,11 +108,39 @@ def main() -> int:
     ap.add_argument("--desde", help="AAAA-MM-DD inclusive")
     ap.add_argument("--ate", help="AAAA-MM-DD inclusive")
     ap.add_argument("--json", help="grava o agregado em JSON")
+    # ! Alteração de IA - Revisar: opção --agentes ROTULO=ID,... (29/09/2026): soma, por rótulo, só os transcritos de
+    # subagente cujo nome contém o ID (os `agent-<id>.jsonl` da sessão) e imprime entrada, cache, saída, total e novos.
+    # ! Motivo: a regra de permanência do codebase-memory-mcp (decisão 49) compara a mesma tarefa feita por subagentes
+    # com ferramentas diferentes (grep × servidor); o agregado por dia, modelo e tipo mistura todos os subagentes.
+    # "total" soma os quatro campos de `usage`; "novos" deixa de fora a leitura de cache (entrada nova + criação + saída).
+    ap.add_argument("--agentes", help="ROTULO=ID,... : soma só os transcritos de subagente cujo nome contém cada ID")
     args = ap.parse_args()
     pasta = _pasta_projeto(args.projeto)
     if not pasta.is_dir():
         print(f"pasta não encontrada: {pasta}")
         return 2
+    if args.agentes:
+        por_agente: dict[str, dict[str, int]] = {}
+        for par in (x.strip() for x in args.agentes.split(",") if x.strip()):
+            rotulo, ident = par.split("=", 1)
+            arquivos = sorted(pasta.rglob(f"*{ident}*.jsonl"))
+            usos_ag = ler_usos(pasta, arquivos)
+            soma = {c: sum(u[c] for u in usos_ag) for c in CAMPOS}
+            soma["respostas"], soma["arquivos"] = len(usos_ag), len(arquivos)
+            soma["total"] = sum(soma[c] for c in CAMPOS)
+            soma["novos"] = soma["input_tokens"] + soma["cache_creation_input_tokens"] + soma["output_tokens"]
+            por_agente[rotulo] = soma
+        print(f"{'rótulo':<18}{'arq':>4}{'resp':>6}{'input':>9}{'cache_cria':>12}{'cache_le':>11}"
+              f"{'output':>9}{'total':>10}{'novos':>9}")
+        for rotulo, s in por_agente.items():
+            print(f"{rotulo[:17]:<18}{s['arquivos']:>4}{s['respostas']:>6}{s['input_tokens']:>9}"
+                  f"{s['cache_creation_input_tokens']:>12}{s['cache_read_input_tokens']:>11}{s['output_tokens']:>9}"
+                  f"{s['total']:>10}{s['novos']:>9}")
+        if args.json:
+            Path(args.json).write_text(json.dumps({"pasta": str(pasta), "por_agente": por_agente},
+                                                  ensure_ascii=False, indent=1), encoding="utf-8")
+            print(f"gravado em {args.json}")
+        return 0
     usos = ler_usos(pasta)
     if args.desde:
         usos = [u for u in usos if u["dia"] >= args.desde]

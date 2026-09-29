@@ -140,7 +140,7 @@ Pesos declarados em pesos_decisao.json (normalização mín-máx por critério; 
 
 ## 7. Revisão humana
 
-Fonte: planilhas revisao_edicoes__<slug>.md lidas direto da pasta da corrida.
+Fonte: resumo_fase3.json.
 
 | Modelo | n | Correta | Parcial | Errada | Sem avaliação |
 |---|---|---|---|---|---|

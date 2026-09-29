@@ -1,0 +1,1400 @@
+﻿== checagens de ambiente  13/09 08:45:23 ==
+== disco livre 221 GB; RAM livre 5,5 GB; modelos faltando: nenhum  13/09 08:45:25 ==
+== validar indice e biblioteca  13/09 08:45:25 ==
+== casos ==
+  90 casos, 0 problema(s)
+
+== biblioteca ==
+  36 verbetes {'contratos': 2, 'defeitos_conhecidos': 3, 'erros': 24, 'falhas_injetadas': 1, 'negocio': 6}; biblioteca inteira: 17113 caracteres ≈ 6582 tokens
+  0 problema(s)
+
+== recuperação BM25: só texto do sintoma ==
+  hit@1=30.0  hit@3=61.1  hit@5=74.4  mrr=0.484  n=90
+  piores (posição do verbete de ouro): lex-1:35, lex-5:32, lex-14:20, lex-3:19, efe-10:19, lex-13:14, sin-6:13, sin-12:13
+
+== recuperação BM25: texto + sinais em código ==
+  hit@1=38.9  hit@3=80.0  hit@5=91.1  mrr=0.596  n=90
+  piores (posição do verbete de ouro): tra-5:13, lex-4:13, tra-9:9, sin-12:8, tra-15:7, tra-3:6, tra-12:6, efe-11:6
+
+INDICE.md regravado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\base_conhecimento\INDICE.md
+
+tudo válido
+== testes automatizados da Fase 3 (sem LLM, < 30 s)  13/09 08:45:26 ==
+teste_fixtures_corrigidos ok
+teste_render_original_inalterado ok
+teste_notas_render_e_validacao ok
+teste_verbete_aprendido ok
+teste_caminhos_fase3 ok
+teste_escrever_indice_raiz ok
+teste_ler_jsonl_tolerante ok
+maior prompt estimado: 1000 tokens + 600 de resposta
+teste_guardas_num_ctx ok
+teste_ambiente_residente ok
+teste_inferir_seguro ok
+teste_particao ok
+teste_parser_propostas ok
+teste_parser_campo_fechado ok
+teste_parser_fim_ausente ok
+teste_parser_proposta_nova_fecha_anterior_sem_fim ok
+teste_particao_exige_18_celulas ok
+teste_arquivos_md_ignora_indice_sem_case ok
+teste_hash_copia_diff_fechamento ok
+teste_validar_proposta_aceita ok
+teste_motivos_de_rejeicao ok
+teste_arquivos_citados_resolvidos ok
+teste_aplicar_e_somente_acrescimo ok
+teste_frontmatter_preservado ok
+teste_notas_um_unico_cabecalho ok
+teste_abrir_epoca_reconstroi ok
+teste_registrar_historico ok
+teste_orcamento_prompt ok
+teste_fechar_epoca ok
+teste_prompt_proposta ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_epoca_completa ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  2 caso(s) completos, 4 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  2 caso(s) completos, 4 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  4/4 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash a14c786140e4, 36 verbetes (0 novos), 1 notas, 0 retificações, 1 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash a14c786140e4) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1254 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_retomada ok
+teste_projecao_tempo ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+     lex-1 · diagnóstico: tentativa 3 deu certo
+  lex-2 · 0/0 aceitas · NENHUMA
+  2/2 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  2/2 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 3 de 3 falhou — ConnectionError: Connection refused (de mentira)
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_repete_inferencia_com_erro ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  1 caso(s) completos, 1 pendentes
+maior prompt estimado: 1013 tokens + 600 de resposta
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_confere_contexto_do_orfao ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 3 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 3 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  lex-2 · 0/0 aceitas · NENHUMA
+  lex-3 · 0/0 aceitas · NENHUMA
+  3/3 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 3 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  3/3 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_epoca_fechada_confere_cobertura ok
+teste_cochran_holm_quiquadrado ok
+teste_acuracia_balanceada_e_distribuicao ok
+teste_avaliar_fase3_sintetico ok
+teste_comparar_fases_sintetico ok
+teste_comparar_fases_negrito_e_p ok
+teste_graficos_fase3: pulado (sem matplotlib nesta venv)
+teste_graficos_fase3 ok
+C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste_efls_u4l\fase3_aval\relatorio_fase3.html (12 diagnóstico(s), 4 proposta(s), 30 KB)
+teste_relatorio_fase3_sintetico ok
+teste_notas_malformadas_e_secoes_base ok
+teste_parser_truncada_so_no_ultimo_bloco ok
+teste_somente_acrescimo_arquivo_novo_qualquer ok
+teste_resolver_arquivo_exige_arquivo_e_ignora_resultados ok
+teste_trecho_com_aspas_delimitadoras ok
+teste_endpoint_citado_com_query_string ok
+teste_titulo_sistema_e_tbody_do_piloto ok
+teste_gravacao_atomica_e_versao_no_fechamento ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 2 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1202 tokens + 600 de resposta
+  !! lex-1 · diagnóstico: tentativa 1 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 2 de 3 falhou — ConnectionError: Connection refused (de mentira)
+     esperando 0 s antes de repetir
+  !! lex-1 · diagnóstico: tentativa 3 de 3 falhou — ConnectionError: Connection refused (de mentira)
+  aviso: não deu para descarregar/conferir o modelo residente (ConnectionError: Ollama fora do ar (de mentira)) — confira 'ollama ps' antes do próximo modelo
+teste_executor_finally_nao_mascara_a_parada ok
+
+=== modelo:teste (digest deadbeef0000, Ollama 0.0.0-teste) — Fase 3, 1 época(s), 6 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- modelo:teste · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  lex-2 · 0/0 aceitas · NENHUMA
+  lex-3 · 0/0 aceitas · NENHUMA
+  lex-5 · 0/0 aceitas · NENHUMA
+  sin-1 · 0/0 aceitas · NENHUMA
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- modelo:teste · passada final · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 6 pendentes
+maior prompt estimado: 1242 tokens + 600 de resposta
+  6/6 — 0.0 min decorridos, ~0.0 min restantes
+  aviso: ainda residente após descarregar: ['modelo:teste']
+teste_executor_campo_mostrado_e_versao_ollama ok
+teste_atualizar_maquina_preserva_inicio ok
+teste_projecao_por_epocas ok
+teste_amostra_revisao_por_epoca_e_holm ok
+teste_avaliar_versao_sem_snapshot_e_conferidos ok
+C:\Users\ERIC~1.DER\AppData\Local\Temp\fase3_teste_fm6we003\fase3_aval\relatorio_fase3.html (12 diagnóstico(s), 4 proposta(s), 30 KB)
+teste_relatorio_placeholder_literal_no_texto_do_modelo ok
+teste_comparar_fases_media_por_coluna_e_balanceada ok
+teste_graficos_rotulos_fig17_nao_se_sobrepoem: pulado (sem matplotlib)
+teste_graficos_rotulos_fig17_nao_se_sobrepoem ok
+teste_graficos_fig15_le_tamanho_renderizado: pulado (sem matplotlib)
+teste_graficos_fig15_le_tamanho_renderizado ok
+60 testes ok
+== projecao de tempo  13/09 08:45:57 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+projeção de tempo — 90 casos (54 de aprendizado), 4 passadas de diagnóstico e 3 de proposta (3 época(s) + passada final):
+  qwen2.5-coder:3b: 5.87 h de diagnóstico + 3.94 h de proposta = 9.81 h
+  qwen2.5:7b: 10.79 h de diagnóstico + 7.00 h de proposta = 17.79 h
+  qwen2.5-coder:7b: 10.70 h de diagnóstico + 6.92 h de proposta = 17.62 h
+  granite4.2:8b: 13.47 h de diagnóstico + 8.49 h de proposta = 21.96 h
+  total: 67.18 h
+  (* velocidade padrão: modelo não medido na Fase 2-B)
+  estimativa a partir dos ms/token da Fase 2-B; o piloto mede o tempo real.
+== qwen2.5-coder:3b: 3 epoca(s) de aprendizado + passada final  (RAM livre 7 GB)  13/09 08:45:58 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+projeção de tempo — 90 casos (54 de aprendizado), 4 passadas de diagnóstico e 3 de proposta (3 época(s) + passada final):
+  qwen2.5-coder:3b: 5.87 h de diagnóstico + 3.94 h de proposta = 9.81 h
+  total: 9.81 h
+  (* velocidade padrão: modelo não medido na Fase 2-B)
+  estimativa a partir dos ms/token da Fase 2-B; o piloto mede o tempo real.
+
+90 casos (54 de aprendizado) x 3 época(s) + passada final
+
+=== qwen2.5-coder:3b (digest f72c60cabf62, Ollama 0.34.0) — Fase 3, 3 época(s), 90 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- qwen2.5-coder:3b · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/1 aceitas · id_repetido
+  lex-5 · 0/1 aceitas · trecho_nao_encontrado
+  sin-1 · 0/1 aceitas · retificacao_sem_trecho
+  sin-2 · 0/1 aceitas · bloco_malformado
+  sin-3 · 0/1 aceitas · bloco_malformado
+  10/90 — 10.2 min decorridos, ~81.3 min restantes
+  semt-2 · 0/1 aceitas · arquivo_inexistente
+  semt-4 · 0/1 aceitas · texto_curto
+  tra-2 · 0/1 aceitas · texto_curto
+  tra-3 · 0/1 aceitas · bloco_malformado
+  tra-5 · 0/1 aceitas · bloco_malformado
+  20/90 — 20.5 min decorridos, ~71.6 min restantes
+  run-3 · 0/1 aceitas · bloco_malformado
+  run-5 · 0/1 aceitas · bloco_malformado
+  efe-4 · 0/1 aceitas · trecho_nao_encontrado
+  30/90 — 29.5 min decorridos, ~59.1 min restantes
+  lex-6 · 0/1 aceitas · palavra_chave_invalida
+  lex-9 · 0/1 aceitas · motivo_longo
+  lex-12 · 1/1 aceitas · sem rejeição
+  sin-6 · 0/1 aceitas · arquivo_inexistente
+  sin-8 · 0/1 aceitas · bloco_malformado
+  40/90 — 39.8 min decorridos, ~49.7 min restantes
+  sin-9 · 1/1 aceitas · sem rejeição
+  sin-12 · 0/1 aceitas · bloco_malformado
+  sin-13 · 0/1 aceitas · bloco_malformado
+  sin-15 · 0/1 aceitas · bloco_malformado
+  semt-6 · 0/1 aceitas · bloco_malformado
+  semt-7 · 0/1 aceitas · bloco_malformado
+  50/90 — 50.4 min decorridos, ~40.3 min restantes
+  semt-10 · 0/1 aceitas · arquivo_inexistente
+  semt-11 · 0/1 aceitas · arquivo_inexistente
+  semt-12 · 0/1 aceitas · bloco_malformado
+  semt-13 · 0/1 aceitas · bloco_malformado
+  semt-15 · 0/1 aceitas · palavra_chave_invalida
+  tra-6 · 0/1 aceitas · bloco_malformado
+  tra-7 · 0/1 aceitas · bloco_malformado
+  60/90 — 61.3 min decorridos, ~30.7 min restantes
+  tra-9 · 0/1 aceitas · texto_curto
+  tra-12 · 0/1 aceitas · bloco_malformado
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/1 aceitas · bloco_malformado
+  run-6 · 0/1 aceitas · texto_curto
+  run-7 · 0/1 aceitas · palavra_chave_invalida
+  run-8 · 0/1 aceitas · bloco_malformado
+  70/90 — 73.1 min decorridos, ~20.9 min restantes
+  run-11 · 1/1 aceitas · sem rejeição
+  run-12 · 0/1 aceitas · bloco_malformado
+  run-14 · 0/1 aceitas · bloco_malformado
+  run-15 · 0/1 aceitas · bloco_malformado
+  efe-6 · 0/1 aceitas · palavra_chave_invalida
+  efe-8 · 0/1 aceitas · bloco_malformado
+  80/90 — 84.9 min decorridos, ~10.6 min restantes
+  efe-9 · 0/1 aceitas · trecho_nao_encontrado
+  efe-10 · 0/1 aceitas · texto_curto
+  efe-11 · 0/1 aceitas · bloco_malformado
+  efe-12 · 0/1 aceitas · trecho_nao_encontrado
+  efe-13 · 0/1 aceitas · bloco_malformado
+  efe-15 · 0/1 aceitas · bloco_malformado
+  lex-13 · 0/1 aceitas · bloco_malformado
+  lex-14 · 0/1 aceitas · bloco_malformado
+  lex-15 · 0/1 aceitas · bloco_malformado
+  90/90 — 100.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 53ccf19abeac, 36 verbetes (0 novos), 0 notas, 4 retificações, 4 edições aceitas nesta época
+
+-- qwen2.5-coder:3b · época 2 · lê epoca-1 (hash 53ccf19abeac) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1479 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · id_repetido
+  lex-3 · 0/1 aceitas · bloco_malformado
+  lex-5 · 0/1 aceitas · alvo_nao_visto
+  sin-1 · 0/1 aceitas · bloco_malformado
+  sin-2 · 0/1 aceitas · bloco_malformado
+  sin-3 · 0/1 aceitas · arquivo_inexistente
+  10/90 — 9.2 min decorridos, ~73.6 min restantes
+  semt-2 · 0/1 aceitas · arquivo_inexistente
+  semt-4 · 0/1 aceitas · texto_curto
+  tra-2 · 0/1 aceitas · bloco_malformado
+  tra-3 · 0/1 aceitas · bloco_malformado
+  tra-5 · 0/1 aceitas · bloco_malformado
+  20/90 — 16.6 min decorridos, ~58.2 min restantes
+  run-3 · 0/1 aceitas · bloco_malformado
+  run-5 · 0/1 aceitas · bloco_malformado
+  efe-4 · 0/1 aceitas · texto_curto
+  30/90 — 23.4 min decorridos, ~46.7 min restantes
+  lex-6 · 0/1 aceitas · bloco_malformado
+  lex-9 · 0/1 aceitas · bloco_malformado
+  lex-12 · 0/1 aceitas · bloco_malformado
+  sin-6 · 0/1 aceitas · bloco_malformado
+  sin-8 · 0/1 aceitas · bloco_malformado
+  40/90 — 31.8 min decorridos, ~39.8 min restantes
+  sin-9 · 0/1 aceitas · duplicada
+  sin-12 · 0/1 aceitas · bloco_malformado
+  sin-13 · 0/1 aceitas · bloco_malformado
+  sin-15 · 0/1 aceitas · bloco_malformado
+  semt-6 · 0/1 aceitas · bloco_malformado
+  semt-7 · 0/1 aceitas · bloco_malformado
+  50/90 — 41.2 min decorridos, ~33.0 min restantes
+  semt-10 · 0/1 aceitas · arquivo_inexistente
+  semt-11 · 0/1 aceitas · bloco_malformado
+  semt-12 · 0/1 aceitas · bloco_malformado
+  semt-13 · 0/1 aceitas · bloco_malformado
+  semt-15 · 0/1 aceitas · bloco_malformado
+  tra-6 · 0/1 aceitas · bloco_malformado
+  tra-7 · 0/1 aceitas · bloco_malformado
+  60/90 — 51.9 min decorridos, ~25.9 min restantes
+  tra-9 · 0/1 aceitas · texto_curto
+  tra-12 · 0/1 aceitas · bloco_malformado
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/1 aceitas · arquivo_inexistente
+  run-6 · 0/1 aceitas · bloco_malformado
+  run-7 · 0/1 aceitas · bloco_malformado
+  run-8 · 0/1 aceitas · bloco_malformado
+  70/90 — 61.6 min decorridos, ~17.6 min restantes
+  run-11 · 0/1 aceitas · duplicada
+  run-12 · 0/1 aceitas · texto_curto
+  run-14 · 1/1 aceitas · sem rejeição
+  run-15 · 0/1 aceitas · id_repetido
+  efe-6 · 0/1 aceitas · palavra_chave_invalida
+  efe-8 · 0/1 aceitas · bloco_malformado
+  80/90 — 71.1 min decorridos, ~8.9 min restantes
+  efe-9 · 0/1 aceitas · motivo_longo
+  efe-10 · 0/1 aceitas · texto_curto
+  efe-11 · 0/1 aceitas · arquivo_inexistente
+  efe-12 · 0/1 aceitas · bloco_malformado
+  efe-13 · 0/1 aceitas · trecho_nao_encontrado
+  efe-15 · 0/1 aceitas · trecho_nao_encontrado
+  lex-13 · 1/1 aceitas · sem rejeição
+  lex-14 · 1/1 aceitas · sem rejeição
+  lex-15 · 0/1 aceitas · id_repetido
+  90/90 — 84.1 min decorridos, ~0.0 min restantes
+  epoca-2 fechada: hash 959db34be15c, 36 verbetes (0 novos), 0 notas, 7 retificações, 3 edições aceitas nesta época
+
+-- qwen2.5-coder:3b · época 3 · lê epoca-2 (hash 959db34be15c) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1552 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · trecho_nao_encontrado
+  lex-3 · 0/1 aceitas · bloco_malformado
+  lex-5 · 0/1 aceitas · bloco_malformado
+  sin-1 · 0/1 aceitas · bloco_malformado
+  sin-2 · 0/1 aceitas · bloco_malformado
+  sin-3 · 1/1 aceitas · sem rejeição
+  10/90 — 9.1 min decorridos, ~73.1 min restantes
+  semt-2 · 0/1 aceitas · arquivo_inexistente
+  semt-4 · 0/1 aceitas · bloco_malformado
+  tra-2 · 1/1 aceitas · sem rejeição
+  tra-3 · 0/1 aceitas · bloco_malformado
+  tra-5 · 0/1 aceitas · arquivo_inexistente
+  20/90 — 18.5 min decorridos, ~64.7 min restantes
+  run-3 · 0/1 aceitas · trecho_nao_encontrado
+  run-5 · 0/1 aceitas · bloco_malformado
+  efe-4 · 0/1 aceitas · texto_curto
+  30/90 — 25.1 min decorridos, ~50.3 min restantes
+  lex-6 · 0/1 aceitas · bloco_malformado
+  lex-9 · 0/1 aceitas · bloco_malformado
+  lex-12 · 0/1 aceitas · bloco_malformado
+  sin-6 · 0/1 aceitas · bloco_malformado
+  sin-8 · 0/1 aceitas · bloco_malformado
+  40/90 — 32.5 min decorridos, ~40.6 min restantes
+  sin-9 · 0/1 aceitas · duplicada
+  sin-12 · 0/1 aceitas · bloco_malformado
+  sin-13 · 0/1 aceitas · bloco_malformado
+  sin-15 · 0/1 aceitas · bloco_malformado
+  semt-6 · 0/1 aceitas · bloco_malformado
+  semt-7 · 0/1 aceitas · bloco_malformado
+  50/90 — 41.5 min decorridos, ~33.2 min restantes
+  semt-10 · 0/1 aceitas · arquivo_inexistente
+  semt-11 · 0/1 aceitas · bloco_malformado
+  semt-12 · 0/1 aceitas · bloco_malformado
+  semt-13 · 0/1 aceitas · bloco_malformado
+  semt-15 · 0/1 aceitas · bloco_malformado
+  tra-6 · 0/1 aceitas · bloco_malformado
+  tra-7 · 0/1 aceitas · bloco_malformado
+  60/90 — 52.0 min decorridos, ~26.0 min restantes
+  tra-9 · 0/1 aceitas · bloco_malformado
+  tra-12 · 0/1 aceitas · bloco_malformado
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/1 aceitas · arquivo_inexistente
+  run-6 · 0/1 aceitas · bloco_malformado
+  run-7 · 0/1 aceitas · texto_curto
+  run-8 · 0/1 aceitas · bloco_malformado
+  70/90 — 61.7 min decorridos, ~17.6 min restantes
+  run-11 · 0/1 aceitas · arquivo_inexistente
+  run-12 · 0/1 aceitas · texto_curto
+  run-14 · 0/1 aceitas · bloco_malformado
+  run-15 · 0/1 aceitas · bloco_malformado
+  efe-6 · 0/1 aceitas · texto_curto
+  efe-8 · 0/1 aceitas · bloco_malformado
+  80/90 — 72.2 min decorridos, ~9.0 min restantes
+  efe-9 · 0/1 aceitas · trecho_nao_encontrado
+  efe-10 · 0/1 aceitas · trecho_nao_encontrado
+  efe-11 · 0/1 aceitas · motivo_longo
+  efe-12 · 0/1 aceitas · bloco_malformado
+  efe-13 · 1/1 aceitas · sem rejeição
+  efe-15 · 0/0 aceitas · NENHUMA
+  lex-13 · 0/1 aceitas · bloco_malformado
+  lex-14 · 0/1 aceitas · trecho_nao_encontrado
+  lex-15 · 0/1 aceitas · id_repetido
+  90/90 — 84.8 min decorridos, ~0.0 min restantes
+  epoca-3 fechada: hash d9a86e383103, 37 verbetes (1 novos), 0 notas, 9 retificações, 3 edições aceitas nesta época
+
+-- qwen2.5-coder:3b · passada final · lê epoca-3 (hash d9a86e383103) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1605 tokens + 600 de resposta
+  10/90 — 2.5 min decorridos, ~20.4 min restantes
+  20/90 — 7.1 min decorridos, ~24.7 min restantes
+  30/90 — 11.0 min decorridos, ~22.0 min restantes
+  40/90 — 13.7 min decorridos, ~17.1 min restantes
+  50/90 — 17.3 min decorridos, ~13.8 min restantes
+  60/90 — 21.0 min decorridos, ~10.5 min restantes
+  70/90 — 24.7 min decorridos, ~7.1 min restantes
+  80/90 — 28.5 min decorridos, ~3.6 min restantes
+  90/90 — 32.3 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3
+== qwen2.5:7b: 3 epoca(s) de aprendizado + passada final  (RAM livre 8,8 GB)  13/09 13:47:28 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+projeção de tempo — 90 casos (54 de aprendizado), 4 passadas de diagnóstico e 3 de proposta (3 época(s) + passada final):
+  qwen2.5:7b: 10.79 h de diagnóstico + 7.00 h de proposta = 17.79 h
+  total: 17.79 h
+  (* velocidade padrão: modelo não medido na Fase 2-B)
+  estimativa a partir dos ms/token da Fase 2-B; o piloto mede o tempo real.
+
+90 casos (54 de aprendizado) x 3 época(s) + passada final
+
+=== qwen2.5:7b (digest 845dbda0ea48, Ollama 0.34.0) — Fase 3, 3 época(s), 90 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- qwen2.5:7b · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  lex-2 · 1/1 aceitas · sem rejeição
+  lex-3 · 0/1 aceitas · trecho_nao_encontrado
+  lex-5 · 2/2 aceitas · sem rejeição
+  sin-1 · 2/2 aceitas · sem rejeição
+  sin-2 · 0/1 aceitas · id_repetido
+  sin-3 · 0/1 aceitas · arquivo_inexistente
+  10/90 — 24.7 min decorridos, ~197.3 min restantes
+  semt-2 · 0/1 aceitas · palavra_chave_invalida
+  semt-4 · 0/1 aceitas · palavra_chave_invalida
+  tra-2 · 0/1 aceitas · arquivo_inexistente
+  tra-3 · 1/2 aceitas · id_repetido
+  tra-5 · 0/2 aceitas · trecho_nao_encontrado, id_repetido
+  20/90 — 48.3 min decorridos, ~168.9 min restantes
+  run-3 · 0/2 aceitas · palavra_chave_invalida, vocabulario
+  run-5 · 0/1 aceitas · id_repetido
+  efe-4 · 2/2 aceitas · sem rejeição
+  30/90 — 68.2 min decorridos, ~136.3 min restantes
+  lex-6 · 0/1 aceitas · bloco_malformado
+  lex-9 · 1/2 aceitas · palavra_chave_invalida
+  lex-12 · 0/1 aceitas · palavra_chave_invalida
+  sin-6 · 1/2 aceitas · id_repetido
+  sin-8 · 1/2 aceitas · id_repetido
+  40/90 — 90.5 min decorridos, ~113.2 min restantes
+  sin-9 · 1/1 aceitas · sem rejeição
+  sin-12 · 1/1 aceitas · sem rejeição
+  sin-13 · 2/2 aceitas · sem rejeição
+  sin-15 · 1/2 aceitas · id_repetido
+  semt-6 · 0/2 aceitas · teto_notas_verbete, palavra_chave_invalida
+  semt-7 · 0/2 aceitas · trecho_nao_encontrado, palavra_chave_invalida
+  50/90 — 115.7 min decorridos, ~92.5 min restantes
+  semt-10 · 0/2 aceitas · bloco_malformado, bloco_malformado
+  semt-11 · 1/2 aceitas · arquivo_inexistente
+  semt-12 · 0/1 aceitas · palavra_chave_invalida
+  semt-13 · 2/2 aceitas · sem rejeição
+  semt-15 · 2/2 aceitas · sem rejeição
+  tra-6 · 2/2 aceitas · sem rejeição
+  tra-7 · 0/2 aceitas · arquivo_inexistente, arquivo_inexistente
+  60/90 — 144.4 min decorridos, ~72.2 min restantes
+  tra-9 · 1/1 aceitas · sem rejeição
+  tra-12 · 2/2 aceitas · sem rejeição
+  tra-13 · 0/2 aceitas · id_repetido, teto_notas_verbete
+  tra-14 · 0/2 aceitas · bloco_malformado, bloco_malformado
+  run-6 · 1/2 aceitas · id_repetido
+  run-7 · 1/1 aceitas · sem rejeição
+  run-8 · 1/2 aceitas · palavra_chave_invalida
+  70/90 — 175.3 min decorridos, ~50.1 min restantes
+  run-11 · 1/1 aceitas · sem rejeição
+  run-12 · 1/2 aceitas · bloco_malformado
+  run-14 · 0/2 aceitas · bloco_malformado, bloco_malformado
+  run-15 · 0/1 aceitas · id_repetido
+  efe-6 · 0/1 aceitas · palavra_chave_invalida
+  efe-8 · 1/2 aceitas · id_repetido
+  80/90 — 200.9 min decorridos, ~25.1 min restantes
+  efe-9 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  efe-10 · 2/2 aceitas · sem rejeição
+  efe-11 · 1/1 aceitas · sem rejeição
+  efe-12 · 1/2 aceitas · palavra_chave_invalida
+  efe-13 · 1/2 aceitas · teto_notas_verbete
+  efe-15 · 0/1 aceitas · id_repetido
+  lex-13 · 2/2 aceitas · sem rejeição
+  lex-14 · 1/2 aceitas · palavra_chave_invalida
+  lex-15 · 0/1 aceitas · texto_curto
+  90/90 — 235.9 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3394d203cab9, 42 verbetes (6 novos), 12 notas, 22 retificações, 40 edições aceitas nesta época
+
+-- qwen2.5:7b · época 2 · lê epoca-1 (hash 3394d203cab9) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1878 tokens + 600 de resposta
+  lex-2 · 2/2 aceitas · sem rejeição
+  lex-3 · 0/1 aceitas · palavra_chave_invalida
+  lex-5 · 0/2 aceitas · duplicada, duplicada
+  sin-1 · 0/2 aceitas · teto_notas_verbete, duplicada
+  sin-2 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  sin-3 · 0/2 aceitas · duplicada, duplicada
+  10/90 — 29.4 min decorridos, ~235.6 min restantes
+  semt-2 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  semt-4 · 0/1 aceitas · palavra_chave_invalida
+  tra-2 · 0/1 aceitas · arquivo_inexistente
+  tra-3 · 1/2 aceitas · duplicada
+  tra-5 · 0/1 aceitas · duplicada
+  20/90 — 54.7 min decorridos, ~191.5 min restantes
+  run-3 · 0/2 aceitas · texto_curto, vocabulario
+  run-5 · 0/1 aceitas · id_repetido
+  efe-4 · 0/2 aceitas · teto_notas_verbete, duplicada
+  30/90 — 75.4 min decorridos, ~150.8 min restantes
+  lex-6 · 0/1 aceitas · trecho_nao_encontrado
+  lex-9 · 0/2 aceitas · id_repetido, palavra_chave_invalida
+  lex-12 · 0/1 aceitas · teto_notas_verbete
+  sin-6 · 0/2 aceitas · teto_notas_verbete, duplicada
+  sin-8 · 0/2 aceitas · duplicada, duplicada
+  40/90 — 103.0 min decorridos, ~128.8 min restantes
+  sin-9 · 0/2 aceitas · duplicada, arquivo_inexistente
+  sin-12 · 0/2 aceitas · duplicada, id_repetido
+  sin-13 · 0/1 aceitas · teto_notas_verbete
+  sin-15 · 0/2 aceitas · trecho_nao_encontrado, duplicada
+  semt-6 · 1/2 aceitas · motivo_longo
+  semt-7 · 0/1 aceitas · trecho_nao_encontrado
+  50/90 — 131.9 min decorridos, ~105.5 min restantes
+  semt-10 · 0/2 aceitas · duplicada, teto_notas_verbete
+  semt-11 · 0/1 aceitas · arquivo_inexistente
+  semt-12 · 0/1 aceitas · duplicada
+  semt-13 · 0/2 aceitas · duplicada, teto_notas_verbete
+  semt-15 · 0/1 aceitas · arquivo_inexistente
+  tra-6 · 0/2 aceitas · duplicada, duplicada
+  tra-7 · 0/2 aceitas · teto_notas_verbete, teto_notas_verbete
+  60/90 — 159.9 min decorridos, ~79.9 min restantes
+  tra-9 · 0/2 aceitas · trecho_nao_encontrado, duplicada
+  tra-12 · 0/2 aceitas · teto_notas_verbete, duplicada
+  tra-13 · 0/2 aceitas · teto_notas_verbete, trecho_nao_encontrado
+  tra-14 · 2/2 aceitas · sem rejeição
+  run-6 · 0/1 aceitas · texto_longo
+  run-7 · 0/2 aceitas · duplicada, duplicada
+  run-8 · 0/2 aceitas · palavra_chave_invalida, id_repetido
+  70/90 — 193.7 min decorridos, ~55.3 min restantes
+  run-11 · 0/1 aceitas · duplicada
+  run-12 · 1/2 aceitas · duplicada
+  run-14 · 1/2 aceitas · trecho_nao_encontrado
+  run-15 · 0/1 aceitas · bloco_malformado
+  efe-6 · 0/1 aceitas · palavra_chave_invalida
+  efe-8 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  80/90 — 219.4 min decorridos, ~27.4 min restantes
+  efe-9 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  efe-10 · 0/2 aceitas · duplicada, duplicada
+  efe-11 · 1/2 aceitas · palavra_chave_invalida
+  efe-12 · 2/2 aceitas · sem rejeição
+  efe-13 · 0/1 aceitas · teto_notas_verbete
+  efe-15 · 0/1 aceitas · teto_notas_verbete
+  lex-13 · 0/1 aceitas · id_repetido
+  lex-14 · 1/1 aceitas · sem rejeição
+  lex-15 · 0/0 aceitas · NENHUMA
+  90/90 — 255.1 min decorridos, ~0.0 min restantes
+  epoca-2 fechada: hash 5aa8cf796035, 43 verbetes (7 novos), 18 notas, 27 retificações, 12 edições aceitas nesta época
+
+-- qwen2.5:7b · época 3 · lê epoca-2 (hash 5aa8cf796035) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 2046 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · duplicada
+  lex-3 · 0/2 aceitas · palavra_chave_invalida, id_repetido
+  lex-5 · 0/1 aceitas · teto_notas_verbete
+  sin-1 · 1/2 aceitas · teto_notas_verbete
+  sin-2 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  sin-3 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  10/90 — 30.0 min decorridos, ~240.2 min restantes
+  semt-2 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  semt-4 · 0/1 aceitas · duplicada
+  tra-2 · 0/1 aceitas · arquivo_inexistente
+  tra-3 · 1/2 aceitas · duplicada
+  tra-5 · 1/2 aceitas · duplicada
+  20/90 — 56.9 min decorridos, ~199.2 min restantes
+  run-3 · 2/2 aceitas · sem rejeição
+  run-5 · 0/1 aceitas · id_repetido
+  efe-4 · 0/2 aceitas · teto_notas_verbete, duplicada
+  30/90 — 78.5 min decorridos, ~157.0 min restantes
+  lex-6 · 1/2 aceitas · bloco_malformado
+  lex-9 · 0/1 aceitas · id_repetido
+  lex-12 · 0/2 aceitas · teto_notas_verbete, teto_notas_verbete
+  sin-6 · 1/2 aceitas · teto_notas_verbete
+  sin-8 · 0/2 aceitas · duplicada, teto_notas_verbete
+  40/90 — 105.9 min decorridos, ~132.3 min restantes
+  sin-9 · 0/2 aceitas · duplicada, duplicada
+  sin-12 · 0/2 aceitas · duplicada, alvo_inexistente
+  sin-13 · 0/1 aceitas · palavra_chave_invalida
+  sin-15 · 0/2 aceitas · duplicada, duplicada
+  semt-6 · 0/2 aceitas · teto_notas_verbete, duplicada
+  semt-7 · 1/2 aceitas · trecho_nao_encontrado
+  50/90 — 134.9 min decorridos, ~107.9 min restantes
+  semt-10 · 0/2 aceitas · teto_notas_verbete, duplicada
+  semt-11 · 0/1 aceitas · arquivo_inexistente
+  semt-12 · 0/1 aceitas · duplicada
+  semt-13 · 0/2 aceitas · duplicada, duplicada
+  semt-15 · 0/2 aceitas · duplicada, duplicada
+  tra-6 · 0/2 aceitas · duplicada, teto_notas_verbete
+  tra-7 · 0/2 aceitas · trecho_nao_encontrado, arquivo_inexistente
+  60/90 — 164.1 min decorridos, ~82.0 min restantes
+  tra-9 · 0/2 aceitas · trecho_nao_encontrado, duplicada
+  tra-12 · 0/2 aceitas · teto_notas_verbete, teto_notas_verbete
+  tra-13 · 0/2 aceitas · arquivo_inexistente, duplicada
+  tra-14 · 0/2 aceitas · trecho_nao_encontrado, duplicada
+  run-6 · 0/2 aceitas · motivo_longo, palavra_chave_invalida
+  run-7 · 0/2 aceitas · teto_notas_verbete, duplicada
+  run-8 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  70/90 — 198.9 min decorridos, ~56.8 min restantes
+  run-11 · 0/1 aceitas · id_repetido
+  run-12 · 0/1 aceitas · trecho_nao_encontrado
+  run-14 · 0/2 aceitas · trecho_nao_encontrado, vocabulario
+  run-15 · 1/1 aceitas · sem rejeição
+  efe-6 · 0/1 aceitas · trecho_nao_encontrado
+  efe-8 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  80/90 — 228.6 min decorridos, ~28.6 min restantes
+  efe-9 · 0/1 aceitas · palavra_chave_invalida
+  efe-10 · 0/2 aceitas · teto_notas_verbete, teto_notas_verbete
+  efe-11 · 0/1 aceitas · duplicada
+  efe-12 · 0/2 aceitas · palavra_chave_invalida, palavra_chave_invalida
+  efe-13 · 0/2 aceitas · teto_notas_verbete, id_repetido
+  efe-15 · 0/1 aceitas · teto_notas_verbete
+  lex-13 · 0/1 aceitas · duplicada
+  lex-14 · 0/2 aceitas · duplicada, id_repetido
+  lex-15 · 0/2 aceitas · trecho_nao_encontrado, trecho_nao_encontrado
+  90/90 — 266.4 min decorridos, ~0.0 min restantes
+  epoca-3 fechada: hash 71258b553152, 45 verbetes (9 novos), 24 notas, 28 retificações, 9 edições aceitas nesta época
+
+-- qwen2.5:7b · passada final · lê epoca-3 (hash 71258b553152) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 2046 tokens + 600 de resposta
+  10/90 — 9.7 min decorridos, ~77.8 min restantes
+  20/90 — 16.4 min decorridos, ~57.3 min restantes
+  30/90 — 27.7 min decorridos, ~55.4 min restantes
+  40/90 — 37.9 min decorridos, ~47.3 min restantes
+  50/90 — 45.2 min decorridos, ~36.1 min restantes
+  60/90 — 53.2 min decorridos, ~26.6 min restantes
+  70/90 — 59.2 min decorridos, ~16.9 min restantes
+  80/90 — 67.4 min decorridos, ~8.4 min restantes
+  90/90 — 74.7 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3
+== qwen2.5-coder:7b: 3 epoca(s) de aprendizado + passada final  (RAM livre 10,4 GB)  14/09 03:40:00 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+projeção de tempo — 90 casos (54 de aprendizado), 4 passadas de diagnóstico e 3 de proposta (3 época(s) + passada final):
+  qwen2.5-coder:7b: 10.70 h de diagnóstico + 6.92 h de proposta = 17.62 h
+  total: 17.62 h
+  (* velocidade padrão: modelo não medido na Fase 2-B)
+  estimativa a partir dos ms/token da Fase 2-B; o piloto mede o tempo real.
+
+90 casos (54 de aprendizado) x 3 época(s) + passada final
+
+=== qwen2.5-coder:7b (digest dae161e27b0e, Ollama 0.34.0) — Fase 3, 3 época(s), 90 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- qwen2.5-coder:7b · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · palavra_chave_invalida
+  lex-3 · 0/1 aceitas · palavra_chave_invalida
+  lex-5 · 1/1 aceitas · sem rejeição
+  sin-1 · 0/1 aceitas · retificacao_sem_trecho
+  sin-2 · 0/1 aceitas · retificacao_sem_trecho
+  sin-3 · 0/1 aceitas · palavra_chave_invalida
+  10/90 — 24.3 min decorridos, ~194.4 min restantes
+  semt-2 · 0/1 aceitas · trecho_nao_encontrado
+  semt-4 · 1/1 aceitas · sem rejeição
+  tra-2 · 1/1 aceitas · sem rejeição
+  tra-3 · 0/1 aceitas · trecho_nao_encontrado
+  tra-5 · 1/1 aceitas · sem rejeição
+  20/90 — 47.0 min decorridos, ~164.6 min restantes
+  run-3 · 1/1 aceitas · sem rejeição
+  run-5 · 1/1 aceitas · sem rejeição
+  efe-4 · 1/1 aceitas · sem rejeição
+  30/90 — 65.5 min decorridos, ~131.0 min restantes
+  lex-6 · 1/1 aceitas · sem rejeição
+  lex-9 · 0/1 aceitas · palavra_chave_invalida
+  lex-12 · 0/1 aceitas · trecho_nao_encontrado
+  sin-6 · 1/1 aceitas · sem rejeição
+  sin-8 · 0/1 aceitas · motivo_longo
+  40/90 — 86.5 min decorridos, ~108.1 min restantes
+  sin-9 · 0/1 aceitas · texto_curto
+  sin-12 · 1/1 aceitas · sem rejeição
+  sin-13 · 0/1 aceitas · retificacao_sem_trecho
+  sin-15 · 0/1 aceitas · trecho_nao_encontrado
+  semt-6 · 0/1 aceitas · retificacao_sem_trecho
+  semt-7 · 0/1 aceitas · motivo_longo
+  50/90 — 108.3 min decorridos, ~86.6 min restantes
+  semt-10 · 0/1 aceitas · arquivo_inexistente
+  semt-11 · 1/1 aceitas · sem rejeição
+  semt-12 · 0/1 aceitas · trecho_nao_encontrado
+  semt-13 · 1/1 aceitas · sem rejeição
+  semt-15 · 0/1 aceitas · motivo_longo
+  tra-6 · 1/1 aceitas · sem rejeição
+  tra-7 · 0/1 aceitas · motivo_longo
+  60/90 — 133.1 min decorridos, ~66.6 min restantes
+  tra-9 · 1/1 aceitas · sem rejeição
+  tra-12 · 1/1 aceitas · sem rejeição
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/1 aceitas · motivo_longo
+  run-6 · 1/1 aceitas · sem rejeição
+  run-7 · 1/1 aceitas · sem rejeição
+  run-8 · 0/1 aceitas · palavra_chave_invalida
+  70/90 — 158.1 min decorridos, ~45.2 min restantes
+  run-11 · 0/1 aceitas · retificacao_sem_trecho
+  run-12 · 1/1 aceitas · sem rejeição
+  run-14 · 0/1 aceitas · palavra_chave_invalida
+  run-15 · 1/1 aceitas · sem rejeição
+  efe-6 · 1/1 aceitas · sem rejeição
+  efe-8 · 0/1 aceitas · palavra_chave_invalida
+  80/90 — 182.0 min decorridos, ~22.7 min restantes
+  efe-9 · 1/1 aceitas · sem rejeição
+  efe-10 · 0/1 aceitas · retificacao_sem_trecho
+  efe-11 · 0/1 aceitas · motivo_longo
+  efe-12 · 1/1 aceitas · sem rejeição
+  efe-13 · 0/1 aceitas · motivo_longo
+  efe-15 · 1/1 aceitas · sem rejeição
+  lex-13 · 1/1 aceitas · sem rejeição
+  lex-14 · 1/1 aceitas · sem rejeição
+  lex-15 · 0/1 aceitas · motivo_longo
+  90/90 — 212.3 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 0f0a6b7f3b37, 36 verbetes (0 novos), 14 notas, 11 retificações, 25 edições aceitas nesta época
+
+-- qwen2.5-coder:7b · época 2 · lê epoca-1 (hash 0f0a6b7f3b37) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1607 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · palavra_chave_invalida
+  lex-3 · 0/1 aceitas · palavra_chave_invalida
+  lex-5 · 0/1 aceitas · duplicada
+  sin-1 · 0/1 aceitas · retificacao_sem_trecho
+  sin-2 · 0/1 aceitas · retificacao_sem_trecho
+  sin-3 · 0/1 aceitas · palavra_chave_invalida
+  10/90 — 23.4 min decorridos, ~187.3 min restantes
+  semt-2 · 0/1 aceitas · trecho_nao_encontrado
+  semt-4 · 0/1 aceitas · motivo_longo
+  tra-2 · 0/1 aceitas · arquivo_inexistente
+  tra-3 · 0/1 aceitas · retificacao_sem_trecho
+  tra-5 · 0/1 aceitas · duplicada
+  20/90 — 46.2 min decorridos, ~161.9 min restantes
+  run-3 · 0/1 aceitas · duplicada
+  run-5 · 0/1 aceitas · motivo_longo
+  efe-4 · 0/1 aceitas · duplicada
+  30/90 — 65.5 min decorridos, ~131.0 min restantes
+  lex-6 · 0/1 aceitas · palavra_chave_invalida
+  lex-9 · 0/1 aceitas · palavra_chave_invalida
+  lex-12 · 1/1 aceitas · sem rejeição
+  sin-6 · 0/1 aceitas · duplicada
+  sin-8 · 0/1 aceitas · trecho_nao_encontrado
+  40/90 — 84.3 min decorridos, ~105.4 min restantes
+  sin-9 · 0/1 aceitas · retificacao_sem_trecho
+  sin-12 · 0/1 aceitas · trecho_nao_encontrado
+  sin-13 · 0/1 aceitas · retificacao_sem_trecho
+  sin-15 · 0/1 aceitas · retificacao_sem_trecho
+  semt-6 · 0/1 aceitas · retificacao_sem_trecho
+  semt-7 · 0/1 aceitas · teto_notas_verbete
+  50/90 — 104.7 min decorridos, ~83.8 min restantes
+  semt-10 · 1/1 aceitas · sem rejeição
+  semt-11 · 0/1 aceitas · arquivo_inexistente
+  semt-12 · 0/1 aceitas · duplicada
+  semt-13 · 0/1 aceitas · duplicada
+  semt-15 · 0/1 aceitas · motivo_longo
+  tra-6 · 0/1 aceitas · duplicada
+  tra-7 · 1/1 aceitas · sem rejeição
+  60/90 — 132.1 min decorridos, ~66.0 min restantes
+  tra-9 · 0/1 aceitas · duplicada
+  tra-12 · 1/1 aceitas · sem rejeição
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 1/1 aceitas · sem rejeição
+  run-6 · 0/1 aceitas · duplicada
+  run-7 · 0/1 aceitas · motivo_longo
+  run-8 · 0/1 aceitas · duplicada
+  70/90 — 157.9 min decorridos, ~45.1 min restantes
+  run-11 · 0/1 aceitas · teto_notas_verbete
+  run-12 · 0/1 aceitas · motivo_longo
+  run-14 · 0/1 aceitas · palavra_chave_invalida
+  run-15 · 0/1 aceitas · duplicada
+  efe-6 · 1/1 aceitas · sem rejeição
+  efe-8 · 0/1 aceitas · palavra_chave_invalida
+  80/90 — 182.8 min decorridos, ~22.8 min restantes
+  efe-9 · 0/1 aceitas · motivo_longo
+  efe-10 · 0/1 aceitas · palavra_chave_invalida
+  efe-11 · 0/1 aceitas · duplicada
+  efe-12 · 0/1 aceitas · duplicada
+  efe-13 · 0/1 aceitas · motivo_longo
+  efe-15 · 0/1 aceitas · duplicada
+  lex-13 · 0/1 aceitas · arquivo_inexistente
+  lex-14 · 0/1 aceitas · duplicada
+  lex-15 · 1/1 aceitas · sem rejeição
+  90/90 — 214.3 min decorridos, ~0.0 min restantes
+  epoca-2 fechada: hash 6791ba8b281c, 36 verbetes (0 novos), 18 notas, 14 retificações, 7 edições aceitas nesta época
+
+-- qwen2.5-coder:7b · época 3 · lê epoca-2 (hash 6791ba8b281c) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1727 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · palavra_chave_invalida
+  lex-3 · 1/1 aceitas · sem rejeição
+  lex-5 · 0/1 aceitas · palavra_chave_invalida
+  sin-1 · 0/1 aceitas · palavra_chave_invalida
+  sin-2 · 0/1 aceitas · retificacao_sem_trecho
+  sin-3 · 0/1 aceitas · motivo_longo
+  10/90 — 23.8 min decorridos, ~190.2 min restantes
+  semt-2 · 0/1 aceitas · arquivo_inexistente
+  semt-4 · 0/1 aceitas · duplicada
+  tra-2 · 0/1 aceitas · motivo_longo
+  tra-3 · 0/1 aceitas · duplicada
+  tra-5 · 0/1 aceitas · duplicada
+  20/90 — 42.5 min decorridos, ~148.8 min restantes
+  run-3 · 0/1 aceitas · duplicada
+  run-5 · 0/1 aceitas · duplicada
+  efe-4 · 0/1 aceitas · duplicada
+  30/90 — 60.4 min decorridos, ~120.8 min restantes
+  lex-6 · 0/1 aceitas · palavra_chave_invalida
+  lex-9 · 0/1 aceitas · duplicada
+  lex-12 · 0/1 aceitas · duplicada
+  sin-6 · 0/1 aceitas · duplicada
+  sin-8 · 0/1 aceitas · motivo_longo
+  40/90 — 82.6 min decorridos, ~103.3 min restantes
+  sin-9 · 1/1 aceitas · sem rejeição
+  sin-12 · 0/1 aceitas · motivo_longo
+  sin-13 · 0/1 aceitas · retificacao_sem_trecho
+  sin-15 · 0/1 aceitas · trecho_nao_encontrado
+  semt-6 · 0/1 aceitas · motivo_longo
+  semt-7 · 0/1 aceitas · trecho_nao_encontrado
+  50/90 — 104.9 min decorridos, ~84.0 min restantes
+  semt-10 · 0/1 aceitas · motivo_longo
+  semt-11 · 0/1 aceitas · trecho_nao_encontrado
+  semt-12 · 0/1 aceitas · motivo_longo
+  semt-13 · 0/1 aceitas · motivo_longo
+  semt-15 · 0/1 aceitas · motivo_longo
+  tra-6 · 0/1 aceitas · motivo_longo
+  tra-7 · 0/1 aceitas · duplicada
+  60/90 — 131.6 min decorridos, ~65.8 min restantes
+  tra-9 · 0/1 aceitas · duplicada
+  tra-12 · 0/1 aceitas · duplicada
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/1 aceitas · palavra_chave_invalida
+  run-6 · 1/1 aceitas · sem rejeição
+  run-7 · 0/1 aceitas · palavra_chave_invalida
+  run-8 · 0/1 aceitas · duplicada
+  70/90 — 159.3 min decorridos, ~45.5 min restantes
+  run-11 · 0/1 aceitas · arquivo_inexistente
+  run-12 · 0/1 aceitas · duplicada
+  run-14 · 0/1 aceitas · palavra_chave_invalida
+  run-15 · 0/1 aceitas · duplicada
+  efe-6 · 1/1 aceitas · sem rejeição
+  efe-8 · 0/1 aceitas · duplicada
+  80/90 — 184.4 min decorridos, ~23.0 min restantes
+  efe-9 · 0/1 aceitas · palavra_chave_invalida
+  efe-10 · 0/1 aceitas · palavra_chave_invalida
+  efe-11 · 0/1 aceitas · palavra_chave_invalida
+  efe-12 · 1/1 aceitas · sem rejeição
+  efe-13 · 1/1 aceitas · sem rejeição
+  efe-15 · 0/1 aceitas · motivo_longo
+  lex-13 · 0/1 aceitas · arquivo_inexistente
+  lex-14 · 0/1 aceitas · duplicada
+  lex-15 · 1/1 aceitas · sem rejeição
+  90/90 — 216.0 min decorridos, ~0.0 min restantes
+  epoca-3 fechada: hash 2b7c441cb9e3, 36 verbetes (0 novos), 25 notas, 14 retificações, 7 edições aceitas nesta época
+
+-- qwen2.5-coder:7b · passada final · lê epoca-3 (hash 2b7c441cb9e3) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1765 tokens + 600 de resposta
+  10/90 — 8.6 min decorridos, ~68.5 min restantes
+  20/90 — 16.0 min decorridos, ~55.8 min restantes
+  30/90 — 27.6 min decorridos, ~55.2 min restantes
+  40/90 — 37.3 min decorridos, ~46.6 min restantes
+  50/90 — 46.0 min decorridos, ~36.8 min restantes
+  60/90 — 53.7 min decorridos, ~26.8 min restantes
+  70/90 — 61.2 min decorridos, ~17.5 min restantes
+  80/90 — 71.9 min decorridos, ~9.0 min restantes
+  90/90 — 83.4 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3
+== granite4.2:8b: 3 epoca(s) de aprendizado + passada final  (RAM livre 10,3 GB)  14/09 15:46:23 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+projeção de tempo — 90 casos (54 de aprendizado), 4 passadas de diagnóstico e 3 de proposta (3 época(s) + passada final):
+  granite4.2:8b: 13.47 h de diagnóstico + 8.49 h de proposta = 21.96 h
+  total: 21.96 h
+  (* velocidade padrão: modelo não medido na Fase 2-B)
+  estimativa a partir dos ms/token da Fase 2-B; o piloto mede o tempo real.
+
+90 casos (54 de aprendizado) x 3 época(s) + passada final
+
+=== granite4.2:8b (digest f586c02fdecd, Ollama 0.34.0) — Fase 3, 3 época(s), 90 casos ===
+  epoca-0: hash 3196327e7fd5
+
+-- granite4.2:8b · época 1 · lê epoca-0 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · texto_longo
+  lex-3 · 0/1 aceitas · texto_longo
+  lex-5 · 0/1 aceitas · texto_longo
+  sin-1 · 0/1 aceitas · texto_longo
+  sin-2 · 0/2 aceitas · texto_longo, bloco_malformado
+  sin-3 · 0/1 aceitas · texto_longo
+  10/90 — 53.3 min decorridos, ~426.7 min restantes
+  semt-2 · 0/1 aceitas · texto_longo
+  semt-4 · 0/1 aceitas · arquivo_inexistente
+  tra-2 · 0/1 aceitas · arquivo_inexistente
+  tra-3 · 0/1 aceitas · bloco_malformado
+  tra-5 · 0/1 aceitas · bloco_malformado
+  20/90 — 104.0 min decorridos, ~364.1 min restantes
+  run-3 · 0/1 aceitas · texto_longo
+  run-5 · 0/1 aceitas · texto_longo
+  efe-4 · 0/1 aceitas · texto_longo
+  30/90 — 142.1 min decorridos, ~284.1 min restantes
+  lex-6 · 0/1 aceitas · texto_longo
+  lex-9 · 0/1 aceitas · texto_longo
+  lex-12 · 0/1 aceitas · texto_longo
+  sin-6 · 0/1 aceitas · texto_longo
+  sin-8 · 0/1 aceitas · texto_longo
+  40/90 — 183.4 min decorridos, ~229.3 min restantes
+  sin-9 · 0/1 aceitas · texto_longo
+  sin-12 · 0/1 aceitas · vocabulario
+  sin-13 · 0/1 aceitas · texto_longo
+  sin-15 · 0/1 aceitas · texto_longo
+  semt-6 · 0/1 aceitas · texto_longo
+  semt-7 · 0/1 aceitas · bloco_malformado
+  50/90 — 234.5 min decorridos, ~187.6 min restantes
+  semt-10 · 0/1 aceitas · texto_longo
+  semt-11 · 0/1 aceitas · texto_longo
+  semt-12 · 0/1 aceitas · texto_longo
+  semt-13 · 0/1 aceitas · texto_longo
+  semt-15 · 0/1 aceitas · id_repetido
+  tra-6 · 0/1 aceitas · texto_longo
+  tra-7 · 0/2 aceitas · texto_longo, bloco_malformado
+  60/90 — 287.1 min decorridos, ~143.6 min restantes
+  tra-9 · 0/2 aceitas · texto_longo, bloco_malformado
+  tra-12 · 0/1 aceitas · texto_longo
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/1 aceitas · bloco_malformado
+  run-6 · 0/1 aceitas · bloco_malformado
+  run-7 · 0/1 aceitas · texto_longo
+  run-8 · 0/1 aceitas · texto_longo
+  70/90 — 344.5 min decorridos, ~98.4 min restantes
+  run-11 · 0/2 aceitas · arquivo_inexistente, bloco_malformado
+  run-12 · 0/1 aceitas · texto_longo
+  run-14 · 0/1 aceitas · texto_longo
+  run-15 · 0/1 aceitas · texto_longo
+  efe-6 · 0/1 aceitas · texto_longo
+  efe-8 · 0/1 aceitas · texto_longo
+  80/90 — 392.9 min decorridos, ~49.1 min restantes
+  efe-9 · 0/1 aceitas · texto_longo
+  efe-10 · 0/1 aceitas · texto_longo
+  efe-11 · 0/1 aceitas · bloco_malformado
+  efe-12 · 0/1 aceitas · texto_longo
+  efe-13 · 0/1 aceitas · texto_longo
+  efe-15 · 0/1 aceitas · texto_longo
+  lex-13 · 0/1 aceitas · texto_longo
+  lex-14 · 0/1 aceitas · texto_longo
+  lex-15 · 0/1 aceitas · texto_longo
+  90/90 — 461.0 min decorridos, ~0.0 min restantes
+  epoca-1 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- granite4.2:8b · época 2 · lê epoca-1 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · texto_longo
+  lex-3 · 0/1 aceitas · texto_longo
+  lex-5 · 0/1 aceitas · texto_longo
+  sin-1 · 0/1 aceitas · texto_longo
+  sin-2 · 0/2 aceitas · texto_longo, bloco_malformado
+  sin-3 · 0/1 aceitas · arquivo_inexistente
+  10/90 — 49.7 min decorridos, ~397.6 min restantes
+  semt-2 · 0/1 aceitas · texto_longo
+  semt-4 · 0/1 aceitas · texto_longo
+  tra-2 · 0/1 aceitas · arquivo_inexistente
+  tra-3 · 0/1 aceitas · arquivo_inexistente
+  tra-5 · 0/2 aceitas · texto_longo, bloco_malformado
+  20/90 — 99.5 min decorridos, ~348.4 min restantes
+  run-3 · 0/1 aceitas · texto_longo
+  run-5 · 0/1 aceitas · texto_longo
+  efe-4 · 0/2 aceitas · texto_longo, bloco_malformado
+  30/90 — 136.6 min decorridos, ~273.2 min restantes
+  lex-6 · 0/1 aceitas · texto_longo
+  lex-9 · 0/1 aceitas · texto_longo
+  lex-12 · 0/1 aceitas · texto_longo
+  sin-6 · 0/1 aceitas · texto_longo
+  sin-8 · 0/1 aceitas · texto_longo
+  40/90 — 178.9 min decorridos, ~223.6 min restantes
+  sin-9 · 0/1 aceitas · texto_longo
+  sin-12 · 0/1 aceitas · operacao_invalida
+  sin-13 · 0/1 aceitas · texto_longo
+  sin-15 · 0/1 aceitas · texto_longo
+  semt-6 · 0/1 aceitas · texto_longo
+  semt-7 · 0/2 aceitas · texto_longo, bloco_malformado
+  50/90 — 232.2 min decorridos, ~185.8 min restantes
+  semt-10 · 0/1 aceitas · texto_longo
+  semt-11 · 0/1 aceitas · texto_longo
+  semt-12 · 0/1 aceitas · texto_longo
+  semt-13 · 0/1 aceitas · texto_longo
+  semt-15 · 0/1 aceitas · id_repetido
+  tra-6 · 0/1 aceitas · texto_longo
+  tra-7 · 0/2 aceitas · texto_longo, bloco_malformado
+  60/90 — 286.3 min decorridos, ~143.1 min restantes
+  tra-9 · 0/2 aceitas · texto_longo, bloco_malformado
+  tra-12 · 0/2 aceitas · texto_longo, bloco_malformado
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/2 aceitas · texto_longo, bloco_malformado
+  run-6 · 0/1 aceitas · texto_longo
+  run-7 · 0/1 aceitas · texto_longo
+  run-8 · 0/1 aceitas · texto_longo
+  70/90 — 342.7 min decorridos, ~97.9 min restantes
+  run-11 · 0/1 aceitas · id_repetido
+  run-12 · 0/1 aceitas · texto_longo
+  run-14 · 0/1 aceitas · texto_longo
+  run-15 · 0/1 aceitas · texto_longo
+  efe-6 · 0/1 aceitas · texto_longo
+  efe-8 · 0/1 aceitas · texto_longo
+  80/90 — 392.4 min decorridos, ~49.1 min restantes
+  efe-9 · 0/1 aceitas · texto_longo
+  efe-10 · 0/1 aceitas · texto_longo
+  efe-11 · 0/1 aceitas · texto_longo
+  efe-12 · 0/1 aceitas · texto_longo
+  efe-13 · 0/1 aceitas · texto_longo
+  efe-15 · 0/1 aceitas · texto_longo
+  lex-13 · 0/1 aceitas · texto_longo
+  lex-14 · 0/1 aceitas · texto_longo
+  lex-15 · 0/1 aceitas · texto_longo
+  90/90 — 461.2 min decorridos, ~0.0 min restantes
+  epoca-2 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- granite4.2:8b · época 3 · lê epoca-2 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  lex-2 · 0/1 aceitas · texto_longo
+  lex-3 · 0/2 aceitas · texto_longo, bloco_malformado
+  lex-5 · 0/1 aceitas · texto_longo
+  sin-1 · 0/1 aceitas · texto_longo
+  sin-2 · 0/1 aceitas · operacao_invalida
+  sin-3 · 0/1 aceitas · texto_longo
+  10/90 — 48.8 min decorridos, ~390.5 min restantes
+  semt-2 · 0/1 aceitas · texto_longo
+  semt-4 · 0/1 aceitas · arquivo_inexistente
+  tra-2 · 0/2 aceitas · arquivo_inexistente, bloco_malformado
+  tra-3 · 0/1 aceitas · texto_longo
+  tra-5 · 0/1 aceitas · bloco_malformado
+  20/90 — 100.1 min decorridos, ~350.2 min restantes
+  run-3 · 0/1 aceitas · texto_longo
+  run-5 · 0/1 aceitas · texto_longo
+  efe-4 · 0/2 aceitas · texto_longo, bloco_malformado
+  30/90 — 136.4 min decorridos, ~272.8 min restantes
+  lex-6 · 0/1 aceitas · texto_longo
+  lex-9 · 0/1 aceitas · texto_longo
+  lex-12 · 0/1 aceitas · texto_longo
+  sin-6 · 0/1 aceitas · texto_longo
+  sin-8 · 0/1 aceitas · texto_longo
+  40/90 — 181.0 min decorridos, ~226.2 min restantes
+  sin-9 · 0/1 aceitas · texto_longo
+  sin-12 · 0/1 aceitas · vocabulario
+  sin-13 · 0/1 aceitas · texto_longo
+  sin-15 · 0/1 aceitas · texto_longo
+  semt-6 · 0/1 aceitas · texto_longo
+  semt-7 · 0/1 aceitas · texto_longo
+  50/90 — 238.1 min decorridos, ~190.5 min restantes
+  semt-10 · 0/1 aceitas · texto_longo
+  semt-11 · 0/1 aceitas · texto_longo
+  semt-12 · 0/1 aceitas · texto_longo
+  semt-13 · 0/1 aceitas · texto_longo
+  semt-15 · 0/1 aceitas · id_repetido
+  tra-6 · 0/1 aceitas · texto_longo
+  tra-7 · 0/2 aceitas · arquivo_inexistente, bloco_malformado
+  60/90 — 301.1 min decorridos, ~150.6 min restantes
+  tra-9 · 0/2 aceitas · texto_longo, bloco_malformado
+  tra-12 · 0/2 aceitas · texto_longo, bloco_malformado
+  tra-13 · 0/1 aceitas · arquivo_inexistente
+  tra-14 · 0/2 aceitas · texto_longo, bloco_malformado
+  run-6 · 0/1 aceitas · texto_longo
+  run-7 · 0/1 aceitas · texto_longo
+  run-8 · 0/1 aceitas · texto_longo
+  70/90 — 360.3 min decorridos, ~102.9 min restantes
+  run-11 · 0/1 aceitas · id_repetido
+  run-12 · 0/1 aceitas · texto_longo
+  run-14 · 0/1 aceitas · texto_longo
+  run-15 · 0/1 aceitas · texto_longo
+  efe-6 · 0/1 aceitas · texto_longo
+  efe-8 · 0/1 aceitas · texto_longo
+  80/90 — 411.0 min decorridos, ~51.4 min restantes
+  efe-9 · 0/1 aceitas · texto_longo
+  efe-10 · 0/1 aceitas · texto_longo
+  efe-11 · 0/1 aceitas · operacao_invalida
+  efe-12 · 0/1 aceitas · texto_longo
+  efe-13 · 0/1 aceitas · texto_longo
+  efe-15 · 0/1 aceitas · texto_longo
+  lex-13 · 0/1 aceitas · texto_longo
+  lex-14 · 0/1 aceitas · texto_longo
+  lex-15 · 0/1 aceitas · texto_longo
+  90/90 — 481.4 min decorridos, ~0.0 min restantes
+  epoca-3 fechada: hash 3196327e7fd5, 36 verbetes (0 novos), 0 notas, 0 retificações, 0 edições aceitas nesta época
+
+-- granite4.2:8b · passada final · lê epoca-3 (hash 3196327e7fd5) --
+  0 caso(s) completos, 90 pendentes
+maior prompt estimado: 1408 tokens + 600 de resposta
+  10/90 — 24.6 min decorridos, ~196.7 min restantes
+  20/90 — 54.4 min decorridos, ~190.4 min restantes
+  30/90 — 78.3 min decorridos, ~156.7 min restantes
+  40/90 — 100.1 min decorridos, ~125.1 min restantes
+  50/90 — 120.4 min decorridos, ~96.3 min restantes
+  60/90 — 142.1 min decorridos, ~71.0 min restantes
+  70/90 — 164.9 min decorridos, ~47.1 min restantes
+  80/90 — 187.9 min decorridos, ~23.5 min restantes
+  90/90 — 214.2 min decorridos, ~0.0 min restantes
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3
+== avaliacao  15/09 18:44:33 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+1440 diagnósticos avaliados — C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3
+
+modelo                      L    particao    n  acerto%          IC95  balanc%  cita%  ouro%  nota%   s med
+granite4.2:8b               0 aprendizado   54     74.1     61.1–83.9     76.4  100.0   75.9    0.0   132.3
+granite4.2:8b               0   avaliacao   36     80.6     65.0–90.2     83.3  100.0   86.1    0.0   129.4
+granite4.2:8b               0       todos   90     76.7     66.9–84.2     79.6  100.0   80.0    0.0   131.3
+granite4.2:8b               1 aprendizado   54     75.9     63.1–85.4     77.2  100.0   75.9    0.0   128.6
+granite4.2:8b               1   avaliacao   36     80.6     65.0–90.2     83.3  100.0   86.1    0.0   133.2
+granite4.2:8b               1       todos   90     77.8     68.2–85.1     80.2  100.0   80.0    0.0   130.9
+granite4.2:8b               2 aprendizado   54     70.4     57.2–80.9     73.7  100.0   75.9    0.0   133.8
+granite4.2:8b               2   avaliacao   36     80.6     65.0–90.2     83.3  100.0   86.1    0.0   131.2
+granite4.2:8b               2       todos   90     74.4     64.6–82.3     78.0  100.0   80.0    0.0   132.3
+granite4.2:8b               3 aprendizado   54     72.2     59.1–82.4     75.2  100.0   75.9    0.0   132.6
+granite4.2:8b               3   avaliacao   36     80.6     65.0–90.2     83.3  100.0   86.1    0.0   134.4
+granite4.2:8b               3       todos   90     75.6     65.8–83.3     78.7  100.0   80.0    0.0   132.6
+qwen2.5-coder:3b            0 aprendizado   54     63.0     49.6–74.6     70.3   98.1   75.9    0.0    29.9
+qwen2.5-coder:3b            0   avaliacao   36     69.4     53.1–82.0     68.8  100.0   86.1    0.0    32.2
+qwen2.5-coder:3b            0       todos   90     65.6     55.3–74.6     71.5   98.9   80.0    0.0    30.8
+qwen2.5-coder:3b            1 aprendizado   54     63.0     49.6–74.6     70.3   98.1   75.9   18.5    14.9
+qwen2.5-coder:3b            1   avaliacao   36     72.2     56.0–84.2     70.4  100.0   86.1    8.3    17.8
+qwen2.5-coder:3b            1       todos   90     66.7     56.4–75.5     72.6   98.9   80.0   14.4    16.6
+qwen2.5-coder:3b            2 aprendizado   54     63.0     49.6–74.6     69.5   98.1   75.9   44.4    16.2
+qwen2.5-coder:3b            2   avaliacao   36     72.2     56.0–84.2     71.2  100.0   86.1   36.1    18.8
+qwen2.5-coder:3b            2       todos   90     66.7     56.4–75.5     72.0   98.9   80.0   41.1    17.8
+qwen2.5-coder:3b            3 aprendizado   54     64.8     51.5–76.2     70.3   98.1   77.8   57.4    17.5
+qwen2.5-coder:3b            3   avaliacao   36     72.2     56.0–84.2     71.2  100.0   86.1   50.0    20.9
+qwen2.5-coder:3b            3       todos   90     67.8     57.6–76.5     72.6   98.9   81.1   54.4    18.4
+qwen2.5-coder:7b            0 aprendizado   54     68.5     55.3–79.3     73.7  100.0   75.9    0.0    68.5
+qwen2.5-coder:7b            0   avaliacao   36     75.0     58.9–86.2     80.0  100.0   86.1    0.0    70.7
+qwen2.5-coder:7b            0       todos   90     71.1     61.0–79.5     75.8  100.0   80.0    0.0    68.7
+qwen2.5-coder:7b            1 aprendizado   54     74.1     61.1–83.9     82.1  100.0   75.9   81.5    68.0
+qwen2.5-coder:7b            1   avaliacao   36     75.0     58.9–86.2     80.0  100.0   86.1   72.2    65.8
+qwen2.5-coder:7b            1       todos   90     74.4     64.6–82.3     78.9  100.0   80.0   77.8    67.4
+qwen2.5-coder:7b            2 aprendizado   54     72.2     59.1–82.4     74.4  100.0   74.1  100.0    62.5
+qwen2.5-coder:7b            2   avaliacao   36     75.0     58.9–86.2     80.0  100.0   83.3  100.0    66.8
+qwen2.5-coder:7b            2       todos   90     73.3     63.4–81.4     77.8  100.0   77.8  100.0    65.5
+qwen2.5-coder:7b            3 aprendizado   54     68.5     55.3–79.3     69.9  100.0   74.1  100.0    47.9
+qwen2.5-coder:7b            3   avaliacao   36     77.8     61.9–88.3     84.2  100.0   86.1  100.0    56.6
+qwen2.5-coder:7b            3       todos   90     72.2     62.2–80.4     75.4  100.0   78.9  100.0    49.8
+qwen2.5:7b                  0 aprendizado   54     66.7     53.4–77.8     74.1  100.0   75.9    0.0    63.6
+qwen2.5:7b                  0   avaliacao   36     77.8     61.9–88.3     81.2  100.0   86.1    0.0    69.5
+qwen2.5:7b                  0       todos   90     71.1     61.0–79.5     75.7  100.0   80.0    0.0    66.8
+qwen2.5:7b                  1 aprendizado   54     68.5     55.3–79.3     79.3  100.0   74.1  100.0    75.3
+qwen2.5:7b                  1   avaliacao   36     88.9     74.7–95.6     91.7  100.0   83.3   94.4    79.5
+qwen2.5:7b                  1       todos   90     76.7     66.9–84.2     83.0  100.0   77.8   97.8    78.2
+qwen2.5:7b                  2 aprendizado   54     68.5     55.3–79.3     74.3  100.0   75.9  100.0    69.3
+qwen2.5:7b                  2   avaliacao   36     83.3     68.1–92.1     84.2  100.0   83.3   94.4    80.6
+qwen2.5:7b                  2       todos   90     74.4     64.6–82.3     78.1  100.0   78.9   97.8    77.6
+qwen2.5:7b                  3 aprendizado   54     72.2     59.1–82.4     76.4  100.0   74.1  100.0    43.6
+qwen2.5:7b                  3   avaliacao   36     86.1     71.3–93.9     86.2  100.0   86.1   94.4    53.9
+qwen2.5:7b                  3       todos   90     77.8     68.2–85.1     80.7  100.0   78.9   97.8    47.0
+
+Δ contra a L0 (pareado por caso; McNemar exato, * = p ajustado por Holm < 0,05):
+  granite4.2:8b              L1 aprendizado:  74.1 →  75.9 (+1.8 pp) b= 1 c= 0 p=1.0     holm=1.0     g=0.5 
+  granite4.2:8b              L1   avaliacao:  80.6 →  80.6 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  granite4.2:8b              L1       todos:  76.7 →  77.8 (+1.1 pp) b= 1 c= 0 p=1.0     holm=1.0     g=0.5 
+  granite4.2:8b              L2 aprendizado:  74.1 →  70.4 (-3.7 pp) b= 0 c= 2 p=0.5     holm=1.0     g=-0.5 
+  granite4.2:8b              L2   avaliacao:  80.6 →  80.6 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  granite4.2:8b              L2       todos:  76.7 →  74.4 (-2.3 pp) b= 0 c= 2 p=0.5     holm=1.0     g=-0.5 
+  granite4.2:8b              L3 aprendizado:  74.1 →  72.2 (-1.9 pp) b= 0 c= 1 p=1.0     holm=1.0     g=-0.5 
+  granite4.2:8b              L3   avaliacao:  80.6 →  80.6 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  granite4.2:8b              L3       todos:  76.7 →  75.6 (-1.1 pp) b= 0 c= 1 p=1.0     holm=1.0     g=-0.5 
+  qwen2.5-coder:3b           L1 aprendizado:  63.0 →  63.0 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  qwen2.5-coder:3b           L1   avaliacao:  69.4 →  72.2 (+2.8 pp) b= 1 c= 0 p=1.0     holm=1.0     g=0.5 
+  qwen2.5-coder:3b           L1       todos:  65.6 →  66.7 (+1.1 pp) b= 1 c= 0 p=1.0     holm=1.0     g=0.5 
+  qwen2.5-coder:3b           L2 aprendizado:  63.0 →  63.0 (+0.0 pp) b= 2 c= 2 p=1.0     holm=1.0     g=0.0 
+  qwen2.5-coder:3b           L2   avaliacao:  69.4 →  72.2 (+2.8 pp) b= 2 c= 1 p=1.0     holm=1.0     g=0.167 
+  qwen2.5-coder:3b           L2       todos:  65.6 →  66.7 (+1.1 pp) b= 4 c= 3 p=1.0     holm=1.0     g=0.071 
+  qwen2.5-coder:3b           L3 aprendizado:  63.0 →  64.8 (+1.8 pp) b= 2 c= 1 p=1.0     holm=1.0     g=0.167 
+  qwen2.5-coder:3b           L3   avaliacao:  69.4 →  72.2 (+2.8 pp) b= 1 c= 0 p=1.0     holm=1.0     g=0.5 
+  qwen2.5-coder:3b           L3       todos:  65.6 →  67.8 (+2.2 pp) b= 3 c= 1 p=0.625   holm=1.0     g=0.25 
+  qwen2.5-coder:7b           L1 aprendizado:  68.5 →  74.1 (+5.6 pp) b= 4 c= 1 p=0.375   holm=1.0     g=0.3 
+  qwen2.5-coder:7b           L1   avaliacao:  75.0 →  75.0 (+0.0 pp) b= 0 c= 0 p=1.0     holm=1.0     g=- 
+  qwen2.5-coder:7b           L1       todos:  71.1 →  74.4 (+3.3 pp) b= 4 c= 1 p=0.375   holm=1.0     g=0.3 
+  qwen2.5-coder:7b           L2 aprendizado:  68.5 →  72.2 (+3.7 pp) b= 4 c= 2 p=0.6875  holm=1.0     g=0.167 
+  qwen2.5-coder:7b           L2   avaliacao:  75.0 →  75.0 (+0.0 pp) b= 1 c= 1 p=1.0     holm=1.0     g=0.0 
+  qwen2.5-coder:7b           L2       todos:  71.1 →  73.3 (+2.2 pp) b= 5 c= 3 p=0.7266  holm=1.0     g=0.125 
+  qwen2.5-coder:7b           L3 aprendizado:  68.5 →  68.5 (+0.0 pp) b= 6 c= 6 p=1.0     holm=1.0     g=0.0 
+  qwen2.5-coder:7b           L3   avaliacao:  75.0 →  77.8 (+2.8 pp) b= 3 c= 2 p=1.0     holm=1.0     g=0.1 
+  qwen2.5-coder:7b           L3       todos:  71.1 →  72.2 (+1.1 pp) b= 9 c= 8 p=1.0     holm=1.0     g=0.029 
+  qwen2.5:7b                 L1 aprendizado:  66.7 →  68.5 (+1.8 pp) b= 3 c= 2 p=1.0     holm=1.0     g=0.1 
+  qwen2.5:7b                 L1   avaliacao:  77.8 →  88.9 (+11.1 pp) b= 4 c= 0 p=0.125   holm=0.375   g=0.5 
+  qwen2.5:7b                 L1       todos:  71.1 →  76.7 (+5.6 pp) b= 7 c= 2 p=0.1797  holm=0.3594  g=0.278 
+  qwen2.5:7b                 L2 aprendizado:  66.7 →  68.5 (+1.8 pp) b= 4 c= 3 p=1.0     holm=1.0     g=0.071 
+  qwen2.5:7b                 L2   avaliacao:  77.8 →  83.3 (+5.5 pp) b= 2 c= 0 p=0.5     holm=0.5     g=0.5 
+  qwen2.5:7b                 L2       todos:  71.1 →  74.4 (+3.3 pp) b= 6 c= 3 p=0.5078  holm=0.5078  g=0.167 
+  qwen2.5:7b                 L3 aprendizado:  66.7 →  72.2 (+5.5 pp) b= 5 c= 2 p=0.4531  holm=1.0     g=0.214 
+  qwen2.5:7b                 L3   avaliacao:  77.8 →  86.1 (+8.3 pp) b= 3 c= 0 p=0.25    holm=0.5     g=0.5 
+  qwen2.5:7b                 L3       todos:  71.1 →  77.8 (+6.7 pp) b= 8 c= 2 p=0.1094  holm=0.3282  g=0.3 
+
+Cochran Q (as versões da biblioteca lado a lado, mesmos casos):
+  granite4.2:8b              aprendizado: Q=6.0      gl=3 p=0.1116 (n=54)
+  granite4.2:8b                avaliacao: Q=0.0      gl=3 p=1.0 (n=36)
+  granite4.2:8b                    todos: Q=6.0      gl=3 p=0.1116 (n=90)
+  qwen2.5-coder:3b           aprendizado: Q=0.5294   gl=3 p=0.9124 (n=54)
+  qwen2.5-coder:3b             avaliacao: Q=0.8182   gl=3 p=0.8451 (n=36)
+  qwen2.5-coder:3b                 todos: Q=0.8571   gl=3 p=0.8358 (n=90)
+  qwen2.5-coder:7b           aprendizado: Q=1.5882   gl=3 p=0.6621 (n=54)
+  qwen2.5-coder:7b             avaliacao: Q=0.5294   gl=3 p=0.9124 (n=36)
+  qwen2.5-coder:7b                 todos: Q=0.8824   gl=3 p=0.8297 (n=90)
+  qwen2.5:7b                 aprendizado: Q=1.7273   gl=3 p=0.6309 (n=54)
+  qwen2.5:7b                   avaliacao: Q=5.5263   gl=3 p=0.1371 (n=36)
+  qwen2.5:7b                       todos: Q=4.8462   gl=3 p=0.1834 (n=90)
+
+Flips entre épocas (autoenvenenamento = certo → errado):
+  granite4.2:8b              L0→L1 aprendizado: ✓→✗  0, ✗→✓  1 de  54 casos — autoenvenenamento 0.0%
+  granite4.2:8b              L1→L2 aprendizado: ✓→✗  3, ✗→✓  0 de  54 casos — autoenvenenamento 5.6%
+  granite4.2:8b              L2→L3 aprendizado: ✓→✗  0, ✗→✓  1 de  54 casos — autoenvenenamento 0.0%
+  granite4.2:8b              L0→L1   avaliacao: ✓→✗  0, ✗→✓  0 de  36 casos — autoenvenenamento 0.0%
+  granite4.2:8b              L1→L2   avaliacao: ✓→✗  0, ✗→✓  0 de  36 casos — autoenvenenamento 0.0%
+  granite4.2:8b              L2→L3   avaliacao: ✓→✗  0, ✗→✓  0 de  36 casos — autoenvenenamento 0.0%
+  granite4.2:8b              L0→L1       todos: ✓→✗  0, ✗→✓  1 de  90 casos — autoenvenenamento 0.0%
+  granite4.2:8b              L1→L2       todos: ✓→✗  3, ✗→✓  0 de  90 casos — autoenvenenamento 3.3%
+  granite4.2:8b              L2→L3       todos: ✓→✗  0, ✗→✓  1 de  90 casos — autoenvenenamento 0.0%
+  qwen2.5-coder:3b           L0→L1 aprendizado: ✓→✗  0, ✗→✓  0 de  54 casos — autoenvenenamento 0.0%
+  qwen2.5-coder:3b           L1→L2 aprendizado: ✓→✗  2, ✗→✓  2 de  54 casos — autoenvenenamento 3.7%
+  qwen2.5-coder:3b           L2→L3 aprendizado: ✓→✗  1, ✗→✓  2 de  54 casos — autoenvenenamento 1.9%
+  qwen2.5-coder:3b           L0→L1   avaliacao: ✓→✗  0, ✗→✓  1 de  36 casos — autoenvenenamento 0.0%
+  qwen2.5-coder:3b           L1→L2   avaliacao: ✓→✗  1, ✗→✓  1 de  36 casos — autoenvenenamento 2.8%
+  qwen2.5-coder:3b           L2→L3   avaliacao: ✓→✗  1, ✗→✓  1 de  36 casos — autoenvenenamento 2.8%
+  qwen2.5-coder:3b           L0→L1       todos: ✓→✗  0, ✗→✓  1 de  90 casos — autoenvenenamento 0.0%
+  qwen2.5-coder:3b           L1→L2       todos: ✓→✗  3, ✗→✓  3 de  90 casos — autoenvenenamento 3.3%
+  qwen2.5-coder:3b           L2→L3       todos: ✓→✗  2, ✗→✓  3 de  90 casos — autoenvenenamento 2.2%
+  qwen2.5-coder:7b           L0→L1 aprendizado: ✓→✗  1, ✗→✓  4 de  54 casos — autoenvenenamento 1.9%
+  qwen2.5-coder:7b           L1→L2 aprendizado: ✓→✗  4, ✗→✓  3 de  54 casos — autoenvenenamento 7.4%
+  qwen2.5-coder:7b           L2→L3 aprendizado: ✓→✗  5, ✗→✓  3 de  54 casos — autoenvenenamento 9.3%
+  qwen2.5-coder:7b           L0→L1   avaliacao: ✓→✗  0, ✗→✓  0 de  36 casos — autoenvenenamento 0.0%
+  qwen2.5-coder:7b           L1→L2   avaliacao: ✓→✗  1, ✗→✓  1 de  36 casos — autoenvenenamento 2.8%
+  qwen2.5-coder:7b           L2→L3   avaliacao: ✓→✗  1, ✗→✓  2 de  36 casos — autoenvenenamento 2.8%
+  qwen2.5-coder:7b           L0→L1       todos: ✓→✗  1, ✗→✓  4 de  90 casos — autoenvenenamento 1.1%
+  qwen2.5-coder:7b           L1→L2       todos: ✓→✗  5, ✗→✓  4 de  90 casos — autoenvenenamento 5.6%
+  qwen2.5-coder:7b           L2→L3       todos: ✓→✗  6, ✗→✓  5 de  90 casos — autoenvenenamento 6.7%
+  qwen2.5:7b                 L0→L1 aprendizado: ✓→✗  2, ✗→✓  3 de  54 casos — autoenvenenamento 3.7%
+  qwen2.5:7b                 L1→L2 aprendizado: ✓→✗  3, ✗→✓  3 de  54 casos — autoenvenenamento 5.6%
+  qwen2.5:7b                 L2→L3 aprendizado: ✓→✗  0, ✗→✓  2 de  54 casos — autoenvenenamento 0.0%
+  qwen2.5:7b                 L0→L1   avaliacao: ✓→✗  0, ✗→✓  4 de  36 casos — autoenvenenamento 0.0%
+  qwen2.5:7b                 L1→L2   avaliacao: ✓→✗  2, ✗→✓  0 de  36 casos — autoenvenenamento 5.6%
+  qwen2.5:7b                 L2→L3   avaliacao: ✓→✗  1, ✗→✓  2 de  36 casos — autoenvenenamento 2.8%
+  qwen2.5:7b                 L0→L1       todos: ✓→✗  2, ✗→✓  7 de  90 casos — autoenvenenamento 2.2%
+  qwen2.5:7b                 L1→L2       todos: ✓→✗  5, ✗→✓  3 de  90 casos — autoenvenenamento 5.6%
+  qwen2.5:7b                 L2→L3       todos: ✓→✗  1, ✗→✓  4 de  90 casos — autoenvenenamento 1.1%
+
+Documentação escrita pelo modelo, por época:
+  granite4.2:8b              E1: 0/58 aceitas (0.0%), 1 NENHUMA, 17 sem FIM, +0 chars (md) — texto_longo 42, bloco_malformado 10, arquivo_inexistente 4
+  granite4.2:8b              E2: 0/62 aceitas (0.0%), 0 NENHUMA, 16 sem FIM, +0 chars (md) — texto_longo 47, bloco_malformado 8, arquivo_inexistente 4
+  granite4.2:8b              E3: 0/61 aceitas (0.0%), 0 NENHUMA, 17 sem FIM, +0 chars (md) — texto_longo 44, bloco_malformado 8, arquivo_inexistente 4
+  qwen2.5-coder:3b           E1: 4/54 aceitas (7.4%), 0 NENHUMA, 12 sem FIM, +1927 chars (md) — bloco_malformado 29, texto_curto 5, arquivo_inexistente 5
+  qwen2.5-coder:3b           E2: 3/54 aceitas (5.6%), 0 NENHUMA, 8 sem FIM, +1534 chars (md) — bloco_malformado 30, arquivo_inexistente 6, texto_curto 5
+  qwen2.5-coder:3b           E3: 3/53 aceitas (5.7%), 1 NENHUMA, 8 sem FIM, +1938 chars (md) — bloco_malformado 32, arquivo_inexistente 6, trecho_nao_encontrado 5
+  qwen2.5-coder:7b           E1: 25/54 aceitas (46.3%), 0 NENHUMA, 54 sem FIM, +12376 chars (md) — motivo_longo 8, palavra_chave_invalida 7, retificacao_sem_trecho 6
+  qwen2.5-coder:7b           E2: 7/54 aceitas (13.0%), 0 NENHUMA, 54 sem FIM, +3571 chars (md) — duplicada 16, palavra_chave_invalida 8, retificacao_sem_trecho 7
+  qwen2.5-coder:7b           E3: 7/54 aceitas (13.0%), 0 NENHUMA, 54 sem FIM, +3591 chars (md) — duplicada 17, motivo_longo 11, palavra_chave_invalida 10
+  qwen2.5:7b                 E1: 40/87 aceitas (46.0%), 0 NENHUMA, 87 sem FIM, +22461 chars (md) — palavra_chave_invalida 14, id_repetido 12, bloco_malformado 8
+  qwen2.5:7b                 E2: 12/86 aceitas (14.0%), 1 NENHUMA, 84 sem FIM, +6873 chars (md) — duplicada 27, palavra_chave_invalida 14, teto_notas_verbete 13
+  qwen2.5:7b                 E3: 9/91 aceitas (9.9%), 0 NENHUMA, 89 sem FIM, +4645 chars (md) — duplicada 26, teto_notas_verbete 17, palavra_chave_invalida 16
+
+Avaliação em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3\avaliacao_fase3.json
+Resumo em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3\resumo_fase3.json
+== comparacao com as fases 2-A e 2-B  15/09 18:44:39 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+8 modelo(s) comparados — 36 casos de avaliação
+  granite4.2:8b                      2A=67,8% [57,6–76,5]  2B_A0=66,7% [56,4–75,5]  2B_A2=76,7% [66,9–84,2]  F3_L0=76,7% [66,9–84,2]  F3_L3=75,6% [65,8–83,3]
+  phi4-mini:3.8b                     2A=23,3% [15,8–33,1]  2B_A0=23,3% [15,8–33,1]  2B_A2=25,6% [17,7–35,4]  F3_L0=—  F3_L3=—
+  qwen2.5-coder:1.5b                 2A=5,6% [2,4–12,4]  2B_A0=5,6% [2,4–12,4]  2B_A2=16,7% [10,4–25,7]  F3_L0=—  F3_L3=—
+  qwen2.5-coder:1.5b-instruct-fp16   2A=—  2B_A0=8,9% [4,6–16,6]  2B_A2=—  F3_L0=—  F3_L3=—
+  qwen2.5-coder:1.5b-instruct-q8_0   2A=12,5% [5,9–24,7]  2B_A0=8,9% [4,6–16,6]  2B_A2=—  F3_L0=—  F3_L3=—
+  qwen2.5-coder:3b                   2A=25,6% [17,7–35,4]  2B_A0=23,3% [15,8–33,1]  2B_A2=63,3% [53,0–72,6]  F3_L0=65,6% [55,3–74,6]  F3_L3=67,8% [57,6–76,5]
+  qwen2.5-coder:7b                   2A=48,9% [38,8–59,0]  2B_A0=50,0% [39,9–60,1]  2B_A2=72,2% [62,2–80,4]  F3_L0=71,1% [61,0–79,5]  F3_L3=72,2% [62,2–80,4]
+  qwen2.5:7b                         2A=53,3% [43,1–63,3]  2B_A0=57,8% [47,5–67,5]  2B_A2=70,0% [59,9–78,5]  F3_L0=71,1% [61,0–79,5]  F3_L3=77,8% [68,2–85,1]
+
+Comparação em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3\comparacao_fases.json
+Tabela em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3\comparacao_fases.md
+== graficos (venv com matplotlib)  15/09 18:44:39 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+Gerando gráficos em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\graficos:
+findfont: Failed to find font weight 600, now using 700.
+findfont: Failed to find font weight 600, now using 700.
+  12-fase3-acerto-por-epoca.png / .svg
+findfont: Failed to find font weight 600, now using 700.
+  13-fase3-recuperacao-por-epoca.png / .svg
+  14-fase3-propostas-por-motivo.png / .svg
+  15-fase3-crescimento-da-biblioteca.png / .svg
+  16-comparacao-entre-fases.png / .svg
+  17-custo-versus-acerto-tres-fases.png / .svg
+
+Gráficos em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\graficos
+== relatorio  15/09 18:44:55 ==
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3\relatorio_fase3.html (1440 diagnóstico(s), 648 proposta(s), 8527 KB)
+== FIM da Fase 3 - duracao total 58h59 - modelos com falha: nenhum  15/09 18:44:56 ==

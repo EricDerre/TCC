@@ -1,0 +1,1549 @@
+{
+  "metadados": {
+    "gerado_em": "2026-09-29T11:41:03",
+    "A": "qwen2.5:7b",
+    "B": "qwen2.5-coder:7b",
+    "fontes": {
+      "2a": "resumo_metricas.json (Ryzen)",
+      "2b": "resultados_alvo/resumo_metricas.json (+ avaliacao.json)",
+      "f3": "resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json",
+      "comparacao": "comparacao_fases.json",
+      "decisao": "decisao_modelo.json",
+      "ineditos": "fase3b_ineditos\\resumo_fase3.json"
+    },
+    "melhor_L_nos_36": {
+      "qwen2.5:7b": 1,
+      "qwen2.5-coder:7b": 3
+    },
+    "ineditos_modelos": [
+      "qwen2.5-coder:3b",
+      "qwen2.5:7b"
+    ],
+    "f3_gerado_em": "2026-09-29T11:04:10",
+    "decisao_gerado_em": "2026-09-29T11:09:07"
+  },
+  "fase2a": [
+    {
+      "contexto": "2-A · estratégia linear",
+      "n": 90,
+      "acerto_A": 53.3,
+      "acerto_B": 48.9,
+      "delta": -4.4,
+      "s_A": 17.1,
+      "s_B": 25.9,
+      "fmt_err_A": 46.7,
+      "fmt_err_B": 48.9
+    },
+    {
+      "contexto": "2-A · estratégia compilador",
+      "n": 90,
+      "acerto_A": 47.8,
+      "acerto_B": 52.2,
+      "delta": 4.4,
+      "s_A": 18.5,
+      "s_B": 18.5,
+      "fmt_err_A": 52.2,
+      "fmt_err_B": 47.8
+    },
+    {
+      "contexto": "2-A · estratégia dominio",
+      "n": 90,
+      "acerto_A": 48.9,
+      "acerto_B": 48.9,
+      "delta": 0.0,
+      "s_A": 17.5,
+      "s_B": 17.4,
+      "fmt_err_A": 51.1,
+      "fmt_err_B": 51.1
+    }
+  ],
+  "fase2a_classe": [
+    {
+      "classe": "1 lexica",
+      "n": 45,
+      "acerto_A": 60.0,
+      "acerto_B": 68.9,
+      "delta": 8.9
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 45,
+      "acerto_A": 51.1,
+      "acerto_B": 40.0,
+      "delta": -11.1
+    },
+    {
+      "classe": "3 semantica",
+      "n": 45,
+      "acerto_A": 37.8,
+      "acerto_B": 40.0,
+      "delta": 2.2
+    },
+    {
+      "classe": "4 traducao",
+      "n": 45,
+      "acerto_A": 37.8,
+      "acerto_B": 22.2,
+      "delta": -15.6
+    },
+    {
+      "classe": "5 runtime",
+      "n": 45,
+      "acerto_A": 75.6,
+      "acerto_B": 77.8,
+      "delta": 2.2
+    },
+    {
+      "classe": "6 efeito",
+      "n": 45,
+      "acerto_A": 37.8,
+      "acerto_B": 51.1,
+      "delta": 13.3
+    }
+  ],
+  "fase2b_condicoes": [
+    {
+      "contexto": "2-B · A0",
+      "n": 90,
+      "acerto_A": 57.8,
+      "acerto_B": 50.0,
+      "delta": -7.8,
+      "s_A": 38.0,
+      "s_B": 51.3,
+      "fmt_err_A": 42.2,
+      "fmt_err_B": 48.9,
+      "vs_A0_A": null,
+      "vs_A0_B": null
+    },
+    {
+      "contexto": "2-B · A1",
+      "n": 90,
+      "acerto_A": 62.2,
+      "acerto_B": 63.3,
+      "delta": 1.1,
+      "s_A": 57.1,
+      "s_B": 61.2,
+      "fmt_err_A": 37.8,
+      "fmt_err_B": 30.0,
+      "vs_A0_A": "+4,4 pp (p = 0,5034)",
+      "vs_A0_B": "+13,3 pp (p = 0,0730)"
+    },
+    {
+      "contexto": "2-B · A2",
+      "n": 90,
+      "acerto_A": 70.0,
+      "acerto_B": 72.2,
+      "delta": 2.2,
+      "s_A": 61.1,
+      "s_B": 66.6,
+      "fmt_err_A": 30.0,
+      "fmt_err_B": 27.8,
+      "vs_A0_A": "+12,2 pp (p = 0,0708)",
+      "vs_A0_B": "+22,2 pp (p = 0,0005)"
+    }
+  ],
+  "fase2b_classe_A2": [
+    {
+      "classe": "1 lexica",
+      "n": 15,
+      "acerto_A": 86.7,
+      "acerto_B": 100.0,
+      "delta": 13.3
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 15,
+      "acerto_A": 73.3,
+      "acerto_B": 73.3,
+      "delta": 0.0
+    },
+    {
+      "classe": "3 semantica",
+      "n": 15,
+      "acerto_A": 73.3,
+      "acerto_B": 60.0,
+      "delta": -13.3
+    },
+    {
+      "classe": "4 traducao",
+      "n": 15,
+      "acerto_A": 46.7,
+      "acerto_B": 40.0,
+      "delta": -6.7
+    },
+    {
+      "classe": "5 runtime",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 86.7,
+      "delta": 6.7
+    },
+    {
+      "classe": "6 efeito",
+      "n": 15,
+      "acerto_A": 60.0,
+      "acerto_B": 73.3,
+      "delta": 13.3
+    }
+  ],
+  "fase2b_nivel_A2": [
+    {
+      "nivel": "1 fácil",
+      "n": 30,
+      "acerto_A": 66.7,
+      "acerto_B": 66.7,
+      "delta": 0.0
+    },
+    {
+      "nivel": "2 médio",
+      "n": 30,
+      "acerto_A": 73.3,
+      "acerto_B": 73.3,
+      "delta": 0.0
+    },
+    {
+      "nivel": "3 difícil",
+      "n": 30,
+      "acerto_A": 70.0,
+      "acerto_B": 76.7,
+      "delta": 6.7
+    }
+  ],
+  "confronto_2b": [
+    {
+      "contexto": "2-B · A0",
+      "n": 90,
+      "ambos": 33,
+      "nenhum": 26,
+      "so_coder": 12,
+      "so_qwen": 19,
+      "delta_pp": -7.8,
+      "p_mcnemar": 0.281
+    },
+    {
+      "contexto": "2-B · A1",
+      "n": 90,
+      "ambos": 45,
+      "nenhum": 22,
+      "so_coder": 12,
+      "so_qwen": 11,
+      "delta_pp": 1.1,
+      "p_mcnemar": 1.0
+    },
+    {
+      "contexto": "2-B · A2",
+      "n": 90,
+      "ambos": 53,
+      "nenhum": 15,
+      "so_coder": 12,
+      "so_qwen": 10,
+      "delta_pp": 2.2,
+      "p_mcnemar": 0.8318
+    }
+  ],
+  "fase3_versoes": [
+    {
+      "contexto": "F3 · L0 · 36 de avaliação",
+      "n": 36,
+      "acerto_A": 77.8,
+      "acerto_B": 75.0,
+      "delta": -2.8,
+      "bal_A": 81.2,
+      "bal_B": 80.0,
+      "delta_bal": -1.2,
+      "s_A": 69.5,
+      "s_B": 70.7,
+      "fmt_err_A": 22.2,
+      "fmt_err_B": 25.0
+    },
+    {
+      "contexto": "F3 · L1 · 36 de avaliação",
+      "n": 36,
+      "acerto_A": 88.9,
+      "acerto_B": 75.0,
+      "delta": -13.9,
+      "bal_A": 91.7,
+      "bal_B": 80.0,
+      "delta_bal": -11.7,
+      "s_A": 79.5,
+      "s_B": 65.8,
+      "fmt_err_A": 11.1,
+      "fmt_err_B": 25.0
+    },
+    {
+      "contexto": "F3 · L2 · 36 de avaliação",
+      "n": 36,
+      "acerto_A": 83.3,
+      "acerto_B": 75.0,
+      "delta": -8.3,
+      "bal_A": 84.2,
+      "bal_B": 80.0,
+      "delta_bal": -4.2,
+      "s_A": 80.6,
+      "s_B": 66.8,
+      "fmt_err_A": 16.7,
+      "fmt_err_B": 25.0
+    },
+    {
+      "contexto": "F3 · L3 · 36 de avaliação",
+      "n": 36,
+      "acerto_A": 86.1,
+      "acerto_B": 77.8,
+      "delta": -8.3,
+      "bal_A": 86.2,
+      "bal_B": 84.2,
+      "delta_bal": -2.0,
+      "s_A": 53.9,
+      "s_B": 56.6,
+      "fmt_err_A": 13.9,
+      "fmt_err_B": 22.2
+    },
+    {
+      "contexto": "F3 · L0 · 54 de aprendizado",
+      "n": 54,
+      "acerto_A": 66.7,
+      "acerto_B": 68.5,
+      "delta": 1.8,
+      "bal_A": 74.1,
+      "bal_B": 73.7,
+      "delta_bal": -0.4,
+      "s_A": 63.6,
+      "s_B": 68.5,
+      "fmt_err_A": 33.3,
+      "fmt_err_B": 31.5
+    },
+    {
+      "contexto": "F3 · L1 · 54 de aprendizado",
+      "n": 54,
+      "acerto_A": 68.5,
+      "acerto_B": 74.1,
+      "delta": 5.6,
+      "bal_A": 79.3,
+      "bal_B": 82.1,
+      "delta_bal": 2.8,
+      "s_A": 75.3,
+      "s_B": 68.0,
+      "fmt_err_A": 31.5,
+      "fmt_err_B": 22.2
+    },
+    {
+      "contexto": "F3 · L2 · 54 de aprendizado",
+      "n": 54,
+      "acerto_A": 68.5,
+      "acerto_B": 72.2,
+      "delta": 3.7,
+      "bal_A": 74.3,
+      "bal_B": 74.4,
+      "delta_bal": 0.1,
+      "s_A": 69.3,
+      "s_B": 62.5,
+      "fmt_err_A": 31.5,
+      "fmt_err_B": 25.9
+    },
+    {
+      "contexto": "F3 · L3 · 54 de aprendizado",
+      "n": 54,
+      "acerto_A": 72.2,
+      "acerto_B": 68.5,
+      "delta": -3.7,
+      "bal_A": 76.4,
+      "bal_B": 69.9,
+      "delta_bal": -6.5,
+      "s_A": 43.6,
+      "s_B": 47.9,
+      "fmt_err_A": 27.8,
+      "fmt_err_B": 25.9
+    },
+    {
+      "contexto": "F3 · L0 · 90",
+      "n": 90,
+      "acerto_A": 71.1,
+      "acerto_B": 71.1,
+      "delta": 0.0,
+      "bal_A": 75.7,
+      "bal_B": 75.8,
+      "delta_bal": 0.1,
+      "s_A": 66.8,
+      "s_B": 68.7,
+      "fmt_err_A": 28.9,
+      "fmt_err_B": 28.9
+    },
+    {
+      "contexto": "F3 · L1 · 90",
+      "n": 90,
+      "acerto_A": 76.7,
+      "acerto_B": 74.4,
+      "delta": -2.3,
+      "bal_A": 83.0,
+      "bal_B": 78.9,
+      "delta_bal": -4.1,
+      "s_A": 78.2,
+      "s_B": 67.4,
+      "fmt_err_A": 23.3,
+      "fmt_err_B": 23.3
+    },
+    {
+      "contexto": "F3 · L2 · 90",
+      "n": 90,
+      "acerto_A": 74.4,
+      "acerto_B": 73.3,
+      "delta": -1.1,
+      "bal_A": 78.1,
+      "bal_B": 77.8,
+      "delta_bal": -0.3,
+      "s_A": 77.6,
+      "s_B": 65.5,
+      "fmt_err_A": 25.6,
+      "fmt_err_B": 25.6
+    },
+    {
+      "contexto": "F3 · L3 · 90",
+      "n": 90,
+      "acerto_A": 77.8,
+      "acerto_B": 72.2,
+      "delta": -5.6,
+      "bal_A": 80.7,
+      "bal_B": 75.4,
+      "delta_bal": -5.3,
+      "s_A": 47.0,
+      "s_B": 49.8,
+      "fmt_err_A": 22.2,
+      "fmt_err_B": 24.4
+    }
+  ],
+  "fase3_classe_L0": [
+    {
+      "classe": "1 lexica",
+      "n": 15,
+      "acerto_A": 86.7,
+      "acerto_B": 93.3,
+      "delta": 6.6
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 15,
+      "acerto_A": 73.3,
+      "acerto_B": 80.0,
+      "delta": 6.7
+    },
+    {
+      "classe": "3 semantica",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 60.0,
+      "delta": -20.0
+    },
+    {
+      "classe": "4 traducao",
+      "n": 15,
+      "acerto_A": 46.7,
+      "acerto_B": 26.7,
+      "delta": -20.0
+    },
+    {
+      "classe": "5 runtime",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 93.3,
+      "delta": 13.3
+    },
+    {
+      "classe": "6 efeito",
+      "n": 15,
+      "acerto_A": 60.0,
+      "acerto_B": 73.3,
+      "delta": 13.3
+    }
+  ],
+  "fase3_classe_L1": [
+    {
+      "classe": "1 lexica",
+      "n": 15,
+      "acerto_A": 86.7,
+      "acerto_B": 93.3,
+      "delta": 6.6
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 80.0,
+      "delta": 0.0
+    },
+    {
+      "classe": "3 semantica",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 66.7,
+      "delta": -13.3
+    },
+    {
+      "classe": "4 traducao",
+      "n": 15,
+      "acerto_A": 46.7,
+      "acerto_B": 40.0,
+      "delta": -6.7
+    },
+    {
+      "classe": "5 runtime",
+      "n": 15,
+      "acerto_A": 100.0,
+      "acerto_B": 93.3,
+      "delta": -6.7
+    },
+    {
+      "classe": "6 efeito",
+      "n": 15,
+      "acerto_A": 66.7,
+      "acerto_B": 73.3,
+      "delta": 6.6
+    }
+  ],
+  "fase3_classe_melhor": [
+    {
+      "classe": "1 lexica",
+      "n": 15,
+      "acerto_A": 86.7,
+      "acerto_B": 86.7,
+      "delta": 0.0
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 66.7,
+      "delta": -13.3
+    },
+    {
+      "classe": "3 semantica",
+      "n": 15,
+      "acerto_A": 80.0,
+      "acerto_B": 73.3,
+      "delta": -6.7
+    },
+    {
+      "classe": "4 traducao",
+      "n": 15,
+      "acerto_A": 46.7,
+      "acerto_B": 33.3,
+      "delta": -13.4
+    },
+    {
+      "classe": "5 runtime",
+      "n": 15,
+      "acerto_A": 100.0,
+      "acerto_B": 86.7,
+      "delta": -13.3
+    },
+    {
+      "classe": "6 efeito",
+      "n": 15,
+      "acerto_A": 66.7,
+      "acerto_B": 86.7,
+      "delta": 20.0
+    }
+  ],
+  "fase3_nivel_L0": [
+    {
+      "nivel": "1 fácil",
+      "n": 30,
+      "acerto_A": 66.7,
+      "acerto_B": 66.7,
+      "delta": 0.0
+    },
+    {
+      "nivel": "2 médio",
+      "n": 30,
+      "acerto_A": 73.3,
+      "acerto_B": 76.7,
+      "delta": 3.4
+    },
+    {
+      "nivel": "3 difícil",
+      "n": 30,
+      "acerto_A": 73.3,
+      "acerto_B": 70.0,
+      "delta": -3.3
+    }
+  ],
+  "fase3_nivel_L1": [
+    {
+      "nivel": "1 fácil",
+      "n": 30,
+      "acerto_A": 76.7,
+      "acerto_B": 63.3,
+      "delta": -13.4
+    },
+    {
+      "nivel": "2 médio",
+      "n": 30,
+      "acerto_A": 76.7,
+      "acerto_B": 80.0,
+      "delta": 3.3
+    },
+    {
+      "nivel": "3 difícil",
+      "n": 30,
+      "acerto_A": 76.7,
+      "acerto_B": 80.0,
+      "delta": 3.3
+    }
+  ],
+  "confronto_f3": [
+    {
+      "contexto": "F3 · L0 · 36 de avaliação",
+      "n": 36,
+      "ambos": 23,
+      "nenhum": 4,
+      "so_coder": 4,
+      "so_qwen": 5,
+      "delta_pp": -2.8,
+      "p_mcnemar": 1.0
+    },
+    {
+      "contexto": "F3 · L0 · 90",
+      "n": 90,
+      "ambos": 55,
+      "nenhum": 17,
+      "so_coder": 9,
+      "so_qwen": 9,
+      "delta_pp": 0.0,
+      "p_mcnemar": 1.0
+    },
+    {
+      "contexto": "F3 · L1 · 36 de avaliação",
+      "n": 36,
+      "ambos": 26,
+      "nenhum": 3,
+      "so_coder": 1,
+      "so_qwen": 6,
+      "delta_pp": -13.9,
+      "p_mcnemar": 0.125
+    },
+    {
+      "contexto": "F3 · L1 · 90",
+      "n": 90,
+      "ambos": 59,
+      "nenhum": 13,
+      "so_coder": 8,
+      "so_qwen": 10,
+      "delta_pp": -2.2,
+      "p_mcnemar": 0.8145
+    },
+    {
+      "contexto": "F3 · L2 · 36 de avaliação",
+      "n": 36,
+      "ambos": 25,
+      "nenhum": 4,
+      "so_coder": 2,
+      "so_qwen": 5,
+      "delta_pp": -8.3,
+      "p_mcnemar": 0.4531
+    },
+    {
+      "contexto": "F3 · L2 · 90",
+      "n": 90,
+      "ambos": 57,
+      "nenhum": 14,
+      "so_coder": 9,
+      "so_qwen": 10,
+      "delta_pp": -1.1,
+      "p_mcnemar": 1.0
+    },
+    {
+      "contexto": "F3 · L3 · 36 de avaliação",
+      "n": 36,
+      "ambos": 26,
+      "nenhum": 3,
+      "so_coder": 2,
+      "so_qwen": 5,
+      "delta_pp": -8.3,
+      "p_mcnemar": 0.4531
+    },
+    {
+      "contexto": "F3 · L3 · 90",
+      "n": 90,
+      "ambos": 56,
+      "nenhum": 11,
+      "so_coder": 9,
+      "so_qwen": 14,
+      "delta_pp": -5.6,
+      "p_mcnemar": 0.4049
+    }
+  ],
+  "fase3_documentacao": [
+    {
+      "epoca": 1,
+      "propostas_A": 87,
+      "aceitas_A": 40,
+      "aceitas_pct_A": 46.0,
+      "propostas_B": 54,
+      "aceitas_B": 25,
+      "aceitas_pct_B": 46.3,
+      "tokens_A": 8639,
+      "tokens_B": 4760,
+      "verbetes_A": 42,
+      "verbetes_B": 36
+    },
+    {
+      "epoca": 2,
+      "propostas_A": 86,
+      "aceitas_A": 12,
+      "aceitas_pct_A": 14.0,
+      "propostas_B": 54,
+      "aceitas_B": 7,
+      "aceitas_pct_B": 13.0,
+      "tokens_A": 2643,
+      "tokens_B": 1373,
+      "verbetes_A": 43,
+      "verbetes_B": 36
+    },
+    {
+      "epoca": 3,
+      "propostas_A": 91,
+      "aceitas_A": 9,
+      "aceitas_pct_A": 9.9,
+      "propostas_B": 54,
+      "aceitas_B": 7,
+      "aceitas_pct_B": 13.0,
+      "tokens_A": 1787,
+      "tokens_B": 1381,
+      "verbetes_A": 45,
+      "verbetes_B": 36
+    }
+  ],
+  "fase3_rejeicoes": {
+    "qwen2.5:7b": [
+      [
+        "duplicada",
+        53
+      ],
+      [
+        "palavra_chave_invalida",
+        44
+      ],
+      [
+        "teto_notas_verbete",
+        33
+      ],
+      [
+        "id_repetido",
+        23
+      ],
+      [
+        "trecho_nao_encontrado",
+        18
+      ],
+      [
+        "arquivo_inexistente",
+        13
+      ]
+    ],
+    "qwen2.5-coder:7b": [
+      [
+        "duplicada",
+        33
+      ],
+      [
+        "motivo_longo",
+        26
+      ],
+      [
+        "palavra_chave_invalida",
+        25
+      ],
+      [
+        "retificacao_sem_trecho",
+        15
+      ],
+      [
+        "trecho_nao_encontrado",
+        11
+      ],
+      [
+        "arquivo_inexistente",
+        10
+      ]
+    ]
+  },
+  "fase3_revisao": [
+    {
+      "operacao": "nota",
+      "Correta_A": 7,
+      "Parcial_A": 5,
+      "Errada_A": 2,
+      "Correta_B": 9,
+      "Parcial_B": 5,
+      "Errada_B": 2
+    },
+    {
+      "operacao": "retificacao",
+      "Correta_A": 2,
+      "Parcial_A": 2,
+      "Errada_A": 6,
+      "Correta_B": 1,
+      "Parcial_B": 2,
+      "Errada_B": 5
+    },
+    {
+      "operacao": "novo_verbete",
+      "Correta_A": 0,
+      "Parcial_A": 1,
+      "Errada_A": 4,
+      "Correta_B": null,
+      "Parcial_B": null,
+      "Errada_B": null
+    }
+  ],
+  "fase3_recuperacao": [
+    {
+      "L": 0,
+      "hit3_90_A": 80.0,
+      "hit3_90_B": 80.0,
+      "hit3_36_A": 86.1,
+      "hit3_36_B": 86.1,
+      "verbetes_A": 36,
+      "verbetes_B": 36
+    },
+    {
+      "L": 1,
+      "hit3_90_A": 77.8,
+      "hit3_90_B": 81.1,
+      "hit3_36_A": 83.3,
+      "hit3_36_B": 86.1,
+      "verbetes_A": 42,
+      "verbetes_B": 36
+    },
+    {
+      "L": 2,
+      "hit3_90_A": 78.9,
+      "hit3_90_B": 78.9,
+      "hit3_36_A": 83.3,
+      "hit3_36_B": 83.3,
+      "verbetes_A": 43,
+      "verbetes_B": 36
+    },
+    {
+      "L": 3,
+      "hit3_90_A": 78.9,
+      "hit3_90_B": 80.0,
+      "hit3_36_A": 86.1,
+      "hit3_36_B": 86.1,
+      "verbetes_A": 45,
+      "verbetes_B": 36
+    }
+  ],
+  "fase3_flips": [
+    {
+      "transicao": "L0→L1 · 36",
+      "autoenv_A": 0.0,
+      "autoenv_B": 0.0,
+      "certo_errado_A": 0,
+      "errado_certo_A": 4,
+      "certo_errado_B": 0,
+      "errado_certo_B": 0
+    },
+    {
+      "transicao": "L0→L1 · 90",
+      "autoenv_A": 2.2,
+      "autoenv_B": 1.1,
+      "certo_errado_A": 2,
+      "errado_certo_A": 7,
+      "certo_errado_B": 1,
+      "errado_certo_B": 4
+    },
+    {
+      "transicao": "L1→L2 · 36",
+      "autoenv_A": 5.6,
+      "autoenv_B": 2.8,
+      "certo_errado_A": 2,
+      "errado_certo_A": 0,
+      "certo_errado_B": 1,
+      "errado_certo_B": 1
+    },
+    {
+      "transicao": "L1→L2 · 90",
+      "autoenv_A": 5.6,
+      "autoenv_B": 5.6,
+      "certo_errado_A": 5,
+      "errado_certo_A": 3,
+      "certo_errado_B": 5,
+      "errado_certo_B": 4
+    },
+    {
+      "transicao": "L2→L3 · 36",
+      "autoenv_A": 2.8,
+      "autoenv_B": 2.8,
+      "certo_errado_A": 1,
+      "errado_certo_A": 2,
+      "certo_errado_B": 1,
+      "errado_certo_B": 2
+    },
+    {
+      "transicao": "L2→L3 · 90",
+      "autoenv_A": 1.1,
+      "autoenv_B": 6.7,
+      "certo_errado_A": 1,
+      "errado_certo_A": 4,
+      "certo_errado_B": 6,
+      "errado_certo_B": 5
+    }
+  ],
+  "entre_fases": [
+    {
+      "contexto": "2A_linear_ryzen · nos 36",
+      "acerto_A": 63.9,
+      "acerto_B": 44.4,
+      "delta": -19.5,
+      "bal_A": 65.0,
+      "bal_B": 50.4
+    },
+    {
+      "contexto": "2B_A0 · nos 36",
+      "acerto_A": 66.7,
+      "acerto_B": 41.7,
+      "delta": -25.0,
+      "bal_A": 66.7,
+      "bal_B": 48.3
+    },
+    {
+      "contexto": "2B_A2 · nos 36",
+      "acerto_A": 77.8,
+      "acerto_B": 72.2,
+      "delta": -5.6,
+      "bal_A": 81.2,
+      "bal_B": 77.5
+    },
+    {
+      "contexto": "F3_L0 · nos 36",
+      "acerto_A": 77.8,
+      "acerto_B": 75.0,
+      "delta": -2.8,
+      "bal_A": 81.2,
+      "bal_B": 80.0
+    },
+    {
+      "contexto": "F3_L1 · nos 36",
+      "acerto_A": 88.9,
+      "acerto_B": 75.0,
+      "delta": -13.9,
+      "bal_A": 91.7,
+      "bal_B": 80.0
+    },
+    {
+      "contexto": "F3_L2 · nos 36",
+      "acerto_A": 83.3,
+      "acerto_B": 75.0,
+      "delta": -8.3,
+      "bal_A": 84.2,
+      "bal_B": 80.0
+    },
+    {
+      "contexto": "F3_L3 · nos 36",
+      "acerto_A": 86.1,
+      "acerto_B": 77.8,
+      "delta": -8.3,
+      "bal_A": 86.2,
+      "bal_B": 84.2
+    },
+    {
+      "contexto": "F3_melhor · nos 36",
+      "acerto_A": 88.9,
+      "acerto_B": 77.8,
+      "delta": -11.1,
+      "bal_A": 91.7,
+      "bal_B": 84.2
+    },
+    {
+      "contexto": "2A_linear_ryzen · nos 90",
+      "acerto_A": 53.3,
+      "acerto_B": 48.9,
+      "delta": -4.4,
+      "bal_A": 60.1,
+      "bal_B": 54.9
+    },
+    {
+      "contexto": "2B_A0 · nos 90",
+      "acerto_A": 57.8,
+      "acerto_B": 50.0,
+      "delta": -7.8,
+      "bal_A": 64.5,
+      "bal_B": 56.9
+    },
+    {
+      "contexto": "2B_A2 · nos 90",
+      "acerto_A": 70.0,
+      "acerto_B": 72.2,
+      "delta": 2.2,
+      "bal_A": 74.9,
+      "bal_B": 75.2
+    },
+    {
+      "contexto": "F3_L0 · nos 90",
+      "acerto_A": 71.1,
+      "acerto_B": 71.1,
+      "delta": 0.0,
+      "bal_A": 75.7,
+      "bal_B": 75.8
+    },
+    {
+      "contexto": "F3_L1 · nos 90",
+      "acerto_A": 76.7,
+      "acerto_B": 74.4,
+      "delta": -2.3,
+      "bal_A": 83.0,
+      "bal_B": 78.9
+    },
+    {
+      "contexto": "F3_L2 · nos 90",
+      "acerto_A": 74.4,
+      "acerto_B": 73.3,
+      "delta": -1.1,
+      "bal_A": 78.1,
+      "bal_B": 77.8
+    },
+    {
+      "contexto": "F3_L3 · nos 90",
+      "acerto_A": 77.8,
+      "acerto_B": 72.2,
+      "delta": -5.6,
+      "bal_A": 80.7,
+      "bal_B": 75.4
+    },
+    {
+      "contexto": "F3_melhor · nos 90",
+      "acerto_A": 76.7,
+      "acerto_B": 74.4,
+      "delta": -2.3,
+      "bal_A": 83.0,
+      "bal_B": 78.9
+    }
+  ],
+  "riscos_entre_fases": {
+    "qwen2.5:7b": {
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": {
+        "total": 0,
+        "por_epoca": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "autoenvenenamento_F3": {
+        "L0→L1": 0.0,
+        "L1→L2": 5.6,
+        "L2→L3": 2.8
+      }
+    },
+    "qwen2.5-coder:7b": {
+      "adesao_cega_2B_A5_pct": null,
+      "teto_2B_A3_pct": null,
+      "tentativas_de_decorar_F3": {
+        "total": 0,
+        "por_epoca": {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        }
+      },
+      "autoenvenenamento_F3": {
+        "L0→L1": 0.0,
+        "L1→L2": 2.8,
+        "L2→L3": 2.8
+      }
+    }
+  },
+  "decisao": {
+    "ranking_36": [
+      {
+        "pos": 1,
+        "modelo": "qwen2.5:7b",
+        "L": 1,
+        "bal_36": 91.7,
+        "acerto_36": 88.9,
+        "s_36": 79.5,
+        "autoenv_max_36": 5.6,
+        "risco": 5.57,
+        "vetado": false
+      },
+      {
+        "pos": 2,
+        "modelo": "qwen2.5:7b",
+        "L": 3,
+        "bal_36": 86.2,
+        "acerto_36": 86.1,
+        "s_36": 53.9,
+        "autoenv_max_36": 5.6,
+        "risco": 7.43,
+        "vetado": false
+      },
+      {
+        "pos": 3,
+        "modelo": "qwen2.5:7b",
+        "L": 2,
+        "bal_36": 84.2,
+        "acerto_36": 83.3,
+        "s_36": 80.6,
+        "autoenv_max_36": 5.6,
+        "risco": 8.37,
+        "vetado": false
+      },
+      {
+        "pos": 4,
+        "modelo": "qwen2.5-coder:7b",
+        "L": 3,
+        "bal_36": 84.2,
+        "acerto_36": 77.8,
+        "s_36": 56.6,
+        "autoenv_max_36": 2.8,
+        "risco": 8.33,
+        "vetado": false
+      },
+      {
+        "pos": 9,
+        "modelo": "qwen2.5:7b",
+        "L": 0,
+        "bal_36": 81.2,
+        "acerto_36": 77.8,
+        "s_36": 69.5,
+        "autoenv_max_36": 5.6,
+        "risco": 10.2,
+        "vetado": false
+      },
+      {
+        "pos": 10,
+        "modelo": "qwen2.5-coder:7b",
+        "L": 0,
+        "bal_36": 80.0,
+        "acerto_36": 75.0,
+        "s_36": 70.7,
+        "autoenv_max_36": 2.8,
+        "risco": 10.2,
+        "vetado": false
+      },
+      {
+        "pos": 11,
+        "modelo": "qwen2.5-coder:7b",
+        "L": 1,
+        "bal_36": 80.0,
+        "acerto_36": 75.0,
+        "s_36": 65.8,
+        "autoenv_max_36": 2.8,
+        "risco": 10.2,
+        "vetado": false
+      },
+      {
+        "pos": 12,
+        "modelo": "qwen2.5-coder:7b",
+        "L": 2,
+        "bal_36": 80.0,
+        "acerto_36": 75.0,
+        "s_36": 66.8,
+        "autoenv_max_36": 2.8,
+        "risco": 10.2,
+        "vetado": false
+      }
+    ],
+    "bootstrap": {
+      "nos_36": {
+        "qwen2.5-coder:7b/L0": {
+          "p_top1": 0.002,
+          "ic": [
+            66.7,
+            88.9
+          ]
+        },
+        "qwen2.5-coder:7b/L1": {
+          "p_top1": 0.0,
+          "ic": [
+            66.7,
+            88.9
+          ]
+        },
+        "qwen2.5-coder:7b/L2": {
+          "p_top1": 0.0,
+          "ic": [
+            67.7,
+            88.9
+          ]
+        },
+        "qwen2.5-coder:7b/L3": {
+          "p_top1": 0.0055,
+          "ic": [
+            70.0,
+            91.1
+          ]
+        },
+        "qwen2.5:7b/L0": {
+          "p_top1": 0.002,
+          "ic": [
+            67.7,
+            91.2
+          ]
+        },
+        "qwen2.5:7b/L1": {
+          "p_top1": 0.776,
+          "ic": [
+            81.9,
+            97.8
+          ]
+        },
+        "qwen2.5:7b/L2": {
+          "p_top1": 0.0,
+          "ic": [
+            72.2,
+            94.0
+          ]
+        },
+        "qwen2.5:7b/L3": {
+          "p_top1": 0.1525,
+          "ic": [
+            75.0,
+            96.7
+          ]
+        }
+      },
+      "nos_90": {
+        "qwen2.5-coder:7b/L0": {
+          "p_top1": 0.0025,
+          "ic": [
+            67.6,
+            82.7
+          ]
+        },
+        "qwen2.5-coder:7b/L1": {
+          "p_top1": 0.0985,
+          "ic": [
+            70.5,
+            85.8
+          ]
+        },
+        "qwen2.5-coder:7b/L2": {
+          "p_top1": 0.037,
+          "ic": [
+            69.4,
+            84.4
+          ]
+        },
+        "qwen2.5-coder:7b/L3": {
+          "p_top1": 0.01,
+          "ic": [
+            66.3,
+            82.8
+          ]
+        },
+        "qwen2.5:7b/L0": {
+          "p_top1": 0.0035,
+          "ic": [
+            67.4,
+            82.8
+          ]
+        },
+        "qwen2.5:7b/L1": {
+          "p_top1": 0.5005,
+          "ic": [
+            75.9,
+            88.3
+          ]
+        },
+        "qwen2.5:7b/L2": {
+          "p_top1": 0.0025,
+          "ic": [
+            70.6,
+            85.2
+          ]
+        },
+        "qwen2.5:7b/L3": {
+          "p_top1": 0.1715,
+          "ic": [
+            73.7,
+            87.5
+          ]
+        }
+      }
+    },
+    "pareto_nao_dominados": [
+      "qwen2.5:7b/L1",
+      "qwen2.5:7b/L3"
+    ],
+    "escore": [
+      {
+        "modelo": "qwen2.5:7b",
+        "L": 1,
+        "score": 0.8942
+      },
+      {
+        "modelo": "qwen2.5:7b",
+        "L": 3,
+        "score": 0.7897
+      },
+      {
+        "modelo": "qwen2.5-coder:7b",
+        "L": 3,
+        "score": 0.6921
+      },
+      {
+        "modelo": "qwen2.5:7b",
+        "L": 2,
+        "score": 0.6788
+      },
+      {
+        "modelo": "qwen2.5:7b",
+        "L": 0,
+        "score": 0.5905
+      },
+      {
+        "modelo": "qwen2.5-coder:7b",
+        "L": 1,
+        "score": 0.5562
+      },
+      {
+        "modelo": "qwen2.5-coder:7b",
+        "L": 2,
+        "score": 0.5545
+      },
+      {
+        "modelo": "qwen2.5-coder:7b",
+        "L": 0,
+        "score": 0.5478
+      }
+    ],
+    "estabilidade_top1": {
+      "qwen2.5:7b": 14,
+      "qwen2.5-coder:7b": 5
+    },
+    "total_rankings": 36,
+    "ponte": [
+      {
+        "modelo": "qwen2.5-coder:7b",
+        "acerto_36": 75.0,
+        "bal_36": 80.0,
+        "b": 0,
+        "c": 0,
+        "p": 1.0
+      },
+      {
+        "modelo": "qwen2.5:7b",
+        "acerto_36": 77.8,
+        "bal_36": 78.8,
+        "b": 1,
+        "c": 1,
+        "p": 1.0
+      }
+    ]
+  },
+  "onde_o_coder_vence": [
+    {
+      "onde": "2-A · estratégia compilador",
+      "metrica": "acerto",
+      "A": 47.8,
+      "B": 52.2,
+      "delta": 4.4,
+      "n": 90
+    },
+    {
+      "onde": "2-B · A1",
+      "metrica": "acerto",
+      "A": 62.2,
+      "B": 63.3,
+      "delta": 1.1,
+      "n": 90
+    },
+    {
+      "onde": "2-B · A2",
+      "metrica": "acerto",
+      "A": 70.0,
+      "B": 72.2,
+      "delta": 2.2,
+      "n": 90
+    },
+    {
+      "onde": "F3 · L0 · 54 de aprendizado",
+      "metrica": "acerto",
+      "A": 66.7,
+      "B": 68.5,
+      "delta": 1.8,
+      "n": 54
+    },
+    {
+      "onde": "F3 · L1 · 54 de aprendizado",
+      "metrica": "acerto",
+      "A": 68.5,
+      "B": 74.1,
+      "delta": 5.6,
+      "n": 54
+    },
+    {
+      "onde": "F3 · L2 · 54 de aprendizado",
+      "metrica": "acerto",
+      "A": 68.5,
+      "B": 72.2,
+      "delta": 3.7,
+      "n": 54
+    },
+    {
+      "onde": "2B_A2 · nos 90",
+      "metrica": "acerto",
+      "A": 70.0,
+      "B": 72.2,
+      "delta": 2.2,
+      "n": null
+    },
+    {
+      "onde": "F3 · L1 · 54 de aprendizado",
+      "metrica": "acurácia balanceada",
+      "A": 79.3,
+      "B": 82.1,
+      "delta": 2.8,
+      "n": 54
+    },
+    {
+      "onde": "F3 · L2 · 54 de aprendizado",
+      "metrica": "acurácia balanceada",
+      "A": 74.3,
+      "B": 74.4,
+      "delta": 0.1,
+      "n": 54
+    },
+    {
+      "onde": "F3 · L0 · 90",
+      "metrica": "acurácia balanceada",
+      "A": 75.7,
+      "B": 75.8,
+      "delta": 0.1,
+      "n": 90
+    },
+    {
+      "onde": "fase2b classe A2 · 1 lexica",
+      "metrica": "acerto",
+      "A": 86.7,
+      "B": 100.0,
+      "delta": 13.3,
+      "n": 15
+    },
+    {
+      "onde": "fase2b classe A2 · 5 runtime",
+      "metrica": "acerto",
+      "A": 80.0,
+      "B": 86.7,
+      "delta": 6.7,
+      "n": 15
+    },
+    {
+      "onde": "fase2b classe A2 · 6 efeito",
+      "metrica": "acerto",
+      "A": 60.0,
+      "B": 73.3,
+      "delta": 13.3,
+      "n": 15
+    },
+    {
+      "onde": "fase2b nivel A2 · 3 difícil",
+      "metrica": "acerto",
+      "A": 70.0,
+      "B": 76.7,
+      "delta": 6.7,
+      "n": 30
+    },
+    {
+      "onde": "fase3 classe L0 · 1 lexica",
+      "metrica": "acerto",
+      "A": 86.7,
+      "B": 93.3,
+      "delta": 6.6,
+      "n": 15
+    },
+    {
+      "onde": "fase3 classe L0 · 2 sintatica",
+      "metrica": "acerto",
+      "A": 73.3,
+      "B": 80.0,
+      "delta": 6.7,
+      "n": 15
+    },
+    {
+      "onde": "fase3 classe L0 · 5 runtime",
+      "metrica": "acerto",
+      "A": 80.0,
+      "B": 93.3,
+      "delta": 13.3,
+      "n": 15
+    },
+    {
+      "onde": "fase3 classe L0 · 6 efeito",
+      "metrica": "acerto",
+      "A": 60.0,
+      "B": 73.3,
+      "delta": 13.3,
+      "n": 15
+    },
+    {
+      "onde": "fase3 classe L1 · 1 lexica",
+      "metrica": "acerto",
+      "A": 86.7,
+      "B": 93.3,
+      "delta": 6.6,
+      "n": 15
+    },
+    {
+      "onde": "fase3 classe L1 · 6 efeito",
+      "metrica": "acerto",
+      "A": 66.7,
+      "B": 73.3,
+      "delta": 6.6,
+      "n": 15
+    },
+    {
+      "onde": "fase3 classe melhor · 6 efeito",
+      "metrica": "acerto",
+      "A": 66.7,
+      "B": 86.7,
+      "delta": 20.0,
+      "n": 15
+    },
+    {
+      "onde": "fase3 nivel L0 · 2 médio",
+      "metrica": "acerto",
+      "A": 73.3,
+      "B": 76.7,
+      "delta": 3.4,
+      "n": 30
+    },
+    {
+      "onde": "fase3 nivel L1 · 2 médio",
+      "metrica": "acerto",
+      "A": 76.7,
+      "B": 80.0,
+      "delta": 3.3,
+      "n": 30
+    },
+    {
+      "onde": "fase3 nivel L1 · 3 difícil",
+      "metrica": "acerto",
+      "A": 76.7,
+      "B": 80.0,
+      "delta": 3.3,
+      "n": 30
+    },
+    {
+      "onde": "2-B · A1 (confronto direto)",
+      "metrica": "casos só o Coder acertou − só o qwen acertou",
+      "A": 11,
+      "B": 12,
+      "delta": 1.1,
+      "n": 90,
+      "p": 1.0
+    },
+    {
+      "onde": "2-B · A2 (confronto direto)",
+      "metrica": "casos só o Coder acertou − só o qwen acertou",
+      "A": 10,
+      "B": 12,
+      "delta": 2.2,
+      "n": 90,
+      "p": 0.8318
+    }
+  ]
+}

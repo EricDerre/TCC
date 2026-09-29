@@ -1,0 +1,161 @@
+resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo — RESULTADOS_DIR=resultados_alvo
+
+sonda: qwen2.5:7b lê epoca-1 (hash 3394d203cab9) e roda a época 2 só com ['efe-3', 'efe-10'] em aprendizado
+
+-- qwen2.5:7b · época 2 · lê epoca-1 (hash 3394d203cab9) --
+  0 caso(s) completos, 2 pendentes
+maior prompt estimado: 1963 tokens + 600 de resposta
+  efe-3 · 0/2 aceitas · teto_notas_verbete, duplicada
+  efe-10 · 1/2 aceitas · teto_notas_verbete
+  2/2 — 10.5 min decorridos, ~0.0 min restantes
+  epoca-2 fechada: hash 1202f1be9a75, 43 verbetes (7 novos), 12 notas, 22 retificações, 1 edições aceitas nesta época
+
+===== diagnósticos: diagnosticos__L1.jsonl =====
+
+-- {"caso": "efe-3", "particao": "aprendizado", "segundos": 125.12}
+[resposta] CAUSA_RAIZ: campo_ausente
+CAMPO: imagem
+IMPACTO: Os cartões aparecem sem foto nenhuma, pois o campo imagem está ausente na resposta.
+FONTE: [contrato-produto] [campo_ausente]
+
+-- {"caso": "efe-10", "particao": "aprendizado", "segundos": 122.44}
+[resposta] CAUSA_RAIZ: dado_desatualizado
+CAMPO: preco
+IMPACTO: O usuário vê um preço diferente do retornado pela API, exibindo 'R$ 79,90' em vez de 'R$ 84,90'.
+FONTE: [contrato-produto], [estado_da_tela_divergente]
+
+===== propostas e decisão do validador: propostas__E2.jsonl =====
+
+-- {"caso": "efe-3", "particao": "aprendizado", "segundos": 190.01, "n_aceitas": 0}
+[resposta] PROPOSTA 1
+OPERACAO: retificacao
+VERBETE: [contrato-produto]
+TRECHO: "Campos: id inteiro, nome texto, resumo texto|nulo, tipo texto, preco número, imagem texto|nulo, destaque booleano."
+TITULO: Nenhum
+SISTEMA: CobaiaAPI
+ENTIDADE: Produto
+CAUSAS: campo_ausente, tipo_divergente
+ARQUIVOS: nenhum
+PALAVRAS_CHAVE: campo_imagem, formato_preco
+SINTOMAS: cartões sem foto, preço formatado incorretamente
+TEXTO: Corrigir "preco número" para "preco Decimal" e adicionar observação sobre a necessidade de formatação correta do preço no front-end.
+MOTIVO: Este caso mostrou a necessidade de especificar o tipo correto do preço e a importância de formatação no front-end, evidenciando lacunas na documentação atual.
+
+PROPOSTA 2
+OPERACAO: nota
+VERBETE: [campo_ausente]
+TRECHO: Nenhum
+TITULO: Nenhum
+SISTEMA: CobaiaFront
+ENTIDADE: Interface
+CAUSAS: campo_ausente
+ARQUIVOS: nenhum
+PALAVRAS_CHAVE: campo_imagem, fron
+  [decisoes] aceita=False rejeicao=None | operacao=None verbete=None
+  [decisoes] aceita=False rejeicao=None | operacao=None verbete=None
+
+-- {"caso": "efe-10", "particao": "aprendizado", "segundos": 184.48, "n_aceitas": 1}
+[resposta] PROPOSTA 1
+OPERACAO: retificacao
+VERBETE: [estado_da_tela_divergente]
+TRECHO: "na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7)."
+TEXTO: Corrigir a lógica de cancelamento para não depender apenas do redirect, garantindo a atualização do estado da tela.
+MOTIVO: O caso mostrou que a lógica de atualização da tela não é consistente, levando a divergências entre o que a API retorna e o que o usuário vê.
+
+PROPOSTA 2
+OPERACAO: novo_verbete
+VERBETE: [atualizacao-da-interface]
+TITULO: Atualização da Interface
+SISTEMA: CobaiaFront
+ENTIDADE: Interface
+CAUSAS: dado_desatualizado, estado_da_tela_divergente
+ARQUIVOS: nenhum
+PALAVRAS_CHAVE: atualizacao, interface, sincronismo
+SINTOMAS: interface desatualizada, divergência entre API e interface
+TEXTO: Adicionar verbete sobre a importância de manter a interface atualizada com a API, evitando divergências.
+MOTIVO: Este verbete aju
+  [decisoes] aceita=False rejeicao=None | operacao=None verbete=None
+  [decisoes] aceita=True rejeicao=None | operacao=novo_verbete verbete=atualizacao-da-interface
+      texto: Adicionar verbete sobre a importância de manter a interface atualizada com a API, evitando divergências.
+      motivo: Este verbete ajudaria a prevenir futuros casos onde a interface não reflete as atualizações da API devido a problemas de sincronização.
+
+===== linhas acrescentadas: epoca-1 -> epoca-2 =====
+
+--- aprendidos\atualizacao-da-interface.md (NOVO)
+  +---
+  +# ! Alteração de IA - Revisar: verbete criado pelo modelo qwen2.5:7b na época 2 a partir do caso efe-10 (Fase 3).
+  +# ! Motivo: Este verbete ajudaria a prevenir futuros casos onde a interface não reflete as atualizações da API devido a problemas de sincronização.
+  +id: atualizacao-da-interface
+  +titulo: Atualização da Interface
+  +sistema: CobaiaFront
+  +entidade_principal: Interface
+  +tipo: aprendido
+  +status: ativo
+  +sintomas: [interface desatualizada, divergencia entre api e interface]
+  +palavras_chave: [atualizacao, interface, sincronismo]
+  +causas_relacionadas: [dado_desatualizado, estado_da_tela_divergente]
+  +---
+  +## Resumo
+  +Adicionar verbete sobre a importância de manter a interface atualizada com a API, evitando divergências.
+  +
+  +## Sinais
+  +- interface desatualizada
+  +- divergencia entre api e interface
+
+--- INDICE.md (NOVO)
+  +<!-- ! Alteração de IA - Revisar: índice humano da biblioteca, GERADO por
+  +     validar_banco.py --indice a partir do frontmatter dos verbetes; não editar à mão.
+  +     ! Motivo: o modelo recebe os verbetes renderizados, não este arquivo — ele existe
+  +     para quem revisa a biblioteca enxergar cobertura e tipos num lugar só. -->
+  +
+  +# Índice da biblioteca (epoca-2)
+  +
+  +43 verbetes. 43 verbetes {'aprendidos': 7, 'contratos': 2, 'defeitos_conhecidos': 3, 'erros': 24, 'falhas_injetadas': 1, 'negocio': 6}; biblioteca inteira: 25757 caracteres ≈ 9907 tokens
+  +
+  +| Pasta | Id | Título | Tipo | Causas |
+  +|---|---|---|---|---|
+  +| aprendidos | `atualizacao-da-interface` | Atualização da Interface | aprendido | dado_desatualizado, estado_da_tela_divergente |
+  +| aprendidos | `atualizacao_imediata` | Atualização imediata do grid | aprendido | estado_da_tela_divergente |
+  +| aprendidos | `conversao-de-unidade` | Conversão de unidade | aprendido | escala_ou_unidade_errada |
+  +| aprendidos | `conversao-de-valor` | Conversão de valor DECIMAL para float | aprendido | escala_ou_unidade_errada, valor_fora_do_dominio |
+  +| aprendidos | `interface-estados` | Estados da Interface | aprendido | estado_da_tela_divergente |
+  +| aprendidos | `interface-frontend` | Interface Frontend | aprendido | estado_da_tela_divergente, tipo_divergente |
+  +| aprendidos | `rotas-inexistentes` | Rotas Inexistentes | aprendido | recurso_inexistente |
+  +| contratos | `contrato-pedido` | Contrato de /api/pedidos | contrato | formato_de_data_divergente, valor_fora_do_dominio, recurso_inexistente, campo_ausente |
+  +| contratos | `contrato-produto` | Contrato de /api/produtos | contrato | campo_ausente, campo_renomeado, colecao_no_lugar_de_objeto, tipo_divergente, recurso_inexistente |
+  +| defeitos_conhecidos | `ancora-saiba-mais` | Link "Saiba Mais..." abre produto vazio | defeito_conhecido | localizador_quebrado, recurso_inexistente, estado_da_tela_divergente |
+  +| defeitos_conhecidos | `consultas-sem-checagem` | Consultas sem checagem e cancelamento sem dono | defeito_conhecido | dado_desatualizado, estado_da_tela_divergente, registro_duplicado |
+  +| defeitos_conhecidos | `senha-sem-hash` | Senha em texto puro, MD5 na edição, sem hash no login | defeito_conhecido | estado_da_tela_divergente, valor_fora_do_dominio |
+  +| erros | `campo_ausente` | Campo ausente | erro | campo_ausente |
+  +| erros | `campo_renomeado` | Campo renomeado | erro | campo_renomeado |
+  +| erros | `chave_de_juncao_errada` | Chave de junção errada | erro | chave_de_juncao_errada |
+  +| erros | `codificacao_incorreta` | Codificação de caracteres incorreta | erro | codificacao_incorreta |
+  +| erros | `colecao_no_lugar_de_objeto` | Coleção no lugar de objeto (ou o inverso) | erro | colecao_no_lugar_de_objeto |
+  +| erros | `contagem_inconsistente` | Contagem inconsistente | erro | contagem_inconsistente |
+  +| erros | `corpo_nao_e_json` | Corpo não é JSON | erro | corpo_nao_e_json |
+  +| erros | `corpo_vazio` | Corpo vazio | erro | corpo_vazio |
+  +| erros | `dado_desatualizado` | Dado desatualizado (cache) | erro | dado_desatualizado |
+  +| erros | `erro_interno_do_servidor` | Erro interno do servidor (500) | erro | erro_interno_do_servidor |
+  +| erros | `escala_ou_unidade_errada` | Escala ou unidade errada | erro | escala_ou_unidade_errada |
+  +| erros | `estado_da_tela_divergente` | Estado da tela divergente da resposta | erro | estado_da_tela_divergente |
+  +| erros | `estrutura_aninhada_divergente` | Estrutura aninhada divergente | erro | estrutura_aninhada_divergente |
+  +| erros | `formato_de_data_divergente` | Formato de data divergente | erro | formato_de_data_divergente |
+  +| erros | `limite_de_requisicoes` | Limite de requisições (429) | erro | limite_de_requisicoes |
+  +| erros | `localizador_quebrado` | Localizador (seletor) quebrado | erro | localizador_quebrado |
+  +| erros | `mensagens-de-erro-do-codigo` | Índice de mensagens literais do código | funcionamento | recurso_inexistente, erro_interno_do_servidor, corpo_nao_e_json, corpo_vazio, estado_da_tela_divergente |
+  +| erros | `nulo_inesperado` | Nulo inesperado | erro | nulo_inesperado |
+  +| erros | `recurso_inexistente` | Recurso inexistente (404 e vizinhos) | erro | recurso_inexistente |
+  +| erros | `registro_duplicado` | Registro duplicado | erro | registro_duplicado |
+  +| erros | `resposta_truncada` | Resposta truncada | erro | resposta_truncada |
+  +| erros | `tempo_de_resposta_excedido` | Tempo de resposta excedido | erro | tempo_de_resposta_excedido |
+  +| erros | `tipo_divergente` | Tipo divergente | erro | tipo_divergente |
+  +| erros | `valor_fora_do_dominio` | Valor fora do domínio | erro | valor_fora_do_dominio |
+  +| falhas_injetadas | `modos-de-injecao` | Injeção de falhas da CobaiaAPI | funcionamento | erro_interno_do_servidor, tempo_de_resposta_excedido, tipo_divergente, campo_ausente, campo_renomeado, resposta_truncada |
+  +| negocio | `entidade-produto` | Produto e sua categoria | funcionamento | chave_de_juncao_errada, escala_ou_unidade_errada, tipo_divergente |
+  +| negocio | `fluxo-reserva-e-cancelamento` | Fluxo de reservar e cancelar | regra | valor_fora_do_dominio, dado_desatualizado, estado_da_tela_divergente |
+  +| negocio | `limites-do-sistema` | O que o sistema não faz | limite | valor_fora_do_dominio, campo_ausente, tipo_divergente, dado_desatualizado |
+  +| negocio | `pagina-produtos-api` | Aba "Produtos (API)", a fronteira JSON | funcionamento | estado_da_tela_divergente, localizador_quebrado, corpo_vazio, tipo_divergente |
+  +| negocio | `pedido-reserva` | Reserva de mesa (pedido) | funcionamento | valor_fora_do_dominio, nulo_inesperado, chave_de_juncao_errada |
+  +| negocio | `usuario-e-login` | Usuário, níveis e login | funcionamento | chave_de_juncao_errada, nulo_inesperado |
+
+Resultados em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase3b_correcao
