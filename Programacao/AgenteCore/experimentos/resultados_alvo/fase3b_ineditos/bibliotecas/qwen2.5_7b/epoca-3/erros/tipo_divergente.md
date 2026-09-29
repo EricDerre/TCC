@@ -1,0 +1,32 @@
+---
+# ! Alteração de IA - Revisar: verbete de causa raiz da biblioteca base (Fase 2-B).
+# ! Motivo: type_drift converte com str(); texto numérico ainda formata na tela, então o
+# sintoma aparece em ordenação/soma. Conferido em fault_injection.py e produtos_api.php.
+id: tipo_divergente
+titulo: Tipo divergente
+sistema: CobaiaAPI
+entidade_principal: Produto
+tipo: erro
+status: ativo
+causa_raiz: tipo_divergente
+arquivos: [Programacao/CobaiaAPI/app/fault_injection.py, Programacao/CobaiaFront/produtos_api.php, Programacao/CobaiaAPI/app/routers/produtos.py]
+endpoints: [GET /api/produtos, GET /api/pedidos]
+sintomas: [numero como texto, booleano como Sim, destaque 1, ordenacao errada, soma errada, destaque booleano sai literal, categoria errada]
+palavras_chave: [tipo, texto, string, numero, booleano, Sim, aspas, type_drift, str, virgula decimal, convercao, destaque]
+causas_relacionadas: [valor_fora_do_dominio, formato_de_data_divergente, escala_ou_unidade_errada]
+# ! Alteração por modelo qwen2.5:7b (E1, caso semt-13) - Revisar: retificação acrescentada.
+# ! Alteração por modelo qwen2.5:7b (E3, caso tra-3) - Revisar: nota acrescentada.
+---
+## Resumo
+Chave certa com o tipo JSON errado: número entre aspas ("89.90"), booleano como texto ("Sim") ou número (1), inteiro como texto ("4").
+
+## Sinais
+- texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar
+- "89,90" com vírgula não converte; destaque fora de true/false sai literal
+
+## Causa
+O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).
+
+## Notas do modelo
+- [E1 · semt-13 · retificação de "destaque fora de true/false sai literal."] Corrigir que destaque booleano saia literal, garantindo que seja convertido corretamente para True ou False. — Motivo: O caso mostrou que a conversão incorreta de booleano afeta a apresentação do preço, indicando a necessidade de corrigir essa conversão.
+- [E3 · tra-3 · nota] Notar que a junção errada pode afetar campos derivados como tipo, garantindo a precisão na apresentação dos produtos. — Motivo: O sintoma mostrou que a categoria estava incorreta, indicando que a converção incorreta de dados pode afetar a apresentação correta dos produtos.

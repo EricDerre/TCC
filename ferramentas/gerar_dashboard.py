@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
-# ! Alteração de IA - Revisar: gerador do dashboard interativo dos testes (28/09/2026, pedido do Eric):
+# ! Alteração de IA - Revisar: gerador do painel interativo dos testes (28/09/2026, pedido do Eric):
 # lê os registros oficiais (resumo_fase3.json, comparacao_fases.json, decisao_modelo.json, os
 # resumos das Fases 2-A/2-B, os 29 blocos de tabelas_relatorio.md e as figuras SVG 01–18) e grava
-# um HTML único e autossuficiente em Documentacao/dashboard/dashboard-fase3.html, com gráficos
-# Chart.js (carregado do CDN) e as figuras oficiais embutidas; --check regera e compara.
+# um HTML único e autossuficiente, com gráficos Chart.js (carregado do CDN) e as figuras oficiais
+# embutidas; --check regera e compara.
 # ! Motivo: o Eric pediu "um dashboard com o relatório detalhado dos testes, com gráficos e
 # números, com a explicação e a avaliação de cada modelo, detalhado porém sumarizado". A regra do
 # projeto é nenhum número digitado à mão: todo valor do painel sai dos JSON pela mesma origem
 # das tabelas do Memorial, e o --check acusa qualquer edição manual do HTML.
-"""Uso: python ferramentas/gerar_dashboard.py [--check] [--saida Documentacao/dashboard/dashboard-fase3.html]"""
+# ! Alteração de IA - Revisar: na noite de 28/09/2026 o painel dos testes virou o PAINEL DO PROJETO
+# (Documentacao/dashboard/painel-do-projeto.html): ganhou as abas Início (estado por fase, o que
+# depende do Eric, corridas), Pendências (um cartão por ficha de pendencias.md, com filtro) e Roadmap
+# (faixa de fases e cartões de corrida com o comando pronto, lidos de roadmap.md), antes das abas dos
+# testes, que não mudaram; a leitura dos dois .md fica em painel_textos.py.
+# ! Motivo: o Eric pediu um relatório visual por pergunta das pendências ("ler no .md é bem ruim"),
+# um relatório do roadmap e "tudo num único relatório / página web, um dashboard completo do
+# projeto, que dá para acessar de qualquer lugar" — o arquivo publicado no claude.ai passa a ser
+# este. O nome do arquivo mudou porque o conteúdo deixou de ser só a Fase 3.
+"""Uso: python ferramentas/gerar_dashboard.py [--check] [--saida Documentacao/dashboard/painel-do-projeto.html]"""
 from __future__ import annotations
 
 import argparse
@@ -20,10 +29,13 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+import painel_textos as pt
+
 RAIZ = Path(__file__).resolve().parent.parent
 EXP = RAIZ / "Programacao" / "AgenteCore" / "experimentos"
 F3 = EXP / "resultados_alvo" / "fase3"
-SAIDA_PADRAO = RAIZ / "Documentacao" / "dashboard" / "dashboard-fase3.html"
+MEMORIAL = RAIZ / "Documentacao" / "memorial"
+SAIDA_PADRAO = RAIZ / "Documentacao" / "dashboard" / "painel-do-projeto.html"
 
 MODELOS_F3 = ["qwen2.5:7b", "granite4.2:8b", "qwen2.5-coder:7b", "qwen2.5-coder:3b"]
 CORES = {"qwen2.5:7b": "#2f5d8a", "granite4.2:8b": "#9a6b2f", "qwen2.5-coder:7b": "#3b8a6e",
@@ -343,6 +355,35 @@ figcaption{font-size:13px;color:var(--ink2);margin-top:8px}
 details{border:1px solid var(--linha);border-radius:8px;padding:8px 12px;margin:10px 0;background:var(--bg2)}summary{cursor:pointer;font-weight:600}
 .hip{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:start}.hip .h{font:600 15px var(--fm)}
 .rodape{margin-top:40px;font-size:12px;color:var(--ink2);border-top:1px solid var(--linha);padding-top:12px}
+nav .grupo{font:600 11px var(--fb);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);padding:6px 2px 6px 10px}
+.chip{display:inline-block;font:600 11px var(--fb);letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--acento2);color:var(--acento);white-space:nowrap;vertical-align:middle}
+.chip.aberta,.chip.andamento{background:color-mix(in srgb,var(--meio) 18%,transparent);color:var(--meio)}
+.chip.fechada,.chip.feita,.chip.concluida{background:color-mix(in srgb,var(--bom) 18%,transparent);color:var(--bom)}
+.chip.rodando{background:color-mix(in srgb,var(--acento) 22%,transparent);color:var(--acento)}
+.chip.pendente,.chip.aguarda,.chip.nao_iniciada,.chip.outro{background:color-mix(in srgb,var(--ink2) 14%,transparent);color:var(--ink2)}
+.chip.opcional{background:transparent;border:1px dashed var(--linha);color:var(--ink2)}
+.chip.quem,.chip.data{background:transparent;border:1px solid var(--linha);color:var(--ink2);text-transform:none;letter-spacing:0}
+.fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px;margin:14px 0}
+.fase{background:var(--bg2);border:1px solid var(--linha);border-top:4px solid var(--ink2);border-radius:10px;padding:12px 14px}
+.fase.concluida{border-top-color:var(--bom)}.fase.andamento{border-top-color:var(--meio)}.fase.nao_iniciada{border-top-color:var(--linha)}
+.fase b{display:block;font:600 15px/1.25 var(--fd);margin-bottom:6px}.fase small{display:block;color:var(--ink2);font-size:12px;margin-top:8px}.fase p{font-size:13px;margin:6px 0 0}
+.lista-eric,.lista-corridas{padding-left:22px}.lista-eric li,.lista-corridas li{margin:8px 0}.lista-eric a{color:var(--acento);font-weight:600;text-decoration:none}.lista-eric a:hover{text-decoration:underline}
+.numero{display:inline-block;font:600 12px/1.4 var(--fm);background:var(--acento);color:var(--bg2);border-radius:6px;padding:1px 7px;vertical-align:middle}
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.filtros button{border:1px solid var(--linha);background:var(--bg2);color:var(--ink2);font:500 13px var(--fb);padding:6px 12px;border-radius:999px;cursor:pointer}
+.filtros button[aria-pressed=true]{border-color:var(--acento);color:var(--acento);background:var(--acento2)}.filtros button:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+.ficha,.corrida{background:var(--bg2);border:1px solid var(--linha);border-radius:10px;padding:16px 18px;margin:12px 0;box-shadow:var(--sombra)}
+.ficha.fechada{border-style:dashed;box-shadow:none}.ficha.realce{outline:3px solid var(--acento);outline-offset:2px}
+.ficha header,.corrida header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:8px}.ficha h3,.corrida h3{margin:0;flex:1 1 260px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.fc{margin:10px 0}.fc h4{margin:0 0 3px}.fc p{margin:0;max-width:90ch}.opcoes{margin:4px 0 0;padding-left:22px}.opcoes li{margin:3px 0}
+.fc.decisao{border-left:3px solid var(--meio);padding-left:12px}.fc.decisao.tomada{border-left-color:var(--bom)}
+.corridas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:14px}.corrida{margin:0}
+.fatos2{display:grid;grid-template-columns:1fr;gap:4px;font-size:13px}.fatos2 div{display:grid;grid-template-columns:130px 1fr;gap:8px;border-bottom:1px dotted var(--linha);padding:4px 0}.fatos2 span{color:var(--ink2)}.fatos2 b{font-weight:500}
+.cmd{position:relative;margin-top:10px}.cmd pre{margin:0;background:var(--acento2);border-radius:6px;padding:10px 74px 10px 12px;font:12px/1.5 var(--fm);white-space:pre-wrap;word-break:break-all;overflow-x:auto}
+.cmd button{position:absolute;top:6px;right:6px;border:1px solid var(--linha);background:var(--bg2);color:var(--ink2);font:500 12px var(--fb);padding:3px 8px;border-radius:6px;cursor:pointer}
+.ref{font-family:var(--fm);font-size:13px;color:var(--acento)}
+main ol,main ul{padding-left:22px}
+@media (max-width:640px){.fatos2 div{grid-template-columns:1fr}.cmd pre{padding-right:12px}.cmd button{position:static;margin-top:6px}}
 @media (max-width:640px){.fatos{grid-template-columns:1fr}.chart{height:280px}h1{font-size:24px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 """
@@ -427,8 +468,26 @@ function desenhar(id){
 ['sel-conj','sel-met'].forEach(i => document.getElementById(i).addEventListener('change', linhaCurvas));
 document.getElementById('sel-fases').addEventListener('change', barrasFases);
 document.getElementById('sel-boot').addEventListener('change', bootstrap);
-const inicial = (location.hash||'#visao').slice(1);
-mostrar(document.getElementById(inicial) ? inicial : 'visao');
+let fEstado = 'aberta', fEric = false;
+function filtrar(){
+  document.querySelectorAll('.ficha').forEach(f => { f.hidden = !((fEstado === 'todas' || f.dataset.estado === fEstado) && (!fEric || f.dataset.quem === 'eric')); });
+  document.querySelectorAll('.bloco-pend').forEach(b => { const fs = [...b.querySelectorAll('.ficha')]; b.hidden = fs.length > 0 && fs.every(f => f.hidden); });
+  document.querySelectorAll('.filtros button').forEach(b => b.setAttribute('aria-pressed', b.dataset.estado ? String(b.dataset.estado === fEstado) : String(fEric)));
+}
+document.querySelectorAll('.filtros button').forEach(b => b.addEventListener('click', () => { if(b.dataset.estado) fEstado = b.dataset.estado; else fEric = !fEric; filtrar(); }));
+function irPara(secao, id){
+  mostrar(secao); const el = document.getElementById(id); if(!el) return;
+  if(el.hidden){ fEstado = 'todas'; fEric = false; filtrar(); }
+  el.scrollIntoView({behavior:'smooth', block:'start'}); el.classList.add('realce'); setTimeout(() => el.classList.remove('realce'), 2500);
+}
+document.querySelectorAll('[data-ir]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const [s, id] = a.dataset.ir.split('|'); irPara(s, id); }));
+document.querySelectorAll('button.copiar').forEach(b => b.addEventListener('click', async () => {
+  try{ await navigator.clipboard.writeText(b.dataset.cmd); b.textContent = 'copiado'; }catch(e){ b.textContent = 'selecione e copie'; }
+  setTimeout(() => b.textContent = 'copiar', 1800);
+}));
+filtrar();
+const inicial = (location.hash||'#inicio').slice(1);
+mostrar(document.getElementById(inicial) ? inicial : 'inicio');
 """
 
 
@@ -499,7 +558,129 @@ def figura(figs: dict, num: str) -> str:
     return f'<figure><img src="{figs[num]}" alt="{html.escape(FIGURAS[num])}"><figcaption>Figura {num} — {html.escape(FIGURAS[num])} (gerada por script a partir dos registros oficiais).</figcaption></figure>'
 
 
-def pagina(dados: dict, blocos: dict, figs: dict) -> str:
+# ------------------------------------------------------------------ projeto: início, pendências, roadmap
+
+ESTADO_FASE = {"concluida": "Concluída", "andamento": "Em andamento", "nao_iniciada": "Não iniciada", "outro": "—"}
+ESTADO_CORRIDA = {"feita": "Feita", "rodando": "Rodando", "pendente": "Pendente", "opcional": "Opcional",
+                  "aguarda": "Aguarda decisão", "outro": "—"}
+
+
+def _chip(classe: str, texto: str) -> str:
+    return f'<span class="chip {classe}">{html.escape(texto)}</span>'
+
+
+def faixa_fases(road: dict, compacta: bool = False) -> str:
+    itens = []
+    for f in road["fases"]:
+        corpo = "" if compacta else f"<small>{pt.inline(f.o_que_e)}</small><p>{pt.inline(f.estado)}</p>"
+        itens.append(f'<div class="fase {f.classe}"><b>{pt.inline(f.nome)}</b>{_chip(f.classe, ESTADO_FASE.get(f.classe, "—"))}{corpo}</div>')
+    return '<div class="fases">' + "".join(itens) + "</div>"
+
+
+def cartoes_corridas(road: dict) -> str:
+    out = []
+    for c in road["corridas"]:
+        cmd = ""
+        if c.comando:
+            cmd = (f'<div class="cmd"><pre><code>{html.escape(c.comando)}</code></pre>'
+                   f'<button class="copiar" type="button" data-cmd="{html.escape(c.comando, quote=True)}">copiar</button></div>')
+        fatos = [("Estado", c.estado), ("Inferências / tempo", c.tempo), ("Pré-requisito", c.prerequisito), ("O que fecha", c.fecha)]
+        fatos_html = "".join(f"<div><span>{html.escape(a)}</span><b>{pt.inline(b)}</b></div>" for a, b in fatos if b)
+        out.append(f'<article class="corrida {c.classe}"><header><span class="numero">{html.escape(c.numero)}</span><h3>{pt.inline(c.nome)}</h3>'
+                   f'{_chip(c.classe, ESTADO_CORRIDA.get(c.classe, "—"))}</header><div class="fatos2">{fatos_html}</div>{cmd}</article>')
+    return '<div class="corridas">' + "".join(out) + "</div>"
+
+
+def avisos_corridas(road: dict) -> list[str]:
+    """Confere a coluna Estado do roadmap contra a pasta de saída de cada corrida (resumo_fase3.json
+    gravado = corrida avaliada); só avisa, não muda nada."""
+    avisos = []
+    for c in road["corridas"]:
+        if not c.saida or "-Modo" not in c.comando:
+            continue  # só as corridas do rodar_fase3b.ps1 gravam resumo_fase3.json na própria pasta de saída
+        pasta = EXP / "resultados_alvo" / c.saida
+        avaliada = (pasta / "resumo_fase3.json").exists()
+        if c.classe in ("pendente", "aguarda", "opcional") and avaliada:
+            avisos.append(f"corrida {c.numero} ({c.saida}) está avaliada em disco, mas o roadmap diz {c.estado[:30]!r}")
+        if c.classe == "feita" and not pasta.exists():
+            avisos.append(f"corrida {c.numero} ({c.saida}) marcada como feita, mas a pasta não existe")
+    return avisos
+
+
+def secao_inicio(dados: dict, pend: list, road: dict) -> str:
+    fichas = [f for b in pend for f in b.fichas]
+    abertas = [f for f in fichas if f.aberta]
+    do_eric = [f for f in abertas if f.depende_do_eric]
+    corr = road["corridas"]
+    n_rod = sum(c.classe == "rodando" for c in corr)
+    n_pend = sum(c.classe in ("pendente", "aguarda") for c in corr)
+    n_feitas = sum(c.classe == "feita" for c in corr)
+    fase = next((f for f in road["fases"] if f.classe == "andamento"), None)
+    v = dados["vencedor"]
+    m = re.search(r"fim do \*\*(Mês \d+)\*\*", road["posicao"])
+    itens = [("Fase atual", fase.nome if fase else "—", f"cronograma do projeto: fim do {m.group(1)}" if m else ""),
+             ("Modelo escolhido", v["modelo"], f'biblioteca L{v["biblioteca_epoca"]} (decisão 52)'),
+             ("Pendências abertas", str(len(abertas)), f"{len(do_eric)} dependem de decisão do Eric"),
+             ("Corridas da 3-B", f"{n_rod} rodando · {n_pend} pendentes", f"{n_feitas} feitas"),
+             ("Estado registrado em", road["data"] or "—", "roadmap.md e pendencias.md")]
+    kp = '<div class="kpis">' + "".join(f"<div class='kpi'><span>{html.escape(t)}</span><b>{html.escape(b)}</b><small>{html.escape(s)}</small></div>" for t, b, s in itens) + "</div>"
+    lista = "".join(f'<li><a href="#{f.id_html}" data-ir="pendencias|{f.id_html}"><span class="numero">{f.numero}</span> {pt.inline(f.titulo)}</a>'
+                    f'<br><span class="nota">Recomendação: {pt.inline(f.campos.get("Recomendação", "—"))}</span></li>' for f in do_eric)
+    corridas = "".join(f'<li>{_chip(c.classe, ESTADO_CORRIDA.get(c.classe, "—"))} <strong>{pt.inline(c.nome.split(" — ")[0])}</strong> — {pt.inline(c.estado)}</li>' for c in corr)
+    return f'''<section id="inicio">
+<h1>Onde o projeto está</h1>
+<p class="lead">Painel único do TCC: o estado de cada fase, as decisões que esperam resposta, as corridas que faltam e todos os números dos testes — tudo lido dos arquivos do repositório por script, nada digitado à mão.</p>
+{kp}
+<h2>Fases</h2>
+{faixa_fases(road, compacta=True)}
+{pt.md_doc_para_html(road["posicao"])}
+<h2>O que precisa de você</h2>
+<p>Cada item abre a ficha completa na aba Pendências: o que é, por que importa, opções e recomendação.</p>
+<ol class="lista-eric">{lista}</ol>
+<h2>Corridas da Fase 3-B</h2>
+<ul class="lista-corridas">{corridas}</ul>
+<p class="nota">Comandos, pré-requisitos e o que cada corrida fecha: aba Roadmap.</p>
+</section>'''
+
+
+def secao_pendencias(pend: list) -> str:
+    fichas = [f for b in pend for f in b.fichas]
+    n_ab = sum(f.aberta for f in fichas)
+    n_fe = len(fichas) - n_ab
+    blocos_html = []
+    for b in pend:
+        cards = "".join(pt.html_ficha(f) for f in b.fichas)
+        if b.fichas:
+            intro = f"<details><summary>Contexto do bloco</summary>{pt.md_doc_para_html(b.intro)}</details>" if b.intro.strip() else ""
+            resto = f"<details><summary>Texto original das pendências antigas deste bloco</summary>{pt.md_doc_para_html(b.resto)}</details>" if b.resto.strip() else ""
+        else:
+            intro = f"<details><summary>Ver o texto original (bloco só de registro)</summary>{pt.md_doc_para_html(b.intro)}{pt.md_doc_para_html(b.resto)}</details>"
+            resto = ""
+        blocos_html.append(f'<div class="bloco-pend"><h2>{pt.inline(b.titulo)}</h2>{intro}{cards}{resto}</div>')
+    return f'''<section id="pendencias" hidden>
+<h1>Pendências e decisões</h1>
+<p class="lead">Uma ficha por pergunta, em linguagem direta: o que é, por que importa, as opções, a recomendação e a decisão (quando sai). {n_ab} abertas e {n_fe} fechadas; o filtro começa nas abertas. Para responder, basta citar o número da ficha no chat.</p>
+<div class="filtros" role="group" aria-label="Filtro das fichas"><button type="button" data-estado="aberta" aria-pressed="true">Abertas ({n_ab})</button><button type="button" data-estado="fechada" aria-pressed="false">Fechadas ({n_fe})</button><button type="button" data-estado="todas" aria-pressed="false">Todas</button><button type="button" data-quem="eric" aria-pressed="false">Só o que depende do Eric</button></div>
+{"".join(blocos_html)}
+</section>'''
+
+
+def secao_roadmap(road: dict) -> str:
+    resto = "".join(f"<h2>{pt.inline(t)}</h2>{pt.md_doc_para_html(c)}" for t, c in road["secoes"])
+    return f'''<section id="roadmap" hidden>
+<h1>Roadmap — onde estamos e o que falta rodar</h1>
+<p class="lead">Estado por fase, corridas pendentes com o comando pronto, a sonda de correção, o esqueleto das Fases 4 e 5 e a tabela para encaixar pontos novos. Fonte: <code>roadmap.md</code> de {html.escape(road["data"])}.</p>
+<h2>1. Onde estamos, por fase</h2>
+{faixa_fases(road)}
+{pt.md_doc_para_html(road["posicao"])}
+<h2>2. O que precisamos rodar (máquina), em ordem</h2>
+{cartoes_corridas(road)}
+{pt.md_doc_para_html(road["fora_da_maquina"])}
+{resto}
+</section>'''
+
+
+def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict) -> str:
     vered = texto_vereditos(dados)
     hips = vereditos_hipoteses(dados)
     v = dados["vencedor"]
@@ -507,20 +688,24 @@ def pagina(dados: dict, blocos: dict, figs: dict) -> str:
     ponte = dados["tres_b"].get("fase3b_ponte", {}).get("linhas", [])
     ponte_txt = "; ".join(f'{x["modelo"]} b/c {x["pareado_vs_f3"]["b"]}/{x["pareado_vs_f3"]["c"]}' for x in ponte)
     dados_json = json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
-    return f"""<!-- ! Alteração de IA - Revisar: painel interativo dos testes, GERADO por ferramentas/gerar_dashboard.py a partir dos registros oficiais (não editar à mão; --check acusa diferença).
-     ! Motivo: o Eric pediu um dashboard com os números, gráficos e a avaliação de cada modelo; todo valor sai dos mesmos JSON das tabelas do Memorial. -->
-<title>Painel dos Modelos Locais</title>
+    return f"""<!-- ! Alteração de IA - Revisar: painel do projeto, GERADO por ferramentas/gerar_dashboard.py a partir de pendencias.md, roadmap.md e dos registros oficiais dos testes (não editar à mão; --check acusa diferença).
+     ! Motivo: o Eric pediu as pendências e o roadmap em forma visual e um único painel do projeto, acessível de qualquer lugar; todo valor sai dos mesmos arquivos do Memorial. -->
+<title>Painel do Agente de QA</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>{CSS}</style>
 <header class="topo"><div class="in">
-<div class="marca">Painel dos Modelos Locais<small>Agente de QA E2E · Fases 2-A, 2-B e 3 · registros oficiais de {html.escape(dados["meta"]["resumo_gerado_em"][:10])}</small></div>
+<div class="marca">Painel do Agente de QA<small>TCC · agente de QA E2E autônomo com self-healing · estado em {html.escape(road["data"])} · registros dos testes de {html.escape(dados["meta"]["resumo_gerado_em"][:10])}</small></div>
 <nav aria-label="Seções">
-<button data-alvo="visao">Visão geral</button><button data-alvo="modelos">Modelos</button><button data-alvo="fase3">Fase 3</button>
+<span class="grupo">Projeto</span><button data-alvo="inicio">Início</button><button data-alvo="pendencias">Pendências</button><button data-alvo="roadmap">Roadmap</button>
+<span class="grupo">Testes</span><button data-alvo="visao">Resultados</button><button data-alvo="modelos">Modelos</button><button data-alvo="fase3">Fase 3</button>
 <button data-alvo="decisao">Decisão</button><button data-alvo="hipoteses">Hipóteses</button><button data-alvo="fases2">Fases 2-A e 2-B</button>
 <button data-alvo="comparacao">Entre fases</button><button data-alvo="metodo">Método e limites</button>
 </nav></div></header>
 <main>
-<section id="visao">
+{secao_inicio(dados, pend, road)}
+{secao_pendencias(pend)}
+{secao_roadmap(road)}
+<section id="visao" hidden>
 <h1>O que os testes decidiram</h1>
 <p class="lead">Quatro modelos locais diagnosticaram 90 falhas de integração do sistema-cobaia em quatro versões da biblioteca de conhecimento (a original L0 e as três que cada modelo escreveu, L1–L3). Pela regra fixada antes da bateria, o padrão do agente passa a ser <strong>{html.escape(v["modelo"])}</strong> com a biblioteca no estado <strong>L{v["biblioteca_epoca"]}</strong>.</p>
 {kpis(dados, vered)}
@@ -670,13 +855,14 @@ def pagina(dados: dict, blocos: dict, figs: dict) -> str:
 <li>Uma execução por condição, sem semente fixa; ruído medido de 0 a 2 casos em 36.</li>
 <li>Escritor e leitor confundidos: a biblioteca L1 só foi lida pelo próprio qwen2.5:7b (teste (b) da 3-B).</li>
 </ol>
-<h2>Fase 3-B — o que falta rodar</h2>
+<h2>Fase 3-B — os testes complementares</h2>
 <ul>
 <li><strong>(b) Troca cruzada</strong>: L1 e L3 do qwen2.5:7b lidas pelos dois Coder nos 36 — o ganho é da biblioteca ou de quem a lê?</li>
 <li><strong>(a) Casos inéditos</strong>: 36 casos novos, escritos só a partir do código do cobaia, com o qwen2.5:7b e o 3B em L0, L1 e L3 — o ganho generaliza?</li>
 <li><strong>Sonda de detecção de correção</strong>: o modelo percebe, ao rever um caso corrigido, que a própria nota ficou desatualizada?</li>
 </ul>
-<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>. Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
+<p class="nota">O estado de cada corrida (feita, rodando, pendente) e o comando pronto estão na aba Roadmap; as decisões que esperam resposta, na aba Pendências.</p>
+<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
 </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
@@ -698,7 +884,11 @@ def main() -> None:
     blocos = blocos_tabelas(F3 / "tabelas_relatorio.md")
     dados = montar_dados(r, c, d, m2b, m2a)
     figs = figuras_b64()
-    html_final = pagina(dados, blocos, figs)
+    pend = pt.ler_pendencias(MEMORIAL / "pendencias.md")
+    road = pt.ler_roadmap(MEMORIAL / "roadmap.md")
+    for aviso in avisos_corridas(road):
+        print("aviso:", aviso, file=sys.stderr)
+    html_final = pagina(dados, blocos, figs, pend, road)
     saida = Path(args.saida)
     if args.check:
         atual = saida.read_text(encoding="utf-8") if saida.exists() else ""
@@ -709,7 +899,8 @@ def main() -> None:
         sys.exit(1)
     saida.parent.mkdir(parents=True, exist_ok=True)
     saida.write_text(html_final, encoding="utf-8", newline="\n")
-    print(f"gravado: {saida} ({len(html_final):,} caracteres; {len(figs)} figuras; {len(blocos)} blocos de tabela)")
+    print(f"gravado: {saida} ({len(html_final):,} caracteres; {len(figs)} figuras; {len(blocos)} blocos de tabela; "
+          f"{sum(len(b.fichas) for b in pend)} fichas de pendência; {len(road['fases'])} fases; {len(road['corridas'])} corridas)")
 
 
 if __name__ == "__main__":
