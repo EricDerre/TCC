@@ -17,6 +17,14 @@
 # um relatório do roadmap e "tudo num único relatório / página web, um dashboard completo do
 # projeto, que dá para acessar de qualquer lugar" — o arquivo publicado no claude.ai passa a ser
 # este. O nome do arquivo mudou porque o conteúdo deixou de ser só a Fase 3.
+# ! Alteração de IA - Revisar: em 30/09/2026 o painel virou o compilador das análises: navegação em cinco grupos
+# (Projeto, Modelos, Biblioteca, Fases anteriores, Pesquisa e método), sete abas novas geradas por
+# painel_topicos.py (qwen × Coder, Fase 3-B, curadoria da L1, recuperador, ablação, pesquisa, ferramental),
+# mapa do painel na aba Início, e a paleta das séries trocada pela paleta validada da regra de gráficos
+# (tokens --s1..--s8, com versão para o tema escuro; a cor de cada modelo vem de painel_topicos.SLOTS).
+# ! Motivo: o Eric pediu "a aba do comparativo do qwen 2.5 7b e o coder" e que o painel seja "o grande
+# compilador / centralizador das análises e dados, com cada aba específica falando sobre os tópicos". A paleta
+# antiga reprovava na validação (cores acinzentadas e o par ocre × verde difícil de distinguir).
 """Uso: python ferramentas/gerar_dashboard.py [--check] [--saida Documentacao/dashboard/painel-do-projeto.html]"""
 from __future__ import annotations
 
@@ -30,6 +38,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import painel_textos as pt
+import painel_topicos as tp
 
 RAIZ = Path(__file__).resolve().parent.parent
 EXP = RAIZ / "Programacao" / "AgenteCore" / "experimentos"
@@ -38,9 +47,6 @@ MEMORIAL = RAIZ / "Documentacao" / "memorial"
 SAIDA_PADRAO = RAIZ / "Documentacao" / "dashboard" / "painel-do-projeto.html"
 
 MODELOS_F3 = ["qwen2.5:7b", "granite4.2:8b", "qwen2.5-coder:7b", "qwen2.5-coder:3b"]
-CORES = {"qwen2.5:7b": "#2f5d8a", "granite4.2:8b": "#9a6b2f", "qwen2.5-coder:7b": "#3b8a6e",
-         "qwen2.5-coder:3b": "#8a3f63", "phi4-mini:3.8b": "#6f6f6f", "qwen2.5-coder:1.5b": "#a8a8a8",
-         "qwen2.5-coder:1.5b-instruct-fp16": "#c2c2c2", "qwen2.5-coder:1.5b-instruct-q8_0": "#b5b5b5"}
 CLASSES = {1: "léxica", 2: "sintática", 3: "semântica", 4: "tradução", 5: "runtime", 6: "efeito"}
 NIVEIS = {1: "fácil", 2: "médio", 3: "difícil"}
 CONDICOES_2B = {"A0": "A0 — sem documentação", "A1": "A1 — biblioteca inteira no prompt",
@@ -140,7 +146,7 @@ def pct(v) -> float | None:
 
 
 def montar_dados(r: dict, c: dict, d: dict, m2b: dict, m2a: dict) -> dict:
-    dados: dict = {"modelos": MODELOS_F3, "cores": CORES}
+    dados: dict = {"modelos": MODELOS_F3, "slots": tp.SLOTS}
     curvas = defaultdict(lambda: defaultdict(dict))
     custo = defaultdict(dict)
     for x in r["por_modelo_biblioteca_particao"]:
@@ -316,9 +322,12 @@ def vereditos_hipoteses(dados: dict) -> list[dict]:
 CSS = r"""
 :root{--bg:#f6f4ee;--bg2:#fdfcf9;--ink:#1f2328;--ink2:#4c545c;--linha:#d8d3c7;--acento:#2f5d8a;--acento2:#dbe7f3;
 --bom:#2e7d4f;--meio:#b7791f;--ruim:#b3392b;--sombra:0 1px 2px rgba(20,25,30,.06),0 8px 24px rgba(20,25,30,.06);
---fd:"Source Serif 4",Georgia,"Times New Roman",serif;--fb:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif;--fm:"IBM Plex Mono",Consolas,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--meio:#e0a84a;--ruim:#e46b5c;--sombra:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35)}}
-:root[data-theme=dark]{--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--meio:#e0a84a;--ruim:#e46b5c;--sombra:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35)}
+--fd:"Source Serif 4",Georgia,"Times New Roman",serif;--fb:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif;--fm:"IBM Plex Mono",Consolas,monospace;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#4a3aa7;--s8:#e34948}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--meio:#e0a84a;--ruim:#e46b5c;--sombra:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--meio:#e0a84a;--ruim:#e46b5c;--sombra:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--fb)}
 .topo{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg2);border-bottom:1px solid var(--linha);box-shadow:var(--sombra)}
 .topo .in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
@@ -386,11 +395,12 @@ main ol,main ul{padding-left:22px}
 @media (max-width:640px){.fatos2 div{grid-template-columns:1fr}.cmd pre{padding-right:12px}.cmd button{position:static;margin-top:6px}}
 @media (max-width:640px){.fatos{grid-template-columns:1fr}.chart{height:280px}h1{font-size:24px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-"""
+""" + tp.CSS_TOPICOS
 
 JS = r"""
 const D = window.DADOS;
-const cor = m => D.cores[m] || '#888';
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const cor = m => css('--s' + (D.slots[m] || 8));
 const abas = [...document.querySelectorAll('nav button')];
 function mostrar(id){document.querySelectorAll('main > section').forEach(s => s.hidden = s.id !== id);
   abas.forEach(b => b.setAttribute('aria-selected', b.dataset.alvo === id));
@@ -447,7 +457,7 @@ function custo(){
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'segundos por diagnóstico (mediana, 90)'}, beginAtZero:true}}, plugins:{tooltip:{callbacks:{afterLabel: c => { const r = D.custo[c.dataset.label][String(c.dataIndex)]; return r ? `prefill ${r.prefill_s} s · geração ${r.geracao_s} s · p95 ${r.p95} s` : ''; }}}}}});
 }
 function revisao(){
-  const mods = Object.keys(D.revisao); const cats = ['Correta','Parcial','Errada']; const cores = {Correta:'#2e7d4f',Parcial:'#b7791f',Errada:'#b3392b'};
+  const mods = Object.keys(D.revisao); const cats = ['Correta','Parcial','Errada']; const cores = {Correta:css('--bom'),Parcial:css('--meio'),Errada:css('--ruim')};
   grafico('g-rev', {type:'bar', data:{labels: mods, datasets: cats.map(c => ({label:c, data: mods.map(m => D.revisao[m][c]), backgroundColor: cores[c]}))},
     options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, max:100, title:{display:true,text:'% das edições revisadas'}}}, plugins:{tooltip:{callbacks:{afterLabel: c => 'n = '+D.revisao[c.label].n}}}}});
 }
@@ -461,20 +471,26 @@ function f2a(){
   grafico('g-f2a', {type:'bar', data:{labels: est, datasets: mods.map(m => ({label:m, data: est.map(e => (D.f2a[m][e]||{}).acerto ?? null), backgroundColor:cor(m)}))},
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'acerto (%) — Fase 2-A, Ryzen'}, min:0, max:100}}}});
 }
+__JS_TOPICOS__
+const MAPA_DESENHO = __MAPA_DESENHO__;
 function desenhar(id){
   if(feitos.has(id)) return; feitos.add(id);
-  ({visao:[linhaCurvas, barrasFases], fase3:[documentacao, rejeicoes, recuperacao, custo, revisao], decisao:[pareto, bootstrap], fases2:[f2b, f2a]}[id]||[]).forEach(f => { try{ f(); }catch(e){ console.error(e); } });
+  Chart.defaults.color = css('--ink2'); Chart.defaults.borderColor = css('--linha');
+  (MAPA_DESENHO[id]||[]).forEach(nome => { try{ window[nome](); }catch(e){ console.error(nome, e); } });
 }
-['sel-conj','sel-met'].forEach(i => document.getElementById(i).addEventListener('change', linhaCurvas));
-document.getElementById('sel-fases').addEventListener('change', barrasFases);
-document.getElementById('sel-boot').addEventListener('change', bootstrap);
+const SELETORES = __SELETORES__;
+Object.entries(SELETORES).forEach(([id, nome]) => { const el = document.getElementById(id); if(el) el.addEventListener('change', () => window[nome]()); });
+try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { feitos.clear(); const atual = [...document.querySelectorAll('main > section')].find(s => !s.hidden); if(atual) desenhar(atual.id); }); }catch(e){}
 let fEstado = 'aberta', fEric = false;
 function filtrar(){
   document.querySelectorAll('.ficha').forEach(f => { f.hidden = !((fEstado === 'todas' || f.dataset.estado === fEstado) && (!fEric || f.dataset.quem === 'eric')); });
   document.querySelectorAll('.bloco-pend').forEach(b => { const fs = [...b.querySelectorAll('.ficha')]; b.hidden = fs.length > 0 && fs.every(f => f.hidden); });
-  document.querySelectorAll('.filtros button').forEach(b => b.setAttribute('aria-pressed', b.dataset.estado ? String(b.dataset.estado === fEstado) : String(fEric)));
+  document.querySelectorAll('#pendencias .filtros button').forEach(b => b.setAttribute('aria-pressed', b.dataset.estado ? String(b.dataset.estado === fEstado) : String(fEric)));
 }
-document.querySelectorAll('.filtros button').forEach(b => b.addEventListener('click', () => { if(b.dataset.estado) fEstado = b.dataset.estado; else fEric = !fEric; filtrar(); }));
+document.querySelectorAll('#pendencias .filtros button').forEach(b => b.addEventListener('click', () => { if(b.dataset.estado) fEstado = b.dataset.estado; else fEric = !fEric; filtrar(); }));
+document.querySelectorAll('.filtro-tabela').forEach(grp => { const alvo = document.getElementById(grp.dataset.alvo); if(!alvo) return;
+  grp.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { grp.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    alvo.querySelectorAll('tbody tr').forEach(tr => { tr.hidden = b.dataset.valor !== 'todos' && tr.dataset.valor !== b.dataset.valor; }); })); });
 function irPara(secao, id){
   mostrar(secao); const el = document.getElementById(id); if(!el) return;
   if(el.hidden){ fEstado = 'todas'; fEric = false; filtrar(); }
@@ -488,6 +504,7 @@ document.querySelectorAll('button.copiar').forEach(b => b.addEventListener('clic
 filtrar();
 const inicial = (location.hash||'#inicio').slice(1);
 mostrar(document.getElementById(inicial) ? inicial : 'inicio');
+window.addEventListener('load', () => setTimeout(() => window.scrollTo(0, 0), 0));
 """
 
 
@@ -520,7 +537,7 @@ def cards_modelos(dados: dict, vered: dict) -> str:
                  ("Edições aceitas / propostas", f'{v["aceitas"]} / {v["propostas"]}'), ("Revisão correta / parcial / errada", rev_txt),
                  ("Licença", v["licenca"]), ("Risco (Pareto)", fmt(v["risco"]))]
         out.append(f"""<article class="card{' venc' if v['vencedor'] else ''}">
-<h3><span class="dot" style="background:{CORES[m]}"></span>{html.escape(m)} {'<span class="tag">escolhido</span>' if v['vencedor'] else ''}</h3>
+<h3><span class="dot" style="background:var(--s{tp.SLOTS[m]})"></span>{html.escape(m)} {'<span class="tag">escolhido</span>' if v['vencedor'] else ''}</h3>
 <p class="nota"><strong>{html.escape(titulo)}</strong></p>
 <div class="fatos">{''.join(f'<div><span>{html.escape(a)}</span><b>{html.escape(b)}</b></div>' for a, b in fatos)}</div>
 <p>{html.escape(leitura)}</p></article>""")
@@ -577,16 +594,20 @@ def faixa_fases(road: dict, compacta: bool = False) -> str:
     return '<div class="fases">' + "".join(itens) + "</div>"
 
 
-def cartoes_corridas(road: dict) -> str:
+def cartoes_corridas(road: dict, numeros: list[str] | None = None, sufixo: str = "") -> str:
+    """Cartões das corridas do roadmap; `numeros` restringe a um subconjunto (abas por tópico) e `sufixo`
+    diferencia o id do cartão quando a mesma corrida aparece em mais de uma aba."""
     out = []
     for c in road["corridas"]:
+        if numeros is not None and c.numero not in numeros:
+            continue
         cmd = ""
         if c.comando:
             cmd = (f'<div class="cmd"><pre><code>{html.escape(c.comando)}</code></pre>'
                    f'<button class="copiar" type="button" data-cmd="{html.escape(c.comando, quote=True)}">copiar</button></div>')
         fatos = [("Estado", c.estado), ("Inferências / tempo", c.tempo), ("Pré-requisito", c.prerequisito), ("O que fecha", c.fecha)]
         fatos_html = "".join(f"<div><span>{html.escape(a)}</span><b>{pt.inline(b)}</b></div>" for a, b in fatos if b)
-        out.append(f'<article class="corrida {c.classe}"><header><span class="numero">{html.escape(c.numero)}</span><h3>{pt.inline(c.nome)}</h3>'
+        out.append(f'<article class="corrida {c.classe}" id="corrida-{html.escape(c.numero)}{html.escape(sufixo)}"><header><span class="numero">{html.escape(c.numero)}</span><h3>{pt.inline(c.nome)}</h3>'
                    f'{_chip(c.classe, ESTADO_CORRIDA.get(c.classe, "—"))}</header><div class="fatos2">{fatos_html}</div>{cmd}</article>')
     return '<div class="corridas">' + "".join(out) + "</div>"
 
@@ -627,10 +648,16 @@ def secao_inicio(dados: dict, pend: list, road: dict) -> str:
     lista = "".join(f'<li><a href="#{f.id_html}" data-ir="pendencias|{f.id_html}"><span class="numero">{f.numero}</span> {pt.inline(f.titulo)}</a>'
                     f'<br><span class="nota">Recomendação: {pt.inline(f.campos.get("Recomendação", "—"))}</span></li>' for f in do_eric)
     corridas = "".join(f'<li>{_chip(c.classe, ESTADO_CORRIDA.get(c.classe, "—"))} <strong>{pt.inline(c.nome.split(" — ")[0])}</strong> — {pt.inline(c.estado)}</li>' for c in corr)
+    mapa = "".join(
+        f'<div><h3>{html.escape(grupo)}</h3><ul>' + "".join(
+            f'<li><a href="#{sid}" data-ir="{sid}|">{html.escape(nome)}</a> — {html.escape(desc)}</li>' for sid, nome, desc in abas if sid != "inicio") + "</ul></div>"
+        for grupo, abas in tp.NAV)
     return f'''<section id="inicio">
 <h1>Onde o projeto está</h1>
-<p class="lead">Painel único do TCC: o estado de cada fase, as decisões que esperam resposta, as corridas que faltam e todos os números dos testes — tudo lido dos arquivos do repositório por script, nada digitado à mão.</p>
+<p class="lead">Painel único do TCC, o compilador das análises e dos dados: o estado de cada fase, as decisões que esperam resposta, as corridas que faltam e, em cada aba, um tópico dos testes com os números-chave, os gráficos e a leitura — tudo lido dos arquivos do repositório por script, nada digitado à mão.</p>
 {kp}
+<h2>Mapa do painel</h2>
+<div class="mapa-painel">{mapa}</div>
 <h2>Fases</h2>
 {faixa_fases(road, compacta=True)}
 {pt.md_doc_para_html(road["posicao"])}
@@ -680,7 +707,7 @@ def secao_roadmap(road: dict) -> str:
 </section>'''
 
 
-def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict) -> str:
+def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topicos_html: str) -> str:
     vered = texto_vereditos(dados)
     hips = vereditos_hipoteses(dados)
     v = dados["vencedor"]
@@ -688,6 +715,13 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict) -> str
     ponte = dados["tres_b"].get("fase3b_ponte", {}).get("linhas", [])
     ponte_txt = "; ".join(f'{x["modelo"]} b/c {x["pareado_vs_f3"]["b"]}/{x["pareado_vs_f3"]["c"]}' for x in ponte)
     dados_json = json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
+    mapa_desenho = {"visao": ["linhaCurvas", "barrasFases"], "fase3": ["documentacao", "rejeicoes", "recuperacao", "custo", "revisao"],
+                    "decisao": ["pareto", "bootstrap"], "fases2": ["f2b", "f2a"]} | tp.DESENHAR_TOPICOS
+    seletores = {"sel-conj": "linhaCurvas", "sel-met": "linhaCurvas", "sel-fases": "barrasFases", "sel-boot": "bootstrap"} | tp.SELETORES_TOPICOS
+    js = (JS.replace("__JS_TOPICOS__", tp.JS_TOPICOS).replace("__MAPA_DESENHO__", json.dumps(mapa_desenho))
+          .replace("__SELETORES__", json.dumps(seletores)))
+    nav = "".join(f'<span class="grupo">{html.escape(grupo)}</span>' + "".join(f'<button data-alvo="{sid}">{html.escape(nome)}</button>' for sid, nome, _ in abas)
+                  for grupo, abas in tp.NAV)
     return f"""<!-- ! Alteração de IA - Revisar: painel do projeto, GERADO por ferramentas/gerar_dashboard.py a partir de pendencias.md, roadmap.md e dos registros oficiais dos testes (não editar à mão; --check acusa diferença).
      ! Motivo: o Eric pediu as pendências e o roadmap em forma visual e um único painel do projeto, acessível de qualquer lugar; todo valor sai dos mesmos arquivos do Memorial. -->
 <title>Painel do Agente de QA</title>
@@ -695,12 +729,7 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict) -> str
 <style>{CSS}</style>
 <header class="topo"><div class="in">
 <div class="marca">Painel do Agente de QA<small>TCC · agente de QA E2E autônomo com self-healing · estado em {html.escape(road["data"])} · registros dos testes de {html.escape(dados["meta"]["resumo_gerado_em"][:10])}</small></div>
-<nav aria-label="Seções">
-<span class="grupo">Projeto</span><button data-alvo="inicio">Início</button><button data-alvo="pendencias">Pendências</button><button data-alvo="roadmap">Roadmap</button>
-<span class="grupo">Testes</span><button data-alvo="visao">Resultados</button><button data-alvo="modelos">Modelos</button><button data-alvo="fase3">Fase 3</button>
-<button data-alvo="decisao">Decisão</button><button data-alvo="hipoteses">Hipóteses</button><button data-alvo="fases2">Fases 2-A e 2-B</button>
-<button data-alvo="comparacao">Entre fases</button><button data-alvo="metodo">Método e limites</button>
-</nav></div></header>
+<nav aria-label="Seções">{nav}</nav></div></header>
 <main>
 {secao_inicio(dados, pend, road)}
 {secao_pendencias(pend)}
@@ -862,12 +891,13 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict) -> str
 <li><strong>Sonda de detecção de correção</strong>: o modelo percebe, ao rever um caso corrigido, que a própria nota ficou desatualizada?</li>
 </ul>
 <p class="nota">O estado de cada corrida (feita, rodando, pendente) e o comando pronto estão na aba Roadmap; as decisões que esperam resposta, na aba Pendências.</p>
-<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
+<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>comparativo_qwen_coder.json</code>, <code>fase3b_ineditos/resumo_fase3.json</code>, <code>curadoria.json</code>, <code>experimento_recuperador.json</code>, <code>ablacao_base_instruct/resumo_metricas.json</code>, os levantamentos bibliográficos e o README (abas por tópico, <code>ferramentas/painel_topicos.py</code>); <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
 </section>
+{topicos_html}
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 <script>window.DADOS = {dados_json};</script>
-<script>{JS}</script>
+<script>{js}</script>
 """
 
 
@@ -888,7 +918,21 @@ def main() -> None:
     road = pt.ler_roadmap(MEMORIAL / "roadmap.md")
     for aviso in avisos_corridas(road):
         print("aviso:", aviso, file=sys.stderr)
-    html_final = pagina(dados, blocos, figs, pend, road)
+    medicao = MEMORIAL / "5-metodo-e-ferramental" / "dados" / "medicao-permanencia-mcp.json"
+    ctx = {
+        "dados": dados, "road": road, "cartoes_corridas": cartoes_corridas, "md_para_html": md_para_html,
+        "md_doc_para_html": pt.md_doc_para_html,
+        "cq": ler_json(F3 / "comparativo_qwen_coder.json"), "blocos_cq": blocos_tabelas(F3 / "comparativo_qwen_coder.md"),
+        "ineditos": ler_json(EXP / "resultados_alvo" / "fase3b_ineditos" / "resumo_fase3.json"),
+        "curadoria": ler_json(EXP.parent / "biblioteca_producao" / "curadoria.json"),
+        "planilha_curadoria": (F3 / "curadoria_L1__qwen2.5_7b.md").read_text(encoding="utf-8"),
+        "recuperador": ler_json(EXP / "resultados_alvo" / "recuperador" / "experimento_recuperador.json"),
+        "ablacao": ler_json(EXP / "resultados_alvo" / "ablacao_base_instruct" / "resumo_metricas.json"),
+        "medicao_mcp": ler_json(medicao) if medicao.exists() else None,
+        "readme": (RAIZ / "README.md").read_text(encoding="utf-8"),
+    }
+    dados["topicos"], topicos_html = tp.montar(ctx)
+    html_final = pagina(dados, blocos, figs, pend, road, topicos_html)
     saida = Path(args.saida)
     if args.check:
         atual = saida.read_text(encoding="utf-8") if saida.exists() else ""

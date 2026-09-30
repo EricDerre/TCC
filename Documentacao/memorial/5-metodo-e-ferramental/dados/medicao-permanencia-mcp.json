@@ -1,0 +1,126 @@
+{
+ "_comentario": "! Alteração de IA - Revisar: cópia versionada (30/09/2026) da medição da regra de permanência do codebase-memory-mcp (29/09/2026), gravada por ferramentas/medir_tokens.py --agentes: consumo de 12 subagentes (3 tarefas × grep/servidor × 2). ! Motivo: o original ficou em .superpowers/ (fora do git); o ferramental §7.2 e a aba Ferramental do painel citam estes números, que precisam estar no repositório para o --check do painel valer em qualquer máquina.",
+ "pasta": "C:\\Users\\Eric.Derre\\.claude\\projects\\C--Users-Eric-Derre-Documents-TCC",
+ "por_agente": {
+  "t1_grep_r1": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 61745,
+   "cache_read_input_tokens": 201498,
+   "output_tokens": 26,
+   "respostas": 5,
+   "arquivos": 1,
+   "total": 263279,
+   "novos": 61781
+  },
+  "t1_grep_r2": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 62561,
+   "cache_read_input_tokens": 150245,
+   "output_tokens": 29,
+   "respostas": 4,
+   "arquivos": 1,
+   "total": 212843,
+   "novos": 62598
+  },
+  "t1_mcp_r1": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 54939,
+   "cache_read_input_tokens": 140955,
+   "output_tokens": 20,
+   "respostas": 4,
+   "arquivos": 1,
+   "total": 195922,
+   "novos": 54967
+  },
+  "t1_mcp_r2": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 32701,
+   "cache_read_input_tokens": 325493,
+   "output_tokens": 55,
+   "respostas": 7,
+   "arquivos": 1,
+   "total": 358263,
+   "novos": 32770
+  },
+  "t2_grep_r1": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 27023,
+   "cache_read_input_tokens": 221454,
+   "output_tokens": 28,
+   "respostas": 5,
+   "arquivos": 1,
+   "total": 248515,
+   "novos": 27061
+  },
+  "t2_grep_r2": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 28095,
+   "cache_read_input_tokens": 217022,
+   "output_tokens": 23,
+   "respostas": 5,
+   "arquivos": 1,
+   "total": 245150,
+   "novos": 28128
+  },
+  "t2_mcp_r1": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 32145,
+   "cache_read_input_tokens": 272546,
+   "output_tokens": 47,
+   "respostas": 6,
+   "arquivos": 1,
+   "total": 304750,
+   "novos": 32204
+  },
+  "t2_mcp_r2": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 31833,
+   "cache_read_input_tokens": 323511,
+   "output_tokens": 47,
+   "respostas": 7,
+   "arquivos": 1,
+   "total": 355405,
+   "novos": 31894
+  },
+  "t3_grep_r1": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 53278,
+   "cache_read_input_tokens": 387285,
+   "output_tokens": 32,
+   "respostas": 7,
+   "arquivos": 1,
+   "total": 440609,
+   "novos": 53324
+  },
+  "t3_grep_r2": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 64757,
+   "cache_read_input_tokens": 420034,
+   "output_tokens": 47,
+   "respostas": 7,
+   "arquivos": 1,
+   "total": 484852,
+   "novos": 64818
+  },
+  "t3_mcp_r1": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 66470,
+   "cache_read_input_tokens": 357058,
+   "output_tokens": 43,
+   "respostas": 6,
+   "arquivos": 1,
+   "total": 423583,
+   "novos": 66525
+  },
+  "t3_mcp_r2": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 66626,
+   "cache_read_input_tokens": 354328,
+   "output_tokens": 40,
+   "respostas": 6,
+   "arquivos": 1,
+   "total": 421006,
+   "novos": 66678
+  }
+ }
+}
