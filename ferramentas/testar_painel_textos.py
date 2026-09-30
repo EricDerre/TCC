@@ -198,7 +198,12 @@ class TesteArquivosReais(unittest.TestCase):
         blocos = pt.ler_pendencias(MEMORIAL / "pendencias.md")
         fichas = [f for b in blocos for f in b.fichas]
         self.assertGreaterEqual(len(fichas), 14)
-        self.assertTrue(any(f.aberta for f in fichas))
+        # ! Alteração de IA - Revisar: o teste deixou de exigir ao menos uma ficha aberta (30/09/2026) e passou a exigir que toda
+        # ficha esteja aberta ou fechada com data.
+        # ! Motivo: em 30/09/2026 as 16 fichas ficaram fechadas e o teste antigo falhava; o que o painel precisa é de um estado
+        # legível em cada ficha, não de haver pendência aberta.
+        for f in fichas:
+            self.assertTrue(f.aberta or f.fechada_em, f"ficha {f.numero} sem estado legível: {f.estado!r}")
         for f in fichas:
             for campo in ("Estado", "Quem decide", "O que é", "Recomendação", "Decisão"):
                 self.assertIn(campo, f.campos, f"ficha {f.numero} ({f.titulo}) sem o campo {campo}")

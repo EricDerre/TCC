@@ -84,3 +84,21 @@ Documento conferido: `Projeto de Pesquisa - ABNT 15287_2025 - V3.md` (324 linhas
 | 11 | Todo o documento | 20 comentários de marcação; `.pdf` anterior às correções de 12/09 | — | Já pendente: remover as marcações e regerar o PDF na entrega |
 
 **Posição no cronograma (§5).** O cronograma não tem datas, só "Mês 1" a "Mês 7"; lido pelo conteúdo: o **Mês 1** (revisão bibliográfica) está concluído e ampliado (três rodadas, 342 referências); o **Mês 2** (ambiente, camada de inferência e comparação de modelos) está concluído e ampliado — instalador, duas cobaias, Fases 2-A, 2-B e 3 e a decisão do modelo, mais a Fase 3-B em curso (troca cruzada e casos inéditos); o **Mês 3** (filtragem de contexto e árvore de acessibilidade via Playwright) e o **Mês 4** (self-healing e interceptação) são a Fase 4, não iniciada; o **Mês 5** (MTTR e Task Success) é a Fase 5, não iniciada; do **Mês 6** (redação) existe o Memorial, que já é a matéria-prima do relatório, mas o texto ABNT final não começou; **Mês 7**, defesa. Em resumo: o projeto está no fim do Mês 2 do próprio cronograma, com o Mês 1 e parte do Mês 6 adiantados — e o que falta (Fases 4 e 5) é exatamente o que o novo plano do Eric vai cobrir.
+
+<!-- ! Alteração de IA - Revisar: seção nova (30/09/2026) com o estado de cada uma das 11 modificações da revisão de 23/09 depois das decisões do Eric (29 e 30/09/2026).
+     ! Motivo: a §5.1 dizia "nada aplicado"; sem este registro, quem lesse o projeto ABNT não saberia quais mudanças entraram, quando e com que ressalva. -->
+## 5.2 Aplicação das modificações (29 e 30/09/2026)
+
+| # | Estado | Como ficou |
+|---|---|---|
+| 1 | Aplicada em 30/09 | "um modelo da família Qwen2.5 em variante quantizada, com porte e variante (instrução geral ou código) definidos experimentalmente" no objetivo específico 2, na §3.2 (1º parágrafo), no Mês 2 do cronograma e no glossário (entrada "Qwen2.5 / Qwen2.5-Coder") |
+| 2 | Aplicada em 30/09 | §3.2, 2º parágrafo: a regra fixada antes dos testes (acurácia balanceada nos casos de avaliação nunca vistos, veto por autoenvenenamento, desempate por licença); latência e memória na análise de robustez |
+| 3 | Aplicada em 29/09 | linha "Mês 2 (continuação)" no cronograma |
+| 4 | Aplicada em 29/09 | parágrafo de abertura da §3 ligando as etapas aos objetivos específicos |
+| 5 | Aplicada em 29/09 | rubrica aplicada em primeira passada por assistente de IA e ratificada por um revisor |
+| 6 | Aplicada em 29/09, com ressalva do Eric | injeção determinística de falhas dominante; Fuzzing reservado a fases de teste posteriores (também no Mês 5) |
+| 7 | Aplicada em 29/09 | frase sobre como a Fase 3 mediu a reprodutibilidade |
+| 8 | Aplicada em 29/09 | endereços em BISWAS, JÚNIOR, SHI e ZHANG, J.; MACIAK → INSTATUNNEL (a página é assinada assim; a entrada volta se o Eric tiver a origem do nome) |
+| 9 | Conferida em 30/09 | o Eric confirmou no exemplar a 3. ed. de 2025; os notebooks de apoio do livro ficaram em `Documentacao/notebooks/` (fora do git) |
+| 10 | Para a entrega | referencial do TCC final (roadmap §6) |
+| 11 | Beta em 29/09, regerado em 30/09 | `Projeto de Pesquisa - ABNT 15287_2025 - V4-beta.pdf` por `ferramentas/gerar_pdf_abnt.py`; as marcações saem só da cópia |

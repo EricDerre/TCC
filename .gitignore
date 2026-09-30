@@ -93,3 +93,12 @@ Thumbs.db
 # o `git add` normal já os pega. O log do piloto continua fora porque a pasta `fase3_piloto/` inteira é ignorada
 # acima, e o git não reinclui arquivo de pasta ignorada.
 !Programacao/AgenteCore/experimentos/resultados_alvo/**/*.log
+
+# ---------------------------------------------------------------------------
+# Material de apoio do livro-texto (Faceli et al., 3. ed., 2025)
+# ---------------------------------------------------------------------------
+# ! Alteração de IA - Revisar: `Documentacao/notebooks/` fora do versionamento (30/09/2026, decisão 66).
+# ! Motivo: são os notebooks e dados de apoio do livro (baixados pelo QR code; material de terceiros sem
+# licença declarada), 330 MB com os dados dos capítulos e 117 MB de lixo de compactação do macOS (`__MACOSX`);
+# a pasta fica na máquina como referência de leitura e é citada no fichamento (`2-pesquisa-e-literatura/`).
+Documentacao/notebooks/

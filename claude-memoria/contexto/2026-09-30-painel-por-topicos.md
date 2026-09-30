@@ -12,7 +12,10 @@ Continua o handoff de [29/09](2026-09-29-decisoes-e-frentes.md). Livro-razão: `
 | **Como conferir** | `python ferramentas/gerar_dashboard.py` e `--check`; captura com o Edge sem janela: `msedge --headless=new --screenshot=x.png --window-size=1300,2400 --virtual-time-budget=8000 file:///.../painel-do-projeto.html#<aba>` (o headless renderiza no tema escuro) |
 | **Lições** | A coluna Veredito do mapa da rodada 4 vem em negrito (`**adotado**`): limpar `*` antes de classificar; a paleta antiga reprovava no validador da regra de gráficos (`node .../dataviz/scripts/validate_palette.js`), a de referência passa nos dois temas; `getComputedStyle` no `documentElement` lê os tokens do tema ativo; a rolagem para a âncora do `#hash` esconde o topo da seção sob o cabeçalho fixo |
 
+| **Decisões da tarde** | Ficha 10: itens 1 e 2 do ABNT liberados e aplicados (modelo = família Qwen2.5 com porte e variante definidos experimentalmente; critério = regra pré-registrada), PDF beta regerado, `correcoes-aplicadas.md` §5.2 — ficha fechada. Ficha 11(e): Faceli 3. ed. 2025 confirmado no exemplar; notebooks de apoio em `Documentacao/notebooks/`, fora do git (decisão 66; README do material diz 2ª edição) — ficha fechada. Ficha 16: opção (b) (decisão 65) — fechada. Nenhuma ficha aberta |
+
 ## O que falta (ordem)
-1. Eric: troca cruzada à noite (corrida 1); conferir a planilha de curadoria; ler o comparativo (agora também na aba qwen × Coder) e liberar os itens 1–2 do ABNT; Faceli no exemplar (11e); decidir a ficha 16; commit (`git add -A` pega tudo).
+1. Eric: troca cruzada à noite (corrida 1); conferir a planilha de curadoria (aba Curadoria da L1; se mudar um veredito, apagar `biblioteca_producao/` e rodar `curar_biblioteca.py --curar`); commit (`git add -A` pega tudo; os notebooks ficam fora).
 2. Depois da cruzada: integração da 3-B (corrida 6) e a aba Fase 3-B ganha o resultado (mesma função `secao_tres_b`, ler `fase3b_cruzada_qwen`).
-3. Toda análise nova: aba em `painel_topicos.py` (regra em `.claude/rules/documentacao.md`), regerar, testar, republicar em https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN.
+3. Plano da Fase 4 (agente na tela): esqueleto no roadmap §4, filtros da decisão 65, cópia curada da L1 como ponto de partida; o Eric arquiteta.
+4. Toda análise nova: aba em `painel_topicos.py` (regra em `.claude/rules/documentacao.md`), regerar, testar, republicar em https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN.
