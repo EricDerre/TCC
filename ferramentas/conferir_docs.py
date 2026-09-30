@@ -79,6 +79,11 @@ def conferir_tags(arqs: list[Path]) -> list[str]:
         # cobrança de tag (29/09/2026).
         # ! Motivo: ele é gravado por evolucao_biblioteca.fechar_snapshot, no formato congelado da Fase 3, sem
         # campo de comentário; a tag e o motivo estão em curar_biblioteca.py e no curadoria.json ao lado.
+        # ! Alteração de IA - Revisar: o LICENSE (texto canônico da licença MIT, 30/09/2026) fica fora da
+        # exigência de tag.
+        # ! Motivo: a licença é reconhecida pelo GitHub pelo texto exato; um comentário dentro dela a descaracterizaria.
+        if a.name == "LICENSE":
+            continue
         if a.name == "fechamento.json" and "biblioteca_producao" in a.as_posix():
             continue
         t = a.read_text(encoding="utf-8", errors="replace")

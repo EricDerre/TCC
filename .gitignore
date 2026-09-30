@@ -97,8 +97,13 @@ Thumbs.db
 # ---------------------------------------------------------------------------
 # Material de apoio do livro-texto (Faceli et al., 3. ed., 2025)
 # ---------------------------------------------------------------------------
-# ! Alteração de IA - Revisar: `Documentacao/notebooks/` fora do versionamento (30/09/2026, decisão 66).
-# ! Motivo: são os notebooks e dados de apoio do livro (baixados pelo QR code; material de terceiros sem
-# licença declarada), 330 MB com os dados dos capítulos e 117 MB de lixo de compactação do macOS (`__MACOSX`);
-# a pasta fica na máquina como referência de leitura e é citada no fichamento (`2-pesquisa-e-literatura/`).
+# ! Alteração de IA - Revisar: `Documentacao/notebooks/` inteira fora do versionamento (noite de 30/09/2026, decisão 68),
+# mais as regras gerais para restos de compactação do macOS (`__MACOSX/`) e cópias automáticas do Jupyter
+# (`.ipynb_checkpoints/`).
+# ! Motivo: são os notebooks e dados de apoio do livro-texto, material dos autores e da editora sem licença declarada,
+# 330 MB em 53 mil arquivos que nenhum script do projeto usa; a pasta fica na máquina como referência de leitura e é
+# citada no fichamento. Ela chegou a ser versionada na manhã de 30/09 e o Eric reviu a decisão no mesmo dia; a saída
+# do rastreamento (`git rm -r --cached`) e a limpeza do histórico são comandos dele.
 Documentacao/notebooks/
+__MACOSX/
+.ipynb_checkpoints/

@@ -1,0 +1,36 @@
+# ! Alteração de IA - Revisar: arquivo de citação (30/09/2026) no formato Citation File Format 1.2.0, que o GitHub
+# mostra no botão "Cite this repository"; autores e título copiados da capa do projeto de pesquisa ABNT.
+# ! Motivo: repositório acadêmico sem forma de citação definida; o Eric pediu tom mais sério para o projeto.
+cff-version: 1.2.0
+message: "Se usar este repositório, cite-o como indicado abaixo."
+type: software
+title: "Agente de QA E2E Autônomo com Self-Healing: ambiente-alvo, experimentos com modelos locais e memorial"
+abstract: "Trabalho de Conclusão de Curso (Ciência da Computação, Universidade Cidade de São Paulo, 2026). Repositório com o ambiente-alvo de testes (site PHP legado e API FastAPI com injeção de falhas), a bateria de avaliação de modelos de linguagem locais executados em CPU pelo Ollama, a biblioteca de documentação gerida pelo próprio modelo (Fase 3), as ferramentas de apoio e o memorial de desenvolvimento."
+authors:
+  - family-names: Derre
+    given-names: Eric Conde
+  - family-names: Esteves
+    given-names: Erick do Carmo
+  - family-names: Santos
+    given-names: Guilherme Penha dos
+  - family-names: Silva
+    given-names: João Victor Fonseca
+  - family-names: Gundim
+    given-names: Kennedy Fernando de Oliveira
+  - family-names: Patricio
+    given-names: Leandro Henrique da Silva
+  - family-names: Gonçalves
+    given-names: Pedro Henrique Torres
+version: "2026.09"
+date-released: "2026-09-30"
+repository-code: "https://github.com/EricDerre/TCC"
+url: "https://github.com/EricDerre/TCC"
+license: MIT
+keywords:
+  - teste de software
+  - agente autônomo
+  - self-healing
+  - contract drift
+  - modelos de linguagem locais
+  - Ollama
+  - Playwright

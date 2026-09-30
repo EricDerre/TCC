@@ -1,30 +1,30 @@
 **Universidade Cidade de São Paulo \- UNICID**  
 **Curso de Ciência da Computação**
 
+<!-- ! Alteração de IA - Revisar: dois nomes retirados da lista de autores (capa e folha de rosto) em 30/09/2026, a pedido do Eric.
+     ! Motivo: os dois integrantes deixaram o grupo do TCC; a lista de autores do projeto de pesquisa, da licença, do arquivo de citação e do README passa a ter sete nomes. -->
 ERIC CONDE DERRE  
 ERICK DO CARMO ESTEVES  
-FERNANDO MATOS DE SOUZA  
 GUILHERME PENHA DOS SANTOS  
 JOÃO VICTOR FONSECA SILVA  
 KENNEDY FERNANDO DE OLIVEIRA GUNDIM  
 LEANDRO HENRIQUE DA SILVA PATRICIO  
-PEDRO HENRIQUE TORRES GONÇALVES  
-RAUL SILVESTRE MARINHO
+PEDRO HENRIQUE TORRES GONÇALVES
 
 **DESENVOLVIMENTO DE UM AGENTE DE QA END-TO-END (E2E) AUTÔNOMO COM CAPACIDADES DE SELF-HEALING:**  
 Focado na Fronteira de Integração
 
+<!-- ! Alteração de IA - Revisar: dois nomes retirados da lista de autores (capa e folha de rosto) em 30/09/2026, a pedido do Eric.
+     ! Motivo: os dois integrantes deixaram o grupo do TCC; a lista de autores do projeto de pesquisa, da licença, do arquivo de citação e do README passa a ter sete nomes. -->
 São Paulo  
 2026  
 ERIC CONDE DERRE  
 ERICK DO CARMO ESTEVES  
-FERNANDO MATOS DE SOUZA  
 GUILHERME PENHA DOS SANTOS  
 JOÃO VICTOR FONSECA SILVA  
 KENNEDY FERNANDO DE OLIVEIRA GUNDIM  
 LEANDRO HENRIQUE DA SILVA PATRICIO  
-PEDRO HENRIQUE TORRES GONÇALVES  
-RAUL SILVESTRE MARINHO
+PEDRO HENRIQUE TORRES GONÇALVES
 
 **DESENVOLVIMENTO DE UM AGENTE DE QA END-TO-END (E2E) AUTÔNOMO COM CAPACIDADES DE SELF-HEALING:**  
 Focado na Fronteira de Integração
@@ -32,6 +32,8 @@ Focado na Fronteira de Integração
 |  | Projeto de pesquisa apresentado ao curso de Ciência da Computação da Universidade Cidade de São Paulo (UNICID), como requisito parcial para a elaboração do Trabalho de Conclusão de Curso. |
 | :---- | :---- |
 
+<!-- ! Alteração de IA - Revisar: dois nomes retirados da lista de autores (capa e folha de rosto) em 30/09/2026, a pedido do Eric.
+     ! Motivo: os dois integrantes deixaram o grupo do TCC; a lista de autores do projeto de pesquisa, da licença, do arquivo de citação e do README passa a ter sete nomes. -->
 São Paulo  
 2026
 

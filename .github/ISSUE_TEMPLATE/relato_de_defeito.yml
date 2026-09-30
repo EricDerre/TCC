@@ -1,0 +1,59 @@
+# ! Alteração de IA - Revisar: modelo de issue para relato de defeito (30/09/2026), no formato de formulário do GitHub.
+# ! Motivo: a lista de padrões de comunidade marcava "Issue templates" como pendente; os campos pedem o que o grupo
+# precisa para reproduzir um problema (componente, sistema, versões de Python, PHP e Ollama, passos e saída real).
+name: Relato de defeito
+description: Algo não funciona como o README descreve.
+title: "[Defeito] "
+labels: ["defeito"]
+body:
+  - type: dropdown
+    id: componente
+    attributes:
+      label: Componente
+      options:
+        - CobaiaFront (site PHP)
+        - CobaiaAPI (FastAPI)
+        - Instalador ou Cobaia.exe
+        - AgenteCore / experimentos com modelos locais
+        - Ferramentas (ferramentas/)
+        - Documentação ou painel
+    validations:
+      required: true
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que aconteceu
+      description: Descreva o problema e o que você esperava que acontecesse.
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Como reproduzir
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: saida
+    attributes:
+      label: Saída, mensagem de erro ou log
+      description: Cole o texto exato. Logs das baterias ficam em resultados_alvo/<corrida>/*.log.
+      render: text
+  - type: input
+    id: ambiente
+    attributes:
+      label: Ambiente
+      placeholder: "Windows 11 / Python 3.14 / PHP 8.2 / Ollama 0.34.1"
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Confirmações
+      options:
+        - label: Li a seção "Problemas conhecidos" do README e este defeito não está lá.
+          required: true
+        - label: Não é um dos comportamentos inseguros de propósito descritos em SECURITY.md.
+          required: true

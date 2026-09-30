@@ -1,0 +1,45 @@
+# ! Alteração de IA - Revisar: modelo de issue para proposta de melhoria ou de experimento (30/09/2026).
+# ! Motivo: o projeto decide baterias e mudanças por pergunta, custo e efeito nos registros oficiais; o formulário
+# pede exatamente isso, para a proposta chegar completa à revisão do grupo.
+name: Proposta de melhoria ou de experimento
+description: Uma mudança no código, na documentação ou uma bateria nova com os modelos locais.
+title: "[Proposta] "
+labels: ["proposta"]
+body:
+  - type: textarea
+    id: motivacao
+    attributes:
+      label: Problema ou pergunta que a proposta responde
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: O que você propõe
+      description: Descreva a mudança ou o experimento. Para bateria, informe modelos, número de inferências e tempo estimado na máquina-alvo.
+    validations:
+      required: true
+  - type: dropdown
+    id: fase
+    attributes:
+      label: Fase do projeto afetada
+      options:
+        - Ambiente-alvo (CobaiaFront, CobaiaAPI, instaladores)
+        - Fase 3 ou 3-B (biblioteca gerida pelo modelo)
+        - Fase 4 (agente na tela)
+        - Fase 5 (medição de valor)
+        - Documentação, painel ou ferramentas
+    validations:
+      required: true
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas consideradas
+  - type: checkboxes
+    id: registros
+    attributes:
+      label: Registros oficiais
+      options:
+        - label: A proposta não altera nem regenera nada em resultados_alvo/ nem em base_conhecimento/.
+          required: true
+        - label: Se for bateria, roda com um modelo residente por vez, em CPU, e grava numa pasta nova de resultados_alvo/.

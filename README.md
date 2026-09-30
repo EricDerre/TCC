@@ -1,41 +1,45 @@
 <!-- ! Alteração de IA - Revisar: documento inteiro gerado por IA (arquitetura, instalação,
      uso, decisões técnicas e problemas conhecidos do ambiente cobaia).
-     ! Motivo: o repositório não tinha nenhuma documentação — quem clonasse não teria como
+     ! Motivo: o repositório não tinha nenhuma documentação; quem clonasse não teria como
      saber que o CobaiaFront depende das extensões mbstring/output_buffering do PHP, que o
      banco é compartilhado entre os dois alvos, nem quais bugs foram deixados de propósito.
      Cada afirmação técnica aqui foi verificada executando, não deduzida do código. -->
+<!-- ! Alteração de IA - Revisar: revisão de 30/09/2026 a pedido do Eric: cabeçalho novo (nome do projeto, selos, resumo,
+     estado por fase e resultado principal, mapa da documentação), seções de contribuição, citação, licença e autores,
+     índice regerado a partir dos títulos, títulos sem travessão, e todos os travessões e setas do texto corrido trocados
+     por vírgula, dois-pontos ou palavras (blocos de código, comandos e diagramas ficaram como estavam).
+     ! Motivo: o README descrevia só o ambiente cobaia e ainda dizia que a bateria da Fase 3 estava por rodar e que a Fase 4
+     era o próximo passo sem nada antes; o repositório passou a ter os padrões de comunidade do GitHub (código de conduta,
+     guia de contribuição, licença, política de segurança, modelos de issue e de pull request) e o Eric pediu tom mais sério,
+     sem travessões e setas, mantendo a árvore do repositório e o restante do conteúdo. -->
+# Agente de QA E2E Autônomo com Self-Healing
 
-# TCC — Agente de QA E2E Autônomo — Ambiente "Cobaia"
+[![Licença MIT](https://img.shields.io/badge/licen%C3%A7a-MIT-2ea44f)](LICENSE)
+[![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white)](Programacao/CobaiaAPI/requirements.txt)
+[![PHP 8.2](https://img.shields.io/badge/PHP-8.2-777BB4?logo=php&logoColor=white)](Programacao/CobaiaFront)
+[![Modelo local](https://img.shields.io/badge/LLM%20local-Ollama%20%C2%B7%20qwen2.5%3A7b-1f6feb)](Programacao/AgenteCore/experimentos)
+[![Painel do projeto](https://img.shields.io/badge/painel-do%20projeto-8957e5)](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN)
 
-Este repositório contém o ambiente-alvo ("cobaia") usado para validar o
-**Agente de QA End-to-End (E2E) Autônomo com Capacidades de Self-Healing**,
-projeto de pesquisa do curso de Ciência da Computação da UNICID. A
-fundamentação teórica completa está em
-[`Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V3.md`](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md).
+Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade de
+São Paulo, 2026): um agente de QA end-to-end que roda com um modelo de linguagem
+local (Ollama, só CPU, sem nuvem), diagnostica falhas na fronteira de integração
+entre o front-end e a API (deriva de contrato) e mantém a própria biblioteca de
+conhecimento sobre o sistema testado. Este repositório reúne o ambiente-alvo (dois
+sistemas "cobaia"), as baterias de avaliação dos modelos locais (Fases 2-A, 2-B,
+3 e 3-B), as ferramentas de apoio, o memorial de desenvolvimento e o projeto de
+pesquisa no padrão ABNT.
 
-Este README documenta o **ambiente cobaia** (`Programacao/CobaiaFront`
-+ `Programacao/CobaiaAPI`) e, na seção "AgenteCore — experimentos", a
-biblioteca de documentação e a bateria de avaliação dos modelos locais que
-já existem em `Programacao/AgenteCore`.
-
-<!-- ! Alteração de IA - Revisar: a frase sobre o agente ainda não implementado passa a apontar
-     para a Fase 4 (nome oficial da etapa, decisão nº 29 do plano aprovado da Fase 3).
-     ! Motivo: a frase antiga ("ainda não foi implementado", sem mais contexto) ficou
-     desatualizada depois que a Fase 3 (biblioteca gerida pelo próprio modelo) começou a ser
-     implementada em cima da Fase 2-B; sem apontar a fase certa, o README dava a entender que
-     nada tinha avançado desde a Fase 2-B. -->
-<!-- ! Alteração de IA - Revisar: em 12/09/2026 "em implementação (Fase 3)" passou a "implementado,
-     com piloto executado e bateria por rodar (Fase 3)".
-     ! Motivo: os oito scripts da Fase 3 foram concluídos e revisados em 11–12/09/2026 e o piloto
-     `rodar_fase3.ps1 -Piloto` rodou em 12/09; "em implementação" passou a descrever um estado
-     que não existe mais, e o que ainda falta é a bateria completa (~60 h), não código. -->
-O agente em si (interceptador, poda da árvore de acessibilidade, cura de
-seletor) é a **Fase 4** do projeto, ainda não iniciada — ver a seção
-"AgenteCore — experimentos com os modelos locais" para o que já está pronto
-(Fase 2-B) e implementado, com piloto executado e bateria por rodar (Fase 3).
+**Estado em 30/09/2026:** Fases 1, 2-A, 2-B e 3 concluídas; Fase 3-B em
+andamento (falta a troca cruzada de bibliotecas); Fase 4, o agente na tela, em
+planejamento. Modelo padrão do agente: `qwen2.5:7b` com a biblioteca no estado L1
+(decisão 52). Números, gráficos e a leitura de cada resultado estão no
+[painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN).
 
 ## Índice
 
+- [Sobre o projeto](#sobre-o-projeto)
+- [Estado do projeto e resultados](#estado-do-projeto-e-resultados)
+- [Documentação](#documentação)
 - [Por que dois alvos](#por-que-dois-alvos)
 - [Arquitetura](#arquitetura)
 - [Stack técnica](#stack-técnica)
@@ -43,32 +47,88 @@ seletor) é a **Fase 4** do projeto, ainda não iniciada — ver a seção
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação](#instalação)
 - [Como rodar](#como-rodar)
-- [Cobaia.exe — instalação + run + navegador em 1 clique](#cobaiaexe--instalação--run--navegador-em-1-clique)
+- [Cobaia.exe: instalação, execução e navegador em um clique](#cobaiaexe-instalação-execução-e-navegador-em-um-clique)
 - [Navegador recomendado para o agente](#navegador-recomendado-para-o-agente)
-- [CobaiaFront — detalhes](#cobaiafront--detalhes)
-- [CobaiaAPI — detalhes](#cobaiaapi--detalhes)
+- [CobaiaFront em detalhe](#cobaiafront-em-detalhe)
+- [CobaiaAPI em detalhe](#cobaiaapi-em-detalhe)
+- [AgenteCore: experimentos com os modelos locais](#agentecore-experimentos-com-os-modelos-locais)
+- [Ferramentas de apoio ao trabalho com IA (`ferramentas/`)](#ferramentas-de-apoio-ao-trabalho-com-ia-ferramentas)
+- [Memória do Claude Code entre máquinas](#memória-do-claude-code-entre-máquinas)
 - [Testes e lint](#testes-e-lint)
 - [O que é versionado e por quê](#o-que-é-versionado-e-por-quê)
 - [Decisões técnicas e problemas resolvidos](#decisões-técnicas-e-problemas-resolvidos)
 - [Problemas conhecidos (deixados de propósito)](#problemas-conhecidos-deixados-de-propósito)
 - [Segurança](#segurança)
 - [Troubleshooting](#troubleshooting)
+- [Como contribuir](#como-contribuir)
+- [Como citar](#como-citar)
+- [Licença](#licença)
+- [Autores](#autores)
 - [Convenções para alterações por IA](#convenções-para-alterações-por-ia)
+
+## Sobre o projeto
+
+O objetivo é um agente de QA end-to-end que roda inteiramente na máquina de quem
+testa, com um modelo de linguagem local, e que:
+
+- **detecta deriva de contrato** (contract drift) na fronteira entre o front-end
+  e a API, o ponto em que sistemas legados e serviços novos mais quebram;
+- **mantém a própria biblioteca de conhecimento** sobre o sistema-alvo: em cada
+  época o modelo diagnostica as falhas e propõe acréscimos à documentação, que só
+  entram depois de uma validação em código;
+- **cura seletores** quando a interface muda (self-healing), a etapa prevista
+  para a Fase 4.
+
+Para medir isso sem depender de opinião, o repositório tem um ambiente-alvo
+controlado (dois sistemas "cobaia" com injeção determinística de falhas), 90
+casos de falha com gabarito e uma bateria de avaliação que compara modelos e
+versões da biblioteca por regras fixadas antes de rodar.
+
+## Estado do projeto e resultados
+
+| Fase | O que é | Estado |
+|---|---|---|
+| 1 | Ambiente e sistemas cobaia | Concluída |
+| 2-A | Prompts sem documentação, seis modelos, máquina de desenvolvimento | Concluída |
+| 2-B | Biblioteca de documentação escrita à mão, seis condições, máquina-alvo | Concluída |
+| 3 | Biblioteca gerida pelo próprio modelo, quatro modelos, três épocas | Concluída em 15/09/2026 |
+| 3-B | Ponte de versão, casos inéditos, troca cruzada e sondas | Em andamento: falta a troca cruzada |
+| 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor | Em planejamento |
+| 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
+
+**Resultado principal (decisão 52, 22/09/2026):** pela regra fixada antes da
+bateria, o modelo padrão do agente é o `qwen2.5:7b` com a biblioteca no estado
+L1, a primeira época escrita por ele, curada em 29/09/2026 e guardada em
+`Programacao/AgenteCore/biblioteca_producao/`. O comparativo com o
+`qwen2.5-coder:7b`, os 36 casos inéditos, a curadoria, o experimento do
+recuperador, a ablação base × instruct e as quatro rodadas de pesquisa
+bibliográfica estão no [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN), com uma
+aba por tópico; uma cópia do painel fica em
+`Documentacao/dashboard/painel-do-projeto.html`. Os números citados neste README
+vêm dos registros em `resultados_alvo/` e do Memorial.
+
+## Documentação
+
+- [Painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN): estado por fase, pendências, roadmap e os resultados, numa página só; gerado por `ferramentas/gerar_dashboard.py`.
+- [Memorial de Desenvolvimento](Documentacao/Memorial%20de%20Desenvolvimento.md): índice de tudo o que foi decidido, pesquisado, medido e analisado, em `Documentacao/memorial/` (decisões numeradas, levantamentos bibliográficos com afirmações verificadas, relatórios por fase, análise decisória, método e ferramental).
+- [Roadmap](Documentacao/memorial/roadmap.md) e [pendências](Documentacao/memorial/pendencias.md): o que falta rodar e as decisões, em fichas.
+- [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
+- Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
 
 ## Por que dois alvos
 
 O núcleo da pesquisa é detectar **Contract Drift** (deriva de contrato) na
 fronteira de integração Front-to-Back. Um site PHP+MySQL clássico, que
-renderiza tudo no servidor, não tem essa fronteira — não há nenhuma
+renderiza tudo no servidor, não tem essa fronteira, não há nenhuma
 requisição JSON pra interceptar. Por isso o ambiente cobaia tem **dois
 alvos**, deliberadamente separados:
 
 | Alvo | O quê | Serve pra testar |
 |---|---|---|
 | **CobaiaFront** | Site PHP+MySQL legado e monolítico (cedido por um integrante do grupo), mantido **100% intocado** no código | Interceptação de requisições de página completa, erros PHP/SQL clássicos, sistemas legados sem API |
-| **CobaiaAPI** + a aba "PRODUTOS (API)" dentro do próprio CobaiaFront | API JSON nova (Python/FastAPI), com mecanismo de injeção de falhas controlada | Contract Drift em contratos JSON reais — o foco principal do agente |
+| **CobaiaAPI** + a aba "PRODUTOS (API)" dentro do próprio CobaiaFront | API JSON nova (Python/FastAPI), com mecanismo de injeção de falhas controlada | Contract Drift em contratos JSON reais, o foco principal do agente |
 
-Os dois compartilham o **mesmo banco de dados** (`ti93phpdb01`) — uma
+Os dois compartilham o **mesmo banco de dados** (`ti93phpdb01`), uma
 reserva criada por um dos lados aparece no outro. Isso evita dados
 inconsistentes entre os alvos e simula um cenário realista (um backend,
 dois clientes diferentes o consumindo).
@@ -84,7 +144,7 @@ dois clientes diferentes o consumindo).
                                     │ mysqli           │ HTTP/JSON
                                     ▼                  ▼
                      ┌─────────────────────────────────────┐
-                     │      MariaDB — banco ti93phpdb01      │
+                     │      MariaDB · banco ti93phpdb01      │
                      │  (root sem senha, único pra os dois)  │
                      └─────────────────────────────────────┘
                                     ▲
@@ -101,7 +161,7 @@ dois clientes diferentes o consumindo).
 ## Stack técnica
 
 ### CobaiaFront
-- **Linguagem/execução:** PHP 8.2, servidor embutido (`php -S`) — sem
+- **Linguagem/execução:** PHP 8.2, servidor embutido (`php -S`), sem
   Apache/Nginx (o projeto não usa `.htaccess`/mod_rewrite, então o servidor
   embutido é suficiente e muito mais simples de automatizar).
 - **Banco:** MariaDB via extensão `mysqli`, sem ORM, queries diretas.
@@ -137,16 +197,25 @@ TCC/
 ├── install.cmd / install.ps1 / install.sh / install.py   # instalador (chamado por Cobaia.exe também)
 ├── run.cmd / run.ps1 / run.sh / run.py                   # sobe CobaiaFront + CobaiaAPI juntos
 ├── _env_common.py                          # helpers compartilhados por install.py/run.py/Cobaia.py
-├── .claude/                                # CLAUDE.md, settings.json (hooks, permissões), rules/ e skills/ do Claude Code — versionados; só settings.local.json fica fora
-├── ferramentas/                            # scripts locais de apoio ao trabalho com IA: medição de tokens, resumo de saídas, conferência da documentação, pesquisa
-├── claude-memoria/                         # memória do Claude + CLAUDE.md portáteis, com importar/exportar.ps1
-├── Documentacao/                           # projeto de pesquisa (ABNT) do TCC e memorial de desenvolvimento
+├── LICENSE / CITATION.cff                  # licença MIT e citação do repositório
+├── CONTRIBUTING.md / CODE_OF_CONDUCT.md / SECURITY.md    # como contribuir, conduta e política de segurança
+├── .github/                                # modelos de issue e de pull request
+├── .claude/                                # CLAUDE.md, settings.json (hooks, permissões), rules/ e skills/ do Claude Code (versionados; só settings.local.json fica fora)
+├── ferramentas/                            # scripts locais de apoio: painel do projeto, medição de tokens, resumo de saídas, conferência da documentação, pesquisa, PDF do ABNT
+├── claude-memoria/                         # memória do Claude + CLAUDE.md portáteis (importar/exportar.ps1) e os handoffs de sessão em contexto/
+├── Documentacao/
+│   ├── Projeto de Pesquisa - ABNT 15287_2025 - V3.md   # projeto de pesquisa; o PDF beta V4 é gerado a partir dele
+│   ├── Memorial de Desenvolvimento.md      # índice do memorial
+│   ├── memorial/                           # decisões numeradas, pesquisa bibliográfica, resultados e análises, projeto ABNT, método e ferramental, pendências, roadmap
+│   ├── dashboard/painel-do-projeto.html    # painel do projeto (gerado por ferramentas/gerar_dashboard.py; publicado no claude.ai)
+│   └── notebooks/                          # (fora do git) notebooks de apoio do livro-texto (Faceli et al., 3. ed.), baixados por quem tem o livro
 └── Programacao/
     ├── AgenteCore/
-    │   ├── base_conhecimento/              # biblioteca de documentação do cobaia (Fase 2-B)
+    │   ├── base_conhecimento/              # biblioteca de documentação original do cobaia (Fase 2-B); nunca escrita por script
     │   │   ├── negocio/ contratos/ erros/ falhas_injetadas/ defeitos_conhecidos/
     │   │   └── INDICE.md                   # gerado por validar_banco.py --indice
-    │   ├── experimentos/                   # bateria de avaliação dos modelos locais (ver seção abaixo)
+    │   ├── biblioteca_producao/            # cópia curada da biblioteca L1 do qwen2.5:7b (ponto de partida da Fase 4)
+    │   ├── experimentos/                   # baterias de avaliação dos modelos locais (Fases 2-A, 2-B, 3 e 3-B) e os registros em resultados_alvo/
     │   └── requirements.txt
     ├── CobaiaFront/                        # site PHP legado ("Churrascaria Fornalha")
     │   ├── banco/
@@ -182,13 +251,13 @@ TCC/
 - **Linux:** `sudo` disponível (`apt-get`), distro baseada em Debian/Ubuntu.
 - **macOS:** [Homebrew](https://brew.sh) instalado.
 
-Nada precisa ser pré-instalado manualmente além disso — o instalador cuida
+Nada precisa ser pré-instalado manualmente além disso, o instalador cuida
 do PHP, do MariaDB e do Python/venv.
 
 ## Instalação
 
 No Windows, `Cobaia.exe` já faz instalação + run + abrir o navegador em um
-só passo — ver [seção dedicada](#cobaiaexe--instalação--run--navegador-em-1-clique)
+só passo; ver [seção dedicada](#cobaiaexe-instalação-execução-e-navegador-em-um-clique)
 abaixo. O resto desta seção documenta o instalador "por partes"
 (`install.*`), útil pra rodar só a instalação sem subir os serviços, ou no
 Linux/macOS.
@@ -196,7 +265,7 @@ Linux/macOS.
 Um único comando, na raiz do repositório:
 
 ```
-# Windows — clique duplo em install.cmd, ou pelo terminal:
+# Windows: clique duplo em install.cmd, ou pelo terminal:
 install.cmd
 ```
 ```bash
@@ -204,31 +273,31 @@ install.cmd
 ./install.sh
 ```
 
-No Windows, use `install.cmd` (não `install.ps1` diretamente) — ele evita o
+No Windows, use `install.cmd` (não `install.ps1` diretamente), ele evita o
 erro comum de *Execution Policy* do PowerShell (ver
 [Troubleshooting](#troubleshooting)) sem precisar mudar nenhuma
 configuração do sistema. `install.cmd` só chama `install.ps1` por baixo.
 
-O que ele faz, em ordem (idempotente — pode rodar de novo a qualquer hora
+O que ele faz, em ordem (idempotente, pode rodar de novo a qualquer hora
 sem duplicar nada):
 
 1. Garante que existe Python 3 (instala via winget/apt/brew se faltar).
 2. Instala PHP 8.2 se não encontrar (`winget`/`apt`/`brew`).
-3. Instala MariaDB Server se não encontrar, e garante que está rodando —
+3. Instala MariaDB Server se não encontrar, e garante que está rodando,
    no Windows, como processo direto (não há serviço registrado, ver
    [Decisões técnicas](#decisões-técnicas-e-problemas-resolvidos)); no
    Linux/macOS, via `systemctl`/`brew services`.
 4. Garante que o usuário `root` do banco está acessível sem senha (o que
    `Programacao/CobaiaFront/conn/connect.php`, intocado, espera).
-5. Aplica, em ordem: `bancoatualizado.sql` → `schema_completo.sql` →
-   `seed.sql`.
+5. Aplica, em ordem: `bancoatualizado.sql`, depois `schema_completo.sql` e
+   por fim `seed.sql`.
 6. Cria o venv em `Programacao/CobaiaAPI/.venv` e instala as dependências
    (`requirements-dev.txt`, que já inclui as de produção).
-7. **Se o `AgenteCore` já estiver implementado**, prepara também o ambiente
-   do agente: venv próprio, dependências, o Chromium do Playwright, o Ollama
-   e o download do modelo. Enquanto o `AgenteCore` estiver vazio, esse passo
-   é pulado com uma mensagem — de propósito, para que quem só quer rodar o
-   site não baixe alguns GB de navegador e modelo sem precisar.
+7. Prepara o ambiente do `AgenteCore`: venv própria, dependências, o
+   Chromium do Playwright, o Ollama e o download do modelo padrão
+   (`qwen2.5:7b`; a variável de ambiente `COBAIA_MODELO_LLM` troca o modelo).
+   São alguns GB, então esse passo é o último e pode ser interrompido por quem
+   só quer rodar o site.
 
 Se algo faltar automatizar no seu SO específico, o script imprime uma
 mensagem clara em vez de travar silenciosamente.
@@ -236,7 +305,7 @@ mensagem clara em vez de travar silenciosamente.
 ## Como rodar
 
 ```
-# Windows — clique duplo em run.cmd, ou pelo terminal:
+# Windows: clique duplo em run.cmd, ou pelo terminal:
 run.cmd
 ```
 ```bash
@@ -256,18 +325,18 @@ uvicorn) e imprime:
 
 | Login | Senha | Nível | Uso |
 |---|---|---|---|
-| `admin` | `admin123` | `sup` | Painel admin (`/admin/login.php`) — CRUD de produtos/tipos/usuários |
-| `11122233344` | `123456` | `cli` | Área do cliente (`/admin/login.php`, mesmo formulário) — reservas |
+| `admin` | `admin123` | `sup` | Painel admin (`/admin/login.php`), CRUD de produtos/tipos/usuários |
+| `11122233344` | `123456` | `cli` | Área do cliente (`/admin/login.php`, mesmo formulário), reservas |
 
 14 produtos de exemplo já vêm cadastrados.
 
-## Cobaia.exe — instalação + run + navegador em 1 clique
+## Cobaia.exe: instalação, execução e navegador em um clique
 
 No Windows, `Cobaia.exe` (raiz do repositório) faz tudo de uma vez: roda a
-instalação completa (idempotente — se já estiver tudo instalado, só
+instalação completa (idempotente, se já estiver tudo instalado, só
 confirma e segue), sobe CobaiaFront + CobaiaAPI, e abre as duas URLs no
 navegador padrão assim que os serviços respondem. É o jeito mais direto de
-usar o projeto — inclusive pra demonstrar ao vivo no dia da banca.
+usar o projeto, inclusive pra demonstrar ao vivo no dia da banca.
 
 ```
 # duplo clique em Cobaia.exe, ou pelo terminal:
@@ -278,13 +347,13 @@ Fecha a janela (ou `Ctrl+C`) pra encerrar tudo (PHP, MariaDB, uvicorn).
 
 **Sobre o aviso do Windows Defender/SmartScreen:** `Cobaia.exe` não é
 assinado digitalmente (certificado de assinatura de código custa dinheiro e
-não faz sentido pra um projeto acadêmico) — é esperado que o Windows mostre
+não faz sentido pra um projeto acadêmico), é esperado que o Windows mostre
 "Windows protegeu seu PC" na primeira execução em uma máquina nova. Clique
-em "Mais informações" → "Executar assim mesmo". O `.exe` é gerado a partir
+em "Mais informações" e depois em "Executar assim mesmo". O `.exe` é gerado a partir
 do código-fonte deste mesmo repositório (`Cobaia.py`), sem nenhuma
 dependência externa além do que já está documentado aqui.
 
-**Reproduzindo/atualizando o `.exe`:** ele não se autoatualiza — depois de
+**Reproduzindo/atualizando o `.exe`:** ele não se autoatualiza, depois de
 mudar `Cobaia.py`, `install.py`, `run.py` ou `_env_common.py`, rode:
 ```powershell
 .\build_exe.ps1
@@ -292,29 +361,29 @@ mudar `Cobaia.py`, `install.py`, `run.py` ou `_env_common.py`, rode:
 Isso usa [PyInstaller](https://pyinstaller.org) (instalado num venv
 temporário só pra compilar, separado do venv da CobaiaAPI) e regrava
 `Cobaia.exe` na raiz. **Importante:** o `.exe` empacota um interpretador
-Python só pra rodar a lógica de orquestração (winget/pip/php/uvicorn) — ele
+Python só pra rodar a lógica de orquestração (winget/pip/php/uvicorn), ele
 **não** usa esse interpretador embutido pra criar o venv da CobaiaAPI, isso
 quebra (testado ao vivo: o layout do Python embutido no PyInstaller não é o
 de uma instalação normal, faltam os arquivos que o módulo `venv` espera
 copiar). Por isso, quando rodando como `.exe`, a criação do venv busca (ou
 instala via winget, se faltar) um Python "de verdade" no sistema e delega a
-criação pra ele via subprocesso — ver `find_or_install_real_python()` em
+criação pra ele via subprocesso; ver `find_or_install_real_python()` em
 `_env_common.py`. As dependências da CobaiaAPI continuam indo exclusivamente
 pra `Programacao/CobaiaAPI/.venv`, nunca pro ambiente do `.exe`.
 
 Nos scripts (`install.cmd`/`.ps1`/`.sh`, sem ser via `.exe`), isso nem entra
-em jogo — `sys.executable` ali já é um Python real, porque foi ele mesmo
+em jogo, `sys.executable` ali já é um Python real, porque foi ele mesmo
 quem rodou o script.
 
 ## Navegador recomendado para o agente
 
-Esta pergunta é sobre qual navegador o **futuro `AgenteCore`** deve
-automatizar (via Playwright) pra interceptar rede/coletar erros — não afeta
+Esta pergunta é sobre qual navegador o **`AgenteCore` da Fase 4** deve
+automatizar (via Playwright) pra interceptar rede/coletar erros, não afeta
 o CobaiaFront/CobaiaAPI em si, que funcionam em qualquer navegador
 (Bootstrap 3 + jQuery + `fetch()`, nada específico de motor).
 
 **Recomendação: o Chromium que o próprio Playwright baixa e fixa
-(`playwright install chromium`), rodando headless — não o Chrome/Edge
+(`playwright install chromium`), rodando headless, não o Chrome/Edge
 instalado no sistema.**
 
 O motor é Chromium em qualquer um dos casos; a diferença é *qual build*.
@@ -324,63 +393,63 @@ graça e localmente:
 - **Reprodutibilidade dos resultados (o argumento decisivo pra um TCC).** A
   pesquisa mede MTTR e Task Success. O Chrome/Edge do sistema se
   autoatualiza sozinho e é diferente na máquina de cada um dos 9
-  integrantes — dois runs do mesmo experimento podem cair em versões
+  integrantes, dois runs do mesmo experimento podem cair em versões
   diferentes do navegador. O Playwright **fixa uma build exata de Chromium
   por versão do Playwright**: todo mundo (e a banca, meses depois) roda
   exatamente o mesmo motor.
 - **Mesmo comando nos dois SOs.** `playwright install chromium` é idêntico
   em Windows e Linux e cabe direto no instalador. Usar o Chrome do sistema
   exigiria um caminho de instalação por SO (winget no Windows, repositório
-  `.deb`/`.rpm` no Linux) — mais peças pra dar errado no "hit and run".
+  `.deb`/`.rpm` no Linux), mais peças pra dar errado no "hit and run".
   No Linux, `playwright install --with-deps chromium` ainda instala
   sozinho as libs de sistema que o headless precisa (libnss3, libgbm1 etc.).
 - **Não depende do que está instalado.** Máquina corporativa pode ter
   Chrome antigo, travado por política, ou nenhum.
 - **Profundidade de interceptação:** o Chromium é o motor "de origem" do
-  Playwright (boa parte da equipe veio do Puppeteer/Chrome DevTools) — os
+  Playwright (boa parte da equipe veio do Puppeteer/Chrome DevTools), os
   hooks de rede (`page.on('request'/'response')`, `route()`, corpo via
   `response.body()`) são os mais maduros ali, comparado ao wrapper usado
   para Firefox (Juggler) ou WebKit.
-- **Headless** é o modo mais testado do mercado inteiro de automação —
+- **Headless** é o modo mais testado do mercado inteiro de automação,
   exatamente o que o agente precisa pra rodar em segundo plano.
 
 **Alternativa (uma linha de diferença):** se em alguma máquina o download
 de ~150 MB for um problema, ou se a política de TI só permitir binário já
 homologado, dá pra apontar pro Chrome instalado com
-`browser_type.launch(channel="chrome")` — funciona em Windows e Linux e não
+`browser_type.launch(channel="chrome")`, funciona em Windows e Linux e não
 muda mais nada no código. Só perde a garantia de versão fixa. (`channel="msedge"`
 existe também, mas aí a portabilidade pro Linux fica pior, já que o Edge não
-é padrão lá — por isso não é a recomendação.)
+é padrão lá, por isso não é a recomendação.)
 
 **WebKit/Firefox** não agregam aqui: não há necessidade de validar
 comportamento de Safari, e o Firefox tem hooks de rede menos ricos no
 Playwright.
 
 Detalhe à parte: o navegador que o `webbrowser.open()` do `Cobaia.exe` abre
-(nesta máquina, Firefox — o seu padrão) é só conveniência pra você olhar o
+(nesta máquina, Firefox, o seu padrão) é só conveniência pra você olhar o
 site, **não tem relação nenhuma** com qual navegador o `AgenteCore` vai
-automatizar depois — o Playwright sempre sobe sua própria instância
+automatizar depois, o Playwright sempre sobe sua própria instância
 isolada, independente do navegador padrão do sistema.
 
-## CobaiaFront — detalhes
+## CobaiaFront em detalhe
 
 Site de restaurante ("Churrascaria Fornalha"): cardápio público, busca de
 produtos, formulário de contato (PHPMailer), painel admin com CRUD
 completo, e área de cliente com reservas.
 
 Rotas principais:
-- `/index.php` — home (destaques + produtos + carrossel)
+- `/index.php`: home (destaques + produtos + carrossel)
 - `/produtos_busca.php?buscar=X`, `/produtos_por_tipo.php?id_tipo=X`,
   `/produto_detalhes.php?id_produto=X`
-- `/produtos_api.php` — **nova**, consome a CobaiaAPI via `fetch()`
-- `/admin/login.php` → `/admin/index.php` (CRUD produtos/tipos/usuários)
-- `/admin/login.php` → `/cliente/index.php?cliente=<login>` (reservas)
+- `/produtos_api.php`: **nova**, consome a CobaiaAPI via `fetch()`
+- `/admin/login.php`, que leva a `/admin/index.php` (CRUD produtos/tipos/usuários)
+- `/admin/login.php`, que leva a `/cliente/index.php?cliente=<login>` (reservas)
 
 O código PHP em si não foi alterado, exceto um link novo de navegação em
 `menu_publico.php` (marcado com `! Alteração de IA - Revisar`) apontando
 pra `produtos_api.php`.
 
-## CobaiaAPI — detalhes
+## CobaiaAPI em detalhe
 
 Documentação interativa (Swagger UI) sempre disponível em
 `http://localhost:8000/docs` enquanto o servidor estiver rodando.
@@ -390,14 +459,14 @@ Documentação interativa (Swagger UI) sempre disponível em
 | `/api/produtos` | GET | Lista todos os produtos |
 | `/api/produtos/{id}` | GET | Detalhe de um produto (404 se não existir) |
 | `/api/pedidos?login=<cpf>` | GET | Reservas de um cliente |
-| `/api/pedidos` | POST | Cria reserva — `{id_clientes, pessoas, data_pedido}` |
+| `/api/pedidos` | POST | Cria reserva, `{id_clientes, pessoas, data_pedido}` |
 | `/api/pedidos/{id}/cancelar` | POST | Cancela uma reserva |
 | `/api/admin/fault-mode` | GET/POST | Liga/desliga modos de falha (ver abaixo) |
 
 ### Injeção de falhas (fault injection)
 
 Mecanismo pensado pra viabilizar Fuzzing/Mutação Dinâmica contra a
-CobaiaAPI — o agente de QA precisa de um jeito determinístico e
+CobaiaAPI, o agente de QA precisa de um jeito determinístico e
 reproduzível de provocar falhas conhecidas.
 
 ```bash
@@ -414,13 +483,13 @@ Modos disponíveis (`mode`):
 | `normal` | Comportamento padrão (default) |
 | `error_500` | Responde HTTP 500 |
 | `latency` | Atraso artificial de 2s antes de responder |
-| `type_drift` | Muda o tipo do campo `target_field` (ex.: número → string) |
+| `type_drift` | Muda o tipo do campo `target_field` (ex.: número vira string) |
 | `field_missing` | Remove `target_field` da resposta |
 | `field_renamed` | Renomeia `target_field` para `<campo>_v2` |
 | `malformed_json` | Responde um corpo JSON sintaticamente quebrado |
 
 `probability` (0.0–1.0, default 1.0) controla a chance da falha disparar
-por requisição — útil pra simular intermitência.
+por requisição, útil pra simular intermitência.
 
 <!-- ! Alteração de IA - Revisar: documenta o modo de ativação por variável de ambiente.
      ! Motivo: só FAULT_MODE era lido do .env; sem FAULT_TARGET_FIELD os modos com
@@ -439,14 +508,14 @@ O token (`X-Admin-Token`) vem de `ADMIN_TOKEN` no `.env` (veja
 
 **Detalhe técnico importante:** as rotas montam a resposta como `dict` puro
 e retornam via `JSONResponse(content=...)` explícito, em vez de deixar o
-FastAPI serializar pelo `response_model` declarado — isso é o que permite a
+FastAPI serializar pelo `response_model` declarado, isso é o que permite a
 injeção de falha realmente alterar o formato da resposta; se as rotas
 dependessem do `response_model` normal, o Pydantic validaria e filtraria
 silenciosamente qualquer campo alterado antes de sair pela rede.
 `response_model` continua declarado nas rotas só pra gerar a documentação
 OpenAPI do contrato "normal".
 
-## AgenteCore — experimentos com os modelos locais
+## AgenteCore: experimentos com os modelos locais
 
 <!-- ! Alteração de IA - Revisar: seção nova descrevendo a bateria de experimentos e a
      biblioteca de documentação da Fase 2-B.
@@ -455,14 +524,14 @@ OpenAPI do contrato "normal".
      residente no Ollama. -->
 Tudo em `Programacao/AgenteCore/experimentos/`, rodando com o Python da venv
 do AgenteCore (`Programacao/AgenteCore/.venv`, criada pelo instalador).
-**Regra de ouro: um modelo por vez** — os scripts conferem em `/api/ps` que
+**Regra de ouro: um modelo por vez**, os scripts conferem em `/api/ps` que
 não há outro modelo residente, e toda inferência é forçada para CPU
 (`num_gpu=0`) porque a tese afirma operar sob restrição de hardware local.
 
 **Duas máquinas, duas pastas de resultado.** A Fase 2-A foi medida no Ryzen
 de desenvolvimento (`resultados/`, `graficos/`, `relatorio.html` na raiz de
-`experimentos/`). A Fase 2-B roda na **máquina-alvo** (notebook corporativo
-i5-1235U, 16 GB, sem GPU) e grava em `resultados_alvo/` — é a variável de
+`experimentos/`). A Fase 2-B rodou na **máquina-alvo** (notebook corporativo
+i5-1235U, 16 GB, sem GPU) e grava em `resultados_alvo/`, é a variável de
 ambiente `RESULTADOS_DIR` (lida por `caminhos.py`) que decide onde cada
 script grava e lê, para os dois conjuntos nunca se sobrescreverem. Cada
 registro leva o nome da máquina, e `maquina.json` guarda CPU, RAM, sistema e
@@ -475,7 +544,7 @@ versão do Ollama. Tempos só são comparáveis dentro da mesma pasta.
 | 3 | `executar_bateria.py --modelos M --condicao A0..A5` | Roda os 90 casos; `A0` sem biblioteca (Fase 2-A), `A1` inteira, `A2` top-3 recuperada, `A3` só o verbete certo, `A4` distratores, `A5` verbete errado. Resumível: grava JSONL por caso. |
 | 4 | `avaliar.py` | Pontua pelos gabaritos; Δ contra A0, McNemar pareado, IC de Wilson, ancoragem, flips de quantização. |
 | 5 | `gerar_graficos.py` / `gerar_relatorio.py` | PNG/SVG para o documento e `relatorio.html` navegável, tudo a partir do JSONL. |
-| — | `rodar_fase2b.ps1` | Orquestra a Fase 2-B inteira **na máquina-alvo**: confere Python/Ollama/RAM/disco, baixa os 8 modelos que faltarem, grava `maquina.json`, refaz a linha de base A0 lá, roda A1–A5 e a avaliação — tudo em `resultados_alvo/`. Um modelo por vez, resumível (Ctrl+C e relançar), ~30–45 h: `powershell -ExecutionPolicy Bypass -File .\rodar_fase2b.ps1`. |
+| todos | `rodar_fase2b.ps1` | Orquestra a Fase 2-B inteira **na máquina-alvo**: confere Python/Ollama/RAM/disco, baixa os 8 modelos que faltarem, grava `maquina.json`, refaz a linha de base A0 lá, roda A1–A5 e a avaliação, tudo em `resultados_alvo/`. Um modelo por vez, resumível (Ctrl+C e relançar), ~30–45 h: `powershell -ExecutionPolicy Bypass -File .\rodar_fase2b.ps1`. |
 
 A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e em
 [`Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md`](Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md)
@@ -485,7 +554,7 @@ A leitura dos resultados fica em `RESULTADO_FASE2.md` (primeira leva, 2 casos) e
 Decisões, pesquisa e fontes estão em `Documentacao/Memorial de Desenvolvimento.md`
 (índice) e na pasta `Documentacao/memorial/`.
 
-### Fase 3 — biblioteca gerida pelo modelo
+### Fase 3: biblioteca gerida pelo modelo
 
 <!-- ! Alteração de IA - Revisar: subseção nova descrevendo a Fase 3 (biblioteca editada pelo
      próprio modelo, por modelo e por época) e os scripts que a implementam.
@@ -497,8 +566,8 @@ A Fase 2-B mostrou que a biblioteca **recuperada** (top-3) sobe o acerto em
 todos os modelos e que documentação errada é seguida em 93–96% dos casos. A
 Fase 3 testa se o próprio modelo consegue **melhorar** essa documentação: em
 cada "época", ele diagnostica os 90 casos com a biblioteca atual e, só nos
-casos de aprendizado (54 dos 90, com gabarito), propõe acréscimos — nunca
-reescreve nem apaga — que passam por validação em código antes de entrar.
+casos de aprendizado (54 dos 90, com gabarito), propõe acréscimos, nunca
+reescreve nem apaga, que passam por validação em código antes de entrar.
 Cada modelo evolui a **sua própria cópia** da biblioteca (a original em
 `base_conhecimento/` nunca é escrita pela Fase 3); a cópia intocada continua
 disponível como L0, o ponto de comparação de todas as épocas seguintes.
@@ -510,7 +579,7 @@ disponível como L0, o ponto de comparação de todas as épocas seguintes.
      `revisao_edicoes__<slug>.md`, gráficos 12–17 na pasta comum) e o parágrafo de custo cita a
      projeção do executor.
      ! Motivo: todos os scripts existem, foram revisados e rodaram juntos no piloto de
-     12/09/2026 (1 modelo, 10 casos, 1 época, 00h13; retomada com hash idêntico) — a marca
+     12/09/2026 (1 modelo, 10 casos, 1 época, 00h13; retomada com hash idêntico), a marca
      "(em implementação)" estava obsoleta. `CODIGOS_REJEICAO` em `evolucao_biblioteca.py` tem
      30 códigos (26 é o número de checagens). E a árvore omitia arquivos que existem em
      `resultados_alvo/fase3_piloto/` (conferida em 12/09/2026): os diffs de época são irmãos
@@ -521,12 +590,12 @@ disponível como L0, o ponto de comparação de todas as épocas seguintes.
 |---|---|---|
 | `evolucao_biblioteca.py` | Parser das propostas de edição do modelo, validador com 30 códigos de rejeição em 26 checagens de ordem fixa (cópia do caso, estouro de teto, vocabulário fora do padrão etc.), aplicação só por acréscimo, hash/diff/fechamento de cada época. | Usado pelos scripts abaixo; não é chamado direto. |
 | `executar_fase3.py` | Laço por modelo e por época: diagnóstico com a biblioteca da época anterior, proposta de edição nos casos de aprendizado, validação e aplicação na época seguinte. Resumível por `(modelo, época, caso, tipo)`. | `python executar_fase3.py --modelos M --epocas 3 --saida fase3` |
-| `avaliar_fase3.py` | Pontua por modelo × versão da biblioteca (L0..L3) × partição (aprendizado/avaliação/geral); McNemar pareado, Cochran Q entre as 4 épocas, IC de Wilson, flips de acerto↔erro entre épocas. | `python avaliar_fase3.py` |
+| `avaliar_fase3.py` | Pontua por modelo × versão da biblioteca (L0..L3) × partição (aprendizado/avaliação/geral); McNemar pareado, Cochran Q entre as 4 épocas, IC de Wilson, trocas entre acerto e erro entre épocas. | `python avaliar_fase3.py` |
 | `comparar_fases.py` | Junta 2-A, 2-B e Fase 3 num só `comparacao_fases.json`/`.md`, com os pareamentos que fazem sentido entre fases. | `python comparar_fases.py` |
 | `gerar_graficos_fase3.py` | Figuras 12–17: acerto por época, recuperação por época, motivos de rejeição das propostas, crescimento da biblioteca, comparação entre as três fases. | `python gerar_graficos_fase3.py` (venv com matplotlib) |
 | `gerar_relatorio_fase3.py` | `relatorio_fase3.html` navegável por modelo/época/partição, com cada proposta de edição (prompt, resposta crua, decisão do validador). | `python gerar_relatorio_fase3.py` |
-| `testar_fase3.py` | Testes em Python puro (sem pytest) do parser, do validador, da aplicação de edição e do hash/diff — sem chamar o Ollama, < 30 s. | `python testar_fase3.py` |
-| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash — validação do encanamento feita; a bateria completa rodou em 13–15/09/2026 (58h59, 0 falhas — ver "Resultado da Fase 3" abaixo). | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
+| `testar_fase3.py` | Testes em Python puro (sem pytest) do parser, do validador, da aplicação de edição e do hash/diff, sem chamar o Ollama, < 30 s. | `python testar_fase3.py` |
+| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash, validação do encanamento feita; a bateria completa rodou em 13–15/09/2026 (58h59, 0 falhas; ver "Resultado da Fase 3" abaixo). | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
 
 <!-- ! Alteração de IA - Revisar: na tabela acima, a linha de `rodar_fase3.ps1` deixou de dizer que "a bateria completa ainda não rodou".
      ! Motivo: a bateria rodou em 13–15/09/2026 (58h59, 0 falhas; parágrafo "Resultado da Fase 3" abaixo) e a frase, esquecida na revisão de 21/09, contradizia o resto da seção. -->
@@ -554,7 +623,7 @@ fase3/
 ../graficos/12-…17-…          figuras 12–17 na pasta comum de gráficos (resultados_alvo/graficos/); só o piloto grava em fase3_piloto/graficos/
 ```
 
-<!-- ! Alteração de IA - Revisar: segunda passada de 12/09/2026 — o comando da projeção
+<!-- ! Alteração de IA - Revisar: segunda passada de 12/09/2026, o comando da projeção
      ganhou `--modelos` com os quatro modelos.
      ! Motivo: `python executar_fase3.py --so-projecao` sozinho encerra com "the following
      arguments are required: --modelos" (`required=True` no argparse de `executar_fase3.py`);
@@ -563,10 +632,10 @@ fase3/
 Estimativa de custo: **~60 h de máquina** para os 4 modelos × 3 épocas no
 plano; a projeção que o executor imprime (`python executar_fase3.py
 --so-projecao --modelos granite4.2:8b qwen2.5:7b qwen2.5-coder:7b
-qwen2.5-coder:3b` — `--modelos` é obrigatório; é o comando que `rodar_fase3.ps1`
-roda antes da corrida —, com os ms/token medidos na 2-B) dá **67,18 h**. O piloto de 10
-casos (`-Piloto`) rodou em 12/09/2026 em 00h13 — `qwen2.5-coder:3b`, 1 época,
-0 de 6 propostas aceitas — e valida o encanamento, não o custo dos quatro
+qwen2.5-coder:3b`, `--modelos` é obrigatório; é o comando que `rodar_fase3.ps1`
+roda antes da corrida, com os ms/token medidos na 2-B) dá **67,18 h**. O piloto de 10
+casos (`-Piloto`) rodou em 12/09/2026 em 00h13, `qwen2.5-coder:3b`, 1 época,
+0 de 6 propostas aceitas, e valida o encanamento, não o custo dos quatro
 modelos. A bateria é **retomável**: interromper com Ctrl+C e rodar de novo
 continua da mesma época e do mesmo caso, sem repetir trabalho já fechado.
 
@@ -579,22 +648,23 @@ falha: nenhum`, Ollama 0.34.0), 2.088 inferências, e os resultados estão em
 em `resultados_alvo/fase3/comparacao_fases.md`; a leitura está no Memorial
 (`Documentacao/memorial/3-resultados-e-analises/`, relatório e comparação
 preenchidos em 22/09/2026). **Decisão do modelo (22/09/2026, decisão 52):
-`qwen2.5:7b` com a biblioteca no estado L1** — pela regra pré-registrada
-(`decidir_modelo.py` → `resultados_alvo/fase3/decisao_modelo.md`: 91,7% de
+`qwen2.5:7b` com a biblioteca no estado L1**, pela regra pré-registrada
+(`decidir_modelo.py`, que grava `resultados_alvo/fase3/decisao_modelo.md`: 91,7% de
 acurácia balanceada nos 36 casos de avaliação, sem veto por autoenvenenamento;
 P(top-1) de 77,6% no bootstrap); análise completa em
 `Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md`.
 As tabelas do Memorial saem de `gerar_tabelas_relatorio_fase3.py` como blocos
 conferidos por `--check` (`resultados_alvo/fase3/tabelas_relatorio.md`).
 
-### Fase 3-B — ponte de versão e testes complementares
+### Fase 3-B: ponte de versão e testes complementares
 
 Depois da bateria o Ollama atualizou sozinho de 0.34.0 para 0.34.1. Qualquer
 inferência nova passa antes por uma **ponte de versão** (L0 nos 36 casos de
 avaliação, 4 modelos) que mede se o runtime novo reproduz o antigo; só então os
-testes complementares que o Eric escolher (casos inéditos, troca cruzada de
-bibliotecas entre modelos, granite com o teto de texto relaxado, verbete errado
-plantado nas bibliotecas finais). Tudo roda por um executor **próprio**, que
+testes complementares escolhidos em 23/09/2026 (decisão 56): os 36 casos inéditos,
+que rodaram em 28/09, e a troca cruzada de bibliotecas entre modelos, ainda
+pendente; a sonda de detecção de correção, a ablação base × instruct e o
+experimento do recuperador entraram depois. Tudo roda por um executor **próprio**, que
 lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 `estrategias.py`, `evolucao_biblioteca.py` nem `resultados_alvo/fase3/`.
 
@@ -610,7 +680,7 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `curar_biblioteca.py` | Curadoria da biblioteca L1 do `qwen2.5:7b` (29/09/2026, ficha 2): `--listar` escreve a planilha `resultados_alvo/fase3/curadoria_L1__qwen2.5_7b.md` (40 edições da época 1, 10 com veredito da planilha oficial); `--curar --destino ../biblioteca_producao` reconstrói a cópia de produção a partir da época 0 reaplicando só o que não for *Errada*, depois de conferir que reaplicar tudo reproduz o hash oficial; grava `curadoria.json`. | `RESULTADOS_DIR=resultados_alvo python curar_biblioteca.py --listar` |
 | `comparar_qwen_coder.py` | Comparativo `qwen2.5:7b` × `qwen2.5-coder:7b` em todas as fases (29/09/2026, ficha 4): tabelas, confronto caso a caso (McNemar exato) e a lista de toda célula em que o Coder fica à frente; grava `resultados_alvo/fase3/comparativo_qwen_coder.{json,md}`; `--colar` cola os blocos em `Documentacao/memorial/3-resultados-e-analises/comparativo-qwen25-7b-vs-coder-7b.md`; `--check`. | `RESULTADOS_DIR=resultados_alvo python comparar_qwen_coder.py` |
 | `experimento_recuperador.py` | Experimento offline do recuperador (29/09/2026, ficha 11f): BM25 com sinais × embedding denso (`embeddinggemma:300m`, consulta por termos e por texto) × híbrido RRF, k = 1/3/5, nos 90 oficiais e nos 36 inéditos, bibliotecas L0/L1/L3; saída em `resultados_alvo/recuperador/` (`.json` registro, `.md` derivado com `--check`). | `RESULTADOS_DIR=resultados_alvo python experimento_recuperador.py --embedding embeddinggemma:300m` |
-| `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados — nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
+| `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados, nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
 copiados em `bibliotecas/<slug>/`, `diagnosticos__L<n>.jsonl` por modelo,
@@ -622,7 +692,7 @@ exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52).
 
 <!-- ! Alteração de IA - Revisar: parágrafo abaixo com os testes da 3-B escolhidos pelo Eric em 23/09/2026, os comandos na forma que o Windows PowerShell aceita por -File (listas separadas por vírgula) e o efeito da decisão do modelo no instalador.
      ! Motivo: o texto anterior dizia "testes a escolher"; a escolha saiu (decisão 56) e o comando registrado antes nas pendências, com a lista separada por espaço, falha na vinculação de parâmetros do PowerShell (conferido em 23/09/2026 com um script de teste). O `install.py` passou a baixar o `qwen2.5:7b` e os outros modelos ficam só como registro. -->
-**Testes da 3-B escolhidos (23/09/2026, decisão 56).** Primeiro a **troca cruzada** — as bibliotecas L1 e L3 do `qwen2.5:7b` lidas pelos dois Coder nos 36 casos de avaliação:
+**Testes da 3-B escolhidos (23/09/2026, decisão 56).** Primeiro a **troca cruzada**, as bibliotecas L1 e L3 do `qwen2.5:7b` lidas pelos dois Coder nos 36 casos de avaliação:
 
 ```
 powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo cruzada -Saida fase3b_cruzada_qwen -Doador qwen2.5:7b -Versoes 1,3 -Modelos qwen2.5-coder:7b,qwen2.5-coder:3b
@@ -634,7 +704,7 @@ Depois os **casos inéditos** (`banco_casos_ineditos.py`: 36 casos novos, 2 por 
 powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo ineditos -Saida fase3b_ineditos -Versoes 0,1,3 -Modelos qwen2.5:7b,qwen2.5-coder:3b
 ```
 
-As listas vão separadas por **vírgula** (`-File` do Windows PowerShell 5.1 vincula `a b` como dois argumentos e falha). Com a decisão tomada, o `install.py` passou a baixar o `qwen2.5:7b` por padrão; os outros modelos ficam só como registro histórico — resultados, gráficos e o veredito de cada um em `Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md` §8. O painel do projeto — pendências em fichas, roadmap com os comandos prontos e todos os números dos testes numa página só — está em `Documentacao/dashboard/painel-do-projeto.html` (gerado por `ferramentas/gerar_dashboard.py` e publicado no claude.ai para leitura de qualquer lugar); o estado por fase, com o que falta rodar, em `Documentacao/memorial/roadmap.md`, e as decisões que esperam resposta, em fichas, em `Documentacao/memorial/pendencias.md`.
+As listas vão separadas por **vírgula** (`-File` do Windows PowerShell 5.1 vincula `a b` como dois argumentos e falha). Com a decisão tomada, o `install.py` passou a baixar o `qwen2.5:7b` por padrão; os outros modelos ficam só como registro histórico, resultados, gráficos e o veredito de cada um em `Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md` §8. O painel do projeto, pendências em fichas, roadmap com os comandos prontos e todos os números dos testes numa página só, está em `Documentacao/dashboard/painel-do-projeto.html` (gerado por `ferramentas/gerar_dashboard.py` e publicado em https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN para leitura de qualquer lugar); o estado por fase, com o que falta rodar, em `Documentacao/memorial/roadmap.md`, e as decisões que esperam resposta, em fichas, em `Documentacao/memorial/pendencias.md`.
 
 ## Ferramentas de apoio ao trabalho com IA (`ferramentas/`)
 
@@ -648,7 +718,7 @@ modelo):
      ! Motivo: o Eric pediu a aba do comparativo qwen × Coder e que o painel fosse o compilador das análises, com uma aba por tópico; a linha antiga ainda descrevia o painel só com as abas de 28/09. -->
 | Script | O que faz |
 |---|---|
-| `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: navegação em cinco grupos (Projeto, Modelos, Biblioteca, Fases anteriores, Pesquisa e método), abas Início (estado por fase, o que depende do Eric, mapa do painel), Pendências (um cartão por ficha de `pendencias.md`, com filtro), Roadmap (fases e corridas de `roadmap.md`, com o comando pronto) e as abas dos testes — lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18, monta gráficos (Chart.js, paleta validada da regra de gráficos, com tema escuro) e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
+| `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: navegação em cinco grupos (Projeto, Modelos, Biblioteca, Fases anteriores, Pesquisa e método), abas Início (estado por fase, o que depende do Eric, mapa do painel), Pendências (um cartão por ficha de `pendencias.md`, com filtro), Roadmap (fases e corridas de `roadmap.md`, com o comando pronto) e as abas dos testes, lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18, monta gráficos (Chart.js, paleta validada da regra de gráficos, com tema escuro) e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
 | `integrar_pesquisa_documentacao.py` | Rodada 4 do levantamento (29/09/2026, qualidade da documentação autogerida): `--montar` junta pesquisa + verificação + síntese de `.superpowers/sdd/fase3b-e-fechamento/pesquisa/r4/` em `r4-final.json`; a integração grava `levantamento-2026-09-29-documentacao-autogerida.md` (§6.13), o bloco de referências e a linha no índice do Memorial; `--check`. |
 | `gerar_pdf_abnt.py` | PDF (versão beta) do projeto de pesquisa a partir do Markdown, sem as marcações de IA (retiradas só da cópia), com folha de estilo ABNT e impressão pelo Microsoft Edge em modo sem janela; grava `Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V4-beta.pdf`. |
 | `painel_textos.py` (+ `testar_painel_textos.py`) | Leitura das fichas de `pendencias.md` (`### N. Título` + campos Estado / Quem decide / O que é / Por que importa / Opções / Recomendação / Decisão) e das tabelas de `roadmap.md` (estado por fase; corridas com a coluna Estado) para o painel, e conversão do resto dos dois documentos em HTML; o teste confere o formato dos arquivos reais. |
@@ -676,7 +746,7 @@ abra o Claude Code na pasta do repositório. Detalhes no README de lá.
      "Eric.Derre" intacto e apontando para uma pasta de memória que o Claude Code nunca usa
      (`c--Users-Eric.Derre-Documents-TCC`); o slug real desta máquina é
      `c--Users-Eric-Derre-Documents-TCC` (todo caractere fora de letra/número vira `-`).
-     Corrigido em 11/09/2026 nos dois scripts — ver `claude-memoria/README.md`. -->
+     Corrigido em 11/09/2026 nos dois scripts; ver `claude-memoria/README.md`. -->
 Quem já rodou `importar.ps1`/`exportar.ps1` antes de 11/09/2026 deve rodar de
 novo depois de atualizar: o slug calculado mudou (era
 `c--Users-Eric.Derre-Documents-TCC`, agora é `c--Users-Eric-Derre-Documents-TCC`).
@@ -690,7 +760,20 @@ cd Programacao\CobaiaAPI
 ```
 (No Linux/macOS: `.venv/bin/python -m pytest -v`.)
 
-Os testes rodam contra o **banco real** (não há banco de testes isolado —
+Experimentos, painel e documentação, sem chamar modelo nenhum:
+
+```powershell
+cd Programacao\AgenteCore\experimentos
+python testar_fase3.py
+python testar_fase3b.py
+cd ..\..\..
+python ferramentas/testar_painel_textos.py
+python ferramentas/testar_painel_topicos.py
+python ferramentas/gerar_dashboard.py --check
+python ferramentas/conferir_docs.py
+```
+
+Os testes da CobaiaAPI rodam contra o **banco real** (não há banco de testes isolado,
 é um ambiente cobaia, não produção), então rode `install.ps1`/`install.sh`
 pelo menos uma vez antes.
 
@@ -699,42 +782,45 @@ pelo menos uma vez antes.
 O repositório é deliberadamente "hit and run": versionamos **muito mais que
 o normal** para que quem clonar precise do mínimo de passos. Fica de fora só
 o que não funcionaria na máquina de outra pessoa, ou o que se regenera
-sozinho — versionar essas coisas atrapalharia o "hit and run" em vez de
+sozinho, versionar essas coisas atrapalharia o "hit and run" em vez de
 ajudar.
 
 <!-- ! Alteração de IA - Revisar: em 12/09/2026 a tabela ganhou as duas linhas de `.superpowers/`
      e de `resultados_alvo/fase3_piloto/`, que já estavam no `.gitignore` (linhas 19 e 25).
      ! Motivo: as duas regras entraram no `.gitignore` em 11/09/2026 com comentário lá, mas esta
-     tabela — que é onde o README explica o que fica fora do git e por quê — não as citava, e
+     tabela, que é onde o README explica o que fica fora do git e por quê, não as citava, e
      quem procurasse aqui o motivo de o piloto não estar versionado não achava. -->
-<!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `.mcp.json`/`.cbmignore` passou a "Não — removidos" (29/09/2026).
+<!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `.mcp.json`/`.cbmignore` passou a "Não, removidos" (29/09/2026).
      ! Motivo: a linha dizia que os dois ficavam se a regra de permanência fosse cumprida; ela foi medida e o servidor saiu. -->
 | Item | Versionado? | Por quê |
 |---|---|---|
-| `Cobaia.exe` (8.6 MB) | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou — sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
+| `Cobaia.exe` (8.6 MB) | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou, sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
 | `Cobaia.spec` | **Sim** | Receita de recompilação (arquivo texto pequeno). |
-| `Programacao/CobaiaFront/` inteiro (16 MB, sendo 13 MB de imagens) | **Sim** | Imagens, CSS/JS do Bootstrap e PHPMailer são carregados localmente pelo site — sem eles o CobaiaFront não renderiza. Não há passo de build/download que os recupere. |
+| `Programacao/CobaiaFront/` inteiro (16 MB, sendo 13 MB de imagens) | **Sim** | Imagens, CSS/JS do Bootstrap e PHPMailer são carregados localmente pelo site, sem eles o CobaiaFront não renderiza. Não há passo de build/download que os recupere. |
 | `banco/*.sql` | **Sim** | Schema + seed. É o que faz o site funcionar de verdade. |
 | `.env.example` | **Sim** | Template de configuração (o `.env` real fica de fora). |
-| `Programacao/CobaiaAPI/.venv/` (67 MB) | **Não** | Verificado: o `pyvenv.cfg` grava caminhos absolutos desta máquina (`home = C:\Python314`) e a pasta tem 16 `.exe` + 14 `.pyd` (binários Windows) e nenhum `bin/`. É **inutilizável no Linux** e quebra em outra máquina Windows. São 67 MB que enganam quem clona — e o instalador recria a venv correta pra cada SO em ~30s. |
+| `Programacao/CobaiaAPI/.venv/` (67 MB) | **Não** | Verificado: o `pyvenv.cfg` grava caminhos absolutos desta máquina (`home = C:\Python314`) e a pasta tem 16 `.exe` + 14 `.pyd` (binários Windows) e nenhum `bin/`. É **inutilizável no Linux** e quebra em outra máquina Windows. São 67 MB que enganam quem clona, e o instalador recria a venv correta pra cada SO em ~30s. |
 | `__pycache__/`, `*.pyc` | **Não** | Cache de bytecode: derivado, regenerado sozinho, muda a cada execução e polui o diff. |
 | `.env` | **Não** | Configuração local. Use o `.env.example` como base. |
 | `build/`, `dist/` | **Não** | Artefatos transitórios do PyInstaller (o `.exe` final é gravado na raiz, esses ficam no `%TEMP%`). |
-| `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore — centenas de MB, específicos de cada SO, baixados por instalador. |
-| `.claude/` (menos `settings.local.json`) | **Sim** | Configuração do projeto para o Claude Code: `CLAUDE.md`, `settings.json` (hook que resume saídas longas, permissões de leitura, plugin de estilo desligado), `rules/` por tipo de arquivo e `skills/` copiadas — precisa chegar à outra máquina pelo git (decisão do Eric, 21/09/2026). Só `settings.local.json` (permissões concedidas nesta máquina) fica de fora. |
+| `node_modules/`, browsers do Playwright | **Não** | Trabalho futuro do AgenteCore, centenas de MB, específicos de cada SO, baixados por instalador. |
+| `.claude/` (menos `settings.local.json`) | **Sim** | Configuração do projeto para o Claude Code: `CLAUDE.md`, `settings.json` (hook que resume saídas longas, permissões de leitura, plugin de estilo desligado), `rules/` por tipo de arquivo e `skills/` copiadas, precisa chegar à outra máquina pelo git (decisão do Eric, 21/09/2026). Só `settings.local.json` (permissões concedidas nesta máquina) fica de fora. |
 | `.superpowers/` | **Não** | Rascunho de sessão do Claude Code (livro-razão, briefs e relatórios de tarefa da Fase 3); mesma natureza de `.claude/`. |
-| `.mcp.json`, `.cbmignore` | **Não — removidos em 29/09/2026** | Registro do servidor `codebase-memory-mcp` em escopo de projeto e as exclusões do índice (22/09/2026, decisão 49). A regra de permanência foi medida em 29/09 com três tarefas fixas (grep × servidor, duas vezes cada): o servidor gastou 8,6% a mais de tokens no total e 4,3% a menos nos novos, sem chegar aos 20% de corte, e saiu junto com o pacote npm (decisão 62; ferramental §7.2). |
+| `.mcp.json`, `.cbmignore` | **Não, removidos em 29/09/2026** | Registro do servidor `codebase-memory-mcp` em escopo de projeto e as exclusões do índice (22/09/2026, decisão 49). A regra de permanência foi medida em 29/09 com três tarefas fixas (grep × servidor, duas vezes cada): o servidor gastou 8,6% a mais de tokens no total e 4,3% a menos nos novos, sem chegar aos 20% de corte, e saiu junto com o pacote npm (decisão 62; ferramental §7.2). |
+| `Documentacao/notebooks/` | **Não** | Notebooks e dados de apoio do livro-texto (Faceli et al., 3. ed., 2025), baixados pelo QR code do livro: material dos autores e da editora, sem licença declarada, 330 MB em 53 mil arquivos que nenhum script do projeto usa. Quem tem o livro baixa a pasta por conta própria; ela é citada no fichamento (decisão 68). |
+| `resultados_alvo/**/*.log` | **Sim** | Registro corrido de cada bateria (início e fim de cada modelo, relances, falhas, versão do Ollama); exceção ao `*.log` genérico desde 29/09/2026 (decisão 63). |
+| `Documentacao/dashboard/painel-do-projeto.html` | **Sim** | Gerado por `ferramentas/gerar_dashboard.py` a partir dos registros; versionado para o painel abrir em qualquer clone, e `--check` acusa qualquer edição manual. |
 | `Programacao/AgenteCore/experimentos/resultados_alvo/fase3_piloto/` | **Não** | Piloto da Fase 3 (1 modelo, 10 casos, 1 época): existe para conferir o encanamento e calibrar o tempo antes das ~60 h; seus JSONL e snapshots confundiriam a leitura de `resultados_alvo/fase3/`, que é o que vale. |
 
 O "hit and run" continua íntegro sem a venv, porque os dois caminhos a
 recriam automaticamente:
-- **Windows:** duplo clique em `Cobaia.exe` → instala (inclui criar a venv) → sobe tudo → abre o navegador.
-- **Linux/macOS:** `./install.sh && ./run.sh` → mesma coisa.
+- **Windows:** duplo clique em `Cobaia.exe`: instala (inclui criar a venv), sobe tudo e abre o navegador.
+- **Linux/macOS:** `./install.sh && ./run.sh` faz a mesma coisa.
 
 ## Decisões técnicas e problemas resolvidos
 
 Documentado aqui porque cada um foi descoberto testando ao vivo, não
-teorizado — importante pra quem for mexer no ambiente depois entender o
+teorizado, importante pra quem for mexer no ambiente depois entender o
 porquê:
 
 - **XAMPP foi descartado.** O objetivo era um instalador silencioso e
@@ -745,32 +831,32 @@ porquê:
   privilégios de administrador: o `winget install MariaDB.Server` instala
   os binários e já inicializa o data dir (root sem senha), mas não registra
   um Windows Service (isso exigiria elevação). Por isso o MariaDB é sempre
-  gerenciado como subprocesso direto no Windows, igual ao PHP e ao uvicorn
-  — ver `_env_common.py::ensure_mariadb_running`.
+  gerenciado como subprocesso direto no Windows, igual ao PHP e ao uvicorn; 
+  ver `_env_common.py::ensure_mariadb_running`.
 - **`extension_dir` do PHP vem hardcoded errado.** O build Windows do PHP
   aponta por padrão pra `C:\php\ext`, que não bate com o caminho real de
   instalação do winget. `_env_common.py::php_extension_flags` calcula o
   caminho certo dinamicamente a partir do binário encontrado.
 - **`mbstring` é obrigatória, não opcional.** `mb_strimwidth()` é usada em
-  5 páginas de produtos (incluindo a home) — sem a extensão carregada, é
+  5 páginas de produtos (incluindo a home), sem a extensão carregada, é
   **erro fatal**, não warning. Só foi percebido testando a home page a
   fundo (um teste superficial só com `grep` não pegou, porque o conteúdo
   antes do ponto de falha ainda aparecia no HTML).
 - **`output_buffering` precisa estar ligado.** `cliente/index.php` ecoa
   HTML antes de `reserva_cli.php` incluir `admin/acesso_com.php`, que só
-  então chama `session_start()` — um bug de ordenação pré-existente no
+  então chama `session_start()`, um bug de ordenação pré-existente no
   código original. Um XAMPP/Apache real normalmente mascara isso porque
   `output_buffering` costuma vir ligado por padrão. Sem isso, a sessão de
   login não é retomada corretamente e a página trunca logo após a
   saudação. Resolvido via flag de configuração do PHP (não altera nenhum
   arquivo `.php`).
 - **`vw_tbpedidos` usa `LEFT JOIN`, não `JOIN`.** Na primeira versão da
-  view (criada do zero — o dump original não tinha essa tabela/view), um
+  view (criada do zero, o dump original não tinha essa tabela/view), um
   `JOIN` normal a partir de `tbpedido_reserva` fazia um cliente **sem
-  nenhuma reserva ainda** sumir inteiramente da view — quebrando a
+  nenhuma reserva ainda** sumir inteiramente da view, quebrando a
   saudação com "Trying to access array offset on value of type null".
   Corrigido fazendo `LEFT JOIN` a partir de `tbusuarios`, e usando
-  `u.id_usuario` (não `pr.id_clientes`) como `id_clientes` — assim o campo
+  `u.id_usuario` (não `pr.id_clientes`) como `id_clientes`, assim o campo
   continua correto mesmo sem nenhuma reserva prévia.
 
 ## Problemas conhecidos (deixados de propósito)
@@ -780,8 +866,8 @@ exceto o único caso de segurança justificado abaixo.
 
 | Item | Situação |
 |---|---|
-| Link "Saiba Mais..." nas listagens de produtos | Aspas do `href` no lugar errado (bug do código original) — sempre abre `id_produto=` vazio. Não corrigido. |
-| Senha de usuário: texto puro no insert, MD5 no update, sem hash no login | Inconsistência do código original. Não corrigido — o `seed.sql` sempre insere em texto puro, então não afeta o login das contas de teste. |
+| Link "Saiba Mais..." nas listagens de produtos | Aspas do `href` no lugar errado (bug do código original), sempre abre `id_produto=` vazio. Não corrigido. |
+| Senha de usuário: texto puro no insert, MD5 no update, sem hash no login | Inconsistência do código original. Não corrigido, o `seed.sql` sempre insere em texto puro, então não afeta o login das contas de teste. |
 | Credencial SMTP real hardcoded em `rodape_contato_envia.php` | Decisão explícita do grupo: como é ambiente de teste sem dados reais, foi mantida como está. |
 
 ## Segurança
@@ -789,31 +875,74 @@ exceto o único caso de segurança justificado abaixo.
 Este é um **ambiente de teste** (cobaia), não um sistema em produção:
 credenciais fracas/hardcoded, SQL injection nas queries do CobaiaFront, e
 CORS liberado (`*`) na CobaiaAPI são conhecidos e intencionalmente não
-corrigidos — fazem parte do escopo de cenários que o agente de QA deve ser
-capaz de lidar. Não reutilize esses padrões fora deste projeto.
+corrigidos, fazem parte do escopo de cenários que o agente de QA deve ser
+capaz de lidar. Não reutilize esses padrões fora deste projeto. A política de
+segurança do repositório, com o canal privado para relatar problemas reais nos
+instaladores e nas ferramentas, está em [SECURITY.md](SECURITY.md).
 
 ## Troubleshooting
 
 - **`.\install.ps1 : ... a execução de scripts foi desabilitada neste
   sistema` (PSSecurityException):** é a Execution Policy padrão do Windows,
-  que bloqueia scripts `.ps1` não assinados — não é um bug do projeto. Use
+  que bloqueia scripts `.ps1` não assinados, não é um bug do projeto. Use
   `install.cmd`/`run.cmd` em vez de chamar os `.ps1` diretamente (eles
   chamam o PowerShell com `-ExecutionPolicy Bypass`, que vale só pra aquela
   execução, sem mudar nenhuma configuração persistente do sistema). Se
   preferir rodar o `.ps1` direto mesmo assim:
   `powershell -ExecutionPolicy Bypass -File .\install.ps1`.
 - **`winget install` parece ter funcionado mas o comando ainda não é
-  encontrado:** normal — o PATH só atualiza numa sessão de terminal nova.
+  encontrado:** normal, o PATH só atualiza numa sessão de terminal nova.
   `install.py`/`run.py` já lidam com isso procurando o executável
   diretamente nos caminhos de instalação conhecidos, sem depender do PATH.
 - **Porta 8080 ou 8000 já em uso:** edite `FRONT_PORT`/`API_PORT` no topo
   de `run.py`.
 - **Erro de conexão com o banco (`Access denied for user 'root'`):** o
   `connect.php` do CobaiaFront espera `root` sem senha. Rode o instalador
-  de novo — ele tenta corrigir isso automaticamente; se persistir, ajuste
+  de novo, ele tenta corrigir isso automaticamente; se persistir, ajuste
   manualmente (`ALTER USER 'root'@'localhost' IDENTIFIED BY '';`).
 - **`ModuleNotFoundError` ao rodar a CobaiaAPI:** o venv não foi
   criado/atualizado. Rode `install.ps1`/`install.sh` de novo.
+
+## Como contribuir
+
+Leia o [guia de contribuição](CONTRIBUTING.md) (fluxo de trabalho, convenções,
+o que nunca muda e os testes obrigatórios) e o
+[código de conduta](CODE_OF_CONDUCT.md). Defeitos e propostas entram por issue,
+com os modelos em `.github/ISSUE_TEMPLATE/`; pull requests seguem o modelo em
+`.github/PULL_REQUEST_TEMPLATE.md`. Problemas de segurança reais seguem a
+[política de segurança](SECURITY.md), pelo canal privado do GitHub.
+
+## Como citar
+
+O arquivo [`CITATION.cff`](CITATION.cff) alimenta o botão "Cite this repository"
+do GitHub. Em texto:
+
+> DERRE, E. C. et al. **Desenvolvimento de um agente de QA end-to-end (E2E)
+> autônomo com capacidades de self-healing: focado na fronteira de integração.**
+> Trabalho de Conclusão de Curso (Ciência da Computação). Universidade Cidade de
+> São Paulo, São Paulo, 2026. Repositório: https://github.com/EricDerre/TCC.
+
+## Licença
+
+O código e a documentação deste repositório estão sob a [licença MIT](LICENSE).
+Componentes de terceiros mantêm as próprias licenças: Bootstrap 3.3.7 e jQuery
+(MIT) e PHPMailer 5.2.27 (LGPL 2.1, com o texto em
+`Programacao/CobaiaFront/PHPMailer/LICENSE`) no CobaiaFront; AngularJS 1.6.9 e
+Chart.js 4.4.1 carregados de CDN (MIT). Os notebooks de apoio do livro-texto
+(Faceli et al., 3. ed., 2025) são material dos autores e da editora, ficam fora
+do repositório e não estão cobertos por esta licença. Os modelos de
+linguagem não são distribuídos aqui: o Ollama os baixa sob a licença de cada um
+(Apache 2.0 para o `qwen2.5:7b` e o `qwen2.5-coder:7b`; Qwen Research License
+para o `qwen2.5-coder:3b`).
+
+## Autores
+
+Grupo de Ciência da Computação da Universidade Cidade de São Paulo (UNICID),
+2026: Eric Conde Derre, Erick do Carmo Esteves, Guilherme Penha dos Santos,
+João Victor Fonseca Silva, Kennedy Fernando de Oliveira Gundim, Leandro
+Henrique da Silva Patricio e Pedro Henrique Torres Gonçalves. O repositório é
+mantido por
+[@EricDerre](https://github.com/EricDerre).
 
 ## Convenções para alterações por IA
 

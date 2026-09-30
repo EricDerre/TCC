@@ -1,0 +1,15 @@
+# ! Alteração de IA - Revisar: configuração dos modelos de issue (30/09/2026): desliga a issue em branco e aponta
+# para o painel, a documentação e o canal de segurança.
+# ! Motivo: sem isto o GitHub oferece "issue em branco" ao lado dos modelos, e relatos de vulnerabilidade
+# poderiam vir por issue pública em vez do canal privado descrito em SECURITY.md.
+blank_issues_enabled: false
+contact_links:
+  - name: Painel do projeto
+    url: https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN
+    about: Estado por fase, pendências, roadmap e os resultados dos testes, numa página só.
+  - name: Documentação
+    url: https://github.com/EricDerre/TCC/blob/main/Documentacao/Memorial%20de%20Desenvolvimento.md
+    about: Memorial de desenvolvimento, decisões numeradas e relatórios por fase.
+  - name: Relatar uma vulnerabilidade
+    url: https://github.com/EricDerre/TCC/security/advisories/new
+    about: Canal privado, conforme SECURITY.md. Os defeitos intencionais do ambiente-alvo não entram aqui.
