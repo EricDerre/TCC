@@ -138,6 +138,32 @@ Pesos declarados em pesos_decisao.json (normalização mín-máx por critério; 
 | qwen2.5-coder:7b | L0 | 36 | 75,0% | 80,0% | 36 | 0 | 0 | 1,0000 | 1,0000 | — |
 | qwen2.5:7b | L0 | 36 | 77,8% | 78,8% | 36 | 1 | 1 | 1,0000 | 1,0000 | 0,0 |
 
+### fase3b_ponte_0344 (modo `ponte`)
+
+| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | b | c | p (McNemar) | p (Holm) | g de Cohen |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:3b | L0 | 36 | 72,2% | 70,4% | 36 | 1 | 0 | 1,0000 | 1,0000 | 0,5 |
+| qwen2.5-coder:7b | L0 | 36 | 80,6% | 82,5% | 36 | 3 | 1 | 0,6250 | 0,6250 | 0,2 |
+| qwen2.5:7b | L0 | 36 | 75,0% | 79,6% | 36 | 0 | 1 | 1,0000 | 1,0000 | -0,5 |
+
+### fase3b_cruzada_qwen (modo `cruzada`)
+
+| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | b | c | p (McNemar) | p (Holm) | g de Cohen |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:3b | L1 | 36 | 61,1% | 60,4% | 36 | 1 | 5 | 0,2188 | 0,4376 | -0,3 |
+| qwen2.5-coder:3b | L3 | 36 | 61,1% | 60,4% | 36 | 1 | 5 | 0,2188 | 0,4376 | -0,3 |
+| qwen2.5-coder:7b | L1 | 36 | 83,3% | 88,3% | 36 | 4 | 1 | 0,3750 | 0,7500 | 0,3 |
+| qwen2.5-coder:7b | L3 | 36 | 83,3% | 88,3% | 36 | 2 | 0 | 0,5000 | 0,7500 | 0,5 |
+
+Matriz doador × leitor:
+
+| Doador | Leitor | L | n | Acerto | Acurácia balanceada |
+|---|---|---|---|---|---|
+| qwen2.5:7b | qwen2.5-coder:3b | L1 | 36 | 61,1% | 60,4% |
+| qwen2.5:7b | qwen2.5-coder:3b | L3 | 36 | 61,1% | 60,4% |
+| qwen2.5:7b | qwen2.5-coder:7b | L1 | 36 | 83,3% | 88,3% |
+| qwen2.5:7b | qwen2.5-coder:7b | L3 | 36 | 83,3% | 88,3% |
+
 ## 7. Revisão humana
 
 Fonte: resumo_fase3.json.

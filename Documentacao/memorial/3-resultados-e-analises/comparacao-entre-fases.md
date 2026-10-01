@@ -190,10 +190,18 @@ Três leituras que as tabelas sustentam. (1) O salto grande do trabalho é da 2-
 - **Riscos:** adesão cega de 93–96% a um verbete errado com "registro de incidente" (A5; 4.24) — o risco que a Fase 3 precisou controlar com validação em código; a biblioteca inteira no prompt piora o Granite (Context Rot; 4.22).
 - **Perdas:** o tempo por caso sobe com a biblioteca (Granite 83,0 → 123,9 s; `qwen2.5:7b` 38,0 → 61,1 s) e a biblioteca era estática: nada do que o modelo aprendia num caso servia ao seguinte.
 
+<!-- ! Alteração de IA - Revisar: duração da Fase 3 corrigida de 58h59 para 57h59 no item "Perdas" abaixo (30/09/2026).
+     ! Motivo: a bateria rodou de 13/09 08:45:25 a 15/09 18:44:56 pelos marcos do `fase3.log`; os 58h59 vinham da linha FIM, em que o script arredondava a hora para cima. -->
 ### Fase 3 — biblioteca escrita pelo próprio modelo
 - **Ganhos:** o vencedor sobe de 81,2% para 91,7% de acurácia balanceada nos 36 em L1 (acerto 77,8% → 88,9%, b/c 4/0) sem envenenar (autoenvenenamento máximo 5,6%); a média dos quatro vai de 78,3% (F3 L0) para 82,6% (F3 melhor) nos 36; 0 tentativas de decorar; o validador em código barrou 658 propostas e deixou passar 110, sem que a biblioteca perdesse uma linha (só acréscimo conferido a cada fechamento).
 - **Riscos:** 41,4% das edições do vencedor estão erradas na revisão (relatório §7) e as corretas são redundantes — o ganho não é da verdade do conteúdo (achado 4.35); a recuperação ficou um pouco pior em quem editou (MRR 0,596 → 0,579–0,589); a biblioteca satura em três épocas (`duplicada`, `teto_notas_verbete`; 4.32); o ganho fica abaixo do efeito mínimo detectável de 19,4 pp (4.33); o Granite não conseguiu documentar sob o formato (4.30).
-- **Perdas:** custo — 61,9 s/caso em F3 L3 contra 57,0 em 2-B A2 ("Leitura por fase") e 58h59 de máquina para as 2.088 inferências; a biblioteca do `qwen2.5:7b` cresceu 73% em tokens (6.582 → 11.377), o que encarece o prefill (relatório §9); e o estado da biblioteca deixou de ser variável controlada entre modelos (relatório §11).
+- **Perdas:** custo — 61,9 s/caso em F3 L3 contra 57,0 em 2-B A2 ("Leitura por fase") e 57h59 de máquina para as 2.088 inferências; a biblioteca do `qwen2.5:7b` cresceu 73% em tokens (6.582 → 11.377), o que encarece o prefill (relatório §9); e o estado da biblioteca deixou de ser variável controlada entre modelos (relatório §11).
+
+<!-- ! Alteração de IA - Revisar: subseção nova (01/10/2026) com o que a Fase 3-B acrescenta à comparação, e um parágrafo no §5 com as duas pontes de versão.
+     ! Motivo: o quadro das fases terminava na Fase 3; a 3-B muda o alcance do ganho medido nela (vale para o par modelo e biblioteca, nos 36 oficiais) e alarga a faixa de variação entre execuções. -->
+### Fase 3-B: a biblioteca lida por outro modelo e em casos nunca vistos
+- **O que acrescenta:** três medidas que a Fase 3 não tinha ([fase-3b-relatorio.md](fase-3b-relatorio.md)): o ganho da L1 não reaparece nos 36 casos inéditos; lida pelos dois Coder, a biblioteca do `qwen2.5:7b` dá 1 caso de saldo ao 7B e tira 4 do 3B; e, com a mesma entrada, entre corridas iguais mudam de 0 a 3 casos em 36.
+- **O que isso faz com a comparação entre fases:** o ganho da Fase 3 sobre a 2-B vale para o `qwen2.5:7b` lendo a biblioteca que ele mesmo escreveu, nos 36 casos oficiais; não vale como propriedade da biblioteca nem como ganho confirmado em casos novos.
 
 ## 5. Reprodutibilidade entre execuções
 
@@ -238,6 +246,8 @@ _Sem negrito nesta tabela: cada linha compara duas fases diferentes do MESMO mod
 <!-- /tabela:cf_pareamentos -->
 
 Nos 36, b/c = 0/0 nos quatro modelos exceto o `qwen2.5-coder:7b` (1/0, Δ +2,8 pp, p = 1,0); nos 86 não alterados, 0/0 no Granite, no 3B e no `qwen2.5:7b`, e 2/3 no Coder 7B (Δ −1,2 pp, p = 1,0) — **b = c = 0 em 6 dos 8 pareamentos e no máximo 5 discordâncias em 86** apesar da mudança de runtime (0.33.3 → 0.34.0). É o mesmo modelo, `qwen2.5-coder:7b`, que 4.26 apontou como o menos idêntico entre máquinas (68,9%) e o único com `formato_valido_pct` abaixo de 100 na Fase 3: a variação entre execuções mora nele. A ponte de versão da 3-B (0.34.0 → 0.34.1; relatório §11) repetiu a medida: 0/0, 0/0 e 1/1 nos 36 em três modelos. O ruído de execução que separa dois números deste arquivo é, portanto, de 0 a 2 casos em 36 — e é isso que calibra a leitura do +11,1 pp (4 casos) do `qwen2.5:7b` em L1: acima do ruído, abaixo do que o teste resolve (achado 4.31).
+
+As duas pontes de versão da Fase 3-B repetem essa medida entre versões do Ollama: b/c de 0/0, 0/0 e 1/1 em 0.34.1 e de 1/0, 3/1 e 0/1 em 0.34.4, nos 36, para o 3B, o Coder 7B e o `qwen2.5:7b`. Com elas, e com a mesma entrada, a faixa de variação entre corridas iguais passa a ser de 0 a 3 casos em 36 (achado 4.43).
 
 ## 6. Decisão do modelo final
 

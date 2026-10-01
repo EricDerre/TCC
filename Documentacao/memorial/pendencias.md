@@ -204,6 +204,38 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
 - **Recomendação:** (b) — tudo o que roda em código entra já; a segunda chamada (5) só depois de medida, porque cada inferência do 7B custa de 47 a 78 segundos nesta máquina.
 - **Decisão:** (b), em 30/09/2026 ("seguir com a opção recomendada"): os filtros adotados que rodam em código entram no plano da Fase 4 já (mapa em §6.13.10 do levantamento; roadmap §4.4); a segunda chamada ao modelo (filtro 5) só depois de medido o custo, porque cada inferência do 7B leva de 47 a 78 segundos nesta máquina. Decisão 65.
 
+<!-- ! Alteração de IA - Revisar: bloco novo (01/10/2026) com as fichas 17 e 18, abertas no encerramento das Fases 3 e 3-B.
+     ! Motivo: o Eric pediu a verificação de que os tópicos das duas fases podem ser dados por concluídos antes do planejamento da Fase 4; a verificação achou duas decisões que só ele pode tomar (o que fazer com as corridas opcionais e com as conferências que ficaram para depois, e se a cópia curada é medida antes de a Fase 4 usá-la). -->
+## Abertas em 01/10/2026 (encerramento das Fases 3 e 3-B)
+
+Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feitas e analisadas (`3-resultados-e-analises/fase-3b-relatorio.md`, com a lista de fechamento no §9). Sobram duas decisões, e nenhuma impede o planejamento da Fase 4.
+
+### 17. Encerrar a Fase 3-B: corridas opcionais e conferências que ficaram para depois
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 01/10/2026
+- **O que é:** Todas as corridas previstas da Fase 3-B rodaram e estão analisadas. Ficaram de fora duas corridas marcadas como opcionais desde o início: a corrida 5 (o modelo recebe documentação errada de propósito, para ver se a biblioteca que ele mesmo escreveu muda a obediência cega; 72 inferências, cerca de 1h20) e a corrida 7 (o Coder 7B nos 36 casos inéditos; 108 inferências, cerca de 2 h). E duas conferências suas que tinham ficado para depois: os 6 casos inéditos de amostra (`lex-16`, `sin-20`, `semt-18`, `tra-19`, `run-20` e `efe-20`, em `banco_casos_ineditos.py`) e a planilha da curadoria da L1 (`resultados_alvo/fase3/curadoria_L1__qwen2.5_7b.md`, 40 linhas; também na aba Curadoria da L1 do painel).
+- **Por que importa:** Sem a sua palavra a fase fica quase fechada. As duas corridas não mudam a decisão do modelo, mas a 7 é a única medida que falta no comparativo qwen × Coder. As duas conferências são as únicas partes da 3-B em que nenhuma pessoa olhou o que a IA escreveu (os casos novos) e julgou (30 das 40 avaliações da curadoria). E enquanto alguma corrida puder precisar deles, os dois Coder continuam ocupando 6,6 GB no Ollama.
+- **Opções:**
+  - (a) Encerrar agora: as opcionais não rodam, as duas conferências ficam como ressalva declarada no relatório da 3-B (limitação 5), e os dois Coder saem do Ollama (`ollama rm qwen2.5-coder:7b qwen2.5-coder:3b`).
+  - (b) Encerrar depois de você conferir os 6 casos e a planilha (cerca de uma hora de leitura; basta dizer "ok como está" ou o número das linhas que mudam); as opcionais não rodam.
+  - (c) Antes de encerrar, rodar a corrida 7 numa noite (o comando está no roadmap), com ou sem as conferências.
+- **Recomendação:** (b). A leitura não bloqueia o planejamento da Fase 4, tira duas ressalvas do relatório, e a planilha decide o que fica na biblioteca que a Fase 4 vai usar. As opcionais não mudam a decisão: o Coder 7B não alcançou o qwen na troca cruzada, e a obediência cega já tem medida na Fase 2-B.
+- **Decisão:** em aberto
+
+### 18. Medir a cópia curada da L1 antes de a Fase 4 usá-la
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 01/10/2026
+- **O que é:** A biblioteca que a Fase 4 vai usar (`Programacao/AgenteCore/biblioteca_producao/`) é a L1 do `qwen2.5:7b` sem as 17 edições que a curadoria reprovou: ficam 23 das 40. Essa cópia nunca foi medida. O que se mediu foi a L1 inteira: 88,9% de acerto nos 36 casos oficiais e 72,2% nos 36 inéditos, contra 77,8% e 75,0% com a biblioteca original.
+- **Por que importa:** A revisão das edições mostrou que o ganho da Fase 3 não pode ser creditado à verdade das notas (achado 4.35), e de onde ele vem não foi isolado; por isso não dá para prever se tirar 17 notas mexe no resultado. E a troca cruzada mostrou que uma nota num verbete muito recuperado muda respostas (achado 4.42). Sem essa medida a Fase 4 começa sem saber quanto a própria biblioteca rende na versão atual do Ollama.
+- **Opções:**
+  - (a) Rodar agora, numa noite: `qwen2.5:7b` lendo a cópia curada nos 36 casos oficiais e nos 36 inéditos, mais a biblioteca original nos inéditos na versão atual do Ollama (108 inferências, cerca de 2h15). Pede um modo novo no executor da 3-B para ler a pasta da cópia curada, que o Claude escreve e testa antes. A comparação com a L1 inteira, medida na Fase 3, vale porque a ponte de 30/09 deixou o `qwen2.5:7b` dentro do limite (1 caso de diferença em 36).
+  - (b) Pôr essa medição como a primeira corrida do plano da Fase 4 (mesma conta, mesmo modo novo).
+  - (c) Não medir: a L1 curada entra na Fase 4 como ponto de partida sem número próprio.
+- **Recomendação:** (a). É uma noite de máquina, e o resultado pode mudar o que o plano da Fase 4 assume sobre a biblioteca de partida; o planejamento segue enquanto a corrida roda.
+- **Decisão:** em aberto
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

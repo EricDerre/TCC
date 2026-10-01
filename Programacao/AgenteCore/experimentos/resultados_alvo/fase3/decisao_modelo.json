@@ -2028,6 +2028,155 @@
           }
         }
       ]
+    },
+    "fase3b_ponte_0344": {
+      "modo": "ponte",
+      "linhas": [
+        {
+          "modelo": "qwen2.5-coder:3b",
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 72.2,
+          "acuracia_balanceada_pct": 70.4,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 1,
+            "c": 0,
+            "p_mcnemar": 1.0,
+            "g_cohen": 0.5,
+            "p_holm": 1.0
+          }
+        },
+        {
+          "modelo": "qwen2.5-coder:7b",
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 80.6,
+          "acuracia_balanceada_pct": 82.5,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 3,
+            "c": 1,
+            "p_mcnemar": 0.625,
+            "g_cohen": 0.25,
+            "p_holm": 0.625
+          }
+        },
+        {
+          "modelo": "qwen2.5:7b",
+          "biblioteca_epoca": 0,
+          "n": 36,
+          "acerto_pct": 75.0,
+          "acuracia_balanceada_pct": 79.6,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 0,
+            "c": 1,
+            "p_mcnemar": 1.0,
+            "g_cohen": -0.5,
+            "p_holm": 1.0
+          }
+        }
+      ]
+    },
+    "fase3b_cruzada_qwen": {
+      "modo": "cruzada",
+      "linhas": [
+        {
+          "modelo": "qwen2.5-coder:3b",
+          "biblioteca_epoca": 1,
+          "n": 36,
+          "acerto_pct": 61.1,
+          "acuracia_balanceada_pct": 60.4,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 1,
+            "c": 5,
+            "p_mcnemar": 0.2188,
+            "g_cohen": -0.333,
+            "p_holm": 0.4376
+          }
+        },
+        {
+          "modelo": "qwen2.5-coder:3b",
+          "biblioteca_epoca": 3,
+          "n": 36,
+          "acerto_pct": 61.1,
+          "acuracia_balanceada_pct": 60.4,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 1,
+            "c": 5,
+            "p_mcnemar": 0.2188,
+            "g_cohen": -0.333,
+            "p_holm": 0.4376
+          }
+        },
+        {
+          "modelo": "qwen2.5-coder:7b",
+          "biblioteca_epoca": 1,
+          "n": 36,
+          "acerto_pct": 83.3,
+          "acuracia_balanceada_pct": 88.3,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 4,
+            "c": 1,
+            "p_mcnemar": 0.375,
+            "g_cohen": 0.3,
+            "p_holm": 0.75
+          }
+        },
+        {
+          "modelo": "qwen2.5-coder:7b",
+          "biblioteca_epoca": 3,
+          "n": 36,
+          "acerto_pct": 83.3,
+          "acuracia_balanceada_pct": 88.3,
+          "pareado_vs_f3": {
+            "n_comuns": 36,
+            "b": 2,
+            "c": 0,
+            "p_mcnemar": 0.5,
+            "g_cohen": 0.5,
+            "p_holm": 0.75
+          }
+        }
+      ],
+      "matriz_doador_leitor": [
+        {
+          "doador": "qwen2.5:7b",
+          "leitor": "qwen2.5-coder:3b",
+          "biblioteca_epoca": 1,
+          "n": 36,
+          "acerto_pct": 61.1,
+          "acuracia_balanceada_pct": 60.4
+        },
+        {
+          "doador": "qwen2.5:7b",
+          "leitor": "qwen2.5-coder:3b",
+          "biblioteca_epoca": 3,
+          "n": 36,
+          "acerto_pct": 61.1,
+          "acuracia_balanceada_pct": 60.4
+        },
+        {
+          "doador": "qwen2.5:7b",
+          "leitor": "qwen2.5-coder:7b",
+          "biblioteca_epoca": 1,
+          "n": 36,
+          "acerto_pct": 83.3,
+          "acuracia_balanceada_pct": 88.3
+        },
+        {
+          "doador": "qwen2.5:7b",
+          "leitor": "qwen2.5-coder:7b",
+          "biblioteca_epoca": 3,
+          "n": 36,
+          "acerto_pct": 83.3,
+          "acuracia_balanceada_pct": 88.3
+        }
+      ]
     }
   },
   "revisao_humana": {
@@ -2071,7 +2220,7 @@
       "_nota": "pesos declarados antes da leitura dos resultados; a varredura de sensibilidade mostra onde o vencedor muda",
       "_comentario": "! Alteração de IA - Revisar: cria pesos_decisao.json (Tarefa P2.1) com o limiar de veto por autoenvenenamento, os pesos do escore ponderado de decidir_modelo.py e a semente do bootstrap. ! Motivo: brief-p2-decidir-modelo.md exige que os pesos sejam declarados ANTES da leitura de comparacao_fases.json/resumo_fase3.json, para a varredura de sensibilidade (decidir_modelo.py --saida fase3) mostrar se o vencedor é estável ou um artefato da escolha de pesos, em vez de pesos ajustados depois de ver o resultado."
     },
-    "gerado_em": "2026-09-29T11:09:07",
+    "gerado_em": "2026-10-01T09:43:39",
     "saida": "fase3",
     "fontes": {
       "comparacao": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\AgenteCore\\experimentos\\resultados_alvo\\fase3\\comparacao_fases.json",

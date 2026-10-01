@@ -1,0 +1,548 @@
+{
+  "regra": "sha256(semente + ':' + id) ordena os 5 casos de cada celula (classe, nivel); 3 primeiros = aprendizado, 2 ultimos = avaliacao",
+  "semente": "fase3",
+  "n_aprendizado": 54,
+  "n_avaliacao": 36,
+  "casos": {
+    "lex-1": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": "94b818e2cababb12cfa31fb1fd9da939e084ccba853f7d48f3d34ef136867d57"
+    },
+    "lex-2": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 1,
+      "hash": "6bafcf828b190b2463b2d0d7acc02e5e20c6b9adfc21a73029db63694247b0b5"
+    },
+    "lex-3": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 1,
+      "hash": "67ba0fc63df384a985ef979d18b57cd46e5b57e66d915ac7c1caebfbbdd73c72"
+    },
+    "lex-4": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": "d7d1ca8a711ef83c8714a032cf6c48e49d770796c6de801a6f5a685d98f5f699"
+    },
+    "lex-5": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 3,
+      "hash": "18f6b475ed615af6363581b991070172985ef61d3137c51ad9c1b70d068dbf8c"
+    },
+    "sin-1": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 1,
+      "hash": "8a3c9b035af33bf466a049c5a9a1b5d9d1adfbc2436f503b572fa7cead8e4fd1"
+    },
+    "sin-2": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 2,
+      "hash": "8f10bd344eca66d3541243a5110dfe668de2b7490a588099f3c24e83f52cad64"
+    },
+    "sin-3": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 2,
+      "hash": "20be3d65975f419f45eb8f2d24e5123405507060075ffcff3fb08833844a1bc2"
+    },
+    "sin-4": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": "e0967d60be2aff77addc847855a39132bd7d19742e5fa05a21cb4c7087624764"
+    },
+    "sin-5": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": "f5c60e597e6462db3f8b2c727cb117f6abc396e9930faeea46a367c3119725cc"
+    },
+    "semt-1": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": "e8660cc7c490ea5f26101d9c59d053a5c8e356b62adf53d1ccf27276ce2533e0"
+    },
+    "semt-2": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 2,
+      "hash": "e3c54a1572d57a995e8b850135ecd93a58cbe1ba1b0a5115f6cba43722f05100"
+    },
+    "semt-3": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": "e76145fb2777cb8cb048d8203ad6705c506cf793d7686e7a34c755f8063f7070"
+    },
+    "semt-4": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 2,
+      "hash": "6b9082615d079bb3756e68bbecde341184a95d6165ecccedc546d0de86763d2a"
+    },
+    "semt-5": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": "ffd17a9d6400343258f10ef63a827d1eca3feee1bd77a10ef361c5b814852a33"
+    },
+    "tra-1": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": "6c23e11c27d907afc5672a4957d893e712a864b63847e1c3abeba44d97f83cba"
+    },
+    "tra-2": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 3,
+      "hash": "6caf624037215e88634887517caeae551e9e89742b385f279740ae085d996d35"
+    },
+    "tra-3": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 2,
+      "hash": "45c7d6b4451d51e55d0350d6b0487821251c591354c0f34a7379f2d00671436f"
+    },
+    "tra-4": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": "9719c58d5788734dd36d265d9a82a8c2ef986fbffddd08e7fa8498521789ae93"
+    },
+    "tra-5": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 3,
+      "hash": "65d822b4541a48b63c2a41d319caa24818c8e25fda5fe3376033db6306e8865f"
+    },
+    "run-1": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": "f151328826e6248d7e4ad45d9635cc120229c16f20b76f9d00f9fa350ce97962"
+    },
+    "run-2": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": "58f698e4a006ecb8451fb774346519634dd5c5a824710ae4e3a0a389f0a44bf6"
+    },
+    "run-3": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 2,
+      "hash": "8818476e25f9608303806567b59d0d28e35c88eef0d948a800fb1aa1e528743b"
+    },
+    "run-4": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": "a63f8a737572f7b18a698c12df4ea51bc5cb73d12604bca417d0687aace77916"
+    },
+    "run-5": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 3,
+      "hash": "532da8bd1bdcc9faae1d0402bed8cf144fbd5be59ebfa76a2453e185885877e6"
+    },
+    "efe-1": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": "d79ddaeb5e5bafef80b9cc6ffb7acc87ee2874082aa2384891743e2085b8dcfd"
+    },
+    "efe-2": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": "cf227cd75cc1d678c2181b4e91254cbf83eaabb0af009027933df90846e48649"
+    },
+    "efe-3": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": "fcccbc89507a91b074828755bb4eb501e7ba5c95d6a88d87363d2f5d1791faa3"
+    },
+    "efe-4": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 3,
+      "hash": "467a5d0ba0d8aa2bb9334ad78b8effce6d07afa840d23cf70e0c9531fef6eed3"
+    },
+    "efe-5": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": "6c6723b003a2b6a9f80bd7fcd5303e2a6abf5be37fd95a14540fab16f07613d4"
+    },
+    "lex-6": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 1,
+      "hash": "019bfc0eed53e4746c20227c6e2d22eeba736c94c6fb51eda990e5860e919a87"
+    },
+    "lex-7": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": "9000793e385fd5c9b29f55ded8b64f6ee942f275724ae0b5e07a9d09dc7e6638"
+    },
+    "lex-8": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": "e44208cb6471dc1c239c83bfb1642435ab1d8f3a6460e6c78e96b3c439b4eb5f"
+    },
+    "lex-9": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 2,
+      "hash": "c81d61e7d60a3cab4e5ea70277e30dda81fda051d42df6434563be76455ef35d"
+    },
+    "lex-10": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": "8f831452472c5e9e7490b29c0f5fd38d9e63b44cfd2945d4726618f92d9ba98c"
+    },
+    "lex-11": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": "d45ead9e2fc7eaf641c072575b71c9aad97c0470cae91c7b11ea33df36e39c32"
+    },
+    "lex-12": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 3,
+      "hash": "7a8818c5f0b6c16b11ef63c61604a0d69aeae395c364503dc31fd8b300a2873b"
+    },
+    "sin-6": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 1,
+      "hash": "cff6508f4f10e23dd33dd3603d6d9b3a865a8b0175c653dc32a8205eaf376ca0"
+    },
+    "sin-7": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": "e40c63523384b6d08d629708d1dd3afb462be27a4bb90a64b31eb234b8b2bb4c"
+    },
+    "sin-8": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 1,
+      "hash": "92fb088828c7e38491669717b8c7ada9f05de64ee71400bfa9678bccd74de3ad"
+    },
+    "sin-9": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 2,
+      "hash": "3e584655023ced34695656197830cc96e462311311ba50cb0e80d97b6d2bb5ef"
+    },
+    "sin-10": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": "b8eb0cad0e740bbb2aebdf47178019e2333a7e5c3c59f520b036e373f915ed4c"
+    },
+    "sin-11": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": "a875522d753393cd0aea3ccbc5665ec7388bb2162a5b26c9759605c975e26605"
+    },
+    "sin-12": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 3,
+      "hash": "0eba890fc1c6d8709bfc8b3d8f2deb0e1a20b12ca0f4526ab772d8b4b2bbf51e"
+    },
+    "sin-13": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 3,
+      "hash": "3d1a981e3619a55ab1ff08aa39372bc6e27cf9a2b70f86a1fed7008f0341f1dc"
+    },
+    "sin-14": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": "ea2c40fbccd2689ceec65c6fc174c9079bf4ba8e04a7dd1138af4653f373b21d"
+    },
+    "sin-15": {
+      "particao": "aprendizado",
+      "classe": 2,
+      "nivel": 3,
+      "hash": "d4db8a521e1e3a03e9170601882d2ad43b01d36d3067ef6971f11a226c577d17"
+    },
+    "semt-6": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 1,
+      "hash": "691372c56b177b09988e045319d2c18e366900db406b597ac84c51d5d4da6e10"
+    },
+    "semt-7": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 1,
+      "hash": "1c059c24b31e912ff0f86707751447bd481a21dfedde6ef51ebaf2a6efc55a66"
+    },
+    "semt-8": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": "a8cc739b9180d0b69695ad4588fb0a12e3a2f9c4628217f21eb54779e7d269f5"
+    },
+    "semt-9": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": "ed5fbd783b54ee8678dab0ce9d22e903e418f23c58254871b72eca0771489e4e"
+    },
+    "semt-10": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 1,
+      "hash": "61bab4ce8be0f9735b011629e8a3d8bf360c818c735060659265ef2069673663"
+    },
+    "semt-11": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 2,
+      "hash": "b50fc2f0c5b505679019d28104ef8565372959898c729d2c5fabe84ac1b18de4"
+    },
+    "semt-12": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 3,
+      "hash": "153280f72df654918949d21cf195181931cc97a8962483f33811bce9e58a3372"
+    },
+    "semt-13": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 3,
+      "hash": "695dda6ac347dea9aa4565671df5c8766379f11b31beeb94f9c18488336ab4fb"
+    },
+    "semt-14": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": "ae7fbb7e07bbfbcd8aa4cc2bfe9a9acd773663df17204e75e1d007f0153ab3e1"
+    },
+    "semt-15": {
+      "particao": "aprendizado",
+      "classe": 3,
+      "nivel": 3,
+      "hash": "37100f85dd8cc5df0211133107c436e6b4e56cd005ba24252e5e4098e37e496d"
+    },
+    "tra-6": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 1,
+      "hash": "6695f2f238946ebe4fd974c023c5a471b63d3336cf3382c6e9bef1ce839cb7e1"
+    },
+    "tra-7": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 1,
+      "hash": "55c728f04d2de8b51bd60fdeaed445ec2d7ee04984fe14f2ea155e1c1163559c"
+    },
+    "tra-8": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": "ebf0183a82d4288f7d9d6405ad3e16f9fc2e3e19894951c00485c613447b3d53"
+    },
+    "tra-9": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 1,
+      "hash": "1486348db4005c6bc6c21635cfe32e985f010d770de4c3243dd509302e74d560"
+    },
+    "tra-10": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": "d1775f25436a65868948d752f367b6c26ba34561ee01152bbf817de5427c93e1"
+    },
+    "tra-11": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": "5337da3b0e560507612644e62e24092cd663c7263a56ecdd8fc475bede0ba047"
+    },
+    "tra-12": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 2,
+      "hash": "4a55e5da3764e5d9d16c90b65a32993c131d492d54589e9e5541becb1044c359"
+    },
+    "tra-13": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 2,
+      "hash": "3bec429dd73a3154e0a0e43c278a9d0f943dba65bd0af4f35413b967789f3d5e"
+    },
+    "tra-14": {
+      "particao": "aprendizado",
+      "classe": 4,
+      "nivel": 3,
+      "hash": "74e1660e55216edac0f98b14f065268d0d5b4e78a7f35ed255473a02a83ea171"
+    },
+    "tra-15": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": "90cda8cc898873c77fdc372c839bf91ea553ddbe2967b56bd4d50b981b86fe76"
+    },
+    "run-6": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 1,
+      "hash": "20da5c051cea8f3d1fdd45b1f4a4fe9d955aae5e4af4841ebda5db50c9c9d86e"
+    },
+    "run-7": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 1,
+      "hash": "55ee7cfc30e835c42aceda490f8d50fb2d762e10c4397834bb21f4e275edeaef"
+    },
+    "run-8": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 1,
+      "hash": "17871346a95bac0912f514884b76367eb3de8f1a5697f7b9289db36fb1ac5a7f"
+    },
+    "run-9": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": "cf6183343d767e64aac196f3d68613030db6c169083d0c9fe2ed75a5d83bb688"
+    },
+    "run-10": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": "eef9ad70a4860259bee6d672a01facde689acb7b894457845d225a1d0c1fbb2c"
+    },
+    "run-11": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 2,
+      "hash": "bd63b89dde3cabd94e02e0c14513b1c89ab56d4f073b4e503bb96eb6a6e29c19"
+    },
+    "run-12": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 2,
+      "hash": "77771dd3da8c2396bf61d9f10f0a22bf7a5eb4e1e85b9467e681cbb68b6e0a01"
+    },
+    "run-13": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": "df0dd3c6f52283bc5893b76fbb1ca3c0051cf9cdfa9dfb63e51262681e6a152a"
+    },
+    "run-14": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 3,
+      "hash": "69d89c2db9c460c0ac81d2d3c0edf6d76b2a8d76dde34ce342cca0d2c943ec1d"
+    },
+    "run-15": {
+      "particao": "aprendizado",
+      "classe": 5,
+      "nivel": 3,
+      "hash": "a22a1cef8a98206c680c185b29e5a172b021e058aa605cbc25a61ec63e47959b"
+    },
+    "efe-6": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 1,
+      "hash": "9a74444ba99bd87855035fe4ed024c7ebf2d9c30dff9ad4b4fa7da5270915dfd"
+    },
+    "efe-7": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": "e0afcacb1aabc792f033e3d1a9f267bebc5d851621c5bf4b9ecc4476df8388a2"
+    },
+    "efe-8": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 1,
+      "hash": "1ce91b2543e83ba95be0c38ee4bf8364cfab8dd9bfc61cc4e6170f5b241e0a44"
+    },
+    "efe-9": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 1,
+      "hash": "97465144b39c3863583324f9c69ce2f6bb0c606e33290dbcb2d8de106328c3f4"
+    },
+    "efe-10": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 2,
+      "hash": "00bda49fd6a81ac692fc74bbe7dfafded2776954afe7894f7f06d82e07d53739"
+    },
+    "efe-11": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 2,
+      "hash": "80410b9f26eddea21d552d61418edbfd1ac54ffa47d8df178c8d7b472d9139ec"
+    },
+    "efe-12": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 2,
+      "hash": "355e50f4336d1d251f247249b0862a2285b1a9d7dc652d89a9e3d5695bc8cf48"
+    },
+    "efe-13": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 3,
+      "hash": "2312832c20ec28be5e17f215680d6609ff804ce5dd99bc1493b59f14f5314861"
+    },
+    "efe-14": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": "f895d742d138124a28c86d730ce1d68d4ccfbd5fa6a61eb8d6b8bde75dd198ff"
+    },
+    "efe-15": {
+      "particao": "aprendizado",
+      "classe": 6,
+      "nivel": 3,
+      "hash": "3ab5ded813f11fbcf5bbe6c8a53a2ff807691448ba050fa7d0d105c349a105c0"
+    },
+    "lex-13": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 2,
+      "hash": "1a65a83dc6c00c836e7465d6ba6fd0e17edf56f9654591e310787961f4f1358c"
+    },
+    "lex-14": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 2,
+      "hash": "95e72267e7b1b5cf2be61f6a1fe3bbc8a39457eb2ef70de57ea5c9b172b7bc8c"
+    },
+    "lex-15": {
+      "particao": "aprendizado",
+      "classe": 1,
+      "nivel": 3,
+      "hash": "544a7bf51ac7d9ce0179f200dab3336d1a1f26fc1b5e5c4ec5d263be714c52a2"
+    }
+  }
+}

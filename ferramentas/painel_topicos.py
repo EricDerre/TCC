@@ -41,6 +41,7 @@ NAV = [
         ("inicio", "Início", "Onde o projeto está, o que depende do Eric e o mapa deste painel."),
         ("pendencias", "Pendências", "Uma ficha por decisão: o que é, por que importa, opções, recomendação e decisão."),
         ("roadmap", "Roadmap", "Estado por fase, corridas com o comando pronto e o esqueleto das Fases 4 e 5."),
+        ("fechamento", "Fechamento", "As Fases 3 e 3-B podem ser dadas por concluídas? O estado de cada tópico e o que depende do Eric."),
     ]),
     ("Modelos", [
         ("visao", "Resultados", "O que os testes decidiram: acurácia por versão da biblioteca e as três fases lado a lado."),
@@ -52,6 +53,7 @@ NAV = [
     ("Biblioteca", [
         ("fase3", "Fase 3", "A biblioteca gerida pelo modelo: edições, rejeições, recuperação, custo e revisão humana."),
         ("tresb", "Fase 3-B", "Casos inéditos, ponte de versão, sonda de correção e as corridas complementares."),
+        ("cruzada", "Troca cruzada", "A biblioteca escrita por um modelo, lida por outros dois: o ganho é dela ou de quem a lê?"),
         ("curadoria", "Curadoria da L1", "O que a cópia de produção herdou da biblioteca escrita pelo modelo."),
         ("recuperador", "Recuperador", "BM25 com sinais contra embeddings e híbrido: vale trocar?"),
         ("ablacao", "Ablação", "Sem ajuste por instrução, o modelo faz a tarefa? O piso da família."),
@@ -269,7 +271,13 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 
 # ------------------------------------------------------------------ 2. Fase 3-B
 
-def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_para_html) -> tuple[dict, str]:
+def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_para_html, an: dict | None = None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: em 01/10/2026 a aba ganhou a soma dos 36 oficiais com os 36 inéditos e a tabela dos
+    # casos que mudam entre corridas iguais (lidas de `analise_fase3b.json`, parâmetro `an`), e três textos mudaram: o
+    # rótulo do cartão do 3B, a frase de abertura e a remissão à troca cruzada.
+    # ! Motivo: o cartão dizia "a biblioteca do qwen não muda o 3B", mas nos inéditos cada modelo leu a biblioteca que
+    # ele mesmo escreveu (hash 53ccf19abeac e d9a86e383103 no 3B); a abertura dizia que faltava a troca cruzada, que
+    # rodou em 01/10 e ganhou aba própria.
     cur: dict = defaultdict(dict)
     for x in ined["por_modelo_biblioteca_particao"]:
         cur[x["modelo"]][str(x["biblioteca_epoca"])] = {"acerto": x["causa_correta_pct"], "bal": x["acuracia_balanceada_pct"], "s": x["segundos_mediana"]}
@@ -281,7 +289,12 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
         rec[x["modelo"]][str(x["biblioteca_epoca"])] = x["hit@3"]
     rec_of = {m: {L: dados["recuperacao"][m][L]["hit3_36"] for L in Ls} for m in modelos}
     par = [x for x in ined["pareado_vs_L0"] if x.get("particao", "avaliacao") == "avaliacao"]
-    ponte = dados["tres_b"].get("fase3b_ponte", {}).get("linhas", [])
+    # ! Alteração de IA - Revisar: a aba passa a ler todas as pontes de versão (`dados["pontes"]`, montado em
+    # gerar_dashboard.pontes_de_versao) e a resumir a mais recente (30/09/2026, noite).
+    # ! Motivo: só a ponte de 21/09 (Ollama 0.34.1) era lida, pelo nome fixo `fase3b_ponte`; a de 30/09 (0.34.4)
+    # deu o Coder 7B com b + c = 4, acima do limite da decisão 47, e o texto fixo "a ponte é pareável" ficaria errado.
+    pontes = dados.get("pontes", [])
+    ult = pontes[-1] if pontes else {"versao": "?", "linhas": []}
     q = cur[A]
     L_ult = Ls[-1]
     p_ult = next((x for x in par if x["modelo"] == A and str(x["biblioteca_epoca"]) == L_ult), {})
@@ -289,27 +302,58 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
     n_feitas = sum(c.classe == "feita" for c in corr3b)
     n_pend = sum(c.classe in ("pendente", "aguarda") for c in corr3b)
     n_opc = sum(c.classe == "opcional" for c in corr3b)
-    ponte_txt = "; ".join(f'{x["modelo"]} b/c {x["pareado_vs_f3"]["b"]}/{x["pareado_vs_f3"]["c"]}' for x in ponte)
+    ponte_txt = "; ".join(f'{x["modelo"]} b/c {x["b"]}/{x["c"]}' for x in ult["linhas"])
+    n_par = sum(x["pareavel"] for x in ult["linhas"])
+    acima = [x["modelo"] for x in ult["linhas"] if not x["pareavel"]]
+    if not ult["linhas"]:
+        ponte_frase = "A ponte de versão do Ollama ainda não foi registrada na decisão."
+    elif acima:
+        ponte_frase = (f'Na ponte de versão mais recente (Ollama {ult["versao"]}), {n_par} de {len(ult["linhas"])} modelos continuam pareáveis com a Fase 3; '
+                       f'{", ".join(acima)} passou do limite e é lido contra a própria ponte.')
+    else:
+        ponte_frase = f'A ponte de versão mais recente (Ollama {ult["versao"]}) é pareável nos {len(ult["linhas"])} modelos.'
     dados_js = {"modelos": modelos, "Ls": Ls, "ineditos": {m: cur[m] for m in modelos}, "oficiais": oficial,
                 "rec_ineditos": {m: rec[m] for m in modelos}, "rec_oficiais": rec_of}
     tab_par = tabela(["Modelo", "Versão", "Diferença contra L0", "b / c (✗→✓ / ✓→✗)", "p (McNemar exato)"],
                      [[x["modelo"], f'L{x["biblioteca_epoca"]}', pp(x.get("delta_pp")), f'{x.get("b", "—")} / {x.get("c", "—")}', fmt(x.get("p_mcnemar"), 3)] for x in par])
-    tab_ponte = tabela(["Modelo", "b / c contra a Fase 3 (L0, 36)", "Leitura"],
-                       [[x["modelo"], f'{x["pareado_vs_f3"]["b"]} / {x["pareado_vs_f3"]["c"]}', "pareável" if x["pareado_vs_f3"]["b"] + x["pareado_vs_f3"]["c"] <= 2 else "divergente"] for x in ponte])
+    tab_ponte = tabela(["Ponte", "Modelo", "Acerto em L0 (36)", "Acurácia balanceada", "b / c contra a Fase 3", "p (McNemar exato)", "Leitura"],
+                       [[f'Ollama {p["versao"]}', x["modelo"], f'{fmt(x["acerto"])}%', f'{fmt(x["bal"])}%', f'{x["b"]} / {x["c"]}', fmt(x["p"], 3),
+                         "pareável" if x["pareavel"] else "divergente"] for p in pontes for x in p["linhas"]])
     sec = {t[:3]: c for t, c in road["secoes"]}
     leitura_ined = next((c for t, c in road["secoes"] if t.startswith("2.1")), "")
+    leitura_ponte = next(((t, c) for t, c in road["secoes"] if t.startswith("2.3")), None)
     sonda = next((c for t, c in road["secoes"] if t.startswith("3. ")), "")
     itens_kpi = [
         (f"{A} nos 36 inéditos", " → ".join(f'{fmt(q[L]["acerto"])}%' for L in Ls), f'acerto com {" → ".join("L" + L for L in Ls)}; balanceada ' + " / ".join(fmt(q[L]["bal"]) for L in Ls)),
-        (f"{COD3B} nos 36 inéditos", " → ".join(f'{fmt(cur[COD3B][L]["acerto"])}%' for L in Ls) if COD3B in cur else "—", "a biblioteca do qwen não muda o 3B"),
+        (f"{COD3B} nos 36 inéditos", " → ".join(f'{fmt(cur[COD3B][L]["acerto"])}%' for L in Ls) if COD3B in cur else "—", "a biblioteca que ele mesmo escreveu não muda nenhum acerto"),
         (f"L{L_ult} contra L0 no qwen", pp(p_ult.get("delta_pp")), f'b/c {p_ult.get("b", "—")}/{p_ult.get("c", "—")}, p = {fmt(p_ult.get("p_mcnemar"), 3)}'),
         ("hit@3 nos inéditos (qwen)", " → ".join(f'{fmt(rec[A][L])}%' for L in Ls), f'nos 36 oficiais: ' + " → ".join(f'{fmt(rec_of[A][L])}%' for L in Ls)),
-        ("Ponte de versão", f"{sum(x['pareado_vs_f3']['b'] + x['pareado_vs_f3']['c'] <= 2 for x in ponte)} de {len(ponte)} pareáveis", f"{ponte_txt}; pareável quando b + c ≤ 2"),
+        ("Ponte de versão", f"{n_par} de {len(ult['linhas'])} pareáveis", f"Ollama {ult['versao']}: {ponte_txt}; pareável quando b + c ≤ 2"),
         ("Corridas da 3-B", f"{n_feitas} feitas · {n_pend} pendentes", f"{n_opc} opcionais"),
     ]
+    agrupado = (an or {}).get("ineditos", {}).get("agrupado", [])
+    tab_agrupado = tabela(["Modelo", "Biblioteca", "Casos", "Acerto com L0", "Acerto com a biblioteca", "Oficiais: b / c", "Inéditos: b / c", "Somados: b / c", "Diferença", "p (McNemar exato)"],
+                          [[x["modelo"], f'L{x["biblioteca_epoca"]}', x["n_comuns"], f'{fmt(x["acerto_l0_pct"])}%', f'{fmt(x["acerto_pct"])}%', f'{x["oficiais"]["b"]} / {x["oficiais"]["c"]}',
+                            f'{x["ineditos"]["b"]} / {x["ineditos"]["c"]}', f'{x["b"]} / {x["c"]}', pp(x["delta_pp"]), fmt(x["p_mcnemar"], 3)] for x in agrupado])
+    mde = {x["n"]: x["delta_pp"] for x in (an or {}).get("ineditos", {}).get("efeito_minimo_detectavel", [])}
+    maior = max((x["delta_pp"] for x in agrupado), default=None)
+    frase_72 = (f'Somando os 36 oficiais e os 36 inéditos, o maior ganho é de {pp(maior)}, abaixo do efeito mínimo detectável com 72 casos ({fmt(mde.get(72))} pontos): '
+                "a biblioteca fica acima de L0 nas duas versões, sem resolução estatística." if agrupado and mde.get(72) else "")
+    ruido = (an or {}).get("ruido_l0", [])
+    # ! Alteração de IA - Revisar: a variação entre corridas passa a ser contada com a mesma entrada (01/10/2026, depois da
+    # revisão independente do relatório da 3-B): sai da conta o caso cujo texto foi corrigido entre as duas corridas.
+    # ! Motivo: o `efe-3` teve o sintoma corrigido em 28/09; contá-lo como "caso que mudou entre corridas iguais" dava 4
+    # casos no Coder 7B, e com a mesma entrada são 3.
+    tab_ruido = tabela(["Modelo (L0, 36 casos)", "Corrida A", "Corrida B", "Casos que mudaram de acerto", "Com a mesma entrada", "Só B acertou", "Só A acertou", "Rótulos que mudaram", "Quais"],
+                       [[x["modelo"], x["corrida_a"], x["corrida_b"], x["discordantes"], x.get("discordantes_mesma_entrada", x["discordantes"]), x["b"], x["c"], x.get("rotulos_diferentes", "—"),
+                         ", ".join(x["casos"]) or "nenhum"] for x in ruido])
+    mesma = [x.get("discordantes_mesma_entrada", x["discordantes"]) for x in ruido]
+    saldo_mesma = max((abs(x.get("b_mesma_entrada", x["b"]) - x.get("c_mesma_entrada", x["c"])) for x in ruido), default=0)
+    frase_ruido = (f'Com a mesma entrada, entre duas corridas iguais do mesmo modelo mudam de acerto de {min(mesma)} a {max(mesma)} casos em 36, com saldo de até {saldo_mesma}: é a régua para ler '
+                   f'qualquer diferença pequena deste painel. A coluna "Casos que mudaram de acerto" conta também o efe-3, cujo texto foi corrigido em 28/09 e que não é a mesma entrada.' if ruido else "")
     html_ = f'''<section id="tresb" hidden>
 <h1>Fase 3-B: o ganho da biblioteca generaliza para casos nunca vistos?</h1>
-<p class="lead">Trinta e seis casos inéditos, escritos só a partir do código do sistema-cobaia e nunca vistos por nenhum modelo, foram diagnosticados com a biblioteca original (L0) e com as versões escritas pelo qwen2.5:7b (L1 e L3). O qwen acerta {" → ".join(f'{fmt(q[L]["acerto"])}%' for L in Ls)}: o ganho de L1 medido nos 36 oficiais <strong>não reaparece</strong>, e L{L_ult} rende {pp(p_ult.get("delta_pp"))} (b/c {p_ult.get("b", "—")}/{p_ult.get("c", "—")}, p = {fmt(p_ult.get("p_mcnemar"), 3)}). O 3B fica igual nas três versões. A ponte de versão do Ollama é pareável. Falta a troca cruzada (corrida 1), que separa quem escreveu a biblioteca de quem a lê.</p>
+<p class="lead">Trinta e seis casos inéditos, escritos só a partir do código do sistema-cobaia e nunca vistos por nenhum modelo, foram diagnosticados com a biblioteca original (L0) e com as versões que cada modelo escreveu (L1 e L3). O qwen acerta {" → ".join(f'{fmt(q[L]["acerto"])}%' for L in Ls)}: o ganho de L1 medido nos 36 oficiais <strong>não reaparece</strong>, e L{L_ult} rende {pp(p_ult.get("delta_pp"))} (b/c {p_ult.get("b", "—")}/{p_ult.get("c", "—")}, p = {fmt(p_ult.get("p_mcnemar"), 3)}). O 3B acerta o mesmo nas três versões. {esc(frase_72)} {esc(ponte_frase)} A troca cruzada, que separa quem escreveu a biblioteca de quem a lê, tem <a href="#cruzada" data-ir="cruzada|">aba própria</a>.</p>
 {kpis(itens_kpi)}
 <h2>Oficiais × inéditos</h2>
 <p>Linha cheia: os 36 casos oficiais de avaliação (vistos em quatro passadas por modelo). Linha tracejada: os 36 inéditos. Se o ganho fosse da biblioteca, as duas linhas subiriam juntas.</p>
@@ -319,14 +363,17 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
 <p>hit@3 = o verbete de ouro está entre os três recuperados. Nos inéditos o recuperador acerta menos e cai com as notas acrescentadas; nos oficiais, fica estável.</p>
 <div class="chart baixo"><canvas id="g-tb-rec"></canvas></div>
 {tab_par}
+{"<h2>Oficiais e inéditos somados (72 casos)</h2><p>Cada versão da biblioteca contra a original, nos dois conjuntos e na soma. b conta os casos que só a versão nova acertou; c, os que só a original acertou.</p>" + tab_agrupado if agrupado else ""}
 <h2>Ponte de versão do Ollama</h2>
-<p>A bateria oficial rodou no Ollama 0.34.0; a 3-B roda no 0.34.1. A ponte repete L0 nos 36 no runtime novo e compara caso a caso.</p>
+<p>A bateria oficial rodou no Ollama 0.34.0, e o Ollama se atualiza sozinho. A cada versão nova, a ponte repete L0 nos 36 e compara caso a caso com a Fase 3: b conta os casos que só a ponte acertou, c os que só a Fase 3 acertou. Com b + c até 2 as corridas dessa versão são pareáveis com a Fase 3; acima disso, o modelo é lido contra a própria ponte e a ressalva vai para o relatório (decisão 47).</p>
 {tab_ponte}
+{"<h3>Quanto o resultado varia sozinho</h3><p>" + esc(frase_ruido) + "</p>" + tab_ruido if ruido else ""}
+{detalhes(f"Leitura da ponte mais recente (roadmap §{leitura_ponte[0][:3]})", md_doc_para_html(leitura_ponte[1])) if leitura_ponte else ""}
 <h2>Corridas da Fase 3-B</h2>
 {cartoes_corridas(road, numeros=[c.numero for c in corr3b], sufixo="-3b")}
 {detalhes("Primeira leitura dos inéditos (roadmap §2.1)", md_doc_para_html(leitura_ined))}
 {detalhes("Sonda de detecção de correção (roadmap §3)", md_doc_para_html(sonda))}
-{fontes(["<code>resultados_alvo/fase3b_ineditos/resumo_fase3.json</code> (corrida 2, 28/09)", "<code>decisao_modelo.json</code> (ponte)", "<code>roadmap.md</code> §2, §2.1 e §3", "achado 4.37"])}
+{fontes(["<code>resultados_alvo/fase3b_ineditos/resumo_fase3.json</code> (corrida 2, 28/09)", "<code>decisao_modelo.json</code> (pontes de versão: " + ", ".join(p["saida"] for p in pontes) + ")", "<code>resultados_alvo/fase3/analise_fase3b.json</code> (72 casos somados e variação entre corridas)", "<code>roadmap.md</code> §2, §2.1, §2.3 e §3", "achados 4.37, 4.43 e 4.44; relatório <code>fase-3b-relatorio.md</code>"])}
 </section>'''
     return dados_js, html_
 
@@ -600,6 +647,203 @@ def secao_ferramental(med: dict | None, readme: str) -> tuple[dict, str]:
     return dados_js, html_
 
 
+# ------------------------------------------------------------------ 8. troca cruzada
+
+# ! Alteração de IA - Revisar: aba nova (01/10/2026) com a troca cruzada da Fase 3-B: a biblioteca escrita pelo
+# qwen2.5:7b lida pelos dois Coder. Tudo vem de `resultados_alvo/fase3/analise_fase3b.json` (analisar_fase3b.py).
+# ! Motivo: era a última corrida prevista da 3-B e a que responde se o ganho da Fase 3 é da biblioteca ou de quem a
+# lê; pela regra do painel, toda análise nova ganha aba (pergunta, resposta, números-chave, gráficos, leitura, fontes).
+NOME_CURTO = {"qwen2.5:7b": "qwen2.5:7b", "qwen2.5-coder:7b": "Coder 7B", "qwen2.5-coder:3b": "Coder 3B"}
+NOME_CONTRA = {"l0_ponte": "o próprio L0 na ponte (mesma versão do Ollama)", "propria": "a própria biblioteca na Fase 3",
+               "doador": "o doador lendo a mesma biblioteca (Fase 3)"}
+
+
+def _saldo_txt(b: int, c: int) -> str:
+    s = b - c
+    if s == 0:
+        return "saldo zero"
+    return f'{abs(s)} caso{"s" if abs(s) != 1 else ""} {"a mais" if s > 0 else "a menos"}'
+
+
+def secao_cruzada(an: dict, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    cz, meta = an["cruzada"], an["metadados"]
+    doador, leitores = meta["doador"], meta["leitores"]
+    nome = lambda m: NOME_CURTO.get(m, m)  # noqa: E731
+    cel = {(c["leitor"], c["origem"], c["biblioteca_epoca"]): c for c in cz["celulas"]}
+    par = {(p["leitor"], p["biblioteca_epoca"], p["contra"]): p for p in cz["pareados"]}
+    rot = {(r["leitor"], r["biblioteca"]): r for r in cz["rotulos"]}
+    agr = {(l["modelo"], l["biblioteca_epoca"]): l for l in an["ineditos"]["agrupado"]}
+    ponto = lambda c: {"acerto": c["acerto_pct"], "bal": c["acuracia_balanceada_pct"]}  # noqa: E731
+    versoes = ["0", "1", "3"]
+    doador_lido = {m: {"0": ponto(cel[(m, "ponte", 0)]), "1": ponto(cel[(m, "cruzada", 1)]), "3": ponto(cel[(m, "cruzada", 3)])} for m in leitores}
+    propria = {m: {v: ponto(cel[(m, "fase3", int(v))]) for v in versoes} for m in [doador] + leitores}
+    # rótulos curtos: o eixo do gráfico corta o começo de um rótulo comprido
+    trocas = [{"leitor": doador, "epoca": e, "rot": f"{nome(doador)} · própria L{e}", "b": agr[(doador, e)]["oficiais"]["b"], "c": agr[(doador, e)]["oficiais"]["c"]}
+              for e in (1, 3) if (doador, e) in agr]
+    trocas += [{"leitor": m, "epoca": e, "rot": f"{nome(m)} · L{e} do doador", "b": par[(m, e, "l0_ponte")]["b"], "c": par[(m, e, "l0_ponte")]["c"]} for m in leitores for e in (1, 3)]
+    dados_js = {"doador": doador, "leitores": leitores, "versoes": versoes, "doador_lido": doador_lido, "propria": propria, "trocas": trocas}
+
+    q1 = cel[(doador, "fase3", 1)]
+    versao = meta["versao_da_ponte_de_base"]
+    frases = [f'{nome(m)}: {fmt(cel[(m, "ponte", 0)]["acerto_pct"])}% com a biblioteca original e {fmt(cel[(m, "cruzada", 1)]["acerto_pct"])}% com a L1 do {nome(doador)} '
+              f'({_saldo_txt(par[(m, 1, "l0_ponte")]["b"], par[(m, 1, "l0_ponte")]["c"])})' for m in leitores]
+    pior = min(leitores, key=lambda m: par[(m, 1, "l0_ponte")]["b"] - par[(m, 1, "l0_ponte")]["c"])
+    r_pior = rot[(pior, "L1 do doador")]
+    ruido = an["ruido_l0"]
+    itens_kpi = [(f"{nome(m)} com a L1 do {nome(doador)}", f'{fmt(cel[(m, "ponte", 0)]["acerto_pct"])}% → {fmt(cel[(m, "cruzada", 1)]["acerto_pct"])}%',
+                  f'b/c {par[(m, 1, "l0_ponte")]["b"]}/{par[(m, 1, "l0_ponte")]["c"]} contra o próprio L0, p = {fmt(par[(m, 1, "l0_ponte")]["p_mcnemar"], 3)}') for m in leitores]
+    itens_kpi += [
+        ("A mesma L1 lida por quem a escreveu", f'{fmt(q1["acerto_pct"])}%', "; ".join(f'{nome(m)} b/c {par[(m, 1, "doador")]["b"]}/{par[(m, 1, "doador")]["c"]} contra ele' for m in leitores)),
+        (f"Rótulo que o {nome(pior)} passa a dar", f'{r_pior["respostas_no_rotulo_com_l0"]} → {r_pior["respostas_no_rotulo"]} respostas',
+         f'{r_pior["rotulo_mais_frequente"]}; ' + ("nenhum dos 36 casos tem essa causa" if r_pior["casos_com_esse_gabarito"] == 0 else f'{r_pior["casos_com_esse_gabarito"]} dos 36 casos têm essa causa')),
+        ("Contextos com nota do doador", f'{fmt(cel[(pior, "cruzada", 1)]["contexto_com_nota_pct"])}%',
+         "com a própria L1: " + "; ".join(f'{nome(m)} {fmt(cel[(m, "fase3", 1)]["contexto_com_nota_pct"])}%' for m in leitores)),
+        ("Variação entre corridas iguais", f'{min(x["discordantes_mesma_entrada"] for x in ruido)} a {max(x["discordantes_mesma_entrada"] for x in ruido)} casos',
+         f'em 36, com a mesma entrada e saldo de até {max(abs(x["b_mesma_entrada"] - x["c_mesma_entrada"]) for x in ruido)}; régua para ler os saldos acima'),
+    ]
+    linhas_par = "".join(
+        f'<tr data-valor="{p["contra"]}"><td>{esc(nome(p["leitor"]))} lendo L{p["biblioteca_epoca"]}</td><td>{esc(NOME_CONTRA[p["contra"]])}</td>'
+        f'<td>{"sim" if p["pareavel_pela_ponte"] else "não"}</td><td class=num>{p["b"]} / {p["c"]}</td>'
+        f'<td class=num>{pp(p["delta_pp"])}</td><td class=num>{fmt(p["p_mcnemar"], 3)}</td><td class=num>{p["b_mesma_entrada"]} / {p["c_mesma_entrada"]}</td><td class=num>{p["rotulos_diferentes"]}</td></tr>'
+        for p in cz["pareados"])
+    cont = Counter(p["contra"] for p in cz["pareados"])
+    tab_par = ('<div class="filtros filtro-tabela" data-alvo="tab-cz-par" role="group" aria-label="Filtro dos pareamentos">'
+               f'<button type="button" data-valor="todos" aria-pressed="true">Todos ({len(cz["pareados"])})</button>'
+               + "".join(f'<button type="button" data-valor="{k}" aria-pressed="false">Contra {esc(NOME_CONTRA[k])} ({cont[k]})</button>' for k in NOME_CONTRA if cont[k])
+               + '</div><div class="tabela" id="tab-cz-par"><table><thead><tr><th>Leitor e biblioteca do doador</th><th>Comparado com</th><th>Pareável pela ponte</th>'
+               f'<th>b / c</th><th>Diferença</th><th>p (McNemar exato)</th><th>b / c sem o caso de texto corrigido</th><th>Rótulos que mudaram</th></tr></thead><tbody>{linhas_par}</tbody></table></div>')
+    # as listas de casos de cada pareamento ficam num bloco recolhido: na tabela principal elas a deixavam larga demais
+    tab_par_casos = tabela(["Leitor e biblioteca do doador", "Comparado com", "Ganhou", "Perdeu", "Trocas em casos que já oscilam entre corridas de L0"],
+                           [[f'{nome(p["leitor"])} lendo L{p["biblioteca_epoca"]}', NOME_CONTRA[p["contra"]], ", ".join(p["ganhos"]) or "nenhum", ", ".join(p["perdas"]) or "nenhum",
+                             (", ".join(p["em_casos_que_oscilam"]) or "nenhuma") if p["contra"] == "l0_ponte" else "—"] for p in cz["pareados"]])
+    classes = list(dict.fromkeys(l["classe"] for l in cz["por_classe"]))
+    por_classe = {(l["leitor"], l["biblioteca"], l["classe"]): l for l in cz["por_classe"]}
+    tab_classe = tabela(["Quem lê", "Biblioteca lida"] + classes,
+                        [[nome(m), b] + [f'{por_classe[(m, b, c)]["acertos"]} / {por_classe[(m, b, c)]["n"]}' if (m, b, c) in por_classe else "—" for c in classes]
+                         for m, b in dict.fromkeys((l["leitor"], l["biblioteca"]) for l in cz["por_classe"])])
+    tab_celulas = tabela(["Quem lê", "Biblioteca lida", "Acerto nos 36", "IC 95%", "Acurácia balanceada", "Contexto com nota", "Citou verbete anotado", "Tokens de entrada", "s por diagnóstico"],
+                         [[nome(c["leitor"]), c["biblioteca"], f'{fmt(c["acerto_pct"])}%', f'{fmt(c["ic95"][0])} a {fmt(c["ic95"][1])}', f'{fmt(c["acuracia_balanceada_pct"])}%',
+                           f'{fmt(c["contexto_com_nota_pct"])}%', f'{fmt(c["citou_verbete_anotado_pct"])}%', fmt(c["tokens_entrada_mediana"], 0), fmt(c["segundos_mediana"])] for c in cz["celulas"]])
+    tab_rot = tabela(["Quem lê", "Biblioteca lida", "Rótulo mais respondido", "Respostas com ele", "Com L0", "Casos com essa causa", "Verbetes mais citados como fonte", "Verbetes mais presentes no contexto"],
+                     [[nome(r["leitor"]), r["biblioteca"], r["rotulo_mais_frequente"], f'{r["respostas_no_rotulo"]} ({fmt(r["parcela_rotulo_pct"])}%)', r["respostas_no_rotulo_com_l0"], r["casos_com_esse_gabarito"],
+                       "; ".join(f'{x["verbete"]} ({x["respostas"]})' for x in r["fontes_mais_citadas"]), "; ".join(f'{x["verbete"]} ({x["casos"]})' for x in r["verbetes_mais_presentes"])] for r in cz["rotulos"]])
+    tab_casos = tabela(["Quem lê", "Biblioteca", "Caso", "Passou a", "Causa do gabarito", "Resposta com L0", "Resposta com a biblioteca do doador", "Fonte citada", "Verbete de ouro no contexto", "O doador acerta"],
+                       [[nome(c["leitor"]), f'L{c["biblioteca_epoca"]}', c["caso"], c["mudou_para"], c["esperado"], c["resposta_l0"], c["resposta"], ", ".join(c["fontes_citadas"]) or "—",
+                         "sim" if c["ouro_no_contexto"] else "não", "sim" if c["doador_acertou"] else "não"] for c in cz["casos"]])
+    perdas_pior = [c for c in cz["casos"] if c["leitor"] == pior and c["biblioteca_epoca"] == 1 and c["mudou_para"] == "errado"]
+    no_rotulo = sum(1 for c in perdas_pior if c["resposta"] == r_pior["rotulo_mais_frequente"])
+    com_ouro = sum(1 for c in perdas_pior if c["ouro_no_contexto"])
+    fonte_top = r_pior["fontes_mais_citadas"][0] if r_pior["fontes_mais_citadas"] else None
+    melhor = max(leitores, key=lambda m: par[(m, 1, "l0_ponte")]["b"] - par[(m, 1, "l0_ponte")]["c"])
+    itens_leitura = [
+        f'<strong>O ganho não é da biblioteca sozinha.</strong> Lida por quem a escreveu, a L1 rende {fmt(q1["acerto_pct"])}%; lida pelo {esc(nome(melhor))}, fica com {_saldo_txt(par[(melhor, 1, "l0_ponte")]["b"], par[(melhor, 1, "l0_ponte")]["c"])} '
+        f'sobre o próprio L0, dentro da variação entre corridas ({len(par[(melhor, 1, "l0_ponte")]["em_casos_que_oscilam"])} das {par[(melhor, 1, "l0_ponte")]["b"] + par[(melhor, 1, "l0_ponte")]["c"]} trocas caem em casos que já '
+        f'oscilam sozinhos); lida pelo {esc(nome(pior))}, fica com {_saldo_txt(par[(pior, 1, "l0_ponte")]["b"], par[(pior, 1, "l0_ponte")]["c"])}, o único saldo fora dessa variação, ainda sem significância.',
+        f'<strong>No {esc(nome(pior))} as notas do doador são lidas e seguidas, para pior.</strong> Ele passa a responder <code>{esc(r_pior["rotulo_mais_frequente"])}</code> ({r_pior["respostas_no_rotulo_com_l0"]} respostas com L0, {r_pior["respostas_no_rotulo"]} com a biblioteca do doador), '
+        + ("causa que nenhum dos 36 casos tem" if r_pior["casos_com_esse_gabarito"] == 0 else f'causa de {r_pior["casos_com_esse_gabarito"]} dos 36 casos') + (f', citando <code>{esc(fonte_top["verbete"])}</code> como fonte em {fonte_top["respostas"]} respostas' if fonte_top else "") +
+        f'. Em {no_rotulo} das {len(perdas_pior)} perdas a resposta nova é esse rótulo, e em {com_ouro} das {len(perdas_pior)} o verbete de ouro estava no contexto: nessas, a falha é de uso, não de busca. '
+        f'Em rótulos, {par[(pior, 1, "l0_ponte")]["rotulos_diferentes"]} das 36 respostas mudam; entre corridas iguais dele mudam de {min(x["rotulos_diferentes"] for x in ruido if x["modelo"] == pior)} a '
+        f'{max(x["rotulos_diferentes"] for x in ruido if x["modelo"] == pior)}.',
+        f'<strong>O que a cruzada não separa.</strong> O ganho medido na Fase 3 não acompanha a biblioteca quando muda quem a lê, mas o {esc(nome(doador))} não leu a biblioteca de outro modelo: não dá para dizer se o ganho é '
+        "do par (o modelo com a biblioteca que ele mesmo escreveu) ou do leitor. E o ganho dele com a própria L1 (4 casos) também não alcança significância.",
+        f'<strong>O que fica para a Fase 4.</strong> O padrão do agente é o {esc(nome(doador))} com a biblioteca que ele mesmo escreveu (decisão 69): trocar o modelo que lê exige medir de novo, e a ideia de escrever com o melhor '
+        "modelo e ler com o mais barato sai. Uma nota em verbete que aparece em quase metade dos contextos alcança quase metade dos diagnósticos.",
+    ]
+    numeros = [c.numero for c in road["corridas"] if c.saida in (meta["fontes"]["cruzada"], meta["ponte_de_base"])]
+    html_ = f'''<section id="cruzada" hidden>
+<h1>Troca cruzada: o ganho é da biblioteca ou de quem a lê?</h1>
+<p class="lead">Não é da biblioteca sozinha. Os dois Coder diagnosticaram os mesmos 36 casos, com o mesmo prompt e a mesma busca, lendo a biblioteca escrita pelo {esc(nome(doador))}. {esc("; ".join(frases))}. Lida por quem a escreveu, a mesma L1 rende {fmt(q1["acerto_pct"])}%. O ganho medido na Fase 3 não acompanha a biblioteca quando muda quem a lê.</p>
+{kpis(itens_kpi)}
+<h2>Acerto por versão da biblioteca, por quem lê</h2>
+<p>Linha cheia: a biblioteca escrita pelo {esc(nome(doador))} (no ponto L0, a biblioteca original; para os dois Coder, medida na ponte em Ollama {esc(versao)}). Linha tracejada: cada Coder lendo a biblioteca que ele mesmo escreveu, na Fase 3. Se o ganho fosse da biblioteca, as linhas cheias subiriam juntas.</p>
+<div class="controles"><label>Métrica <select id="sel-cz-met"><option value="acerto">acerto simples</option><option value="bal">acurácia balanceada</option></select></label></div>
+<div class="chart"><canvas id="g-cz-leit"></canvas></div>
+<h2>Casos ganhos e perdidos contra o próprio L0</h2>
+<p>Cada barra compara um modelo com uma versão da biblioteca contra ele mesmo com a biblioteca original: à direita os casos que passou a acertar, à esquerda os que deixou de acertar. Os dois Coder são comparados na mesma versão do Ollama (ponte de 30/09); o {esc(nome(doador))}, dentro da Fase 3.</p>
+<div class="chart"><canvas id="g-cz-trocas"></canvas></div>
+<h2>Os pareamentos, um a um</h2>
+<p>b conta os casos que só o leitor com a biblioteca do doador acertou; c, os que só o outro lado acertou. Só a comparação contra a ponte é feita na mesma versão do Ollama e com o mesmo texto dos casos; as outras duas cruzam versões e, para o Coder 7B, não são pareáveis (decisão 47). Nelas, a coluna "sem o caso de texto corrigido" tira o efe-3, corrigido em 28/09.</p>
+{tab_par}
+{detalhes("Casos ganhos e perdidos em cada pareamento", tab_par_casos)}
+<h2>Leitura</h2>
+{leitura(itens_leitura)}
+{detalhes("Todas as células: quem lê, o que lê e quanto acerta", tab_celulas)}
+{detalhes("Acertos por classe de defeito (6 casos por classe)", tab_classe)}
+{detalhes("Rótulo mais respondido e verbetes citados", tab_rot)}
+{detalhes("Casos que mudaram contra o próprio L0, um a um", tab_casos)}
+<h2>As corridas</h2>
+{cartoes_corridas(road, numeros=numeros, sufixo="-cz")}
+{fontes(["<code>resultados_alvo/fase3/analise_fase3b.json</code> e <code>.md</code>, gerados por <code>analisar_fase3b.py</code> (--check)", "<code>resultados_alvo/fase3b_cruzada_qwen/</code> e <code>fase3b_ponte_0344/</code>", "relatório <code>fase-3b-relatorio.md</code> §5 e §6", "achados 4.42 e 4.43; decisão 69"])}
+</section>'''
+    return dados_js, html_
+
+
+# ------------------------------------------------------------------ 9. fechamento das Fases 3 e 3-B
+
+# ! Alteração de IA - Revisar: aba nova (01/10/2026) com a lista de fechamento das Fases 3 e 3-B, lida da tabela do
+# §9 de `3-resultados-e-analises/fase-3b-relatorio.md`, e com as fichas de pendência que continuam abertas.
+# ! Motivo: o Eric pediu a verificação de que todos os tópicos das duas fases podem ser dados por concluídos antes de
+# passar o planejamento da Fase 4; ele decide pelo painel, e a resposta precisa estar numa tela só, tópico por tópico.
+ESTADOS_FECHAMENTO = {"concluido": ("Concluído", "concluida"), "ressalva": ("Concluído com ressalva", "andamento"),
+                      "nao_rodado": ("Não rodado", "opcional"), "descartado": ("Descartado", "descartado"), "outro": ("Em aberto", "outro")}
+
+
+def _classe_fechamento(estado: str) -> str:
+    e = estado.strip().lower()
+    if "ressalva" in e:
+        return "ressalva"
+    if e.startswith("conclu"):
+        return "concluido"
+    if e.startswith("não rodado") or e.startswith("nao rodado"):
+        return "nao_rodado"
+    if e.startswith("descartado"):
+        return "descartado"
+    return "outro"
+
+
+def secao_fechamento(relatorio_md: str, pend: list, md_doc_para_html) -> tuple[dict, str]:
+    md = pt.sem_comentarios(relatorio_md)
+    secs = {t.split(".")[0]: c for t, c in pt.secoes(md) if t and t[0].isdigit()}
+    cab, linhas, _ = pt.primeira_tabela(secs["9"])
+    col = {c: i for i, c in enumerate(cab)}
+    cont = Counter(_classe_fechamento(r[col["Estado"]]) for r in linhas)
+    abertas = [f for b in pend for f in b.fichas if f.aberta]
+    trs = "".join(
+        f'<tr data-valor="{_classe_fechamento(r[col["Estado"]])}"><td class=num>{esc(r[col["#"]])}</td><td>{pt.inline(r[col["Tópico"]])}</td><td>{esc(r[col["Fase"]])}</td>'
+        f'<td>{chip(ESTADOS_FECHAMENTO[_classe_fechamento(r[col["Estado"]])][1], r[col["Estado"]])}</td><td>{pt.inline(r[col["Evidência"]])}</td><td>{pt.inline(r[col["O que fica"]])}</td></tr>'
+        for r in linhas)
+    tab = ('<div class="filtros filtro-tabela" data-alvo="tab-fechamento" role="group" aria-label="Filtro do fechamento">'
+           f'<button type="button" data-valor="todos" aria-pressed="true">Todos ({len(linhas)})</button>'
+           + "".join(f'<button type="button" data-valor="{k}" aria-pressed="false">{esc(ESTADOS_FECHAMENTO[k][0])} ({cont[k]})</button>' for k in ESTADOS_FECHAMENTO if cont[k])
+           + '</div><div class="tabela" id="tab-fechamento"><table><thead><tr><th>#</th><th>Tópico</th><th>Fase</th><th>Estado</th><th>Evidência</th><th>O que fica</th></tr></thead>'
+           f'<tbody>{trs}</tbody></table></div>')
+    fechado = cont["outro"] == 0
+    resposta = ("Sim. Nenhum tópico obrigatório está aberto." if fechado else f'Ainda não: {cont["outro"]} tópico(s) em aberto.')
+    lista = "".join(f'<li><a href="#{f.id_html}" data-ir="pendencias|{f.id_html}"><span class="numero">{f.numero}</span> {pt.inline(f.titulo)}</a>'
+                    f'<br><span class="nota">Recomendação: {pt.inline(f.campos.get("Recomendação", "—"))}</span></li>' for f in abertas)
+    itens_kpi = [
+        ("Concluídos", str(cont["concluido"]), f"de {len(linhas)} tópicos"),
+        ("Concluídos com ressalva", str(cont["ressalva"]), "a ressalva está na coluna O que fica"),
+        ("Não rodados", str(cont["nao_rodado"]), "corridas opcionais ou inviáveis; o motivo está na tabela"),
+        ("Descartados com motivo", str(cont["descartado"]), "registrados para o texto final"),
+        ("Decisões do Eric em aberto", str(len(abertas)), "fichas na aba Pendências; não impedem o planejamento da Fase 4" if abertas else "nenhuma ficha aberta"),
+    ]
+    html_ = f'''<section id="fechamento" hidden>
+<h1>Fechamento: as Fases 3 e 3-B podem ser dadas por concluídas?</h1>
+<p class="lead">{esc(resposta)} Dos {len(linhas)} tópicos, {cont["concluido"]} estão concluídos, {cont["ressalva"]} concluídos com ressalva declarada, {cont["nao_rodado"]} não rodaram (corridas opcionais ou inviáveis) e {cont["descartado"]} {"foi descartado" if cont["descartado"] == 1 else "foram descartados"} com motivo. {"Faltam " + str(len(abertas)) + " decisões do Eric, que não impedem o planejamento da Fase 4." if abertas else "Não há decisão pendente."}</p>
+{kpis(itens_kpi)}
+<h2>O que depende do Eric</h2>
+{"<ol class='lista-eric'>" + lista + "</ol>" if abertas else "<p>Nenhuma ficha aberta.</p>"}
+<h2>Tópico por tópico</h2>
+{tab}
+{detalhes("O que muda e o que não muda com a Fase 3-B (relatório §7)", md_doc_para_html(secs.get("7", "")))}
+{detalhes("O que a literatura previa e o que saiu (relatório §6)", md_doc_para_html(secs.get("6", "")))}
+{detalhes("Limitações que ficam (relatório §8)", md_doc_para_html(secs.get("8", "")))}
+{fontes(["<code>3-resultados-e-analises/fase-3b-relatorio.md</code> §6 a §9", "<code>pendencias.md</code> (fichas abertas)", "<code>roadmap.md</code>"])}
+</section>'''
+    return {"contagem": dict(cont), "fichas_abertas": len(abertas), "fechado": fechado}, html_
+
+
 # ------------------------------------------------------------------ JS e CSS das abas novas
 
 JS_TOPICOS = r"""
@@ -647,6 +891,20 @@ function ablBarras(){
   grafico('g-abl', {type:'bar', data:{labels: L.map(x => x.modelo.replace('qwen2.5:','')+' · '+x.cond), datasets: series.map(([k, nome], i) => ({label:nome, data: L.map(x => x[k]), backgroundColor: css('--s'+(i+1))}))},
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0, max:100, title:{display:true,text:'% dos 90 casos'}}}, plugins:{tooltip:{callbacks:{afterLabel: c => c.datasetIndex===0 ? 'IC 95% '+L[c.dataIndex].ic.join('–') : ''}}}}});
 }
+function czLeitores(){
+  const met = document.getElementById('sel-cz-met').value; const C = T.cruzada; const ds = [];
+  ds.push({label: C.doador+' · a biblioteca que ele escreveu (Fase 3)', data: C.versoes.map(v => C.propria[C.doador][v][met]), borderColor:cor(C.doador), backgroundColor:cor(C.doador), tension:.2, pointRadius:4});
+  C.leitores.forEach(m => { ds.push({label: m+' · a biblioteca do '+C.doador, data: C.versoes.map(v => C.doador_lido[m][v][met]), borderColor:cor(m), backgroundColor:cor(m), tension:.2, pointRadius:4});
+    ds.push({label: m+' · a própria biblioteca (Fase 3)', data: C.versoes.map(v => C.propria[m][v][met]), borderColor:cor(m), backgroundColor:cor(m), borderDash:[6,4], tension:.2, pointRadius:4, pointStyle:'rectRot'}); });
+  grafico('g-cz-leit', {type:'line', data:{labels: C.versoes.map(v => 'L'+v), datasets: ds},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text: met==='bal'?'acurácia balanceada nos 36 (%)':'acerto nos 36 (%)'}, suggestedMin:50, suggestedMax:95}}, plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+'%'}}}}});
+}
+function czTrocas(){
+  const R = T.cruzada.trocas;
+  grafico('g-cz-trocas', {type:'bar', data:{labels: R.map(r => r.rot), datasets:[{label:'passou a acertar', data: R.map(r => r.b), backgroundColor: css('--bom')}, {label:'deixou de acertar', data: R.map(r => -r.c), backgroundColor: css('--ruim')}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true, title:{display:true,text:'casos em 36 (perdas à esquerda, ganhos à direita)'}, ticks:{stepSize:1, callback: v => Math.abs(v)}}, y:{stacked:true, ticks:{autoSkip:false}}},
+      plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+Math.abs(c.raw)+' caso(s)', afterBody: it => { const r = R[it[0].dataIndex]; return 'saldo: '+(r.b - r.c > 0 ? '+' : '')+(r.b - r.c); }}}}}});
+}
 function ferMcp(){
   if(!T.ferramental.mcp) return; const met = document.getElementById('sel-fer-met').value; const S = T.ferramental.mcp;
   grafico('g-fer-mcp', {type:'bar', data:{labels: S.map(x => x.tarefa), datasets:[{label:'grep, Glob e Read', data: S.map(x => Math.round(x['grep_'+met])), backgroundColor: css('--s1')}, {label:'servidor codebase-memory', data: S.map(x => Math.round(x['mcp_'+met])), backgroundColor: css('--s2')}]},
@@ -655,8 +913,9 @@ function ferMcp(){
 """
 
 DESENHAR_TOPICOS = {"comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
+                    "cruzada": ["czLeitores", "czTrocas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"]}
-SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza",
+SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
 
 CSS_TOPICOS = r"""
@@ -684,7 +943,7 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes: list[tuple[str, dict, str]] = []
     d, h = secao_comparativo(ctx["cq"], ctx["blocos_cq"], ctx["md_para_html"], road, ctx["cartoes_corridas"])
     partes.append(("cq", d, h))
-    d, h = secao_tres_b(ctx["ineditos"], dados, road, ctx["cartoes_corridas"], ctx["md_doc_para_html"])
+    d, h = secao_tres_b(ctx["ineditos"], dados, road, ctx["cartoes_corridas"], ctx["md_doc_para_html"], ctx.get("analise3b"))
     partes.append(("tresb", d, h))
     d, h = secao_curadoria(ctx["curadoria"], ctx["planilha_curadoria"])
     partes.append(("curadoria", d, h))
@@ -697,4 +956,10 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("pesquisa", d, h))
     d, h = secao_ferramental(ctx.get("medicao_mcp"), ctx["readme"])
     partes.append(("ferramental", d, h))
+    if ctx.get("analise3b"):
+        d, h = secao_cruzada(ctx["analise3b"], road, ctx["cartoes_corridas"])
+        partes.append(("cruzada", d, h))
+    if ctx.get("relatorio3b"):
+        d, h = secao_fechamento(ctx["relatorio3b"], ctx.get("pend", []), ctx["md_doc_para_html"])
+        partes.append(("fechamento", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

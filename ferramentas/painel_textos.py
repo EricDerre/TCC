@@ -291,16 +291,22 @@ def inline(s: str) -> str:
     s = html.escape(s, quote=False)
     s = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2" target="_blank" rel="noopener">\1</a>', s)
     s = re.sub(r"\[([^\]]+)\]\([^)]+\)", r'<span class="ref">\1</span>', s)
-    partes = re.split(r"(`[^`]+`)", s)
-    out = []
-    for p in partes:
-        if len(p) > 1 and p.startswith("`") and p.endswith("`"):
-            out.append(f"<code>{p[1:-1]}</code>")
-        else:
-            p = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", p)
-            p = re.sub(r"(?<![*\w])\*([^*\n]+?)\*(?![*\w])", r"<em>\1</em>", p)
-            out.append(p)
-    return "".join(out)
+    # ! Alteração de IA - Revisar: os trechos entre crases saem do texto antes do negrito e do itálico e voltam
+    # depois, cada um no lugar de uma marca numerada (30/09/2026, noite).
+    # ! Motivo: antes o texto era cortado nas crases e o negrito era procurado em cada pedaço; um negrito com
+    # nome de modelo dentro (`**decisão 52: `qwen2.5:7b` com L1**`, tabela §1 do roadmap) ficava com metade dos
+    # asteriscos em cada pedaço e saía no painel com os `**` à vista. O conteúdo das crases continua intocado
+    # (um glob como `a/**/*.log` não vira negrito).
+    codigos: list[str] = []
+
+    def guardar(m: re.Match) -> str:
+        codigos.append(m.group(1))
+        return f"\x00{len(codigos) - 1}\x00"
+
+    s = re.sub(r"`([^`]+)`", guardar, s)
+    s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
+    s = re.sub(r"(?<![*\w])\*([^*\n]+?)\*(?![*\w])", r"<em>\1</em>", s)
+    return re.sub(r"\x00(\d+)\x00", lambda m: f"<code>{codigos[int(m.group(1))]}</code>", s)
 
 
 def tabela_html(linhas: list[str]) -> str:

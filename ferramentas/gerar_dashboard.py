@@ -25,6 +25,11 @@
 # ! Motivo: o Eric pediu "a aba do comparativo do qwen 2.5 7b e o coder" e que o painel seja "o grande
 # compilador / centralizador das análises e dados, com cada aba específica falando sobre os tópicos". A paleta
 # antiga reprovava na validação (cores acinzentadas e o par ocre × verde difícil de distinguir).
+# ! Alteração de IA - Revisar: em 01/10/2026 entraram as abas Troca cruzada e Fechamento (painel_topicos.py), a aba
+# Fase 3-B ganhou a soma dos 72 casos e a variação entre corridas iguais, e a aba Método e limites passou a dizer o
+# que a Fase 3-B mediu das limitações 2, 6 e 7 (números de analise_fase3b.json, lidos por `resumo_3b`).
+# ! Motivo: a troca cruzada rodou e o Eric pediu a análise das duas últimas corridas e a verificação de que as Fases
+# 3 e 3-B podem ser dadas por concluídas; o painel ainda dizia que a cruzada faltava e que o ruído era de 0 a 2 casos.
 """Uso: python ferramentas/gerar_dashboard.py [--check] [--saida Documentacao/dashboard/painel-do-projeto.html]"""
 from __future__ import annotations
 
@@ -69,6 +74,56 @@ FIGURAS = {
 
 def ler_json(p: Path) -> dict:
     return json.loads(p.read_text(encoding="utf-8"))
+
+
+# ! Alteração de IA - Revisar: lista das pontes de versão do Ollama (30/09/2026, noite): uma entrada por saída em
+# modo `ponte` do campo `tres_b` de decisao_modelo.json, na ordem em que foram rodadas, com a versão lida do
+# condicoes_3b.json da própria saída e a marca de pareável (b + c <= 2, decisão 47) por modelo.
+# ! Motivo: o painel lia só a saída `fase3b_ponte` (21/09, Ollama 0.34.1) pelo nome fixo. O Ollama passou a
+# 0.34.4 em 30/09, a ponte nova (`fase3b_ponte_0344`) deu o Coder 7B com b + c = 4, e as abas Decisão e
+# Fase 3-B continuariam dizendo que a ponte é pareável.
+LIMITE_PONTE = 2
+
+
+def pontes_de_versao(tres_b) -> list[dict]:
+    """Pontes de versão registradas na decisão; lista vazia quando a decisão foi gerada sem saídas da 3-B."""
+    if not isinstance(tres_b, dict):
+        return []
+    pontes = []
+    for nome, saida in tres_b.items():
+        if saida.get("modo") != "ponte":
+            continue
+        condicoes = EXP / "resultados_alvo" / nome / "condicoes_3b.json"
+        versao = ler_json(condicoes).get("versao_ollama") if condicoes.exists() else None
+        linhas = []
+        for x in saida["linhas"]:
+            par = x.get("pareado_vs_f3")
+            if not par:
+                continue
+            linhas.append({"modelo": x["modelo"], "acerto": x["acerto_pct"], "bal": x["acuracia_balanceada_pct"],
+                           "b": par["b"], "c": par["c"], "p": par["p_mcnemar"],
+                           "pareavel": par["b"] + par["c"] <= LIMITE_PONTE})
+        pontes.append({"saida": nome, "versao": versao or "?", "linhas": linhas})
+    return pontes
+
+
+def resumo_3b() -> dict | None:
+    """Os poucos números da análise de fechamento da Fase 3-B (analise_fase3b.json) que entram em textos fixos do
+    painel, na aba Método e limites; None enquanto a análise não existir."""
+    arq = F3 / "analise_fase3b.json"
+    if not arq.exists():
+        return None
+    an = ler_json(arq)
+    doador, leitores = an["metadados"]["doador"], an["metadados"]["leitores"]
+    par = {(p["leitor"], p["biblioteca_epoca"], p["contra"]): p for p in an["cruzada"]["pareados"]}
+    agr = {(l["modelo"], l["biblioteca_epoca"]): l for l in an["ineditos"]["agrupado"]}
+    ruido = an["ruido_l0"]
+    # variação contada com a mesma entrada: sem o caso de texto corrigido entre as duas corridas (efe-3, 28/09)
+    return {"doador": doador, "ruido_min": min(x["discordantes_mesma_entrada"] for x in ruido), "ruido_max": max(x["discordantes_mesma_entrada"] for x in ruido),
+            "saldo_max": max(abs(x["b_mesma_entrada"] - x["c_mesma_entrada"]) for x in ruido),
+            "mde72": next((x["delta_pp"] for x in an["ineditos"]["efeito_minimo_detectavel"] if x["n"] == 72), None),
+            "agrupado": {str(e): {"delta": agr[(doador, e)]["delta_pp"], "b": agr[(doador, e)]["b"], "c": agr[(doador, e)]["c"]} for e in (1, 3) if (doador, e) in agr},
+            "cruzada": [{"leitor": m, "b": par[(m, 1, "l0_ponte")]["b"], "c": par[(m, 1, "l0_ponte")]["c"]} for m in leitores]}
 
 
 def blocos_tabelas(p: Path) -> dict[str, str]:
@@ -217,6 +272,8 @@ def montar_dados(r: dict, c: dict, d: dict, m2b: dict, m2a: dict) -> dict:
     dados["escore"] = {"pesos": d["escore_ponderado"]["pesos"], "linhas": d["escore_ponderado"]["linhas"]}
     dados["sensibilidade"] = {k: v["mudancas_de_vencedor"] for k, v in d["sensibilidade"].items()}
     dados["tres_b"] = d["tres_b"]
+    dados["pontes"] = pontes_de_versao(d["tres_b"])
+    dados["resumo3b"] = resumo_3b()
     dados["revisao"] = d["revisao_humana"]["por_modelo"]
     dados["cochran"] = r["cochran_q"]
     dados["meta"] = {"resumo_gerado_em": r["metadados"]["gerado_em"], "n_diagnosticos": r["metadados"]["n_diagnosticos"],
@@ -273,8 +330,8 @@ def texto_vereditos(dados: dict) -> dict[str, dict]:
 LEITURA = {
     "qwen2.5:7b": ("Vencedor da regra pré-registrada", "Único modelo que escreveu na biblioteca no formato exigido e ganhou com ela: o pico é a época 1 (L1), depois regride. As notas aceitas são em maioria redundantes ou erradas na revisão humana; o ganho veio da forma (notas e cabeçalhos no contexto), não da verdade do conteúdo — por isso a cópia L1 pede curadoria antes da Fase 4."),
     "granite4.2:8b": ("O melhor sem edição; fora do padrão", "Igual em L0..L3 porque não conseguiu documentar: todas as propostas foram barradas pelo teto de texto do validador. É o mais estável entre cortes e o melhor sem biblioteca editada, mas fica abaixo do vencedor com L1, é o mais caro por diagnóstico e o único que a máquina-alvo não sustenta com folga (sem ponte de versão, fora da 3-B)."),
-    "qwen2.5-coder:7b": ("Segundo escritor, sem ganho nos 36", "Escreve no formato e teve edições aceitas, mas nos 36 casos de avaliação só ganha em L3 e regride nos 90 depois de L1; é dominado no Pareto (mais lento sem ser mais certeiro). Segue como leitor na troca cruzada da 3-B."),
-    "qwen2.5-coder:3b": ("O mais barato; 20 pontos abaixo", "Não dominado no Pareto só pelo custo. Omite o texto em boa parte das propostas (rejeições por bloco malformado), adere cegamente a documentação errada na condição A5 da 2-B e está sob a Qwen Research License (uso não comercial). Segue como leitor nos testes da 3-B."),
+    "qwen2.5-coder:7b": ("Segundo escritor, sem ganho nos 36", "Escreve no formato e teve edições aceitas, mas nos 36 casos de avaliação só ganha em L3 e regride nos 90 depois de L1; é dominado no Pareto (mais lento sem ser mais certeiro). Como leitor da biblioteca do qwen2.5:7b na troca cruzada, não alcançou o escritor (aba Troca cruzada)."),
+    "qwen2.5-coder:3b": ("O mais barato; 20 pontos abaixo", "Não dominado no Pareto só pelo custo. Omite o texto em boa parte das propostas (rejeições por bloco malformado), adere cegamente a documentação errada na condição A5 da 2-B e está sob a Qwen Research License (uso não comercial). Como leitor da biblioteca do qwen2.5:7b na troca cruzada, acertou menos do que sem ela (aba Troca cruzada)."),
 }
 
 HIPOTESES = [
@@ -636,10 +693,18 @@ def secao_inicio(dados: dict, pend: list, road: dict) -> str:
     n_rod = sum(c.classe == "rodando" for c in corr)
     n_pend = sum(c.classe in ("pendente", "aguarda") for c in corr)
     n_feitas = sum(c.classe == "feita" for c in corr)
-    fase = next((f for f in road["fases"] if f.classe == "andamento"), None)
+    # ! Alteração de IA - Revisar: o cartão passa a mostrar a próxima fase a começar quando nenhuma fase numerada está em
+    # andamento (01/10/2026).
+    # ! Motivo: com a Fase 3-B concluída, a única linha "Em andamento" do roadmap é a Documentação, e o cartão dizia
+    # "Fase atual: Documentação" quando o projeto está na porta da Fase 4.
+    fase = next((f for f in road["fases"] if f.classe == "andamento" and not f.nome.lower().startswith("documenta")), None)
+    rotulo_fase = "Fase atual"
+    if fase is None:
+        fase = next((f for f in road["fases"] if f.classe == "nao_iniciada"), None)
+        rotulo_fase = "Próxima fase"
     v = dados["vencedor"]
     m = re.search(r"fim do \*\*(Mês \d+)\*\*", road["posicao"])
-    itens = [("Fase atual", fase.nome if fase else "—", f"cronograma do projeto: fim do {m.group(1)}" if m else ""),
+    itens = [(rotulo_fase, fase.nome if fase else "—", f"cronograma do projeto: fim do {m.group(1)}" if m else ""),
              ("Modelo escolhido", v["modelo"], f'biblioteca L{v["biblioteca_epoca"]} (decisão 52)'),
              ("Pendências abertas", str(len(abertas)), f"{len(do_eric)} dependem de decisão do Eric"),
              ("Corridas da 3-B", f"{n_rod} rodando · {n_pend} pendentes", f"{n_feitas} feitas"),
@@ -712,8 +777,35 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
     hips = vereditos_hipoteses(dados)
     v = dados["vencedor"]
     B = lambda nome: md_para_html(blocos[nome])  # noqa: E731
-    ponte = dados["tres_b"].get("fase3b_ponte", {}).get("linhas", [])
-    ponte_txt = "; ".join(f'{x["modelo"]} b/c {x["pareado_vs_f3"]["b"]}/{x["pareado_vs_f3"]["c"]}' for x in ponte)
+    # ! Alteração de IA - Revisar: o parágrafo da ponte na aba Decisão passa a citar todas as pontes de versão e a
+    # nomear quem ficou acima do limite (30/09/2026, noite).
+    # ! Motivo: o texto fixo dizia "0.34.1" e "pareáveis" lendo só a ponte de 21/09; com a ponte em 0.34.4 o
+    # Coder 7B passou do limite (b + c = 4) e a frase ficaria errada.
+    pontes = dados["pontes"]
+    ponte_txt = "; ".join(f'em {p["versao"]}, ' + ", ".join(f'{x["modelo"]} {x["b"]}/{x["c"]}' for x in p["linhas"]) for p in pontes)
+    acima = [f'{x["modelo"]} em {p["versao"]}' for p in pontes for x in p["linhas"] if not x["pareavel"]]
+    ponte_leitura = (f'Acima do limite: {"; ".join(acima)}. As corridas desse modelo nessa versão são lidas contra a própria ponte, com a ressalva declarada (decisão 47).'
+                     if acima else "Todos pareáveis.")
+    ponte_versoes = " e depois ".join(p["versao"] for p in pontes)
+    # ! Alteração de IA - Revisar: as limitações 2, 6 e 7 da aba Método e limites passam a dizer o que a Fase 3-B mediu (01/10/2026).
+    # ! Motivo: o texto fixo dizia "ruído medido de 0 a 2 casos em 36" e remetia aos testes (a) e (b) da 3-B como se ainda
+    # fossem rodar; a ponte de 30/09 mediu de 0 a 3 casos com a mesma entrada (4 contando o efe-3, de texto corrigido), e
+    # os dois testes rodaram.
+    r3b = dados.get("resumo3b")
+    lim2 = "Teste reutilizado: os 36 foram vistos em quatro passadas por modelo; só casos inéditos fecham a questão (teste (a) da 3-B)."
+    lim6 = "Uma execução por condição, sem semente fixa; ruído medido de 0 a 2 casos em 36."
+    lim7 = "Escritor e leitor confundidos: a biblioteca L1 só foi lida pelo próprio qwen2.5:7b (teste (b) da 3-B)."
+    if r3b:
+        a1, a3 = r3b["agrupado"].get("1"), r3b["agrupado"].get("3")
+        if a1 and a3 and r3b["mde72"]:
+            lim2 = ("Teste reutilizado: os 36 foram vistos em quatro passadas por modelo. Medido na 3-B: nos 36 casos inéditos o ganho da L1 não reaparece; com os 72 casos somados, "
+                    f'a L1 rende {tp.pp(a1["delta"])} (b/c {a1["b"]}/{a1["c"]}) e a L3 {tp.pp(a3["delta"])} (b/c {a3["b"]}/{a3["c"]}), abaixo do efeito mínimo detectável de {tp.fmt(r3b["mde72"])} pontos.')
+        lim6 = (f'Uma execução por condição, sem semente fixa. Medido na 3-B: com a mesma entrada, entre corridas iguais mudam de {r3b["ruido_min"]} a {r3b["ruido_max"]} casos em 36, '
+                f'com saldo de até {r3b["saldo_max"]}.')
+        saldos = "; ".join(f'{tp.NOME_CURTO.get(x["leitor"], x["leitor"])} b/c {x["b"]}/{x["c"]}' for x in r3b["cruzada"])
+        lim7 = (f'Escritor e leitor confundidos. Medido na 3-B: lida pelos dois Coder, a L1 do {r3b["doador"]} não reproduz o ganho contra o próprio L0 de cada um ({saldos}); '
+                "o ganho não acompanha a biblioteca quando muda quem a lê, e a cruzada não separa se ele é do par ou do leitor.")
+    lim2, lim6, lim7 = html.escape(lim2), html.escape(lim6), html.escape(lim7)
     dados_json = json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
     mapa_desenho = {"visao": ["linhaCurvas", "barrasFases"], "fase3": ["documentacao", "rejeicoes", "recuperacao", "custo", "revisao"],
                     "decisao": ["pareto", "bootstrap"], "fases2": ["f2b", "f2a"]} | tp.DESENHAR_TOPICOS
@@ -816,7 +908,7 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <h2>Escore ponderado e sensibilidade</h2>
 {B("dm_escore")}
 <h2>Ponte de versão (Fase 3-B)</h2>
-<p>O Ollama passou de 0.34.0 (bateria) para 0.34.1 depois dela. A ponte repete L0 nos 36 no runtime novo e compara caso a caso com a Fase 3: {html.escape(ponte_txt)} — pareáveis (b + c ≤ 2). O Granite não rodou por falta de RAM e ficou fora da 3-B.</p>
+<p>O Ollama se atualiza sozinho: a bateria rodou em 0.34.0 e as corridas seguintes em {html.escape(ponte_versoes)}. A cada versão nova, a ponte repete L0 nos 36 e compara caso a caso com a Fase 3 (b = só a ponte acertou, c = só a Fase 3 acertou; pareável quando b + c ≤ {LIMITE_PONTE}): {html.escape(ponte_txt)}. {html.escape(ponte_leitura)} O Granite não rodou por falta de RAM e ficou fora da 3-B.</p>
 {B("dm_3b")}
 <h2>Frase da decisão</h2>
 {B("dm_frase")}
@@ -877,12 +969,12 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <h2>Limitações declaradas</h2>
 <ol>
 <li>Amostra de 36 casos: efeito mínimo detectável alto; a decisão é por convergência de critérios, sob incerteza declarada.</li>
-<li>Teste reutilizado: os 36 foram vistos em quatro passadas por modelo; só casos inéditos fecham a questão (teste (a) da 3-B).</li>
+<li>{lim2}</li>
 <li>Revisão das edições por IA, um único revisor.</li>
 <li>Custo por versão medido em momentos diferentes da mesma corrida.</li>
 <li>Granite sem ponte de versão e sem reteste com teto de texto maior.</li>
-<li>Uma execução por condição, sem semente fixa; ruído medido de 0 a 2 casos em 36.</li>
-<li>Escritor e leitor confundidos: a biblioteca L1 só foi lida pelo próprio qwen2.5:7b (teste (b) da 3-B).</li>
+<li>{lim6}</li>
+<li>{lim7}</li>
 </ol>
 <h2>Fase 3-B — os testes complementares</h2>
 <ul>
@@ -890,8 +982,8 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <li><strong>(a) Casos inéditos</strong>: 36 casos novos, escritos só a partir do código do cobaia, com o qwen2.5:7b e o 3B em L0, L1 e L3 — o ganho generaliza?</li>
 <li><strong>Sonda de detecção de correção</strong>: o modelo percebe, ao rever um caso corrigido, que a própria nota ficou desatualizada?</li>
 </ul>
-<p class="nota">O estado de cada corrida (feita, rodando, pendente) e o comando pronto estão na aba Roadmap; as decisões que esperam resposta, na aba Pendências.</p>
-<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>comparativo_qwen_coder.json</code>, <code>fase3b_ineditos/resumo_fase3.json</code>, <code>curadoria.json</code>, <code>experimento_recuperador.json</code>, <code>ablacao_base_instruct/resumo_metricas.json</code>, os levantamentos bibliográficos e o README (abas por tópico, <code>ferramentas/painel_topicos.py</code>); <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
+<p class="nota">Os resultados estão nas abas Fase 3-B (inéditos e pontes de versão), Troca cruzada e Fechamento. O estado de cada corrida e o comando pronto estão na aba Roadmap; as decisões que esperam resposta, na aba Pendências.</p>
+<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>comparativo_qwen_coder.json</code>, <code>fase3b_ineditos/resumo_fase3.json</code>, <code>curadoria.json</code>, <code>experimento_recuperador.json</code>, <code>ablacao_base_instruct/resumo_metricas.json</code>, <code>analise_fase3b.json</code>, o relatório <code>fase-3b-relatorio.md</code>, os levantamentos bibliográficos e o README (abas por tópico, <code>ferramentas/painel_topicos.py</code>); <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
 </section>
 {topicos_html}
 </main>
@@ -930,6 +1022,10 @@ def main() -> None:
         "ablacao": ler_json(EXP / "resultados_alvo" / "ablacao_base_instruct" / "resumo_metricas.json"),
         "medicao_mcp": ler_json(medicao) if medicao.exists() else None,
         "readme": (RAIZ / "README.md").read_text(encoding="utf-8"),
+        "analise3b": ler_json(F3 / "analise_fase3b.json") if (F3 / "analise_fase3b.json").exists() else None,
+        "relatorio3b": ((MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8")
+                        if (MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").exists() else None),
+        "pend": pend,
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     html_final = pagina(dados, blocos, figs, pend, road, topicos_html)

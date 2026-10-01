@@ -191,4 +191,8 @@ Rodar @("avaliar.py")
 & $Venv gerar_graficos.py 2>&1 | ForEach-Object { Write-Host $_; Add-Content -Path $Log -Value $_ -Encoding utf8 }
 Rodar @("gerar_relatorio.py")
 $duracao = (Get-Date) - $Inicio
-Marco ("FIM da Fase 2-B - duracao total {0:d2}h{1:d2}" -f [int]$duracao.TotalHours, $duracao.Minutes)
+# ! Alteracao de IA - Revisar: as horas da linha FIM passam a ser truncadas com [math]::Floor antes do [int].
+# ! Motivo: no PowerShell, [int] arredonda para o inteiro mais proximo, e a linha FIM somava uma hora sempre que
+# os minutos passavam de 30 (visto na Fase 3: 57h59 de corrida gravadas como 58h59). Mesma correcao feita em
+# rodar_fase3.ps1 e rodar_fase3b.ps1 em 30/09/2026.
+Marco ("FIM da Fase 2-B - duracao total {0:d2}h{1:d2}" -f [int][math]::Floor($duracao.TotalHours), $duracao.Minutes)

@@ -1,8 +1,8 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por comparar_qwen_coder.py a partir dos registros oficiais (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão — o comparativo do Memorial cola estes blocos. -->
-# Comparativo qwen2.5:7b × qwen2.5-coder:7b — gerado em 2026-09-29
+# Comparativo qwen2.5:7b × qwen2.5-coder:7b — gerado em 2026-10-01
 
-Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ avaliacao.json); resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json (gerado em 2026-09-29T11:04:10); comparacao_fases.json; decisao_modelo.json (gerado em 2026-09-29T11:09:07). Melhor versão nos 36: qwen2.5:7b L1, coder:7b L3. Casos inéditos (28/09): modelos rodados = ['qwen2.5-coder:3b', 'qwen2.5:7b'] — o qwen2.5-coder:7b não rodou lá. Estabilidade de ranking (top-1 em 36 cortes): qwen2.5:7b: 14; qwen2.5-coder:7b: 5.
+Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ avaliacao.json); resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json (gerado em 2026-09-29T11:04:10); comparacao_fases.json; decisao_modelo.json (gerado em 2026-10-01T09:43:39). Melhor versão nos 36: qwen2.5:7b L1, coder:7b L3. Casos inéditos (28/09): modelos rodados = ['qwen2.5-coder:3b', 'qwen2.5:7b'] — o qwen2.5-coder:7b não rodou lá. Estabilidade de ranking (top-1 em 36 cortes): qwen2.5:7b: 14; qwen2.5-coder:7b: 5.
 
 
 <!-- tabela:cq_fase2a -->

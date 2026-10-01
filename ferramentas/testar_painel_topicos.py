@@ -39,6 +39,9 @@ def _ctx() -> dict:
         "ablacao": gd.ler_json(gd.EXP / "resultados_alvo" / "ablacao_base_instruct" / "resumo_metricas.json"),
         "medicao_mcp": gd.ler_json(medicao) if medicao.exists() else None,
         "readme": (gd.RAIZ / "README.md").read_text(encoding="utf-8"),
+        "analise3b": gd.ler_json(gd.F3 / "analise_fase3b.json"),
+        "relatorio3b": (gd.MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8"),
+        "pend": pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"),
     }
 
 
@@ -71,6 +74,85 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertEqual(t["Ls"], ["0", "1", "3"])
         for m in t["modelos"]:
             self.assertEqual(set(t["ineditos"][m]), set(t["oficiais"][m]))
+
+    # ! Alteração de IA - Revisar: teste novo (30/09/2026, noite): o painel lista todas as pontes de versão da
+    # decisão, cada uma com a versão do Ollama da própria saída, e marca como divergente quem passa de b + c = 2.
+    # ! Motivo: a ponte em 0.34.4 (`fase3b_ponte_0344`) deu o Coder 7B com b + c = 4; o painel lia só a saída
+    # `fase3b_ponte` (0.34.1) pelo nome fixo e continuaria dizendo que a ponte é pareável.
+    def teste_pontes_de_versao_lidas_da_decisao(self):
+        tres_b = self.ctx["dados"]["tres_b"]
+        esperadas = [nome for nome, s in tres_b.items() if s.get("modo") == "ponte"]
+        pontes = self.ctx["dados"]["pontes"]
+        self.assertEqual([p["saida"] for p in pontes], esperadas)
+        secao = self.html[self.html.index('<section id="tresb"'):].split("</section>")[0]
+        for p in pontes:
+            self.assertRegex(p["versao"], r"^\d+\.\d+\.\d+$", p["saida"])
+            self.assertIn(f'Ollama {p["versao"]}', secao)
+            for x in p["linhas"]:
+                self.assertEqual(x["pareavel"], x["b"] + x["c"] <= 2, (p["saida"], x["modelo"]))
+        n_divergentes = sum(not x["pareavel"] for p in pontes for x in p["linhas"])
+        self.assertEqual(secao.count("<td>divergente</td>"), n_divergentes)
+        self.assertEqual(secao.count("<td>pareável</td>"), sum(len(p["linhas"]) for p in pontes) - n_divergentes)
+        ultima = pontes[-1]
+        n_ok = sum(x["pareavel"] for x in ultima["linhas"])
+        self.assertTrue(re.search(rf'<b[^>]*>{n_ok} de {len(ultima["linhas"])} pareáveis</b>', secao), "cartão da ponte mais recente")
+
+    # ! Alteração de IA - Revisar: teste novo (30/09/2026, noite): nenhuma aba pode sair com os asteriscos do
+    # negrito do Markdown à vista (fora de trechos de código).
+    # ! Motivo: na primeira versão do §2.3 do roadmap o negrito tinha nome de modelo entre crases dentro
+    # (`**O `qwen2.5-coder:3b` e o ...**`); o conversor de painel_textos separava primeiro os trechos entre crases
+    # e só depois procurava o negrito, então os `**` saíram literais nas abas Roadmap e Fase 3-B. O mesmo defeito
+    # já estava publicado na tabela §1 do roadmap (`**decisão 52: `qwen2.5:7b` com L1**`) sem ninguém notar.
+    def teste_nenhuma_aba_com_asteriscos_de_negrito_a_vista(self):
+        html = gd.pagina(self.ctx["dados"] | {"topicos": self.dados_t}, gd.blocos_tabelas(gd.F3 / "tabelas_relatorio.md"), {},
+                         pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"), self.ctx["road"], self.html)
+        ids = re.findall(r'<section id="([a-z0-9_-]+)"', html)
+        self.assertGreaterEqual(len(ids), 18)
+        for sid in ids:
+            secao = html[html.index(f'<section id="{sid}"'):].split("</section>")[0]
+            sem_codigo = re.sub(r"<(code|pre)\b[^>]*>.*?</\1>", "", secao, flags=re.S)
+            achado = re.search(r".{0,60}\*\*.{0,60}", sem_codigo)
+            self.assertIsNone(achado, f"aba {sid}: negrito do Markdown não convertido em {achado.group(0)!r}" if achado else "")
+
+    # ! Alteração de IA - Revisar: dois testes novos (01/10/2026) para as abas Troca cruzada e Fechamento.
+    # ! Motivo: as duas abas nasceram na integração da Fase 3-B; a primeira mostra os pareamentos da cruzada, que
+    # decidem a leitura "o ganho é do par modelo e biblioteca", e a segunda responde se as Fases 3 e 3-B podem
+    # ser dadas por concluídas. Um número trocado ali mudaria a decisão que o Eric toma pelo painel.
+    def teste_cruzada_usa_os_numeros_da_analise(self):
+        an = self.ctx["analise3b"]
+        secao = self.html[self.html.index('<section id="cruzada"'):].split("</section>")[0]
+        t = self.dados_t["cruzada"]
+        self.assertEqual(t["versoes"], ["0", "1", "3"])
+        self.assertEqual(t["leitores"], an["metadados"]["leitores"])
+        cel = {(c["leitor"], c["origem"], c["biblioteca_epoca"]): c for c in an["cruzada"]["celulas"]}
+        for m in t["leitores"]:
+            self.assertEqual(set(t["doador_lido"][m]), {"0", "1", "3"})
+            self.assertEqual(t["doador_lido"][m]["0"]["acerto"], cel[(m, "ponte", 0)]["acerto_pct"])
+            self.assertEqual(t["doador_lido"][m]["1"]["acerto"], cel[(m, "cruzada", 1)]["acerto_pct"])
+            self.assertEqual(t["propria"][m]["3"]["bal"], cel[(m, "fase3", 3)]["acuracia_balanceada_pct"])
+        par = {(p["leitor"], p["biblioteca_epoca"]): p for p in an["cruzada"]["pareados"] if p["contra"] == "l0_ponte"}
+        for linha in t["trocas"]:
+            if linha["leitor"] in t["leitores"]:
+                self.assertEqual((linha["b"], linha["c"]), (par[(linha["leitor"], linha["epoca"])]["b"], par[(linha["leitor"], linha["epoca"])]["c"]))
+        self.assertEqual(len(t["trocas"]), 2 + 2 * len(t["leitores"]))
+        self.assertEqual(secao.count("<tr data-valor="), len(an["cruzada"]["pareados"]))
+        for sel in ("g-cz-leit", "g-cz-trocas"):
+            self.assertIn(f'id="{sel}"', secao)
+
+    def teste_fechamento_conta_os_topicos_do_relatorio(self):
+        secao = self.html[self.html.index('<section id="fechamento"'):].split("</section>")[0]
+        md = pt.sem_comentarios(self.ctx["relatorio3b"])
+        corpo = next(c for titulo, c in pt.secoes(md) if titulo.startswith("9. "))
+        _, linhas, _ = pt.primeira_tabela(corpo)
+        self.assertGreaterEqual(len(linhas), 20)
+        self.assertEqual(secao.count("<tr data-valor="), len(linhas))
+        t = self.dados_t["fechamento"]
+        self.assertEqual(sum(t["contagem"].values()), len(linhas))
+        self.assertNotIn("outro", t["contagem"], "tópico do fechamento com estado fora do vocabulário")
+        abertas = [f for b in self.ctx["pend"] for f in b.fichas if f.aberta]
+        self.assertEqual(t["fichas_abertas"], len(abertas))
+        for f in abertas:
+            self.assertIn(f'data-ir="pendencias|{f.id_html}"', secao)
 
     def teste_curadoria_conta_as_edicoes_da_planilha(self):
         total = sum(sum(v.values()) for v in self.dados_t["curadoria"]["por"].values())

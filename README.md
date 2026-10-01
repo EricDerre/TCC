@@ -29,8 +29,8 @@ sistemas "cobaia"), as baterias de avaliação dos modelos locais (Fases 2-A, 2-
 3 e 3-B), as ferramentas de apoio, o memorial de desenvolvimento e o projeto de
 pesquisa no padrão ABNT.
 
-**Estado em 30/09/2026:** Fases 1, 2-A, 2-B e 3 concluídas; Fase 3-B em
-andamento (falta a troca cruzada de bibliotecas); Fase 4, o agente na tela, em
+**Estado em 01/10/2026:** Fases 1, 2-A, 2-B, 3 e 3-B concluídas (a 3-B com a
+troca cruzada de bibliotecas rodada em 01/10); Fase 4, o agente na tela, em
 planejamento. Modelo padrão do agente: `qwen2.5:7b` com a biblioteca no estado L1
 (decisão 52). Números, gráficos e a leitura de cada resultado estão no
 [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN).
@@ -92,7 +92,7 @@ versões da biblioteca por regras fixadas antes de rodar.
 | 2-A | Prompts sem documentação, seis modelos, máquina de desenvolvimento | Concluída |
 | 2-B | Biblioteca de documentação escrita à mão, seis condições, máquina-alvo | Concluída |
 | 3 | Biblioteca gerida pelo próprio modelo, quatro modelos, três épocas | Concluída em 15/09/2026 |
-| 3-B | Ponte de versão, casos inéditos, troca cruzada e sondas | Em andamento: falta a troca cruzada |
+| 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
 | 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor | Em planejamento |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
 
@@ -595,10 +595,12 @@ disponível como L0, o ponto de comparação de todas as épocas seguintes.
 | `gerar_graficos_fase3.py` | Figuras 12–17: acerto por época, recuperação por época, motivos de rejeição das propostas, crescimento da biblioteca, comparação entre as três fases. | `python gerar_graficos_fase3.py` (venv com matplotlib) |
 | `gerar_relatorio_fase3.py` | `relatorio_fase3.html` navegável por modelo/época/partição, com cada proposta de edição (prompt, resposta crua, decisão do validador). | `python gerar_relatorio_fase3.py` |
 | `testar_fase3.py` | Testes em Python puro (sem pytest) do parser, do validador, da aplicação de edição e do hash/diff, sem chamar o Ollama, < 30 s. | `python testar_fase3.py` |
-| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash, validação do encanamento feita; a bateria completa rodou em 13–15/09/2026 (58h59, 0 falhas; ver "Resultado da Fase 3" abaixo). | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
+| `rodar_fase3.ps1` | Orquestrador da Fase 3 nesta máquina: valida a biblioteca, roda os testes, executa os 4 modelos em sequência, avalia, compara as fases e gera gráficos/relatório. O piloto `-Piloto` (1 modelo, 10 casos, 1 época) rodou em 12/09/2026 em 00h13, e o teste de retomada reconstruiu a `epoca-1` com o mesmo hash, validação do encanamento feita; a bateria completa rodou em 13–15/09/2026 (57h59, 0 falhas; ver "Resultado da Fase 3" abaixo). | `.\rodar_fase3.ps1 -Piloto` (amostra pequena, 1 modelo, 1 época) antes da bateria completa: `.\rodar_fase3.ps1` |
 
 <!-- ! Alteração de IA - Revisar: na tabela acima, a linha de `rodar_fase3.ps1` deixou de dizer que "a bateria completa ainda não rodou".
-     ! Motivo: a bateria rodou em 13–15/09/2026 (58h59, 0 falhas; parágrafo "Resultado da Fase 3" abaixo) e a frase, esquecida na revisão de 21/09, contradizia o resto da seção. -->
+     ! Motivo: a bateria rodou em 13–15/09/2026 (57h59, 0 falhas; parágrafo "Resultado da Fase 3" abaixo) e a frase, esquecida na revisão de 21/09, contradizia o resto da seção. -->
+<!-- ! Alteração de IA - Revisar: duração da Fase 3 corrigida de 58h59 para 57h59 em 30/09/2026, na linha de `rodar_fase3.ps1` da tabela acima e no parágrafo "Resultado da Fase 3".
+     ! Motivo: a bateria rodou de 13/09 08:45:25 a 15/09 18:44:56 pelos marcos do `fase3.log`; a linha FIM do log diz 58h59 porque o script convertia as horas com `[int]`, que no PowerShell arredonda para o inteiro mais próximo. O defeito apareceu na ponte de 30/09 (1h46 gravadas como 02h46) e foi corrigido nos três scripts de bateria. -->
 Cada modelo grava em `resultados_alvo/fase3/`:
 
 <!-- ! Alteração de IA - Revisar: na árvore abaixo, o fase3.log passou a "versionado" (29/09/2026).
@@ -642,8 +644,9 @@ continua da mesma época e do mesmo caso, sem repetir trabalho já fechado.
 <!-- ! Alteração de IA - Revisar: em 21/09/2026 entraram o parágrafo "Resultado da Fase 3", a subseção "Fase 3-B" e a seção "Ferramentas de apoio".
      ! Motivo: a bateria da Fase 3 rodou em 13–15/09/2026 e o README ainda descrevia só a preparação; a Fase 3-B (executor próprio, sem tocar nos scripts oficiais) e a pasta `ferramentas/` são novas no repositório e ninguém saberia para que servem sem esta descrição. Números só com origem: `resultados_alvo/fase3/fase3.log` e `comparacao_fases.md`. -->
 **Resultado da Fase 3 (13–15/09/2026).** A bateria rodou na máquina-alvo de
-13/09 08:45 a 15/09 18:44 (`FIM da Fase 3 - duracao total 58h59 - modelos com
-falha: nenhum`, Ollama 0.34.0), 2.088 inferências, e os resultados estão em
+13/09 08:45 a 15/09 18:44 (57h59, sem falhas, Ollama 0.34.0; a linha `FIM` do
+`fase3.log` diz 58h59 porque o script arredondava a hora), 2.088 inferências, e
+os resultados estão em
 `resultados_alvo/fase3/` (commit `b9f9ad9`). As tabelas por modelo e fase estão
 em `resultados_alvo/fase3/comparacao_fases.md`; a leitura está no Memorial
 (`Documentacao/memorial/3-resultados-e-analises/`, relatório e comparação
@@ -658,12 +661,12 @@ conferidos por `--check` (`resultados_alvo/fase3/tabelas_relatorio.md`).
 
 ### Fase 3-B: ponte de versão e testes complementares
 
-Depois da bateria o Ollama atualizou sozinho de 0.34.0 para 0.34.1. Qualquer
-inferência nova passa antes por uma **ponte de versão** (L0 nos 36 casos de
-avaliação, 4 modelos) que mede se o runtime novo reproduz o antigo; só então os
+Depois da bateria o Ollama atualizou sozinho de 0.34.0 para 0.34.1 e, em 30/09,
+para 0.34.4. Qualquer inferência nova passa antes por uma **ponte de versão** (L0
+nos 36 casos de avaliação) que mede se o runtime novo reproduz o antigo; só então os
 testes complementares escolhidos em 23/09/2026 (decisão 56): os 36 casos inéditos,
-que rodaram em 28/09, e a troca cruzada de bibliotecas entre modelos, ainda
-pendente; a sonda de detecção de correção, a ablação base × instruct e o
+que rodaram em 28/09, e a troca cruzada de bibliotecas entre modelos, que rodou de
+30/09 para 01/10; a sonda de detecção de correção, a ablação base × instruct e o
 experimento do recuperador entraram depois. Tudo roda por um executor **próprio**, que
 lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 `estrategias.py`, `evolucao_biblioteca.py` nem `resultados_alvo/fase3/`.
@@ -680,6 +683,7 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `curar_biblioteca.py` | Curadoria da biblioteca L1 do `qwen2.5:7b` (29/09/2026, ficha 2): `--listar` escreve a planilha `resultados_alvo/fase3/curadoria_L1__qwen2.5_7b.md` (40 edições da época 1, 10 com veredito da planilha oficial); `--curar --destino ../biblioteca_producao` reconstrói a cópia de produção a partir da época 0 reaplicando só o que não for *Errada*, depois de conferir que reaplicar tudo reproduz o hash oficial; grava `curadoria.json`. | `RESULTADOS_DIR=resultados_alvo python curar_biblioteca.py --listar` |
 | `comparar_qwen_coder.py` | Comparativo `qwen2.5:7b` × `qwen2.5-coder:7b` em todas as fases (29/09/2026, ficha 4): tabelas, confronto caso a caso (McNemar exato) e a lista de toda célula em que o Coder fica à frente; grava `resultados_alvo/fase3/comparativo_qwen_coder.{json,md}`; `--colar` cola os blocos em `Documentacao/memorial/3-resultados-e-analises/comparativo-qwen25-7b-vs-coder-7b.md`; `--check`. | `RESULTADOS_DIR=resultados_alvo python comparar_qwen_coder.py` |
 | `experimento_recuperador.py` | Experimento offline do recuperador (29/09/2026, ficha 11f): BM25 com sinais × embedding denso (`embeddinggemma:300m`, consulta por termos e por texto) × híbrido RRF, k = 1/3/5, nos 90 oficiais e nos 36 inéditos, bibliotecas L0/L1/L3; saída em `resultados_alvo/recuperador/` (`.json` registro, `.md` derivado com `--check`). | `RESULTADOS_DIR=resultados_alvo python experimento_recuperador.py --embedding embeddinggemma:300m` |
+| `analisar_fase3b.py` | Análise de fechamento da Fase 3-B (01/10/2026): pontes de versão, casos que mudam entre corridas iguais, inéditos somados aos oficiais (72 casos) e troca cruzada pareada contra a ponte, contra a própria biblioteca e contra o doador; grava `resultados_alvo/fase3/analise_fase3b.{json,md}`; `--colar` cola os blocos em `Documentacao/memorial/3-resultados-e-analises/fase-3b-relatorio.md`; `--check`. | `RESULTADOS_DIR=resultados_alvo python analisar_fase3b.py [--check]` |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados, nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
@@ -689,6 +693,10 @@ versões, teto de texto, condição, versão do Ollama). A ponte de 21/09/2026 c
 `qwen2.5-coder:3b`, `qwen2.5:7b` e `qwen2.5-coder:7b` (b/c 0/0, 1/1 e 0/0 nos 36:
 pareáveis com a Fase 3); o `granite4.2:8b` foi pulado duas vezes por RAM (8 GB
 exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52).
+
+<!-- ! Alteração de IA - Revisar: parágrafo novo (01/10/2026) com o resultado da Fase 3-B, a linha de `analisar_fase3b.py` na tabela acima e o estado da 3-B no topo e na tabela de fases.
+     ! Motivo: a troca cruzada rodou de 30/09 para 01/10 e era o último teste previsto; o README ainda dizia que ela estava pendente. Números de `resultados_alvo/fase3/analise_fase3b.json`. -->
+**Resultado da Fase 3-B (01/10/2026).** A segunda ponte, em Ollama 0.34.4, deixou o `qwen2.5-coder:7b` fora do limite (b/c 3/1 nos 36), e por isso a troca cruzada é lida contra essa ponte. Nos 36 casos inéditos o ganho da biblioteca L1 não reaparece (72,2% contra 75,0% com a biblioteca original; a L3 chega a 80,6%). Na troca cruzada, a biblioteca escrita pelo `qwen2.5:7b` dá 1 caso de saldo ao Coder 7B e tira 4 do Coder 3B, contra 88,9% de acerto quando lida por quem a escreveu: o padrão do agente é o modelo com a biblioteca que ele mesmo escreveu (decisão 69). Com a mesma entrada, entre corridas iguais mudam de 0 a 3 casos em 36. A análise sai de `analisar_fase3b.py`, e o relatório, com a lista de fechamento das Fases 3 e 3-B, está em `Documentacao/memorial/3-resultados-e-analises/fase-3b-relatorio.md`.
 
 <!-- ! Alteração de IA - Revisar: parágrafo abaixo com os testes da 3-B escolhidos pelo Eric em 23/09/2026, os comandos na forma que o Windows PowerShell aceita por -File (listas separadas por vírgula) e o efeito da decisão do modelo no instalador.
      ! Motivo: o texto anterior dizia "testes a escolher"; a escolha saiu (decisão 56) e o comando registrado antes nas pendências, com a lista separada por espaço, falha na vinculação de parâmetros do PowerShell (conferido em 23/09/2026 com um script de teste). O `install.py` passou a baixar o `qwen2.5:7b` e os outros modelos ficam só como registro. -->

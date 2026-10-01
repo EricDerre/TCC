@@ -192,6 +192,14 @@ class TesteMarkdown(unittest.TestCase):
         self.assertEqual(pt.inline("a **b** `c<d>` *e*"), "a <strong>b</strong> <code>c&lt;d&gt;</code> <em>e</em>")
         self.assertEqual(pt.inline("[`x.md`](../x.md)"), '<span class="ref"><code>x.md</code></span>')
 
+    # ! Alteração de IA - Revisar: teste novo (30/09/2026, noite): negrito com trecho entre crases dentro.
+    # ! Motivo: `**decisão 52: `qwen2.5:7b` com L1**` (tabela §1 do roadmap) saía no painel com os asteriscos à
+    # vista, porque `inline` separava os trechos entre crases antes de procurar o negrito.
+    def teste_inline_negrito_com_codigo_dentro(self):
+        self.assertEqual(pt.inline("**o `m:7b` vence** e *fim*"), "<strong>o <code>m:7b</code> vence</strong> e <em>fim</em>")
+        self.assertEqual(pt.inline("glob `a/**/*.log` fica como está"), "glob <code>a/**/*.log</code> fica como está")
+        self.assertEqual(pt.inline("`a` e `b*c*`"), "<code>a</code> e <code>b*c*</code>")
+
 
 class TesteArquivosReais(unittest.TestCase):
     def teste_pendencias_reais(self):
@@ -226,7 +234,15 @@ class TesteArquivosReais(unittest.TestCase):
             self.assertNotEqual(c.classe, "outro", f"corrida {c.numero}: estado sem palavra fixa: {c.estado[:40]!r}")
             if "-Modo" in c.comando:
                 self.assertIsNotNone(c.saida, f"corrida {c.numero} sem -Saida no comando")
-        self.assertTrue(any(c.classe == "rodando" or c.classe == "pendente" for c in road["corridas"]))
+        # ! Alteração de IA - Revisar: o teste deixou de exigir ao menos uma corrida rodando ou pendente (01/10/2026); passou a
+        # exigir que exista ao menos uma corrida feita e que toda corrida feita com saída própria tenha a pasta em disco.
+        # ! Motivo: em 01/10/2026 a troca cruzada rodou e todas as corridas previstas da 3-B ficaram feitas ou opcionais; o
+        # teste antigo falhava só por não haver pendência. O que o painel precisa é que "feita" corresponda a uma corrida que existe.
+        self.assertTrue(any(c.classe == "feita" for c in road["corridas"]))
+        for c in road["corridas"]:
+            if c.classe == "feita" and c.saida and "-Modo" in c.comando:
+                self.assertTrue((MEMORIAL.parent.parent / "Programacao" / "AgenteCore" / "experimentos" / "resultados_alvo" / c.saida).is_dir(),
+                                f"corrida {c.numero} marcada como feita sem a pasta {c.saida}")
 
 
 if __name__ == "__main__":

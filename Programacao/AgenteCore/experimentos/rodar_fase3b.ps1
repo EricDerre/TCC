@@ -187,5 +187,10 @@ $duracao = (Get-Date) - $Inicio
 # executar_fase3b.py saindo com codigo 1 ou 2) deixaria "FIM" no log com codigo 0, e quem
 # encadeia o script ou le so a ultima linha nao saberia que precisa relancar.
 $textoFalhas = if ($Falhas.Count -gt 0) { $Falhas -join ", " } else { "nenhum" }
-Marco ("FIM da Fase 3-B ({0}) - duracao total {1:d2}h{2:d2} - modelos com falha: {3}" -f $Modo, [int]$duracao.TotalHours, $duracao.Minutes, $textoFalhas)
+# ! Alteracao de IA - Revisar: as horas da linha FIM passam a ser truncadas com [math]::Floor antes do [int].
+# ! Motivo: no PowerShell, [int] arredonda para o inteiro mais proximo; a ponte de 30/09/2026 rodou de 20:39:02
+# a 22:25:49 (1h46) e o log gravou "duracao total 02h46", e a Fase 3 gravou 58h59 para 57h59 entre os marcos.
+# Testado no PowerShell 5.1: 01:46:47 dava 02h46 e passa a dar 01h46; 03:02:05 continua 03h02. Os minutos
+# ($duracao.Minutes) ja eram a parte inteira, por isso so a hora saia errada, e so quando os minutos passavam de 30.
+Marco ("FIM da Fase 3-B ({0}) - duracao total {1:d2}h{2:d2} - modelos com falha: {3}" -f $Modo, [int][math]::Floor($duracao.TotalHours), $duracao.Minutes, $textoFalhas)
 if ($Falhas.Count -gt 0) { exit 1 }

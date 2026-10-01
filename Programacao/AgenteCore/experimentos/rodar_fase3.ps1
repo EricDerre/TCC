@@ -273,5 +273,9 @@ $duracao = (Get-Date) - $Inicio
 # marco e o código 1, quem encadeia o script ou lê só a última linha do log sabe que precisa
 # relançar (a retomada refaz só o que faltou).
 $textoFalhas = if ($Falhas.Count -gt 0) { $Falhas -join ", " } else { "nenhum" }
-Marco ("FIM da Fase 3 - duracao total {0:d2}h{1:d2} - modelos com falha: {2}" -f [int]$duracao.TotalHours, $duracao.Minutes, $textoFalhas)
+# ! Alteracao de IA - Revisar: as horas da linha FIM passam a ser truncadas com [math]::Floor antes do [int].
+# ! Motivo: no PowerShell, [int] arredonda para o inteiro mais proximo; a bateria de 13-15/09/2026 rodou de
+# 13/09 08:45:25 a 15/09 18:44:56 (57h59) e o fase3.log gravou "duracao total 58h59". Mesma correcao feita em
+# rodar_fase3b.ps1 em 30/09/2026 (testada no PowerShell 5.1: 01:46:47 dava 02h46 e passa a dar 01h46).
+Marco ("FIM da Fase 3 - duracao total {0:d2}h{1:d2} - modelos com falha: {2}" -f [int][math]::Floor($duracao.TotalHours), $duracao.Minutes, $textoFalhas)
 if ($Falhas.Count -gt 0) { exit 1 }

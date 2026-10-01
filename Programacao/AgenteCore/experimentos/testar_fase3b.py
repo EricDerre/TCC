@@ -805,6 +805,189 @@ def teste_curar_reaplicar_todas_reproduz_hash_oficial() -> None:
     assert h_menos != oficial
 
 
+# ----------------------------------------------------------------- 9. análise de fechamento da 3-B
+
+# ! Alteração de IA - Revisar: testes de analisar_fase3b.py (01/10/2026), escritos antes do módulo
+# existir: o pareamento caso a caso (ganhos, perdas, McNemar), a soma de dois conjuntos de casos
+# disjuntos (36 oficiais + 36 inéditos), a contagem de casos que mudam entre corridas de L0, a leitura
+# da linha FONTE com dois ids no mesmo colchete, a montagem completa sobre registros de mentira com
+# --check, e a conferência dos números reais contra decisao_modelo.json quando a corrida oficial existe.
+# ! Motivo: a análise da troca cruzada e das pontes decide como a Fase 3-B é lida no Memorial; a regra
+# do projeto é nenhum número digitado à mão, então o script que gera as tabelas precisa de teste próprio
+# (um pareamento com b e c trocados inverteria a conclusão sobre quem ganha com a biblioteca alheia).
+def _reg_analise(modelo: str, epoca: int, caso: str, certo: bool, **extra) -> dict:
+    base = {"modelo": modelo, "biblioteca_epoca": epoca, "caso": caso, "particao": "avaliacao",
+            "causa_correta": certo, "causa_esperada": "campo_ausente",
+            "causa_respondida": "campo_ausente" if certo else "corpo_vazio", "classe": 1, "nivel": 1,
+            "segundos": 10.0, "tokens_entrada": 1000, "ouro_no_contexto": True,
+            "contexto_com_nota": epoca > 0, "citou_verbete_anotado": False}
+    return {**base, **extra}
+
+
+def teste_analise3b_parear_conta_ganhos_e_perdas() -> None:
+    import analisar_fase3b as an
+    base = {c: _reg_analise("m", 0, c, v) for c, v in (("a", True), ("b", True), ("c", False), ("d", False))}
+    nova = {c: _reg_analise("m", 1, c, v) for c, v in (("a", True), ("b", False), ("c", True), ("d", True))}
+    par = an.parear(nova, base)
+    assert (par["n_comuns"], par["b"], par["c"]) == (4, 2, 1), par
+    assert par["ganhos"] == ["c", "d"] and par["perdas"] == ["b"], par
+    assert par["delta_pp"] == 25.0 and par["p_mcnemar"] == 1.0, par
+    # troca de rótulo é mais larga que troca de acerto: aqui os três casos que mudaram de acerto mudaram de rótulo,
+    # e um quarto muda só o rótulo (errado nos dois lados)
+    assert par["rotulos_diferentes"] == 3, par
+    base["x"] = _reg_analise("m", 0, "x", False, causa_respondida="corpo_vazio")
+    nova["x"] = _reg_analise("m", 1, "x", False, causa_respondida="corpo_nao_e_json")
+    par_x = an.parear(nova, base)
+    assert (par_x["b"], par_x["c"], par_x["rotulos_diferentes"]) == (2, 1, 4), par_x
+    del base["x"], nova["x"]
+    assert set(an.sem_casos(nova, {"b", "zz"})) == {"a", "c", "d"}
+    # um caso que só existe de um lado não entra na conta
+    nova["e"] = _reg_analise("m", 1, "e", True)
+    assert an.parear(nova, base)["n_comuns"] == 4
+
+
+def teste_analise3b_juntar_soma_conjuntos_disjuntos() -> None:
+    import analisar_fase3b as an
+    of_base = {"a": _reg_analise("m", 0, "a", False), "b": _reg_analise("m", 0, "b", True)}
+    of_nova = {"a": _reg_analise("m", 1, "a", True), "b": _reg_analise("m", 1, "b", True)}
+    in_base = {"a": _reg_analise("m", 0, "a", True)}   # mesmo id de caso em outro conjunto: não pode colidir
+    in_nova = {"a": _reg_analise("m", 1, "a", False)}
+    par = an.parear(an.juntar(oficiais=of_nova, ineditos=in_nova), an.juntar(oficiais=of_base, ineditos=in_base))
+    assert (par["n_comuns"], par["b"], par["c"]) == (3, 1, 1), par
+    assert par["ganhos"] == ["oficiais:a"] and par["perdas"] == ["ineditos:a"], par
+
+
+def teste_analise3b_ruido_conta_casos_que_mudam_entre_corridas() -> None:
+    import analisar_fase3b as an
+    corridas = {
+        "Fase 3": {c: _reg_analise("m", 0, c, v) for c, v in (("a", True), ("b", True), ("c", False))},
+        "ponte 1": {c: _reg_analise("m", 0, c, v) for c, v in (("a", True), ("b", False), ("c", False))},
+        "ponte 2": {c: _reg_analise("m", 0, c, v) for c, v in (("a", False), ("b", True), ("c", True))},
+    }
+    linhas = an.ruido_entre_corridas("m", corridas)
+    por_par = {(l["corrida_a"], l["corrida_b"]): l for l in linhas}
+    assert len(linhas) == 3, linhas
+    assert por_par[("Fase 3", "ponte 1")]["discordantes"] == 1 and por_par[("Fase 3", "ponte 1")]["casos"] == ["b"]
+    assert por_par[("Fase 3", "ponte 2")]["discordantes"] == 2
+    assert por_par[("ponte 1", "ponte 2")]["discordantes"] == 3
+    # sem informar caso de texto alterado, "com a mesma entrada" é igual ao total
+    assert all(l["discordantes_mesma_entrada"] == l["discordantes"] for l in linhas), linhas
+    # o caso "a" teve o texto corrigido antes da "ponte 2": sai das comparações que cruzam a correção e só delas
+    linhas = an.ruido_entre_corridas("m", corridas, alterados={"a"}, depois={"ponte 2"})
+    por_par = {(l["corrida_a"], l["corrida_b"]): l for l in linhas}
+    assert por_par[("Fase 3", "ponte 1")]["discordantes_mesma_entrada"] == 1
+    assert por_par[("Fase 3", "ponte 2")]["discordantes_mesma_entrada"] == 1 and por_par[("Fase 3", "ponte 2")]["discordantes"] == 2
+    assert por_par[("ponte 1", "ponte 2")]["discordantes_mesma_entrada"] == 2
+    assert por_par[("Fase 3", "ponte 2")]["casos_de_texto_alterado"] == ["a"] and por_par[("Fase 3", "ponte 1")]["casos_de_texto_alterado"] == []
+
+
+def teste_analise3b_fontes_do_contexto() -> None:
+    import analisar_fase3b as an
+    r = {"resposta": "CAUSA_RAIZ: corpo_nao_e_json\nCAMPO: preco\nFONTE: [contrato-produto, corpo_nao_e_json]",
+         "verbetes_ids": ["entidade-produto", "contrato-produto", "nulo_inesperado"]}
+    assert an.fontes_do_contexto(r) == ["contrato-produto"], an.fontes_do_contexto(r)
+    r2 = {"resposta": "FONTE: [entidade-produto], [nulo_inesperado]", "verbetes_ids": r["verbetes_ids"]}
+    assert an.fontes_do_contexto(r2) == ["entidade-produto", "nulo_inesperado"]
+    assert an.fontes_do_contexto({"resposta": "CAUSA_RAIZ: x", "verbetes_ids": ["a"]}) == []
+
+
+def _dados_de_mentira_analise() -> dict:
+    """Registros mínimos para montar a análise inteira: 1 doador, 2 leitores, 4 casos oficiais e 2 inéditos."""
+    casos = ["a", "b", "c", "d"]
+    f3, p1, p4, cru, ined = [], [], [], [], []
+    for m, acertos_l0 in (("doador", "TTFF"), ("leitor-x", "TFTF"), ("leitor-y", "TTTF")):
+        for c, v in zip(casos, acertos_l0):
+            f3.append(_reg_analise(m, 0, c, v == "T"))
+            p1.append(_reg_analise(m, 0, c, v == "T"))
+            p4.append(_reg_analise(m, 0, c, v == "T"))
+        for epoca in (1, 3):
+            for c in casos:
+                f3.append(_reg_analise(m, epoca, c, True if m == "doador" else c != "d"))
+    for c in casos:   # leitor-x ganha "b" com a biblioteca do doador; leitor-y perde "a" e "b"
+        for epoca in (1, 3):
+            cru.append(_reg_analise("leitor-x", epoca, c, c != "d"))
+            cru.append(_reg_analise("leitor-y", epoca, c, c == "c"))
+    for m in ("doador", "leitor-y"):
+        for epoca, padrao in ((0, "TF"), (1, "TT"), (3, "FF")):
+            for c, v in zip(("n1", "n2"), padrao):
+                ined.append(_reg_analise(m, epoca, c, v == "T"))
+    brutos = {}
+    for (m, epoca) in (("leitor-x", 1), ("leitor-x", 3), ("leitor-y", 1), ("leitor-y", 3)):
+        brutos[("cruzada", m, epoca)] = {c: {"caso": c, "resposta": "CAUSA_RAIZ: z\nFONTE: [contrato-produto]",
+                                             "verbetes_ids": ["contrato-produto", "campo_ausente"]} for c in casos}
+    for m in ("leitor-x", "leitor-y"):
+        brutos[("ponte", m, 0)] = {c: {"caso": c, "resposta": "CAUSA_RAIZ: z\nFONTE: [campo_ausente]",
+                                       "verbetes_ids": ["contrato-produto", "campo_ausente"]} for c in casos}
+    return {"f3": f3, "pontes": [("fase3b_ponte", "0.0.1", p1), ("fase3b_ponte_x", "0.0.4", p4)], "cruzada": cru, "ineditos": ined,
+            "brutos": brutos, "corridas": [], "doador": "doador", "leitores": ["leitor-x", "leitor-y"],
+            "casos_de_texto_alterado": frozenset({"a"}), "corridas_depois": frozenset({"fase3b_ponte_x", "cruzada"})}
+
+
+def teste_analise3b_montar_render_e_check() -> None:
+    import analisar_fase3b as an
+    dado = an.montar(**_dados_de_mentira_analise())
+    # pontes: nenhuma discordância contra a Fase 3 de mentira, todas pareáveis
+    assert [p["saida"] for p in dado["pontes"]] == ["fase3b_ponte", "fase3b_ponte_x"]
+    assert all(l["pareavel"] and l["b"] + l["c"] == 0 for p in dado["pontes"] for l in p["linhas"])
+    # cruzada: leitor-x ganha 1 (b) e não perde contra o próprio L0 da ponte mais recente; leitor-y perde 2
+    par = {(p["leitor"], p["biblioteca_epoca"], p["contra"]): p for p in dado["cruzada"]["pareados"]}
+    assert (par[("leitor-x", 1, "l0_ponte")]["b"], par[("leitor-x", 1, "l0_ponte")]["c"]) == (1, 0), par[("leitor-x", 1, "l0_ponte")]
+    assert (par[("leitor-y", 1, "l0_ponte")]["b"], par[("leitor-y", 1, "l0_ponte")]["c"]) == (0, 2)
+    assert par[("leitor-y", 1, "doador")]["c"] == 3   # o doador acerta os 4 com a própria biblioteca; o leitor-y, 1
+    assert {c["contra"] for c in dado["cruzada"]["pareados"]} == {"l0_ponte", "propria", "doador"}
+    # o caso "a" teve o texto corrigido antes da ponte mais recente e da cruzada: contra a ponte (mesma época) nada
+    # sai; contra a Fase 3 (antes da correção) o caso "a" sai da conta "com a mesma entrada"
+    assert par[("leitor-y", 1, "l0_ponte")]["c_mesma_entrada"] == 2 and par[("leitor-y", 1, "l0_ponte")]["casos_de_texto_alterado"] == []
+    assert (par[("leitor-y", 1, "propria")]["c"], par[("leitor-y", 1, "propria")]["c_mesma_entrada"]) == (2, 1), par[("leitor-y", 1, "propria")]
+    assert par[("leitor-y", 1, "propria")]["casos_de_texto_alterado"] == ["a"]
+    ponte_x = next(p for p in dado["pontes"] if p["saida"] == "fase3b_ponte_x")
+    assert all("b_mesma_entrada" in l and "pareavel_mesma_entrada" in l for l in ponte_x["linhas"]), ponte_x
+    assert all("discordantes_mesma_entrada" in l and "rotulos_diferentes" in l for l in dado["ruido_l0"]), dado["ruido_l0"][:1]
+    # células: 2 leitores × (L0 Fase 3, L0 ponte, L1/L3 próprias, L1/L3 do doador) + doador × 4
+    assert len(dado["cruzada"]["celulas"]) == 2 * 6 + 4, len(dado["cruzada"]["celulas"])
+    # inéditos agrupados com os oficiais: 4 + 2 casos por linha
+    assert all(l["n_comuns"] == 6 for l in dado["ineditos"]["agrupado"]), dado["ineditos"]["agrupado"]
+    md = an.render(dado)
+    for nome in ("tb_corridas", "tb_pontes", "tb_ruido", "tb_ineditos", "tb_agrupado", "tb_cruzada", "tb_cruzada_pareados",
+                 "tb_cruzada_classe", "tb_cruzada_rotulos", "tb_cruzada_casos"):
+        assert f"<!-- tabela:{nome} -->" in md and f"<!-- /tabela:{nome} -->" in md, nome
+    assert "—" not in md and "→" not in md, "texto gerado com travessão ou seta"
+    json.dumps(dado, ensure_ascii=False)   # serializável
+    # --check: o documento que cola os blocos acusa um número alterado à mão
+    tmp = Path(tempfile.mkdtemp(prefix="analise3b_"))
+    _TEMPORARIOS.append(tmp)
+    doc = tmp / "doc.md"
+    doc.write_text("# x\n\n<!-- tabela:tb_pontes -->\n<!-- /tabela:tb_pontes -->\n", encoding="utf-8", newline="\n")
+    n, mudou = an.colar(doc, md)
+    assert (n, mudou) == (1, True) and an.conferir_doc(doc, md) == []
+    doc.write_text(doc.read_text(encoding="utf-8").replace("| 0 | 0 |", "| 9 | 0 |", 1), encoding="utf-8", newline="\n")
+    assert an.conferir_doc(doc, md) == ["tb_pontes"], an.conferir_doc(doc, md)
+
+
+def teste_analise3b_numeros_reais_batem_com_a_decisao() -> None:
+    """Com as corridas oficiais presentes: b e c das pontes iguais aos de decisao_modelo.json e o acerto de cada
+    célula da cruzada igual ao resumo da própria corrida. Pulado quando a troca cruzada não está na máquina."""
+    import analisar_fase3b as an
+    cruzada = _RAIZ_OFICIAL_FASE3.parent / "fase3b_cruzada_qwen" / "resumo_fase3.json"
+    decisao = _RAIZ_OFICIAL_FASE3 / "decisao_modelo.json"
+    if not cruzada.exists() or not decisao.exists() or caminhos.fase3("fase3")["raiz"] != _RAIZ_OFICIAL_FASE3:
+        print("teste_analise3b_numeros_reais_batem_com_a_decisao: pulado (sem a corrida oficial ou sem RESULTADOS_DIR=resultados_alvo)")
+        return
+    dado = an.montar(**an.carregar())
+    tres_b = json.loads(decisao.read_text(encoding="utf-8"))["tres_b"]
+    for ponte in dado["pontes"]:
+        if ponte["saida"] not in tres_b:
+            continue
+        esperado = {l["modelo"]: (l["pareado_vs_f3"]["b"], l["pareado_vs_f3"]["c"]) for l in tres_b[ponte["saida"]]["linhas"]}
+        assert {l["modelo"]: (l["b"], l["c"]) for l in ponte["linhas"]} == esperado, ponte["saida"]
+    resumo = json.loads(cruzada.read_text(encoding="utf-8"))
+    oficial = {(x["modelo"], x["biblioteca_epoca"]): x["causa_correta_pct"] for x in resumo["por_modelo_biblioteca_particao"]
+               if x["particao"] == "avaliacao"}
+    medido = {(c["leitor"], c["biblioteca_epoca"]): c["acerto_pct"] for c in dado["cruzada"]["celulas"] if c["origem"] == "cruzada"}
+    assert medido == oficial, (medido, oficial)
+    assert all(c["versoes_ollama"] == ["0.34.4"] for c in dado["corridas"] if c["saida"] in ("fase3b_cruzada_qwen", "fase3b_ponte_0344")), dado["corridas"]
+
+
 def teste_area_oficial_hash_depois() -> None:
     """Repete o hash de teste_area_oficial_hash_antes ao fim da suíte — precisa ser o ÚLTIMO
     teste definido no arquivo, para rodar depois de todos os outros."""

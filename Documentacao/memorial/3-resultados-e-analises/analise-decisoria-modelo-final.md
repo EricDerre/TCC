@@ -193,6 +193,12 @@ Fonte: resumo_fase3.json.
 - **Saturação**: 40 → 12 → 9 edições aceitas por época; `duplicada` e `teto_notas_verbete` dominam as rejeições das épocas 2 e 3 (achado 4.32). Não é risco para L1; é o motivo de L1 ser o pico.
 - **Colapso num rótulo e rótulo inventado**: não ocorrem (parcela máxima do rótulo mais frequente 11,1% no `qwen2.5:7b` nos 36; fora do conjunto ≤ 2,8%).
 - **Ponte de versão** (decisão 47): três modelos pareáveis com a Fase 3 sob 0.34.1 — 3B b/c 0/0, Coder 7B 0/0, `qwen2.5:7b` 1/1 (p = 1,0); o Granite não rodou (8 GB de RAM exigidos, 7,8 GB livres em duas tentativas) e saiu da 3-B (decisão 52).
+<!-- ! Alteração de IA - Revisar: item novo (30/09/2026) com a ponte de versão em Ollama 0.34.4, e o bloco `dm_3b` abaixo regerado com as duas pontes.
+     ! Motivo: o Ollama passou a 0.34.4 antes da troca cruzada; a ponte de 30/09 deixou o Coder 7B acima do limite da decisão 47, e o item anterior (três modelos pareáveis) só vale para as corridas feitas em 0.34.1. -->
+- **Ponte de versão em 0.34.4** (30/09/2026; decisão 47): o Ollama voltou a se atualizar e L0 foi repetido nos 36 nos três modelos (`resultados_alvo/fase3b_ponte_0344/`; tabela abaixo, de `decisao_modelo.md` §6). O 3B (b/c 1/0) e o `qwen2.5:7b` (0/1) continuam pareáveis com a Fase 3; o Coder 7B passa do limite (3/1, p = 0,625): a troca cruzada do Coder 7B é lida contra o L0 desta ponte, e não contra a Fase 3 (relatório §11). A decisão não muda, porque saiu da Fase 3 oficial, toda em 0.34.0.
+<!-- ! Alteração de IA - Revisar: item novo (01/10/2026) com o resultado da troca cruzada; o bloco `dm_3b` abaixo foi regerado com a cruzada.
+     ! Motivo: a limitação 7 (escritor e leitor confundidos) passou a ter medida; a leitura completa está no relatório da Fase 3-B. -->
+- **Troca cruzada** (30/09 a 01/10/2026; [fase-3b-relatorio.md](fase-3b-relatorio.md) §5): com a L1 do `qwen2.5:7b`, o Coder 7B vai de 80,6% para 83,3% contra o próprio L0 na mesma versão do Ollama (b/c 3/2, dentro da variação entre corridas) e o Coder 3B cai de 72,2% para 61,1% (b/c 1/5, p = 0,2188); lida pelo próprio `qwen2.5:7b`, a mesma biblioteca rende 88,9%. O risco que isso acrescenta é o de trocar de modelo: o ganho não acompanha a biblioteca quando muda quem a lê (decisão 69).
 
 <!-- tabela:dm_3b -->
 ### fase3b_ponte (modo `ponte`)
@@ -202,6 +208,32 @@ Fonte: resumo_fase3.json.
 | qwen2.5-coder:3b | L0 | 36 | 69,4% | 68,8% | 36 | 0 | 0 | 1,0000 | 1,0000 | — |
 | qwen2.5-coder:7b | L0 | 36 | 75,0% | 80,0% | 36 | 0 | 0 | 1,0000 | 1,0000 | — |
 | qwen2.5:7b | L0 | 36 | 77,8% | 78,8% | 36 | 1 | 1 | 1,0000 | 1,0000 | 0,0 |
+
+### fase3b_ponte_0344 (modo `ponte`)
+
+| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | b | c | p (McNemar) | p (Holm) | g de Cohen |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:3b | L0 | 36 | 72,2% | 70,4% | 36 | 1 | 0 | 1,0000 | 1,0000 | 0,5 |
+| qwen2.5-coder:7b | L0 | 36 | 80,6% | 82,5% | 36 | 3 | 1 | 0,6250 | 0,6250 | 0,2 |
+| qwen2.5:7b | L0 | 36 | 75,0% | 79,6% | 36 | 0 | 1 | 1,0000 | 1,0000 | -0,5 |
+
+### fase3b_cruzada_qwen (modo `cruzada`)
+
+| Modelo | L | n | Acerto | Acurácia balanceada | n comuns c/ F3 | b | c | p (McNemar) | p (Holm) | g de Cohen |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:3b | L1 | 36 | 61,1% | 60,4% | 36 | 1 | 5 | 0,2188 | 0,4376 | -0,3 |
+| qwen2.5-coder:3b | L3 | 36 | 61,1% | 60,4% | 36 | 1 | 5 | 0,2188 | 0,4376 | -0,3 |
+| qwen2.5-coder:7b | L1 | 36 | 83,3% | 88,3% | 36 | 4 | 1 | 0,3750 | 0,7500 | 0,3 |
+| qwen2.5-coder:7b | L3 | 36 | 83,3% | 88,3% | 36 | 2 | 0 | 0,5000 | 0,7500 | 0,5 |
+
+Matriz doador × leitor:
+
+| Doador | Leitor | L | n | Acerto | Acurácia balanceada |
+|---|---|---|---|---|---|
+| qwen2.5:7b | qwen2.5-coder:3b | L1 | 36 | 61,1% | 60,4% |
+| qwen2.5:7b | qwen2.5-coder:3b | L3 | 36 | 61,1% | 60,4% |
+| qwen2.5:7b | qwen2.5-coder:7b | L1 | 36 | 83,3% | 88,3% |
+| qwen2.5:7b | qwen2.5-coder:7b | L3 | 36 | 83,3% | 88,3% |
 <!-- /tabela:dm_3b -->
 
 ## 7. O que a literatura previa
@@ -218,6 +250,10 @@ Das 28 linhas do mapa de decisões (§6.10.1, coluna "Resultado medido na Fase 3
 | n = 36 não resolve; efeito mínimo antes do p (linhas 5, 6) | 19,4 pp de efeito mínimo; maior ganho 11,1 pp; nenhum p < 0,05 (achado 4.33) |
 | Runtime muda; ponte antes de misturar tabelas (linha 21) | Feito: 0/0, 0/0, 1/1 nos 36; 2-B A2 × F3 L0 idêntico em 6 de 8 (achado 4.31) |
 | Custo por acerto e Pareto, com prefill separado de geração (linhas 27, 16 da §6.10.3) | Feito (§4 e §5) |
+
+<!-- ! Alteração de IA - Revisar: parágrafo novo (01/10/2026) com o que a Fase 3-B mediu das linhas 5, 6, 17 e 21 do mapa.
+     ! Motivo: a tabela acima registra o que se sabia em 22/09 (a linha 17 dizia "não rodada"); a troca cruzada, os inéditos e a segunda ponte deram medida a essas linhas. -->
+Depois da Fase 3-B (01/10/2026), quatro linhas desta tabela ganharam medida, em [fase-3b-relatorio.md](fase-3b-relatorio.md) §6: a linha 17 (trocar a biblioteca original pela do doador muda 6 acertos no 3B, contra 0 a 1 entre corridas iguais, e 5 no Coder 7B, dentro da variação dele; o ganho não reaparece em nenhum dos dois); as linhas 5 e 6 (com 72 casos o efeito mínimo cai para 13,9 pontos e o maior ganho é de 6,9); e a linha 21 (com a mesma entrada, entre corridas iguais mudam de 0 a 3 casos em 36, e não de 0 a 2).
 
 ## 8. Decisão
 
@@ -256,6 +292,10 @@ O que fica de cada um: os resultados brutos e os snapshots das bibliotecas em `r
 6. **Uma execução por condição**, temperatura 0,1, sem semente; o ruído medido é de 0 a 2 casos em 36 (4.31).
 7. **Escritor e leitor confundidos**: a biblioteca L1 do `qwen2.5:7b` só foi lida por ele; se o ganho é da biblioteca ou do leitor, só a troca cruzada diz.
 
+<!-- ! Alteração de IA - Revisar: parágrafo novo (01/10/2026) com o que a Fase 3-B mediu das limitações 2, 6 e 7; a lista acima fica como foi escrita em 22/09.
+     ! Motivo: três das sete limitações tinham teste na 3-B; o leitor da análise precisa saber o que saiu sem ir ao relatório, e a decisão 52 precisa dizer com clareza o que ela autoriza afirmar. -->
+**O que a Fase 3-B mediu destas limitações (01/10/2026; [fase-3b-relatorio.md](fase-3b-relatorio.md)).** Limitação 2: nos 36 casos inéditos o ganho da L1 não reaparece (75,0% com L0, 72,2% com L1, 80,6% com L3); com os 72 casos somados, L1 e L3 ficam acima de L0 (+4,2 e +6,9 pontos) sem alcançar o efeito mínimo detectável de 13,9. Limitação 6: com a mesma entrada, entre corridas iguais mudam de 0 a 3 casos em 36, com saldo de até 1. Limitação 7: o ganho não acompanha a biblioteca; lida pelos dois Coder, a L1 do `qwen2.5:7b` dá 1 caso de saldo a um, dentro da variação, e tira 4 do outro. A cruzada não separa se o ganho é do par ou do leitor, porque o `qwen2.5:7b` não leu a biblioteca de outro modelo. As limitações 1, 3, 4 e 5 continuam como estão. Nenhuma delas muda a decisão; muda o que a decisão autoriza dizer, que é "este modelo com a biblioteca que ele escreveu", e não "esta biblioteca".
+
 ## 10. O que a Fase 3-B acrescentaria — para o Eric escolher
 
 Menu do plano complementar (decisão 45), com o que a análise mostrou. O Granite está fora de todos (decisão 52); as horas são estimativas pelas medianas da bateria e da ponte.
@@ -279,12 +319,17 @@ Ordem recomendada: **(b) numa noite; (a) depois da autoria; (c) só se sobrar m�
 
 A cruzada entra em `decisao_modelo.md` §6 por `--saidas-3b fase3b_ponte fase3b_cruzada_qwen`; os inéditos são avaliados por `avaliar_fase3b.py --saida fase3b_ineditos` e lidos no relatório §11 e aqui, em §9 (limitação 2).
 
+<!-- ! Alteração de IA - Revisar: parágrafo novo (01/10/2026) com o resultado do menu acima.
+     ! Motivo: a seção terminava nos comandos a rodar; as duas corridas escolhidas rodaram e a seção precisa dizer onde está a leitura. -->
+**Resultado (01/10/2026).** Os itens (b) e (a) rodaram, o (b) depois de uma segunda ponte de versão, em Ollama 0.34.4; o (c) não rodou e fica como opcional (ficha 17); o (d) continua inviável e o (e), descartado. A leitura conjunta e a lista de fechamento estão em [fase-3b-relatorio.md](fase-3b-relatorio.md); a cruzada entrou em `decisao_modelo.md` §6 por `--saidas-3b fase3b_ponte fase3b_ponte_0344 fase3b_cruzada_qwen`.
+
 ## 11. Rastreabilidade
 
 | Número | Onde nasce | Como conferir |
 |---|---|---|
-| Ranking, veto, bootstrap, Pareto, escore, sensibilidade, 3-B, revisão | `decisao_modelo.json` / `.md` | `python decidir_modelo.py --saida fase3 --saidas-3b fase3b_ponte --check` (com `RESULTADOS_DIR=resultados_alvo`) |
+| Ranking, veto, bootstrap, Pareto, escore, sensibilidade, 3-B, revisão | `decisao_modelo.json` / `.md` | `python decidir_modelo.py --saida fase3 --saidas-3b fase3b_ponte fase3b_ponte_0344 fase3b_cruzada_qwen --check` (com `RESULTADOS_DIR=resultados_alvo`) |
 | Curvas, pareados, flips, efeito mínimo, recuperação, documentação, custo | `resumo_fase3.json` → `tabelas_relatorio.md` | `python gerar_tabelas_relatorio_fase3.py --saida fase3 --check` (confere também os blocos deste arquivo, do relatório e da comparação) |
 | Três fases lado a lado | `comparacao_fases.md` | `python comparar_fases.py --check` |
 | Ponte de versão | `resultados_alvo/fase3b_ponte/` | `python avaliar_fase3b.py --saida fase3b_ponte` regenera a avaliação da ponte |
+| Pontes, variação entre corridas, inéditos somados e troca cruzada | `analise_fase3b.json` / `.md` | `python analisar_fase3b.py --check` (confere também os blocos do relatório da Fase 3-B) |
 | Vereditos das edições | `revisao_edicoes__<slug>.md` | Leitura humana; apurados por `decidir_modelo.py` |
