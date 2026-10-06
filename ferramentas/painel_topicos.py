@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import html
+import unicodedata
 import math
 import re
 from collections import Counter, defaultdict
@@ -37,8 +38,14 @@ SLOTS = {"qwen2.5:7b": 1, "granite4.2:8b": 2, "qwen2.5-coder:7b": 3, "qwen2.5-co
          "qwen2.5-coder:1.5b": 6, "qwen2.5-coder:1.5b-instruct-fp16": 7, "qwen2.5-coder:1.5b-instruct-q8_0": 8,
          "qwen2.5:0.5b-instruct": 1, "qwen2.5:0.5b-base": 2}
 
-# Mapa do painel: grupo → (id da seção, nome na aba, o que a aba responde). É a fonte da barra de navegação e
-# da lista "Mapa do painel" da aba Início.
+# Mapa do painel: grupo → (id da seção, nome na aba, o que a aba responde). É a fonte da barra lateral de navegação e
+# da lista "Mapa do painel" da aba Início. A ordem é a de importância para quem decide: primeiro o projeto e o que
+# depende do Eric, depois a decisão e os resultados que a sustentam, a biblioteca gerida pelo modelo (o experimento
+# central), a Pré-Fase 4 (a fase em andamento), a pesquisa e o método e, por último, as fases anteriores.
+# ! Alteração de IA - Revisar: (06/10/2026) grupos renomeados e reordenados por importância, com a aba mais importante
+# de cada grupo em primeiro (Decisão antes de Resultados; Pesquisa antes de Ferramental).
+# ! Motivo: pedido do Eric em 06/10: com 23 abas a faixa horizontal ficou ilegível, e a ordem antiga era a de
+# construção (Resultados antes da Decisão, Fases anteriores antes da Pesquisa), não a de leitura.
 NAV = [
     ("Projeto", [
         ("inicio", "Início", "Onde o projeto está, o que depende do Eric e o mapa deste painel."),
@@ -46,14 +53,14 @@ NAV = [
         ("roadmap", "Roadmap", "Estado por fase, corridas com o comando pronto e o esqueleto das Fases 4 e 5."),
         ("fechamento", "Fechamento", "As Fases 3 e 3-B podem ser dadas por concluídas? O estado de cada tópico e o que depende do Eric."),
     ]),
-    ("Modelos", [
-        ("visao", "Resultados", "O que os testes decidiram: acurácia por versão da biblioteca e as três fases lado a lado."),
-        ("modelos", "Modelos", "Veredito e números de cada modelo, acerto por classe de defeito e por nível."),
+    ("Decisão e resultados", [
         ("decisao", "Decisão", "A regra pré-registrada, o bootstrap, a fronteira de Pareto e a frase da decisão."),
-        ("comparativo", "qwen × Coder", "Em que cenários o qwen2.5-coder:7b seria melhor que o qwen2.5:7b, e por que a decisão ficou."),
+        ("visao", "Resultados", "O que os testes decidiram: acurácia por versão da biblioteca e as três fases lado a lado."),
         ("hipoteses", "Hipóteses", "As seis hipóteses pré-registradas, o veredito de cada uma e os achados novos."),
+        ("modelos", "Modelos", "Veredito e números de cada modelo, acerto por classe de defeito e por nível."),
+        ("comparativo", "qwen × Coder", "Em que cenários o qwen2.5-coder:7b seria melhor que o qwen2.5:7b, e por que a decisão ficou."),
     ]),
-    ("Biblioteca", [
+    ("Biblioteca gerida pelo modelo", [
         ("fase3", "Fase 3", "A biblioteca gerida pelo modelo: edições, rejeições, recuperação, custo e revisão humana."),
         ("tresb", "Fase 3-B", "Casos inéditos, ponte de versão, sonda de correção e as corridas complementares."),
         ("cruzada", "Troca cruzada", "A biblioteca escrita por um modelo, lida por outros dois: o ganho é dela ou de quem a lê?"),
@@ -61,23 +68,21 @@ NAV = [
         ("recuperador", "Recuperador", "BM25 com sinais contra embeddings e híbrido: vale trocar?"),
         ("ablacao", "Ablação", "Sem ajuste por instrução, o modelo faz a tarefa? O piso da família."),
     ]),
-    # ! Alteração de IA - Revisar: grupo novo da Pré-Fase 4 (01/10/2026), com as três abas da fase: modelos grandes pelo
-    # disco, atlas e raciocínio aberto (a do atlas vive em painel_atlas.py).
-    # ! Motivo: decisão 70 (pausa de pesquisa antes da Fase 4); um id só entra neste mapa junto com a seção dele,
-    # porque teste_toda_aba_do_mapa_existe_na_pagina exige que todo botão da navegação tenha a sua seção.
+    # grupo da Pré-Fase 4 (01/10/2026): um id só entra neste mapa junto com a seção dele, porque
+    # teste_toda_aba_do_mapa_existe_na_pagina exige que todo botão da navegação tenha a sua seção
     ("Pré-Fase 4", [
         ("colibri", "Modelos grandes pelo disco", "Dá para rodar nesta máquina um modelo gigante lendo os pesos do SSD? O que o colibri pede, o que foi medido aqui e o que se aproveita."),
         ("atlas", "Atlas", "Que verbetes a busca entrega para cada tipo de defeito e o que o modelo faz com eles: o mapa, a rota de cada caso e as trocas entre causas."),
         ("raciocinio", "Raciocínio aberto", "Dá para ver por que o modelo respondeu o que respondeu? A trilha bruta, o relatório por caso e o que o código consegue conferir."),
     ]),
+    ("Pesquisa e método", [
+        ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
+        ("metodo", "Método e limites", "Como a Fase 3 foi medida, as limitações declaradas e a Fase 3-B."),
+        ("ferramental", "Ferramental", "As ferramentas locais, a economia de tokens e a medição do servidor de memória do código."),
+    ]),
     ("Fases anteriores", [
         ("fases2", "Fases 2-A e 2-B", "Prompts sem documentação e a biblioteca escrita à mão em seis condições."),
         ("comparacao", "Entre fases", "O que cada etapa acrescentou, nos 90 e nos 36, com custo e riscos."),
-    ]),
-    ("Pesquisa e método", [
-        ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
-        ("ferramental", "Ferramental", "As ferramentas locais, a economia de tokens e a medição do servidor de memória do código."),
-        ("metodo", "Método e limites", "Como a Fase 3 foi medida, as limitações declaradas e a Fase 3-B."),
     ]),
 ]
 
@@ -231,8 +236,16 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
                      [[f'L{x["L"]}', f'{fmt(x["hit3_90_A"])}% / {fmt(x["hit3_90_B"])}%', f'{fmt(x["hit3_36_A"])}% / {fmt(x["hit3_36_B"])}%',
                        f'{x["verbetes_A"]} / {x["verbetes_B"]}'] for x in cq["fase3_recuperacao"]])
     B_ = lambda nome: md_para_html(blocos_cq[nome]) if nome in blocos_cq else ""  # noqa: E731
+    # ! Alteração de IA - Revisar: (06/10/2026) o confronto nos 36 inéditos (corrida 7) entra no cartão, na frase de abertura e numa seção própria.
+    # ! Motivo: a aba dizia que a corrida 7 só rodaria "se o Eric quiser"; ele rodou em 06/10, e o resultado toca a decisão 52 (ficha 21).
+    ined_cq = {x["L"]: x for x in cq.get("confronto_ineditos", [])}
+    i1 = ined_cq.get(1)
+    frase_ineditos = (f'Nos <strong>36 inéditos</strong> (corrida 7, 06/10) o Coder fica à frente com L0 e L1 (com a L1 de cada um, {i1["so_coder"]} casos só dele contra '
+                      f'{i1["so_qwen"]} só do qwen, p = {fmt(i1["p_mcnemar"], 3)}) e atrás com L3; nos 72 casos com L1 o placar empata. É a condição 1 do que mudaria a decisão 52, '
+                      'parcialmente cumprida e dentro do ruído: o que fazer com ela é a ficha 21.' if i1 else "")
     itens_kpi = [
         ("Células em que o Coder lidera", str(n_vence), f"maior vantagem {pp(max_delta)}; {n_vence_36} delas nos 36 nunca vistos"),
+        ("Nos 36 inéditos com L1 (06/10)", f'{i1["so_qwen"]} × {i1["so_coder"]}' if i1 else "não rodou", f'casos que só um acertou; {fmt(i1["acerto_A"])}% × {fmt(i1["acerto_B"])}%, p = {fmt(i1["p_mcnemar"], 3)}' if i1 else "corrida 7"),
         ("Nos 36 nunca vistos, melhor versão", f"{fmt(melhor_A)}% × {fmt(melhor_B)}%", f"qwen L{LA} × Coder L{LB}, acerto simples"),
         ("Confronto em L1 nos 36", f'{c1["so_qwen"]} × {c1["so_coder"]}', f'casos que só um acertou; ambos {c1["ambos"]}, p = {fmt(c1["p_mcnemar"], 3)}'),
         ("Edições aceitas na época 1", f'{doc1["aceitas_A"]} × {doc1["aceitas_B"]}', f'de {doc1["propostas_A"]} × {doc1["propostas_B"]} propostas; corretas na revisão {fmt(corr["A"])}% × {fmt(corr["B"])}%'),
@@ -242,7 +255,7 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
     corridas = cartoes_corridas(road, numeros=["1", "7"], sufixo="-cq")
     html_ = f'''<section id="comparativo" hidden>
 <h1>qwen2.5:7b × qwen2.5-coder:7b: em que cenários o Coder seria melhor?</h1>
-<p class="lead">Pergunta do Eric em 29/09: "pode ser que em alguns cenários o coder seja mais interessante". Resposta: o Coder fica à frente em <strong>{n_vence} células</strong>, todas pequenas (a maior por {pp(max_delta)}) e quase todas nos 54 casos de aprendizado e nas classes léxica, runtime e efeito. Nos <strong>36 casos nunca vistos</strong> o qwen2.5:7b vence em todas as versões da biblioteca ({fmt(melhor_A)}% × {fmt(melhor_B)}% na melhor versão de cada um), e em nenhuma ordenação o Coder tem chance real de ser o primeiro (P(top-1) ≤ {fmt(100 * p_max_B)}%). Como escritor, o Coder é mais contido e mais certo ({fmt(corr["B"])}% de edições corretas contra {fmt(corr["A"])}%). A decisão 52 fica; o que fecharia a pergunta é a troca cruzada (corrida 1) e, se o Eric quiser, o Coder 7B nos 36 inéditos (corrida 7).</p>
+<p class="lead">Pergunta do Eric em 29/09: "pode ser que em alguns cenários o coder seja mais interessante". Resposta: o Coder fica à frente em <strong>{n_vence} células</strong>, todas pequenas (a maior por {pp(max_delta)}) e quase todas nos 54 casos de aprendizado e nas classes léxica, runtime e efeito. Nos <strong>36 casos nunca vistos</strong> o qwen2.5:7b vence em todas as versões da biblioteca ({fmt(melhor_A)}% × {fmt(melhor_B)}% na melhor versão de cada um), e em nenhuma ordenação o Coder tem chance real de ser o primeiro (P(top-1) ≤ {fmt(100 * p_max_B)}%). Como escritor, o Coder é mais contido e mais certo ({fmt(corr["B"])}% de edições corretas contra {fmt(corr["A"])}%). A decisão 52 fica. {frase_ineditos}</p>
 {kpis(itens_kpi)}
 <h2>A trajetória dos dois pelas três fases</h2>
 <p>Os mesmos casos, da Fase 2-A (sem documentação, máquina de desenvolvimento) à Fase 3 (biblioteca editada pelo próprio modelo). Nos 36 de avaliação, o qwen abre vantagem a partir da biblioteca L1; nos 90 as curvas se cruzam.</p>
@@ -274,7 +287,11 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 {detalhes("Escore ponderado e fronteira de Pareto", B_("cq_escore_pareto"))}
 {detalhes("Ponte de versão do Ollama (0.34.0 → 0.34.1)", B_("cq_ponte"))}
 {detalhes("Riscos entre fases", B_("cq_riscos"))}
-<h2>O que fecharia a pergunta</h2>
+<h2>Nos 36 casos inéditos (corrida 7, 06/10/2026)</h2>
+<p>O Coder 7B diagnosticou os mesmos 36 inéditos que o qwen rodou em 28/09, com a biblioteca original e com as versões que ele mesmo escreveu. Caso a caso, por versão e por classe (6 casos por classe: um caso vale 16,7 pontos).</p>
+{B_("cq_ineditos")}
+{detalhes("Por classe, com a L1 de cada um", B_("cq_ineditos_classe"))}
+<h2>As duas corridas que fechariam a pergunta</h2>
 {corridas}
 {fontes(["<code>comparativo-qwen25-7b-vs-coder-7b.md</code> (Memorial, 3-resultados-e-analises)", "<code>comparativo_qwen_coder.json</code> e <code>.md</code> gerados por <code>comparar_qwen_coder.py</code> (--check)", "achado 4.38; decisão 52 mantida"])}
 </section>'''
@@ -293,7 +310,7 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
     cur: dict = defaultdict(dict)
     for x in ined["por_modelo_biblioteca_particao"]:
         cur[x["modelo"]][str(x["biblioteca_epoca"])] = {"acerto": x["causa_correta_pct"], "bal": x["acuracia_balanceada_pct"], "s": x["segundos_mediana"]}
-    modelos = [m for m in (A, COD3B) if m in cur]
+    modelos = [m for m in (A, B, COD3B) if m in cur]
     Ls = sorted({L for m in modelos for L in cur[m]}, key=int)
     oficial = {m: {L: {"acerto": dados["curvas"]["36"][m][L]["acerto"], "bal": dados["curvas"]["36"][m][L]["balanceada"]} for L in Ls} for m in modelos}
     rec: dict = defaultdict(dict)
@@ -343,6 +360,41 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
         ("Ponte de versão", f"{n_par} de {len(ult['linhas'])} pareáveis", f"Ollama {ult['versao']}: {ponte_txt}; pareável quando b + c ≤ 2"),
         ("Corridas da 3-B", f"{n_feitas} feitas · {n_pend} pendentes", f"{n_opc} opcionais"),
     ]
+    # ! Alteração de IA - Revisar: (06/10/2026) as duas corridas opcionais, rodadas pelo Eric em 06/10, entram na aba lidas de
+    # analise_fase3b.json: o Coder 7B contra o qwen nos mesmos inéditos (corrida 7) e a adesão cega com a L3 própria (corrida 5).
+    # ! Motivo: sem isto a aba diria que as corridas eram opcionais e não rodadas, e os números ficariam só no relatório.
+    entre = (an or {}).get("ineditos", {}).get("entre_modelos", [])
+    a5 = (an or {}).get("a5", {}).get("linhas", [])
+    c7 = {x["biblioteca_epoca"]: x for x in entre if x["modelo"] == B}
+    if B in cur:
+        itens_kpi.insert(2, (f"Coder 7B nos 36 inéditos (06/10)", " → ".join(f'{fmt(cur[B][L]["acerto"])}%' for L in Ls),
+                             f'contra o qwen com a L1 de cada um: b/c {c7[1]["b"]}/{c7[1]["c"]}, p = {fmt(c7[1]["p_mcnemar"], 3)}; nos 72, {c7[1]["somados"]["b"]}/{c7[1]["somados"]["c"]}' if 1 in c7 else "sem confronto"))
+    if a5:
+        itens_kpi.insert(3, ("Adesão cega com a L3 própria (06/10)", " · ".join(f'{fmt(l["seguiu_pct"])}%' for l in a5),
+                             "; ".join(f'{NOME_CURTO.get(l["modelo"], l["modelo"])}: seguiu a causa plantada em {l["seguiu"]} de {l["n"]}' for l in a5)))
+    # a análise identifica a classe pelo id sem acento (lexica, traducao); o painel mostra o nome com acento
+    classes_entre = [("".join(ch for ch in unicodedata.normalize("NFKD", nome) if not unicodedata.combining(ch)), nome) for _, nome in sorted(CLASSES.items(), key=lambda kv: int(kv[0]))]
+    tab_entre = ('<div class="tabela"><table><thead><tr><th>Modelo</th><th>Biblioteca de cada um</th><th>Acerto nos 36 inéditos</th><th>Acerto do qwen2.5:7b</th>'
+                 '<th>b / c (só o modelo / só o qwen)</th><th>Diferença</th><th>p (McNemar exato)</th><th>Nos 72 (oficiais + inéditos): b / c</th>'
+                 + "".join(f"<th>{esc(n)}</th>" for _, n in classes_entre) + "</tr></thead><tbody>"
+                 + "".join(f'<tr data-entre-modelos="{html.escape(x["modelo"] + "/L" + str(x["biblioteca_epoca"]), quote=True)}"><td>{esc(x["modelo"])}</td><td>L{x["biblioteca_epoca"]}</td>'
+                           f'<td class=num>{fmt(x["acerto_pct"])}%</td><td class=num>{fmt(x["acerto_doador_pct"])}%</td><td class=num>{x["b"]} / {x["c"]}</td><td class=num>{pp(x["delta_pp"])}</td>'
+                           f'<td class=num>{fmt(x["p_mcnemar"], 3)}</td><td class=num>{x["somados"]["b"]} / {x["somados"]["c"]}</td>'
+                           + "".join(f'<td class=num>{x["por_classe"][i]["acertos"]} / {x["por_classe"][i]["acertos_doador"]} de {x["por_classe"][i]["n"]}</td>' if i in x["por_classe"] else "<td>n/d</td>" for i, _ in classes_entre)
+                           + "</tr>" for x in entre) + "</tbody></table></div>")
+    tab_a5 = ('<div class="tabela"><table><thead><tr><th>Modelo</th><th>Biblioteca</th><th>Casos</th><th>Seguiu a causa plantada</th><th>Acertou mesmo assim</th>'
+              '<th>O mesmo modelo, a mesma biblioteca, na condição normal (A2, Fase 3)</th><th>Adesão cega na Fase 2-B (biblioteca original)</th></tr></thead><tbody>'
+              + "".join(f'<tr data-a5="{html.escape(l["modelo"], quote=True)}"><td>{esc(l["modelo"])}</td><td>L{l["biblioteca_epoca"]} própria</td><td class=num>{l["n"]}</td>'
+                        f'<td class=num>{l["seguiu"]} ({fmt(l["seguiu_pct"])}%)</td><td class=num>{l["acertos"]} ({fmt(l["acerto_pct"])}%)</td><td class=num>{fmt(l["acerto_a2_pct"])}%</td>'
+                        f'<td class=num>{"não medida" if l["adesao_2b_pct"] is None else fmt(l["adesao_2b_pct"]) + "%"}</td></tr>' for l in a5) + "</tbody></table></div>")
+    bloco_opcionais = ""
+    if entre or a5:
+        bloco_opcionais = ('<h2>As duas corridas que eram opcionais (06/10/2026)</h2>'
+                           + ('<h3>Modelo contra modelo nos mesmos 36 inéditos (corrida 7)</h3><p>O Coder 7B rodou os 36 inéditos em 06/10 com a biblioteca original e com as versões que '
+                              'ele mesmo escreveu; o qwen e o Coder 3B tinham rodado em 28/09. b conta os casos que só o modelo da linha acertou e c os que só o qwen acertou; as colunas '
+                              'por classe trazem os acertos do modelo e do qwen nos 6 casos da classe.</p>' + tab_entre if entre else "")
+                           + ('<h3>Adesão cega à documentação errada, com a biblioteca própria (corrida 5)</h3><p>Na condição A5 o contexto afirma uma causa errada para o sintoma e '
+                              'nunca traz o verbete de ouro. Na Fase 2-B isso foi medido com a biblioteca original; aqui cada modelo leu a própria L3 nos 36 oficiais.</p>' + tab_a5 if a5 else ""))
     agrupado = (an or {}).get("ineditos", {}).get("agrupado", [])
     tab_agrupado = tabela(["Modelo", "Biblioteca", "Casos", "Acerto com L0", "Acerto com a biblioteca", "Oficiais: b / c", "Inéditos: b / c", "Somados: b / c", "Diferença", "p (McNemar exato)"],
                           [[x["modelo"], f'L{x["biblioteca_epoca"]}', x["n_comuns"], f'{fmt(x["acerto_l0_pct"])}%', f'{fmt(x["acerto_pct"])}%', f'{x["oficiais"]["b"]} / {x["oficiais"]["c"]}',
@@ -376,6 +428,7 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
 <div class="chart baixo"><canvas id="g-tb-rec"></canvas></div>
 {tab_par}
 {"<h2>Oficiais e inéditos somados (72 casos)</h2><p>Cada versão da biblioteca contra a original, nos dois conjuntos e na soma. b conta os casos que só a versão nova acertou; c, os que só a original acertou.</p>" + tab_agrupado if agrupado else ""}
+{bloco_opcionais}
 <h2>Ponte de versão do Ollama</h2>
 <p>A bateria oficial rodou no Ollama 0.34.0, e o Ollama se atualiza sozinho. A cada versão nova, a ponte repete L0 nos 36 e compara caso a caso com a Fase 3: b conta os casos que só a ponte acertou, c os que só a Fase 3 acertou. Com b + c até 2 as corridas dessa versão são pareáveis com a Fase 3; acima disso, o modelo é lido contra a própria ponte e a ressalva vai para o relatório (decisão 47).</p>
 {tab_ponte}
@@ -385,7 +438,7 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
 {cartoes_corridas(road, numeros=[c.numero for c in corr3b], sufixo="-3b")}
 {detalhes("Primeira leitura dos inéditos (roadmap §2.1)", md_doc_para_html(leitura_ined))}
 {detalhes("Sonda de detecção de correção (roadmap §3)", md_doc_para_html(sonda))}
-{fontes(["<code>resultados_alvo/fase3b_ineditos/resumo_fase3.json</code> (corrida 2, 28/09)", "<code>decisao_modelo.json</code> (pontes de versão: " + ", ".join(p["saida"] for p in pontes) + ")", "<code>resultados_alvo/fase3/analise_fase3b.json</code> (72 casos somados e variação entre corridas)", "<code>roadmap.md</code> §2, §2.1, §2.3 e §3", "achados 4.37, 4.43 e 4.44; relatório <code>fase-3b-relatorio.md</code>"])}
+{fontes(["<code>resultados_alvo/fase3b_ineditos/resumo_fase3.json</code> (corrida 2, 28/09) e <code>fase3b_ineditos_coder7b/</code> (corrida 7, 06/10)", "<code>resultados_alvo/fase3b_a5/</code> (corrida 5, 06/10)", "<code>decisao_modelo.json</code> (pontes de versão: " + ", ".join(p["saida"] for p in pontes) + ")", "<code>resultados_alvo/fase3/analise_fase3b.json</code> (72 casos somados, variação entre corridas, modelo contra modelo e adesão cega)", "<code>roadmap.md</code> §2, §2.1, §2.3 e §3", "achados 4.37, 4.43 e 4.44; relatório <code>fase-3b-relatorio.md</code>"])}
 </section>'''
     return dados_js, html_
 
@@ -1237,7 +1290,7 @@ ROTULO_AVALIACAO = {"causa_correta": "A causa respondida é a do caso", "campo_c
 CASO_PADRAO_DO_EXPLORADOR = ("fase3b_cruzada_qwen__qwen2.5-coder_3b__L1", "sin-4")
 
 
-def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None = None) -> tuple[dict, str]:
+def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None = None, confianca: dict | None = None) -> tuple[dict, str]:
     titulo = "Dá para ver por que o modelo respondeu o que respondeu?"
     if not ind:
         return {"trilhas": [], "explorador": {"trilhas": []}}, (f'<section id="raciocinio" hidden>\n<h1>{titulo}</h1>\n<p class="lead">As trilhas ainda não foram geradas nesta máquina: falta '
@@ -1280,7 +1333,62 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
     # o arquivo de cada trilha é <corrida>__<modelo com _ no lugar de :>__L<versão>; o nome legível é o da tabela
     nomes_das_trilhas = {f'{c["corrida"]}__{c["modelo"].replace(":", "_").replace("/", "_")}__L{c["biblioteca_epoca"]}': nome(c) for c in cs}
     explorador = pe.dados_do_explorador(trilhas, nomes_das_trilhas, {**ROTULO_CONFERENCIA, **ROTULO_AVALIACAO}, CLASSES, CASO_PADRAO_DO_EXPLORADOR)
-    dados_js = {"explorador": explorador,
+    # ! Alteração de IA - Revisar: (06/10/2026) a sonda de confiança (corrida 12) entra na aba: AUROC de cada sinal por
+    # biblioteca, o que a revisão dos 10%, 20% e 30% de menor probabilidade pega, e o acerto da cópia curada contra a L1 e a L0.
+    # ! Motivo: a aba prometia a análise "quando a corrida 12 terminar"; ela rodou em 06/10 (fichas 18 e 19). Tudo vem de
+    # resultados_alvo/pre_fase4/confianca.json.
+    conf = confianca or {}
+    resumos = conf.get("resumos") or []
+    tot = resumos[0] if resumos else None
+    por_bib = [r for r in resumos[1:]] if resumos else []
+    SINAIS = [("p_conjunta", "probabilidade conjunta do rótulo"), ("p_primeiro", "primeiro token"), ("um_menos_massa", "1 menos a massa de outra causa"),
+              ("sustentado", "causa tratada por verbete do contexto"), ("coerente", "causa na classe que a rota aponta")]
+    dados_conf = {"sinais": [n for _, n in SINAIS],
+                  "bibliotecas": [{"rot": r["nome"].split(", ")[-1], "auroc": [(r["sinais"].get(s) or {}).get("auroc") for s, _ in SINAIS]} for r in por_bib]}
+    bloco_conf, itens_conf = "", []
+    if tot:
+        ac = conf.get("acerto", [])
+        pares = {(x["comparacao"], x["conjunto"]): x for x in conf.get("pares", [])}
+        rev = {x["fracao"]: x for x in tot["revisao"]}
+        a72 = {x["rotulo"]: x for x in ac if x["conjunto"] == "todos"}
+        cur = a72.get("L1 curada")
+        l1 = a72.get("L1")
+        p_cur = pares.get(("L1 curada contra L1", "todos"))
+        confiantes = sum(1 for l in conf.get("casos", []) if not l["acerto"] and (l["p_conjunta"] or 0) > 0.85)
+        itens_conf = [
+            ("AUROC da probabilidade do rótulo", fmt(tot["sinais"]["p_conjunta"]["auroc"], 3),
+             f'[{fmt(tot["sinais"]["p_conjunta"]["ic95"][0], 3)} a {fmt(tot["sinais"]["p_conjunta"]["ic95"][1], 3)}] em {tot["casos"]} diagnósticos, {tot["erros"]} erros; verbete do contexto {fmt(tot["sinais"]["sustentado"]["auroc"], 3)}, classe da rota {fmt((tot["sinais"].get("coerente") or {}).get("auroc"), 3)}'),
+            ("Revisar os 10% menos prováveis", f'{rev[0.1]["erros_pegos"]} de {tot["erros"]} erros', f'{rev[0.1]["revisados"]} casos revisados, {rev[0.1]["acertos_revisados"]} à toa; com 30%: {rev[0.3]["erros_pegos"]} de {tot["erros"]}'),
+            ("Erros confiantes", f"{confiantes} de {tot['erros']}", f'probabilidade acima de 0,85; mediana {fmt(tot["p_conjunta_mediana"]["certos"], 3)} nos certos e {fmt(tot["p_conjunta_mediana"]["errados"], 3)} nos errados'),
+        ]
+        if cur and l1 and p_cur:
+            itens_conf.append(("Cópia curada da L1 nos 72 casos", f'{fmt(cur["acerto_pct"])}% × {fmt(l1["acerto_pct"])}%',
+                               f'contra a L1 inteira na mesma corrida: b/c {p_cur["b"]}/{p_cur["c"]}, p = {fmt(p_cur["p_mcnemar"], 2)}; {fmt(cur["segundos_mediana"])} × {fmt(l1["segundos_mediana"])} s por diagnóstico'))
+        tab_res = tabela(["Recorte", "Casos", "Erros"] + [n for _, n in SINAIS] + ["Mediana nos certos", "Mediana nos errados", "Erros com a causa certa em 2º"],
+                         [[r["nome"], r["casos"], r["erros"]] + [("n/d" if not r["sinais"].get(s) or r["sinais"][s].get("auroc") is None else f'{fmt(r["sinais"][s]["auroc"], 3)} [{fmt(r["sinais"][s]["ic95"][0], 2)} a {fmt(r["sinais"][s]["ic95"][1], 2)}]') for s, _ in SINAIS]
+                          + [fmt(r["p_conjunta_mediana"]["certos"], 3), fmt(r["p_conjunta_mediana"]["errados"], 3), f'{r["erros_com_o_gabarito_na_segunda"]} de {r["erros"]}'] for r in resumos])
+        tab_rev = tabela(["Recorte", "Parcela revisada", "Casos revisados", "Erros pegos", "Acertos revisados à toa", "Risco no que sobra"],
+                         [[r["nome"], f'{fmt(100 * x["fracao"], 0)}%', x["revisados"], f'{x["erros_pegos"]} de {x["erros"]}', x["acertos_revisados"], "n/d" if x["risco_no_que_sobra"] is None else f'{fmt(100 * x["risco_no_que_sobra"])}%']
+                          for r in resumos for x in r["revisao"]])
+        tab_ac = ('<div class="tabela"><table><thead><tr><th>Biblioteca</th><th>Conjunto</th><th>Casos</th><th>Acertos</th><th>Acerto</th><th>s por diagnóstico (mediana)</th><th>Tokens do prompt (mediana)</th></tr></thead><tbody>'
+                  + "".join(f'<tr data-conf-acerto="{html.escape(x["rotulo"] + "/" + x["conjunto"], quote=True)}"><td>{esc(x["rotulo"])}</td><td>{esc(x["conjunto"])}</td><td class=num>{x["n"]}</td><td class=num>{x["acertos"]}</td>'
+                            f'<td class=num>{fmt(x["acerto_pct"])}%</td><td class=num>{fmt(x["segundos_mediana"])}</td><td class=num>{fmt(x["tokens_entrada_mediana"], 0)}</td></tr>' for x in ac) + "</tbody></table></div>")
+        tab_par = tabela(["Comparação", "Conjunto", "Casos", "Acerto da primeira", "Acerto da segunda", "b", "c", "Diferença", "p (McNemar exato)", "Casos que mudaram"],
+                         [[x["comparacao"], x["conjunto"], x["n"], f'{fmt(x["acerto_pct"])}%', f'{fmt(x["acerto_base_pct"])}%', x["b"], x["c"], pp(x["delta_pp"]), fmt(x["p_mcnemar"], 4), ", ".join(x["ganhos"] + x["perdas"]) or "nenhum"]
+                          for x in conf.get("pares", []) + conf.get("contra_corridas_anteriores", [])])
+        bloco_conf = f"""<h2>A probabilidade do rótulo separa acerto de erro? (corrida 12, 06/10/2026)</h2>
+<p>O Ollama devolve a probabilidade de cada token que o modelo escreve. A corrida 12 gravou essa probabilidade para o rótulo da causa nos 72 casos que nenhuma biblioteca viu, com o qwen2.5:7b lendo a biblioteca original (L0), a L1 inteira e a cópia curada da L1 que a Fase 4 vai usar: {tot["casos"]} diagnósticos, {tot["erros"]} erros. A medida principal, fixada antes da corrida, é a probabilidade conjunta dos tokens do rótulo; a AUROC diz quanto cada sinal separa acerto de erro (0,5 é sortear, 1,0 separa tudo).</p>
+{kpis(itens_conf)}
+<div class="chart"><canvas id="g-ra-conf"></canvas></div>
+{tab_res}
+{leitura([f"<strong>Separa, e melhor que os dois sinais grátis, mas metade dos erros sai confiante.</strong> AUROC {fmt(tot['sinais']['p_conjunta']['auroc'], 3)} contra {fmt(tot['sinais']['sustentado']['auroc'], 3)} e {fmt((tot['sinais'].get('coerente') or {}).get('auroc'), 3)}; {confiantes} dos {tot['erros']} erros têm probabilidade acima de 0,85, e em {tot['erros_com_o_gabarito_na_segunda']} deles a causa certa era a segunda opção.",
+          f"<strong>Serve de triagem, não de barreira.</strong> Mandar para revisão os 10% de menor probabilidade ({rev[0.1]['revisados']} casos) pega {rev[0.1]['erros_pegos']} dos {tot['erros']} erros; 30% ({rev[0.3]['revisados']} casos) pega {rev[0.3]['erros_pegos']}, revisando {rev[0.3]['acertos_revisados']} acertos à toa. Para a Fase 4, vale como ordem de prioridade de revisão e como aviso na trilha."]
+         + ([f"<strong>A cópia curada rende como a L1 inteira e custa menos.</strong> {fmt(cur['acerto_pct'])}% contra {fmt(l1['acerto_pct'])}% nos 72 casos na mesma corrida (b/c {p_cur['b']}/{p_cur['c']}), dentro da variação entre corridas iguais; {fmt(cur['segundos_mediana'])} s contra {fmt(l1['segundos_mediana'])} s por diagnóstico, com menos texto no contexto. Segue como ponto de partida da Fase 4 (decisão 71)."] if cur and l1 and p_cur else []))}
+{detalhes("Revisão humana por parcela de menor probabilidade", tab_rev)}
+{detalhes("Acerto de cada biblioteca na corrida 12 (36 oficiais, 36 inéditos, 72)", tab_ac)}
+{detalhes("Pares caso a caso: entre as bibliotecas da corrida e contra as corridas anteriores", tab_par)}
+"""
+    dados_js = {"explorador": explorador, "confianca": dados_conf,
                 "trilhas": [{"rot": nome(c).split(" · "), "sustentado": c["acerto_por_sustentacao"]["sustentado"]["acerto_pct"],
                              "nao": c["acerto_por_sustentacao"]["nao_sustentado"]["acerto_pct"],
                              "n_sus": c["acerto_por_sustentacao"]["sustentado"]["n"], "n_nao": c["acerto_por_sustentacao"]["nao_sustentado"]["n"]} for c in cs]}
@@ -1324,6 +1432,7 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
 <h2>O que o código conferiu, por trilha</h2>
 <p>Oito conferências por resposta, todas sem usar o gabarito. As duas últimas não dão veredito: a lista das notas do modelo nos verbetes citados é informativa, e a frase de impacto não tem como ser conferida por código.</p>
 {detalhes("Todas as conferências, trilha por trilha", tab_conf)}
+{bloco_conf}
 {pe.bloco_html(explorador)}
 {bloco_exemplo}
 <h2>Leitura</h2>
@@ -1332,8 +1441,9 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
     leitura_fontes,
     "<strong>O erro mais comum não é inventar, é responder uma causa que a documentação entregue não trata.</strong> Esse caso é detectável em código, na hora, e vira candidato a aviso para quem desenvolve.",
     "<strong>O relatório mostra de quem é cada nota.</strong> Quando o verbete citado tem notas escritas pelo modelo, o relatório lista quantas são e o veredito da revisão humana de cada uma; não dá para saber qual delas pesou na resposta, e isso fica escrito.",
-    "A especificação da trilha para a Fase 4 e a análise da probabilidade do rótulo entram nesta aba quando a rodada B da pesquisa e a corrida 12 terminarem."])}
-{fontes(["<code>resultados_alvo/pre_fase4/indicadores_raciocinio.json</code> (<code>gerar_relatorio_raciocinio.py --vitrine</code>, com <code>--check</code>)", "trilhas em <code>resultados_alvo/pre_fase4/trilhas/</code> (<code>trilha.py</code>) e relatórios em <code>resultados_alvo/pre_fase4/relatorios/</code>", "decisão 70; roadmap §3.1"])}
+    ("<strong>A probabilidade do rótulo é o melhor dos três sinais, e nenhum deles é barreira.</strong> A seção da corrida 12, acima, traz os números; a especificação da trilha para a Fase 4 entra nesta aba quando a rodada B da pesquisa terminar." if tot
+     else "A especificação da trilha para a Fase 4 e a análise da probabilidade do rótulo entram nesta aba quando a rodada B da pesquisa e a corrida 12 terminarem.")])}
+{fontes(["<code>resultados_alvo/pre_fase4/confianca.json</code> e <code>.md</code> (<code>analisar_confianca.py</code>, corrida 12 em <code>resultados_alvo/pre_fase4_confianca/</code>)", "<code>resultados_alvo/pre_fase4/indicadores_raciocinio.json</code> (<code>gerar_relatorio_raciocinio.py --vitrine</code>, com <code>--check</code>)", "trilhas em <code>resultados_alvo/pre_fase4/trilhas/</code> (<code>trilha.py</code>) e relatórios em <code>resultados_alvo/pre_fase4/relatorios/</code>", "decisão 70; roadmap §3.1"])}
 </section>'''
     return dados_js, html_
 
@@ -1428,6 +1538,12 @@ function raSustentacao(){
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0, max:100, title:{display:true, text:'acerto (%)'}}},
       plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+'%', afterLabel: c => 'n = '+(c.datasetIndex===0 ? L[c.dataIndex].n_sus : L[c.dataIndex].n_nao)}}}}});
 }
+function raConfianca(){
+  const C = (T.raciocinio||{}).confianca; if(!C || !C.bibliotecas.length) return;
+  grafico('g-ra-conf', {type:'bar', data:{labels: C.sinais, datasets: C.bibliotecas.map((b, i) => ({label: b.rot, data: b.auroc, backgroundColor: css('--s' + (i + 1))}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0.4, max:1, title:{display:true, text:'AUROC (0,5 = sortear)'}}},
+      plugins:{tooltip:{callbacks:{label: c => c.dataset.label + ': ' + (c.raw === null ? 'n/d' : c.formattedValue)}}}}});
+}
 function ferMcp(){
   if(!T.ferramental.mcp) return; const met = document.getElementById('sel-fer-met').value; const S = T.ferramental.mcp;
   grafico('g-fer-mcp', {type:'bar', data:{labels: S.map(x => x.tarefa), datasets:[{label:'grep, Glob e Read', data: S.map(x => Math.round(x['grep_'+met])), backgroundColor: css('--s1')}, {label:'servidor codebase-memory', data: S.map(x => Math.round(x['mcp_'+met])), backgroundColor: css('--s2')}]},
@@ -1436,7 +1552,7 @@ function ferMcp(){
 """ + pa.JS_ATLAS + pe.JS_EXPLORADOR
 
 DESENHAR_TOPICOS = {"comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
-                    "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raExplorar"], "atlas": ["atlasIniciar"],
+                    "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
@@ -1539,6 +1655,6 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("colibri", d, h))
     d, h = pa.secao_atlas(ctx.get("atlas"), kpis, leitura, fontes, detalhes, validacao_do_gemini())
     partes.append(("atlas", d, h))
-    d, h = secao_raciocinio(ctx.get("indicadores_raciocinio"), ctx.get("relatorio_exemplo"), ctx.get("trilhas"))
+    d, h = secao_raciocinio(ctx.get("indicadores_raciocinio"), ctx.get("relatorio_exemplo"), ctx.get("trilhas"), ctx.get("confianca"))
     partes.append(("raciocinio", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

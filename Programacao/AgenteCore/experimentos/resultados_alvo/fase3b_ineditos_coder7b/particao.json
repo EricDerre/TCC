@@ -1,0 +1,224 @@
+{
+  "regra": "Fase 3-B (ineditos): casos que nunca entraram em banco_casos.py nem banco_casos_extra.py; todos ficam em 'avaliacao' porque nenhum participa de época de aprendizado.",
+  "semente": null,
+  "n_aprendizado": 0,
+  "n_avaliacao": 36,
+  "casos": {
+    "lex-16": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": null
+    },
+    "lex-17": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": null
+    },
+    "lex-18": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": null
+    },
+    "lex-19": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": null
+    },
+    "lex-20": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": null
+    },
+    "lex-21": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": null
+    },
+    "sin-16": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": null
+    },
+    "sin-17": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": null
+    },
+    "sin-18": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-19": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-20": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": null
+    },
+    "sin-21": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": null
+    },
+    "semt-16": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": null
+    },
+    "semt-17": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": null
+    },
+    "semt-18": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": null
+    },
+    "semt-19": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": null
+    },
+    "semt-20": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": null
+    },
+    "semt-21": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": null
+    },
+    "tra-16": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": null
+    },
+    "tra-17": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": null
+    },
+    "tra-18": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": null
+    },
+    "tra-19": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": null
+    },
+    "tra-20": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": null
+    },
+    "tra-21": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": null
+    },
+    "run-16": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": null
+    },
+    "run-17": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": null
+    },
+    "run-18": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": null
+    },
+    "run-19": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": null
+    },
+    "run-20": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": null
+    },
+    "run-21": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": null
+    },
+    "efe-16": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": null
+    },
+    "efe-17": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": null
+    },
+    "efe-18": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-19": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-20": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": null
+    },
+    "efe-21": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": null
+    }
+  }
+}

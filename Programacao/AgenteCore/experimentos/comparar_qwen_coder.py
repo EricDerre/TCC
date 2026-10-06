@@ -152,6 +152,41 @@ def confronto_direto_f3(av: list[dict]) -> list[dict]:
     return linhas
 
 
+# ! Alteração de IA - Revisar: (06/10/2026) confronto nos 36 casos inéditos, por versão da biblioteca que cada um escreveu
+# e por classe: o Coder 7B rodou neles em 06/10 (corrida 7, `fase3b_ineditos_coder7b`), e o qwen já tinha rodado em 28/09.
+# ! Motivo: era a condição 1 que o §9 do comparativo listava para rever a decisão 52 ("o Coder vencer o qwen nos casos
+# inéditos, não medido"); sem estas funções o resultado entraria à mão no documento.
+def confronto_ineditos(av: list[dict]) -> list[dict]:
+    """Nos inéditos, caso a caso e por versão: b = só o Coder acertou, c = só o qwen2.5:7b acertou."""
+    por = defaultdict(dict)
+    for r in av:
+        if r["modelo"] in (A, B) and not r.get("erro_infra"):
+            por[(r["biblioteca_epoca"], r["caso"])][r["modelo"]] = bool(r["causa_correta"])
+    linhas = []
+    for L in sorted({l for l, _ in por}):
+        pares = [d for (l, _), d in por.items() if l == L and A in d and B in d]
+        if not pares:
+            continue
+        n = len(pares)
+        b = sum(d[B] and not d[A] for d in pares)
+        c = sum(d[A] and not d[B] for d in pares)
+        linhas.append({"L": L, "contexto": f"inéditos · L{L} (a biblioteca de cada um)", "n": n,
+                       "acerto_A": round(100 * sum(d[A] for d in pares) / n, 1), "acerto_B": round(100 * sum(d[B] for d in pares) / n, 1),
+                       "ambos": sum(d[A] and d[B] for d in pares), "nenhum": sum(not d[A] and not d[B] for d in pares), "so_coder": b, "so_qwen": c,
+                       "delta_pp": round(100 * (b - c) / n, 1), "p_mcnemar": mcnemar(b, c) if (b + c) else 1.0})
+    return linhas
+
+
+def ineditos_por_classe(av: list[dict], L: int) -> list[dict]:
+    """Acertos por classe nos inéditos, para uma versão da biblioteca, nos dois modelos."""
+    por = defaultdict(lambda: {A: [], B: []})
+    for r in av:
+        if r["modelo"] in (A, B) and r["biblioteca_epoca"] == L and not r.get("erro_infra"):
+            por[str(r["classe"])][r["modelo"]].append(bool(r["causa_correta"]))
+    return [{"classe": f"{k} {CLASSES[k]}", "n": len(por[k][A]), "acertos_A": sum(por[k][A]), "acertos_B": sum(por[k][B]),
+             "delta": sum(por[k][B]) - sum(por[k][A])} for k in sorted(por, key=int) if por[k][A] and por[k][B]]
+
+
 def confronto_direto_2b(av2b) -> list[dict]:
     """Mesma leitura na Fase 2-B, se avaliacao.json trouxer registros por caso com modelo, condição e acerto."""
     regs = av2b if isinstance(av2b, list) else (av2b.get("registros") if isinstance(av2b, dict) else None)
@@ -275,10 +310,13 @@ def onde_o_coder_vence(dado: dict) -> list[dict]:
             if l.get("delta") is not None and l["delta"] > 0:
                 dim = l.get("classe") or l.get("nivel")
                 out.append({"onde": f"{nome.replace('_', ' ')} · {dim}", "metrica": "acerto", "A": l["acerto_A"], "B": l["acerto_B"], "delta": l["delta"], "n": l.get("n")})
-    for l in dado["confronto_f3"] + dado["confronto_2b"]:
+    for l in dado["confronto_f3"] + dado["confronto_2b"] + dado.get("confronto_ineditos", []):
         if l["so_coder"] > l["so_qwen"]:
             out.append({"onde": l["contexto"] + " (confronto direto)", "metrica": "casos só o Coder acertou − só o qwen acertou",
                         "A": l["so_qwen"], "B": l["so_coder"], "delta": l["delta_pp"], "n": l["n"], "p": l["p_mcnemar"]})
+    for l in dado.get("ineditos_classe_L1", []):
+        if l["delta"] > 0:
+            out.append({"onde": f"inéditos L1 · {l['classe']}", "metrica": "acertos", "A": l["acertos_A"], "B": l["acertos_B"], "delta": l["delta"], "n": l["n"]})
     return out
 
 
@@ -291,7 +329,12 @@ def montar() -> dict:
     c = ler(F3["raiz"] / "comparacao_fases.json")
     d = ler(F3["raiz"] / "decisao_modelo.json")
     ined = RES / "fase3b_ineditos" / "resumo_fase3.json"
-    ined_modelos = ler(ined)["metadados"].get("modelos") if ined.exists() else None
+    av_ined = []
+    for pasta in ("fase3b_ineditos", "fase3b_ineditos_coder7b"):
+        p = RES / pasta / "avaliacao_fase3.json"
+        if p.exists():
+            av_ined += ler(p)
+    ined_modelos = sorted({r["modelo"] for r in av_ined}) if av_ined else (ler(ined)["metadados"].get("modelos") if ined.exists() else None)
     doc, rej = bloco_f3_documentacao(f3)
     entre, riscos = bloco_entre_fases(c)
     melhor = {m: max((x for x in f3["por_modelo_biblioteca_particao"] if x["modelo"] == m and x["particao"] == "avaliacao"),
@@ -301,7 +344,7 @@ def montar() -> dict:
                       "fontes": {"2a": "resumo_metricas.json (Ryzen)", "2b": "resultados_alvo/resumo_metricas.json (+ avaliacao.json)",
                                  "f3": "resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json", "comparacao": "comparacao_fases.json",
                                  "decisao": "decisao_modelo.json", "ineditos": str(ined.relative_to(RES)) if ined.exists() else None},
-                      "melhor_L_nos_36": melhor, "ineditos_modelos": ined_modelos,
+                      "melhor_L_nos_36": melhor, "ineditos_modelos": ined_modelos, "coder_nos_ineditos": bool(ined_modelos) and B in ined_modelos,
                       "f3_gerado_em": f3["metadados"]["gerado_em"], "decisao_gerado_em": d["metadados"]["gerado_em"]},
         "fase2a": bloco_2a(m2a),
         "fase2a_classe": bloco_por_dimensao(m2a["por_modelo_classe"], "classe", CLASSES),
@@ -319,6 +362,7 @@ def montar() -> dict:
         "fase3_documentacao": doc, "fase3_rejeicoes": rej,
         "fase3_revisao": bloco_revisao(f3), "fase3_recuperacao": bloco_recuperacao(f3), "fase3_flips": bloco_flips(f3),
         "entre_fases": entre, "riscos_entre_fases": riscos, "decisao": bloco_decisao(d),
+        "confronto_ineditos": confronto_ineditos(av_ined), "ineditos_classe_L1": ineditos_por_classe(av_ined, 1),
     }
     # melhor versão de cada um (nos 36) comparada por classe nos 90
     la, lb = melhor[A], melhor[B]
@@ -421,6 +465,11 @@ def render(dado: dict) -> str:
                       [[f"{x['modelo']}/L{x['L']}", f(x["score"], 4), f(f"{x['modelo']}/L{x['L']}" in dec["pareto_nao_dominados"])] for x in dec["escore"]]))
     blocos.append(tab("cq_ponte", ["Ponte de versão (0.34.1) · nos 36", "acerto", "balanceada", "b (só nova)", "c (só F3)", "p"],
                       [[x["modelo"], f(x["acerto_36"]) + "%", f(x["bal_36"]) + "%", f(x["b"]), f(x["c"]), f(x["p"], 4)] for x in dec["ponte"]]))
+    blocos.append(tab("cq_ineditos", ["36 inéditos · versão (a biblioteca de cada um)", "n", f"acerto {a}", f"acerto {b}", "ambos acertam", "nenhum", "só o Coder", "só o qwen", "Δ", "p (McNemar exato)"],
+                      [[l["contexto"], f(l["n"]), f(l["acerto_A"]) + "%", f(l["acerto_B"]) + "%", f(l["ambos"]), f(l["nenhum"]), f(l["so_coder"]), f(l["so_qwen"]), fd(l["delta_pp"]), f(l["p_mcnemar"], 4)]
+                       for l in dado.get("confronto_ineditos", [])]))
+    blocos.append(tab("cq_ineditos_classe", ["36 inéditos · L1 · classe", "n", f"acertos {a}", f"acertos {b}", "Δ (casos)"],
+                      [[l["classe"], f(l["n"]), f(l["acertos_A"]), f(l["acertos_B"]), fd(l["delta"]).replace(" pp", "")] for l in dado.get("ineditos_classe_L1", [])]))
     blocos.append(tab("cq_onde_vence", ["Onde o Coder fica à frente", "métrica", a, b, "Δ", "n", "p"],
                       [[l["onde"], l["metrica"], f(l["A"]), f(l["B"]), fd(l["delta"]), f(l.get("n")), f(l.get("p"), 4) if l.get("p") is not None else "—"] for l in dado["onde_o_coder_vence"]]))
     cab = ["<!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por comparar_qwen_coder.py a partir dos registros oficiais (--check regera e compara); não editar à mão.",
@@ -428,7 +477,8 @@ def render(dado: dict) -> str:
            f"# Comparativo {A} × {B} — gerado em {m['gerado_em'][:10]}", "",
            f"Fontes: {m['fontes']['2a']}; {m['fontes']['2b']}; {m['fontes']['f3']} (gerado em {m['f3_gerado_em']}); {m['fontes']['comparacao']}; "
            f"{m['fontes']['decisao']} (gerado em {m['decisao_gerado_em']}). Melhor versão nos 36: {a} L{m['melhor_L_nos_36'][A]}, {b} L{m['melhor_L_nos_36'][B]}. "
-           f"Casos inéditos (28/09): modelos rodados = {m['ineditos_modelos']} — o {B} não rodou lá. Estabilidade de ranking (top-1 em {dec['total_rankings']} cortes): "
+           f"Casos inéditos: modelos rodados = {m['ineditos_modelos']}" + (f" (o {B} rodou neles em 06/10/2026, corrida 7). " if m.get("coder_nos_ineditos") else f"; o {B} não rodou lá. ")
+           + f"Estabilidade de ranking (top-1 em {dec['total_rankings']} cortes): "
            + "; ".join(f"{k}: {v}" for k, v in dec["estabilidade_top1"].items()) + ".", ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
 

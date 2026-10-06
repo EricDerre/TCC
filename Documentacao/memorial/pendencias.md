@@ -208,10 +208,13 @@ Parte do [Memorial de Desenvolvimento](../Memorial%20de%20Desenvolvimento.md) �
      ! Motivo: o Eric pediu a verificação de que os tópicos das duas fases podem ser dados por concluídos antes do planejamento da Fase 4; a verificação achou duas decisões que só ele pode tomar (o que fazer com as corridas opcionais e com as conferências que ficaram para depois, e se a cópia curada é medida antes de a Fase 4 usá-la). -->
 ## Abertas em 01/10/2026 (encerramento das Fases 3 e 3-B)
 
+<!-- ! Alteração de IA - Revisar: fichas 17 a 20 fechadas em 06/10/2026 com as respostas do Eric (17 b, 18 a, 19 a, 20 a); o texto das fichas não muda, só o Estado e a Decisão.
+     ! Motivo: o Eric respondeu as quatro no chat de 06/10, e a regra é fechar a ficha trocando o Estado e preenchendo a Decisão, nunca apagando; as corridas das fichas 18 e 19 viraram um comando só (sonda com -Versoes 0,1 -Curada), e a sequência de comandos da noite está no roadmap §2 (corrida 12). -->
+
 Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feitas e analisadas (`3-resultados-e-analises/fase-3b-relatorio.md`, com a lista de fechamento no §9). Sobram duas decisões, e nenhuma impede o planejamento da Fase 4.
 
 ### 17. Encerrar a Fase 3-B: corridas opcionais e conferências que ficaram para depois
-- **Estado:** aberta
+- **Estado:** fechada em 06/10/2026
 - **Quem decide:** Eric
 - **Aberta em:** 01/10/2026
 - **O que é:** Todas as corridas previstas da Fase 3-B rodaram e estão analisadas. Ficaram de fora duas corridas marcadas como opcionais desde o início: a corrida 5 (o modelo recebe documentação errada de propósito, para ver se a biblioteca que ele mesmo escreveu muda a obediência cega; 72 inferências, cerca de 1h20) e a corrida 7 (o Coder 7B nos 36 casos inéditos; 108 inferências, cerca de 2 h). E duas conferências suas que tinham ficado para depois: os 6 casos inéditos de amostra (`lex-16`, `sin-20`, `semt-18`, `tra-19`, `run-20` e `efe-20`, em `banco_casos_ineditos.py`) e a planilha da curadoria da L1 (`resultados_alvo/fase3/curadoria_L1__qwen2.5_7b.md`, 40 linhas; também na aba Curadoria da L1 do painel).
@@ -221,10 +224,10 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Encerrar depois de você conferir os 6 casos e a planilha (cerca de uma hora de leitura; basta dizer "ok como está" ou o número das linhas que mudam); as opcionais não rodam.
   - (c) Antes de encerrar, rodar a corrida 7 numa noite (o comando está no roadmap), com ou sem as conferências.
 - **Recomendação:** (b). A leitura não bloqueia o planejamento da Fase 4, tira duas ressalvas do relatório, e a planilha decide o que fica na biblioteca que a Fase 4 vai usar. As opcionais não mudam a decisão: o Coder 7B não alcançou o qwen na troca cruzada, e a obediência cega já tem medida na Fase 2-B.
-- **Decisão:** em aberto
+- **Decisão:** (b), em 06/10/2026: o Eric conferiu os 6 casos inéditos de amostra e as 40 linhas da planilha da curadoria ("verifiquei cada um, estão OK"); nenhuma linha muda, e as duas ressalvas saem do relatório da 3-B (§8, limitação 6; §9, linhas 6 e 13). As corridas opcionais 5 e 7 não rodam. Como nenhuma corrida restante usa os dois Coder, eles podem sair do Ollama (`ollama rm qwen2.5-coder:7b qwen2.5-coder:3b`); o comando fica por último na sequência da noite, e é o Eric quem o roda. Em 06/10 à tarde o Eric rodou as duas opcionais mesmo assim (corridas 5 e 7, feitas e analisadas: relatório da 3-B §4.1 e §4.2); o resultado da 7 abriu a ficha 21.
 
 ### 18. Medir a cópia curada da L1 antes de a Fase 4 usá-la
-- **Estado:** aberta
+- **Estado:** fechada em 06/10/2026
 - **Quem decide:** Eric
 - **Aberta em:** 01/10/2026
 - **O que é:** A biblioteca que a Fase 4 vai usar (`Programacao/AgenteCore/biblioteca_producao/`) é a L1 do `qwen2.5:7b` sem as 17 edições que a curadoria reprovou: ficam 23 das 40. Essa cópia nunca foi medida. O que se mediu foi a L1 inteira: 88,9% de acerto nos 36 casos oficiais e 72,2% nos 36 inéditos, contra 77,8% e 75,0% com a biblioteca original.
@@ -234,7 +237,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Pôr essa medição como a primeira corrida do plano da Fase 4 (mesma conta, mesmo modo novo).
   - (c) Não medir: a L1 curada entra na Fase 4 como ponto de partida sem número próprio.
 - **Recomendação:** (a). É uma noite de máquina, e o resultado pode mudar o que o plano da Fase 4 assume sobre a biblioteca de partida; o planejamento segue enquanto a corrida roda.
-- **Decisão:** em aberto
+- **Decisão:** (a), em 06/10/2026: a cópia curada roda na mesma noite da sonda de confiança (ficha 19), como a versão reservada L100 ("L1 curada" nas análises) de `sonda_confianca.py --curada`, nos 36 casos oficiais e nos 36 inéditos, já com as probabilidades por token; a biblioteca original nos inéditos na versão atual do Ollama sai da mesma corrida (L0 nos 72). Comando único, em `Programacao/AgenteCore/experimentos`: `powershell -ExecutionPolicy Bypass -File rodar_sonda_confianca.ps1 -Versoes 0,1 -Curada` (216 inferências, cerca de 4 h). O modo foi escrito e testado antes (`testar_pre_fase4.py`, 47 testes). Rodou em 06/10/2026 (14:46 a 18:47, 04h01, sem falhas): a cópia curada rende como a L1 inteira (80,6% contra 81,9% nos 72 casos; b/c 1/2) e custa menos (61,1 contra 70,5 s por diagnóstico); relatório da Pré-Fase 4 §4.2, achado 4.50, decisão 71.
 
 ## Abertas em 01/10/2026 (Pré-Fase 4)
 
@@ -242,7 +245,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
      ! Motivo: as duas perguntas foram feitas no chat, e a regra do projeto é que toda pendência nova vire ficha aqui, para aparecer no painel na lista do que depende do Eric. Sem as fichas, a corrida 12 e a parte B ficariam paradas sem registro do porquê. -->
 
 ### 19. Combinar a noite da sonda de confiança (corrida 12)
-- **Estado:** aberta
+- **Estado:** fechada em 06/10/2026
 - **Quem decide:** Eric
 - **Aberta em:** 01/10/2026
 - **O que é:** A corrida 12 mede se a probabilidade que o modelo dá ao rótulo da causa separa acerto de erro. O `qwen2.5:7b` lê a biblioteca L1 dele nos 36 casos oficiais de avaliação e nos 36 inéditos, com o mesmo executor e o mesmo prompt da Fase 3, e o Ollama grava a probabilidade de cada token num arquivo ao lado do registro (`logprobs__L1.jsonl`). O script está pronto e testado (`sonda_confianca.py` e `rodar_sonda_confianca.ps1`). A máquina precisa estar livre: o modelo pede 6,5 GB de RAM livres, e com o VS Code e a sessão do Claude abertos sobram cerca de 5.
@@ -252,10 +255,10 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Só a L1: o mesmo comando sem `-Versoes` (72 inferências, cerca de 1h15).
   - (c) Não rodar: a Fase 4 fica com os dois sinais que não custam inferência (a causa respondida ser tratada por um verbete do contexto, e a causa respondida ser de uma classe que a rota de busca aponta; relatório da Pré-Fase 4, seções 3.3 e 4.1).
 - **Recomendação:** (a). Dobra o número de erros na amostra pelo custo de uma hora e meia a mais na mesma noite. Se a ficha 18 sair como (a), a cópia curada pode entrar na mesma noite.
-- **Decisão:** em aberto
+- **Decisão:** (a), em 06/10/2026: L0 e L1 na mesma noite, junto com a cópia curada da ficha 18. Comando único: `powershell -ExecutionPolicy Bypass -File rodar_sonda_confianca.ps1 -Versoes 0,1 -Curada`. A máquina precisa estar sem o VS Code e sem a sessão do Claude (o script espera 6,5 GB livres); a análise (`analisar_confianca.py`) roda sozinha no fim e o resultado entra no relatório da Pré-Fase 4 e no painel na sessão seguinte. Rodou em 06/10/2026 (216 inferências, 04h01, sem falhas): AUROC 0,783 para a probabilidade conjunta do rótulo, contra 0,541 e 0,626 dos dois sinais grátis; metade dos erros sai confiante, e o sinal vale como triagem, não como barreira; relatório §4.2, achado 4.49.
 
 ### 20. Parte B da pesquisa bibliográfica (raciocínio aberto): com que custo
-- **Estado:** aberta
+- **Estado:** fechada em 06/10/2026
 - **Quem decide:** Eric
 - **Aberta em:** 01/10/2026
 - **O que é:** A rodada 5 da pesquisa tem duas partes. A parte A (o repositório colibri, as pesquisas que ele cita, inferência com os pesos fora da RAM, modelos MoE pequenos e atlas) rodou e está integrada ao levantamento (§6.14.1 a §6.14.5): 31 agentes e cerca de 1,13 milhão de tokens. A estimativa que dei para as duas partes juntas era de cerca de 1,5 milhão; a parte A sozinha gastou três quartos disso. A parte B são seis tópicos sobre o raciocínio aberto: se o raciocínio escrito é o que decidiu a resposta, formatos de trilha e exigências de registro, relatório para quem desenvolve, atribuição ao contexto, confiança por probabilidade e uso das trilhas para melhorar o sistema.
@@ -265,6 +268,23 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Até 12 afirmações verificadas por tópico: estimativa de 1,1 milhão de tokens; as que passarem do teto ficam registradas como não verificadas.
   - (c) Só os três tópicos de que a especificação mais depende (formatos de trilha, confiança por probabilidade e uso das trilhas): cerca de metade do custo; os outros três ficam para depois.
 - **Recomendação:** (a). A diferença para (b) é de cerca de 15%, e as afirmações além do teto são justamente as que ficariam sem verificação. Se a prioridade for economia, (c) cobre o que a especificação precisa.
+- **Decisão:** (a), em 06/10/2026: mesmo rigor da parte A (até 16 afirmações verificadas por tópico, cerca de 37 agentes, estimativa de 1,3 milhão de tokens). O Workflow roda na sessão seguinte à noite de corridas, porque as corridas pedem a máquina sem a sessão do Claude aberta.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (06/10/2026) com a ficha 21, aberta pelo resultado da corrida 7 (o Coder 7B nos 36 inéditos), que o Eric rodou na tarde de 06/10.
+     ! Motivo: o comparativo qwen × Coder (§9) tinha deixado escrita a condição que reabriria a decisão 52: "o Coder vencer o qwen nos casos inéditos". Ela se cumpriu em parte, dentro do ruído; o que fazer com isso é decisão do Eric, e a regra do projeto é que toda decisão dele vire ficha. -->
+## Abertas em 06/10/2026 (depois das corridas 5 e 7)
+
+### 21. O Coder 7B ficou à frente nos 36 inéditos: rever a decisão 52?
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 06/10/2026
+- **O que é:** A corrida 7 (`resultados_alvo/fase3b_ineditos_coder7b/`, Ollama 0.34.4) pôs o `qwen2.5-coder:7b` nos mesmos 36 casos inéditos que o `qwen2.5:7b` rodou em 28/09, com a biblioteca original e com as versões que cada um escreveu. Com a biblioteca original, o Coder acerta 83,3% contra 75,0% (b/c 4/1, p = 0,375); com a L1 de cada um, 86,1% contra 72,2% (b/c 6/1, p = 0,125); com a L3, 75,0% contra 80,6% (b/c 1/3). Somando os 36 oficiais da Fase 3 e os 36 inéditos, com a L1 de cada um, o placar é 7/7 (p = 1,00): o que o Coder ganha nos inéditos é o que perde nos oficiais. Por classe com a L1 (6 casos cada), o Coder ganha em lexica, semantica, efeito e empata nas outras. Relatório da 3-B §4.1; comparativo §9; achado 4.52.
+- **Por que importa:** O comparativo qwen × Coder (§9, item 4) tinha escrito antes da corrida o que mudaria a decisão 52: "o Coder vencer o qwen nos casos inéditos, ou ler a biblioteca do qwen melhor do que o próprio qwen". A segunda condição não se cumpriu (troca cruzada, 01/10). A primeira se cumpriu em parte: o Coder vence com L0 e L1, por 3 e 5 casos de saldo, e perde com L3; nenhuma diferença passa do efeito mínimo detectável (19,4 pontos nos 36) nem do ruído de uma corrida por condição (de 0 a 3 casos em 36). A decisão 52 saiu da regra pré-registrada nos 36 oficiais, em que o qwen fica à frente em todas as versões; os dois modelos custam o mesmo (cerca de 70 s por diagnóstico) e têm a mesma licença (Apache-2.0). Trocar o modelo agora invalidaria a L1 curada já medida (decisão 71) e a comparação com as fases anteriores.
+- **Opções:**
+  - (a) Manter a decisão 52 e registrar o resultado como limitação declarada: a regra pré-registrada vale nos 36 oficiais, o resultado nos inéditos fica dentro do ruído, e o plano da Fase 4 ganha o item "mais casos inéditos antes de qualquer troca de modelo" (o Coder 7B entra como candidato declarado para uma reavaliação com mais casos).
+  - (b) Antes de decidir, repetir o Coder 7B e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só (72 inferências, cerca de 1h30), para saber se o saldo de 5 casos se mantém fora da variação entre corridas.
+  - (c) Rever a decisão 52 agora e adotar o Coder 7B com a L1 que ele escreveu: exigiria repetir a curadoria da biblioteca dele, a medição da cópia curada e a sonda de confiança (cerca de duas noites), e deixaria a Fase 4 com um modelo que perde nos 36 oficiais e empata nos 72.
+- **Recomendação:** (a). A regra foi fixada antes da bateria para não ser mudada por um resultado dentro do ruído, e é isso que este é; a (b) custa uma noite e, com b/c 6/1, ainda ficaria abaixo do efeito mínimo detectável. O registro honesto (comparativo §9 e achado 4.52) basta para a banca, e a Fase 4 pode reabrir a pergunta com mais casos.
 - **Decisão:** em aberto
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)

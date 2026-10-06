@@ -1,0 +1,28 @@
+{
+  "modo": "confianca",
+  "doador": null,
+  "versoes": [
+    0,
+    1,
+    100
+  ],
+  "texto_max": null,
+  "condicao": "A2",
+  "modelos": [
+    "qwen2.5:7b"
+  ],
+  "versao_ollama": "0.34.4",
+  "origem": "resultados_alvo/fase3",
+  "criado_em": "2026-10-06T14:47:13",
+  "top_logprobs": 20,
+  "conjuntos": {
+    "oficiais_de_avaliacao": 36,
+    "ineditos": 36
+  },
+  "curada": {
+    "versao": 100,
+    "hash": "1fca10f1a6f6",
+    "origem": "Programacao/AgenteCore/biblioteca_producao",
+    "rotulo": "L1 curada"
+  }
+}

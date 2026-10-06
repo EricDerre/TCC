@@ -32,6 +32,7 @@ import caminhos
 import executar_fase3
 import gerar_atlas
 import pre_fase4 as pf
+import recuperacao as rec
 import sonda_confianca as sc
 import trilha
 
@@ -217,6 +218,22 @@ def _rotas_da_base(hash_da_biblioteca: str) -> dict[str, list[str]] | None:
     return None
 
 
+# ! Alteração de IA - Revisar: (06/10/2026) quando a biblioteca lida não tem corrida na Fase 3 (a cópia curada, hash
+# 1fca10f1a6f6), as rotas dos 90 casos oficiais são recalculadas pela própria busca, com os mesmos verbetes e o mesmo k.
+# ! Motivo: a coluna "causa na classe que a rota aponta" saía como n/d para a L1 curada na corrida 12, e a comparação com
+# a L0 e a L1 ficava incompleta. A busca é determinística (trilha.candidatos refaz a conta de recuperacao.pontuar e
+# confere a soma), então a rota recalculada é a mesma que uma corrida gravaria.
+def _rotas_recalculadas(verbetes: list[dict], k: int) -> dict[str, list[str]]:
+    """As rotas (os k verbetes que a busca entrega) dos 90 casos oficiais para esta biblioteca, pela própria busca."""
+    indice = rec.Indice(verbetes)
+    rotas = {}
+    for caso in trilha._todos_os_casos().values():
+        if caso["id"] in _casos_oficiais():
+            _, itens = trilha.candidatos(indice, caso, k)
+            rotas[caso["id"]] = [x["id"] for x in itens if x["escolhido"]]
+    return rotas
+
+
 def montar(saida: str = sc.SAIDA_PADRAO, replicas: int = REPLICAS, gerado_em: str | None = None) -> dict:
     c3 = caminhos.fase3(saida)
     todos = trilha._todos_os_casos()
@@ -227,14 +244,19 @@ def montar(saida: str = sc.SAIDA_PADRAO, replicas: int = REPLICAS, gerado_em: st
     causas = sorted(avaliar._PERMITIDAS)
     oficiais = _casos_oficiais()
     linhas = []
+    por_versao: dict[tuple, dict] = {}   # (modelo, versão) -> {caso: registro bruto}, para o acerto e os pares
     for arq in sorted(c3["raiz"].glob("*/diagnosticos__L*.jsonl")):
         versao = int(arq.stem.split("__L")[1])
         slug = arq.parent.name
         registros = _jsonl(arq)
+        if registros:
+            por_versao[(registros[0]["modelo"], versao)] = {r["caso"]: r for r in registros}
         laterais = {l["caso"]: l for l in _jsonl(arq.parent / f"logprobs__L{versao}.jsonl")}
         verbetes = bib.carregar(c3["bibliotecas"] / slug / f"epoca-{versao}")
         ids = sorted(v["id"] for v in verbetes)
         base = _rotas_da_base(registros[0]["biblioteca_versao"]) if registros else None
+        if base is None and registros:
+            base = _rotas_recalculadas(verbetes, int(registros[0].get("k") or 3))
         atlas_inteiro = gerar_atlas.atlas_de_recuperacao(base, classe_do_caso, ids, gerar_atlas.CLASSES) if base else None
         for r in registros:
             lat = laterais.get(r["caso"])
@@ -271,13 +293,77 @@ def montar(saida: str = sc.SAIDA_PADRAO, replicas: int = REPLICAS, gerado_em: st
 
     grupos_de_linhas = [("todas as versões", linhas)] if len({(l["modelo"], l["versao"]) for l in linhas}) > 1 else []
     for chave in sorted({(l["modelo"], l["versao"]) for l in linhas}):
-        grupos_de_linhas.append((f"{chave[0]}, L{chave[1]}", [l for l in linhas if (l["modelo"], l["versao"]) == chave]))
+        grupos_de_linhas.append((f"{chave[0]}, {sc.rotulo_da_versao(chave[1])}", [l for l in linhas if (l["modelo"], l["versao"]) == chave]))
     resumos = [_resumo(nome, ls, replicas) for nome, ls in grupos_de_linhas]
+    acerto, pares, contra = _acerto_e_pares(por_versao, oficiais)
     return {"metadados": {"script": "analisar_confianca.py", "gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"),
                           "saida": saida, "medida_principal": MEDIDA_PRINCIPAL, "replicas": replicas, "semente": SEMENTE,
                           "nota_sobre_a_massa": "limite inferior: só entram as alternativas que o Ollama devolveu em cada posição",
                           "pareamento_com_a_fase_3": _pareamento(linhas)},
-            "resumos": resumos, "casos": linhas}
+            "resumos": resumos, "acerto": acerto, "pares": pares, "contra_corridas_anteriores": contra, "casos": linhas}
+
+
+# ! Alteração de IA - Revisar: (06/10/2026) acerto por versão e conjunto, pares entre as versões da mesma corrida (a cópia
+# curada contra a L1 e a L0) e pares contra as corridas anteriores dos mesmos casos (Fase 3 nos oficiais, 3-B nos
+# inéditos), quando elas estão no disco.
+# ! Motivo: a ficha 18 (a) pôs a cópia curada na corrida 12 para medir quanto ela rende; a resposta é acerto e pares caso
+# a caso, que a análise não trazia (só a AUROC). Os pares dentro da corrida valem mais que os externos: mesma versão do
+# Ollama, mesmo dia, mesma máquina.
+def _acerto_e_pares(por_versao: dict[tuple, dict], oficiais: set[str]) -> tuple[list[dict], list[dict], list[dict]]:
+    def ok(r: dict) -> bool:
+        return bool(avaliar.avaliar_registro(r, set())["causa_correta"])
+
+    def rotulo(r: dict) -> str | None:
+        return avaliar.extrair(r["resposta"])["causa_raiz"]
+
+    def conjuntos(regs: dict) -> list[tuple[str, list[str]]]:
+        ids = sorted(regs)
+        return [("oficiais", [c for c in ids if c in oficiais]), ("ineditos", [c for c in ids if c not in oficiais]), ("todos", ids)]
+
+    def par(nome: str, a: dict, b: dict, conjunto: str, ids: list[str], **extra) -> dict:
+        ids = [c for c in ids if c in a and c in b]
+        g = [c for c in ids if ok(a[c]) and not ok(b[c])]
+        p = [c for c in ids if ok(b[c]) and not ok(a[c])]
+        return {"comparacao": nome, "conjunto": conjunto, "n": len(ids), "acerto_pct": _pct(sum(ok(a[c]) for c in ids), len(ids)),
+                "acerto_base_pct": _pct(sum(ok(b[c]) for c in ids), len(ids)), "b": len(g), "c": len(p), "ganhos": g, "perdas": p,
+                "p_mcnemar": avaliar.mcnemar_exato(len(g), len(p)), "delta_pp": round(100 * (len(g) - len(p)) / len(ids), 1) if ids else None,
+                "rotulos_diferentes": sum(1 for c in ids if rotulo(a[c]) != rotulo(b[c])), **extra}
+
+    acerto = []
+    for (modelo, versao), regs in sorted(por_versao.items()):
+        for conjunto, ids in conjuntos(regs):
+            if ids:
+                acerto.append({"modelo": modelo, "versao": versao, "rotulo": sc.rotulo_da_versao(versao), "conjunto": conjunto, "n": len(ids),
+                               "acertos": sum(ok(regs[c]) for c in ids), "acerto_pct": _pct(sum(ok(regs[c]) for c in ids), len(ids)),
+                               "segundos_mediana": avaliar._mediana([regs[c].get("segundos") for c in ids]),
+                               "tokens_entrada_mediana": avaliar._mediana([regs[c].get("tokens_entrada") for c in ids])})
+    pares = []
+    chaves = sorted(por_versao)
+    for i, (ma, va) in enumerate(chaves):
+        for mb, vb in chaves[:i]:
+            if ma != mb:
+                continue
+            for conjunto, ids in conjuntos(por_versao[(ma, va)]):
+                if ids:
+                    pares.append(par(f"{sc.rotulo_da_versao(va)} contra {sc.rotulo_da_versao(vb)}", por_versao[(ma, va)], por_versao[(mb, vb)], conjunto, ids,
+                                     modelo=ma, versao=va, base=vb))
+    contra = []
+    for (modelo, versao), regs in sorted(por_versao.items()):
+        if versao == sc.VERSAO_CURADA:
+            continue
+        slug = executar_fase3._slug(modelo)
+        for saida, conjunto, fora in (("fase3", "oficiais", a3b.CASOS_DE_TEXTO_ALTERADO), (a3b.INEDITOS, "ineditos", frozenset())):
+            arq = caminhos.fase3(saida)["raiz"] / slug / f"diagnosticos__L{versao}.jsonl"
+            anterior = {r["caso"]: r for r in _jsonl(arq)}
+            ids = [c for c in sorted(regs) if c in anterior and c not in fora]
+            if ids:
+                contra.append(par(f"{sc.rotulo_da_versao(versao)} contra a corrida `{saida}` (mesmos casos)", regs, anterior, conjunto, ids,
+                                  modelo=modelo, versao=versao, corrida_anterior=saida, casos_fora=sorted(set(fora) & set(regs))))
+    return acerto, pares, contra
+
+
+def _pct(parte: float, total: int) -> float | None:
+    return round(100 * parte / total, 1) if total else None
 
 
 def _casos_oficiais() -> set[str]:
@@ -369,19 +455,36 @@ def render(dado: dict) -> str:
         for x in r["revisao"]:
             md.append(f"| {r['nome']} | {_f(100 * x['fracao'], 0)}% | {x['revisados']} | {x['erros_pegos']} de {x['erros']} | {x['acertos_revisados']} | "
                       f"{'n/d' if x['risco_no_que_sobra'] is None else _f(100 * x['risco_no_que_sobra'], 1) + '%'} |")
-    md += ["<!-- /tabela:tb_conf_revisao -->", "", "Caso a caso, da menor probabilidade conjunta para a maior:", "",
+    md += ["<!-- /tabela:tb_conf_revisao -->", "",
+           "Acerto de cada biblioteca na mesma corrida (mesma versão do Ollama, mesmo dia, mesma máquina), nos 36 oficiais de avaliação, nos 36 inéditos e nos 72:", "",
+           "<!-- tabela:tb_conf_acerto -->",
+           "| Modelo | Biblioteca | Conjunto | Casos | Acertos | Acerto | s por diagnóstico (mediana) | Tokens do prompt (mediana) |",
+           "|---|---|---|---|---|---|---|---|"]
+    for x in dado.get("acerto", []):
+        md.append(f"| `{x['modelo']}` | {x['rotulo']} | {x['conjunto']} | {x['n']} | {x['acertos']} | {_f(x['acerto_pct'], 1)}% | {_f(x['segundos_mediana'], 1)} | {_f(x['tokens_entrada_mediana'], 0)} |")
+    md += ["<!-- /tabela:tb_conf_acerto -->", "",
+           "Pares caso a caso: entre as bibliotecas da mesma corrida (b = casos que só a primeira acertou; c = só a segunda) e, para as versões que já tinham corrida nos mesmos casos, "
+           "contra a corrida anterior (os casos de texto corrigido em 28/09 ficam fora da conta contra a Fase 3):", "",
+           "<!-- tabela:tb_conf_pares -->",
+           "| Comparação | Conjunto | Casos | Acerto da primeira | Acerto da segunda | b | c | Diferença | p (McNemar exato) | Rótulos diferentes | Casos que mudaram |",
+           "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for x in dado.get("pares", []) + dado.get("contra_corridas_anteriores", []):
+        mudaram = ", ".join(f"`{c}`" for c in x["ganhos"] + x["perdas"]) or "nenhum"
+        md.append(f"| {x['comparacao']} | {x['conjunto']} | {x['n']} | {_f(x['acerto_pct'], 1)}% | {_f(x['acerto_base_pct'], 1)}% | {x['b']} | {x['c']} | "
+                  f"{'n/d' if x['delta_pp'] is None else ('+' if x['delta_pp'] > 0 else '') + _f(x['delta_pp'], 1) + ' pp'} | {_f(x['p_mcnemar'], 4)} | {x['rotulos_diferentes']} | {mudaram} |")
+    md += ["<!-- /tabela:tb_conf_pares -->", "", "Caso a caso, da menor probabilidade conjunta para a maior:", "",
            "<!-- tabela:tb_conf_casos -->",
            "| Caso | Biblioteca | Conjunto | Resultado | Causa respondida | Probabilidade conjunta | Primeiro token | Massa de outra causa | Segunda opção | Tratada por verbete do contexto | Na classe da rota |",
            "|---|---|---|---|---|---|---|---|---|---|---|"]
     sim_nao = {True: "sim", False: "não", None: "n/d"}
     for l in sorted(dado["casos"], key=lambda l: (l["p_conjunta"] is None, l["p_conjunta"] or 0, l["caso"], l["versao"])):
         segunda = "nenhuma" if not l["segunda"] else f"{' ou '.join(l['segunda']['causas'])} ({_f(l['segunda']['p'])})"
-        md.append(f"| `{l['caso']}` | L{l['versao']} | {l['conjunto']} | {'certo' if l['acerto'] else 'errado'} | `{l['rotulo']}` | {_f(l['p_conjunta'])} | {_f(l['p_primeiro'])} | "
+        md.append(f"| `{l['caso']}` | {sc.rotulo_da_versao(l['versao'])} | {l['conjunto']} | {'certo' if l['acerto'] else 'errado'} | `{l['rotulo']}` | {_f(l['p_conjunta'])} | {_f(l['p_primeiro'])} | "
                   f"{_f(l['massa_divergente'])} | {segunda} | {sim_nao[l['sustentado']]} | {sim_nao[l['coerente']]} |")
     md += ["<!-- /tabela:tb_conf_casos -->", ""]
     if meta["pareamento_com_a_fase_3"]:
         md += ["Rótulos iguais aos da corrida oficial da Fase 3 nos casos oficiais (sem os casos de texto corrigido em 28/09): "
-               + "; ".join(f"`{p['modelo']}` L{p['versao']}: {p['rotulos_iguais']} de {p['casos']}" for p in meta["pareamento_com_a_fase_3"]) + ".", ""]
+               + "; ".join(f"`{p['modelo']}` {sc.rotulo_da_versao(p['versao'])}: {p['rotulos_iguais']} de {p['casos']}" for p in meta["pareamento_com_a_fase_3"]) + ".", ""]
     return "\n".join(md)
 
 

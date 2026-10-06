@@ -11,9 +11,17 @@
 # 3-B fez com CONDICAO e TEXTO_MAX. A primeira (sondar_logprobs.com_logprobs) acrescenta os dois campos à chamada
 # que cliente_ollama.gerar já faz; a segunda embrulha executar_fase3.diagnosticar para gravar a linha lateral ANTES
 # de o executor gravar o registro, de modo que nunca exista registro sem a probabilidade correspondente.
+# ! Alteração de IA - Revisar: (06/10/2026) a sonda ganhou --curada: depois das versões da Fase 3, roda também a cópia
+# curada da L1 (Programacao/AgenteCore/biblioteca_producao, a biblioteca que a Fase 4 vai usar) como a versão reservada
+# VERSAO_CURADA, com registro, linha lateral e condicoes_3b.json dizendo de onde ela veio e com que hash.
+# ! Motivo: ficha 18, decidida pelo Eric em 06/10 como (a): a cópia curada (23 das 40 edições) nunca foi medida, e a
+# Fase 4 começaria sem saber quanto a própria biblioteca rende. Rodando na mesma noite da sonda (ficha 19), ela sai
+# com as probabilidades por token, e a comparação com a L1 inteira (medida na Fase 3) vale porque a ponte de 30/09
+# deixou o qwen2.5:7b dentro do limite. O número reservado existe para nenhuma análise ler a cópia como uma época
+# da Fase 3 (0 a 3): nos arquivos ela é L100; para pessoas, "L1 curada".
 """Uso (em Programacao/AgenteCore/experimentos, com o Ollama no ar e nenhum modelo residente):
   RESULTADOS_DIR=resultados_alvo python sonda_confianca.py [--saida pre_fase4_confianca] [--modelo qwen2.5:7b]
-                                                           [--versoes 1] [--top 20] [--casos N]
+                                                           [--versoes 1] [--curada] [--top 20] [--casos N]
 """
 from __future__ import annotations
 
@@ -24,6 +32,7 @@ import sys
 from pathlib import Path
 
 import caminhos
+import evolucao_biblioteca as evo
 import executar_fase3
 import executar_fase3b as e3b
 import sondar_logprobs as sl
@@ -37,6 +46,16 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 MODO = "confianca"
 SAIDA_PADRAO = "pre_fase4_confianca"
 CASAS = 5   # casas decimais guardadas de cada log-probabilidade
+# A cópia curada da L1 (curar_biblioteca.py --curar --destino ../biblioteca_producao): entra na sonda como a versão
+# reservada abaixo, fora da faixa 0 a 3 das épocas da Fase 3.
+PASTA_CURADA = caminhos.AQUI.parent / "biblioteca_producao"
+VERSAO_CURADA = 100
+ROTULO_CURADA = "L1 curada"
+
+
+def rotulo_da_versao(versao: int) -> str:
+    """Como a versão aparece para pessoas: L0 a L3 são as épocas da Fase 3; a reservada é a cópia curada da L1."""
+    return ROTULO_CURADA if versao == VERSAO_CURADA else f"L{versao}"
 
 
 def compactar(logprobs: list[dict]) -> list[dict]:
@@ -110,13 +129,17 @@ def diagnostico_com_lateral(pasta: Path, capturas: list, top: int):
         executar_fase3.diagnosticar = original
 
 
-def _completar_condicoes(c3b: dict, top: int, casos: list[dict], n_oficiais: int) -> None:
-    """Acrescenta ao condicoes_3b.json o que é próprio desta corrida (quantas alternativas por posição foram pedidas
-    e de que conjuntos vêm os casos); `_gravar_condicoes` regrava o arquivo a cada chamada, então isto roda depois."""
+def _completar_condicoes(c3b: dict, top: int, casos: list[dict], n_oficiais: int, curada: bool = False) -> None:
+    """Acrescenta ao condicoes_3b.json o que é próprio desta corrida (quantas alternativas por posição foram pedidas,
+    de que conjuntos vêm os casos e, com --curada, de onde vem a cópia curada e com que hash); `_gravar_condicoes`
+    regrava o arquivo a cada chamada, então isto roda depois."""
     caminho = c3b["raiz"] / "condicoes_3b.json"
     dado = json.loads(caminho.read_text(encoding="utf-8"))
     dado["top_logprobs"] = top
     dado["conjuntos"] = {"oficiais_de_avaliacao": n_oficiais, "ineditos": len(casos) - n_oficiais}
+    if curada:
+        dado["curada"] = {"versao": VERSAO_CURADA, "hash": evo.hash_biblioteca(PASTA_CURADA),
+                          "origem": "Programacao/AgenteCore/biblioteca_producao", "rotulo": ROTULO_CURADA}
     caminho.write_text(json.dumps(dado, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -130,11 +153,15 @@ def rodar(args: argparse.Namespace) -> list[str]:
     particao = particao_da_sonda(casos)
     if args.casos:
         casos = casos[:args.casos]
+    curada = bool(getattr(args, "curada", False))
+    if curada and not evo.snapshot_fechado(PASTA_CURADA):
+        raise SystemExit(f"a cópia curada em {PASTA_CURADA} não existe ou não está fechada (sem fechamento.json)")
+    versoes = list(args.versoes) + ([VERSAO_CURADA] if curada else [])
     c3b = e3b.preparar_saida(args.saida, particao)
-    e3b._gravar_condicoes(c3b, modo=MODO, doador=None, versoes=list(args.versoes), texto_max=None,
+    e3b._gravar_condicoes(c3b, modo=MODO, doador=None, versoes=versoes, texto_max=None,
                           condicao=executar_fase3.CONDICAO, modelos=[args.modelo],
                           versao_ollama=executar_fase3._versao_ollama())
-    _completar_condicoes(c3b, args.top, casos_da_sonda(particao_oficial), n_oficiais)
+    _completar_condicoes(c3b, args.top, casos_da_sonda(particao_oficial), n_oficiais, curada)
 
     modelo = args.modelo
     slug = executar_fase3._slug(modelo)
@@ -144,8 +171,9 @@ def rodar(args: argparse.Namespace) -> list[str]:
         digest, versao_ollama = e3b._preparar_modelo(modelo)
 
         def _rodar() -> None:
-            for versao in args.versoes:
-                origem = c3_of["bibliotecas"] / slug / f"epoca-{versao}"
+            for versao in versoes:
+                # a cópia curada vem da pasta de produção; as outras versões, dos snapshots oficiais da Fase 3
+                origem = PASTA_CURADA if versao == VERSAO_CURADA else c3_of["bibliotecas"] / slug / f"epoca-{versao}"
                 if not origem.exists():
                     raise SystemExit(f"sem epoca-{versao} oficial de {modelo} em {origem}")
                 e3b._preparar_copia(origem, pasta_bib / f"epoca-{versao}")
@@ -165,6 +193,7 @@ def main() -> None:
     ap.add_argument("--saida", default=SAIDA_PADRAO, help="subpasta nova dos resultados (padrão: pre_fase4_confianca)")
     ap.add_argument("--modelo", default="qwen2.5:7b")
     ap.add_argument("--versoes", type=int, nargs="+", default=[1], help="versões da biblioteca do próprio modelo (padrão: 1)")
+    ap.add_argument("--curada", action="store_true", help=f"roda também a cópia curada da L1 (biblioteca_producao) como L{VERSAO_CURADA}")
     ap.add_argument("--top", type=int, default=20, help="alternativas por posição pedidas ao Ollama (top_logprobs)")
     ap.add_argument("--k", type=int, default=3, help="verbetes recuperados (condição A2)")
     ap.add_argument("--max-tokens-diagnostico", type=int, default=600)

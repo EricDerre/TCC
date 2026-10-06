@@ -1,0 +1,248 @@
+{
+  "por_modelo_biblioteca_particao": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 0,
+      "particao": "avaliacao",
+      "n": 36,
+      "erros_infra": 0,
+      "causa_correta_pct": 83.3,
+      "causa_correta_ic95": [
+        68.1,
+        92.1
+      ],
+      "campo_correto_pct": 97.2,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 16.7,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 74.89,
+      "segundos_mediana": 74.1,
+      "tokens_saida_medio": 85,
+      "tokens_entrada_mediana": 1084.0,
+      "prefill_ms_mediana": 54965.0,
+      "geracao_ms_mediana": 15138.0,
+      "acuracia_balanceada_pct": 86.2,
+      "rotulo_mais_frequente": "campo_ausente",
+      "parcela_rotulo_mais_frequente_pct": 8.3,
+      "n_rotulos_distintos": 22,
+      "citou_verbete_pct": 100.0,
+      "ouro_no_contexto_pct": 69.4,
+      "contexto_com_nota_pct": 0.0,
+      "citou_verbete_anotado_pct": 0.0,
+      "citou_verbete_novo_pct": 0.0,
+      "verbete_novo_no_contexto_pct": 0.0,
+      "contexto_estourou_n": 0,
+      "segundos_p95": 103.08
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 1,
+      "particao": "avaliacao",
+      "n": 36,
+      "erros_infra": 0,
+      "causa_correta_pct": 86.1,
+      "causa_correta_ic95": [
+        71.3,
+        93.9
+      ],
+      "campo_correto_pct": 94.4,
+      "formato_valido_pct": 97.2,
+      "formato_ok_conteudo_errado_pct": 11.1,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 71.25,
+      "segundos_mediana": 71.3,
+      "tokens_saida_medio": 84,
+      "tokens_entrada_mediana": 1171.5,
+      "prefill_ms_mediana": 50558.0,
+      "geracao_ms_mediana": 15079.0,
+      "acuracia_balanceada_pct": 90.6,
+      "rotulo_mais_frequente": "campo_ausente",
+      "parcela_rotulo_mais_frequente_pct": 8.3,
+      "n_rotulos_distintos": 24,
+      "citou_verbete_pct": 100.0,
+      "ouro_no_contexto_pct": 66.7,
+      "contexto_com_nota_pct": 77.8,
+      "citou_verbete_anotado_pct": 55.6,
+      "citou_verbete_novo_pct": 0.0,
+      "verbete_novo_no_contexto_pct": 0.0,
+      "contexto_estourou_n": 0,
+      "segundos_p95": 105.04
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 3,
+      "particao": "avaliacao",
+      "n": 36,
+      "erros_infra": 0,
+      "causa_correta_pct": 75.0,
+      "causa_correta_ic95": [
+        58.9,
+        86.2
+      ],
+      "campo_correto_pct": 91.7,
+      "formato_valido_pct": 94.4,
+      "formato_ok_conteudo_errado_pct": 19.4,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 2.8,
+      "segundos_medio": 78.45,
+      "segundos_mediana": 79.5,
+      "tokens_saida_medio": 109,
+      "tokens_entrada_mediana": 1254.5,
+      "prefill_ms_mediana": 53646.0,
+      "geracao_ms_mediana": 17493.0,
+      "acuracia_balanceada_pct": 80.4,
+      "rotulo_mais_frequente": "campo_ausente",
+      "parcela_rotulo_mais_frequente_pct": 8.3,
+      "n_rotulos_distintos": 21,
+      "citou_verbete_pct": 100.0,
+      "ouro_no_contexto_pct": 66.7,
+      "contexto_com_nota_pct": 100.0,
+      "citou_verbete_anotado_pct": 66.7,
+      "citou_verbete_novo_pct": 0.0,
+      "verbete_novo_no_contexto_pct": 0.0,
+      "contexto_estourou_n": 0,
+      "segundos_p95": 118.26
+    }
+  ],
+  "pareado_vs_L0": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 1,
+      "particao": "avaliacao",
+      "n_pares": 36,
+      "acerto_L0_pct": 83.3,
+      "acerto_pct": 86.1,
+      "delta_pp": 2.8,
+      "b": 1,
+      "c": 0,
+      "p_mcnemar": 1.0,
+      "p_holm": 1.0,
+      "g_cohen": 0.5,
+      "razao_bc": null
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 1,
+      "particao": "todos",
+      "n_pares": 36,
+      "acerto_L0_pct": 83.3,
+      "acerto_pct": 86.1,
+      "delta_pp": 2.8,
+      "b": 1,
+      "c": 0,
+      "p_mcnemar": 1.0,
+      "p_holm": 1.0,
+      "g_cohen": 0.5,
+      "razao_bc": null
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 3,
+      "particao": "avaliacao",
+      "n_pares": 36,
+      "acerto_L0_pct": 83.3,
+      "acerto_pct": 75.0,
+      "delta_pp": -8.3,
+      "b": 0,
+      "c": 3,
+      "p_mcnemar": 0.25,
+      "p_holm": 0.5,
+      "g_cohen": -0.5,
+      "razao_bc": 0.0
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 3,
+      "particao": "todos",
+      "n_pares": 36,
+      "acerto_L0_pct": 83.3,
+      "acerto_pct": 75.0,
+      "delta_pp": -8.3,
+      "b": 0,
+      "c": 3,
+      "p_mcnemar": 0.25,
+      "p_holm": 0.5,
+      "g_cohen": -0.5,
+      "razao_bc": 0.0
+    }
+  ],
+  "cochran_q": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "particao": "avaliacao",
+      "n_casos": 36,
+      "q": 6.5,
+      "gl": 2,
+      "p": 0.0388
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "particao": "todos",
+      "n_casos": 36,
+      "q": 6.5,
+      "gl": 2,
+      "p": 0.0388
+    }
+  ],
+  "flips": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "transicao": "L0→L1",
+      "particao": "avaliacao",
+      "n_pares": 36,
+      "certo_para_errado": 0,
+      "errado_para_certo": 1,
+      "autoenvenenamento_pct": 0.0
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "transicao": "L0→L1",
+      "particao": "todos",
+      "n_pares": 36,
+      "certo_para_errado": 0,
+      "errado_para_certo": 1,
+      "autoenvenenamento_pct": 0.0
+    }
+  ],
+  "aviso_flips": "calcular_flips cobre só transições adjacentes (L0→L1, L1→L2, L2→L3); com versões não consecutivas (ex.: 0, 1, 3) a transição L1→L3 não aparece — use pareado_vs_L0",
+  "recuperacao": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 0,
+      "hit@1": 41.7,
+      "hit@3": 69.4,
+      "hit@5": 69.4,
+      "mrr": 0.547,
+      "n": 36
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 1,
+      "hit@1": 44.4,
+      "hit@3": 66.7,
+      "hit@5": 72.2,
+      "mrr": 0.565,
+      "n": 36
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 3,
+      "hit@1": 41.7,
+      "hit@3": 66.7,
+      "hit@5": 72.2,
+      "mrr": 0.551,
+      "n": 36
+    }
+  ],
+  "metadados": {
+    "saida": "fase3b_ineditos_coder7b",
+    "modo": "ineditos",
+    "modelos": [
+      "qwen2.5-coder:7b"
+    ],
+    "n_casos_ineditos": 36,
+    "n_diagnosticos": 108
+  }
+}

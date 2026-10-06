@@ -42,6 +42,14 @@ LEITORES = ["qwen2.5-coder:7b", "qwen2.5-coder:3b"]
 PONTES = ["fase3b_ponte", "fase3b_ponte_0344"]
 INEDITOS = "fase3b_ineditos"
 CRUZADA = "fase3b_cruzada_qwen"
+# ! Alteração de IA - Revisar: (06/10/2026) as duas corridas opcionais do roadmap entram na análise: o Coder 7B nos
+# mesmos 36 inéditos (corrida 7, pasta `fase3b_ineditos_coder7b`) e a adesão cega sobre a L3 própria (corrida 5,
+# `fase3b_a5`).
+# ! Motivo: o Eric rodou as duas em 06/10. Os inéditos do Coder entram na mesma lista dos inéditos (as linhas e a soma
+# com os oficiais saem iguais às dos outros modelos) e ganham o confronto modelo contra modelo, que era a condição 1 do
+# comparativo qwen × Coder para rever a decisão 52; o A5 responde se a biblioteca própria muda a adesão cega (H5).
+INEDITOS_EXTRA = ["fase3b_ineditos_coder7b"]
+A5 = "fase3b_a5"
 VERSOES_CRUZADA = (1, 3)
 LIMITE_PONTE = 2  # decisão 47: até 2 casos discordantes em 36, a corrida é pareável com a Fase 3
 # Casos cujo sintoma foi corrigido no banco em 28/09/2026 (achado 4.36, decisão 58): as corridas criadas a partir
@@ -217,11 +225,20 @@ def carregar() -> dict:
         return arq.exists() and str(ler(arq).get("criado_em", "")) >= DATA_DA_CORRECAO
 
     depois = [nome for nome, _, _ in pontes if depois_da_correcao(nome)] + (["cruzada"] if depois_da_correcao(CRUZADA) else [])
+    ineditos = ler(caminhos.fase3(INEDITOS)["avaliacao"])
+    for nome in INEDITOS_EXTRA:
+        c3 = caminhos.fase3(nome)
+        if c3["avaliacao"].exists():
+            ineditos += ler(c3["avaliacao"])
+    c3_a5 = caminhos.fase3(A5)
+    a5 = ler(c3_a5["avaliacao"]) if c3_a5["avaliacao"].exists() else []
+    comp = F3["raiz"] / "comparacao_fases.json"
+    adesao_2b = {m: d.get("adesao_cega_2B_A5_pct") for m, d in ler(comp).get("por_modelo", {}).items()} if comp.exists() else {}
     return {"f3": ler(F3["avaliacao"]), "pontes": pontes, "cruzada": ler(caminhos.fase3(CRUZADA)["avaliacao"]),
-            "ineditos": ler(caminhos.fase3(INEDITOS)["avaliacao"]), "brutos": brutos,
-            "corridas": [resumo_da_corrida(s) for s in PONTES + [INEDITOS, CRUZADA] if caminhos.fase3(s)["raiz"].exists()],
+            "ineditos": ineditos, "brutos": brutos,
+            "corridas": [resumo_da_corrida(s) for s in PONTES + [INEDITOS, CRUZADA] + INEDITOS_EXTRA + [A5] if caminhos.fase3(s)["raiz"].exists()],
             "doador": DOADOR, "leitores": LEITORES,
-            "casos_de_texto_alterado": CASOS_DE_TEXTO_ALTERADO, "corridas_depois": frozenset(depois)}
+            "casos_de_texto_alterado": CASOS_DE_TEXTO_ALTERADO, "corridas_depois": frozenset(depois), "a5": a5, "adesao_2b": adesao_2b}
 
 
 # ------------------------------------------------------------------ montagem
@@ -240,11 +257,14 @@ def _linha_celula(leitor: str, epoca: int, origem: str, rotulo: str, versao: str
 
 def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: list[dict], ineditos: list[dict],
            brutos: dict, corridas: list[dict], doador: str, leitores: list[str],
-           casos_de_texto_alterado=frozenset(), corridas_depois=frozenset()) -> dict:
+           casos_de_texto_alterado=frozenset(), corridas_depois=frozenset(), a5: list[dict] | None = None,
+           adesao_2b: dict | None = None) -> dict:
     """Monta o registro da análise. `pontes` vem na ordem em que rodaram; a última é a linha de base (L0) da
     troca cruzada, por ser a que rodou na mesma versão do Ollama. `casos_de_texto_alterado` são os casos corrigidos
     depois da Fase 3 e `corridas_depois` os nomes das saídas que rodaram depois da correção (o nome "cruzada" vale
-    para a troca cruzada); a Fase 3 é sempre anterior."""
+    para a troca cruzada); a Fase 3 é sempre anterior. `ineditos` pode trazer mais de um modelo (o Coder 7B rodou nos
+    mesmos 36 em 06/10); `a5` são os registros avaliados da adesão cega sobre a L3 própria e `adesao_2b` a adesão
+    cega de cada modelo na Fase 2-B (A5 sobre a biblioteca original), para a comparação."""
     modelos = [doador] + list(leitores)
     versao_f3 = "0.34.0"
     nome_ponte, versao_ponte, av_ponte = pontes[-1]
@@ -303,6 +323,38 @@ def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: l
                                  "acerto_l0_pct": _pct(sum(1 for r in velha.values() if r["causa_correta"]), len(velha)),
                                  "acerto_pct": _pct(sum(1 for r in nova.values() if r["causa_correta"]), len(nova))})
             linhas_ineditos.append(linha)
+
+    # --- os mesmos inéditos, modelo contra modelo (corrida 7: o Coder 7B nos 36 que o doador já tinha rodado)
+    entre_modelos = []
+    for m in sorted({r["modelo"] for r in ineditos} - {doador}):
+        for epoca in sorted({r["biblioteca_epoca"] for r in ineditos if r["modelo"] == m}):
+            cel_m, cel_d = celula(ineditos, m, epoca), celula(ineditos, doador, epoca)
+            if not cel_m or not cel_d:
+                continue
+            par = parear(cel_m, cel_d)
+            soma = parear(juntar(oficiais=celula(f3, m, epoca), ineditos=cel_m), juntar(oficiais=celula(f3, doador, epoca), ineditos=cel_d))
+            por_classe_m = {}
+            for k, nome in sorted(CLASSES.items()):
+                rm = [r for r in cel_m.values() if r.get("classe") == k]
+                rd = [r for r in cel_d.values() if r.get("classe") == k]
+                if rm:
+                    por_classe_m[nome] = {"n": len(rm), "acertos": sum(1 for r in rm if r["causa_correta"]), "acertos_doador": sum(1 for r in rd if r["causa_correta"])}
+            entre_modelos.append({"modelo": m, "doador": doador, "biblioteca_epoca": epoca, "acerto_pct": medir(cel_m)["acerto_pct"],
+                                  "acerto_doador_pct": medir(cel_d)["acerto_pct"],
+                                  **{k: par[k] for k in ("n_comuns", "b", "c", "p_mcnemar", "delta_pp", "ganhos", "perdas", "rotulos_diferentes")},
+                                  "somados": {k: soma[k] for k in ("n_comuns", "b", "c", "p_mcnemar", "delta_pp")}, "por_classe": por_classe_m})
+
+    # --- adesão cega sobre a biblioteca própria (corrida 5: A5 sobre a L3 de cada modelo nos 36 oficiais)
+    linhas_a5 = []
+    for m in sorted({r["modelo"] for r in (a5 or [])}):
+        regs = [r for r in a5 if r["modelo"] == m]
+        epoca = regs[0]["biblioteca_epoca"]
+        n = len(regs)
+        seguiu = sum(1 for r in regs if r.get("seguiu_causa_plantada"))
+        acertos = sum(1 for r in regs if r["causa_correta"])
+        linhas_a5.append({"modelo": m, "biblioteca_epoca": epoca, "n": n, "seguiu": seguiu, "seguiu_pct": _pct(seguiu, n), "acertos": acertos,
+                          "acerto_pct": _pct(acertos, n), "ouro_no_contexto_pct": _pct(sum(1 for r in regs if r.get("ouro_no_contexto")), n),
+                          "acerto_a2_pct": medir(celula(f3, m, epoca))["acerto_pct"], "adesao_2b_pct": (adesao_2b or {}).get(m)})
 
     # --- troca cruzada
     celulas, pareados, cochran, por_classe, rotulos, casos = [], [], [], [], [], []
@@ -368,12 +420,14 @@ def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: l
                       "limite_da_ponte": LIMITE_PONTE, "ponte_de_base": nome_ponte, "versao_da_ponte_de_base": versao_ponte,
                       "casos_de_texto_alterado": sorted(alterados), "corridas_depois_da_correcao": sorted(corridas_depois),
                       "fontes": {"fase3": "resultados_alvo/fase3/avaliacao_fase3.json", "pontes": [n for n, _, _ in pontes],
-                                 "ineditos": INEDITOS, "cruzada": CRUZADA}},
+                                 "ineditos": INEDITOS, "ineditos_extra": INEDITOS_EXTRA, "a5": A5, "cruzada": CRUZADA}},
         "corridas": corridas,
         "pontes": bloco_pontes,
         "ruido_l0": ruido,
         "oscilam_em_l0": oscilam,
-        "ineditos": {"linhas": linhas_ineditos, "agrupado": agrupado, "efeito_minimo_detectavel": avaliar_fase3.efeito_minimo_detectavel((36, 72))},
+        "ineditos": {"linhas": linhas_ineditos, "agrupado": agrupado, "entre_modelos": entre_modelos,
+                     "efeito_minimo_detectavel": avaliar_fase3.efeito_minimo_detectavel((36, 72))},
+        "a5": {"linhas": linhas_a5},
         "cruzada": {"celulas": celulas, "pareados": pareados, "cochran": cochran, "por_classe": por_classe, "rotulos": rotulos, "casos": casos},
     }
 
@@ -409,6 +463,7 @@ def tab(nome: str, cab: list[str], linhas: list[list[str]]) -> str:
 
 def render(dado: dict) -> str:
     cz = dado["cruzada"]
+    nomes_classe = [nome for _, nome in sorted(CLASSES.items())]
     blocos = []
     blocos.append(tab("tb_corridas", ["Corrida (pasta em `resultados_alvo/`)", "Modo", "Modelos", "Registros", "Ollama nos registros", "Erros", "Bibliotecas lidas (hash)", "Início", "Fim"],
                       [[f'`{c["saida"]}`', f(c["modo"]), ", ".join(c["modelos"]), f(c["n_registros"]), ", ".join(c["versoes_ollama"]), f(c["erros"]),
@@ -427,6 +482,18 @@ def render(dado: dict) -> str:
     blocos.append(tab("tb_agrupado", ["Modelo", "Biblioteca", "Casos (oficiais + inéditos)", "Acerto com L0", "Acerto com a biblioteca", "Oficiais: b / c", "Inéditos: b / c", "Somados: b / c", "Diferença", "p (McNemar)"],
                       [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]}', f(l["n_comuns"]), f(l["acerto_l0_pct"]) + "%", f(l["acerto_pct"]) + "%", f'{l["oficiais"]["b"]} / {l["oficiais"]["c"]}',
                         f'{l["ineditos"]["b"]} / {l["ineditos"]["c"]}', f'{l["b"]} / {l["c"]}', fd(l["delta_pp"]), f(l["p_mcnemar"], 4)] for l in dado["ineditos"]["agrupado"]]))
+    blocos.append(tab("tb_ineditos_modelos", ["Modelo", "Biblioteca (a de cada um)", "Acerto nos 36 inéditos", f"Acerto do `{dado['metadados']['doador']}`", "b (só o modelo)", "c (só o doador)",
+                                              "Diferença", "p (McNemar)", "Rótulos diferentes", "Nos 72 (oficiais + inéditos): b / c", "p nos 72"]
+                      + [f"{n}: modelo / doador (acertos de n)" for n in nomes_classe],
+                      [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]}', f(l["acerto_pct"]) + "%", f(l["acerto_doador_pct"]) + "%", f(l["b"]), f(l["c"]), fd(l["delta_pp"]), f(l["p_mcnemar"], 4),
+                        f(l["rotulos_diferentes"]), f'{l["somados"]["b"]} / {l["somados"]["c"]}', f(l["somados"]["p_mcnemar"], 4)]
+                       + [f'{l["por_classe"][n]["acertos"]} / {l["por_classe"][n]["acertos_doador"]} (de {l["por_classe"][n]["n"]})' if n in l["por_classe"] else "n/a" for n in nomes_classe]
+                       for l in dado["ineditos"].get("entre_modelos", [])]))
+    blocos.append(tab("tb_a5", ["Modelo", "Biblioteca", "Casos", "Seguiu a causa plantada", "Acertou mesmo assim", "O mesmo modelo, a mesma biblioteca, em A2 (Fase 3, acerto)",
+                                "Adesão cega na Fase 2-B (A5 sobre a biblioteca original)", "Verbete de ouro no contexto"],
+                      [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]} própria', f(l["n"]), f'{l["seguiu"]} ({f(l["seguiu_pct"])}%)', f'{l["acertos"]} ({f(l["acerto_pct"])}%)',
+                        f(l["acerto_a2_pct"]) + "%", "não medida" if l["adesao_2b_pct"] is None else f(l["adesao_2b_pct"]) + "%", f(l["ouro_no_contexto_pct"]) + "%"]
+                       for l in dado.get("a5", {}).get("linhas", [])]))
     blocos.append(tab("tb_cruzada", ["Quem lê", "Biblioteca lida", "Acerto nos 36 (IC 95%)", "Acurácia balanceada", "Verbete de ouro no contexto", "Contexto com nota", "Citou verbete anotado", "Tokens de entrada (mediana)", "s por diagnóstico (mediana)"],
                       [[f'`{c["leitor"]}`', c["biblioteca"], f'{f(c["acerto_pct"])}% ({fic(c["ic95"])})', f(c["acuracia_balanceada_pct"]) + "%", f(c["ouro_no_contexto_pct"]) + "%",
                         f(c["contexto_com_nota_pct"]) + "%", f(c["citou_verbete_anotado_pct"]) + "%", f(c["tokens_entrada_mediana"], 0), f(c["segundos_mediana"])] for c in cz["celulas"]]))
@@ -435,7 +502,6 @@ def render(dado: dict) -> str:
                         f(p["p_mcnemar"], 4), f'{p["b_mesma_entrada"]} / {p["c_mesma_entrada"]}', f(p["rotulos_diferentes"]), fcasos(p["ganhos"]), fcasos(p["perdas"]),
                         fcasos(p["em_casos_que_oscilam"]) if p["contra"] == "l0_ponte" else "n/a"] for p in cz["pareados"]]
                       ))
-    nomes_classe = [nome for _, nome in sorted(CLASSES.items())]
     linhas_classe = []
     for chave in dict.fromkeys((l["leitor"], l["biblioteca"]) for l in cz["por_classe"]):
         por = {l["classe"]: l for l in cz["por_classe"] if (l["leitor"], l["biblioteca"]) == chave}

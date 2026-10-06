@@ -907,10 +907,16 @@ def _dados_de_mentira_analise() -> dict:
         for epoca in (1, 3):
             cru.append(_reg_analise("leitor-x", epoca, c, c != "d"))
             cru.append(_reg_analise("leitor-y", epoca, c, c == "c"))
+    # nos inéditos o leitor-y acerta menos que o doador com a L1 (modelo contra modelo, corrida 7 de 06/10/2026)
     for m in ("doador", "leitor-y"):
-        for epoca, padrao in ((0, "TF"), (1, "TT"), (3, "FF")):
+        for epoca, padrao in ((0, "TF"), (1, "TT" if m == "doador" else "TF"), (3, "FF")):
             for c, v in zip(("n1", "n2"), padrao):
                 ined.append(_reg_analise(m, epoca, c, v == "T"))
+    # A5 sobre a L3 própria (corrida 5 de 06/10/2026): quem segue a causa plantada erra
+    a5 = []
+    for m, seguiu in (("doador", "TTTF"), ("leitor-y", "TTTT")):
+        for c, v in zip(casos, seguiu):
+            a5.append(_reg_analise(m, 3, c, v != "T", seguiu_causa_plantada=(v == "T"), causa_plantada="corpo_vazio", condicao="A5", ouro_no_contexto=False))
     brutos = {}
     for (m, epoca) in (("leitor-x", 1), ("leitor-x", 3), ("leitor-y", 1), ("leitor-y", 3)):
         brutos[("cruzada", m, epoca)] = {c: {"caso": c, "resposta": "CAUSA_RAIZ: z\nFONTE: [contrato-produto]",
@@ -920,7 +926,8 @@ def _dados_de_mentira_analise() -> dict:
                                        "verbetes_ids": ["contrato-produto", "campo_ausente"]} for c in casos}
     return {"f3": f3, "pontes": [("fase3b_ponte", "0.0.1", p1), ("fase3b_ponte_x", "0.0.4", p4)], "cruzada": cru, "ineditos": ined,
             "brutos": brutos, "corridas": [], "doador": "doador", "leitores": ["leitor-x", "leitor-y"],
-            "casos_de_texto_alterado": frozenset({"a"}), "corridas_depois": frozenset({"fase3b_ponte_x", "cruzada"})}
+            "casos_de_texto_alterado": frozenset({"a"}), "corridas_depois": frozenset({"fase3b_ponte_x", "cruzada"}),
+            "a5": a5, "adesao_2b": {"leitor-y": 95.6}}
 
 
 def teste_analise3b_montar_render_e_check() -> None:
@@ -947,8 +954,21 @@ def teste_analise3b_montar_render_e_check() -> None:
     assert len(dado["cruzada"]["celulas"]) == 2 * 6 + 4, len(dado["cruzada"]["celulas"])
     # inéditos agrupados com os oficiais: 4 + 2 casos por linha
     assert all(l["n_comuns"] == 6 for l in dado["ineditos"]["agrupado"]), dado["ineditos"]["agrupado"]
+    # ! Alteração de IA - Revisar: (06/10/2026) modelo contra modelo nos inéditos (corrida 7) e adesão cega sobre a L3
+    # própria (corrida 5) entram na análise.
+    # ! Motivo: o Eric rodou as duas corridas opcionais em 06/10; sem estes blocos os números entrariam à mão no relatório.
+    em = {(x["modelo"], x["biblioteca_epoca"]): x for x in dado["ineditos"]["entre_modelos"]}
+    assert set(em) == {("leitor-y", 0), ("leitor-y", 1), ("leitor-y", 3)}, set(em)
+    assert (em[("leitor-y", 1)]["b"], em[("leitor-y", 1)]["c"]) == (0, 1), em[("leitor-y", 1)]
+    assert (em[("leitor-y", 1)]["acerto_pct"], em[("leitor-y", 1)]["acerto_doador_pct"]) == (50.0, 100.0)
+    assert em[("leitor-y", 1)]["somados"]["n_comuns"] == 6 and em[("leitor-y", 1)]["somados"]["c"] == 2   # oficiais: o leitor-y erra "d"
+    assert em[("leitor-y", 1)]["por_classe"][an.CLASSES[1]] == {"n": 2, "acertos": 1, "acertos_doador": 2}
+    a5 = {x["modelo"]: x for x in dado["a5"]["linhas"]}
+    assert (a5["doador"]["seguiu"], a5["doador"]["seguiu_pct"], a5["doador"]["acerto_pct"]) == (3, 75.0, 25.0), a5["doador"]
+    assert a5["leitor-y"]["adesao_2b_pct"] == 95.6 and a5["doador"]["adesao_2b_pct"] is None
+    assert a5["doador"]["acerto_a2_pct"] == 100.0 and a5["doador"]["biblioteca_epoca"] == 3   # L3 própria nos oficiais da Fase 3 de mentira
     md = an.render(dado)
-    for nome in ("tb_corridas", "tb_pontes", "tb_ruido", "tb_ineditos", "tb_agrupado", "tb_cruzada", "tb_cruzada_pareados",
+    for nome in ("tb_corridas", "tb_pontes", "tb_ruido", "tb_ineditos", "tb_agrupado", "tb_ineditos_modelos", "tb_a5", "tb_cruzada", "tb_cruzada_pareados",
                  "tb_cruzada_classe", "tb_cruzada_rotulos", "tb_cruzada_casos"):
         assert f"<!-- tabela:{nome} -->" in md and f"<!-- /tabela:{nome} -->" in md, nome
     assert "—" not in md and "→" not in md, "texto gerado com travessão ou seta"
@@ -962,6 +982,24 @@ def teste_analise3b_montar_render_e_check() -> None:
     assert (n, mudou) == (1, True) and an.conferir_doc(doc, md) == []
     doc.write_text(doc.read_text(encoding="utf-8").replace("| 0 | 0 |", "| 9 | 0 |", 1), encoding="utf-8", newline="\n")
     assert an.conferir_doc(doc, md) == ["tb_pontes"], an.conferir_doc(doc, md)
+
+
+def teste_comparativo_confronto_nos_ineditos() -> None:
+    """Corrida 7 (06/10/2026): o Coder 7B nos mesmos 36 inéditos do qwen; o comparativo confronta caso a caso por versão
+    e por classe, sem número digitado."""
+    import comparar_qwen_coder as cq
+    av = []
+    for m, padrao in ((cq.A, "TTFF"), (cq.B, "TFTF")):
+        for c, v in zip(("n1", "n2", "n3", "n4"), padrao):
+            av.append({"modelo": m, "biblioteca_epoca": 1, "caso": c, "causa_correta": v == "T", "particao": "avaliacao",
+                       "classe": 1 if c in ("n1", "n2") else 2, "erro_infra": False})
+    linhas = cq.confronto_ineditos(av)
+    assert len(linhas) == 1 and linhas[0]["L"] == 1, linhas
+    assert (linhas[0]["so_coder"], linhas[0]["so_qwen"], linhas[0]["ambos"], linhas[0]["nenhum"], linhas[0]["n"]) == (1, 1, 1, 1, 4)
+    assert (linhas[0]["acerto_A"], linhas[0]["acerto_B"], linhas[0]["delta_pp"]) == (50.0, 50.0, 0.0)
+    classes = cq.ineditos_por_classe(av, 1)
+    assert [(x["classe"].split(" ")[0], x["acertos_A"], x["acertos_B"], x["n"], x["delta"]) for x in classes] == [("1", 2, 1, 2, -1), ("2", 0, 1, 2, 1)], classes
+    assert cq.confronto_ineditos([]) == [] and cq.ineditos_por_classe([], 1) == []
 
 
 def teste_analise3b_numeros_reais_batem_com_a_decisao() -> None:

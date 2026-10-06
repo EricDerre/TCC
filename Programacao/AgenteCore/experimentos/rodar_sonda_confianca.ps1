@@ -14,13 +14,17 @@
 # Uso (PowerShell, de dentro de experimentos\):
 #   powershell -ExecutionPolicy Bypass -File rodar_sonda_confianca.ps1
 #   powershell -ExecutionPolicy Bypass -File rodar_sonda_confianca.ps1 -Versoes 0,1
+#   powershell -ExecutionPolicy Bypass -File rodar_sonda_confianca.ps1 -Versoes 0,1 -Curada
 #   -Versoes ...    versoes da biblioteca do proprio modelo (padrao: 1; com 0,1 roda tambem a L0)
+#   -Curada         roda tambem a copia curada da L1 (Programacao\AgenteCore\biblioteca_producao), gravada como
+#                   L100 nos arquivos ("L1 curada" nas analises) - ficha 18 (a), decidida em 06/10/2026
 #   -Modelo X       modelo a sondar (padrao qwen2.5:7b)
 #   -Saida X        pasta de saida em <Resultados> (padrao pre_fase4_confianca)
 #   -Top N          alternativas por posicao pedidas ao Ollama (padrao 20)
 #   -Resultados X   le a corrida oficial em X\fase3 e grava em X\<Saida> (padrao resultados_alvo)
 param(
     [string[]]$Versoes = @("1"),
+    [switch]$Curada,
     [string]$Modelo = "qwen2.5:7b",
     [string]$Saida = "pre_fase4_confianca",
     [int]$Top = 20,
@@ -110,7 +114,19 @@ if ((Residentes) -gt 0) {
     & ollama ps
     Falha "Ha modelo residente no Ollama. Regra do experimento: um modelo por vez. Descarregue (ollama stop <modelo>) e rode de novo."
 }
-Marco ("RAM livre {0} GB; modelo {1}; versoes {2}; saida {3}" -f (RamLivreGB), $Modelo, ($Versoes -join ","), $Saida)
+# ! Alteracao de IA - Revisar: (06/10/2026) -Curada acrescenta "--curada" aos argumentos da sonda, e o marco diz se a
+# copia curada entra; a pasta de producao e conferida antes dos testes, para a corrida nao parar depois de horas.
+# ! Motivo: ficha 18 (a): medir a copia curada da L1 nos 72 casos na mesma noite da sonda, para ela sair com as
+# probabilidades por token; sem a conferencia antecipada, uma pasta faltando so apareceria depois das versoes 0 e 1.
+$TextoCurada = "nao"
+if ($Curada) {
+    $PastaCurada = Join-Path (Split-Path $PSScriptRoot -Parent) "biblioteca_producao"
+    if (-not (Test-Path (Join-Path $PastaCurada "fechamento.json"))) {
+        Falha "copia curada nao encontrada ou nao fechada em $PastaCurada (falta fechamento.json)."
+    }
+    $TextoCurada = "sim (L100, de $PastaCurada)"
+}
+Marco ("RAM livre {0} GB; modelo {1}; versoes {2}; copia curada {3}; saida {4}" -f (RamLivreGB), $Modelo, ($Versoes -join ","), $TextoCurada, $Saida)
 
 # ---------- 1. testes automatizados (sem LLM) ----------
 Marco "testes automatizados da Fase 3, da Fase 3-B e da Pre-Fase 4 (sem LLM)"
@@ -126,7 +142,9 @@ $Falhou = $false
 if (-not (EsperarRam $Modelo)) {
     $Falhou = $true
 } else {
-    $Argumentos = @("sonda_confianca.py", "--saida", $Saida, "--modelo", $Modelo, "--top", $Top, "--versoes") + $Versoes
+    $Argumentos = @("sonda_confianca.py", "--saida", $Saida, "--modelo", $Modelo, "--top", $Top)
+    if ($Curada) { $Argumentos += "--curada" }
+    $Argumentos += @("--versoes") + $Versoes
     Marco ("{0}: sonda de confianca  (RAM livre {1} GB)" -f $Modelo, (RamLivreGB))
     Rodar $Argumentos
     if ($LASTEXITCODE -ne 0) {

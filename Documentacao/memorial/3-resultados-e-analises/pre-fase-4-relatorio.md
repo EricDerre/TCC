@@ -12,7 +12,7 @@ Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md)
 |---|---|---|---|
 | 1. Modelos grandes pelo disco | A ideia do repositório colibri (rodar modelo muito grande em máquina fraca lendo os pesos do SSD) serve ao projeto, que é só CPU? Com que ganhos e custos? | Não como motor do agente: nesta máquina só o menor modelo do repositório roda com folga, 2 modelos grandes ficam no mínimo de RAM que o repositório declara, sem medida publicada nessa condição, e nas máquinas maiores em que há medida uma resposta levaria minutos. Aproveitam-se três ideias sem trocar de motor (seção 2.4). | A medição real com o OLMoE (corrida 13), que não muda o veredito e alimenta o atlas. |
 | 2. Atlas visual | A descrição que o Gemini deu das imagens está certa? Dá para aplicar ao projeto e pôr no painel, de forma interativa? | A descrição acerta o que é MoE e o que a tela mostra, erra no que a posição dos pontos significa e na escala, e exagera nas "regiões dedicadas" (seção 3.1). O método foi aplicado ao que o projeto mede e está na aba Atlas do painel (seção 3.2). | O atlas do OLMoE lendo os nossos casos (corrida 13). |
-| 3. Raciocínio aberto | Dá para deixar aberto tudo o que a IA fez, num arquivo bruto, e gerar dele um relatório para humanos? O que isso rende para lapidar a IA e conter alucinação? | O protótipo sobre as corridas gravadas existe: a trilha em três camadas, o relatório por caso e os indicadores (seção 4.1). | A parte B da pesquisa (seis tópicos), a sonda de confiança (corrida 12) e a especificação do que a Fase 4 emite. |
+| 3. Raciocínio aberto | Dá para deixar aberto tudo o que a IA fez, num arquivo bruto, e gerar dele um relatório para humanos? O que isso rende para lapidar a IA e conter alucinação? | O protótipo sobre as corridas gravadas existe: a trilha em três camadas, o relatório por caso e os indicadores (seção 4.1). A probabilidade que o modelo dá ao rótulo separa acerto de erro melhor que os dois sinais sem gabarito (AUROC 0,78 contra 0,54 e 0,63), mas metade dos erros sai com probabilidade alta: serve de triagem, não de barreira (seção 4.2). | A parte B da pesquisa (seis tópicos) e a especificação do que a Fase 4 emite. |
 
 ## 2. Modelos grandes lendo os pesos do disco (colibri)
 
@@ -309,9 +309,78 @@ E a avaliação contra o gabarito, com o cruzamento que interessa à Fase 4: o a
 
 Duas leituras já são seguras. Nenhum diagnóstico das corridas remontadas traz raciocínio escrito antes das quatro linhas da resposta (tabela `tb_rac_corridas`), nem do `qwen2.5:7b` nem do `qwen2.5-coder:3b`: o que há para abrir é o que o programa fez e o que o código confere, não uma cadeia de raciocínio do modelo. E a conferência "a causa respondida é tratada por algum verbete do contexto" separa acerto de erro sem precisar do gabarito na corrida oficial do `qwen2.5:7b` e, com muito mais força, no `qwen2.5-coder:3b` da troca cruzada; nos casos inéditos do `qwen2.5:7b` ela não separa, com só 4 casos no grupo sem verbete (tabela `tb_rac_corridas`, duas últimas colunas).
 
-### 4.2 Sonda de confiança (corrida 12, pendente)
+### 4.2 Sonda de confiança e cópia curada (corrida 12, 06/10/2026)
 
-O Ollama instalado devolve a probabilidade de cada token que o modelo escreve, medida antes da temperatura (sonda `sondar_logprobs.py`). A corrida 12 grava essa probabilidade para o rótulo de cada um dos 72 casos que nenhuma biblioteca viu, e a análise dirá se ela separa acerto de erro melhor do que os dois sinais calculáveis sem gabarito que já existem (seções 3.3 e 4.1). A corrida depende de uma noite combinada com o Eric.
+<!-- ! Alteração de IA - Revisar: seção reescrita em 06/10/2026 com o resultado da corrida 12 (antes dizia que a corrida dependia de uma noite combinada); os blocos vêm de analisar_confianca.py (--colar).
+     ! Motivo: a corrida rodou em 06/10 (14:46 a 18:47, 216 inferências, sem falhas) com L0, L1 e a cópia curada, pelas fichas 18 (a) e 19 (a); a análise roda sozinha no fim do `.ps1`. -->
+O Ollama instalado devolve a probabilidade de cada token que o modelo escreve, medida antes da temperatura (sonda `sondar_logprobs.py`). A corrida 12 gravou essa probabilidade para o rótulo de cada um dos 72 casos que nenhuma biblioteca viu (36 oficiais de avaliação e 36 inéditos), com o `qwen2.5:7b` lendo a biblioteca original (L0), a L1 inteira que ele escreveu e a cópia curada da L1 (`biblioteca_producao/`, gravada como L100 e lida como "L1 curada"): 216 diagnósticos, mesmo prompt e mesmos parâmetros da Fase 3, Ollama 0.34.4, 216 registros com probabilidades. A medida principal, fixada antes da corrida, é a probabilidade conjunta dos tokens do rótulo; a análise (`analisar_confianca.py`, `resultados_alvo/pre_fase4/confianca.md`) compara-a com a probabilidade do primeiro token, com a massa das alternativas que levariam a outra causa e com os dois sinais que não custam inferência (seções 3.3 e 4.1).
+
+<!-- tabela:tb_conf_resumo -->
+| Recorte | Casos | Erros | Probabilidade conjunta do rótulo | Primeiro token do rótulo | 1 menos a massa de outra causa | Causa tratada por verbete do contexto | Causa na classe que a rota aponta | Mediana da conjunta nos certos | Mediana nos errados | Erros com a causa certa como segunda opção |
+|---|---|---|---|---|---|---|---|---|---|---|
+| todas as versões | 216 | 46 | 0,783 [0,684 a 0,882] | 0,765 [0,665 a 0,861] | 0,820 [0,691 a 0,915] | 0,541 [0,464 a 0,626] | 0,626 [0,503 a 0,751] | 0,992 | 0,846 | 25 de 46 |
+| qwen2.5:7b, L0 | 72 | 19 | 0,814 [0,709 a 0,908] | 0,795 [0,687 a 0,892] | 0,834 [0,708 a 0,930] | 0,551 [0,468 a 0,643] | 0,681 [0,550 a 0,800] | 0,989 | 0,686 | 13 de 19 |
+| qwen2.5:7b, L1 | 72 | 13 | 0,770 [0,637 a 0,893] | 0,748 [0,616 a 0,870] | 0,825 [0,671 a 0,939] | 0,496 [0,429 a 0,583] | 0,570 [0,423 a 0,727] | 0,996 | 0,883 | 6 de 13 |
+| qwen2.5:7b, L1 curada | 72 | 14 | 0,752 [0,610 a 0,876] | 0,738 [0,596 a 0,862] | 0,791 [0,643 a 0,908] | 0,573 [0,464 a 0,695] | 0,613 [0,464 a 0,754] | 0,991 | 0,843 | 6 de 14 |
+<!-- /tabela:tb_conf_resumo -->
+
+<!-- tabela:tb_conf_revisao -->
+| Recorte | Parcela revisada | Casos revisados | Erros pegos | Acertos revisados à toa | Risco no que sobra |
+|---|---|---|---|---|---|
+| todas as versões | 10% | 22 | 14 de 46 | 8 | 16,5% |
+| todas as versões | 20% | 43 | 18 de 46 | 25 | 16,2% |
+| todas as versões | 30% | 65 | 26 de 46 | 39 | 13,2% |
+| qwen2.5:7b, L0 | 10% | 7 | 6 de 19 | 1 | 20,0% |
+| qwen2.5:7b, L0 | 20% | 14 | 8 de 19 | 6 | 19,0% |
+| qwen2.5:7b, L0 | 30% | 22 | 11 de 19 | 11 | 16,0% |
+| qwen2.5:7b, L1 | 10% | 7 | 4 de 13 | 3 | 13,9% |
+| qwen2.5:7b, L1 | 20% | 14 | 5 de 13 | 9 | 13,8% |
+| qwen2.5:7b, L1 | 30% | 22 | 8 de 13 | 14 | 10,0% |
+| qwen2.5:7b, L1 curada | 10% | 7 | 4 de 14 | 3 | 15,4% |
+| qwen2.5:7b, L1 curada | 20% | 14 | 4 de 14 | 10 | 17,2% |
+| qwen2.5:7b, L1 curada | 30% | 22 | 7 de 14 | 15 | 14,0% |
+<!-- /tabela:tb_conf_revisao -->
+
+A mesma corrida responde a ficha 18: quanto rende a cópia curada, contra a L1 inteira e a biblioteca original, nas mesmas condições.
+
+<!-- tabela:tb_conf_acerto -->
+| Modelo | Biblioteca | Conjunto | Casos | Acertos | Acerto | s por diagnóstico (mediana) | Tokens do prompt (mediana) |
+|---|---|---|---|---|---|---|---|
+| `qwen2.5:7b` | L0 | oficiais | 36 | 28 | 77,8% | 69,2 | 1044 |
+| `qwen2.5:7b` | L0 | ineditos | 36 | 25 | 69,4% | 69,7 | 1084 |
+| `qwen2.5:7b` | L0 | todos | 72 | 53 | 73,6% | 69,2 | 1056 |
+| `qwen2.5:7b` | L1 | oficiais | 36 | 33 | 91,7% | 75,0 | 1295 |
+| `qwen2.5:7b` | L1 | ineditos | 36 | 26 | 72,2% | 67,6 | 1330 |
+| `qwen2.5:7b` | L1 | todos | 72 | 59 | 81,9% | 70,5 | 1315 |
+| `qwen2.5:7b` | L1 curada | oficiais | 36 | 31 | 86,1% | 61,0 | 1116 |
+| `qwen2.5:7b` | L1 curada | ineditos | 36 | 27 | 75,0% | 61,1 | 1150 |
+| `qwen2.5:7b` | L1 curada | todos | 72 | 58 | 80,6% | 61,1 | 1132 |
+<!-- /tabela:tb_conf_acerto -->
+
+<!-- tabela:tb_conf_pares -->
+| Comparação | Conjunto | Casos | Acerto da primeira | Acerto da segunda | b | c | Diferença | p (McNemar exato) | Rótulos diferentes | Casos que mudaram |
+|---|---|---|---|---|---|---|---|---|---|---|
+| L1 contra L0 | oficiais | 36 | 91,7% | 77,8% | 5 | 0 | +13,9 pp | 0,0625 | 7 | `efe-1`, `efe-3`, `run-10`, `sin-14`, `tra-8` |
+| L1 contra L0 | ineditos | 36 | 72,2% | 69,4% | 1 | 0 | +2,8 pp | 1,0000 | 4 | `run-21` |
+| L1 contra L0 | todos | 72 | 81,9% | 73,6% | 6 | 0 | +8,3 pp | 0,0312 | 11 | `efe-1`, `efe-3`, `run-10`, `run-21`, `sin-14`, `tra-8` |
+| L1 curada contra L0 | oficiais | 36 | 86,1% | 77,8% | 3 | 0 | +8,3 pp | 0,2500 | 4 | `efe-3`, `run-10`, `tra-8` |
+| L1 curada contra L0 | ineditos | 36 | 75,0% | 69,4% | 2 | 0 | +5,6 pp | 0,5000 | 5 | `run-21`, `semt-20` |
+| L1 curada contra L0 | todos | 72 | 80,6% | 73,6% | 5 | 0 | +6,9 pp | 0,0625 | 9 | `efe-3`, `run-10`, `run-21`, `semt-20`, `tra-8` |
+| L1 curada contra L1 | oficiais | 36 | 86,1% | 91,7% | 0 | 2 | -5,6 pp | 0,5000 | 4 | `efe-1`, `sin-14` |
+| L1 curada contra L1 | ineditos | 36 | 75,0% | 72,2% | 1 | 0 | +2,8 pp | 1,0000 | 1 | `semt-20` |
+| L1 curada contra L1 | todos | 72 | 80,6% | 81,9% | 1 | 2 | -1,4 pp | 1,0000 | 5 | `semt-20`, `efe-1`, `sin-14` |
+| L0 contra a corrida `fase3` (mesmos casos) | oficiais | 35 | 80,0% | 80,0% | 0 | 0 | 0,0 pp | 1,0000 | 2 | nenhum |
+| L0 contra a corrida `fase3b_ineditos` (mesmos casos) | ineditos | 36 | 69,4% | 75,0% | 0 | 2 | -5,6 pp | 0,5000 | 2 | `run-21`, `semt-20` |
+| L1 contra a corrida `fase3` (mesmos casos) | oficiais | 35 | 91,4% | 91,4% | 0 | 0 | 0,0 pp | 1,0000 | 0 | nenhum |
+| L1 contra a corrida `fase3b_ineditos` (mesmos casos) | ineditos | 36 | 72,2% | 72,2% | 0 | 0 | 0,0 pp | 1,0000 | 1 | nenhum |
+<!-- /tabela:tb_conf_pares -->
+
+Leitura:
+- **A probabilidade do rótulo separa acerto de erro, e separa melhor que os dois sinais grátis.** Nos 216 diagnósticos (46 erros), a AUROC da probabilidade conjunta é 0,783 [0,684 a 0,882], contra 0,541 de "a causa respondida é tratada por um verbete do contexto" e 0,626 de "a causa respondida é da classe que a rota aponta". A massa das alternativas que levariam a outra causa fica em 0,820, no mesmo patamar; o primeiro token sozinho, em 0,765. Por biblioteca: 0,814 com L0, 0,770 com L1 e 0,752 com a cópia curada, com intervalos largos (46 erros no total).
+- **Mas metade dos erros sai confiante.** A mediana da probabilidade conjunta é 0,992 nos acertos e 0,846 nos erros; 23 dos 46 erros têm probabilidade acima de 0,85. Em 25 dos 46 erros a causa certa era a segunda opção que o modelo considerou.
+- **Como triagem, não como barreira.** Mandar para revisão humana os 10% de menor probabilidade (22 casos) pega 14 dos 46 erros e revisa à toa 8 acertos, deixando 16,5% de erro no que sobra (contra 21,3% sem revisão); 20% (43 casos) pega 18; 30% (65) pega 26, com 39 acertos revisados à toa. Para a Fase 4, o sinal vale como ordem de prioridade de revisão e como aviso na trilha, somado aos dois sinais grátis; não vale como regra de abstenção.
+- **A cópia curada rende como a L1 inteira e custa menos.** Na mesma corrida, 80,6% nos 72 casos com a cópia curada contra 81,9% com a L1 inteira (b/c 1/2, p = 1,00: 2 casos oficiais a menos, `efe-1` e `sin-14`, 1 inédito a mais, `semt-20`) e 73,6% com a biblioteca original (b/c 5/0); nos 36 inéditos, 75,0% contra 72,2% da L1. A diferença está dentro da variação entre corridas iguais (de 0 a 3 casos em 36). Com menos texto no contexto (1132 contra 1315 tokens de mediana), o diagnóstico leva 61,1 s contra 70,5 s. A L1 curada segue como ponto de partida da Fase 4 (decisão 71).
+- **A corrida reproduz as anteriores.** Nos 36 oficiais, L0 e L1 dão os mesmos acertos da Fase 3 (b/c 0/0 e 0/0 nos 35 casos de mesma entrada; 35 de 35 rótulos iguais com a L1); nos inéditos, a L1 repete a corrida de 28/09 e a L0 perde 2 casos (b/c 0/2), a variação de sempre. Dentro da corrida, a L1 fica 6 casos acima de L0 e nenhum abaixo nos 72 (p = 0,0312), o maior saldo da L1 medido até aqui; continua abaixo do efeito mínimo detectável de 13,9 pontos com 72 casos.
 
 ### 4.3 Literatura (parte B da rodada 5, pendente)
 
@@ -321,10 +390,11 @@ Seis tópicos: se o raciocínio escrito é o que decidiu a resposta, formatos de
 
 - Emitir a trilha em três camadas a cada diagnóstico, no formato já usado pelo protótipo, e gerar dela o relatório por caso.
 - Fazer em código, a cada diagnóstico, as conferências que não dependem do gabarito (tabela `tb_rac_conferencias`).
-- Avaliar, como regras de "peça revisão humana", os sinais calculáveis sem gabarito: a causa respondida ser tratada por um verbete do contexto, a causa respondida ser de uma classe que a rota aponta e, depois da corrida 12, a probabilidade do rótulo.
+- Avaliar, como regras de "peça revisão humana", os sinais calculáveis sem gabarito: a causa respondida ser tratada por um verbete do contexto, a causa respondida ser de uma classe que a rota aponta e a probabilidade do rótulo, que a corrida 12 mostrou ser o melhor dos três (AUROC 0,78 contra 0,54 e 0,63), como ordem de prioridade de revisão e não como barreira: revisar os 10% de menor probabilidade pega 14 dos 46 erros, e metade dos erros sai com probabilidade acima de 0,85.
+- Partir da L1 curada como biblioteca da Fase 4, com o número dela medido (seção 4.2; decisão 71), e levar os 72 casos como conjunto de avaliação.
 - Rever o lugar dos verbetes novos escritos pelo modelo: como a busca não os entrega, eles só aumentam a biblioteca.
 
-Nada disto é decisão: são candidatos, a decidir no plano da Fase 4 com a parte B da pesquisa e a corrida 12 em mãos.
+Nada disto é decisão: são candidatos, a decidir no plano da Fase 4 com a parte B da pesquisa em mãos (a corrida 12 já rodou).
 
 ## 6. Limitações
 
@@ -332,6 +402,7 @@ Nada disto é decisão: são candidatos, a decidir no plano da Fase 4 com a part
 - O atlas descreve a busca e o uso do contexto. Parte da afinidade vem do desenho da biblioteca, e os cruzamentos por corrida têm poucos casos nas corridas de 36.
 - As trilhas das corridas gravadas são remontadas: o prompt não foi gravado na época, e o relatório diz até onde a remontagem está provada. Nas corridas novas o hash do prompt enviado fica gravado.
 - A parte B da pesquisa ainda não rodou; o que este relatório diz sobre o raciocínio aberto vem dos dados do projeto, não da literatura.
+- A sonda de confiança tem uma corrida por biblioteca e 46 erros em 216 diagnósticos: os intervalos da AUROC são largos (0,68 a 0,88 no total), a massa das alternativas é limite inferior (só entram as 20 alternativas por posição que o Ollama devolve), e o sinal "causa na classe que a rota aponta" da cópia curada usa rotas recalculadas pela busca, não gravadas numa corrida.
 <!-- ! Alteração de IA - Revisar: (05/10/2026) limitação nova e linha de rastreabilidade sobre a revisão das sínteses da parte A; duas células da tabela 2.3 refeitas.
      ! Motivo: seis revisores conferiram as sínteses contra as afirmações verificadas e apontaram 104 trechos (quase todos frase mais forte que a fonte); as correções entraram por script, declaradas no levantamento (§6.14.12), e as duas células repetiam frases corrigidas ("o limite é a RAM"; escritas do cache KV lidas como se fossem dos pesos). -->
 - As sínteses da parte A passaram por revisão contra as afirmações verificadas (um revisor por tópico e um para o mapa): 104 apontamentos, quase todos frase mais forte que a fonte, viraram 156 correções declaradas no levantamento (§6.14.12, com o trecho antigo, o novo e o motivo de cada uma). O texto corrigido continua sendo texto de agente sobre fontes verificadas por agente; o que a revisão não cobre é a leitura das fontes em si.
@@ -344,6 +415,7 @@ Nada disto é decisão: são candidatos, a decidir no plano da Fase 4 com a part
 | Amostra de probabilidades por token | `resultados_alvo/pre_fase4/logprobs_amostra__*.json` (`sondar_logprobs.py`) |
 | Atlas | `resultados_alvo/pre_fase4/atlas.json` e `atlas.md` (`gerar_atlas.py`); aba Atlas do painel (`ferramentas/painel_atlas.py`) |
 | Trilhas e relatórios de caso | `resultados_alvo/pre_fase4/trilhas/`, `relatorios/` e `indicadores_raciocinio.json` (`trilha.py`, `gerar_relatorio_raciocinio.py`) |
+| Sonda de confiança e cópia curada (corrida 12) | `resultados_alvo/pre_fase4_confianca/` (registros, `logprobs__L*.jsonl`, `sonda_confianca.log`; `sonda_confianca.py --curada`) e `resultados_alvo/pre_fase4/confianca.json` e `.md` (`analisar_confianca.py`) |
 | Literatura | [levantamento da Pré-Fase 4](../2-pesquisa-e-literatura/levantamento-2026-10-01-pre-fase-4.md) (§6.14) e [referencias.md](../2-pesquisa-e-literatura/referencias.md) |
 | Correções da revisão das sínteses | `ferramentas/correcoes_pesquisa_pre_fase4.py` (156 trechos, aplicados por `integrar_pesquisa_pre_fase4.py` e listados no fim do §6.14.12); os relatórios dos revisores ficam em `.superpowers/sdd/pre-fase-4/pesquisa/revisao/` (fora do git) |
 | Testes | `testar_pre_fase4.py` e `ferramentas/testar_integrar_pesquisa_pre_fase4.py`, `ferramentas/testar_painel_topicos.py` |

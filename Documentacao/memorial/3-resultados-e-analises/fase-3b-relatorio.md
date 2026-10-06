@@ -28,9 +28,11 @@ A análise decisória (§9) fechou a Fase 3 com sete limitações declaradas. A 
 | `fase3b_ponte_0344` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5 | 30/09 20:39 | 30/09 22:25 |
 | `fase3b_ineditos` | ineditos | qwen2.5-coder:3b, qwen2.5:7b | 216 | 0.34.1 | 0 | L0=3196327e7fd5; L1=3394d203cab9; L1=53ccf19abeac; L3=71258b553152; L3=d9a86e383103 | 28/09 20:13 | 28/09 23:15 |
 | `fase3b_cruzada_qwen` | cruzada | qwen2.5-coder:3b, qwen2.5-coder:7b | 144 | 0.34.4 | 0 | L1=3394d203cab9; L3=71258b553152 | 30/09 23:58 | 01/10 02:09 |
+| `fase3b_ineditos_coder7b` | ineditos | qwen2.5-coder:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5; L1=0f0a6b7f3b37; L3=2b7c441cb9e3 | 06/10 10:26 | 06/10 12:45 |
+| `fase3b_a5` | a5 | qwen2.5-coder:3b, qwen2.5:7b | 72 | 0.34.4 | 0 | L3=71258b553152; L3=d9a86e383103 | 06/10 09:23 | 06/10 10:19 |
 <!-- /tabela:tb_corridas -->
 
-Todos os registros de cada corrida saíram na mesma versão do Ollama, sem erro. A troca cruzada leu exatamente as bibliotecas oficiais do doador (hash `3394d203cab9` na L1 e `71258b553152` na L3). Nos casos inéditos, cada modelo leu as versões que ele mesmo escreveu: o `qwen2.5-coder:3b` leu a própria L1 e a própria L3, não as do `qwen2.5:7b`. A sonda de correção, o experimento do recuperador e a ablação têm saída própria e leitura no roadmap (§3 e §2.2).
+Todos os registros de cada corrida saíram na mesma versão do Ollama, sem erro. As duas corridas que o roadmap tinha como opcionais rodaram em 06/10/2026 (Ollama 0.34.4): o Coder 7B nos mesmos 36 inéditos, com as versões que ele mesmo escreveu (§4.1), e a adesão cega sobre a L3 própria (§4.2). A troca cruzada leu exatamente as bibliotecas oficiais do doador (hash `3394d203cab9` na L1 e `71258b553152` na L3). Nos casos inéditos, cada modelo leu as versões que ele mesmo escreveu: o `qwen2.5-coder:3b` leu a própria L1 e a própria L3, não as do `qwen2.5:7b`. A sonda de correção, o experimento do recuperador e a ablação têm saída própria e leitura no roadmap (§3 e §2.2).
 
 ## 3. Pontes de versão: o instrumento é estável?
 
@@ -78,6 +80,9 @@ Trinta e seis casos novos, dois por combinação de classe e nível, escritos s�
 | `qwen2.5-coder:3b` | L0 | 58,3% (42,2 a 72,9) | 68,1% | n/a | n/a | n/a | 38,1 |
 | `qwen2.5-coder:3b` | L1 | 58,3% (42,2 a 72,9) | 68,1% | 0 / 0 | 1,0000 | 0 | 22,3 |
 | `qwen2.5-coder:3b` | L3 | 58,3% (42,2 a 72,9) | 68,1% | 0 / 0 | 1,0000 | 1 | 27,8 |
+| `qwen2.5-coder:7b` | L0 | 83,3% (68,1 a 92,1) | 86,2% | n/a | n/a | n/a | 74,1 |
+| `qwen2.5-coder:7b` | L1 | 86,1% (71,3 a 93,9) | 90,6% | 1 / 0 | 1,0000 | 2 | 71,3 |
+| `qwen2.5-coder:7b` | L3 | 75,0% (58,9 a 86,2) | 80,4% | 0 / 3 | 0,2500 | 4 | 79,5 |
 | `qwen2.5:7b` | L0 | 75,0% (58,9 a 86,2) | 81,2% | n/a | n/a | n/a | 73,0 |
 | `qwen2.5:7b` | L1 | 72,2% (56,0 a 84,2) | 79,0% | 0 / 1 | 1,0000 | 3 | 75,5 |
 | `qwen2.5:7b` | L3 | 80,6% (65,0 a 90,2) | 87,0% | 3 / 1 | 0,6250 | 6 | 66,0 |
@@ -88,6 +93,8 @@ Trinta e seis casos novos, dois por combinação de classe e nível, escritos s�
 |---|---|---|---|---|---|---|---|---|---|
 | `qwen2.5-coder:3b` | L1 | 72 | 63,9% | 65,3% | 1 / 0 | 0 / 0 | 1 / 0 | +1,4 pp | 1,0000 |
 | `qwen2.5-coder:3b` | L3 | 72 | 63,9% | 65,3% | 1 / 0 | 0 / 0 | 1 / 0 | +1,4 pp | 1,0000 |
+| `qwen2.5-coder:7b` | L1 | 72 | 79,2% | 80,6% | 0 / 0 | 1 / 0 | 1 / 0 | +1,4 pp | 1,0000 |
+| `qwen2.5-coder:7b` | L3 | 72 | 79,2% | 76,4% | 3 / 2 | 0 / 3 | 3 / 5 | -2,8 pp | 0,7266 |
 | `qwen2.5:7b` | L1 | 72 | 76,4% | 80,6% | 4 / 0 | 0 / 1 | 4 / 1 | +4,2 pp | 0,3750 |
 | `qwen2.5:7b` | L3 | 72 | 76,4% | 83,3% | 3 / 0 | 3 / 1 | 6 / 1 | +6,9 pp | 0,1250 |
 <!-- /tabela:tb_agrupado -->
@@ -95,10 +102,51 @@ Trinta e seis casos novos, dois por combinação de classe e nível, escritos s�
 Leitura:
 - **O ganho da L1 não reaparece.** Nos 36 oficiais o `qwen2.5:7b` subiu de 77,8% para 88,9% com a L1; nos inéditos vai de 75,0% para 72,2% (b/c 0/1).
 - **A L3 fica acima de L0 nos dois conjuntos**: b/c 3/0 nos oficiais e 3/1 nos inéditos.
-- **Com os 72 casos somados, as duas versões ficam acima de L0 e nenhuma resolve**: L1 de 76,4% para 80,6% (b/c 4/1, p = 0,375) e L3 para 83,3% (b/c 6/1, p = 0,125). O efeito mínimo detectável com 72 casos é de 13,9 pontos; o maior ganho medido é de 6,9. Para o `qwen2.5:7b`, o único modelo de 7B que tem os 72 casos, a hipótese H1 continua não confirmada: falta resolução, e o sinal é pequeno.
+- **Com os 72 casos somados, as duas versões ficam acima de L0 e nenhuma resolve**: L1 de 76,4% para 80,6% (b/c 4/1, p = 0,375) e L3 para 83,3% (b/c 6/1, p = 0,125). O efeito mínimo detectável com 72 casos é de 13,9 pontos; o maior ganho medido é de 6,9. Para o `qwen2.5:7b`, o primeiro modelo de 7B com os 72 casos (o Coder 7B ganhou os seus em 06/10, §4.1), a hipótese H1 continua não confirmada: falta resolução, e o sinal é pequeno.
 - **Entre L1 e L3 a diferença é de 2 casos em 72** (58 acertos com a L1, 60 com a L3): a L1 fica 1 caso à frente nos oficiais (32 contra 31) e a L3 fica 3 à frente nos inéditos (29 contra 26). Está dentro da faixa de variação entre corridas do §3.
 - **O `qwen2.5-coder:3b` acerta o mesmo com L0, com a própria L1 e com a própria L3** (58,3% nas três; b/c 0/0), embora 13,9% dos contextos com a L1 e 47,2% com a L3 já tragam nota escrita por ele. Nos inéditos só 1 rótulo muda, com a L3, de um erro para outro; nos 36 oficiais as notas próprias mudam 3 rótulos com a L1 e 2 com a L3, com 1 acerto ganho em cada.
 - Os inéditos rodaram em Ollama 0.34.1, com ponte pareável nos dois modelos. Os tempos por diagnóstico desta tabela e da tabela do §5 foram medidos com a sessão de trabalho aberta na máquina e valem como ordem de grandeza; o custo comparável é o da Fase 3 (relatório da Fase 3, §9).
+
+<!-- ! Alteração de IA - Revisar: subseções 4.1 e 4.2 novas (06/10/2026) com as duas corridas opcionais que o Eric rodou na tarde de 06/10, depois de fechar a ficha 17 como (b); os blocos vêm de analisar_fase3b.py (--colar).
+     ! Motivo: a ficha 17 dizia que as opcionais não rodariam; o Eric rodou as duas mesmo assim, e o resultado da corrida 7 toca a condição 1 do comparativo qwen × Coder para rever a decisão 52 (ficha 21). Ficam como subseções do §4 para não renumerar as seções que o painel e as fichas citam. -->
+### 4.1 Corrida 7 (06/10/2026): o Coder 7B nos mesmos 36 inéditos
+
+O `qwen2.5-coder:7b` diagnosticou os 36 inéditos com a biblioteca original e com as versões L1 e L3 que ele mesmo escreveu na Fase 3 (hash `0f0a6b7f3b37` e `2b7c441cb9e3`), em Ollama 0.34.4, 06/10 10:26 a 06/10 12:45. A tabela abaixo confronta, caso a caso, cada modelo com o `qwen2.5:7b` (que rodou os mesmos 36 em 28/09, Ollama 0.34.1), com a biblioteca de cada um; b conta os casos que só o modelo acertou e c os que só o `qwen2.5:7b` acertou. A última coluna de cada classe traz os acertos do modelo e do `qwen2.5:7b` nos 6 casos da classe.
+
+<!-- tabela:tb_ineditos_modelos -->
+| Modelo | Biblioteca (a de cada um) | Acerto nos 36 inéditos | Acerto do `qwen2.5:7b` | b (só o modelo) | c (só o doador) | Diferença | p (McNemar) | Rótulos diferentes | Nos 72 (oficiais + inéditos): b / c | p nos 72 | lexica: modelo / doador (acertos de n) | sintatica: modelo / doador (acertos de n) | semantica: modelo / doador (acertos de n) | traducao: modelo / doador (acertos de n) | runtime: modelo / doador (acertos de n) | efeito: modelo / doador (acertos de n) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `qwen2.5-coder:3b` | L0 | 58,3% | 75,0% | 1 | 7 | -16,7 pp | 0,0703 | 12 | 6 / 15 | 0,0784 | 3 / 4 (de 6) | 5 / 6 (de 6) | 3 / 5 (de 6) | 2 / 4 (de 6) | 6 / 6 (de 6) | 2 / 2 (de 6) |
+| `qwen2.5-coder:3b` | L1 | 58,3% | 72,2% | 1 | 6 | -13,9 pp | 0,1250 | 12 | 3 / 14 | 0,0127 | 3 / 4 (de 6) | 5 / 6 (de 6) | 3 / 4 (de 6) | 2 / 4 (de 6) | 6 / 6 (de 6) | 2 / 2 (de 6) |
+| `qwen2.5-coder:3b` | L3 | 58,3% | 80,6% | 0 | 8 | -22,2 pp | 0,0078 | 12 | 2 / 15 | 0,0023 | 3 / 6 (de 6) | 5 / 6 (de 6) | 3 / 4 (de 6) | 2 / 4 (de 6) | 6 / 6 (de 6) | 2 / 3 (de 6) |
+| `qwen2.5-coder:7b` | L0 | 83,3% | 75,0% | 4 | 1 | +8,3 pp | 0,3750 | 7 | 8 / 6 | 0,7905 | 5 / 4 (de 6) | 6 / 6 (de 6) | 5 / 5 (de 6) | 4 / 4 (de 6) | 6 / 6 (de 6) | 4 / 2 (de 6) |
+| `qwen2.5-coder:7b` | L1 | 86,1% | 72,2% | 6 | 1 | +13,9 pp | 0,1250 | 8 | 7 / 7 | 1,0000 | 6 / 4 (de 6) | 6 / 6 (de 6) | 5 / 4 (de 6) | 4 / 4 (de 6) | 6 / 6 (de 6) | 4 / 2 (de 6) |
+| `qwen2.5-coder:7b` | L3 | 75,0% | 80,6% | 1 | 3 | -5,6 pp | 0,6250 | 6 | 3 / 8 | 0,2266 | 5 / 6 (de 6) | 6 / 6 (de 6) | 5 / 4 (de 6) | 2 / 4 (de 6) | 6 / 6 (de 6) | 3 / 3 (de 6) |
+<!-- /tabela:tb_ineditos_modelos -->
+
+Leitura:
+- **Nos inéditos o Coder 7B fica à frente com L0 e com L1 e atrás com L3.** Com a biblioteca original, 83,3% contra 75,0% (b/c 4/1, p = 0,375); com a L1 de cada um, 86,1% contra 72,2% (b/c 6/1, p = 0,125); com a L3, 75,0% contra 80,6% (b/c 1/3). Nenhuma diferença chega ao efeito mínimo detectável de 19,4 pontos nos 36.
+- **Nos 72 casos (36 oficiais da Fase 3 mais os 36 inéditos), com a L1 de cada um, o placar é 7/7** (p = 1,000): o que o Coder ganha nos inéditos é o que perde nos oficiais. Com L0, 8/6; com L3, 3/8.
+- **Por classe, com a L1** (6 casos cada; um caso vale 16,7 pontos): o Coder ganha em lexica, semantica, efeito e empata em sintatica, traducao, runtime. É o mesmo padrão parcial das fases anteriores (léxica e efeito) com a semântica invertida.
+- **A biblioteca própria do Coder 7B pouco muda nos inéditos**: contra o próprio L0, a L1 ganha 1 caso e a L3 perde 3 (bloco `tb_ineditos`); nos 72 somados, a L1 fica 1 caso acima de L0 e a L3 2 abaixo (bloco `tb_agrupado`).
+- **O Coder 3B fica bem atrás do `qwen2.5:7b` nos mesmos casos**: 58,3% contra 72,2% com a L1 de cada um (b/c 1/6); nos 72, 3/14 (p = 0,0127).
+- A condição 1 do comparativo qwen × Coder para rever a decisão 52 ("o Coder vencer o qwen nos casos inéditos") fica parcialmente cumprida, dentro do ruído de uma corrida por condição (de 0 a 3 casos, §3). O que fazer com isso é a ficha 21.
+
+### 4.2 Corrida 5 (06/10/2026): adesão cega à documentação errada, com a biblioteca própria
+
+Na condição A5 o contexto traz um verbete de erro de causa diferente da do caso e um registro de incidente fabricado que afirma essa causa errada para o sintoma; o verbete de ouro nunca está no contexto. A Fase 2-B mediu essa adesão com a biblioteca original; aqui cada modelo leu a própria L3, nos 36 casos de avaliação, em Ollama 0.34.4 (06/10 09:23 a 06/10 10:19).
+
+<!-- tabela:tb_a5 -->
+| Modelo | Biblioteca | Casos | Seguiu a causa plantada | Acertou mesmo assim | O mesmo modelo, a mesma biblioteca, em A2 (Fase 3, acerto) | Adesão cega na Fase 2-B (A5 sobre a biblioteca original) | Verbete de ouro no contexto |
+|---|---|---|---|---|---|---|---|
+| `qwen2.5-coder:3b` | L3 própria | 36 | 34 (94,4%) | 2 (5,6%) | 72,2% | 95,6% | 0,0% |
+| `qwen2.5:7b` | L3 própria | 36 | 29 (80,6%) | 7 (19,4%) | 86,1% | não medida | 0,0% |
+<!-- /tabela:tb_a5 -->
+
+Leitura:
+- **A biblioteca própria não muda a adesão cega.** O `qwen2.5-coder:3b` segue a causa plantada em 94,4% dos casos com a própria L3, contra 95,6% na Fase 2-B com a biblioteca original; o `qwen2.5:7b`, que não tinha medida de A5 na 2-B, segue em 80,6% e acerta 19,4%, contra 86,1% com a mesma L3 na condição normal (A2).
+- É o mesmo mecanismo da troca cruzada (§5) e da Fase 2-B: o modelo lê e segue o que a documentação afirma, para o bem e para o mal. Para a Fase 4, reforça que o que entra na biblioteca precisa de validação em código antes, e que uma nota errada num verbete muito recuperado vira resposta errada.
+- H5 (autoenvenenamento) não muda: a adesão é à documentação errada entregue, não a notas que o modelo escreveu; com a própria L3 em A2 os dois modelos acertam como na Fase 3.
 
 ## 5. Troca cruzada: o ganho é da biblioteca ou de quem a lê?
 
@@ -233,10 +281,10 @@ Fontes do mapa de decisões ([mapa-de-decisoes-fase-3.md](../2-pesquisa-e-litera
 
 ## 7. O que muda e o que não muda
 
-- **A decisão 52 não muda.** Ela saiu da regra fixada antes da bateria, sobre a Fase 3 oficial. O Coder 7B, lendo a L1 do `qwen2.5:7b`, não alcança o `qwen2.5:7b` (83,3% contra 88,9%); era uma das duas condições que o comparativo qwen × Coder (§9) listava para rever a escolha. A outra, o Coder 7B nos casos inéditos, não foi rodada (ficha 17).
+- **A decisão 52 não muda.** Ela saiu da regra fixada antes da bateria, sobre a Fase 3 oficial. O Coder 7B, lendo a L1 do `qwen2.5:7b`, não alcança o `qwen2.5:7b` (83,3% contra 88,9%); era uma das duas condições que o comparativo qwen × Coder (§9) listava para rever a escolha. A outra, o Coder 7B nos casos inéditos, rodou em 06/10/2026 (§4.1): o Coder fica à frente nos 36 inéditos com L0 e L1 (saldo de 3 e 5 casos, p = 0,375 e 0,125) e atrás com L3; nos 72 casos com L1 o placar é 7/7. A condição fica parcialmente cumprida, dentro do ruído, e a revisão da decisão 52 é a ficha 21.
 - **O padrão do agente é o modelo com a biblioteca que ele mesmo escreveu, e não a biblioteca como peça independente** (decisão 69). O ganho medido não acompanhou a biblioteca quando mudou quem a lê; trocar o modelo que lê exige medir de novo.
 - **A biblioteca de partida da Fase 4 continua sendo a L1 curada** (decisão 60). O achado 4.37 deixou essa conta para a integração: com 72 casos, a L3 fica 2 casos à frente da L1, dentro da variação; a L1 já tem curadoria, hash conferido e cópia de produção, e a L3 exigiria revisar as edições das épocas 2 e 3. Não há evidência para trocar.
-- **A cópia curada ainda não foi medida.** O que se mediu foi a L1 inteira (40 edições, hash `3394d203cab9`); a cópia de produção tem 23 delas (hash `1fca10f1a6f6`). A revisão das edições mostrou que o ganho da Fase 3 não pode ser creditado à verdade das notas (achado 4.35), e de onde ele vem não foi isolado; por isso não dá para prever o efeito de tirar 17 delas. É a ficha 18.
+- **A cópia curada foi medida em 06/10/2026** (corrida 12, `resultados_alvo/pre_fase4_confianca/`, Ollama 0.34.4; relatório da Pré-Fase 4 §4.2, bloco `tb_conf_acerto`): com 23 das 40 edições (hash `1fca10f1a6f6`), o `qwen2.5:7b` acerta 80,6% nos 72 casos, contra 81,9% com a L1 inteira na mesma corrida (b/c 1/2, p = 1,00) e 73,6% com a biblioteca original (b/c 5/0); nos 36 inéditos fica 1 caso acima da L1. Custa menos por diagnóstico (61,1 s contra 70,5 s de mediana; 1132 contra 1315 tokens de prompt). A ficha 18 fecha e a L1 curada segue como ponto de partida da Fase 4 (decisão 71).
 - **Para o plano da Fase 4**, quatro pontos saem daqui: (1) ponte de versão antes de toda medição, porque o Ollama se atualiza sozinho nesta máquina; (2) uma corrida por condição não basta para diferenças de até 3 casos, e os 72 casos (36 oficiais e 36 inéditos) passam a ser o conjunto de avaliação disponível; (3) nota anexada a verbete que aparece em quase metade dos contextos, como `contrato-produto`, alcança quase metade dos diagnósticos e pede revisão humana antes de entrar; (4) a medição da cópia curada como linha de base.
 
 ## 8. Limitações que ficam
@@ -246,12 +294,16 @@ Fontes do mapa de decisões ([mapa-de-decisoes-fase-3.md](../2-pesquisa-e-litera
 3. Os pareamentos da cruzada contra a Fase 3 misturam versões do Ollama (0.34.0 e 0.34.4); para o Coder 7B eles não são pareáveis, e a leitura usa só a ponte.
 4. Os inéditos rodaram em 0.34.1 e a cruzada em 0.34.4; as duas corridas não são comparadas entre si.
 5. O caso `efe-3` mudou de texto em 28/09 e está nos 36; as comparações que cruzam essa data trazem a conta com ele e sem ele.
-6. Os 36 casos inéditos e 30 das 40 avaliações da curadoria foram escritos por IA e conferidos contra o código; a conferência do Eric nos 6 casos de amostra e na planilha ficou para depois (ficha 17).
+6. Os 36 casos inéditos e 30 das 40 avaliações da curadoria foram escritos por IA e conferidos contra o código; em 06/10/2026 o Eric conferiu os 6 casos de amostra e a planilha inteira (ficha 17) e não mudou nenhuma linha.
 7. O mecanismo do 3B (§5) é leitura dos registros; não houve corrida que isolasse a nota de `contrato-produto`.
 8. Os tempos por diagnóstico das corridas da 3-B foram medidos com a sessão de trabalho aberta e valem como ordem de grandeza; o custo por versão segue com a ressalva da análise decisória (limitação 4).
 9. O Granite ficou fora de toda a 3-B por falta de memória (decisão 52).
+10. As corridas de 06/10/2026 (§4.1, §4.2) têm uma corrida por condição; o `qwen2.5:7b` não tinha medida de A5 na Fase 2-B, então a comparação "biblioteca original contra própria" na adesão cega só existe para o 3B; e o Coder 7B nos inéditos rodou em outra versão do Ollama (0.34.4) que o `qwen2.5:7b` nos mesmos casos (0.34.1), com a ponte de 30/09 dizendo que o Coder 7B passou do limite de pareamento.
 
 ## 9. Fechamento das Fases 3 e 3-B
+
+<!-- ! Alteração de IA - Revisar: (06/10/2026) linhas 6, 13, 18, 19 e 25 da tabela e a frase final da seção refeitas com as respostas do Eric às fichas 17 e 18; a limitação 6 do §8 também.
+     ! Motivo: o Eric fechou a ficha 17 como (b), conferindo os 6 casos e a planilha sem mudar nada, e a 18 como (a), medindo a cópia curada na corrida 12 de 06/10; o texto dizia que as conferências esperavam por ele e que as duas corridas opcionais aguardavam decisão. -->
 
 Todos os tópicos obrigatórios estão concluídos. A tabela diz o estado de cada um, a evidência e o que fica para depois.
 
@@ -262,28 +314,28 @@ Todos os tópicos obrigatórios estão concluídos. A tabela diz o estado de cad
 | 3 | Hipóteses H1 a H6 com veredito | 3 | Concluído | Achado 4.29; relatório da Fase 3 §2 | Os vereditos não mudam; para o `qwen2.5:7b`, H1 segue não confirmada com 72 casos (§4) |
 | 4 | Decisão do modelo e da biblioteca | 3 | Concluído | Decisão 52; `decisao_modelo.md`; análise decisória §8 | Mantida depois da 3-B (§7); o que vai para a produção é a cópia curada, com as ressalvas do tópico 6 |
 | 5 | Revisão das 63 edições aceitas | 3 | Concluído com ressalva | Relatório da Fase 3 §7; resumo regravado em 29/09 | Um revisor só, IA conferida contra o código, aceita pelo Eric em 23/09 |
-| 6 | Curadoria da L1 e cópia de produção | 3 | Concluído com ressalva | `biblioteca_producao/` (hash `1fca10f1a6f6`); achado 4.40 | A cópia curada não foi medida (ficha 18); a planilha de 40 linhas espera a conferência do Eric (ficha 17) |
+| 6 | Curadoria da L1 e cópia de produção | 3 | Concluído com ressalva | `biblioteca_producao/` (hash `1fca10f1a6f6`); achado 4.40 | A cópia curada foi medida na corrida 12 de 06/10/2026 (ficha 18): rende como a L1 inteira (80,6% contra 81,9% nos 72; decisão 71); a planilha de 40 linhas foi conferida pelo Eric em 06/10 (ficha 17), sem mudança |
 | 7 | Comparativo qwen × Coder | 3 | Concluído | `comparativo-qwen25-7b-vs-coder-7b.md`; achado 4.38 | A medida que falta nele é a corrida opcional do tópico 19 |
 | 8 | Instalador com o modelo escolhido | 3 | Concluído | `install.py` baixa o `qwen2.5:7b` desde 23/09 | Nada |
 | 9 | Pesquisa bibliográfica: quatro rodadas, mapa de decisões e mapa de filtros | 3 | Concluído | Levantamentos §6.9 a §6.13; `referencias.md` | Lacuna declarada: biblioteca escrita por um modelo local e lida por outro (§6) |
 | 10 | Ponte de versão em Ollama 0.34.1 | 3-B | Concluído | §3 | O Granite ficou sem ponte, por falta de memória (decisão 52) |
 | 11 | Ponte de versão em Ollama 0.34.4 | 3-B | Concluído com ressalva | §3; relatório da Fase 3 §11 | Coder 7B fora do limite; ponte nova a cada versão do Ollama |
 | 12 | Correção dos casos `efe-3` e `efe-10` no banco | 3-B | Concluído com ressalva | Achado 4.36; decisão 58; ficha 13 | O `efe-3` está nos 36: as comparações com a Fase 3 trazem a conta com ele e sem ele |
-| 13 | Casos inéditos | 3-B | Concluído com ressalva | §4; achados 4.37 e 4.44 | Conferência dos 6 casos de amostra pelo Eric (ficha 17) |
+| 13 | Casos inéditos | 3-B | Concluído | §4; achados 4.37 e 4.44 | Os 6 casos de amostra foram conferidos pelo Eric em 06/10/2026 (ficha 17), sem mudança |
 | 14 | Troca cruzada | 3-B | Concluído | §5; achado 4.42 | A direção inversa não rodou (§8, limitação 1) |
 | 15 | Sonda de detecção de correção | 3-B | Concluído | Roadmap §3; decisão 58 | O ciclo de correção é requisito da Fase 4 |
 | 16 | Experimento do recuperador | 3-B | Concluído | Roadmap §2.2; decisão 61; achado 4.39 | Medir k = 5 na Fase 4 |
 | 17 | Ablação base × instruct | 3-B | Concluído | Roadmap §2.2; achado 4.41 | Nada |
-| 18 | Adesão cega sobre a L3 (corrida 5) | 3-B | Não rodado (opcional) | Análise decisória §10, item (c) | Decisão do Eric na ficha 17 |
-| 19 | Coder 7B nos 36 inéditos (corrida 7) | 3-B | Não rodado (opcional) | Comparativo qwen × Coder §9 | Decisão do Eric na ficha 17 |
+| 18 | Adesão cega sobre a L3 (corrida 5) | 3-B | Concluído | §4.2; análise decisória §10, item (c) | Rodou em 06/10/2026: a biblioteca própria não muda a adesão cega |
+| 19 | Coder 7B nos 36 inéditos (corrida 7) | 3-B | Concluído | §4.1; comparativo qwen × Coder §9 | Rodou em 06/10/2026: o Coder fica à frente nos inéditos com L0 e L1, dentro do ruído; a decisão 52 é a ficha 21 |
 | 20 | Granite com teto de texto maior | 3-B | Não rodado (inviável) | Decisão 52 (memória insuficiente); análise decisória §10, item (d) | A leitura "barrado pelo formato, não incapaz" (achado 4.30) continua hipótese não medida |
 | 21 | Réplicas com temperatura alta | 3-B | Descartado | Plano complementar, item (e) | A variação entre corridas foi medida pelas pontes (achado 4.43) |
 | 22 | Integração da 3-B na documentação e no painel | 3-B | Concluído | Este relatório; `decisao_modelo.md` §6; painel do projeto | Nada |
 | 23 | Ferramental do Claude Code e das LLMs locais | Método | Concluído | `5-metodo-e-ferramental/` | Repetir a medição de tokens ao fim da Fase 4 |
 | 24 | Projeto de pesquisa ABNT, modificações 1 a 8 | Documentação | Concluído | `correcoes-aplicadas.md` §5.2 | Item 10 e o PDF final sem as marcações, na entrega |
-| 25 | Pendências em ficha (1 a 16) | Gestão | Concluído | `pendencias.md` | Fichas 17 e 18 abertas em 01/10 |
+| 25 | Pendências em ficha (1 a 16) | Gestão | Concluído | `pendencias.md` | Fichas 17 e 18 abertas em 01/10 e fechadas em 06/10/2026 |
 
-O que depende só do Eric para o encerramento formal: responder as fichas 17 e 18, tirar os dois Coder do Ollama quando nenhuma corrida precisar deles, e o commit.
+As fichas 17 e 18 foram respondidas em 06/10/2026, e as duas corridas opcionais rodaram no mesmo dia (§4.1 e §4.2). O que ainda depende só do Eric para o encerramento formal: a ficha 21 (o que fazer com a decisão 52 depois do Coder 7B nos inéditos), tirar os dois Coder do Ollama (nenhuma corrida restante os usa) e o commit.
 
 ## 10. Rastreabilidade
 

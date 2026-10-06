@@ -1,8 +1,8 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por comparar_qwen_coder.py a partir dos registros oficiais (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão — o comparativo do Memorial cola estes blocos. -->
-# Comparativo qwen2.5:7b × qwen2.5-coder:7b — gerado em 2026-10-01
+# Comparativo qwen2.5:7b × qwen2.5-coder:7b — gerado em 2026-10-06
 
-Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ avaliacao.json); resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json (gerado em 2026-09-29T11:04:10); comparacao_fases.json; decisao_modelo.json (gerado em 2026-10-01T09:43:39). Melhor versão nos 36: qwen2.5:7b L1, coder:7b L3. Casos inéditos (28/09): modelos rodados = ['qwen2.5-coder:3b', 'qwen2.5:7b'] — o qwen2.5-coder:7b não rodou lá. Estabilidade de ranking (top-1 em 36 cortes): qwen2.5:7b: 14; qwen2.5-coder:7b: 5.
+Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ avaliacao.json); resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json (gerado em 2026-09-29T11:04:10); comparacao_fases.json; decisao_modelo.json (gerado em 2026-10-01T09:43:39). Melhor versão nos 36: qwen2.5:7b L1, coder:7b L3. Casos inéditos: modelos rodados = ['qwen2.5-coder:3b', 'qwen2.5-coder:7b', 'qwen2.5:7b'] (o qwen2.5-coder:7b rodou neles em 06/10/2026, corrida 7). Estabilidade de ranking (top-1 em 36 cortes): qwen2.5:7b: 14; qwen2.5-coder:7b: 5.
 
 
 <!-- tabela:cq_fase2a -->
@@ -263,6 +263,25 @@ Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ av
 | qwen2.5:7b | 77,8% | 78,8% | 1 | 1 | 1,0000 |
 <!-- /tabela:cq_ponte -->
 
+<!-- tabela:cq_ineditos -->
+| 36 inéditos · versão (a biblioteca de cada um) | n | acerto qwen2.5:7b | acerto coder:7b | ambos acertam | nenhum | só o Coder | só o qwen | Δ | p (McNemar exato) |
+|---|---|---|---|---|---|---|---|---|---|
+| inéditos · L0 (a biblioteca de cada um) | 36 | 75,0% | 83,3% | 26 | 5 | 4 | 1 | +8,3 pp | 0,3750 |
+| inéditos · L1 (a biblioteca de cada um) | 36 | 72,2% | 86,1% | 25 | 4 | 6 | 1 | +13,9 pp | 0,1250 |
+| inéditos · L3 (a biblioteca de cada um) | 36 | 80,6% | 75,0% | 26 | 6 | 1 | 3 | -5,6 pp | 0,6250 |
+<!-- /tabela:cq_ineditos -->
+
+<!-- tabela:cq_ineditos_classe -->
+| 36 inéditos · L1 · classe | n | acertos qwen2.5:7b | acertos coder:7b | Δ (casos) |
+|---|---|---|---|---|
+| 1 lexica | 6 | 4 | 6 | +2,0 |
+| 2 sintatica | 6 | 6 | 6 | +0,0 |
+| 3 semantica | 6 | 4 | 5 | +1,0 |
+| 4 traducao | 6 | 4 | 4 | +0,0 |
+| 5 runtime | 6 | 6 | 6 | +0,0 |
+| 6 efeito | 6 | 2 | 4 | +2,0 |
+<!-- /tabela:cq_ineditos_classe -->
+
 <!-- tabela:cq_onde_vence -->
 | Onde o Coder fica à frente | métrica | qwen2.5:7b | coder:7b | Δ | n | p |
 |---|---|---|---|---|---|---|
@@ -292,4 +311,9 @@ Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ av
 | fase3 nivel L1 · 3 difícil | acerto | 76,7 | 80,0 | +3,3 pp | 30 | — |
 | 2-B · A1 (confronto direto) | casos só o Coder acertou − só o qwen acertou | 11 | 12 | +1,1 pp | 90 | 1,0000 |
 | 2-B · A2 (confronto direto) | casos só o Coder acertou − só o qwen acertou | 10 | 12 | +2,2 pp | 90 | 0,8318 |
+| inéditos · L0 (a biblioteca de cada um) (confronto direto) | casos só o Coder acertou − só o qwen acertou | 1 | 4 | +8,3 pp | 36 | 0,3750 |
+| inéditos · L1 (a biblioteca de cada um) (confronto direto) | casos só o Coder acertou − só o qwen acertou | 1 | 6 | +13,9 pp | 36 | 0,1250 |
+| inéditos L1 · 1 lexica | acertos | 4 | 6 | +2,0 pp | 6 | — |
+| inéditos L1 · 3 semantica | acertos | 4 | 5 | +1,0 pp | 6 | — |
+| inéditos L1 · 6 efeito | acertos | 2 | 4 | +2,0 pp | 6 | — |
 <!-- /tabela:cq_onde_vence -->

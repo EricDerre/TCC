@@ -32,7 +32,7 @@ def _ctx() -> dict:
         "dados": dados, "road": road, "cartoes_corridas": gd.cartoes_corridas, "md_para_html": gd.md_para_html,
         "md_doc_para_html": pt.md_doc_para_html,
         "cq": gd.ler_json(gd.F3 / "comparativo_qwen_coder.json"), "blocos_cq": gd.blocos_tabelas(gd.F3 / "comparativo_qwen_coder.md"),
-        "ineditos": gd.ler_json(gd.EXP / "resultados_alvo" / "fase3b_ineditos" / "resumo_fase3.json"),
+        "ineditos": gd.resumo_dos_ineditos(),
         "curadoria": gd.ler_json(gd.EXP.parent / "biblioteca_producao" / "curadoria.json"),
         "planilha_curadoria": (gd.F3 / "curadoria_L1__qwen2.5_7b.md").read_text(encoding="utf-8"),
         "recuperador": gd.ler_json(gd.EXP / "resultados_alvo" / "recuperador" / "experimento_recuperador.json"),
@@ -63,18 +63,56 @@ class TestesAbasPorTopico(unittest.TestCase):
         repetidos = {i for i in ids if ids.count(i) > 1}
         self.assertFalse(repetidos, f"ids repetidos na página: {sorted(repetidos)[:10]}")
 
+    # ! Alteração de IA - Revisar: teste novo (06/10/2026) da navegação lateral em ordem de importância.
+    # ! Motivo: o Eric pediu a barra de seções na lateral (com 23 abas a faixa horizontal ficou ilegível) e a ordem
+    # por importância: primeiro o projeto e o que depende dele, depois a decisão e os resultados, a biblioteca gerida
+    # pelo modelo, a Pré-Fase 4, a pesquisa e, por último, as fases anteriores.
+    def teste_navegacao_lateral_em_ordem_de_importancia(self):
+        html = gd.pagina(self.ctx["dados"] | {"topicos": self.dados_t}, gd.blocos_tabelas(gd.F3 / "tabelas_relatorio.md"), {},
+                         pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"), self.ctx["road"], self.html)
+        lateral = re.search(r'<aside class="lateral" id="lateral">(.*?)</aside>', html, re.S)
+        self.assertTrue(lateral, "a navegação fica num <aside class=\"lateral\">")
+        self.assertIn('<nav aria-label="Seções">', lateral.group(1))
+        self.assertEqual(re.findall(r'data-alvo="([^"]+)"', lateral.group(1)), [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        self.assertEqual(re.findall(r'<span class="grupo">([^<]+)</span>', lateral.group(1)), [g for g, _ in tp.NAV])
+        self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Pesquisa e método", "Fases anteriores"])
+        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "pesquisa", "fases2"])
+        # em tela estreita a lateral vira gaveta aberta por um botão
+        self.assertIn('<button class="menu" aria-controls="lateral" aria-expanded="false">', html)
+        self.assertRegex(html, r"@media \(max-width:\s*900px\)\{[^}]*\.lateral\{")
+        self.assertIn("menu-aberto", html)
+
     def teste_comparativo_usa_os_numeros_do_json(self):
         cq = self.ctx["cq"]
         n_vence = len(cq["onde_o_coder_vence"])
         self.assertIn(f"<b>{n_vence}</b>", self.html)
         self.assertEqual(len(self.dados_t["cq"]["trajetoria"]["36"]), 7)  # 2-A, 2-B A0/A2, F3 L0..L3 (sem "melhor")
         self.assertEqual(len(self.dados_t["cq"]["confronto"]["90"]), 3 + 4)
+        # ! Alteração de IA - Revisar: (06/10/2026) o confronto nos 36 inéditos (corrida 7) entra na aba, lido do JSON.
+        # ! Motivo: era a condição 1 do comparativo para rever a decisão 52; o Eric rodou a corrida em 06/10.
+        secao = self.html[self.html.index('<section id="comparativo"'):].split("</section>")[0]
+        for x in cq.get("confronto_ineditos", []):
+            if x["L"] == 1:
+                self.assertIn(f'<b>{x["so_qwen"]} × {x["so_coder"]}</b>', secao)
+                self.assertIn("ficha 21", secao)
+        self.assertNotIn("se o Eric quiser, o Coder 7B nos 36 inéditos", secao)
 
     def teste_tres_b_compara_oficiais_e_ineditos_nas_mesmas_versoes(self):
         t = self.dados_t["tresb"]
         self.assertEqual(t["Ls"], ["0", "1", "3"])
         for m in t["modelos"]:
             self.assertEqual(set(t["ineditos"][m]), set(t["oficiais"][m]))
+        # ! Alteração de IA - Revisar: (06/10/2026) o Coder 7B entra na aba quando a corrida 7 está no disco, e as duas
+        # corridas opcionais ganham tabelas lidas de analise_fase3b.json (modelo contra modelo; adesão cega A5).
+        # ! Motivo: o Eric rodou as corridas 5 e 7 em 06/10; sem isto a aba continuaria dizendo que só o qwen e o 3B rodaram.
+        an = self.ctx.get("analise3b") or {}
+        secao = self.html[self.html.index('<section id="tresb"'):].split("</section>")[0]
+        if (gd.EXP / "resultados_alvo" / "fase3b_ineditos_coder7b" / "resumo_fase3.json").exists():
+            self.assertIn("qwen2.5-coder:7b", t["modelos"])
+        self.assertEqual(secao.count("<tr data-entre-modelos="), len(an.get("ineditos", {}).get("entre_modelos", [])))
+        self.assertEqual(secao.count("<tr data-a5="), len(an.get("a5", {}).get("linhas", [])))
+        for l in an.get("a5", {}).get("linhas", []):
+            self.assertIn(f'{l["seguiu"]} ({tp.fmt(l["seguiu_pct"])}%)', secao)
 
     # ! Alteração de IA - Revisar: teste novo (30/09/2026, noite): o painel lista todas as pontes de versão da
     # decisão, cada uma com a versão do Ollama da própria saída, e marca como divergente quem passa de b + c = 2.
@@ -206,6 +244,16 @@ class TestesAbasPorTopico(unittest.TestCase):
             self.assertEqual(linha["sustentado"], c["acerto_por_sustentacao"]["sustentado"]["acerto_pct"])
             self.assertEqual(linha["n_nao"], c["acerto_por_sustentacao"]["nao_sustentado"]["n"])
         self.assertIn('id="g-ra-sus"', secao)
+        # ! Alteração de IA - Revisar: (06/10/2026) a sonda de confiança (corrida 12) entra na aba, lida de confianca.json.
+        # ! Motivo: a aba prometia a análise da probabilidade do rótulo "quando a corrida 12 terminar"; ela terminou em 06/10.
+        conf = self.ctx.get("confianca")
+        if conf:
+            tot = conf["resumos"][0]
+            self.assertIn(f'<b>{tp.fmt(tot["sinais"]["p_conjunta"]["auroc"], 3)}</b>', secao)
+            self.assertIn('id="g-ra-conf"', secao)
+            self.assertEqual(len(t["confianca"]["bibliotecas"]), len(conf["resumos"]) - 1)
+            self.assertEqual(secao.count("<tr data-conf-acerto="), len(conf["acerto"]))
+            self.assertNotIn("quando a rodada B da pesquisa e a corrida 12 terminarem", secao)
         if self.ctx["relatorio_exemplo"]:
             for titulo in ("O que o programa fez", "O que o modelo declarou", "O que o código conferiu", "Avaliação contra o gabarito"):
                 self.assertIn(f"<h4>{titulo}</h4>", secao)

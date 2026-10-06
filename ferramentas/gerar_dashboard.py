@@ -392,13 +392,21 @@ CSS = r"""
 :root[data-theme=dark]{color-scheme:dark;--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--meio:#e0a84a;--ruim:#e46b5c;--sombra:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);
 --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--fb)}
-.topo{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg2);border-bottom:1px solid var(--linha);box-shadow:var(--sombra)}
-.topo .in{max-width:1200px;margin:0 auto;padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
-.marca{font:600 18px/1.2 var(--fd);letter-spacing:.01em}.marca small{display:block;font:12px var(--fb);color:var(--ink2)}
-nav{display:flex;flex-wrap:wrap;gap:4px}nav button{border:1px solid transparent;background:none;color:var(--ink2);font:500 13px var(--fb);padding:6px 10px;border-radius:6px;cursor:pointer}
+/* navegação lateral (06/10/2026): a faixa horizontal não comportava 23 abas; em tela estreita a lateral vira gaveta */
+.pagina{display:flex;align-items:flex-start;min-height:100vh}
+.lateral{position:sticky;top:env(safe-area-inset-top,0px);flex:0 0 250px;width:250px;max-height:100vh;overflow-y:auto;background:var(--bg2);border-right:1px solid var(--linha);padding:14px 10px 28px;z-index:6}
+.lateral .marca{padding:2px 10px 8px}.marca{font:600 18px/1.2 var(--fd);letter-spacing:.01em}.marca small{display:block;font:12px var(--fb);color:var(--ink2);margin-top:4px}
+nav{display:flex;flex-direction:column;gap:1px}nav button{display:block;width:100%;text-align:left;border:1px solid transparent;background:none;color:var(--ink2);font:500 13px/1.3 var(--fb);padding:4px 10px;border-radius:6px;cursor:pointer}
 nav button:hover{background:var(--acento2)}nav button[aria-selected=true]{color:var(--acento);border-color:var(--acento);background:var(--acento2)}
 nav button:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
-main{max-width:1200px;margin:0 auto;padding:22px 16px 64px}section[hidden]{display:none}
+.conteudo{flex:1 1 auto;min-width:0}
+.topo{display:none;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg2);border-bottom:1px solid var(--linha);box-shadow:var(--sombra);padding:8px 16px;align-items:center;gap:12px}
+.topo .menu{border:1px solid var(--linha);background:var(--bg2);color:var(--ink);font:500 13px var(--fb);padding:6px 12px;border-radius:6px;cursor:pointer}
+.topo .marca-curta{font:600 16px var(--fd)}
+.fundo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:5}
+main{max-width:1200px;margin:0 auto;padding:22px 24px 64px}section[hidden]{display:none}
+@media (max-width:900px){.lateral{position:fixed;top:0;left:0;height:100%;max-height:none;transform:translateX(-100%);transition:transform .2s;box-shadow:var(--sombra)}
+body.menu-aberto .lateral{transform:none}body.menu-aberto .fundo{display:block}.topo{display:flex}main{padding:18px 16px 64px}}
 h1{font:600 30px/1.15 var(--fd);margin:0 0 6px;text-wrap:balance}h2{font:600 22px/1.2 var(--fd);margin:34px 0 10px;text-wrap:balance}
 h3{font:600 17px/1.25 var(--fd);margin:24px 0 8px}h4{font:600 14px var(--fb);margin:14px 0 6px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
 p{max-width:78ch;margin:8px 0}p.nota,.nota{color:var(--ink2);font-size:13px}.lead{font-size:17px;color:var(--ink)}
@@ -427,7 +435,7 @@ figcaption{font-size:13px;color:var(--ink2);margin-top:8px}
 details{border:1px solid var(--linha);border-radius:8px;padding:8px 12px;margin:10px 0;background:var(--bg2)}summary{cursor:pointer;font-weight:600}
 .hip{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:start}.hip .h{font:600 15px var(--fm)}
 .rodape{margin-top:40px;font-size:12px;color:var(--ink2);border-top:1px solid var(--linha);padding-top:12px}
-nav .grupo{font:600 11px var(--fb);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);padding:6px 2px 6px 10px}
+nav .grupo{font:600 11px var(--fb);text-transform:uppercase;letter-spacing:.06em;color:var(--ink2);padding:10px 2px 3px 10px}nav .grupo:first-child{padding-top:2px}
 .chip{display:inline-block;font:600 11px var(--fb);letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--acento2);color:var(--acento);white-space:nowrap;vertical-align:middle}
 .chip.aberta,.chip.andamento{background:color-mix(in srgb,var(--meio) 18%,transparent);color:var(--meio)}
 .chip.fechada,.chip.feita,.chip.concluida{background:color-mix(in srgb,var(--bom) 18%,transparent);color:var(--bom)}
@@ -469,7 +477,12 @@ function mostrar(id){document.querySelectorAll('main > section').forEach(s => s.
   abas.forEach(b => b.setAttribute('aria-selected', b.dataset.alvo === id));
   try{history.replaceState(null,'','#'+id)}catch(e){} window.scrollTo({top:0});
   desenhar(id);}
-abas.forEach(b => b.addEventListener('click', () => mostrar(b.dataset.alvo)));
+abas.forEach(b => b.addEventListener('click', () => { mostrar(b.dataset.alvo); fecharMenu(); }));
+const botaoMenu = document.querySelector('.topo .menu');
+function fecharMenu(){document.body.classList.remove('menu-aberto'); if(botaoMenu) botaoMenu.setAttribute('aria-expanded','false');}
+if(botaoMenu){botaoMenu.addEventListener('click', () => { const aberto = document.body.classList.toggle('menu-aberto'); botaoMenu.setAttribute('aria-expanded', aberto); });
+  document.querySelector('.fundo').addEventListener('click', fecharMenu);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenu(); });}
 const feitos = new Set();
 Chart.defaults.font.family = getComputedStyle(document.body).getPropertyValue('--fb');
 Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--ink2').trim();
@@ -722,6 +735,15 @@ def secao_inicio(dados: dict, pend: list, road: dict) -> str:
     lista = "".join(f'<li><a href="#{f.id_html}" data-ir="pendencias|{f.id_html}"><span class="numero">{f.numero}</span> {pt.inline(f.titulo)}</a>'
                     f'<br><span class="nota">Recomendação: {pt.inline(f.campos.get("Recomendação", "—"))}</span></li>' for f in do_eric)
     corridas = "".join(f'<li>{_chip(c.classe, ESTADO_CORRIDA.get(c.classe, "—"))} <strong>{pt.inline(c.nome.split(" — ")[0])}</strong> — {pt.inline(c.estado)}</li>' for c in corr)
+    # ! Alteração de IA - Revisar: (06/10/2026) sem ficha aberta, a aba diz isso em vez de mostrar uma lista vazia, e aponta
+    # para as corridas pendentes do roadmap, que são o que resta combinado.
+    # ! Motivo: em 06/10 o Eric fechou as fichas 17 a 20 e a seção ficou com a frase de instrução e nenhum item embaixo.
+    if do_eric:
+        bloco_eric = ('<p>Cada item abre a ficha completa na aba Pendências: o que é, por que importa, opções e recomendação.</p>'
+                      f'<ol class="lista-eric">{lista}</ol>')
+    else:
+        bloco_eric = ('<p>Nenhuma decisão em aberto: todas as fichas estão fechadas (aba Pendências). O que resta combinado está nas corridas abaixo e no '
+                      f'<a href="#roadmap" data-ir="roadmap|">Roadmap</a>: {n_pend} pendente{"" if n_pend == 1 else "s"}, com o comando pronto.</p>')
     mapa = "".join(
         f'<div><h3>{html.escape(grupo)}</h3><ul>' + "".join(
             f'<li><a href="#{sid}" data-ir="{sid}|">{html.escape(nome)}</a> — {html.escape(desc)}</li>' for sid, nome, desc in abas if sid != "inicio") + "</ul></div>"
@@ -736,8 +758,7 @@ def secao_inicio(dados: dict, pend: list, road: dict) -> str:
 {faixa_fases(road, compacta=True)}
 {pt.md_doc_para_html(road["posicao"])}
 <h2>O que precisa de você</h2>
-<p>Cada item abre a ficha completa na aba Pendências: o que é, por que importa, opções e recomendação.</p>
-<ol class="lista-eric">{lista}</ol>
+{bloco_eric}
 <h2>Corridas da Fase 3-B</h2>
 <ul class="lista-corridas">{corridas}</ul>
 <p class="nota">Comandos, pré-requisitos e o que cada corrida fecha: aba Roadmap.</p>
@@ -828,9 +849,13 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <title>Painel do Agente de QA</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>{CSS}</style>
-<header class="topo"><div class="in">
+<div class="pagina">
+<aside class="lateral" id="lateral">
 <div class="marca">Painel do Agente de QA<small>TCC · agente de QA E2E autônomo com self-healing · estado em {html.escape(road["data"])} · registros dos testes de {html.escape(dados["meta"]["resumo_gerado_em"][:10])}</small></div>
-<nav aria-label="Seções">{nav}</nav></div></header>
+<nav aria-label="Seções">{nav}</nav></aside>
+<div class="conteudo">
+<header class="topo"><button class="menu" aria-controls="lateral" aria-expanded="false">Seções</button><span class="marca-curta">Painel do Agente de QA</span></header>
+<div class="fundo"></div>
 <main>
 {secao_inicio(dados, pend, road)}
 {secao_pendencias(pend)}
@@ -996,6 +1021,7 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 </section>
 {topicos_html}
 </main>
+</div></div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 <script>window.DADOS = {dados_json};</script>
 <script>{js}</script>
@@ -1007,6 +1033,20 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 # os três arquivos nascem em resultados_alvo/pre_fase4/ e podem não existir numa máquina que não rodou as sondas, caso
 # em que a aba mostra o estado vazio em vez de o painel inteiro falhar. O teste das abas usa esta mesma função, para
 # o teste e o gerador nunca lerem arquivos diferentes.
+# ! Alteração de IA - Revisar: (06/10/2026) o resumo dos inéditos passa a juntar as corridas que os rodaram: a de 28/09
+# (qwen e Coder 3B) e a de 06/10 (Coder 7B, pasta `fase3b_ineditos_coder7b`).
+# ! Motivo: a aba Fase 3-B lia só `fase3b_ineditos/resumo_fase3.json`; com o Coder 7B numa pasta própria, ele ficaria
+# fora do gráfico e dos cartões.
+def resumo_dos_ineditos() -> dict:
+    base = ler_json(EXP / "resultados_alvo" / "fase3b_ineditos" / "resumo_fase3.json")
+    extra = EXP / "resultados_alvo" / "fase3b_ineditos_coder7b" / "resumo_fase3.json"
+    if extra.exists():
+        r = ler_json(extra)
+        for k in ("por_modelo_biblioteca_particao", "pareado_vs_L0", "recuperacao"):
+            base[k] = list(base.get(k, [])) + list(r.get(k, []))
+    return base
+
+
 def contexto_pre_fase4() -> dict:
     pasta = EXP / "resultados_alvo" / "pre_fase4"
 
@@ -1022,6 +1062,7 @@ def contexto_pre_fase4() -> dict:
     return {"viabilidade": le("viabilidade_modelos_grandes.json"), "disco": le("disco.json"),
             "logprobs_amostra": ler_json(preferida) if preferida else None,
             "indicadores_raciocinio": le("indicadores_raciocinio.json"),
+            "confianca": le("confianca.json"),   # sonda de confiança e cópia curada (corrida 12, 06/10/2026)
             "relatorio_exemplo": exemplo.read_text(encoding="utf-8") if exemplo.exists() else None,
             "atlas": le("atlas.json"),
             # as trilhas versionadas (uma lista de eventos por arquivo), para o explorador de casos da aba "Raciocínio aberto"
@@ -1051,7 +1092,7 @@ def main() -> None:
         "dados": dados, "road": road, "cartoes_corridas": cartoes_corridas, "md_para_html": md_para_html,
         "md_doc_para_html": pt.md_doc_para_html,
         "cq": ler_json(F3 / "comparativo_qwen_coder.json"), "blocos_cq": blocos_tabelas(F3 / "comparativo_qwen_coder.md"),
-        "ineditos": ler_json(EXP / "resultados_alvo" / "fase3b_ineditos" / "resumo_fase3.json"),
+        "ineditos": resumo_dos_ineditos(),
         "curadoria": ler_json(EXP.parent / "biblioteca_producao" / "curadoria.json"),
         "planilha_curadoria": (F3 / "curadoria_L1__qwen2.5_7b.md").read_text(encoding="utf-8"),
         "recuperador": ler_json(EXP / "resultados_alvo" / "recuperador" / "experimento_recuperador.json"),

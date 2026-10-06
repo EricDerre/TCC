@@ -1,0 +1,17 @@
+{
+  "modo": "a5",
+  "doador": null,
+  "versoes": [
+    3
+  ],
+  "texto_max": null,
+  "condicao": "A5",
+  "modelos": [
+    "qwen2.5:7b",
+    "qwen2.5-coder:3b"
+  ],
+  "versao_ollama": "0.34.4",
+  "origem": "resultados_alvo/fase3",
+  "criado_em": "2026-10-06T09:23:40",
+  "atualizado_em": "2026-10-06T10:01:31"
+}

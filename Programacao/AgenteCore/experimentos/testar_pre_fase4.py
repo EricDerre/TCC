@@ -481,6 +481,57 @@ def teste_sonda_grava_lateral_e_mantem_o_registro_oficial() -> None:
     testar_fase3b._com_resultados_temporarios(corpo)
 
 
+# ! Alteração de IA - Revisar: teste novo (06/10/2026) da cópia curada na sonda: com --curada, a biblioteca de produção
+# (cópia fechada em Programacao/AgenteCore/biblioteca_producao) entra como a versão reservada VERSAO_CURADA, com
+# registro, linha lateral de probabilidades e condicoes_3b.json dizendo de onde ela veio e com que hash.
+# ! Motivo: ficha 18, decidida pelo Eric em 06/10 como (a): medir a cópia curada nos 72 casos antes de a Fase 4 usá-la,
+# na mesma noite da sonda (ficha 19), para ela já sair com as probabilidades. A versão é reservada (não 0 a 3) para
+# nenhuma análise confundi-la com uma época da Fase 3; o rótulo humano é "L1 curada".
+def teste_sonda_roda_a_copia_curada_como_versao_reservada() -> None:
+    assert sonda_confianca.VERSAO_CURADA not in (0, 1, 2, 3)
+    assert sonda_confianca.rotulo_da_versao(sonda_confianca.VERSAO_CURADA) == "L1 curada"
+    assert sonda_confianca.rotulo_da_versao(1) == "L1" and sonda_confianca.rotulo_da_versao(0) == "L0"
+    assert sonda_confianca.PASTA_CURADA == EXP.parent / "biblioteca_producao"
+
+    def corpo(tmp: Path) -> None:
+        particao = _oficial_de_mentira([1])
+        casos = sonda_confianca.casos_da_sonda(particao)
+        curada = testar_fase3b._fechar_biblioteca_de_mentira(tmp / "curada_de_mentira", 0, _MODELO_SONDA)
+        hash_curada = evo.hash_biblioteca(curada)
+        vistos: list = []
+        stubs = _stubs_da_sonda(casos, vistos)
+        args = argparse.Namespace(saida="pre_fase4_confianca_teste3", modelo=_MODELO_SONDA, versoes=[1], curada=True, top=20, casos=3, k=3,
+                                  max_tokens_diagnostico=600, max_tokens_proposta=700)
+        pasta_antes = sonda_confianca.PASTA_CURADA
+        sonda_confianca.PASTA_CURADA = curada
+        try:
+            falhas = testar_fase3._com_stubs(stubs, lambda: sonda_confianca.rodar(args))
+        finally:
+            sonda_confianca.PASTA_CURADA = pasta_antes
+        assert falhas == [], falhas
+        v = sonda_confianca.VERSAO_CURADA
+        c3b = caminhos.fase3("pre_fase4_confianca_teste3")
+        pasta = c3b["raiz"] / executar_fase3._slug(_MODELO_SONDA)
+        regs = [json.loads(l) for l in (pasta / f"diagnosticos__L{v}.jsonl").read_text(encoding="utf-8").splitlines()]
+        lat = [json.loads(l) for l in (pasta / f"logprobs__L{v}.jsonl").read_text(encoding="utf-8").splitlines()]
+        assert len(regs) == 3 and [l["caso"] for l in lat] == [r["caso"] for r in regs], (len(regs), len(lat))
+        assert all(r["biblioteca_epoca"] == v and r["biblioteca_versao"] == hash_curada for r in regs), regs[0]["biblioteca_versao"]
+        assert all(set(r) == _CHAVES_DO_REGISTRO_OFICIAL for r in regs)
+        assert len([json.loads(l) for l in (pasta / "diagnosticos__L1.jsonl").read_text(encoding="utf-8").splitlines()]) == 3, "a L1 roda antes"
+        assert evo.hash_biblioteca(c3b["bibliotecas"] / executar_fase3._slug(_MODELO_SONDA) / f"epoca-{v}") == hash_curada
+        cond = json.loads((c3b["raiz"] / "condicoes_3b.json").read_text(encoding="utf-8"))
+        assert cond["versoes"] == [1, v], cond["versoes"]
+        assert cond["curada"] == {"versao": v, "hash": hash_curada, "origem": "Programacao/AgenteCore/biblioteca_producao", "rotulo": "L1 curada"}, cond["curada"]
+        # sem --curada nada da cópia entra, e o condicoes não a menciona
+        args2 = argparse.Namespace(saida="pre_fase4_confianca_teste4", modelo=_MODELO_SONDA, versoes=[1], curada=False, top=20, casos=2, k=3,
+                                   max_tokens_diagnostico=600, max_tokens_proposta=700)
+        assert testar_fase3._com_stubs(stubs, lambda: sonda_confianca.rodar(args2)) == []
+        cond2 = json.loads((caminhos.fase3("pre_fase4_confianca_teste4")["raiz"] / "condicoes_3b.json").read_text(encoding="utf-8"))
+        assert "curada" not in cond2 and cond2["versoes"] == [1]
+
+    testar_fase3b._com_resultados_temporarios(corpo)
+
+
 def teste_sonda_para_se_o_ollama_nao_devolve_probabilidades() -> None:
     def corpo(tmp: Path) -> None:
         particao = _oficial_de_mentira([1])
@@ -1045,8 +1096,16 @@ def teste_confianca_montar_render_e_check() -> None:
             assert linha["sustentado"] in (True, False)
         resumo = dado["resumos"][0]
         assert resumo["casos"] == len(regs) and resumo["erros"] == 0 and resumo["sinais"]["p_conjunta"]["auroc"] is None
+        # ! Alteração de IA - Revisar: (06/10/2026) a análise passou a trazer o acerto por versão e conjunto e os pareamentos
+        # entre versões (a cópia curada contra a L1 e a L0) e contra as corridas anteriores, quando existem no disco.
+        # ! Motivo: ficha 18 (a): a pergunta "quanto rende a cópia curada" se responde com acerto e pares, não com a AUROC.
+        ac = {(x["modelo"], x["versao"], x["conjunto"]): x for x in dado["acerto"]}
+        assert set(ac) == {(_MODELO_SONDA, 1, "oficiais"), (_MODELO_SONDA, 1, "todos")}, set(ac)   # a corrida de mentira só tem casos oficiais
+        assert ac[(_MODELO_SONDA, 1, "todos")]["n"] == len(regs) and ac[(_MODELO_SONDA, 1, "todos")]["acerto_pct"] == 100.0
+        assert ac[(_MODELO_SONDA, 1, "todos")]["rotulo"] == "L1" and ac[(_MODELO_SONDA, 1, "todos")]["segundos_mediana"] is not None
+        assert dado["pares"] == [] and dado["contra_corridas_anteriores"] == []   # uma versão só, e nenhuma corrida anterior na pasta temporária
         md = conf.render(dado)
-        assert set(a3b.blocos_de(md)) == {"tb_conf_resumo", "tb_conf_revisao", "tb_conf_casos"}, list(a3b.blocos_de(md))
+        assert set(a3b.blocos_de(md)) == {"tb_conf_resumo", "tb_conf_revisao", "tb_conf_acerto", "tb_conf_pares", "tb_conf_casos"}, list(a3b.blocos_de(md))
         assert "—" not in md and "→" not in md
         pasta = _temp()
         assert pf.fechar(conf.NOME, dado, md, conf.PREFIXO, pasta=pasta, doc=pasta / "nao_existe.md") == 0
@@ -1064,6 +1123,8 @@ def teste_rodar_sonda_confianca_ps1_bom_e_sem_travessao() -> None:
     assert "—" not in texto and "–" not in texto
     for script in ("testar_fase3.py", "testar_fase3b.py", "testar_pre_fase4.py", "sonda_confianca.py", "analisar_confianca.py"):
         assert script in texto, script
+    # ficha 18 (06/10/2026): o interruptor -Curada leva --curada à sonda, para a cópia curada rodar na mesma noite
+    assert "[switch]$Curada" in texto and '"--curada"' in texto, "o .ps1 precisa do interruptor -Curada"
     assert "[int][math]::Floor($duracao.TotalHours)" in texto
     assert "de IA - Revisar" in texto and "! Motivo:" in texto
 

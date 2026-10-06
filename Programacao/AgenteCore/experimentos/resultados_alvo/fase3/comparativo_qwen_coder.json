@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-10-01T09:46:11",
+    "gerado_em": "2026-10-06T19:17:52",
     "A": "qwen2.5:7b",
     "B": "qwen2.5-coder:7b",
     "fontes": {
@@ -17,8 +17,10 @@
     },
     "ineditos_modelos": [
       "qwen2.5-coder:3b",
+      "qwen2.5-coder:7b",
       "qwen2.5:7b"
     ],
+    "coder_nos_ineditos": true,
     "f3_gerado_em": "2026-09-29T11:04:10",
     "decisao_gerado_em": "2026-10-01T09:43:39"
   },
@@ -1334,6 +1336,91 @@
       }
     ]
   },
+  "confronto_ineditos": [
+    {
+      "L": 0,
+      "contexto": "inéditos · L0 (a biblioteca de cada um)",
+      "n": 36,
+      "acerto_A": 75.0,
+      "acerto_B": 83.3,
+      "ambos": 26,
+      "nenhum": 5,
+      "so_coder": 4,
+      "so_qwen": 1,
+      "delta_pp": 8.3,
+      "p_mcnemar": 0.375
+    },
+    {
+      "L": 1,
+      "contexto": "inéditos · L1 (a biblioteca de cada um)",
+      "n": 36,
+      "acerto_A": 72.2,
+      "acerto_B": 86.1,
+      "ambos": 25,
+      "nenhum": 4,
+      "so_coder": 6,
+      "so_qwen": 1,
+      "delta_pp": 13.9,
+      "p_mcnemar": 0.125
+    },
+    {
+      "L": 3,
+      "contexto": "inéditos · L3 (a biblioteca de cada um)",
+      "n": 36,
+      "acerto_A": 80.6,
+      "acerto_B": 75.0,
+      "ambos": 26,
+      "nenhum": 6,
+      "so_coder": 1,
+      "so_qwen": 3,
+      "delta_pp": -5.6,
+      "p_mcnemar": 0.625
+    }
+  ],
+  "ineditos_classe_L1": [
+    {
+      "classe": "1 lexica",
+      "n": 6,
+      "acertos_A": 4,
+      "acertos_B": 6,
+      "delta": 2
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 6,
+      "acertos_A": 6,
+      "acertos_B": 6,
+      "delta": 0
+    },
+    {
+      "classe": "3 semantica",
+      "n": 6,
+      "acertos_A": 4,
+      "acertos_B": 5,
+      "delta": 1
+    },
+    {
+      "classe": "4 traducao",
+      "n": 6,
+      "acertos_A": 4,
+      "acertos_B": 4,
+      "delta": 0
+    },
+    {
+      "classe": "5 runtime",
+      "n": 6,
+      "acertos_A": 6,
+      "acertos_B": 6,
+      "delta": 0
+    },
+    {
+      "classe": "6 efeito",
+      "n": 6,
+      "acertos_A": 2,
+      "acertos_B": 4,
+      "delta": 2
+    }
+  ],
   "onde_o_coder_vence": [
     {
       "onde": "2-A · estratégia compilador",
@@ -1544,6 +1631,48 @@
       "delta": 2.2,
       "n": 90,
       "p": 0.8318
+    },
+    {
+      "onde": "inéditos · L0 (a biblioteca de cada um) (confronto direto)",
+      "metrica": "casos só o Coder acertou − só o qwen acertou",
+      "A": 1,
+      "B": 4,
+      "delta": 8.3,
+      "n": 36,
+      "p": 0.375
+    },
+    {
+      "onde": "inéditos · L1 (a biblioteca de cada um) (confronto direto)",
+      "metrica": "casos só o Coder acertou − só o qwen acertou",
+      "A": 1,
+      "B": 6,
+      "delta": 13.9,
+      "n": 36,
+      "p": 0.125
+    },
+    {
+      "onde": "inéditos L1 · 1 lexica",
+      "metrica": "acertos",
+      "A": 4,
+      "B": 6,
+      "delta": 2,
+      "n": 6
+    },
+    {
+      "onde": "inéditos L1 · 3 semantica",
+      "metrica": "acertos",
+      "A": 4,
+      "B": 5,
+      "delta": 1,
+      "n": 6
+    },
+    {
+      "onde": "inéditos L1 · 6 efeito",
+      "metrica": "acertos",
+      "A": 2,
+      "B": 4,
+      "delta": 2,
+      "n": 6
     }
   ]
 }

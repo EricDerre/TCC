@@ -1,0 +1,440 @@
+{
+  "regra": "Pré-Fase 4 (sonda de confiança): os 36 casos oficiais de avaliação da Fase 3 e os 36 inéditos da Fase 3-B; todos em 'avaliacao', porque a corrida só diagnostica.",
+  "semente": null,
+  "n_aprendizado": 0,
+  "n_avaliacao": 72,
+  "casos": {
+    "lex-1": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": null
+    },
+    "lex-4": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-4": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": null
+    },
+    "sin-5": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": null
+    },
+    "semt-1": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": null
+    },
+    "semt-3": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": null
+    },
+    "semt-5": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": null
+    },
+    "tra-1": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": null
+    },
+    "tra-4": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": null
+    },
+    "run-1": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": null
+    },
+    "run-2": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": null
+    },
+    "run-4": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": null
+    },
+    "efe-1": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": null
+    },
+    "efe-2": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-3": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-5": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": null
+    },
+    "lex-7": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": null
+    },
+    "lex-8": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": null
+    },
+    "lex-10": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": null
+    },
+    "lex-11": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": null
+    },
+    "sin-7": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": null
+    },
+    "sin-10": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-11": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-14": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": null
+    },
+    "semt-8": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": null
+    },
+    "semt-9": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": null
+    },
+    "semt-14": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": null
+    },
+    "tra-8": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": null
+    },
+    "tra-10": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": null
+    },
+    "tra-11": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": null
+    },
+    "tra-15": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": null
+    },
+    "run-9": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": null
+    },
+    "run-10": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": null
+    },
+    "run-13": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": null
+    },
+    "efe-7": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": null
+    },
+    "efe-14": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": null
+    },
+    "lex-16": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": null
+    },
+    "lex-17": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 1,
+      "hash": null
+    },
+    "lex-18": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": null
+    },
+    "lex-19": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 2,
+      "hash": null
+    },
+    "lex-20": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": null
+    },
+    "lex-21": {
+      "particao": "avaliacao",
+      "classe": 1,
+      "nivel": 3,
+      "hash": null
+    },
+    "sin-16": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": null
+    },
+    "sin-17": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 1,
+      "hash": null
+    },
+    "sin-18": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-19": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 2,
+      "hash": null
+    },
+    "sin-20": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": null
+    },
+    "sin-21": {
+      "particao": "avaliacao",
+      "classe": 2,
+      "nivel": 3,
+      "hash": null
+    },
+    "semt-16": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": null
+    },
+    "semt-17": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 1,
+      "hash": null
+    },
+    "semt-18": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": null
+    },
+    "semt-19": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 2,
+      "hash": null
+    },
+    "semt-20": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": null
+    },
+    "semt-21": {
+      "particao": "avaliacao",
+      "classe": 3,
+      "nivel": 3,
+      "hash": null
+    },
+    "tra-16": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": null
+    },
+    "tra-17": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 1,
+      "hash": null
+    },
+    "tra-18": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": null
+    },
+    "tra-19": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 2,
+      "hash": null
+    },
+    "tra-20": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": null
+    },
+    "tra-21": {
+      "particao": "avaliacao",
+      "classe": 4,
+      "nivel": 3,
+      "hash": null
+    },
+    "run-16": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": null
+    },
+    "run-17": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 1,
+      "hash": null
+    },
+    "run-18": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": null
+    },
+    "run-19": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 2,
+      "hash": null
+    },
+    "run-20": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": null
+    },
+    "run-21": {
+      "particao": "avaliacao",
+      "classe": 5,
+      "nivel": 3,
+      "hash": null
+    },
+    "efe-16": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": null
+    },
+    "efe-17": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 1,
+      "hash": null
+    },
+    "efe-18": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-19": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 2,
+      "hash": null
+    },
+    "efe-20": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": null
+    },
+    "efe-21": {
+      "particao": "avaliacao",
+      "classe": 6,
+      "nivel": 3,
+      "hash": null
+    }
+  }
+}
