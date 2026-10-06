@@ -30,7 +30,8 @@ sistemas "cobaia"), as baterias de avaliação dos modelos locais (Fases 2-A, 2-
 pesquisa no padrão ABNT.
 
 **Estado em 01/10/2026:** Fases 1, 2-A, 2-B, 3 e 3-B concluídas (a 3-B com a
-troca cruzada de bibliotecas rodada em 01/10); Fase 4, o agente na tela, em
+troca cruzada de bibliotecas rodada em 01/10); Pré-Fase 4, uma pausa de pesquisa
+antes do agente na tela, em andamento desde 01/10; Fase 4, o agente na tela, em
 planejamento. Modelo padrão do agente: `qwen2.5:7b` com a biblioteca no estado L1
 (decisão 52). Números, gráficos e a leitura de cada resultado estão no
 [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN).
@@ -93,6 +94,7 @@ versões da biblioteca por regras fixadas antes de rodar.
 | 2-B | Biblioteca de documentação escrita à mão, seis condições, máquina-alvo | Concluída |
 | 3 | Biblioteca gerida pelo próprio modelo, quatro modelos, três épocas | Concluída em 15/09/2026 |
 | 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
+| Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Em andamento desde 01/10/2026 |
 | 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor | Em planejamento |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
 
@@ -684,6 +686,15 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `comparar_qwen_coder.py` | Comparativo `qwen2.5:7b` × `qwen2.5-coder:7b` em todas as fases (29/09/2026, ficha 4): tabelas, confronto caso a caso (McNemar exato) e a lista de toda célula em que o Coder fica à frente; grava `resultados_alvo/fase3/comparativo_qwen_coder.{json,md}`; `--colar` cola os blocos em `Documentacao/memorial/3-resultados-e-analises/comparativo-qwen25-7b-vs-coder-7b.md`; `--check`. | `RESULTADOS_DIR=resultados_alvo python comparar_qwen_coder.py` |
 | `experimento_recuperador.py` | Experimento offline do recuperador (29/09/2026, ficha 11f): BM25 com sinais × embedding denso (`embeddinggemma:300m`, consulta por termos e por texto) × híbrido RRF, k = 1/3/5, nos 90 oficiais e nos 36 inéditos, bibliotecas L0/L1/L3; saída em `resultados_alvo/recuperador/` (`.json` registro, `.md` derivado com `--check`). | `RESULTADOS_DIR=resultados_alvo python experimento_recuperador.py --embedding embeddinggemma:300m` |
 | `analisar_fase3b.py` | Análise de fechamento da Fase 3-B (01/10/2026): pontes de versão, casos que mudam entre corridas iguais, inéditos somados aos oficiais (72 casos) e troca cruzada pareada contra a ponte, contra a própria biblioteca e contra o doador; grava `resultados_alvo/fase3/analise_fase3b.{json,md}`; `--colar` cola os blocos em `Documentacao/memorial/3-resultados-e-analises/fase-3b-relatorio.md`; `--check`. | `RESULTADOS_DIR=resultados_alvo python analisar_fase3b.py [--check]` |
+| `viabilidade_modelos_grandes.py` | Pré-Fase 4: para cada família de modelo do repositório colibri, se cabe no disco e na RAM desta máquina, quanto o disco custaria por token e quanto levaria a nossa resposta mediana nas velocidades medidas por terceiros; grava `resultados_alvo/pre_fase4/viabilidade_modelos_grandes.{json,md}` (`--check`, `--colar`). |
+| `sondar_logprobs.py` | Pré-Fase 4: confere com três chamadas o que o Ollama devolve de probabilidade por token (`logprobs`, `top_logprobs`) e traz o gancho `com_logprobs`, que acrescenta os dois campos à chamada de `cliente_ollama.gerar` sem mudar o que ela devolve. |
+| `sonda_confianca.py` (+ `rodar_sonda_confianca.ps1`) | Pré-Fase 4: o modelo decidido com a biblioteca dele nos 36 casos oficiais de avaliação e nos 36 inéditos, com o mesmo executor e o mesmo prompt da Fase 3, gravando a probabilidade de cada token em `logprobs__L<n>.jsonl` ao lado do registro (que mantém as 37 chaves oficiais). |
+| `analisar_confianca.py` | Pré-Fase 4: analisa a sonda de confiança. Acha nos tokens gravados o trecho do rótulo da causa, calcula a probabilidade conjunta dele (a medida principal, fixada antes da corrida), a do primeiro token e a massa das alternativas que levariam a outra causa, e mede se separam acerto de erro (AUROC com intervalo por reamostragem dos casos, risco por cobertura, quantos erros uma parcela de revisão humana pega), ao lado dos dois sinais que não custam inferência; grava `resultados_alvo/pre_fase4/confianca.{json,md}` (`--check`, `--colar`). O script da noite roda a análise no fim. |
+| `pre_fase4.py` | Pré-Fase 4: pasta dos derivados da fase (`resultados_alvo/pre_fase4/`) e a rotina comum de gravar, conferir (`--check`) e colar os blocos de tabela de cada script no relatório. |
+| `trilha.py` | Pré-Fase 4: a trilha do agente, o arquivo bruto com uma linha JSON por evento (o caso, os verbetes que a busca pontuou e entregou, o prompt, a resposta, o que o modelo declarou e o que o código conferiu), em três camadas que não se misturam; o adaptador remonta a trilha das corridas já gravadas, sem rodar modelo, e diz até onde o prompt remontado está provado; `--errata` recupera do git o texto antigo dos dois casos corrigidos em 28/09. |
+| `gerar_relatorio_raciocinio.py` | Pré-Fase 4: gera, só da trilha, o relatório para humanos de cada diagnóstico (passo a passo nas três camadas; a resposta certa aparece numa seção só), o índice de cada corrida e os indicadores somados; `--vitrine` grava as trilhas e os relatórios versionados em `resultados_alvo/pre_fase4/` (`--check`, `--colar`). |
+| `gerar_atlas.py` | Pré-Fase 4: o atlas do projeto com os dados já medidos, pelo método do `expert_atlas` do colibri: para cada versão da biblioteca, em quantos casos de cada classe de defeito cada verbete entrou no contexto, a especialização, a validação deixando um caso de fora, as citações e as trocas entre causas de cada corrida e a rota de cada caso; grava `resultados_alvo/pre_fase4/atlas.{json,md}` (`--check`, `--colar`). |
+| `testar_pre_fase4.py` | Testes sem LLM da Pré-Fase 4 (leitura do disco, gancho das probabilidades, conta de viabilidade, sonda de confiança com Ollama de mentira, trilha, relatório de raciocínio, atlas, pastas oficiais intocadas antes e depois). |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados, nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
@@ -694,6 +705,8 @@ versões, teto de texto, condição, versão do Ollama). A ponte de 21/09/2026 c
 pareáveis com a Fase 3); o `granite4.2:8b` foi pulado duas vezes por RAM (8 GB
 exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52).
 
+<!-- ! Alteração de IA - Revisar: linhas novas (01/10/2026) para os scripts da Pré-Fase 4 nas duas tabelas, a fase na tabela de fases e no estado do topo.
+     ! Motivo: decisão 70 (pausa de pesquisa antes da Fase 4); os scripts são novos no repositório e o README é a porta de entrada que diz o que cada um faz. -->
 <!-- ! Alteração de IA - Revisar: parágrafo novo (01/10/2026) com o resultado da Fase 3-B, a linha de `analisar_fase3b.py` na tabela acima e o estado da 3-B no topo e na tabela de fases.
      ! Motivo: a troca cruzada rodou de 30/09 para 01/10 e era o último teste previsto; o README ainda dizia que ela estava pendente. Números de `resultados_alvo/fase3/analise_fase3b.json`. -->
 **Resultado da Fase 3-B (01/10/2026).** A segunda ponte, em Ollama 0.34.4, deixou o `qwen2.5-coder:7b` fora do limite (b/c 3/1 nos 36), e por isso a troca cruzada é lida contra essa ponte. Nos 36 casos inéditos o ganho da biblioteca L1 não reaparece (72,2% contra 75,0% com a biblioteca original; a L3 chega a 80,6%). Na troca cruzada, a biblioteca escrita pelo `qwen2.5:7b` dá 1 caso de saldo ao Coder 7B e tira 4 do Coder 3B, contra 88,9% de acerto quando lida por quem a escreveu: o padrão do agente é o modelo com a biblioteca que ele mesmo escreveu (decisão 69). Com a mesma entrada, entre corridas iguais mudam de 0 a 3 casos em 36. A análise sai de `analisar_fase3b.py`, e o relatório, com a lista de fechamento das Fases 3 e 3-B, está em `Documentacao/memorial/3-resultados-e-analises/fase-3b-relatorio.md`.
@@ -727,10 +740,15 @@ modelo):
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: navegação em cinco grupos (Projeto, Modelos, Biblioteca, Fases anteriores, Pesquisa e método), abas Início (estado por fase, o que depende do Eric, mapa do painel), Pendências (um cartão por ficha de `pendencias.md`, com filtro), Roadmap (fases e corridas de `roadmap.md`, com o comando pronto) e as abas dos testes, lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18, monta gráficos (Chart.js, paleta validada da regra de gráficos, com tema escuro) e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
+| `medir_disco.py` | Pré-Fase 4: mede a vazão de leitura do disco no desenho do `iobench` do colibri (blocos de 19 MB, 64 leituras, 8 threads), passando pelo cache do sistema e por fora dele, e grava `resultados_alvo/pre_fase4/disco.json` com a descrição da máquina. |
 | `integrar_pesquisa_documentacao.py` | Rodada 4 do levantamento (29/09/2026, qualidade da documentação autogerida): `--montar` junta pesquisa + verificação + síntese de `.superpowers/sdd/fase3b-e-fechamento/pesquisa/r4/` em `r4-final.json`; a integração grava `levantamento-2026-09-29-documentacao-autogerida.md` (§6.13), o bloco de referências e a linha no índice do Memorial; `--check`. |
+| `integrar_pesquisa_pre_fase4.py` (+ `testar_integrar_pesquisa_pre_fase4.py`) | Rodada 5 do levantamento (01/10/2026, Pré-Fase 4), em duas partes: integra ao Memorial as partes que já rodaram, com numeração fixa (§6.14.1 a §6.14.11, §6.14.12 rejeitadas, §6.14.13 mapas), regrava o bloco de referências sem repetir fonte (pela chave das outras rodadas e pelo endereço) e a linha do índice; troca pelo número medido a expressão imprecisa do contexto dado aos agentes e declara a troca; `--check`. |
+| `correcoes_pesquisa_pre_fase4.py` | As 156 correções declaradas das sínteses e do mapa da parte A da rodada 5 (trecho antigo, novo e motivo), que o integrador aplica e lista no §6.14.12 do levantamento; cada trecho tem de aparecer uma vez só no texto do agente, senão a integração para |
 | `gerar_pdf_abnt.py` | PDF (versão beta) do projeto de pesquisa a partir do Markdown, sem as marcações de IA (retiradas só da cópia), com folha de estilo ABNT e impressão pelo Microsoft Edge em modo sem janela; grava `Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V4-beta.pdf`. |
 | `painel_textos.py` (+ `testar_painel_textos.py`) | Leitura das fichas de `pendencias.md` (`### N. Título` + campos Estado / Quem decide / O que é / Por que importa / Opções / Recomendação / Decisão) e das tabelas de `roadmap.md` (estado por fase; corridas com a coluna Estado) para o painel, e conversão do resto dos dois documentos em HTML; o teste confere o formato dos arquivos reais. |
 | `painel_topicos.py` (+ `testar_painel_topicos.py`) | Abas por tópico do painel (30/09/2026): qwen × Coder (`comparativo_qwen_coder.json`), Fase 3-B (`fase3b_ineditos/resumo_fase3.json`, ponte, sonda, corridas), curadoria da L1 (`curadoria.json` + planilha), recuperador (`experimento_recuperador.json`), ablação base × instruct (`ablacao_base_instruct/resumo_metricas.json`), pesquisa (títulos dos levantamentos e o mapa de filtros da rodada 4) e ferramental (esta tabela e a medição do servidor MCP). Cada aba: pergunta, resposta em uma frase, números-chave, um ou dois gráficos, leitura curta e tabelas recolhidas; nenhum número digitado à mão. |
+| `painel_atlas.py` | Aba Atlas do painel (01/10/2026): o mapa dos verbetes pelas seis classes de defeito, desenhado em SVG no próprio Python e movido por um script simples na página (biblioteca, quem leu, caso), o detalhe de cada verbete, a rota de cada caso, o acerto por causa com as trocas e um passeio guiado; lê `resultados_alvo/pre_fase4/atlas.json`. |
+| `painel_explorador.py` | Explorador de casos da aba "Raciocínio aberto" do painel (01/10/2026): de cada trilha versionada, o recorte por caso das três camadas (o que o programa fez, o que o modelo declarou, o que o código conferiu) e, à parte e recolhida, a avaliação contra o gabarito. |
 | `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). `--agentes rótulo=id,...` soma só os subagentes pedidos (usado na regra de permanência do servidor MCP, 29/09/2026). |
 | `resumir_saida.py` / `gancho_pre_bash.py` | Hook `PreToolUse` do Claude Code (`.claude/settings.json`) que encurta a saída de comandos longos (testes, baterias, `git diff`) antes de ela entrar no contexto. |
 | `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
@@ -774,9 +792,11 @@ Experimentos, painel e documentação, sem chamar modelo nenhum:
 cd Programacao\AgenteCore\experimentos
 python testar_fase3.py
 python testar_fase3b.py
+python testar_pre_fase4.py
 cd ..\..\..
 python ferramentas/testar_painel_textos.py
 python ferramentas/testar_painel_topicos.py
+python ferramentas/testar_integrar_pesquisa_pre_fase4.py
 python ferramentas/gerar_dashboard.py --check
 python ferramentas/conferir_docs.py
 ```

@@ -10,14 +10,23 @@
 # efeitos na mesma medição — o Ollama 0.34.1 (instalado depois da corrida oficial em 0.34.0)
 # reproduz os números (ponte)? o que um modelo escreve ajuda outro modelo, ou só ajuda quem
 # escreveu (cruzada)? o teto de 280 caracteres por nota (evolucao_biblioteca.TEXTO_MAX) é o
-# gargalo, ou o modelo já para sozinho antes disso (texto_max)? o ganho da condição A2
-# (top-k recuperado) sobrevive com a biblioteca inteira no contexto, condição A5 (a5)? o ganho
+# gargalo, ou o modelo já para sozinho antes disso (texto_max)? lendo a biblioteca que ele mesmo
+# editou, o modelo ainda copia a causa errada quando a documentação a afirma, condição A5 (a5)? o ganho
 # sobrevive em casos que nunca entraram em banco_casos.py/banco_casos_extra.py, nem para
 # calibrar o banco (ineditos)? Cada modo chama executar_fase3.rodar_epoca com n = versão+1 e
 # epocas = versão — o suficiente para cair sempre no ramo 'passada final' (ultima=True), que
 # NUNCA escreve em pasta_bib — e sempre contra uma CÓPIA do snapshot oficial (_preparar_copia),
 # nunca a pasta bibliotecas/<slug>/ de resultados_alvo/fase3/ direto: um erro de conta em
 # 'ultima' não arrisca gravar por cima de uma época fechada da corrida oficial.
+# ! Alteração de IA - Revisar: descrição do modo a5 corrigida em 01/10/2026, neste cabeçalho e na
+# docstring de modo_a5: A5 é o braço em que a documentação afirma a causa errada, não a biblioteca
+# inteira.
+# ! Motivo: o texto dizia que a5 punha "a biblioteca inteira no contexto, sem recuperação top-k"; em
+# recuperacao.contexto essa é a condição A1. A5 monta o contexto com um verbete de erro de causa
+# diferente da do caso e um registro de incidente fabricado que afirma essa causa errada para o
+# sintoma do caso: mede se o modelo copia o rótulo da documentação. O código do modo não mudou; só
+# a descrição estava errada (a corrida 5 do roadmap, "A5 sobre L3: documentação própria e adesão
+# cega", já descrevia certo).
 """Executor da Fase 3-B: ponte, cruzada, texto_max, a5 e ineditos — todos sobre cópias dos
 snapshots fechados da Fase 3 oficial (resultados_alvo/fase3/), em pastas de saída próprias."""
 import argparse
@@ -465,12 +474,15 @@ def modo_texto_max(args: argparse.Namespace) -> list[str]:
 
 
 def modo_a5(args: argparse.Namespace) -> list[str]:
-    """! Alteração de IA - Revisar: modo 'a5' — executar_fase3.CONDICAO = 'A5' (biblioteca
-    inteira no contexto, sem recuperação top-k) em tempo de execução, restaurada no finally;
-    L3 de cada --modelos, nos 36 casos de avaliação.
-    ! Motivo: a Fase 3 oficial roda sempre A2 (top-k); sem esta ablação não dá para saber se o
-    ganho da biblioteca editada sobrevive quando o modelo vê a biblioteca inteira, em vez de
-    só os k verbetes recuperados para o caso."""
+    """! Alteração de IA - Revisar: modo 'a5' — executar_fase3.CONDICAO = 'A5' em tempo de
+    execução, restaurada no finally; L3 de cada --modelos, nos 36 casos de avaliação. A5 é o braço
+    adversarial de recuperacao.contexto: o contexto traz um verbete de erro de causa diferente da
+    do caso e um registro de incidente fabricado que afirma essa causa errada para o sintoma.
+    ! Motivo: a Fase 2-B mediu a adesão cega (o modelo copia o rótulo da documentação errada em
+    93 a 96% dos casos) só com a biblioteca escrita à mão; sem esta corrida não dá para saber se,
+    lendo a biblioteca que ele mesmo editou (L3), o modelo segue menos a documentação errada.
+    Descrição corrigida em 01/10/2026: a anterior dizia "biblioteca inteira no contexto, sem
+    recuperação top-k", que é a condição A1."""
     if not args.modelos:
         raise SystemExit("modo a5 exige --modelos")
     c3_of = _oficial()

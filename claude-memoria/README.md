@@ -19,6 +19,9 @@ O que o Claude Code sabe deste projeto fica **fora do repositório**: na pasta d
 | `memory\feedback-eric-nunca-commitar.md` | Nunca commitar por conta própria; sem comando git destrutivo sem confirmação. |
 | `CLAUDE.md` | As regras do projeto que o Claude lê ao abrir o repositório. |
 | `plano-aprovado-fase-2b.md` | O plano da Fase 2-B aprovado em 03/09/2026 (desenho experimental, biblioteca, métricas, revisão de código). |
+| `plano-aprovado-fase-3.md` | O plano da Fase 3 aprovado em 11/09/2026, com o anexo dos desvios registrados no livro-razão. |
+| `plano-aprovado-complementar-3b.md` | O plano complementar de 21/09/2026 (fechar a pesquisa, decidir o modelo, Fase 3-B e ferramental), concluído em 01/10/2026. |
+| `plano-aprovado-pre-fase-4.md` | O plano da Pré-Fase 4 aprovado em 01/10/2026 (colibri e modelos grandes pelo disco, atlas visual, raciocínio aberto). |
 | `contexto\` | **Passagem de bastão entre sessões/máquinas**: o que não cabe na memória — como o harness está montado, armadilhas já pagas, estado das fases, próximas fases e o jeito de trabalhar. Um arquivo por sessão encerrada. O Claude deve ler o mais recente na primeira sessão numa máquina nova. |
 
 ## Na máquina de destino (importar — **adiciona, não substitui**)
@@ -43,3 +46,6 @@ powershell -ExecutionPolicy Bypass -File claude-memoria\exportar.ps1
 ```
 
 Copia a memória atual e o `CLAUDE.md` para cá; aí é só commitar.
+
+<!-- ! Alteração de IA - Revisar: três linhas novas na tabela (01/10/2026): os planos da Fase 3, complementar e da Pré-Fase 4.
+     ! Motivo: a tabela listava só o plano da Fase 2-B; os outros dois já estavam ou passaram a estar na pasta, e quem importa a memória em outra máquina precisa saber que eles existem. -->

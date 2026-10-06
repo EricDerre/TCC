@@ -30,6 +30,12 @@
 # que a Fase 3-B mediu das limitações 2, 6 e 7 (números de analise_fase3b.json, lidos por `resumo_3b`).
 # ! Motivo: a troca cruzada rodou e o Eric pediu a análise das duas últimas corridas e a verificação de que as Fases
 # 3 e 3-B podem ser dadas por concluídas; o painel ainda dizia que a cruzada faltava e que o ruído era de 0 a 2 casos.
+# ! Alteração de IA - Revisar: na tarde de 01/10/2026 entrou o grupo "Pré-Fase 4" com a aba "Modelos grandes pelo
+# disco" (`contexto_pre_fase4` lê os derivados de resultados_alvo/pre_fase4/), e o CSS dos cartões de corrida passou
+# a quebrar nomes compridos dentro da coluna (`minmax(0,1fr)` e `overflow-wrap:anywhere` em `.fatos2`).
+# ! Motivo: decisão 70 (Pré-Fase 4). O estado da corrida 11 cita o arquivo `logprobs_amostra__qwen2.5-coder_3b.json`,
+# e esse nome sem espaço alargava a coluna para além do cartão: o texto do estado e o de "O que fecha" saíam cortados
+# à direita na captura de tela.
 """Uso: python ferramentas/gerar_dashboard.py [--check] [--saida Documentacao/dashboard/painel-do-projeto.html]"""
 from __future__ import annotations
 
@@ -443,13 +449,13 @@ nav .grupo{font:600 11px var(--fb);text-transform:uppercase;letter-spacing:.06em
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .fc{margin:10px 0}.fc h4{margin:0 0 3px}.fc p{margin:0;max-width:90ch}.opcoes{margin:4px 0 0;padding-left:22px}.opcoes li{margin:3px 0}
 .fc.decisao{border-left:3px solid var(--meio);padding-left:12px}.fc.decisao.tomada{border-left-color:var(--bom)}
-.corridas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:14px}.corrida{margin:0}
-.fatos2{display:grid;grid-template-columns:1fr;gap:4px;font-size:13px}.fatos2 div{display:grid;grid-template-columns:130px 1fr;gap:8px;border-bottom:1px dotted var(--linha);padding:4px 0}.fatos2 span{color:var(--ink2)}.fatos2 b{font-weight:500}
+.corridas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:14px}.corrida{margin:0;min-width:0}
+.fatos2{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;font-size:13px}.fatos2 div{display:grid;grid-template-columns:130px minmax(0,1fr);gap:8px;border-bottom:1px dotted var(--linha);padding:4px 0}.fatos2 span{color:var(--ink2)}.fatos2 b{font-weight:500;overflow-wrap:anywhere}
 .cmd{position:relative;margin-top:10px}.cmd pre{margin:0;background:var(--acento2);border-radius:6px;padding:10px 74px 10px 12px;font:12px/1.5 var(--fm);white-space:pre-wrap;word-break:break-all;overflow-x:auto}
 .cmd button{position:absolute;top:6px;right:6px;border:1px solid var(--linha);background:var(--bg2);color:var(--ink2);font:500 12px var(--fb);padding:3px 8px;border-radius:6px;cursor:pointer}
 .ref{font-family:var(--fm);font-size:13px;color:var(--acento)}
 main ol,main ul{padding-left:22px}
-@media (max-width:640px){.fatos2 div{grid-template-columns:1fr}.cmd pre{padding-right:12px}.cmd button{position:static;margin-top:6px}}
+@media (max-width:640px){.fatos2 div{grid-template-columns:minmax(0,1fr)}.cmd pre{padding-right:12px}.cmd button{position:static;margin-top:6px}}
 @media (max-width:640px){.fatos{grid-template-columns:1fr}.chart{height:280px}h1{font-size:24px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 """ + tp.CSS_TOPICOS
@@ -707,7 +713,10 @@ def secao_inicio(dados: dict, pend: list, road: dict) -> str:
     itens = [(rotulo_fase, fase.nome if fase else "—", f"cronograma do projeto: fim do {m.group(1)}" if m else ""),
              ("Modelo escolhido", v["modelo"], f'biblioteca L{v["biblioteca_epoca"]} (decisão 52)'),
              ("Pendências abertas", str(len(abertas)), f"{len(do_eric)} dependem de decisão do Eric"),
-             ("Corridas da 3-B", f"{n_rod} rodando · {n_pend} pendentes", f"{n_feitas} feitas"),
+             # ! Alteração de IA - Revisar: o cartão passa a se chamar "Corridas no roadmap" (01/10/2026).
+             # ! Motivo: ele sempre contou todas as linhas da tabela §2 do roadmap, e com as corridas 11 a 13 da
+             # Pré-Fase 4 o nome "Corridas da 3-B" passou a dizer uma coisa e contar outra.
+             ("Corridas no roadmap", f"{n_rod} rodando · {n_pend} pendentes", f"{n_feitas} feitas"),
              ("Estado registrado em", road["data"] or "—", "roadmap.md e pendencias.md")]
     kp = '<div class="kpis">' + "".join(f"<div class='kpi'><span>{html.escape(t)}</span><b>{html.escape(b)}</b><small>{html.escape(s)}</small></div>" for t, b, s in itens) + "</div>"
     lista = "".join(f'<li><a href="#{f.id_html}" data-ir="pendencias|{f.id_html}"><span class="numero">{f.numero}</span> {pt.inline(f.titulo)}</a>'
@@ -993,6 +1002,33 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 """
 
 
+# ! Alteração de IA - Revisar: leitura dos derivados da Pré-Fase 4 (01/10/2026) para a aba "Modelos grandes pelo disco".
+# ! Motivo: a aba nova lê a conta de viabilidade do colibri, a medição do disco e a amostra de probabilidades do Ollama;
+# os três arquivos nascem em resultados_alvo/pre_fase4/ e podem não existir numa máquina que não rodou as sondas, caso
+# em que a aba mostra o estado vazio em vez de o painel inteiro falhar. O teste das abas usa esta mesma função, para
+# o teste e o gerador nunca lerem arquivos diferentes.
+def contexto_pre_fase4() -> dict:
+    pasta = EXP / "resultados_alvo" / "pre_fase4"
+
+    def le(nome: str):
+        return ler_json(pasta / nome) if (pasta / nome).exists() else None
+
+    amostras = sorted(pasta.glob("logprobs_amostra__*.json")) if pasta.exists() else []
+    # a amostra do modelo decidido tem preferência quando existir
+    preferida = next((a for a in amostras if "qwen2.5_7b" in a.name), amostras[0] if amostras else None)
+    # relatório de exemplo da aba "Raciocínio aberto": um caso da troca cruzada em que a conferência feita só em código
+    # (nenhum verbete do contexto trata da causa respondida) acusa a resposta errada
+    exemplo = pasta / "relatorios" / "fase3b_cruzada_qwen__qwen2.5-coder_3b__L1" / "sin-4.md"
+    return {"viabilidade": le("viabilidade_modelos_grandes.json"), "disco": le("disco.json"),
+            "logprobs_amostra": ler_json(preferida) if preferida else None,
+            "indicadores_raciocinio": le("indicadores_raciocinio.json"),
+            "relatorio_exemplo": exemplo.read_text(encoding="utf-8") if exemplo.exists() else None,
+            "atlas": le("atlas.json"),
+            # as trilhas versionadas (uma lista de eventos por arquivo), para o explorador de casos da aba "Raciocínio aberto"
+            "trilhas": {p.stem: [json.loads(l) for l in p.read_text(encoding="utf-8").splitlines() if l.strip()]
+                        for p in sorted((pasta / "trilhas").glob("*.jsonl"))} if (pasta / "trilhas").exists() else {}}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", default=str(SAIDA_PADRAO))
@@ -1026,6 +1062,7 @@ def main() -> None:
         "relatorio3b": ((MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8")
                         if (MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").exists() else None),
         "pend": pend,
+        **contexto_pre_fase4(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     html_final = pagina(dados, blocos, figs, pend, road, topicos_html)

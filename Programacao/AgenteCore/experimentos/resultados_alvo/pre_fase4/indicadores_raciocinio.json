@@ -1,0 +1,242 @@
+{
+  "metadados": {
+    "gerado_em": "2026-10-01T15:16:11",
+    "fonte": "trilhas remontadas por trilha.adaptar_corrida a partir dos registros das corridas"
+  },
+  "corridas": [
+    {
+      "corrida": "fase3",
+      "modelo": "qwen2.5:7b",
+      "biblioteca_epoca": 1,
+      "dono_da_biblioteca": "qwen2.5:7b",
+      "diagnosticos": 90,
+      "sem_raciocinio_antes_das_linhas": 90,
+      "conferencias": [
+        {
+          "regra": "quatro_linhas_presentes",
+          "confere": 90
+        },
+        {
+          "regra": "rotulo_no_conjunto",
+          "confere": 89,
+          "nao_confere": 1
+        },
+        {
+          "regra": "fonte_existe_na_biblioteca",
+          "confere": 117
+        },
+        {
+          "regra": "fonte_estava_no_contexto",
+          "confere": 117
+        },
+        {
+          "regra": "campo_existe_no_caso",
+          "confere": 53,
+          "nao_se_aplica": 37
+        },
+        {
+          "regra": "rotulo_sustentado_por_verbete_do_contexto",
+          "confere": 83,
+          "nao_confere": 7
+        },
+        {
+          "regra": "notas_nos_verbetes_citados",
+          "informativo": 90
+        },
+        {
+          "regra": "impacto",
+          "nao_verificavel": 90
+        }
+      ],
+      "avaliacao": {
+        "causa_correta": {
+          "confere": 69,
+          "nao_confere": 21
+        },
+        "campo_correto": {
+          "nao_confere": 23,
+          "confere": 67
+        },
+        "verbete_de_ouro_no_contexto": {
+          "confere": 70,
+          "nao_confere": 20
+        }
+      },
+      "prova_do_prompt": {
+        "contexto": 36,
+        "prompt_inteiro": 54
+      },
+      "acerto_por_sustentacao": {
+        "sustentado": {
+          "n": 83,
+          "acertos": 65,
+          "acerto_pct": 78.3
+        },
+        "nao_sustentado": {
+          "n": 7,
+          "acertos": 4,
+          "acerto_pct": 57.1
+        }
+      },
+      "propostas": {
+        "aceita": 12,
+        "humano: Correta": 5,
+        "rejeitada": 74,
+        "humano: Errada": 4,
+        "humano: Parcial": 1
+      }
+    },
+    {
+      "corrida": "fase3b_ineditos",
+      "modelo": "qwen2.5:7b",
+      "biblioteca_epoca": 1,
+      "dono_da_biblioteca": "qwen2.5:7b",
+      "diagnosticos": 36,
+      "sem_raciocinio_antes_das_linhas": 36,
+      "conferencias": [
+        {
+          "regra": "quatro_linhas_presentes",
+          "confere": 36
+        },
+        {
+          "regra": "rotulo_no_conjunto",
+          "confere": 36
+        },
+        {
+          "regra": "fonte_existe_na_biblioteca",
+          "confere": 43
+        },
+        {
+          "regra": "fonte_estava_no_contexto",
+          "confere": 43
+        },
+        {
+          "regra": "campo_existe_no_caso",
+          "confere": 23,
+          "nao_se_aplica": 13
+        },
+        {
+          "regra": "rotulo_sustentado_por_verbete_do_contexto",
+          "confere": 32,
+          "nao_confere": 4
+        },
+        {
+          "regra": "notas_nos_verbetes_citados",
+          "informativo": 36
+        },
+        {
+          "regra": "impacto",
+          "nao_verificavel": 36
+        }
+      ],
+      "avaliacao": {
+        "causa_correta": {
+          "confere": 26,
+          "nao_confere": 10
+        },
+        "campo_correto": {
+          "confere": 31,
+          "nao_confere": 5
+        },
+        "verbete_de_ouro_no_contexto": {
+          "confere": 24,
+          "nao_confere": 12
+        }
+      },
+      "prova_do_prompt": {
+        "contexto": 36
+      },
+      "acerto_por_sustentacao": {
+        "sustentado": {
+          "n": 32,
+          "acertos": 23,
+          "acerto_pct": 71.9
+        },
+        "nao_sustentado": {
+          "n": 4,
+          "acertos": 3,
+          "acerto_pct": 75.0
+        }
+      },
+      "propostas": {}
+    },
+    {
+      "corrida": "fase3b_cruzada_qwen",
+      "modelo": "qwen2.5-coder:3b",
+      "biblioteca_epoca": 1,
+      "dono_da_biblioteca": "qwen2.5:7b",
+      "diagnosticos": 36,
+      "sem_raciocinio_antes_das_linhas": 36,
+      "conferencias": [
+        {
+          "regra": "quatro_linhas_presentes",
+          "confere": 36
+        },
+        {
+          "regra": "rotulo_no_conjunto",
+          "confere": 36
+        },
+        {
+          "regra": "fonte_existe_na_biblioteca",
+          "confere": 36,
+          "nao_se_aplica": 2
+        },
+        {
+          "regra": "fonte_estava_no_contexto",
+          "confere": 36,
+          "nao_se_aplica": 2
+        },
+        {
+          "regra": "campo_existe_no_caso",
+          "confere": 19,
+          "nao_confere": 2,
+          "nao_se_aplica": 15
+        },
+        {
+          "regra": "rotulo_sustentado_por_verbete_do_contexto",
+          "confere": 27,
+          "nao_confere": 9
+        },
+        {
+          "regra": "notas_nos_verbetes_citados",
+          "nao_se_aplica": 2,
+          "informativo": 34
+        },
+        {
+          "regra": "impacto",
+          "nao_verificavel": 36
+        }
+      ],
+      "avaliacao": {
+        "causa_correta": {
+          "nao_confere": 14,
+          "confere": 22
+        },
+        "campo_correto": {
+          "confere": 25,
+          "nao_confere": 11
+        },
+        "verbete_de_ouro_no_contexto": {
+          "confere": 30,
+          "nao_confere": 6
+        }
+      },
+      "prova_do_prompt": {
+        "contexto": 36
+      },
+      "acerto_por_sustentacao": {
+        "sustentado": {
+          "n": 27,
+          "acertos": 21,
+          "acerto_pct": 77.8
+        },
+        "nao_sustentado": {
+          "n": 9,
+          "acertos": 1,
+          "acerto_pct": 11.1
+        }
+      },
+      "propostas": {}
+    }
+  ]
+}

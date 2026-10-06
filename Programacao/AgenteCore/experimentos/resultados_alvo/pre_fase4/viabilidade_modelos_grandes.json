@@ -1,0 +1,269 @@
+{
+  "metadados": {
+    "gerado_em": "2026-10-01T16:44:50",
+    "repositorio": "https://github.com/JustVugg/colibri",
+    "acesso": "2026-10-01",
+    "conferido_pela_rodada_5": true,
+    "ressalva_da_conferencia": "o verificador não confirmou o tamanho em disco do GLM-5.3 (419 GB)",
+    "modelo_do_agente": "qwen2.5:7b",
+    "gb_por_token_frio": 11.4,
+    "fontes": {
+      "tabela_de_requisitos": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "medidas": "https://github.com/JustVugg/colibri/blob/main/docs/benchmarks.md",
+      "parametros": "https://justvugg.github.io/colibri",
+      "disco": "resultados_alvo/pre_fase4/disco.json",
+      "medianas": "resultados_alvo/fase3/<modelo>/diagnosticos__L*.jsonl",
+      "ram_livre": "resultados_alvo/maquina.json (ram_livre_no_inicio_gb)"
+    }
+  },
+  "maquina": {
+    "cpu": "12th Gen Intel(R) Core(TM) i5-1235U",
+    "nucleos": 10,
+    "threads": 12,
+    "ram_gb": 15.69,
+    "ram_instalada_gb": 16.0,
+    "ram_livre_no_inicio_de_corrida_gb": 7.2,
+    "disco_modelo": "NVMe SM2P41C3 NVMe ADATA 512GB",
+    "disco_barramento": "NVMe",
+    "disco_total_gb": 474.0,
+    "disco_livre_gb": 218.1,
+    "sistema": "Microsoft Windows 11 Pro 10.0.26200",
+    "ollama_da_fase_3": "0.34.0"
+  },
+  "medianas_do_agente": {
+    "n": 360,
+    "tokens_entrada": 1285.5,
+    "tokens_saida": 61.0,
+    "segundos": 66.715,
+    "prefill_ms": 50832.5,
+    "geracao_ms": 14070.0
+  },
+  "disco_medido": {
+    "bloco_bytes": 19922944,
+    "blocos": 64,
+    "threads": 8,
+    "direto": {
+      "repeticoes": 3,
+      "gb_por_s_mediana": 3.765,
+      "gb_por_s_min": 3.37,
+      "gb_por_s_max": 3.914
+    },
+    "pelo_cache": {
+      "repeticoes": 3,
+      "gb_por_s_mediana": 2.308,
+      "gb_por_s_min": 2.304,
+      "gb_por_s_max": 2.819
+    }
+  },
+  "familias": [
+    {
+      "nome": "OLMoE",
+      "parametros_bi": 7,
+      "ativos_bi": 1,
+      "disco_gb": 7,
+      "ram_min_gb": 8,
+      "ram_texto": "8 GB",
+      "gpu": "não precisa",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": true,
+      "disco_total": true,
+      "ram": "sim",
+      "roda": "sim"
+    },
+    {
+      "nome": "Qwen3.6-35B-A3B",
+      "parametros_bi": 35,
+      "ativos_bi": 3,
+      "disco_gb": 20,
+      "ram_min_gb": 24,
+      "ram_texto": "24 GB (needs full RAM residency)",
+      "gpu": "opcional",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": true,
+      "disco_total": true,
+      "ram": "nao",
+      "roda": "nao"
+    },
+    {
+      "nome": "DeepSeek V4 Flash",
+      "parametros_bi": 284,
+      "ativos_bi": 13,
+      "disco_gb": 167,
+      "ram_min_gb": 16,
+      "ram_texto": "16 GB min, 32 GB comfortable",
+      "gpu": "opcional",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": true,
+      "disco_total": true,
+      "ram": "no_minimo",
+      "roda": "no_limite"
+    },
+    {
+      "nome": "Qwen3.8-Flash-Next",
+      "parametros_bi": 180,
+      "ativos_bi": 6,
+      "disco_gb": 185.5,
+      "ram_min_gb": 16,
+      "ram_texto": "16 GB min, 24 GB comfortable at the default context",
+      "gpu": "opcional",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": true,
+      "disco_total": true,
+      "ram": "no_minimo",
+      "roda": "no_limite"
+    },
+    {
+      "nome": "GLM-5.3-Flash",
+      "parametros_bi": 320,
+      "ativos_bi": 18,
+      "disco_gb": 195,
+      "ram_min_gb": 25,
+      "ram_texto": "25 GB (12 GB weights at int4 + expert cache)",
+      "gpu": "não precisa",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": true,
+      "disco_total": true,
+      "ram": "nao",
+      "roda": "nao"
+    },
+    {
+      "nome": "GLM-5.2",
+      "parametros_bi": 744,
+      "ativos_bi": 40,
+      "disco_gb": 372,
+      "ram_min_gb": 16,
+      "ram_texto": "16 GB min, 24 GB comfortable",
+      "gpu": "não precisa",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": false,
+      "disco_total": true,
+      "ram": "no_minimo",
+      "roda": "nao"
+    },
+    {
+      "nome": "GLM-5.3",
+      "parametros_bi": null,
+      "ativos_bi": null,
+      "disco_gb": 419,
+      "ram_min_gb": 16,
+      "ram_texto": "16 GB min, 24 GB comfortable",
+      "gpu": "não precisa",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": false,
+      "disco_total": true,
+      "ram": "no_minimo",
+      "roda": "nao"
+    },
+    {
+      "nome": "Inkling",
+      "parametros_bi": 975,
+      "ativos_bi": 41,
+      "disco_gb": 469,
+      "ram_min_gb": 25,
+      "ram_texto": "25 GB with the int4 dense container, ~120 GB without",
+      "gpu": "não precisa",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": false,
+      "disco_total": true,
+      "ram": "nao",
+      "roda": "nao"
+    },
+    {
+      "nome": "Kimi K3",
+      "parametros_bi": 2800,
+      "ativos_bi": 104,
+      "disco_gb": 1600,
+      "ram_min_gb": 32,
+      "ram_texto": "32 GB+",
+      "gpu": "não precisa",
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/README.md",
+      "disco_livre": false,
+      "disco_total": false,
+      "ram": "nao",
+      "roda": "nao"
+    }
+  ],
+  "cenarios_de_disco": [
+    {
+      "disco": "NVMe desta máquina, leitura por fora do cache (medido)",
+      "gb_por_s": 3.765,
+      "premissa": false,
+      "segundos_por_token_frio": 3.0278884462151394,
+      "tokens_por_s_teto": 0.33026315789473687,
+      "minutos_de_leitura_por_resposta": 3.0783532536520584
+    },
+    {
+      "disco": "SSD SATA (premissa: 0,55 GB/s, teto prático da interface)",
+      "gb_por_s": 0.55,
+      "premissa": true,
+      "segundos_por_token_frio": 20.727272727272727,
+      "tokens_por_s_teto": 0.048245614035087724,
+      "minutos_de_leitura_por_resposta": 21.07272727272727
+    },
+    {
+      "disco": "disco rígido de 7.200 rpm (premissa: 0,15 GB/s em leitura sequencial)",
+      "gb_por_s": 0.15,
+      "premissa": true,
+      "segundos_por_token_frio": 76.0,
+      "tokens_por_s_teto": 0.013157894736842105,
+      "minutos_de_leitura_por_resposta": 77.26666666666667
+    }
+  ],
+  "medidas_de_terceiros": [
+    {
+      "maquina": "Intel Core Ultra 7 270K Plus, 24 GB, WSL2, NVMe",
+      "modelo": "GLM-5.2",
+      "tok_por_s": 0.07,
+      "nota": "padrão; cache de especialistas com acerto de 3 a 4%",
+      "issue": 2,
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/docs/benchmarks.md",
+      "segundos_por_resposta": 871.4285714285713,
+      "minutos_por_resposta": 14.523809523809522,
+      "vezes_o_tempo_de_hoje": 13.0619586514063
+    },
+    {
+      "maquina": "Intel Core Ultra 7 270K Plus, 24 GB, WSL2, NVMe",
+      "modelo": "GLM-5.2",
+      "tok_por_s": 0.11,
+      "nota": "com --topp 0.7, que o repositório marca como opção com perda",
+      "issue": 2,
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/docs/benchmarks.md",
+      "segundos_por_resposta": 554.5454545454545,
+      "minutos_por_resposta": 9.242424242424242,
+      "vezes_o_tempo_de_hoje": 8.312155505440373
+    },
+    {
+      "maquina": "Intel i5-12600K, 32 GB, Windows 11 nativo, só CPU",
+      "modelo": "GLM-5.2",
+      "tok_por_s": 0.08,
+      "nota": "frio, cache limitado pela RAM a cerca de 2 especialistas por camada",
+      "issue": 113,
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/docs/benchmarks.md",
+      "segundos_por_resposta": 762.5,
+      "minutos_por_resposta": 12.708333333333334,
+      "vezes_o_tempo_de_hoje": 11.429213819980513
+    },
+    {
+      "maquina": "Intel Core Ultra 9 185H, 32 GB, Windows 11 nativo",
+      "modelo": "GLM-5.2",
+      "tok_por_s": 0.03,
+      "nota": "frio, só CPU; a mesma máquina chega a 0,5 com o cache quente",
+      "issue": 128,
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/docs/benchmarks.md",
+      "segundos_por_resposta": 2033.3333333333335,
+      "minutos_por_resposta": 33.88888888888889,
+      "vezes_o_tempo_de_hoje": 30.47790351994804
+    },
+    {
+      "maquina": "Apple M3 básico, 16 GB, só CPU",
+      "modelo": "OLMoE",
+      "tok_por_s": 3.69,
+      "nota": "frio; 4,18 com o cache quente",
+      "issue": 949,
+      "fonte": "https://github.com/JustVugg/colibri/blob/main/docs/benchmarks.md",
+      "segundos_por_resposta": 16.531165311653115,
+      "minutos_por_resposta": 0.27551942186088524,
+      "vezes_o_tempo_de_hoje": 0.24778783349551248
+    }
+  ]
+}

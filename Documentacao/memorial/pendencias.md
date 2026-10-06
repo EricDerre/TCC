@@ -236,6 +236,37 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). É uma noite de máquina, e o resultado pode mudar o que o plano da Fase 4 assume sobre a biblioteca de partida; o planejamento segue enquanto a corrida roda.
 - **Decisão:** em aberto
 
+## Abertas em 01/10/2026 (Pré-Fase 4)
+
+<!-- ! Alteração de IA - Revisar: bloco novo (01/10/2026) com as duas decisões que a Pré-Fase 4 deixou com o Eric: a noite da sonda de confiança e o custo da parte B da pesquisa bibliográfica.
+     ! Motivo: as duas perguntas foram feitas no chat, e a regra do projeto é que toda pendência nova vire ficha aqui, para aparecer no painel na lista do que depende do Eric. Sem as fichas, a corrida 12 e a parte B ficariam paradas sem registro do porquê. -->
+
+### 19. Combinar a noite da sonda de confiança (corrida 12)
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 01/10/2026
+- **O que é:** A corrida 12 mede se a probabilidade que o modelo dá ao rótulo da causa separa acerto de erro. O `qwen2.5:7b` lê a biblioteca L1 dele nos 36 casos oficiais de avaliação e nos 36 inéditos, com o mesmo executor e o mesmo prompt da Fase 3, e o Ollama grava a probabilidade de cada token num arquivo ao lado do registro (`logprobs__L1.jsonl`). O script está pronto e testado (`sonda_confianca.py` e `rodar_sonda_confianca.ps1`). A máquina precisa estar livre: o modelo pede 6,5 GB de RAM livres, e com o VS Code e a sessão do Claude abertos sobram cerca de 5.
+- **Por que importa:** É a medição que diz se o agente da Fase 4 pode usar a probabilidade do rótulo para pedir revisão humana. Nos 72 casos o modelo erra cerca de 14 (pelas corridas já feitas com a L1); com tão poucos erros a medida sai com intervalo largo, e por isso a opção de rodar também com a biblioteca original (L0).
+- **Opções:**
+  - (a) Uma noite com L0 e L1: em `Programacao/AgenteCore/experimentos`, `powershell -ExecutionPolicy Bypass -File rodar_sonda_confianca.ps1 -Versoes 0,1` (144 inferências, cerca de 2h40).
+  - (b) Só a L1: o mesmo comando sem `-Versoes` (72 inferências, cerca de 1h15).
+  - (c) Não rodar: a Fase 4 fica com os dois sinais que não custam inferência (a causa respondida ser tratada por um verbete do contexto, e a causa respondida ser de uma classe que a rota de busca aponta; relatório da Pré-Fase 4, seções 3.3 e 4.1).
+- **Recomendação:** (a). Dobra o número de erros na amostra pelo custo de uma hora e meia a mais na mesma noite. Se a ficha 18 sair como (a), a cópia curada pode entrar na mesma noite.
+- **Decisão:** em aberto
+
+### 20. Parte B da pesquisa bibliográfica (raciocínio aberto): com que custo
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 01/10/2026
+- **O que é:** A rodada 5 da pesquisa tem duas partes. A parte A (o repositório colibri, as pesquisas que ele cita, inferência com os pesos fora da RAM, modelos MoE pequenos e atlas) rodou e está integrada ao levantamento (§6.14.1 a §6.14.5): 31 agentes e cerca de 1,13 milhão de tokens. A estimativa que dei para as duas partes juntas era de cerca de 1,5 milhão; a parte A sozinha gastou três quartos disso. A parte B são seis tópicos sobre o raciocínio aberto: se o raciocínio escrito é o que decidiu a resposta, formatos de trilha e exigências de registro, relatório para quem desenvolve, atribuição ao contexto, confiança por probabilidade e uso das trilhas para melhorar o sistema.
+- **Por que importa:** A especificação da trilha e do relatório para a Fase 4 e a leitura da sonda de confiança se apoiam nessa literatura. O plano aprovado já autoriza a rodada; o que mudou foi o custo, e a regra de economia de tokens é sua.
+- **Opções:**
+  - (a) Mesmo rigor da parte A: até 16 afirmações verificadas por tópico, cerca de 37 agentes, estimativa de 1,3 milhão de tokens.
+  - (b) Até 12 afirmações verificadas por tópico: estimativa de 1,1 milhão de tokens; as que passarem do teto ficam registradas como não verificadas.
+  - (c) Só os três tópicos de que a especificação mais depende (formatos de trilha, confiança por probabilidade e uso das trilhas): cerca de metade do custo; os outros três ficam para depois.
+- **Recomendação:** (a). A diferença para (b) é de cerca de 15%, e as afirmações além do teto são justamente as que ficariam sem verificação. Se a prioridade for economia, (c) cobre o que a especificação precisa.
+- **Decisão:** em aberto
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

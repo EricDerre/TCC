@@ -1,0 +1,104 @@
+{
+  "gerado_em": "2026-10-01T14:28:33",
+  "metodo": "leituras de blocos inteiros em posições sorteadas de um arquivo grande, repartidas entre threads; desenho do iobench do colibri (19 MB x 64, 8 threads). 'direto' abre o arquivo sem o cache do sistema; 'pelo_cache' passa pelo cache, e a partir da segunda repetição pode vir da RAM.",
+  "arquivo": {
+    "nome": "sha256-60e05f2100071479f596b964f89f510f057ce397ea22f2833a0cfe029bfc2463",
+    "gb": 4.36,
+    "origem": "blob de modelo do Ollama, só leitura"
+  },
+  "bloco_bytes": 19922944,
+  "blocos": 64,
+  "threads": 8,
+  "direto": {
+    "repeticoes": 3,
+    "gb_por_s_mediana": 3.765,
+    "gb_por_s_min": 3.37,
+    "gb_por_s_max": 3.914,
+    "medidas": [
+      {
+        "modo": "direto",
+        "blocos": 64,
+        "bloco_bytes": 19922944,
+        "threads": 8,
+        "bytes": 1275068416,
+        "segundos": 0.3783,
+        "gb_por_s": 3.37,
+        "gib_por_s": 3.139
+      },
+      {
+        "modo": "direto",
+        "blocos": 64,
+        "bloco_bytes": 19922944,
+        "threads": 8,
+        "bytes": 1275068416,
+        "segundos": 0.3258,
+        "gb_por_s": 3.914,
+        "gib_por_s": 3.645
+      },
+      {
+        "modo": "direto",
+        "blocos": 64,
+        "bloco_bytes": 19922944,
+        "threads": 8,
+        "bytes": 1275068416,
+        "segundos": 0.3387,
+        "gb_por_s": 3.765,
+        "gib_por_s": 3.506
+      }
+    ]
+  },
+  "pelo_cache": {
+    "repeticoes": 3,
+    "gb_por_s_mediana": 2.308,
+    "gb_por_s_min": 2.304,
+    "gb_por_s_max": 2.819,
+    "medidas": [
+      {
+        "modo": "pelo_cache",
+        "blocos": 64,
+        "bloco_bytes": 19922944,
+        "threads": 8,
+        "bytes": 1275068416,
+        "segundos": 0.5535,
+        "gb_por_s": 2.304,
+        "gib_por_s": 2.145
+      },
+      {
+        "modo": "pelo_cache",
+        "blocos": 64,
+        "bloco_bytes": 19922944,
+        "threads": 8,
+        "bytes": 1275068416,
+        "segundos": 0.4524,
+        "gb_por_s": 2.819,
+        "gib_por_s": 2.625
+      },
+      {
+        "modo": "pelo_cache",
+        "blocos": 64,
+        "bloco_bytes": 19922944,
+        "threads": 8,
+        "bytes": 1275068416,
+        "segundos": 0.5525,
+        "gb_por_s": 2.308,
+        "gib_por_s": 2.149
+      }
+    ]
+  },
+  "maquina": {
+    "cpu": "12th Gen Intel(R) Core(TM) i5-1235U",
+    "threads": 12,
+    "ram_gb": 15.69,
+    "disco": {
+      "modelo": "NVMe SM2P41C3 NVMe ADATA 512GB",
+      "tipo": "SSD",
+      "barramento": "NVMe",
+      "tamanho_fisico_gb": 476.9,
+      "discos_fisicos": 1,
+      "unidade": "C:\\",
+      "total_gb": 474.0,
+      "livre_gb": 218.1
+    },
+    "ram_instalada_gb": 16.0
+  }
+}

@@ -42,6 +42,7 @@ def _ctx() -> dict:
         "analise3b": gd.ler_json(gd.F3 / "analise_fase3b.json"),
         "relatorio3b": (gd.MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8"),
         "pend": pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"),
+        **gd.contexto_pre_fase4(),
     }
 
 
@@ -154,6 +155,91 @@ class TestesAbasPorTopico(unittest.TestCase):
         for f in abertas:
             self.assertIn(f'data-ir="pendencias|{f.id_html}"', secao)
 
+    # ! Alteração de IA - Revisar: teste novo (01/10/2026) para a primeira aba da Pré-Fase 4, "Modelos grandes pelo disco".
+    # ! Motivo: a aba responde se o colibri serve a esta máquina, com a conta de viabilidade_modelos_grandes.json, a
+    # medição do disco e a amostra de probabilidades do Ollama; é por ela que o Eric lê o veredito, e um número
+    # trocado (quantas famílias cabem, quantos minutos por resposta) inverteria a leitura.
+    def teste_colibri_usa_os_numeros_da_viabilidade(self):
+        v = self.ctx["viabilidade"]
+        self.assertIsNotNone(v, "falta resultados_alvo/pre_fase4/viabilidade_modelos_grandes.json")
+        secao = self.html[self.html.index('<section id="colibri"'):].split("</section>")[0]
+        # o veredito tem três estados: roda com folga, fica no limite (cabe no disco livre e pede exatamente a RAM instalada) ou não roda
+        rodam = [f["nome"] for f in v["familias"] if f["roda"] == "sim"]
+        limite = [f["nome"] for f in v["familias"] if f["roda"] == "no_limite"]
+        self.assertIn(f"<b>{len(rodam)} de {len(v['familias'])}</b>", secao)
+        self.assertEqual(secao.count("<tr data-familia="), len(v["familias"]))
+        self.assertEqual(secao.count('data-veredito="sim"'), len(rodam))
+        self.assertEqual(secao.count('data-veredito="no_limite"'), len(limite))
+        self.assertEqual(secao.count('data-veredito="nao"'), len(v["familias"]) - len(rodam) - len(limite))
+        self.assertNotIn("passa da instalada", secao, "a máquina está no mínimo de RAM declarado, não abaixo dele")
+        t = self.dados_t["colibri"]
+        self.assertEqual(len(t["barras"]), 1 + len(v["medidas_de_terceiros"]))
+        self.assertTrue(t["barras"][0]["hoje"])
+        self.assertEqual(t["barras"][0]["minutos"], round(v["medianas_do_agente"]["segundos"] / 60, 2))
+        for b, m in zip(t["barras"][1:], v["medidas_de_terceiros"]):
+            self.assertEqual(b["minutos"], round(m["minutos_por_resposta"], 2))
+        self.assertIn('id="g-co-min"', secao)
+        sem_codigo = re.sub(r"<(code|pre)\b[^>]*>.*?</\1>", "", secao, flags=re.S)
+        self.assertNotIn("—", sem_codigo, "texto novo do painel sem travessão")
+        self.assertNotIn("→", sem_codigo)
+        if self.ctx["logprobs_amostra"]:
+            self.assertGreaterEqual(secao.count('class="tok"'), 5, "a amostra mostra a probabilidade token a token")
+            self.assertIn("<tr data-alternativa=", secao)
+        for numero in ("11", "12", "13"):
+            self.assertIn(f'id="corrida-{numero}-co"', secao)
+
+    # ! Alteração de IA - Revisar: teste novo (01/10/2026) para a aba "Raciocínio aberto" da Pré-Fase 4.
+    # ! Motivo: a aba mostra o que as trilhas remontadas das corridas gravadas permitem conferir sem o gabarito e um
+    # relatório de caso inteiro; os números vêm de indicadores_raciocinio.json, e o relatório de exemplo precisa
+    # sair com as três camadas e com os blocos de código preservados.
+    def teste_raciocinio_usa_os_indicadores_e_mostra_um_relatorio(self):
+        ind = self.ctx["indicadores_raciocinio"]
+        self.assertIsNotNone(ind, "falta resultados_alvo/pre_fase4/indicadores_raciocinio.json")
+        secao = self.html[self.html.index('<section id="raciocinio"'):].split("</section>")[0]
+        total = sum(c["diagnosticos"] for c in ind["corridas"])
+        sem = sum(c["sem_raciocinio_antes_das_linhas"] for c in ind["corridas"])
+        self.assertIn(f"<b>{sem} de {total}</b>", secao)
+        self.assertEqual(secao.count("<tr data-conferencia="), sum(len(c["conferencias"]) for c in ind["corridas"]))
+        t = self.dados_t["raciocinio"]
+        self.assertEqual(len(t["trilhas"]), len(ind["corridas"]))
+        for linha, c in zip(t["trilhas"], ind["corridas"]):
+            self.assertEqual(linha["sustentado"], c["acerto_por_sustentacao"]["sustentado"]["acerto_pct"])
+            self.assertEqual(linha["n_nao"], c["acerto_por_sustentacao"]["nao_sustentado"]["n"])
+        self.assertIn('id="g-ra-sus"', secao)
+        if self.ctx["relatorio_exemplo"]:
+            for titulo in ("O que o programa fez", "O que o modelo declarou", "O que o código conferiu", "Avaliação contra o gabarito"):
+                self.assertIn(f"<h4>{titulo}</h4>", secao)
+            self.assertIn('<pre class="bruto"><code>', secao)
+            self.assertNotIn("```", secao, "cerca de código do Markdown não convertida")
+        sem_codigo = re.sub(r"<(code|pre)\b[^>]*>.*?</\1>", "", secao, flags=re.S)
+        self.assertNotIn("—", sem_codigo, "texto novo do painel sem travessão")
+        self.assertNotIn("→", sem_codigo)
+
+    # ! Alteração de IA - Revisar: teste novo (01/10/2026) para o explorador de casos da aba "Raciocínio aberto".
+    # ! Motivo: o explorador mostra, para qualquer caso das trilhas versionadas, as três camadas lado a lado (o que o
+    # programa fez, o que o modelo declarou, o que o código conferiu) e, à parte, a avaliação contra o gabarito. O
+    # recorte que vai para a página tem de trazer todos os diagnósticos das trilhas, com a causa que o avaliador leu.
+    def teste_raciocinio_tem_o_explorador_de_casos(self):
+        ind = self.ctx["indicadores_raciocinio"]
+        trilhas = self.ctx["trilhas"]
+        self.assertTrue(trilhas, "faltam as trilhas em resultados_alvo/pre_fase4/trilhas/")
+        ex = self.dados_t["raciocinio"]["explorador"]
+        self.assertEqual(len(ex["trilhas"]), len(ind["corridas"]))
+        self.assertEqual(sum(len(t["casos"]) for t in ex["trilhas"]), sum(c["diagnosticos"] for c in ind["corridas"]))
+        for t in ex["trilhas"]:
+            eventos = trilhas[t["arquivo"]]
+            causas = {e["trilha"]: e["dados"].get("lido") for e in eventos if e["tipo"] == "declaracao" and e["dados"]["campo"] == "causa_raiz"}
+            for c in t["casos"]:
+                self.assertEqual(c["modelo"]["causa"], causas[c["trilha"]], c["trilha"])
+                self.assertEqual(len([x for x in c["programa"]["candidatos"] if x["entregue"]]), 3, c["trilha"])
+                self.assertTrue(c["conferencias"] and all("usa_gabarito" not in x for x in c["conferencias"]))
+                self.assertEqual({x["regra"] for x in c["avaliacao"]}, {"causa_correta", "campo_correto", "verbete_de_ouro_no_contexto"})
+        secao = self.html[self.html.index('<section id="raciocinio"'):].split("</section>")[0]
+        self.assertIn('class="ra-explorador"', secao)
+        self.assertIn('class="ra-sel-trilha"', secao)
+        self.assertIn("function raExplorar(", tp.JS_TOPICOS)
+        self.assertIn("raExplorar", tp.DESENHAR_TOPICOS["raciocinio"])
+
     def teste_curadoria_conta_as_edicoes_da_planilha(self):
         total = sum(sum(v.values()) for v in self.dados_t["curadoria"]["por"].values())
         self.assertEqual(total, self.ctx["curadoria"]["edicoes_na_epoca"])
@@ -163,6 +249,127 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertNotIn("**", secao.split("</section>")[0])
         self.assertRegex(secao, r'data-valor="adotado" aria-pressed="false">Adotado \(\d+\)')
         self.assertNotIn('data-valor="outro"', secao.split("</section>")[0])
+
+    # ! Alteração de IA - Revisar: dois testes novos (01/10/2026) para a rodada 5 da pesquisa (Pré-Fase 4) no painel.
+    # ! Motivo: (1) a aba Pesquisa lia o mapa de filtros "do último levantamento da lista"; com a rodada 5 na lista ela
+    # passaria a procurar o §6.13.10 no arquivo errado e a geração do painel pararia; o mapa de filtros é o da rodada
+    # 4 e tem de ser lido do arquivo dela. (2) A aba "Modelos grandes pelo disco" mostra o mapa adotado, adiado,
+    # descartado da parte A, lido do levantamento §6.14.13; os vereditos contados no painel têm de ser os do arquivo.
+    def teste_pesquisa_lista_a_rodada_5_e_le_o_mapa_de_filtros_da_rodada_4(self):
+        secao = self.html[self.html.index('<section id="pesquisa"'):].split("</section>")[0]
+        r4 = (tp.PESQUISA / "levantamento-2026-09-29-documentacao-autogerida.md").read_text(encoding="utf-8")
+        _, filtros, _ = pt.primeira_tabela(r4[r4.index("#### 6.13.10"):])
+        self.assertEqual(secao.count("<tr data-valor="), len(filtros))
+        r5 = (tp.PESQUISA / tp.LEVANTAMENTO_PRE_FASE4).read_text(encoding="utf-8")
+        topicos_r5 = [l for l in r5.splitlines() if tp._TOPICO.match(l)]
+        self.assertGreaterEqual(len(topicos_r5), 5)
+        for l in topicos_r5:
+            self.assertIn(f"§{tp._TOPICO.match(l).group(1)} ", secao)
+        self.assertIn("Rodada 5 (01/10): Pré-Fase 4", secao)
+        self.assertNotIn("Quatro rodadas", secao)
+        n_ref = sum(1 for l in (tp.PESQUISA / "referencias.md").read_text(encoding="utf-8").splitlines() if l.startswith("- "))
+        self.assertIn(f"<b>{n_ref}</b>", secao)
+        self.assertIn('data-ir="colibri|"', secao, "a aba Pesquisa leva ao mapa de viabilidade da aba do colibri")
+
+    def teste_colibri_mostra_o_mapa_da_literatura(self):
+        r5 = (tp.PESQUISA / tp.LEVANTAMENTO_PRE_FASE4).read_text(encoding="utf-8")
+        trecho = r5[r5.index("#### 6.14.13"):]
+        cab, linhas, _ = pt.primeira_tabela(trecho)
+        self.assertGreaterEqual(len(linhas), 20)
+        i_v = cab.index("Veredito")
+        cont = {}
+        for r in linhas:
+            v = re.sub(r"[*`_]", "", r[i_v]).strip().lower()
+            cont[v] = cont.get(v, 0) + 1
+        self.assertEqual(set(cont), {"adotado", "adiado", "descartado"})
+        secao = self.html[self.html.index('<section id="colibri"'):].split("</section>")[0]
+        self.assertIn('id="tab-mapa-co"', secao)
+        self.assertEqual(secao.count("<tr data-valor="), len(linhas))
+        for v, n in cont.items():
+            self.assertIn(f'data-valor="{v}" aria-pressed="false">{v.capitalize()} ({n})</button>', secao)
+        _, riscos, _ = pt.primeira_tabela(trecho[trecho.index("**Riscos**"):])
+        self.assertEqual(secao.count("<tr data-risco="), len(riscos))
+        self.assertNotIn("entra nesta aba quando for integrada", secao)
+        sem_codigo = re.sub(r"<(code|pre)\b[^>]*>.*?</\1>", "", secao, flags=re.S)
+        self.assertNotIn("**", sem_codigo)
+        self.assertIn(f"<b>{cont['adotado']} adotadas</b>", secao)
+        # ! Alteração de IA - Revisar: (05/10/2026) os avisos do cabeçalho do levantamento sobre a memória da máquina e
+        # sobre as correções da revisão aparecem na aba, lidos do arquivo, e o texto das sínteses mostrado é o corrigido.
+        # ! Motivo: o Eric decide pelo painel; sem os avisos ele leria as sínteses corrigidas sem saber que foram corrigidas
+        # nem por quê, e a aba mostraria "15,69 GB" sem a nota de que a máquina tem 16 GB instalados.
+        for aviso in ("O que mudou depois de a parte A ser escrita", "Memória da máquina", "Correções da revisão"):
+            if re.search(r"^\d+\. \*\*" + re.escape(aviso) + r"\.\*\* ", r5, re.M):
+                self.assertIn(f'<p class="nota"><strong>{aviso}.</strong> ', secao, aviso)
+        if "**Correções feitas depois da revisão**" in r5:
+            self.assertIn("trechos foram corrigidos por script", secao)
+            self.assertNotIn("abaixo dos 16 GB mínimos do colibri", secao)
+
+    # ! Alteração de IA - Revisar: teste novo (01/10/2026) para a aba "Atlas" da Pré-Fase 4.
+    # ! Motivo: a aba desenha o mapa dos verbetes em SVG no próprio Python (o primeiro quadro tem de ser legível sem
+    # script) e entrega ao script da página um recorte do atlas.json; os números-chave, a quantidade de nós e as trocas
+    # entre causas têm de ser os do arquivo, e o passeio guiado não pode citar verbete ou caso que a página não tenha.
+    def teste_atlas_desenha_o_mapa_e_usa_os_numeros_do_atlas(self):
+        at = self.ctx["atlas"]
+        self.assertIsNotNone(at, "falta resultados_alvo/pre_fase4/atlas.json")
+        secao = self.html[self.html.index('<section id="atlas"'):].split("</section>")[0]
+        t = self.dados_t["atlas"]
+        meta = at["metadados"]
+        f = next(x for x in at["fatias"] if x["id"] == meta["fatia_decidida"])
+        b = at["bibliotecas"][f["biblioteca"]]
+        self.assertEqual(t["padrao"], {"bib": f["biblioteca"], "fatia": f["id"]})
+        # um nó por verbete da união das bibliotecas mostradas; os da biblioteca decidida já vêm posicionados
+        todos = {i for x in t["bibs"].values() for i in x["verbetes"]}
+        self.assertEqual(secao.count('<g class="at-no'), len(todos))
+        self.assertEqual(secao.count('style="transform:translate('), len(b["verbetes"]))
+        for h in t["bibs"]:
+            self.assertEqual(set(t["bibs"][h]["verbetes"]), set(at["bibliotecas"][h]["verbetes"]))
+        cont = b["contagem_por_rotulo"]
+        self.assertIn(f'<b>{cont["especialista"]} de {len(b["verbetes"])}</b>', secao)
+        self.assertIn(f'<b>{cont["nunca_recuperado"]}</b>', secao)
+        loo = b["validacao"]["deixando_um_de_fora"]
+        self.assertIn(f'{loo["acertos"]} de {loo["total"]}', secao)
+        # as fatias da página são fatias do atlas, com as rotas dos mesmos casos
+        ids = {x["id"] for x in at["fatias"]}
+        for x in t["fatias"]:
+            self.assertIn(x["id"], ids)
+            original = next(y for y in at["fatias"] if y["id"] == x["id"])
+            self.assertEqual(len(x["rotas"]), original["casos"])
+            self.assertEqual(sum(1 for r in x["rotas"].values() if r["ok"]), original["acertos"])
+        # a figura das trocas sai com as trocas da fatia decidida
+        self.assertEqual(secao.count('<path class="at-aresta"'), len(f["confusoes"]))
+        self.assertEqual(secao.count('<g class="at-causa"'), len(at["causas"]))
+        # o passeio guiado só aponta para o que a página tem
+        self.assertGreaterEqual(len(t["paradas"]), 4)
+        for p in t["paradas"]:
+            fatia = next(x for x in t["fatias"] if x["id"] == p["fatia"])
+            self.assertEqual(fatia["bib"], p["bib"])
+            if p.get("no"):
+                self.assertIn(p["no"], t["bibs"][p["bib"]]["verbetes"])
+            if p.get("caso"):
+                self.assertIn(p["caso"], fatia["rotas"])
+        sem_codigo = re.sub(r"<(code|pre)\b[^>]*>.*?</\1>", "", secao, flags=re.S)
+        self.assertNotIn("—", sem_codigo, "texto novo do painel sem travessão")
+        self.assertNotIn("→", sem_codigo)
+        self.assertIn("function atlasIniciar(", tp.JS_TOPICOS)
+
+    # ! Alteração de IA - Revisar: teste novo (01/10/2026): a aba Atlas mostra a validação do texto do Gemini, lida do
+    # relatório da Pré-Fase 4 (§3.1), uma linha por afirmação, com o veredito em destaque.
+    # ! Motivo: o Eric pediu que a descrição do Gemini fosse validada; a resposta fica no relatório e o painel é onde
+    # ele a lê. Se o título da subseção mudar no relatório, a aba perderia a tabela sem ninguém notar.
+    def teste_atlas_traz_a_validacao_do_texto_do_gemini(self):
+        md = pt.sem_comentarios((gd.MEMORIAL / "3-resultados-e-analises" / "pre-fase-4-relatorio.md").read_text(encoding="utf-8"))
+        trecho = md[md.index("### 3.1 "):]
+        trecho = trecho[:trecho.index("\n### ", 4)]
+        cab, linhas, _ = pt.primeira_tabela(trecho)
+        self.assertEqual(cab[:2], ["O que o Gemini afirmou", "Veredito"])
+        self.assertGreaterEqual(len(linhas), 8)
+        secao = self.html[self.html.index('<section id="atlas"'):].split("</section>")[0]
+        self.assertEqual(secao.count("<tr data-afirmacao="), len(linhas))
+        self.assertIn("position is measured routing affinity, not a learned embedding", secao)
+        vereditos = re.findall(r'<tr data-afirmacao="\d+" data-veredito="([a-z]+)"', secao)
+        self.assertEqual(len(vereditos), len(linhas))
+        self.assertTrue(set(vereditos) <= {"certo", "ressalva", "errado"}, vereditos)
+        self.assertEqual(vereditos.count("errado"), sum(1 for r in linhas if r[1].strip().lower().startswith("errado")))
 
     def teste_funcoes_de_grafico_e_seletores_existem(self):
         for funcs in tp.DESENHAR_TOPICOS.values():
