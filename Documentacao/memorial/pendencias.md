@@ -274,6 +274,10 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
      ! Motivo: o comparativo qwen × Coder (§9) tinha deixado escrita a condição que reabriria a decisão 52: "o Coder vencer o qwen nos casos inéditos". Ela se cumpriu em parte, dentro do ruído; o que fazer com isso é decisão do Eric, e a regra do projeto é que toda decisão dele vire ficha. -->
 ## Abertas em 06/10/2026 (depois das corridas 5 e 7)
 
+<!-- ! Alteração de IA - Revisar: parágrafo novo (22/10/2026) com a resposta do Eric à ficha 21 e, na ficha, a linha Decisão com a escolha dele e o caminho até a corrida; a ficha continua aberta.
+     ! Motivo: o Eric escolheu a opção (b), repetir a corrida antes de decidir, na primeira sessão do Claude Code no aplicativo; a ficha só fecha com a leitura dessa corrida, e o painel lê o estado e a decisão daqui. Como o Ollama passou de 0.34.4 (corridas de 06/10) para 0.40.2, a repetição pede uma ponte de versão antes (decisão 47). -->
+**Decidido pelo Eric em 22/10/2026:** ficha 21, opção (b): repetir o `qwen2.5-coder:7b` e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só, antes de decidir sobre a decisão 52. Como o Ollama já está em 0.40.2 (as corridas de 06/10 rodaram em 0.34.4), entra antes uma ponte de versão com os dois modelos. Os comandos são as corridas 14 e 15 do [roadmap](roadmap.md) §2; a ficha fica aberta até a leitura dessa corrida.
+
 ### 21. O Coder 7B ficou à frente nos 36 inéditos: rever a decisão 52?
 - **Estado:** aberta
 - **Quem decide:** Eric
@@ -285,7 +289,24 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Antes de decidir, repetir o Coder 7B e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só (72 inferências, cerca de 1h30), para saber se o saldo de 5 casos se mantém fora da variação entre corridas.
   - (c) Rever a decisão 52 agora e adotar o Coder 7B com a L1 que ele escreveu: exigiria repetir a curadoria da biblioteca dele, a medição da cópia curada e a sonda de confiança (cerca de duas noites), e deixaria a Fase 4 com um modelo que perde nos 36 oficiais e empata nos 72.
 - **Recomendação:** (a). A regra foi fixada antes da bateria para não ser mudada por um resultado dentro do ruído, e é isso que este é; a (b) custa uma noite e, com b/c 6/1, ainda ficaria abaixo do efeito mínimo detectável. O registro honesto (comparativo §9 e achado 4.52) basta para a banca, e a Fase 4 pode reabrir a pergunta com mais casos.
-- **Decisão:** em aberto
+- **Decisão:** em aberto; em 22/10/2026 o Eric escolheu a opção (b): antes de decidir, repetir o `qwen2.5-coder:7b` e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só (72 inferências, cerca de 1h30). Como o Ollama passou de 0.34.4 (corrida 7) para 0.40.2, roda antes uma ponte de versão com os dois modelos (L0 nos 36 oficiais, decisão 47), para a repetição poder ser lida contra as corridas 2 e 7. Comandos prontos nas corridas 14 e 15 do roadmap §2. O que fecha esta ficha é a leitura dessa corrida: o saldo do Coder 7B com a L1 (b/c 6/1 na corrida 7) fica fora ou dentro da variação de 0 a 3 casos entre corridas iguais?
+
+## Abertas em 22/10/2026 (cópia no repositório do orientador)
+
+<!-- ! Alteração de IA - Revisar: bloco novo com a ficha 22, aberta ao preparar a cópia do TCC para o repositório da disciplina (decisão 72).
+     ! Motivo: o script de sincronização precisou deixar a `.venv` da CobaiaAPI fora da cópia e, ao fazê-lo, mostrou que ela está rastreada no principal apesar do `.gitignore`; tirá-la do rastreio é comando do Eric (regra do CLAUDE.md), então vira ficha. -->
+
+### 22. A `.venv` da CobaiaAPI está versionada apesar de o `.gitignore` mandar não versionar
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 22/10/2026
+- **O que é:** `Programacao/CobaiaAPI/.venv/` tem 2.113 arquivos rastreados pelo git (`git ls-files Programacao/CobaiaAPI/.venv | wc -l`), embora o `.gitignore` tenha a regra `.venv/` com o aviso de que a pasta grava caminhos absolutos desta máquina (`pyvenv.cfg` com `C:\Python314`) e só tem binários de Windows. A pasta entrou no primeiro commit do repositório (`ab4da6a1`, 31/08/2026), antes da regra, e o `.gitignore` não tira do rastreio o que já estava rastreado. Quem clona recebe a pasta inteira, com um `ruff.exe` de 25 MB, e o `install.py` a recria de qualquer forma. O script `ferramentas/sincronizar_orientador.py` já a deixa fora da cópia do orientador.
+- **Por que importa:** dos 4.671 arquivos rastreados, 2.113 são essa venv, que não funciona em outra máquina e confunde quem lê o repositório; e o README, na seção "O que é versionado e por quê", diz que a `.venv` não é versionada.
+- **Opções:**
+  - (a) Tirar do rastreio sem apagar do disco: `git rm -r --cached Programacao/CobaiaAPI/.venv` e commitar; a pasta continua na máquina e a regra do `.gitignore` passa a valer. O histórico antigo guarda os arquivos (o repositório não encolhe sem reescrever o histórico).
+  - (b) Deixar como está e registrar a exceção no `.gitignore` e no README.
+- **Recomendação:** (a): é o que o `.gitignore` e o README já dizem; comando único, reversível, e o instalador recria a venv em segundos.
+- **Decisão:** em aberto.
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

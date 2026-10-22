@@ -39,6 +39,8 @@ Todo trecho criado ou alterado por um assistente de IA leva, no comentário da l
 
 ## Testes obrigatórios antes de abrir o pull request
 
+<!-- ! Alteração de IA - Revisar: o bloco de comandos abaixo ganhou `testar_sincronizar_orientador.py` (22/10/2026).
+     ! Motivo: é o teste do script que grava a cópia do TCC no repositório do orientador (decisão 72); a lista de testes obrigatórios precisa cobrir tudo o que roda sem modelo. -->
 ```powershell
 # CobaiaAPI (roda contra o banco real; instale antes)
 cd Programacao\CobaiaAPI
@@ -54,6 +56,7 @@ python testar_fase3b.py
 cd ..\..\..
 python ferramentas/testar_painel_textos.py
 python ferramentas/testar_painel_topicos.py
+python ferramentas/testar_sincronizar_orientador.py
 python ferramentas/gerar_dashboard.py --check
 python ferramentas/conferir_docs.py
 ```

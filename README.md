@@ -109,6 +109,8 @@ aba por tópico; uma cópia do painel fica em
 `Documentacao/dashboard/painel-do-projeto.html`. Os números citados neste README
 vêm dos registros em `resultados_alvo/` e do Memorial.
 
+<!-- ! Alteração de IA - Revisar: a lista abaixo ganhou o item da cópia no repositório da disciplina (22/10/2026, decisão 72).
+     ! Motivo: o orientador passou a acompanhar o TCC por um repositório próprio, e quem lê este README precisa saber que aquele é cópia, que este é o principal e qual script mantém os dois iguais. -->
 ## Documentação
 
 - [Painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN): estado por fase, pendências, roadmap e os resultados, numa página só; gerado por `ferramentas/gerar_dashboard.py`.
@@ -116,6 +118,7 @@ vêm dos registros em `resultados_alvo/` e do Memorial.
 - [Roadmap](Documentacao/memorial/roadmap.md) e [pendências](Documentacao/memorial/pendencias.md): o que falta rodar e as decisões, em fichas.
 - [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
 - Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
+- Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório inteiro na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
 
 ## Por que dois alvos
 
@@ -737,6 +740,8 @@ modelo):
      ! Motivo: a regra de permanência do servidor MCP comparou a mesma tarefa feita por subagentes com ferramentas diferentes, e o agregado por dia, modelo e tipo misturava todos os subagentes da sessão. -->
 <!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `gerar_dashboard.py` foi reescrita e entrou a linha de `painel_topicos.py` (30/09/2026).
      ! Motivo: o Eric pediu a aba do comparativo qwen × Coder e que o painel fosse o compilador das análises, com uma aba por tópico; a linha antiga ainda descrevia o painel só com as abas de 28/09. -->
+<!-- ! Alteração de IA - Revisar: na tabela abaixo entrou a linha de `sincronizar_orientador.py` (22/10/2026).
+     ! Motivo: é o script que mantém a cópia no repositório do orientador igual ao commit deste (decisão 72); sem a linha, a tabela que lista as ferramentas deixaria de fora justamente a que o Eric roda a cada entrega. -->
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: navegação em cinco grupos (Projeto, Modelos, Biblioteca, Fases anteriores, Pesquisa e método), abas Início (estado por fase, o que depende do Eric, mapa do painel), Pendências (um cartão por ficha de `pendencias.md`, com filtro), Roadmap (fases e corridas de `roadmap.md`, com o comando pronto) e as abas dos testes, lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18, monta gráficos (Chart.js, paleta validada da regra de gráficos, com tema escuro) e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
@@ -752,6 +757,7 @@ modelo):
 | `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). `--agentes rótulo=id,...` soma só os subagentes pedidos (usado na regra de permanência do servidor MCP, 29/09/2026). |
 | `resumir_saida.py` / `gancho_pre_bash.py` | Hook `PreToolUse` do Claude Code (`.claude/settings.json`) que encurta a saída de comandos longos (testes, baterias, `git diff`) antes de ela entrar no contexto. |
 | `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
+| `sincronizar_orientador.py` (+ `testar_sincronizar_orientador.py`) | Cópia do TCC no repositório da disciplina (decisão 72): replica os arquivos rastreados do commit HEAD deste repositório em `../squad-24-projeto/projeto/` (clone do repositório do orientador), comparando cada arquivo pelo hash do git, apagando o que saiu daqui e deixando de fora a `.venv` da CobaiaAPI e a `.claude/`; escreve o commit e a contagem no README do clone; ensaio por padrão, `--aplicar` grava, `--check` devolve 1 fora de sincronia. O commit e o push no clone são do Eric. |
 | `extrair_pesquisa.py`, `render_levantamento.py`, `integrar_pesquisa.py`, `integrar_pesquisa_llms.py` | Fecham as pesquisas bibliográficas por script: extraem os artefatos verificados, geram as subseções no formato do Memorial (com `--check`) e integram texto, referências (com dedup), mapa de decisões (Fase 3) e mapa adotado/adiado/descartado (LLMs locais, §6.12 e §7.9). |
 
 ## Memória do Claude Code entre máquinas
@@ -786,6 +792,8 @@ cd Programacao\CobaiaAPI
 ```
 (No Linux/macOS: `.venv/bin/python -m pytest -v`.)
 
+<!-- ! Alteração de IA - Revisar: o bloco de comandos abaixo ganhou `testar_sincronizar_orientador.py` (22/10/2026).
+     ! Motivo: é o teste do script que grava a cópia no repositório do orientador (decisão 72); a lista de testes que rodam sem modelo precisa cobrir tudo o que o Eric roda antes de entregar. -->
 Experimentos, painel e documentação, sem chamar modelo nenhum:
 
 ```powershell
@@ -797,6 +805,7 @@ cd ..\..\..
 python ferramentas/testar_painel_textos.py
 python ferramentas/testar_painel_topicos.py
 python ferramentas/testar_integrar_pesquisa_pre_fase4.py
+python ferramentas/testar_sincronizar_orientador.py
 python ferramentas/gerar_dashboard.py --check
 python ferramentas/conferir_docs.py
 ```

@@ -109,6 +109,8 @@ Leitura:
 
 <!-- ! Alteração de IA - Revisar: subseções 4.1 e 4.2 novas (06/10/2026) com as duas corridas opcionais que o Eric rodou na tarde de 06/10, depois de fechar a ficha 17 como (b); os blocos vêm de analisar_fase3b.py (--colar).
      ! Motivo: a ficha 17 dizia que as opcionais não rodariam; o Eric rodou as duas mesmo assim, e o resultado da corrida 7 toca a condição 1 do comparativo qwen × Coder para rever a decisão 52 (ficha 21). Ficam como subseções do §4 para não renumerar as seções que o painel e as fichas citam. -->
+<!-- ! Alteração de IA - Revisar: em 22/10/2026 a última linha do §4.1 e a frase final do §9 ganharam a resposta do Eric à ficha 21 (opção b: repetir a corrida antes de decidir).
+     ! Motivo: o relatório deixava a decisão 52 à espera da ficha 21 e dizia que os dois Coder podiam sair do Ollama; a repetição escolhida usa o `qwen2.5-coder:7b` (roadmap §2, corridas 14 e 15). -->
 ### 4.1 Corrida 7 (06/10/2026): o Coder 7B nos mesmos 36 inéditos
 
 O `qwen2.5-coder:7b` diagnosticou os 36 inéditos com a biblioteca original e com as versões L1 e L3 que ele mesmo escreveu na Fase 3 (hash `0f0a6b7f3b37` e `2b7c441cb9e3`), em Ollama 0.34.4, 06/10 10:26 a 06/10 12:45. A tabela abaixo confronta, caso a caso, cada modelo com o `qwen2.5:7b` (que rodou os mesmos 36 em 28/09, Ollama 0.34.1), com a biblioteca de cada um; b conta os casos que só o modelo acertou e c os que só o `qwen2.5:7b` acertou. A última coluna de cada classe traz os acertos do modelo e do `qwen2.5:7b` nos 6 casos da classe.
@@ -130,7 +132,7 @@ Leitura:
 - **Por classe, com a L1** (6 casos cada; um caso vale 16,7 pontos): o Coder ganha em lexica, semantica, efeito e empata em sintatica, traducao, runtime. É o mesmo padrão parcial das fases anteriores (léxica e efeito) com a semântica invertida.
 - **A biblioteca própria do Coder 7B pouco muda nos inéditos**: contra o próprio L0, a L1 ganha 1 caso e a L3 perde 3 (bloco `tb_ineditos`); nos 72 somados, a L1 fica 1 caso acima de L0 e a L3 2 abaixo (bloco `tb_agrupado`).
 - **O Coder 3B fica bem atrás do `qwen2.5:7b` nos mesmos casos**: 58,3% contra 72,2% com a L1 de cada um (b/c 1/6); nos 72, 3/14 (p = 0,0127).
-- A condição 1 do comparativo qwen × Coder para rever a decisão 52 ("o Coder vencer o qwen nos casos inéditos") fica parcialmente cumprida, dentro do ruído de uma corrida por condição (de 0 a 3 casos, §3). O que fazer com isso é a ficha 21.
+- A condição 1 do comparativo qwen × Coder para rever a decisão 52 ("o Coder vencer o qwen nos casos inéditos") fica parcialmente cumprida, dentro do ruído de uma corrida por condição (de 0 a 3 casos, §3). O que fazer com isso é a ficha 21. Em 22/10/2026 o Eric escolheu, na ficha 21, repetir a corrida antes de decidir (opção b): ponte de versão em Ollama 0.40.2 e os dois modelos com a L1 de cada um nos 36 inéditos, numa corrida só (roadmap §2, corridas 14 e 15).
 
 ### 4.2 Corrida 5 (06/10/2026): adesão cega à documentação errada, com a biblioteca própria
 
@@ -335,7 +337,7 @@ Todos os tópicos obrigatórios estão concluídos. A tabela diz o estado de cad
 | 24 | Projeto de pesquisa ABNT, modificações 1 a 8 | Documentação | Concluído | `correcoes-aplicadas.md` §5.2 | Item 10 e o PDF final sem as marcações, na entrega |
 | 25 | Pendências em ficha (1 a 16) | Gestão | Concluído | `pendencias.md` | Fichas 17 e 18 abertas em 01/10 e fechadas em 06/10/2026 |
 
-As fichas 17 e 18 foram respondidas em 06/10/2026, e as duas corridas opcionais rodaram no mesmo dia (§4.1 e §4.2). O que ainda depende só do Eric para o encerramento formal: a ficha 21 (o que fazer com a decisão 52 depois do Coder 7B nos inéditos), tirar os dois Coder do Ollama (nenhuma corrida restante os usa) e o commit.
+As fichas 17 e 18 foram respondidas em 06/10/2026, e as duas corridas opcionais rodaram no mesmo dia (§4.1 e §4.2). O que ainda depende só do Eric para o encerramento formal: a ficha 21 (em 22/10/2026 ele escolheu repetir a corrida antes de decidir, opção b: ponte de versão em Ollama 0.40.2 e a repetição nos 36 inéditos, corridas 14 e 15 do roadmap, que usam o `qwen2.5-coder:7b`), tirar o `qwen2.5-coder:3b` do Ollama (nenhuma corrida restante o usa) e o commit.
 
 ## 10. Rastreabilidade
 
