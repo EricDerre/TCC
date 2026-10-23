@@ -894,12 +894,16 @@ def teste_analise3b_fontes_do_contexto() -> None:
 def _dados_de_mentira_analise() -> dict:
     """Registros mínimos para montar a análise inteira: 1 doador, 2 leitores, 4 casos oficiais e 2 inéditos."""
     casos = ["a", "b", "c", "d"]
-    f3, p1, p4, cru, ined = [], [], [], [], []
+    f3, p1, p4, p5, cru, ined = [], [], [], [], [], []
     for m, acertos_l0 in (("doador", "TTFF"), ("leitor-x", "TFTF"), ("leitor-y", "TTTF")):
         for c, v in zip(casos, acertos_l0):
             f3.append(_reg_analise(m, 0, c, v == "T"))
             p1.append(_reg_analise(m, 0, c, v == "T"))
             p4.append(_reg_analise(m, 0, c, v == "T"))
+            # ! Alteração de IA - Revisar: (23/10/2026) terceira ponte de mentira, posterior à da cruzada: o doador perde o caso "b".
+            # ! Motivo: a corrida 14 (ponte em Ollama 0.40.2) entrou depois da troca cruzada; a análise precisa listar a ponte nova
+            # sem trocar a linha de base da cruzada (que continua a ponte em que a cruzada rodou) e sem zerar a variação entre corridas.
+            p5.append(_reg_analise(m, 0, c, v == "T" and not (m == "doador" and c == "b")))
         for epoca in (1, 3):
             for c in casos:
                 f3.append(_reg_analise(m, epoca, c, True if m == "doador" else c != "d"))
@@ -924,7 +928,16 @@ def _dados_de_mentira_analise() -> dict:
     for m in ("leitor-x", "leitor-y"):
         brutos[("ponte", m, 0)] = {c: {"caso": c, "resposta": "CAUSA_RAIZ: z\nFONTE: [campo_ausente]",
                                        "verbetes_ids": ["contrato-produto", "campo_ausente"]} for c in casos}
-    return {"f3": f3, "pontes": [("fase3b_ponte", "0.0.1", p1), ("fase3b_ponte_x", "0.0.4", p4)], "cruzada": cru, "ineditos": ined,
+    # ! Alteração de IA - Revisar: (23/10/2026) repetição dos inéditos com a L1 de cada um (corrida 15): o doador perde
+    # "n2" em relação à corrida original e o leitor-y ganha "n2".
+    # ! Motivo: a ficha 21 pergunta se o saldo do Coder 7B nos inéditos se mantém numa corrida nova; a análise precisa
+    # parear cada modelo com a própria corrida original e os dois modelos entre si dentro da repetição.
+    rep = []
+    for m, padrao in (("doador", "TF"), ("leitor-y", "TT")):
+        for c, v in zip(("n1", "n2"), padrao):
+            rep.append(_reg_analise(m, 1, c, v == "T"))
+    return {"f3": f3, "pontes": [("fase3b_ponte", "0.0.1", p1), ("fase3b_ponte_x", "0.0.4", p4), ("fase3b_ponte_y", "0.0.5", p5)],
+            "cruzada": cru, "ineditos": ined, "repeticao": rep, "ponte_da_cruzada": "fase3b_ponte_x",
             "brutos": brutos, "corridas": [], "doador": "doador", "leitores": ["leitor-x", "leitor-y"],
             "casos_de_texto_alterado": frozenset({"a"}), "corridas_depois": frozenset({"fase3b_ponte_x", "cruzada"}),
             "a5": a5, "adesao_2b": {"leitor-y": 95.6}}
@@ -933,9 +946,28 @@ def _dados_de_mentira_analise() -> dict:
 def teste_analise3b_montar_render_e_check() -> None:
     import analisar_fase3b as an
     dado = an.montar(**_dados_de_mentira_analise())
-    # pontes: nenhuma discordância contra a Fase 3 de mentira, todas pareáveis
-    assert [p["saida"] for p in dado["pontes"]] == ["fase3b_ponte", "fase3b_ponte_x"]
-    assert all(l["pareavel"] and l["b"] + l["c"] == 0 for p in dado["pontes"] for l in p["linhas"])
+    # pontes: nenhuma discordância contra a Fase 3 de mentira nas duas primeiras; na terceira o doador perde 1 caso; todas pareáveis
+    assert [p["saida"] for p in dado["pontes"]] == ["fase3b_ponte", "fase3b_ponte_x", "fase3b_ponte_y"]
+    assert all(l["pareavel"] and l["b"] + l["c"] == 0 for p in dado["pontes"][:2] for l in p["linhas"])
+    ponte_y = {l["modelo"]: l for l in dado["pontes"][2]["linhas"]}
+    assert (ponte_y["doador"]["b"], ponte_y["doador"]["c"], ponte_y["doador"]["pareavel"]) == (0, 1, True), ponte_y["doador"]
+    # a linha de base da cruzada continua a ponte em que a cruzada rodou, não a mais recente
+    assert dado["metadados"]["ponte_de_base"] == "fase3b_ponte_x" and dado["metadados"]["versao_da_ponte_de_base"] == "0.0.4"
+    # repetição nos inéditos (corrida 15): cada modelo contra a própria corrida original, e modelo contra modelo dentro dela
+    rep = dado["repeticao"]
+    lin = {(l["modelo"], l["biblioteca_epoca"]): l for l in rep["linhas"]}
+    assert set(lin) == {("doador", 1), ("leitor-y", 1)}, set(lin)
+    assert (lin[("doador", 1)]["contra_original"]["b"], lin[("doador", 1)]["contra_original"]["c"]) == (0, 1), lin[("doador", 1)]
+    assert (lin[("leitor-y", 1)]["contra_original"]["b"], lin[("leitor-y", 1)]["contra_original"]["c"]) == (1, 0)
+    assert (lin[("doador", 1)]["acerto_pct"], lin[("doador", 1)]["acerto_original_pct"]) == (50.0, 100.0)
+    assert lin[("doador", 1)]["versao_da_ultima_ponte"] == "0.0.5" and lin[("doador", 1)]["pareavel_pela_ultima_ponte"] is True
+    em_rep = {(x["modelo"], x["biblioteca_epoca"]): x for x in rep["entre_modelos"]}
+    assert set(em_rep) == {("leitor-y", 1)}, set(em_rep)
+    x = em_rep[("leitor-y", 1)]
+    assert (x["b"], x["c"], x["saldo"], x["saldo_original"]) == (1, 0, 1, -1), x   # na corrida original o leitor-y perdia 1 caso
+    assert rep["limiar_ruido"] == x["limiar_ruido"] == 1 and x["dentro_da_variacao"] is True   # ponte_y: 1 caso muda com a mesma entrada
+    assert (x["somados"]["n_comuns"], x["somados"]["b"], x["somados"]["c"]) == (6, 1, 1), x["somados"]
+    assert x["por_classe"][an.CLASSES[1]] == {"n": 2, "acertos": 2, "acertos_doador": 1}
     # cruzada: leitor-x ganha 1 (b) e não perde contra o próprio L0 da ponte mais recente; leitor-y perde 2
     par = {(p["leitor"], p["biblioteca_epoca"], p["contra"]): p for p in dado["cruzada"]["pareados"]}
     assert (par[("leitor-x", 1, "l0_ponte")]["b"], par[("leitor-x", 1, "l0_ponte")]["c"]) == (1, 0), par[("leitor-x", 1, "l0_ponte")]
@@ -969,7 +1001,7 @@ def teste_analise3b_montar_render_e_check() -> None:
     assert a5["doador"]["acerto_a2_pct"] == 100.0 and a5["doador"]["biblioteca_epoca"] == 3   # L3 própria nos oficiais da Fase 3 de mentira
     md = an.render(dado)
     for nome in ("tb_corridas", "tb_pontes", "tb_ruido", "tb_ineditos", "tb_agrupado", "tb_ineditos_modelos", "tb_a5", "tb_cruzada", "tb_cruzada_pareados",
-                 "tb_cruzada_classe", "tb_cruzada_rotulos", "tb_cruzada_casos"):
+                 "tb_cruzada_classe", "tb_cruzada_rotulos", "tb_cruzada_casos", "tb_repeticao", "tb_repeticao_modelos"):
         assert f"<!-- tabela:{nome} -->" in md and f"<!-- /tabela:{nome} -->" in md, nome
     assert "—" not in md and "→" not in md, "texto gerado com travessão ou seta"
     json.dumps(dado, ensure_ascii=False)   # serializável
@@ -1000,6 +1032,25 @@ def teste_comparativo_confronto_nos_ineditos() -> None:
     classes = cq.ineditos_por_classe(av, 1)
     assert [(x["classe"].split(" ")[0], x["acertos_A"], x["acertos_B"], x["n"], x["delta"]) for x in classes] == [("1", 2, 1, 2, -1), ("2", 0, 1, 2, 1)], classes
     assert cq.confronto_ineditos([]) == [] and cq.ineditos_por_classe([], 1) == []
+
+
+def teste_comparativo_repeticao_contra_a_original() -> None:
+    """Corrida 15 (23/10/2026): os dois modelos repetem os 36 inéditos com a L1 de cada um; o comparativo pareia cada
+    modelo com a própria corrida original (b = só a repetição acertou, c = só a original) e conta os rótulos que mudaram."""
+    import comparar_qwen_coder as cq
+
+    def reg(m, c, certo, rotulo):
+        return {"modelo": m, "biblioteca_epoca": 1, "caso": c, "causa_correta": certo, "causa_respondida": rotulo,
+                "particao": "avaliacao", "classe": 1, "erro_infra": False}
+    orig = [reg(cq.A, "n1", True, "x"), reg(cq.A, "n2", True, "x"), reg(cq.B, "n1", True, "x"), reg(cq.B, "n2", False, "y")]
+    rep = [reg(cq.A, "n1", True, "x"), reg(cq.A, "n2", False, "z"), reg(cq.B, "n1", True, "x"), reg(cq.B, "n2", True, "x")]
+    por = {l["modelo"]: l for l in cq.ruido_repeticao(orig, rep)}
+    assert set(por) == {cq.A, cq.B} and por[cq.A]["L"] == 1 and por[cq.A]["n"] == 2, por
+    assert (por[cq.A]["so_repeticao"], por[cq.A]["so_original"], por[cq.A]["ambos"], por[cq.A]["nenhum"]) == (0, 1, 1, 0), por[cq.A]
+    assert (por[cq.B]["so_repeticao"], por[cq.B]["so_original"], por[cq.B]["rotulos_diferentes"]) == (1, 0, 1), por[cq.B]
+    assert (por[cq.A]["acerto_original"], por[cq.A]["acerto_repeticao"], por[cq.A]["delta_pp"]) == (100.0, 50.0, -50.0)
+    assert por[cq.A]["p_mcnemar"] == 1.0 and por[cq.A]["rotulos_diferentes"] == 1
+    assert cq.ruido_repeticao([], rep) == [] and cq.ruido_repeticao(orig, []) == []
 
 
 def teste_analise3b_numeros_reais_batem_com_a_decisao() -> None:

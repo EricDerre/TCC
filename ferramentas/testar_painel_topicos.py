@@ -96,6 +96,13 @@ class TestesAbasPorTopico(unittest.TestCase):
                 self.assertIn(f'<b>{x["so_qwen"]} × {x["so_coder"]}</b>', secao)
                 self.assertIn("ficha 21", secao)
         self.assertNotIn("se o Eric quiser, o Coder 7B nos 36 inéditos", secao)
+        # ! Alteração de IA - Revisar: (23/10/2026) a repetição dos inéditos (corrida 15) entra na aba com o saldo lido de analise_fase3b.json.
+        # ! Motivo: a ficha 21 fechou pela repetição; a aba precisa mostrar o número da corrida 15 ao lado do da corrida 7.
+        for x in cq.get("confronto_ineditos_repeticao", []):
+            if x["L"] == 1:
+                self.assertIn(f'<b>{x["so_qwen"]} × {x["so_coder"]}</b>', secao)
+                self.assertIn("corrida 15", secao)
+                self.assertIn("decisão 73", secao)
 
     def teste_tres_b_compara_oficiais_e_ineditos_nas_mesmas_versoes(self):
         t = self.dados_t["tresb"]

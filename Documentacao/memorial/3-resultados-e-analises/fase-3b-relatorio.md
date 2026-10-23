@@ -26,10 +26,12 @@ A análise decisória (§9) fechou a Fase 3 com sete limitações declaradas. A 
 |---|---|---|---|---|---|---|---|---|
 | `fase3b_ponte` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.1 | 0 | L0=3196327e7fd5 | 21/09 14:24 | 21/09 18:35 |
 | `fase3b_ponte_0344` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5 | 30/09 20:39 | 30/09 22:25 |
+| `fase3b_ponte_0402` | ponte | qwen2.5-coder:7b, qwen2.5:7b | 72 | 0.40.2 | 0 | L0=3196327e7fd5 | 23/10 08:04 | 23/10 09:25 |
 | `fase3b_ineditos` | ineditos | qwen2.5-coder:3b, qwen2.5:7b | 216 | 0.34.1 | 0 | L0=3196327e7fd5; L1=3394d203cab9; L1=53ccf19abeac; L3=71258b553152; L3=d9a86e383103 | 28/09 20:13 | 28/09 23:15 |
 | `fase3b_cruzada_qwen` | cruzada | qwen2.5-coder:3b, qwen2.5-coder:7b | 144 | 0.34.4 | 0 | L1=3394d203cab9; L3=71258b553152 | 30/09 23:58 | 01/10 02:09 |
 | `fase3b_ineditos_coder7b` | ineditos | qwen2.5-coder:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5; L1=0f0a6b7f3b37; L3=2b7c441cb9e3 | 06/10 10:26 | 06/10 12:45 |
 | `fase3b_a5` | a5 | qwen2.5-coder:3b, qwen2.5:7b | 72 | 0.34.4 | 0 | L3=71258b553152; L3=d9a86e383103 | 06/10 09:23 | 06/10 10:19 |
+| `fase3b_ineditos_repeticao` | ineditos | qwen2.5-coder:7b, qwen2.5:7b | 72 | 0.40.2 | 0 | L1=0f0a6b7f3b37; L1=3394d203cab9 | 23/10 09:28 | 23/10 11:01 |
 <!-- /tabela:tb_corridas -->
 
 Todos os registros de cada corrida saíram na mesma versão do Ollama, sem erro. As duas corridas que o roadmap tinha como opcionais rodaram em 06/10/2026 (Ollama 0.34.4): o Coder 7B nos mesmos 36 inéditos, com as versões que ele mesmo escreveu (§4.1), e a adesão cega sobre a L3 própria (§4.2). A troca cruzada leu exatamente as bibliotecas oficiais do doador (hash `3394d203cab9` na L1 e `71258b553152` na L3). Nos casos inéditos, cada modelo leu as versões que ele mesmo escreveu: o `qwen2.5-coder:3b` leu a própria L1 e a própria L3, não as do `qwen2.5:7b`. A sonda de correção, o experimento do recuperador e a ablação têm saída própria e leitura no roadmap (§3 e §2.2).
@@ -47,6 +49,8 @@ A ponte repete a biblioteca original (L0) nos 36 casos de avaliação, com o mes
 | 0.34.4 | `qwen2.5-coder:3b` | 72,2% (56,0 a 84,2) | 70,4% | 1 | 0 | 1,0000 | `tra-4` | nenhum | sim | 1 / 0 | `efe-3` |
 | 0.34.4 | `qwen2.5-coder:7b` | 80,6% (65,0 a 90,2) | 82,5% | 3 | 1 | 0,6250 | `efe-3`, `semt-14`, `tra-11` | `sin-14` | **não** | 2 / 1 | `efe-3` |
 | 0.34.4 | `qwen2.5:7b` | 75,0% (58,9 a 86,2) | 79,6% | 0 | 1 | 1,0000 | nenhum | `tra-4` | sim | 0 / 1 | `efe-3` |
+| 0.40.2 | `qwen2.5-coder:7b` | 77,8% (61,9 a 88,3) | 81,7% | 1 | 0 | 1,0000 | `efe-3` | nenhum | sim | 0 / 0 | `efe-3` |
+| 0.40.2 | `qwen2.5:7b` | 80,6% (65,0 a 90,2) | 83,8% | 1 | 0 | 1,0000 | `sin-14` | nenhum | sim | 1 / 0 | `efe-3` |
 <!-- /tabela:tb_pontes -->
 
 <!-- tabela:tb_ruido -->
@@ -54,10 +58,16 @@ A ponte repete a biblioteca original (L0) nos 36 casos de avaliação, com o mes
 |---|---|---|---|---|---|---|---|---|
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.34.1 | 2 | 2 | 1 | 1 | 3 | `sin-14`, `tra-10` |
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.34.4 | 1 | 1 | 0 | 1 | 3 | `tra-4` |
+| `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.40.2 | 1 | 1 | 1 | 0 | 2 | `sin-14` |
 | `qwen2.5:7b` | ponte 0.34.1 | ponte 0.34.4 | 3 | 3 | 1 | 2 | 3 | `sin-14`, `tra-10`, `tra-4` |
+| `qwen2.5:7b` | ponte 0.34.1 | ponte 0.40.2 | 1 | 1 | 1 | 0 | 1 | `tra-10` |
+| `qwen2.5:7b` | ponte 0.34.4 | ponte 0.40.2 | 2 | 2 | 2 | 0 | 2 | `sin-14`, `tra-4` |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.34.1 | 0 | 0 | 0 | 0 | 1 | nenhum |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.34.4 | 4 | 3 | 3 | 1 | 4 | `efe-3`, `semt-14`, `sin-14`, `tra-11` |
+| `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.40.2 | 1 | 0 | 1 | 0 | 1 | `efe-3` |
 | `qwen2.5-coder:7b` | ponte 0.34.1 | ponte 0.34.4 | 4 | 3 | 3 | 1 | 4 | `efe-3`, `semt-14`, `sin-14`, `tra-11` |
+| `qwen2.5-coder:7b` | ponte 0.34.1 | ponte 0.40.2 | 1 | 0 | 1 | 0 | 2 | `efe-3` |
+| `qwen2.5-coder:7b` | ponte 0.34.4 | ponte 0.40.2 | 3 | 3 | 1 | 2 | 3 | `semt-14`, `sin-14`, `tra-11` |
 | `qwen2.5-coder:3b` | Fase 3 (0.34.0) | ponte 0.34.1 | 0 | 0 | 0 | 0 | 2 | nenhum |
 | `qwen2.5-coder:3b` | Fase 3 (0.34.0) | ponte 0.34.4 | 1 | 1 | 1 | 0 | 2 | `tra-4` |
 | `qwen2.5-coder:3b` | ponte 0.34.1 | ponte 0.34.4 | 1 | 1 | 1 | 0 | 4 | `tra-4` |
@@ -149,6 +159,32 @@ Leitura:
 - **A biblioteca própria não muda a adesão cega.** O `qwen2.5-coder:3b` segue a causa plantada em 94,4% dos casos com a própria L3, contra 95,6% na Fase 2-B com a biblioteca original; o `qwen2.5:7b`, que não tinha medida de A5 na 2-B, segue em 80,6% e acerta 19,4%, contra 86,1% com a mesma L3 na condição normal (A2).
 - É o mesmo mecanismo da troca cruzada (§5) e da Fase 2-B: o modelo lê e segue o que a documentação afirma, para o bem e para o mal. Para a Fase 4, reforça que o que entra na biblioteca precisa de validação em código antes, e que uma nota errada num verbete muito recuperado vira resposta errada.
 - H5 (autoenvenenamento) não muda: a adesão é à documentação errada entregue, não a notas que o modelo escreveu; com a própria L3 em A2 os dois modelos acertam como na Fase 3.
+
+<!-- ! Alteração de IA - Revisar: §4.3 novo (23/10/2026) com as corridas 14 (ponte de versão em Ollama 0.40.2) e 15 (repetição dos inéditos com a L1 de cada um), os blocos `tb_repeticao` e `tb_repeticao_modelos` colados por `analisar_fase3b.py --colar` e a leitura.
+     ! Motivo: a ficha 21 (opção b, 22/10) pediu a repetição antes de decidir sobre a decisão 52; o relatório da 3-B é onde as corridas desta fase são lidas, e a ponte 0.40.2 entra na tabela do §3 pelo mesmo `--colar`. -->
+### 4.3 Corridas 14 e 15 (23/10/2026): ponte em Ollama 0.40.2 e repetição dos inéditos
+
+O Ollama passou de 0.34.4 (corridas de 06/10) para 0.40.2. Antes da repetição rodou a ponte de versão (corrida 14, `resultados_alvo/fase3b_ponte_0402/`, 23/10 08:05 a 09:25): L0 nos 36 oficiais com o `qwen2.5-coder:7b` e o `qwen2.5:7b`. Os dois ficaram pareáveis com a Fase 3 (bloco `tb_pontes`, §3): b/c 1/0 nos dois e, sem o caso de texto corrigido, 0/0 no Coder e 1/0 no qwen; a maior variação entre corridas iguais de L0 com a mesma entrada continua em 3 casos (bloco `tb_ruido`). Na corrida 15 (`resultados_alvo/fase3b_ineditos_repeticao/`, 23/10 09:29 a 11:01) os dois modelos repetiram os 36 inéditos com a L1 de cada um, numa corrida só.
+
+<!-- tabela:tb_repeticao -->
+| Modelo | Biblioteca (a de cada um) | Acerto na repetição (IC 95%) | Acerto na corrida original | Contra a original: b (só a repetição) / c (só a original) | p (McNemar) | Rótulos que mudaram | Passaram a certos | Passaram a errados | Pareável pela ponte mais recente | s por diagnóstico (mediana) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `qwen2.5-coder:7b` | L1 | 83,3% (68,1 a 92,1) | 86,1% | 0 / 1 | 1,0000 | 3 | nenhum | `lex-19` | sim (0.40.2) | 74,5 |
+| `qwen2.5:7b` | L1 | 72,2% (56,0 a 84,2) | 72,2% | 0 / 0 | 1,0000 | 1 | nenhum | nenhum | sim (0.40.2) | 75,2 |
+<!-- /tabela:tb_repeticao -->
+
+<!-- tabela:tb_repeticao_modelos -->
+| Modelo | Biblioteca (a de cada um) | Acerto na repetição | Acerto do `qwen2.5:7b` | b (só o modelo) | c (só o doador) | Saldo (b menos c) | Saldo na corrida original | Maior variação entre corridas iguais de L0 | Dentro da variação | Diferença | p (McNemar) | Rótulos diferentes | Nos 72 (oficiais + inéditos): b / c | p nos 72 | lexica: modelo / doador (acertos de n) | sintatica: modelo / doador (acertos de n) | semantica: modelo / doador (acertos de n) | traducao: modelo / doador (acertos de n) | runtime: modelo / doador (acertos de n) | efeito: modelo / doador (acertos de n) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `qwen2.5-coder:7b` | L1 | 83,3% | 72,2% | 5 | 1 | +4 | +5 | 3 | não | +11,1 pp | 0,2188 | 8 | 6 / 7 | 1,0000 | 5 / 4 (de 6) | 6 / 6 (de 6) | 5 / 4 (de 6) | 4 / 4 (de 6) | 6 / 6 (de 6) | 4 / 2 (de 6) |
+<!-- /tabela:tb_repeticao_modelos -->
+
+Leitura:
+- **Cada modelo repete a si mesmo.** Contra a própria corrida original, o `qwen2.5-coder:7b` perde 1 caso (`lex-19`; 83,3% contra 86,1% da corrida 7) e o `qwen2.5:7b` não muda nenhum acerto (72,2% nas duas); 3 e 1 rótulos mudaram. É a mesma variação das pontes de L0 (de 0 a 3 casos), agora medida com a biblioteca L1 e entre as versões 0.34.x e 0.40.2 do Ollama.
+- **O saldo do Coder 7B se mantém.** Na repetição, 5 casos só dele contra 1 só do qwen (b/c 5/1, p = 0,219), saldo +4; na corrida 7, 6/1, saldo +5. Pelo critério da ficha 21, o saldo fica um caso acima da maior variação entre corridas iguais (3), nas duas corridas; pelo teste pareado, não separa os dois (a diferença é de 11,1 pontos e o efeito mínimo detectável nos 36 é de 19,4).
+- **Nos 72 casos nunca vistos (36 oficiais da Fase 3 com a L1 de cada um mais os 36 inéditos da repetição), 6/7** (p = 1,000): o que o Coder ganha nos inéditos continua sendo o que perde nos oficiais, como os 7/7 da corrida 7.
+- **Por classe na repetição** (6 casos cada): o Coder ganha em lexica, semantica e efeito e empata nas outras três, o mesmo desenho da corrida 7.
+- **Decisão 73 (Eric, 23/10/2026): a decisão 52 fica.** O saldo é reproduzível, mas não separa os dois no teste pareado e some quando os 36 oficiais entram na conta; a regra pré-registrada (decisão 36) decide pela acurácia balanceada nos 36 oficiais, onde o qwen está à frente. O saldo nos inéditos fica como limitação declarada, e o plano da Fase 4 ganha o item "mais casos inéditos". Ficha 21 fechada; achado 4.53.
 
 ## 5. Troca cruzada: o ganho é da biblioteca ou de quem a lê?
 
@@ -337,7 +373,7 @@ Todos os tópicos obrigatórios estão concluídos. A tabela diz o estado de cad
 | 24 | Projeto de pesquisa ABNT, modificações 1 a 8 | Documentação | Concluído | `correcoes-aplicadas.md` §5.2 | Item 10 e o PDF final sem as marcações, na entrega |
 | 25 | Pendências em ficha (1 a 16) | Gestão | Concluído | `pendencias.md` | Fichas 17 e 18 abertas em 01/10 e fechadas em 06/10/2026 |
 
-As fichas 17 e 18 foram respondidas em 06/10/2026, e as duas corridas opcionais rodaram no mesmo dia (§4.1 e §4.2). O que ainda depende só do Eric para o encerramento formal: a ficha 21 (em 22/10/2026 ele escolheu repetir a corrida antes de decidir, opção b: ponte de versão em Ollama 0.40.2 e a repetição nos 36 inéditos, corridas 14 e 15 do roadmap, que usam o `qwen2.5-coder:7b`), tirar o `qwen2.5-coder:3b` do Ollama (nenhuma corrida restante o usa) e o commit.
+As fichas 17 e 18 foram respondidas em 06/10/2026, e as duas corridas opcionais rodaram no mesmo dia (§4.1 e §4.2). O que ainda depende só do Eric para o encerramento formal: a ficha 21 (fechada em 23/10/2026: as corridas 14 e 15 rodaram e a decisão 73 mantém a decisão 52; §4.3), tirar do Ollama o `qwen2.5-coder:3b` e o `qwen2.5-coder:7b` (nenhuma corrida restante os usa) e o commit.
 
 ## 10. Rastreabilidade
 

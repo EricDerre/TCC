@@ -279,7 +279,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 **Decidido pelo Eric em 22/10/2026:** ficha 21, opção (b): repetir o `qwen2.5-coder:7b` e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só, antes de decidir sobre a decisão 52. Como o Ollama já está em 0.40.2 (as corridas de 06/10 rodaram em 0.34.4), entra antes uma ponte de versão com os dois modelos. Os comandos são as corridas 14 e 15 do [roadmap](roadmap.md) §2; a ficha fica aberta até a leitura dessa corrida.
 
 ### 21. O Coder 7B ficou à frente nos 36 inéditos: rever a decisão 52?
-- **Estado:** aberta
+- **Estado:** fechada em 23/10/2026
 - **Quem decide:** Eric
 - **Aberta em:** 06/10/2026
 - **O que é:** A corrida 7 (`resultados_alvo/fase3b_ineditos_coder7b/`, Ollama 0.34.4) pôs o `qwen2.5-coder:7b` nos mesmos 36 casos inéditos que o `qwen2.5:7b` rodou em 28/09, com a biblioteca original e com as versões que cada um escreveu. Com a biblioteca original, o Coder acerta 83,3% contra 75,0% (b/c 4/1, p = 0,375); com a L1 de cada um, 86,1% contra 72,2% (b/c 6/1, p = 0,125); com a L3, 75,0% contra 80,6% (b/c 1/3). Somando os 36 oficiais da Fase 3 e os 36 inéditos, com a L1 de cada um, o placar é 7/7 (p = 1,00): o que o Coder ganha nos inéditos é o que perde nos oficiais. Por classe com a L1 (6 casos cada), o Coder ganha em lexica, semantica, efeito e empata nas outras. Relatório da 3-B §4.1; comparativo §9; achado 4.52.
@@ -289,7 +289,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Antes de decidir, repetir o Coder 7B e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só (72 inferências, cerca de 1h30), para saber se o saldo de 5 casos se mantém fora da variação entre corridas.
   - (c) Rever a decisão 52 agora e adotar o Coder 7B com a L1 que ele escreveu: exigiria repetir a curadoria da biblioteca dele, a medição da cópia curada e a sonda de confiança (cerca de duas noites), e deixaria a Fase 4 com um modelo que perde nos 36 oficiais e empata nos 72.
 - **Recomendação:** (a). A regra foi fixada antes da bateria para não ser mudada por um resultado dentro do ruído, e é isso que este é; a (b) custa uma noite e, com b/c 6/1, ainda ficaria abaixo do efeito mínimo detectável. O registro honesto (comparativo §9 e achado 4.52) basta para a banca, e a Fase 4 pode reabrir a pergunta com mais casos.
-- **Decisão:** em aberto; em 22/10/2026 o Eric escolheu a opção (b): antes de decidir, repetir o `qwen2.5-coder:7b` e o `qwen2.5:7b` com a L1 de cada um nos 36 inéditos, numa corrida só (72 inferências, cerca de 1h30). Como o Ollama passou de 0.34.4 (corrida 7) para 0.40.2, roda antes uma ponte de versão com os dois modelos (L0 nos 36 oficiais, decisão 47), para a repetição poder ser lida contra as corridas 2 e 7. Comandos prontos nas corridas 14 e 15 do roadmap §2. O que fecha esta ficha é a leitura dessa corrida: o saldo do Coder 7B com a L1 (b/c 6/1 na corrida 7) fica fora ou dentro da variação de 0 a 3 casos entre corridas iguais?
+- **Decisão:** (b) em 22/10/2026 e, com a repetição lida, (a) em 23/10/2026 (decisão 73): a decisão 52 fica. As corridas 14 e 15 rodaram em 23/10 (Ollama 0.40.2): na ponte os dois modelos ficaram pareáveis com a Fase 3 (b/c 1/0 nos dois); na repetição dos 36 inéditos com a L1 de cada um, o Coder 7B acertou 83,3% e o qwen2.5:7b 72,2%, b/c 5/1 (p = 0,219), saldo +4 contra +5 na corrida 7, um caso acima da maior variação entre corridas iguais (3 casos); nos 72 casos nunca vistos, 6/7 (empate, como os 7/7 da corrida 7). O saldo se reproduz, mas não separa os dois no teste pareado e some quando os 36 oficiais entram na conta; a regra pré-registrada (decisão 36) decide pelos 36 oficiais, onde o qwen está à frente. Fica como limitação declarada no comparativo (§9.1) e no relatório da 3-B (§4.3), e o plano da Fase 4 ganha o item "mais casos inéditos". Números em `analise_fase3b.json` (blocos `tb_pontes`, `tb_repeticao`, `tb_repeticao_modelos`) e `comparativo_qwen_coder.json`; achado 4.53.
 
 ## Abertas em 22/10/2026 (cópia no repositório do orientador)
 
@@ -297,7 +297,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
      ! Motivo: o script de sincronização precisou deixar a `.venv` da CobaiaAPI fora da cópia e, ao fazê-lo, mostrou que ela está rastreada no principal apesar do `.gitignore`; tirá-la do rastreio é comando do Eric (regra do CLAUDE.md), então vira ficha. -->
 
 ### 22. A `.venv` da CobaiaAPI está versionada apesar de o `.gitignore` mandar não versionar
-- **Estado:** aberta
+- **Estado:** fechada em 23/10/2026
 - **Quem decide:** Eric
 - **Aberta em:** 22/10/2026
 - **O que é:** `Programacao/CobaiaAPI/.venv/` tem 2.113 arquivos rastreados pelo git (`git ls-files Programacao/CobaiaAPI/.venv | wc -l`), embora o `.gitignore` tenha a regra `.venv/` com o aviso de que a pasta grava caminhos absolutos desta máquina (`pyvenv.cfg` com `C:\Python314`) e só tem binários de Windows. A pasta entrou no primeiro commit do repositório (`ab4da6a1`, 31/08/2026), antes da regra, e o `.gitignore` não tira do rastreio o que já estava rastreado. Quem clona recebe a pasta inteira, com um `ruff.exe` de 25 MB, e o `install.py` a recria de qualquer forma. O script `ferramentas/sincronizar_orientador.py` já a deixa fora da cópia do orientador.
@@ -306,7 +306,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (a) Tirar do rastreio sem apagar do disco: `git rm -r --cached Programacao/CobaiaAPI/.venv` e commitar; a pasta continua na máquina e a regra do `.gitignore` passa a valer. O histórico antigo guarda os arquivos (o repositório não encolhe sem reescrever o histórico).
   - (b) Deixar como está e registrar a exceção no `.gitignore` e no README.
 - **Recomendação:** (a): é o que o `.gitignore` e o README já dizem; comando único, reversível, e o instalador recria a venv em segundos.
-- **Decisão:** em aberto.
+- **Decisão:** (a), pelo Eric em 23/10/2026 (decisão 74): a `.venv` sai do rastreio sem sair do disco. O comando é do Eric, antes do commit: `git rm -r --cached Programacao/CobaiaAPI/.venv` (o Claude não mexe no índice, regra do CLAUDE.md; em 23/10 a tentativa dele foi barrada pelo próprio modo automático). Depois do commit a regra `.venv/` do `.gitignore` passa a valer, o README já descreve a pasta como não versionada e o script de sincronização continua a deixá-la fora da cópia do orientador.
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

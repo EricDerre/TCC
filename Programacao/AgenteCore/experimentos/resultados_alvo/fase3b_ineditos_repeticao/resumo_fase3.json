@@ -1,0 +1,141 @@
+{
+  "por_modelo_biblioteca_particao": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 1,
+      "particao": "avaliacao",
+      "n": 36,
+      "erros_infra": 0,
+      "causa_correta_pct": 83.3,
+      "causa_correta_ic95": [
+        68.1,
+        92.1
+      ],
+      "campo_correto_pct": 94.4,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 16.7,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 0.0,
+      "segundos_medio": 76.63,
+      "segundos_mediana": 74.5,
+      "tokens_saida_medio": 84,
+      "tokens_entrada_mediana": 1171.5,
+      "prefill_ms_mediana": 53626.0,
+      "geracao_ms_mediana": 15424.0,
+      "acuracia_balanceada_pct": 86.2,
+      "rotulo_mais_frequente": "campo_ausente",
+      "parcela_rotulo_mais_frequente_pct": 8.3,
+      "n_rotulos_distintos": 22,
+      "citou_verbete_pct": 100.0,
+      "ouro_no_contexto_pct": 66.7,
+      "contexto_com_nota_pct": 77.8,
+      "citou_verbete_anotado_pct": 58.3,
+      "citou_verbete_novo_pct": 0.0,
+      "verbete_novo_no_contexto_pct": 0.0,
+      "contexto_estourou_n": 0,
+      "segundos_p95": 98.61
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "biblioteca_epoca": 1,
+      "particao": "avaliacao",
+      "n": 36,
+      "erros_infra": 0,
+      "causa_correta_pct": 72.2,
+      "causa_correta_ic95": [
+        56.0,
+        84.2
+      ],
+      "campo_correto_pct": 83.3,
+      "formato_valido_pct": 100.0,
+      "formato_ok_conteudo_errado_pct": 27.8,
+      "fora_do_conjunto_pct": 0.0,
+      "diagnostico_errado_pct": 5.6,
+      "segundos_medio": 71.54,
+      "segundos_mediana": 75.2,
+      "tokens_saida_medio": 62,
+      "tokens_entrada_mediana": 1330.0,
+      "prefill_ms_mediana": 57221.5,
+      "geracao_ms_mediana": 14311.0,
+      "acuracia_balanceada_pct": 79.0,
+      "rotulo_mais_frequente": "tipo_divergente",
+      "parcela_rotulo_mais_frequente_pct": 11.1,
+      "n_rotulos_distintos": 20,
+      "citou_verbete_pct": 100.0,
+      "ouro_no_contexto_pct": 66.7,
+      "contexto_com_nota_pct": 91.7,
+      "citou_verbete_anotado_pct": 75.0,
+      "citou_verbete_novo_pct": 0.0,
+      "verbete_novo_no_contexto_pct": 0.0,
+      "contexto_estourou_n": 0,
+      "segundos_p95": 94.42
+    }
+  ],
+  "pareado_vs_L0": [],
+  "cochran_q": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "particao": "avaliacao",
+      "n_casos": 36,
+      "q": 0.0,
+      "gl": 0,
+      "p": 1.0
+    },
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "particao": "todos",
+      "n_casos": 36,
+      "q": 0.0,
+      "gl": 0,
+      "p": 1.0
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "particao": "avaliacao",
+      "n_casos": 36,
+      "q": 0.0,
+      "gl": 0,
+      "p": 1.0
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "particao": "todos",
+      "n_casos": 36,
+      "q": 0.0,
+      "gl": 0,
+      "p": 1.0
+    }
+  ],
+  "flips": [],
+  "aviso_flips": "calcular_flips cobre só transições adjacentes (L0→L1, L1→L2, L2→L3); com versões não consecutivas (ex.: 0, 1, 3) a transição L1→L3 não aparece — use pareado_vs_L0",
+  "recuperacao": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "biblioteca_epoca": 1,
+      "hit@1": 44.4,
+      "hit@3": 66.7,
+      "hit@5": 72.2,
+      "mrr": 0.565,
+      "n": 36
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "biblioteca_epoca": 1,
+      "hit@1": 38.9,
+      "hit@3": 66.7,
+      "hit@5": 66.7,
+      "mrr": 0.532,
+      "n": 36
+    }
+  ],
+  "metadados": {
+    "saida": "fase3b_ineditos_repeticao",
+    "modo": "ineditos",
+    "modelos": [
+      "qwen2.5-coder:7b",
+      "qwen2.5:7b"
+    ],
+    "n_casos_ineditos": 36,
+    "n_diagnosticos": 72
+  }
+}

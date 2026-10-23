@@ -39,7 +39,16 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 
 DOADOR = "qwen2.5:7b"
 LEITORES = ["qwen2.5-coder:7b", "qwen2.5-coder:3b"]
-PONTES = ["fase3b_ponte", "fase3b_ponte_0344"]
+# ! Alteração de IA - Revisar: (23/10/2026) a ponte em Ollama 0.40.2 (corrida 14, `fase3b_ponte_0402`) entra na lista de
+# pontes, a repetição dos inéditos (corrida 15, `fase3b_ineditos_repeticao`) ganha leitura própria, e a linha de base da
+# troca cruzada passa a ser nomeada (`PONTE_DA_CRUZADA`) em vez de "a última ponte da lista".
+# ! Motivo: a cruzada rodou em 0.34.4 e continua lida contra a ponte dessa versão (decisão 69); com a ponte 0.40.2 no
+# fim da lista, "a última" apontaria para a versão errada. A repetição não entra na lista dos inéditos porque repete
+# modelo, biblioteca e casos da corrida original e sobrescreveria as células dela; é lida à parte, cada modelo contra a
+# própria corrida original e modelo contra modelo dentro da repetição (ficha 21).
+PONTES = ["fase3b_ponte", "fase3b_ponte_0344", "fase3b_ponte_0402"]
+PONTE_DA_CRUZADA = "fase3b_ponte_0344"
+REPETICAO = "fase3b_ineditos_repeticao"
 INEDITOS = "fase3b_ineditos"
 CRUZADA = "fase3b_cruzada_qwen"
 # ! Alteração de IA - Revisar: (06/10/2026) as duas corridas opcionais do roadmap entram na análise: o Coder 7B nos
@@ -214,7 +223,8 @@ def carregar() -> dict:
             pontes.append((nome, condicoes.get("versao_ollama") or "?", ler(c3["avaliacao"])))
     brutos = {}
     raiz_cruzada = caminhos.fase3(CRUZADA)["raiz"]
-    raiz_ponte = caminhos.fase3(pontes[-1][0])["raiz"] if pontes else None
+    nomes_pontes = [n for n, _, _ in pontes]
+    raiz_ponte = caminhos.fase3(PONTE_DA_CRUZADA if PONTE_DA_CRUZADA in nomes_pontes else pontes[-1][0])["raiz"] if pontes else None
     for m in LEITORES:
         for epoca in VERSOES_CRUZADA:
             brutos[("cruzada", m, epoca)] = _brutos(raiz_cruzada, m, epoca)
@@ -232,13 +242,16 @@ def carregar() -> dict:
             ineditos += ler(c3["avaliacao"])
     c3_a5 = caminhos.fase3(A5)
     a5 = ler(c3_a5["avaliacao"]) if c3_a5["avaliacao"].exists() else []
+    c3_rep = caminhos.fase3(REPETICAO)
+    repeticao = ler(c3_rep["avaliacao"]) if c3_rep["avaliacao"].exists() else []
     comp = F3["raiz"] / "comparacao_fases.json"
     adesao_2b = {m: d.get("adesao_cega_2B_A5_pct") for m, d in ler(comp).get("por_modelo", {}).items()} if comp.exists() else {}
     return {"f3": ler(F3["avaliacao"]), "pontes": pontes, "cruzada": ler(caminhos.fase3(CRUZADA)["avaliacao"]),
             "ineditos": ineditos, "brutos": brutos,
-            "corridas": [resumo_da_corrida(s) for s in PONTES + [INEDITOS, CRUZADA] + INEDITOS_EXTRA + [A5] if caminhos.fase3(s)["raiz"].exists()],
+            "corridas": [resumo_da_corrida(s) for s in PONTES + [INEDITOS, CRUZADA] + INEDITOS_EXTRA + [A5, REPETICAO] if caminhos.fase3(s)["raiz"].exists()],
             "doador": DOADOR, "leitores": LEITORES,
-            "casos_de_texto_alterado": CASOS_DE_TEXTO_ALTERADO, "corridas_depois": frozenset(depois), "a5": a5, "adesao_2b": adesao_2b}
+            "casos_de_texto_alterado": CASOS_DE_TEXTO_ALTERADO, "corridas_depois": frozenset(depois), "a5": a5, "adesao_2b": adesao_2b,
+            "repeticao": repeticao, "ponte_da_cruzada": PONTE_DA_CRUZADA}
 
 
 # ------------------------------------------------------------------ montagem
@@ -258,16 +271,17 @@ def _linha_celula(leitor: str, epoca: int, origem: str, rotulo: str, versao: str
 def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: list[dict], ineditos: list[dict],
            brutos: dict, corridas: list[dict], doador: str, leitores: list[str],
            casos_de_texto_alterado=frozenset(), corridas_depois=frozenset(), a5: list[dict] | None = None,
-           adesao_2b: dict | None = None) -> dict:
-    """Monta o registro da análise. `pontes` vem na ordem em que rodaram; a última é a linha de base (L0) da
-    troca cruzada, por ser a que rodou na mesma versão do Ollama. `casos_de_texto_alterado` são os casos corrigidos
+           adesao_2b: dict | None = None, repeticao: list[dict] | None = None, ponte_da_cruzada: str | None = None) -> dict:
+    """Monta o registro da análise. `pontes` vem na ordem em que rodaram; a linha de base (L0) da troca cruzada é a
+    ponte nomeada em `ponte_da_cruzada` (a que rodou na mesma versão do Ollama; sem o nome, a última da lista).
+    `repeticao` são os registros da repetição dos inéditos (corrida 15), lidos à parte. `casos_de_texto_alterado` são os casos corrigidos
     depois da Fase 3 e `corridas_depois` os nomes das saídas que rodaram depois da correção (o nome "cruzada" vale
     para a troca cruzada); a Fase 3 é sempre anterior. `ineditos` pode trazer mais de um modelo (o Coder 7B rodou nos
     mesmos 36 em 06/10); `a5` são os registros avaliados da adesão cega sobre a L3 própria e `adesao_2b` a adesão
     cega de cada modelo na Fase 2-B (A5 sobre a biblioteca original), para a comparação."""
     modelos = [doador] + list(leitores)
     versao_f3 = "0.34.0"
-    nome_ponte, versao_ponte, av_ponte = pontes[-1]
+    nome_ponte, versao_ponte, av_ponte = next((p for p in pontes if p[0] == ponte_da_cruzada), pontes[-1])
     alterados = frozenset(casos_de_texto_alterado)
     cruzada_depois = "cruzada" in corridas_depois
 
@@ -367,7 +381,7 @@ def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: l
             continue
         for epoca in VERSOES_CRUZADA:
             celulas.append(_linha_celula(m, epoca, "cruzada", f"L{epoca} do doador, cruzada (Ollama {versao_ponte})", versao_ponte, celula(cruzada, m, epoca)))
-    pareavel = {l["modelo"]: l["pareavel"] for l in bloco_pontes[-1]["linhas"]}
+    pareavel = {l["modelo"]: l["pareavel"] for l in next(b for b in bloco_pontes if b["saida"] == nome_ponte)["linhas"]}
     for m in leitores:
         l0 = celula(av_ponte, m, 0)
         for epoca in VERSOES_CRUZADA:
@@ -415,18 +429,59 @@ def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: l
                 if regs:
                     por_classe.append({"leitor": m, "biblioteca": rotulo_bib, "classe": nome, "acertos": sum(1 for r in regs if r["causa_correta"]), "n": len(regs)})
 
+    # ! Alteração de IA - Revisar: (23/10/2026) repetição dos inéditos (corrida 15): cada modelo contra a própria corrida
+    # original (corrida 2 para o doador, 7 para o Coder 7B) e modelo contra modelo dentro da repetição, com o saldo lido
+    # contra a maior variação entre corridas iguais de L0 (bloco do ruído, "com a mesma entrada").
+    # ! Motivo: a ficha 21 pergunta se o saldo de 5 casos do Coder 7B com a L1 (b/c 6/1 na corrida 7) se mantém fora da
+    # variação de 0 a 3 casos entre corridas iguais; sem este bloco a resposta seria digitada à mão.
+    limiar_ruido = max((l["discordantes_mesma_entrada"] for l in ruido), default=None)
+    ultima = bloco_pontes[-1] if bloco_pontes else {"versao": None, "linhas": []}
+    pareavel_ultima = {l["modelo"]: l["pareavel"] for l in ultima["linhas"]}
+    repeticao = repeticao or []
+    rep_linhas, rep_entre = [], []
+    for m in sorted({r["modelo"] for r in repeticao}):
+        for epoca in sorted({r["biblioteca_epoca"] for r in repeticao if r["modelo"] == m}):
+            cel, orig = celula(repeticao, m, epoca), celula(ineditos, m, epoca)
+            par = parear(cel, orig)
+            rep_linhas.append({"modelo": m, "biblioteca_epoca": epoca, **medir(cel),
+                               "acerto_original_pct": medir(orig)["acerto_pct"] if orig else None,
+                               "contra_original": {k: par[k] for k in ("n_comuns", "b", "c", "p_mcnemar", "delta_pp", "ganhos", "perdas", "rotulos_diferentes")},
+                               "versao_da_ultima_ponte": ultima["versao"], "pareavel_pela_ultima_ponte": pareavel_ultima.get(m)})
+    saldo_original = {(x["modelo"], x["biblioteca_epoca"]): x["b"] - x["c"] for x in entre_modelos}
+    for m in sorted({r["modelo"] for r in repeticao} - {doador}):
+        for epoca in sorted({r["biblioteca_epoca"] for r in repeticao if r["modelo"] == m}):
+            cel_m, cel_d = celula(repeticao, m, epoca), celula(repeticao, doador, epoca)
+            if not cel_m or not cel_d:
+                continue
+            par = parear(cel_m, cel_d)
+            soma = parear(juntar(oficiais=celula(f3, m, epoca), ineditos=cel_m), juntar(oficiais=celula(f3, doador, epoca), ineditos=cel_d))
+            por_classe_m = {}
+            for k, nome in sorted(CLASSES.items()):
+                rm = [r for r in cel_m.values() if r.get("classe") == k]
+                rd = [r for r in cel_d.values() if r.get("classe") == k]
+                if rm:
+                    por_classe_m[nome] = {"n": len(rm), "acertos": sum(1 for r in rm if r["causa_correta"]), "acertos_doador": sum(1 for r in rd if r["causa_correta"])}
+            saldo = par["b"] - par["c"]
+            rep_entre.append({"modelo": m, "doador": doador, "biblioteca_epoca": epoca, "acerto_pct": medir(cel_m)["acerto_pct"],
+                              "acerto_doador_pct": medir(cel_d)["acerto_pct"],
+                              **{k: par[k] for k in ("n_comuns", "b", "c", "p_mcnemar", "delta_pp", "ganhos", "perdas", "rotulos_diferentes")},
+                              "saldo": saldo, "saldo_original": saldo_original.get((m, epoca)), "limiar_ruido": limiar_ruido,
+                              "dentro_da_variacao": None if limiar_ruido is None else abs(saldo) <= limiar_ruido,
+                              "somados": {k: soma[k] for k in ("n_comuns", "b", "c", "p_mcnemar", "delta_pp")}, "por_classe": por_classe_m})
+
     return {
         "metadados": {"gerado_em": datetime.now().isoformat(timespec="seconds"), "doador": doador, "leitores": list(leitores),
                       "limite_da_ponte": LIMITE_PONTE, "ponte_de_base": nome_ponte, "versao_da_ponte_de_base": versao_ponte,
                       "casos_de_texto_alterado": sorted(alterados), "corridas_depois_da_correcao": sorted(corridas_depois),
                       "fontes": {"fase3": "resultados_alvo/fase3/avaliacao_fase3.json", "pontes": [n for n, _, _ in pontes],
-                                 "ineditos": INEDITOS, "ineditos_extra": INEDITOS_EXTRA, "a5": A5, "cruzada": CRUZADA}},
+                                 "ineditos": INEDITOS, "ineditos_extra": INEDITOS_EXTRA, "a5": A5, "cruzada": CRUZADA, "repeticao": REPETICAO}},
         "corridas": corridas,
         "pontes": bloco_pontes,
         "ruido_l0": ruido,
         "oscilam_em_l0": oscilam,
         "ineditos": {"linhas": linhas_ineditos, "agrupado": agrupado, "entre_modelos": entre_modelos,
                      "efeito_minimo_detectavel": avaliar_fase3.efeito_minimo_detectavel((36, 72))},
+        "repeticao": {"linhas": rep_linhas, "entre_modelos": rep_entre, "limiar_ruido": limiar_ruido},
         "a5": {"linhas": linhas_a5},
         "cruzada": {"celulas": celulas, "pareados": pareados, "cochran": cochran, "por_classe": por_classe, "rotulos": rotulos, "casos": casos},
     }
@@ -489,6 +544,20 @@ def render(dado: dict) -> str:
                         f(l["rotulos_diferentes"]), f'{l["somados"]["b"]} / {l["somados"]["c"]}', f(l["somados"]["p_mcnemar"], 4)]
                        + [f'{l["por_classe"][n]["acertos"]} / {l["por_classe"][n]["acertos_doador"]} (de {l["por_classe"][n]["n"]})' if n in l["por_classe"] else "n/a" for n in nomes_classe]
                        for l in dado["ineditos"].get("entre_modelos", [])]))
+    # ! Alteração de IA - Revisar: (23/10/2026) duas tabelas da repetição dos inéditos (corrida 15), coladas no relatório da 3-B.
+    # ! Motivo: a ficha 21 fecha pelo saldo do Coder 7B na repetição contra a variação entre corridas iguais; os números saem daqui.
+    rp = dado.get("repeticao", {"linhas": [], "entre_modelos": []})
+    blocos.append(tab("tb_repeticao", ["Modelo", "Biblioteca (a de cada um)", "Acerto na repetição (IC 95%)", "Acerto na corrida original", "Contra a original: b (só a repetição) / c (só a original)", "p (McNemar)", "Rótulos que mudaram", "Passaram a certos", "Passaram a errados", "Pareável pela ponte mais recente", "s por diagnóstico (mediana)"],
+                      [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]}', f'{f(l["acerto_pct"])}% ({fic(l["ic95"])})', "n/a" if l["acerto_original_pct"] is None else f(l["acerto_original_pct"]) + "%",
+                        f'{l["contra_original"]["b"]} / {l["contra_original"]["c"]}', f(l["contra_original"]["p_mcnemar"], 4), f(l["contra_original"]["rotulos_diferentes"]),
+                        fcasos(l["contra_original"]["ganhos"]), fcasos(l["contra_original"]["perdas"]),
+                        f'{f(l["pareavel_pela_ultima_ponte"])} ({l["versao_da_ultima_ponte"]})', f(l["segundos_mediana"])] for l in rp["linhas"]]))
+    blocos.append(tab("tb_repeticao_modelos", ["Modelo", "Biblioteca (a de cada um)", "Acerto na repetição", f"Acerto do `{dado['metadados']['doador']}`", "b (só o modelo)", "c (só o doador)", "Saldo (b menos c)", "Saldo na corrida original", "Maior variação entre corridas iguais de L0", "Dentro da variação", "Diferença", "p (McNemar)", "Rótulos diferentes", "Nos 72 (oficiais + inéditos): b / c", "p nos 72"]
+                      + [f"{n}: modelo / doador (acertos de n)" for n in nomes_classe],
+                      [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]}', f(l["acerto_pct"]) + "%", f(l["acerto_doador_pct"]) + "%", f(l["b"]), f(l["c"]), f"{l['saldo']:+d}", "n/a" if l["saldo_original"] is None else f"{l['saldo_original']:+d}",
+                        f(l["limiar_ruido"]), f(l["dentro_da_variacao"]), fd(l["delta_pp"]), f(l["p_mcnemar"], 4), f(l["rotulos_diferentes"]), f'{l["somados"]["b"]} / {l["somados"]["c"]}', f(l["somados"]["p_mcnemar"], 4)]
+                       + [f'{l["por_classe"][n]["acertos"]} / {l["por_classe"][n]["acertos_doador"]} (de {l["por_classe"][n]["n"]})' if n in l["por_classe"] else "n/a" for n in nomes_classe]
+                       for l in rp["entre_modelos"]]))
     blocos.append(tab("tb_a5", ["Modelo", "Biblioteca", "Casos", "Seguiu a causa plantada", "Acertou mesmo assim", "O mesmo modelo, a mesma biblioteca, em A2 (Fase 3, acerto)",
                                 "Adesão cega na Fase 2-B (A5 sobre a biblioteca original)", "Verbete de ouro no contexto"],
                       [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]} própria', f(l["n"]), f'{l["seguiu"]} ({f(l["seguiu_pct"])}%)', f'{l["acertos"]} ({f(l["acerto_pct"])}%)',
@@ -520,7 +589,9 @@ def render(dado: dict) -> str:
            f"# Análise de fechamento da Fase 3-B, gerada em {m['gerado_em'][:10]}", "",
            f"Doador da troca cruzada: `{m['doador']}`. Leitores: {', '.join('`' + x + '`' for x in m['leitores'])}. Linha de base da cruzada: L0 da ponte `{m['ponte_de_base']}` "
            f"(Ollama {m['versao_da_ponte_de_base']}). b conta os casos que só a primeira condição acertou; c, os que só a segunda acertou. "
-           f"Uma ponte é pareável com a Fase 3 quando b + c fica em até {m['limite_da_ponte']} (decisão 47).", ""]
+           f"Uma ponte é pareável com a Fase 3 quando b + c fica em até {m['limite_da_ponte']} (decisão 47). "
+           f"Repetição dos inéditos (corrida 15): `{m['fontes'].get('repeticao')}`, lida com cada modelo contra a própria corrida original e modelo contra "
+           f"modelo dentro da repetição; o saldo é comparado com a maior variação entre corridas iguais de L0 com a mesma entrada (bloco do ruído).", ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
 
 
@@ -582,7 +653,8 @@ def main() -> None:
     SAIDA_JSON.write_text(json.dumps(dado, ensure_ascii=False, indent=2), encoding="utf-8")
     SAIDA_MD.write_text(md, encoding="utf-8", newline="\n")
     print(f"gravado: {SAIDA_JSON.name} e {SAIDA_MD.name}: {len(dado['cruzada']['pareados'])} pareamento(s) da cruzada, "
-          f"{len(dado['pontes'])} ponte(s), {len(dado['ineditos']['agrupado'])} linha(s) de oficiais + inéditos")
+          f"{len(dado['pontes'])} ponte(s), {len(dado['ineditos']['agrupado'])} linha(s) de oficiais + inéditos, "
+          f"{len(dado['repeticao']['linhas'])} linha(s) da repetição")
 
 
 if __name__ == "__main__":

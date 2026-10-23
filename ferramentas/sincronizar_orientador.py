@@ -8,7 +8,7 @@
 # repositório continua o principal, onde toda alteração sai primeiro. Copiar à mão milhares de arquivos a cada entrega
 # erraria (arquivo editado sem commit indo junto, arquivo apagado aqui sobrevivendo lá); o script copia só o que está no
 # commit, compara pelo mesmo hash que o git usa (sha1 de "blob <tamanho>\0<conteúdo>") e o Eric revisa, commita e dá push
-# no clone. A `.venv` fica de fora porque está rastreada por engano (o `.gitignore` manda não versionar) e só funciona
+# no clone. A `.venv` fica de fora porque estava rastreada por engano até a ficha 22 (sai do rastreio no commit do Eric, decisão 74) e só funciona
 # nesta máquina; a `.claude/` porque é configuração do Claude Code com caminhos daqui.
 """Replica o commit HEAD deste repositório em `<clone do orientador>/projeto/`.
 

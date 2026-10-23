@@ -187,6 +187,38 @@ def ineditos_por_classe(av: list[dict], L: int) -> list[dict]:
              "delta": sum(por[k][B]) - sum(por[k][A])} for k in sorted(por, key=int) if por[k][A] and por[k][B]]
 
 
+# ! Alteração de IA - Revisar: função nova (23/10/2026): cada modelo da repetição dos inéditos (corrida 15) contra a
+# própria corrida original (corrida 2 para o qwen, 7 para o Coder), caso a caso, com os rótulos que mudaram.
+# ! Motivo: a ficha 21 pergunta se o saldo do Coder nos inéditos se mantém numa corrida nova; para ler isso é preciso
+# saber quanto cada modelo muda sozinho entre as duas corridas (a mesma biblioteca, outra versão do Ollama).
+def ruido_repeticao(av_original: list[dict], av_repeticao: list[dict]) -> list[dict]:
+    """Por modelo e versão presentes nas duas corridas: b = só a repetição acertou, c = só a original acertou."""
+    def por_celula(av):
+        cel = defaultdict(dict)
+        for r in av:
+            if not r.get("erro_infra"):
+                cel[(r["modelo"], r["biblioteca_epoca"])][r["caso"]] = r
+        return cel
+    orig, rep = por_celula(av_original), por_celula(av_repeticao)
+    linhas = []
+    for chave in sorted(set(orig) & set(rep)):
+        o, p = orig[chave], rep[chave]
+        comuns = sorted(set(o) & set(p))
+        if not comuns:
+            continue
+        n = len(comuns)
+        b = sum(1 for c in comuns if p[c]["causa_correta"] and not o[c]["causa_correta"])
+        c_ = sum(1 for c in comuns if o[c]["causa_correta"] and not p[c]["causa_correta"])
+        ac_o = round(100 * sum(1 for c in comuns if o[c]["causa_correta"]) / n, 1)
+        ac_p = round(100 * sum(1 for c in comuns if p[c]["causa_correta"]) / n, 1)
+        linhas.append({"modelo": chave[0], "L": chave[1], "n": n, "acerto_original": ac_o, "acerto_repeticao": ac_p,
+                       "ambos": sum(1 for c in comuns if o[c]["causa_correta"] and p[c]["causa_correta"]),
+                       "nenhum": sum(1 for c in comuns if not o[c]["causa_correta"] and not p[c]["causa_correta"]),
+                       "so_repeticao": b, "so_original": c_, "delta_pp": round(ac_p - ac_o, 1), "p_mcnemar": mcnemar(b, c_) if (b + c_) else 1.0,
+                       "rotulos_diferentes": sum(1 for c in comuns if o[c].get("causa_respondida") != p[c].get("causa_respondida"))})
+    return linhas
+
+
 def confronto_direto_2b(av2b) -> list[dict]:
     """Mesma leitura na Fase 2-B, se avaliacao.json trouxer registros por caso com modelo, condição e acerto."""
     regs = av2b if isinstance(av2b, list) else (av2b.get("registros") if isinstance(av2b, dict) else None)
@@ -335,6 +367,11 @@ def montar() -> dict:
         if p.exists():
             av_ined += ler(p)
     ined_modelos = sorted({r["modelo"] for r in av_ined}) if av_ined else (ler(ined)["metadados"].get("modelos") if ined.exists() else None)
+    # ! Alteração de IA - Revisar: (23/10/2026) a repetição dos inéditos (corrida 15) entra à parte: confronto modelo contra
+    # modelo dentro dela, por classe, e cada modelo contra a própria corrida original.
+    # ! Motivo: ficha 21; a repetição não pode ir para a mesma lista dos inéditos porque repete modelo, versão e casos.
+    p_rep = RES / "fase3b_ineditos_repeticao" / "avaliacao_fase3.json"
+    av_rep = ler(p_rep) if p_rep.exists() else []
     doc, rej = bloco_f3_documentacao(f3)
     entre, riscos = bloco_entre_fases(c)
     melhor = {m: max((x for x in f3["por_modelo_biblioteca_particao"] if x["modelo"] == m and x["particao"] == "avaliacao"),
@@ -343,8 +380,10 @@ def montar() -> dict:
         "metadados": {"gerado_em": datetime.now().isoformat(timespec="seconds"), "A": A, "B": B,
                       "fontes": {"2a": "resumo_metricas.json (Ryzen)", "2b": "resultados_alvo/resumo_metricas.json (+ avaliacao.json)",
                                  "f3": "resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json", "comparacao": "comparacao_fases.json",
-                                 "decisao": "decisao_modelo.json", "ineditos": str(ined.relative_to(RES)) if ined.exists() else None},
+                                 "decisao": "decisao_modelo.json", "ineditos": str(ined.relative_to(RES)) if ined.exists() else None,
+                                 "repeticao": str(p_rep.relative_to(RES)) if p_rep.exists() else None},
                       "melhor_L_nos_36": melhor, "ineditos_modelos": ined_modelos, "coder_nos_ineditos": bool(ined_modelos) and B in ined_modelos,
+                      "repeticao_modelos": sorted({r["modelo"] for r in av_rep}) if av_rep else None,
                       "f3_gerado_em": f3["metadados"]["gerado_em"], "decisao_gerado_em": d["metadados"]["gerado_em"]},
         "fase2a": bloco_2a(m2a),
         "fase2a_classe": bloco_por_dimensao(m2a["por_modelo_classe"], "classe", CLASSES),
@@ -363,6 +402,8 @@ def montar() -> dict:
         "fase3_revisao": bloco_revisao(f3), "fase3_recuperacao": bloco_recuperacao(f3), "fase3_flips": bloco_flips(f3),
         "entre_fases": entre, "riscos_entre_fases": riscos, "decisao": bloco_decisao(d),
         "confronto_ineditos": confronto_ineditos(av_ined), "ineditos_classe_L1": ineditos_por_classe(av_ined, 1),
+        "confronto_ineditos_repeticao": confronto_ineditos(av_rep), "ineditos_repeticao_classe_L1": ineditos_por_classe(av_rep, 1),
+        "repeticao_vs_original": ruido_repeticao(av_ined, av_rep),
     }
     # melhor versão de cada um (nos 36) comparada por classe nos 90
     la, lb = melhor[A], melhor[B]
@@ -470,6 +511,16 @@ def render(dado: dict) -> str:
                        for l in dado.get("confronto_ineditos", [])]))
     blocos.append(tab("cq_ineditos_classe", ["36 inéditos · L1 · classe", "n", f"acertos {a}", f"acertos {b}", "Δ (casos)"],
                       [[l["classe"], f(l["n"]), f(l["acertos_A"]), f(l["acertos_B"]), fd(l["delta"]).replace(" pp", "")] for l in dado.get("ineditos_classe_L1", [])]))
+    # ! Alteração de IA - Revisar: (23/10/2026) três blocos da repetição dos inéditos (corrida 15), colados no comparativo §9.
+    # ! Motivo: ficha 21; o saldo da repetição e o quanto cada modelo muda sozinho entre corridas saem daqui, não digitados.
+    blocos.append(tab("cq_ineditos_repeticao", ["Repetição nos 36 inéditos (corrida 15, Ollama 0.40.2) · versão", "n", f"acerto {a}", f"acerto {b}", "ambos acertam", "nenhum", "só o Coder", "só o qwen", "Δ", "p (McNemar exato)"],
+                      [[l["contexto"], f(l["n"]), f(l["acerto_A"]) + "%", f(l["acerto_B"]) + "%", f(l["ambos"]), f(l["nenhum"]), f(l["so_coder"]), f(l["so_qwen"]), fd(l["delta_pp"]), f(l["p_mcnemar"], 4)]
+                       for l in dado.get("confronto_ineditos_repeticao", [])]))
+    blocos.append(tab("cq_repeticao_vs_original", ["Modelo · versão", "n", "acerto na corrida original", "acerto na repetição", "Δ", "ambos", "nenhum", "só a repetição", "só a original", "p (McNemar exato)", "rótulos que mudaram"],
+                      [[f'{l["modelo"]} · L{l["L"]}', f(l["n"]), f(l["acerto_original"]) + "%", f(l["acerto_repeticao"]) + "%", fd(l["delta_pp"]), f(l["ambos"]), f(l["nenhum"]), f(l["so_repeticao"]), f(l["so_original"]), f(l["p_mcnemar"], 4), f(l["rotulos_diferentes"])]
+                       for l in dado.get("repeticao_vs_original", [])]))
+    blocos.append(tab("cq_ineditos_repeticao_classe", ["Repetição · L1 · classe", "n", f"acertos {a}", f"acertos {b}", "Δ (casos)"],
+                      [[l["classe"], f(l["n"]), f(l["acertos_A"]), f(l["acertos_B"]), fd(l["delta"]).replace(" pp", "")] for l in dado.get("ineditos_repeticao_classe_L1", [])]))
     blocos.append(tab("cq_onde_vence", ["Onde o Coder fica à frente", "métrica", a, b, "Δ", "n", "p"],
                       [[l["onde"], l["metrica"], f(l["A"]), f(l["B"]), fd(l["delta"]), f(l.get("n")), f(l.get("p"), 4) if l.get("p") is not None else "—"] for l in dado["onde_o_coder_vence"]]))
     cab = ["<!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por comparar_qwen_coder.py a partir dos registros oficiais (--check regera e compara); não editar à mão.",
@@ -478,6 +529,7 @@ def render(dado: dict) -> str:
            f"Fontes: {m['fontes']['2a']}; {m['fontes']['2b']}; {m['fontes']['f3']} (gerado em {m['f3_gerado_em']}); {m['fontes']['comparacao']}; "
            f"{m['fontes']['decisao']} (gerado em {m['decisao_gerado_em']}). Melhor versão nos 36: {a} L{m['melhor_L_nos_36'][A]}, {b} L{m['melhor_L_nos_36'][B]}. "
            f"Casos inéditos: modelos rodados = {m['ineditos_modelos']}" + (f" (o {B} rodou neles em 06/10/2026, corrida 7). " if m.get("coder_nos_ineditos") else f"; o {B} não rodou lá. ")
+           + (f"Repetição dos inéditos em 23/10/2026 (corrida 15, {m['fontes']['repeticao']}): modelos {m['repeticao_modelos']}. " if m.get("repeticao_modelos") else "")
            + f"Estabilidade de ranking (top-1 em {dec['total_rankings']} cortes): "
            + "; ".join(f"{k}: {v}" for k, v in dec["estabilidade_top1"].items()) + ".", ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"

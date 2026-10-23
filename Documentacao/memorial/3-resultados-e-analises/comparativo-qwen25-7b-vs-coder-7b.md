@@ -324,6 +324,38 @@ Em grupos: (1) a estratégia de compilador da 2-A, descartada; (2) as condiçõe
 3. **Escritor de notas.** O Coder escreve menos edições, com mais corretas e sem duplicar; se a Fase 4 separar o momento de escrever (fora da corrida, revisado) do momento de diagnosticar, ele é o candidato natural a escritor — mas isso exige dois modelos de 7B alternando na mesma máquina (só um fica residente por vez) e dobra o tempo. Fica como opção a medir depois da troca cruzada, não como decisão.
 4. **O que mudaria a decisão 52:** o Coder vencer o qwen nos casos inéditos (não medido), ou ler a biblioteca do qwen melhor do que o próprio qwen (troca cruzada pendente). Sem uma das duas, a variante de instrução geral continua sendo o modelo do agente — e nas duas classes difíceis (semântica e tradução) a vantagem do qwen é a maior de todas. **Resultado (01/10/2026):** a troca cruzada rodou e a segunda condição não se cumpriu. **Resultado (06/10/2026):** a primeira condição rodou (corrida 7, bloco `cq_ineditos`): o Coder vence o qwen nos inéditos com L0 (83,3% contra 75,0%, b/c 4/1, p = 0,375) e com L1 (86,1% contra 72,2%, b/c 6/1, p = 0,125) e perde com L3 (75,0% contra 80,6%, b/c 1/3); nos 72 casos com L1 o placar é 7/7 (p = 1,00). A condição fica parcialmente cumprida, dentro do ruído de uma corrida por condição (de 0 a 3 casos em 36); o que fazer com a decisão 52 é a ficha 21.
 
+<!-- ! Alteração de IA - Revisar: §9.1 novo (23/10/2026) com a repetição dos inéditos (corrida 15) e a ponte 0.40.2 (corrida 14): blocos `cq_ineditos_repeticao`, `cq_repeticao_vs_original` e `cq_ineditos_repeticao_classe` colados por `comparar_qwen_coder.py --colar`.
+     ! Motivo: o item 4 do §9 deixava a decisão 52 à espera da repetição pedida na ficha 21; a repetição rodou e o documento precisa mostrar o que saiu e o que ficou decidido (decisão 73), sem número digitado. -->
+### 9.1 Repetição nos inéditos (corridas 14 e 15, 23/10/2026)
+
+Depois da ponte de versão em Ollama 0.40.2 (corrida 14, os dois modelos pareáveis com a Fase 3), os dois repetiram os 36 inéditos com a L1 de cada um numa corrida só (corrida 15). A primeira tabela é o confronto dentro da repetição; a segunda, quanto cada modelo mudou sozinho contra a própria corrida original (corrida 2 para o qwen, 7 para o Coder); a terceira, por classe.
+
+<!-- tabela:cq_ineditos_repeticao -->
+| Repetição nos 36 inéditos (corrida 15, Ollama 0.40.2) · versão | n | acerto qwen2.5:7b | acerto coder:7b | ambos acertam | nenhum | só o Coder | só o qwen | Δ | p (McNemar exato) |
+|---|---|---|---|---|---|---|---|---|---|
+| inéditos · L1 (a biblioteca de cada um) | 36 | 72,2% | 83,3% | 25 | 5 | 5 | 1 | +11,1 pp | 0,2188 |
+<!-- /tabela:cq_ineditos_repeticao -->
+
+<!-- tabela:cq_repeticao_vs_original -->
+| Modelo · versão | n | acerto na corrida original | acerto na repetição | Δ | ambos | nenhum | só a repetição | só a original | p (McNemar exato) | rótulos que mudaram |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:7b · L1 | 36 | 86,1% | 83,3% | -2,8 pp | 30 | 5 | 0 | 1 | 1,0000 | 3 |
+| qwen2.5:7b · L1 | 36 | 72,2% | 72,2% | +0,0 pp | 26 | 10 | 0 | 0 | 1,0000 | 1 |
+<!-- /tabela:cq_repeticao_vs_original -->
+
+<!-- tabela:cq_ineditos_repeticao_classe -->
+| Repetição · L1 · classe | n | acertos qwen2.5:7b | acertos coder:7b | Δ (casos) |
+|---|---|---|---|---|
+| 1 lexica | 6 | 4 | 5 | +1,0 |
+| 2 sintatica | 6 | 6 | 6 | +0,0 |
+| 3 semantica | 6 | 4 | 5 | +1,0 |
+| 4 traducao | 6 | 4 | 4 | +0,0 |
+| 5 runtime | 6 | 6 | 6 | +0,0 |
+| 6 efeito | 6 | 2 | 4 | +2,0 |
+<!-- /tabela:cq_ineditos_repeticao_classe -->
+
+Leitura (bloco `cq_ineditos_repeticao`): o Coder fica à frente de novo, 83,3% contra 72,2%, 5 casos só dele contra 1 só do qwen (p = 0,219), saldo +4 contra +5 na corrida 7. Cada modelo repete a si mesmo (bloco `cq_repeticao_vs_original`): o Coder perde 1 caso e o qwen nenhum. Nos 72 casos nunca vistos o placar volta a empatar (6/7; relatório da 3-B §4.3). O saldo é reproduzível e um caso maior que a variação entre corridas iguais de L0, mas não separa os dois no teste pareado; a decisão 73 mantém a decisão 52 e registra o saldo como limitação declarada.
+
 <!-- ! Alteração de IA - Revisar: em 22/10/2026 a última linha do §10 ganhou a resposta do Eric à ficha 21 (opção b: repetir a corrida antes de decidir).
      ! Motivo: o item 4 do §9 e a linha de 06/10 deixavam a decisão 52 à espera da ficha 21; o documento precisa dizer o que foi escolhido e onde está o comando (roadmap §2, corridas 14 e 15), senão o leitor acha que a ficha segue sem resposta. -->
 ## 10. O que muda no projeto
@@ -333,3 +365,4 @@ Em grupos: (1) a estratégia de compilador da 2-A, descartada; (2) as condiçõe
 - Roadmap: corrida opcional nova — Coder 7B nos 36 inéditos (`-Modo ineditos -Saida fase3b_ineditos_coder7b -Versoes 0,1,3 -Modelos qwen2.5-coder:7b`; 108 diagnósticos, ~2 h) — só se o Eric quiser fechar o cenário 1; a troca cruzada (corrida 1) já responde o cenário 2.
 - Troca cruzada rodada em 01/10/2026: decisão 52 mantida; o padrão é o `qwen2.5:7b` com a biblioteca que ele mesmo escreveu (decisão 69). Na ponte de 30/09 (Ollama 0.34.4) o Coder 7B acertou 80,6% em L0, 2 casos acima do qwen (75,0%), dentro da variação entre corridas iguais (achado 4.43).
 - Corrida 7 rodada em 06/10/2026: o Coder 7B fica à frente nos inéditos com L0 e L1 e atrás com L3, e empata nos 72 com L1 (§9, itens 1 e 4; achado 4.52). A decisão 52 fica como está até a ficha 21, e o plano da Fase 4 ganha o item "mais casos inéditos antes de qualquer troca de modelo". **Ficha 21 (22/10/2026):** o Eric escolheu repetir a corrida antes de decidir (opção b): ponte de versão em Ollama 0.40.2 e os dois modelos com a L1 de cada um nos 36 inéditos, numa corrida só (roadmap §2, corridas 14 e 15); a decisão 52 segue como está até a leitura dessa corrida.
+- **Corridas 14 e 15 rodadas em 23/10/2026 (decisão 73):** a ponte em 0.40.2 deixa os dois modelos pareáveis com a Fase 3, e a repetição dos inéditos reproduz o saldo do Coder (5/1, saldo +4) sem separar os dois no teste pareado nem nos 72 casos (6/7). A decisão 52 fica; o saldo nos inéditos é limitação declarada (§9.1, relatório da 3-B §4.3, achado 4.53), e o plano da Fase 4 ganha o item "mais casos inéditos".

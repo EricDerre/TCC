@@ -169,7 +169,7 @@ ROTULO_FASE = {"2A_linear_ryzen": "2-A (Ryzen)", "2B_A0": "2-B A0", "2B_A2": "2-
                "F3_L1": "F3 L1", "F3_L2": "F3 L2", "F3_L3": "F3 L3"}
 
 
-def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, cartoes_corridas) -> tuple[dict, str]:
+def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, cartoes_corridas, analise3b: dict | None = None) -> tuple[dict, str]:
     meta = cq["metadados"]
     LA, LB = meta["melhor_L_nos_36"][A], meta["melhor_L_nos_36"][B]
     v36 = {x["contexto"]: x for x in cq["fase3_versoes"]}
@@ -240,19 +240,36 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
     # ! Motivo: a aba dizia que a corrida 7 só rodaria "se o Eric quiser"; ele rodou em 06/10, e o resultado toca a decisão 52 (ficha 21).
     ined_cq = {x["L"]: x for x in cq.get("confronto_ineditos", [])}
     i1 = ined_cq.get(1)
+    # ! Alteração de IA - Revisar: (23/10/2026) a repetição dos inéditos (corrida 15) entra no cartão, na frase de abertura e numa seção
+    # própria; o veredito da ficha 21 (saldo do Coder dentro ou fora da variação entre corridas iguais) é lido de analise_fase3b.json.
+    # ! Motivo: o Eric escolheu repetir a corrida antes de decidir (ficha 21, opção b); a aba precisa mostrar a repetição ao lado da corrida 7
+    # e dizer o que ela decidiu, sem número digitado.
+    r1 = {x["L"]: x for x in cq.get("confronto_ineditos_repeticao", [])}.get(1)
+    rep_an = next((x for x in (analise3b or {}).get("repeticao", {}).get("entre_modelos", []) if x["modelo"] == B and x["biblioteca_epoca"] == 1), None)
+    if rep_an:
+        veredito = (f'dentro da variação de até {rep_an["limiar_ruido"]} casos entre corridas iguais de L0: a decisão 52 fica (decisão 73)' if rep_an["dentro_da_variacao"]
+                    else f'um caso acima da variação de até {rep_an["limiar_ruido"]} casos entre corridas iguais de L0, mas sem separar os dois no teste pareado '
+                         f'(p = {fmt(rep_an["p_mcnemar"], 3)}) e com {rep_an["somados"]["b"]}/{rep_an["somados"]["c"]} nos 72 casos nunca vistos: a decisão 52 fica, '
+                         'com o saldo registrado como limitação declarada (decisão 73)')
+        frase_rep = (f' Na <strong>repetição de 23/10</strong> (corrida 15, Ollama 0.40.2, a L1 de cada um), {r1["so_coder"]} casos só do Coder contra {r1["so_qwen"]} só do qwen '
+                     f'(p = {fmt(r1["p_mcnemar"], 3)}): saldo {rep_an["saldo"]:+d}, contra {rep_an["saldo_original"]:+d} na corrida 7, {veredito}.') if r1 else ""
+    else:
+        frase_rep = ""
     frase_ineditos = (f'Nos <strong>36 inéditos</strong> (corrida 7, 06/10) o Coder fica à frente com L0 e L1 (com a L1 de cada um, {i1["so_coder"]} casos só dele contra '
                       f'{i1["so_qwen"]} só do qwen, p = {fmt(i1["p_mcnemar"], 3)}) e atrás com L3; nos 72 casos com L1 o placar empata. É a condição 1 do que mudaria a decisão 52, '
-                      'parcialmente cumprida e dentro do ruído: o que fazer com ela é a ficha 21.' if i1 else "")
+                      'parcialmente cumprida e dentro do ruído: o que fazer com ela era a ficha 21.' + frase_rep if i1 else "")
     itens_kpi = [
         ("Células em que o Coder lidera", str(n_vence), f"maior vantagem {pp(max_delta)}; {n_vence_36} delas nos 36 nunca vistos"),
         ("Nos 36 inéditos com L1 (06/10)", f'{i1["so_qwen"]} × {i1["so_coder"]}' if i1 else "não rodou", f'casos que só um acertou; {fmt(i1["acerto_A"])}% × {fmt(i1["acerto_B"])}%, p = {fmt(i1["p_mcnemar"], 3)}' if i1 else "corrida 7"),
+        ("Repetição dos 36 inéditos com L1 (23/10)", f'{r1["so_qwen"]} × {r1["so_coder"]}' if r1 else "não rodou",
+         (f'casos que só um acertou; {fmt(r1["acerto_A"])}% × {fmt(r1["acerto_B"])}%, p = {fmt(r1["p_mcnemar"], 3)}' + (f'; saldo {rep_an["saldo"]:+d}, variação entre corridas iguais até {rep_an["limiar_ruido"]}' if rep_an else "")) if r1 else "corrida 15"),
         ("Nos 36 nunca vistos, melhor versão", f"{fmt(melhor_A)}% × {fmt(melhor_B)}%", f"qwen L{LA} × Coder L{LB}, acerto simples"),
         ("Confronto em L1 nos 36", f'{c1["so_qwen"]} × {c1["so_coder"]}', f'casos que só um acertou; ambos {c1["ambos"]}, p = {fmt(c1["p_mcnemar"], 3)}'),
         ("Edições aceitas na época 1", f'{doc1["aceitas_A"]} × {doc1["aceitas_B"]}', f'de {doc1["propostas_A"]} × {doc1["propostas_B"]} propostas; corretas na revisão {fmt(corr["A"])}% × {fmt(corr["B"])}%'),
         ("hit@3 com a biblioteca L1 (90)", f'{fmt(rec1["hit3_90_A"])}% × {fmt(rec1["hit3_90_B"])}%', f'{rec1["verbetes_A"]} × {rec1["verbetes_B"]} verbetes'),
         ("P(top-1) do Coder nos 36", f"≤ {fmt(100 * p_max_B)}%", f'primeiro em {est.get(B, 0)} × {est.get(A, 0)} de {cq["decisao"]["total_rankings"]} ordenações; {fmt(l1["s_A"])} × {fmt(l1["s_B"])} s por diagnóstico em L1'),
     ]
-    corridas = cartoes_corridas(road, numeros=["1", "7"], sufixo="-cq")
+    corridas = cartoes_corridas(road, numeros=["1", "7", "14", "15"], sufixo="-cq")
     html_ = f'''<section id="comparativo" hidden>
 <h1>qwen2.5:7b × qwen2.5-coder:7b: em que cenários o Coder seria melhor?</h1>
 <p class="lead">Pergunta do Eric em 29/09: "pode ser que em alguns cenários o coder seja mais interessante". Resposta: o Coder fica à frente em <strong>{n_vence} células</strong>, todas pequenas (a maior por {pp(max_delta)}) e quase todas nos 54 casos de aprendizado e nas classes léxica, runtime e efeito. Nos <strong>36 casos nunca vistos</strong> o qwen2.5:7b vence em todas as versões da biblioteca ({fmt(melhor_A)}% × {fmt(melhor_B)}% na melhor versão de cada um), e em nenhuma ordenação o Coder tem chance real de ser o primeiro (P(top-1) ≤ {fmt(100 * p_max_B)}%). Como escritor, o Coder é mais contido e mais certo ({fmt(corr["B"])}% de edições corretas contra {fmt(corr["A"])}%). A decisão 52 fica. {frase_ineditos}</p>
@@ -291,9 +308,14 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 <p>O Coder 7B diagnosticou os mesmos 36 inéditos que o qwen rodou em 28/09, com a biblioteca original e com as versões que ele mesmo escreveu. Caso a caso, por versão e por classe (6 casos por classe: um caso vale 16,7 pontos).</p>
 {B_("cq_ineditos")}
 {detalhes("Por classe, com a L1 de cada um", B_("cq_ineditos_classe"))}
-<h2>As duas corridas que fechariam a pergunta</h2>
+<h2>Repetição nos 36 inéditos (corrida 15, 23/10/2026)</h2>
+<p>Os dois modelos repetiram os mesmos 36 inéditos com a L1 de cada um, numa corrida só e em Ollama 0.40.2, depois da ponte de versão (corrida 14). A primeira tabela é o confronto dentro da repetição; a segunda, quanto cada modelo mudou sozinho contra a própria corrida original (corrida 2 para o qwen, 7 para o Coder).{(" " + frase_rep.strip()) if frase_rep else ""}</p>
+{B_("cq_ineditos_repeticao")}
+{detalhes("Cada modelo contra a própria corrida original", B_("cq_repeticao_vs_original"))}
+{detalhes("Por classe, na repetição", B_("cq_ineditos_repeticao_classe"))}
+<h2>As corridas desta pergunta</h2>
 {corridas}
-{fontes(["<code>comparativo-qwen25-7b-vs-coder-7b.md</code> (Memorial, 3-resultados-e-analises)", "<code>comparativo_qwen_coder.json</code> e <code>.md</code> gerados por <code>comparar_qwen_coder.py</code> (--check)", "achado 4.38; decisão 52 mantida"])}
+{fontes(["<code>comparativo-qwen25-7b-vs-coder-7b.md</code> (Memorial, 3-resultados-e-analises)", "<code>comparativo_qwen_coder.json</code> e <code>.md</code> gerados por <code>comparar_qwen_coder.py</code> (--check)", "<code>analise_fase3b.json</code>, bloco <code>repeticao</code> (saldo contra a variação entre corridas iguais)", "achados 4.38, 4.52 e 4.53; decisões 52 e 73"])}
 </section>'''
     return dados, html_
 
@@ -1628,7 +1650,7 @@ def montar(ctx: dict) -> tuple[dict, str]:
     curadoria, planilha_curadoria, recuperador, ablacao, medicao_mcp, readme. Devolve (dados_topicos, html)."""
     dados, road = ctx["dados"], ctx["road"]
     partes: list[tuple[str, dict, str]] = []
-    d, h = secao_comparativo(ctx["cq"], ctx["blocos_cq"], ctx["md_para_html"], road, ctx["cartoes_corridas"])
+    d, h = secao_comparativo(ctx["cq"], ctx["blocos_cq"], ctx["md_para_html"], road, ctx["cartoes_corridas"], ctx.get("analise3b"))
     partes.append(("cq", d, h))
     d, h = secao_tres_b(ctx["ineditos"], dados, road, ctx["cartoes_corridas"], ctx["md_doc_para_html"], ctx.get("analise3b"))
     partes.append(("tresb", d, h))

@@ -1,8 +1,8 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por comparar_qwen_coder.py a partir dos registros oficiais (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão — o comparativo do Memorial cola estes blocos. -->
-# Comparativo qwen2.5:7b × qwen2.5-coder:7b — gerado em 2026-10-06
+# Comparativo qwen2.5:7b × qwen2.5-coder:7b — gerado em 2026-10-23
 
-Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ avaliacao.json); resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json (gerado em 2026-09-29T11:04:10); comparacao_fases.json; decisao_modelo.json (gerado em 2026-10-01T09:43:39). Melhor versão nos 36: qwen2.5:7b L1, coder:7b L3. Casos inéditos: modelos rodados = ['qwen2.5-coder:3b', 'qwen2.5-coder:7b', 'qwen2.5:7b'] (o qwen2.5-coder:7b rodou neles em 06/10/2026, corrida 7). Estabilidade de ranking (top-1 em 36 cortes): qwen2.5:7b: 14; qwen2.5-coder:7b: 5.
+Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ avaliacao.json); resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json (gerado em 2026-09-29T11:04:10); comparacao_fases.json; decisao_modelo.json (gerado em 2026-10-01T09:43:39). Melhor versão nos 36: qwen2.5:7b L1, coder:7b L3. Casos inéditos: modelos rodados = ['qwen2.5-coder:3b', 'qwen2.5-coder:7b', 'qwen2.5:7b'] (o qwen2.5-coder:7b rodou neles em 06/10/2026, corrida 7). Repetição dos inéditos em 23/10/2026 (corrida 15, fase3b_ineditos_repeticao\avaliacao_fase3.json): modelos ['qwen2.5-coder:7b', 'qwen2.5:7b']. Estabilidade de ranking (top-1 em 36 cortes): qwen2.5:7b: 14; qwen2.5-coder:7b: 5.
 
 
 <!-- tabela:cq_fase2a -->
@@ -281,6 +281,30 @@ Fontes: resumo_metricas.json (Ryzen); resultados_alvo/resumo_metricas.json (+ av
 | 5 runtime | 6 | 6 | 6 | +0,0 |
 | 6 efeito | 6 | 2 | 4 | +2,0 |
 <!-- /tabela:cq_ineditos_classe -->
+
+<!-- tabela:cq_ineditos_repeticao -->
+| Repetição nos 36 inéditos (corrida 15, Ollama 0.40.2) · versão | n | acerto qwen2.5:7b | acerto coder:7b | ambos acertam | nenhum | só o Coder | só o qwen | Δ | p (McNemar exato) |
+|---|---|---|---|---|---|---|---|---|---|
+| inéditos · L1 (a biblioteca de cada um) | 36 | 72,2% | 83,3% | 25 | 5 | 5 | 1 | +11,1 pp | 0,2188 |
+<!-- /tabela:cq_ineditos_repeticao -->
+
+<!-- tabela:cq_repeticao_vs_original -->
+| Modelo · versão | n | acerto na corrida original | acerto na repetição | Δ | ambos | nenhum | só a repetição | só a original | p (McNemar exato) | rótulos que mudaram |
+|---|---|---|---|---|---|---|---|---|---|---|
+| qwen2.5-coder:7b · L1 | 36 | 86,1% | 83,3% | -2,8 pp | 30 | 5 | 0 | 1 | 1,0000 | 3 |
+| qwen2.5:7b · L1 | 36 | 72,2% | 72,2% | +0,0 pp | 26 | 10 | 0 | 0 | 1,0000 | 1 |
+<!-- /tabela:cq_repeticao_vs_original -->
+
+<!-- tabela:cq_ineditos_repeticao_classe -->
+| Repetição · L1 · classe | n | acertos qwen2.5:7b | acertos coder:7b | Δ (casos) |
+|---|---|---|---|---|
+| 1 lexica | 6 | 4 | 5 | +1,0 |
+| 2 sintatica | 6 | 6 | 6 | +0,0 |
+| 3 semantica | 6 | 4 | 5 | +1,0 |
+| 4 traducao | 6 | 4 | 4 | +0,0 |
+| 5 runtime | 6 | 6 | 6 | +0,0 |
+| 6 efeito | 6 | 2 | 4 | +2,0 |
+<!-- /tabela:cq_ineditos_repeticao_classe -->
 
 <!-- tabela:cq_onde_vence -->
 | Onde o Coder fica à frente | métrica | qwen2.5:7b | coder:7b | Δ | n | p |

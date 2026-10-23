@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-10-06T19:17:52",
+    "gerado_em": "2026-10-23T11:38:11",
     "A": "qwen2.5:7b",
     "B": "qwen2.5-coder:7b",
     "fontes": {
@@ -9,7 +9,8 @@
       "f3": "resultados_alvo/fase3/resumo_fase3.json + avaliacao_fase3.json",
       "comparacao": "comparacao_fases.json",
       "decisao": "decisao_modelo.json",
-      "ineditos": "fase3b_ineditos\\resumo_fase3.json"
+      "ineditos": "fase3b_ineditos\\resumo_fase3.json",
+      "repeticao": "fase3b_ineditos_repeticao\\avaliacao_fase3.json"
     },
     "melhor_L_nos_36": {
       "qwen2.5:7b": 1,
@@ -21,6 +22,10 @@
       "qwen2.5:7b"
     ],
     "coder_nos_ineditos": true,
+    "repeticao_modelos": [
+      "qwen2.5-coder:7b",
+      "qwen2.5:7b"
+    ],
     "f3_gerado_em": "2026-09-29T11:04:10",
     "decisao_gerado_em": "2026-10-01T09:43:39"
   },
@@ -1419,6 +1424,95 @@
       "acertos_A": 2,
       "acertos_B": 4,
       "delta": 2
+    }
+  ],
+  "confronto_ineditos_repeticao": [
+    {
+      "L": 1,
+      "contexto": "inéditos · L1 (a biblioteca de cada um)",
+      "n": 36,
+      "acerto_A": 72.2,
+      "acerto_B": 83.3,
+      "ambos": 25,
+      "nenhum": 5,
+      "so_coder": 5,
+      "so_qwen": 1,
+      "delta_pp": 11.1,
+      "p_mcnemar": 0.2188
+    }
+  ],
+  "ineditos_repeticao_classe_L1": [
+    {
+      "classe": "1 lexica",
+      "n": 6,
+      "acertos_A": 4,
+      "acertos_B": 5,
+      "delta": 1
+    },
+    {
+      "classe": "2 sintatica",
+      "n": 6,
+      "acertos_A": 6,
+      "acertos_B": 6,
+      "delta": 0
+    },
+    {
+      "classe": "3 semantica",
+      "n": 6,
+      "acertos_A": 4,
+      "acertos_B": 5,
+      "delta": 1
+    },
+    {
+      "classe": "4 traducao",
+      "n": 6,
+      "acertos_A": 4,
+      "acertos_B": 4,
+      "delta": 0
+    },
+    {
+      "classe": "5 runtime",
+      "n": 6,
+      "acertos_A": 6,
+      "acertos_B": 6,
+      "delta": 0
+    },
+    {
+      "classe": "6 efeito",
+      "n": 6,
+      "acertos_A": 2,
+      "acertos_B": 4,
+      "delta": 2
+    }
+  ],
+  "repeticao_vs_original": [
+    {
+      "modelo": "qwen2.5-coder:7b",
+      "L": 1,
+      "n": 36,
+      "acerto_original": 86.1,
+      "acerto_repeticao": 83.3,
+      "ambos": 30,
+      "nenhum": 5,
+      "so_repeticao": 0,
+      "so_original": 1,
+      "delta_pp": -2.8,
+      "p_mcnemar": 1.0,
+      "rotulos_diferentes": 3
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "L": 1,
+      "n": 36,
+      "acerto_original": 72.2,
+      "acerto_repeticao": 72.2,
+      "ambos": 26,
+      "nenhum": 10,
+      "so_repeticao": 0,
+      "so_original": 0,
+      "delta_pp": 0.0,
+      "p_mcnemar": 1.0,
+      "rotulos_diferentes": 1
     }
   ],
   "onde_o_coder_vence": [

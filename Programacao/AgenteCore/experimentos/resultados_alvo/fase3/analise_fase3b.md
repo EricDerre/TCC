@@ -1,8 +1,8 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por analisar_fase3b.py a partir dos registros avaliados da Fase 3 e da Fase 3-B (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão; o relatório da Fase 3-B do Memorial cola estes blocos. -->
-# Análise de fechamento da Fase 3-B, gerada em 2026-10-06
+# Análise de fechamento da Fase 3-B, gerada em 2026-10-23
 
-Doador da troca cruzada: `qwen2.5:7b`. Leitores: `qwen2.5-coder:7b`, `qwen2.5-coder:3b`. Linha de base da cruzada: L0 da ponte `fase3b_ponte_0344` (Ollama 0.34.4). b conta os casos que só a primeira condição acertou; c, os que só a segunda acertou. Uma ponte é pareável com a Fase 3 quando b + c fica em até 2 (decisão 47).
+Doador da troca cruzada: `qwen2.5:7b`. Leitores: `qwen2.5-coder:7b`, `qwen2.5-coder:3b`. Linha de base da cruzada: L0 da ponte `fase3b_ponte_0344` (Ollama 0.34.4). b conta os casos que só a primeira condição acertou; c, os que só a segunda acertou. Uma ponte é pareável com a Fase 3 quando b + c fica em até 2 (decisão 47). Repetição dos inéditos (corrida 15): `fase3b_ineditos_repeticao`, lida com cada modelo contra a própria corrida original e modelo contra modelo dentro da repetição; o saldo é comparado com a maior variação entre corridas iguais de L0 com a mesma entrada (bloco do ruído).
 
 
 <!-- tabela:tb_corridas -->
@@ -10,10 +10,12 @@ Doador da troca cruzada: `qwen2.5:7b`. Leitores: `qwen2.5-coder:7b`, `qwen2.5-co
 |---|---|---|---|---|---|---|---|---|
 | `fase3b_ponte` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.1 | 0 | L0=3196327e7fd5 | 21/09 14:24 | 21/09 18:35 |
 | `fase3b_ponte_0344` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5 | 30/09 20:39 | 30/09 22:25 |
+| `fase3b_ponte_0402` | ponte | qwen2.5-coder:7b, qwen2.5:7b | 72 | 0.40.2 | 0 | L0=3196327e7fd5 | 23/10 08:04 | 23/10 09:25 |
 | `fase3b_ineditos` | ineditos | qwen2.5-coder:3b, qwen2.5:7b | 216 | 0.34.1 | 0 | L0=3196327e7fd5; L1=3394d203cab9; L1=53ccf19abeac; L3=71258b553152; L3=d9a86e383103 | 28/09 20:13 | 28/09 23:15 |
 | `fase3b_cruzada_qwen` | cruzada | qwen2.5-coder:3b, qwen2.5-coder:7b | 144 | 0.34.4 | 0 | L1=3394d203cab9; L3=71258b553152 | 30/09 23:58 | 01/10 02:09 |
 | `fase3b_ineditos_coder7b` | ineditos | qwen2.5-coder:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5; L1=0f0a6b7f3b37; L3=2b7c441cb9e3 | 06/10 10:26 | 06/10 12:45 |
 | `fase3b_a5` | a5 | qwen2.5-coder:3b, qwen2.5:7b | 72 | 0.34.4 | 0 | L3=71258b553152; L3=d9a86e383103 | 06/10 09:23 | 06/10 10:19 |
+| `fase3b_ineditos_repeticao` | ineditos | qwen2.5-coder:7b, qwen2.5:7b | 72 | 0.40.2 | 0 | L1=0f0a6b7f3b37; L1=3394d203cab9 | 23/10 09:28 | 23/10 11:01 |
 <!-- /tabela:tb_corridas -->
 
 <!-- tabela:tb_pontes -->
@@ -25,6 +27,8 @@ Doador da troca cruzada: `qwen2.5:7b`. Leitores: `qwen2.5-coder:7b`, `qwen2.5-co
 | 0.34.4 | `qwen2.5-coder:3b` | 72,2% (56,0 a 84,2) | 70,4% | 1 | 0 | 1,0000 | `tra-4` | nenhum | sim | 1 / 0 | `efe-3` |
 | 0.34.4 | `qwen2.5-coder:7b` | 80,6% (65,0 a 90,2) | 82,5% | 3 | 1 | 0,6250 | `efe-3`, `semt-14`, `tra-11` | `sin-14` | **não** | 2 / 1 | `efe-3` |
 | 0.34.4 | `qwen2.5:7b` | 75,0% (58,9 a 86,2) | 79,6% | 0 | 1 | 1,0000 | nenhum | `tra-4` | sim | 0 / 1 | `efe-3` |
+| 0.40.2 | `qwen2.5-coder:7b` | 77,8% (61,9 a 88,3) | 81,7% | 1 | 0 | 1,0000 | `efe-3` | nenhum | sim | 0 / 0 | `efe-3` |
+| 0.40.2 | `qwen2.5:7b` | 80,6% (65,0 a 90,2) | 83,8% | 1 | 0 | 1,0000 | `sin-14` | nenhum | sim | 1 / 0 | `efe-3` |
 <!-- /tabela:tb_pontes -->
 
 <!-- tabela:tb_ruido -->
@@ -32,10 +36,16 @@ Doador da troca cruzada: `qwen2.5:7b`. Leitores: `qwen2.5-coder:7b`, `qwen2.5-co
 |---|---|---|---|---|---|---|---|---|
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.34.1 | 2 | 2 | 1 | 1 | 3 | `sin-14`, `tra-10` |
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.34.4 | 1 | 1 | 0 | 1 | 3 | `tra-4` |
+| `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.40.2 | 1 | 1 | 1 | 0 | 2 | `sin-14` |
 | `qwen2.5:7b` | ponte 0.34.1 | ponte 0.34.4 | 3 | 3 | 1 | 2 | 3 | `sin-14`, `tra-10`, `tra-4` |
+| `qwen2.5:7b` | ponte 0.34.1 | ponte 0.40.2 | 1 | 1 | 1 | 0 | 1 | `tra-10` |
+| `qwen2.5:7b` | ponte 0.34.4 | ponte 0.40.2 | 2 | 2 | 2 | 0 | 2 | `sin-14`, `tra-4` |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.34.1 | 0 | 0 | 0 | 0 | 1 | nenhum |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.34.4 | 4 | 3 | 3 | 1 | 4 | `efe-3`, `semt-14`, `sin-14`, `tra-11` |
+| `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.40.2 | 1 | 0 | 1 | 0 | 1 | `efe-3` |
 | `qwen2.5-coder:7b` | ponte 0.34.1 | ponte 0.34.4 | 4 | 3 | 3 | 1 | 4 | `efe-3`, `semt-14`, `sin-14`, `tra-11` |
+| `qwen2.5-coder:7b` | ponte 0.34.1 | ponte 0.40.2 | 1 | 0 | 1 | 0 | 2 | `efe-3` |
+| `qwen2.5-coder:7b` | ponte 0.34.4 | ponte 0.40.2 | 3 | 3 | 1 | 2 | 3 | `semt-14`, `sin-14`, `tra-11` |
 | `qwen2.5-coder:3b` | Fase 3 (0.34.0) | ponte 0.34.1 | 0 | 0 | 0 | 0 | 2 | nenhum |
 | `qwen2.5-coder:3b` | Fase 3 (0.34.0) | ponte 0.34.4 | 1 | 1 | 1 | 0 | 2 | `tra-4` |
 | `qwen2.5-coder:3b` | ponte 0.34.1 | ponte 0.34.4 | 1 | 1 | 1 | 0 | 4 | `tra-4` |
@@ -76,6 +86,19 @@ Doador da troca cruzada: `qwen2.5:7b`. Leitores: `qwen2.5-coder:7b`, `qwen2.5-co
 | `qwen2.5-coder:7b` | L1 | 86,1% | 72,2% | 6 | 1 | +13,9 pp | 0,1250 | 8 | 7 / 7 | 1,0000 | 6 / 4 (de 6) | 6 / 6 (de 6) | 5 / 4 (de 6) | 4 / 4 (de 6) | 6 / 6 (de 6) | 4 / 2 (de 6) |
 | `qwen2.5-coder:7b` | L3 | 75,0% | 80,6% | 1 | 3 | -5,6 pp | 0,6250 | 6 | 3 / 8 | 0,2266 | 5 / 6 (de 6) | 6 / 6 (de 6) | 5 / 4 (de 6) | 2 / 4 (de 6) | 6 / 6 (de 6) | 3 / 3 (de 6) |
 <!-- /tabela:tb_ineditos_modelos -->
+
+<!-- tabela:tb_repeticao -->
+| Modelo | Biblioteca (a de cada um) | Acerto na repetição (IC 95%) | Acerto na corrida original | Contra a original: b (só a repetição) / c (só a original) | p (McNemar) | Rótulos que mudaram | Passaram a certos | Passaram a errados | Pareável pela ponte mais recente | s por diagnóstico (mediana) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `qwen2.5-coder:7b` | L1 | 83,3% (68,1 a 92,1) | 86,1% | 0 / 1 | 1,0000 | 3 | nenhum | `lex-19` | sim (0.40.2) | 74,5 |
+| `qwen2.5:7b` | L1 | 72,2% (56,0 a 84,2) | 72,2% | 0 / 0 | 1,0000 | 1 | nenhum | nenhum | sim (0.40.2) | 75,2 |
+<!-- /tabela:tb_repeticao -->
+
+<!-- tabela:tb_repeticao_modelos -->
+| Modelo | Biblioteca (a de cada um) | Acerto na repetição | Acerto do `qwen2.5:7b` | b (só o modelo) | c (só o doador) | Saldo (b menos c) | Saldo na corrida original | Maior variação entre corridas iguais de L0 | Dentro da variação | Diferença | p (McNemar) | Rótulos diferentes | Nos 72 (oficiais + inéditos): b / c | p nos 72 | lexica: modelo / doador (acertos de n) | sintatica: modelo / doador (acertos de n) | semantica: modelo / doador (acertos de n) | traducao: modelo / doador (acertos de n) | runtime: modelo / doador (acertos de n) | efeito: modelo / doador (acertos de n) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `qwen2.5-coder:7b` | L1 | 83,3% | 72,2% | 5 | 1 | +4 | +5 | 3 | não | +11,1 pp | 0,2188 | 8 | 6 / 7 | 1,0000 | 5 / 4 (de 6) | 6 / 6 (de 6) | 5 / 4 (de 6) | 4 / 4 (de 6) | 6 / 6 (de 6) | 4 / 2 (de 6) |
+<!-- /tabela:tb_repeticao_modelos -->
 
 <!-- tabela:tb_a5 -->
 | Modelo | Biblioteca | Casos | Seguiu a causa plantada | Acertou mesmo assim | O mesmo modelo, a mesma biblioteca, em A2 (Fase 3, acerto) | Adesão cega na Fase 2-B (A5 sobre a biblioteca original) | Verbete de ouro no contexto |

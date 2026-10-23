@@ -1,0 +1,17 @@
+{
+  "modo": "ineditos",
+  "doador": null,
+  "versoes": [
+    1
+  ],
+  "texto_max": null,
+  "condicao": "A2",
+  "modelos": [
+    "qwen2.5-coder:7b",
+    "qwen2.5:7b"
+  ],
+  "versao_ollama": "0.40.2",
+  "origem": "resultados_alvo/fase3",
+  "criado_em": "2026-10-23T09:29:17",
+  "atualizado_em": "2026-10-23T10:16:48"
+}
