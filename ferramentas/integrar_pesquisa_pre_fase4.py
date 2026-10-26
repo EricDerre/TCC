@@ -17,6 +17,15 @@
 # integração, em vez de "já existe, não regravo", porque a parte B acrescenta referências ao mesmo bloco; (4) o texto
 # que o script escreve não usa travessão nem seta (o cabeçalho de cada subseção mantém o formato fixo da regra de
 # documentação, que o painel lê, e os títulos e citações literais das fontes ficam como na fonte).
+# ! Alteração de IA - Revisar: (23/10/2026) a parte B ganhou os três tópicos pedidos pelo Eric (o Brainiac como segundo
+# cérebro, o codebase-memory-mcp relido pela visualização, a visualização da rede neural) e passou a rodar em duas
+# ondas de Workflow (B: raciocínio aberto; B2: confiança por probabilidade, memória e visualização), cada onda com o
+# seu arquivo de resultado e o seu mapa; a ordem fixa vai a 14 tópicos, e as rejeitadas e os mapas passam de
+# §6.14.12 e §6.14.13 para §6.14.15 e §6.14.16, com o cabeçalho do levantamento declarando a mudança.
+# ! Motivo: a numeração fixa foi desenhada para os onze tópicos do plano de 01/10; os três de 23/10 entram no fim
+# da ordem (§6.14.12 a §6.14.14) para não mudar o número de nenhum tópico já citado, e só as duas subseções finais
+# mudam de número: as citações delas no README, no relatório da fase, no painel e nas correções declaradas foram
+# atualizadas no mesmo dia. Um mapa por onda porque cada Workflow escreve o seu a partir das próprias sínteses.
 """Uso:
     python ferramentas/integrar_pesquisa_pre_fase4.py [--simular]     (integra ao Memorial as partes que já rodaram)
     python ferramentas/integrar_pesquisa_pre_fase4.py --check
@@ -42,7 +51,7 @@ DOC_DIR = RAIZ / "Documentacao" / "memorial"
 LEVANTAMENTO = DOC_DIR / "2-pesquisa-e-literatura" / "levantamento-2026-10-01-pre-fase-4.md"
 MEMORIAL = RAIZ / "Documentacao" / "Memorial de Desenvolvimento.md"
 SDD = RAIZ / ".superpowers" / "sdd" / "pre-fase-4"
-PARTES = [("A", SDD / "pesquisa" / "r5a-final.json"), ("B", SDD / "pesquisa" / "r5b-final.json")]
+PARTES = [("A", SDD / "pesquisa" / "r5a-final.json"), ("B", SDD / "pesquisa" / "r5b1-final.json"), ("B2", SDD / "pesquisa" / "r5b2-final.json")]
 VIABILIDADE = RAIZ / "Programacao" / "AgenteCore" / "experimentos" / "resultados_alvo" / "pre_fase4" / "viabilidade_modelos_grandes.json"
 ROTULO = "levantamento de 01/10/2026"
 TITULO_REFS = f"### Levantamento da Pré-Fase 4 ({ROTULO})"
@@ -50,7 +59,8 @@ MARCA_DO_INDICE = "- [Levantamento: Pré-Fase 4 (01/10/2026)]"
 TAG_DO_INDICE = "<!-- ! Alteração de IA - Revisar: linha do índice para o levantamento da Pré-Fase 4"
 TETO = 16
 
-# Parte da rodada e título curto de cada tópico, na ordem (fixa) das subseções §6.14.1 a §6.14.11.
+# Parte da rodada e título curto de cada tópico, na ordem (fixa) das subseções §6.14.1 a §6.14.14: os três últimos
+# foram acrescentados em 23/10/2026 e ficam no fim para não mudar o número de nenhum tópico já citado.
 TITULOS_R5 = {
     "r5-colibri-leitura-integral": ("A", "O repositório colibri: o que roda, em que máquina e a que velocidade"),
     "r5-base-de-pesquisa-do-colibri": ("A", "As pesquisas em que o colibri se apoia"),
@@ -63,12 +73,18 @@ TITULOS_R5 = {
     "r5-atribuicao-ao-contexto": ("B", "Que trecho do contexto causou a resposta"),
     "r5-confianca-por-probabilidade": ("B", "A probabilidade do rótulo como sinal de incerteza"),
     "r5-uso-das-trilhas": ("B", "Usar as trilhas para melhorar o sistema"),
+    "r5-brainiac-segundo-cerebro": ("B", "Brainiac como segundo cérebro local: aplicabilidade e viabilidade"),
+    "r5-codebase-memory-visual": ("B", "O codebase-memory-mcp relido pela visualização: grafos do código e do conhecimento"),
+    "r5-visualizacao-da-rede-neural": ("B", "Mostrar a rede neural como o cérebro do agente"),
 }
+ACRESCENTADOS = ("r5-brainiac-segundo-cerebro", "r5-codebase-memory-visual", "r5-visualizacao-da-rede-neural")
+DATA_DO_ACRESCIMO = "23/10/2026"
 ORDEM_R5 = tuple(TITULOS_R5)
 N_REJ = len(ORDEM_R5) + 1
 N_MAPA = len(ORDEM_R5) + 2
 NOME_DO_MAPA = {"A": "Parte A: viabilidade nesta máquina (modelos grandes pelo disco e atlas)",
-                "B": "Parte B: raciocínio aberto (trilha, relatório, confiança)"}
+                "B": "Parte B, onda 1: arquitetura da linha de raciocínio aberta (fidelidade, trilha, relatório, atribuição, uso das trilhas)",
+                "B2": "Parte B, onda 2: viabilidade nesta máquina e no painel (confiança por probabilidade, Brainiac, grafos do código e do conhecimento, visualização da rede neural)"}
 # "alguns milhares de tokens" e "milhares de tokens" quando falam do prompt do agente; "dezenas de milhares" e
 # "centenas de milhares" são medidas de fontes e ficam como estão.
 _EXPRESSAO_DO_CONTEXTO = re.compile(r"(?<!dezenas de )(?<!centenas de )(?:alguns )?milhares de tokens")
@@ -76,7 +92,7 @@ _EXPRESSAO_DO_CONTEXTO = re.compile(r"(?<!dezenas de )(?<!centenas de )(?:alguns
 # para o mapa, em 01/10/2026). Cada item: `onde` (a chave do tópico, ou `mapa:A`), `de` (o trecho como o agente
 # escreveu, que tem de aparecer exatamente uma vez), `para` (o trecho corrigido) e `motivo` (o que a afirmação
 # verificada sustenta). A lista vive em correcoes_pesquisa_pre_fase4.py (são dados, não código) e sai declarada no
-# cabeçalho e no fim do §6.14.12 do levantamento.
+# cabeçalho e no fim da subseção das rejeitadas do levantamento (§6.14.15 desde 23/10/2026; era §6.14.12).
 # ! Alteração de IA - Revisar: (05/10/2026) a lista de correções passou a vir de um módulo próprio, e o cabeçalho ganhou
 # o aviso sobre a memória da máquina (instalada contra visível) e a medida do prefill, lidos do JSON de viabilidade.
 # ! Motivo: a revisão de 01/10 apontou 104 trechos; 156 correções declaradas não cabem neste arquivo sem esconder o
@@ -91,7 +107,8 @@ def _plural(n: int, um: str, muitos: str) -> str:
     return f"{n} {um if n == 1 else muitos}"
 
 
-_POR_EXTENSO = {4: "Quatro", 5: "Cinco", 6: "Seis"}
+_POR_EXTENSO = {4: "Quatro", 5: "Cinco", 6: "Seis", 7: "Sete"}
+_TOPICOS_POR_EXTENSO = {11: "Onze", 14: "Catorze"}
 
 
 def _br(v: float, casas: int = 1) -> str:
@@ -145,6 +162,11 @@ def carregar(partes: list[tuple[str, Path]] | None = None, medida: dict | None =
             continue
         dado = json.loads(arq.read_text(encoding="utf-8"))
         dado = dado.get("result", dado)
+        # ! Alteração de IA - Revisar: (23/10/2026) a troca da expressão do contexto pelo número medido só vale para a parte A.
+        # ! Motivo: a parte B recebeu o número medido no contexto dado aos agentes; nela "milhares de tokens" fala de outra
+        # coisa (o custo de um modo de raciocínio escrito, por exemplo), e a troca poria o tamanho do nosso prompt no lugar
+        # de uma medida da fonte. Na primeira integração da onda 1 o contador subiu de 12 para 15 por isso.
+        corrige = troca if parte == "A" else (lambda s: s or "")
         for t in dado.get("topicos") or []:
             if not t:
                 continue
@@ -153,23 +175,23 @@ def carregar(partes: list[tuple[str, Path]] | None = None, medida: dict | None =
                 t.setdefault("rejeitadas", []).append({**r, "motivo": f"além do teto de {TETO} verificações: não verificada"})
             s = t.get("synthesis") or {}
             if s.get("texto_memorial_pt"):
-                s["texto_memorial_pt"] = troca(s["texto_memorial_pt"])
+                s["texto_memorial_pt"] = corrige(s["texto_memorial_pt"])
             for campo in ("implicacoes_fase3_pt", "lacunas_pt"):
                 if s.get(campo):
-                    s[campo] = [troca(x) for x in s[campo]]
+                    s[campo] = [corrige(x) for x in s[campo]]
             for v in t.get("verified") or []:
-                if v.get("support") == "partial":  # só as parciais aparecem no documento (§6.14.12)
-                    v["claim_pt"], v["number"] = _sem_seta(troca(v.get("claim_pt", ""))), _sem_seta(str(v.get("number", "")))
+                if v.get("support") == "partial":  # só as parciais aparecem no documento (subseção das rejeitadas, §6.14.{N_REJ})
+                    v["claim_pt"], v["number"] = _sem_seta(corrige(v.get("claim_pt", ""))), _sem_seta(str(v.get("number", "")))
             for r in t.get("rejeitadas") or []:
-                r["claim"] = _sem_seta(troca(r.get("claim", "")))
+                r["claim"] = _sem_seta(corrige(r.get("claim", "")))
             topicos[t["key"]] = t
         m = dado.get("mapa") or {}
         if m:
             for linha in m.get("linhas") or []:
-                linha["motivo_pt"] = troca(linha["motivo_pt"])
+                linha["motivo_pt"] = corrige(linha["motivo_pt"])
             for r in m.get("riscos") or []:
-                r["risco"], r["mitigacao"] = troca(r["risco"]), troca(r["mitigacao"])
-            m["leitura_pt"] = troca(m.get("leitura_pt") or "")
+                r["risco"], r["mitigacao"] = corrige(r["risco"]), corrige(r["mitigacao"])
+            m["leitura_pt"] = corrige(m.get("leitura_pt") or "")
             mapas[parte] = m
     desconhecidos = sorted(set(topicos) - set(ORDEM_R5))
     if desconhecidos:
@@ -254,8 +276,8 @@ def bloco_rejeitadas(dados: dict, correcoes: list[dict] | None = None) -> str:
 
 def bloco_mapas(mapas: dict) -> str:
     partes = [f"#### 6.14.{N_MAPA} Mapas adotado / adiado / descartado", "",
-              "Um mapa por parte da rodada, escrito por um agente a partir das sínteses e das afirmações verificadas. *Adotado* = serve agora, nesta máquina, sem trocar o modelo "
-              "decidido; *adiado* = só serviria com outra máquina, outro motor ou depois da Fase 4; *descartado* = não serve, com o motivo.", ""]
+              "Um mapa por Workflow (a parte A e as duas ondas da parte B), escrito por um agente a partir das sínteses e das afirmações verificadas. *Adotado* = serve agora, nesta máquina, sem trocar o modelo "
+              "decidido (no mapa da onda 1 da parte B: entra na arquitetura da linha de raciocínio aberta da Fase 4); *adiado* = só serviria com outra máquina, outro motor ou depois da Fase 4; *descartado* = não serve, com o motivo.", ""]
     for parte, _ in PARTES:
         m = mapas.get(parte)
         partes += [f"**{NOME_DO_MAPA[parte]}**", ""]
@@ -276,8 +298,8 @@ def cabecalho(dados: dict, trocas: int, medida: dict, correcoes: list[dict] | No
     saida = medida.get("saida")
     razao = f" Com o número medido as conclusões que dependiam da ordem de grandeza continuam valendo: a entrada é cerca de {round(medida['mediana'] / saida)} vezes os {_br(saida, 0)} tokens da resposta mediana." if saida else ""
     linhas = [
-        "<!-- ! Alteração de IA - Revisar: arquivo gerado por ferramentas/integrar_pesquisa_pre_fase4.py a partir dos resultados dos Workflows da rodada 5 de pesquisa (01/10/2026). NÃO editar as subseções à mão (o --check compara com o regerado).",
-        "     ! Motivo: levantamento pedido pelo Eric em 01/10/2026 (decisão 70, Pré-Fase 4): a viabilidade do repositório colibri e das pesquisas em que ele se apoia, o que é o \"expert atlas\" e como abrir o raciocínio do agente. Cada afirmação passou por verificação cética, e o que foi rejeitado ou descartado fica registrado com o motivo (§6.14.12 e §6.14.13). -->",
+        "<!-- ! Alteração de IA - Revisar: arquivo gerado por ferramentas/integrar_pesquisa_pre_fase4.py a partir dos resultados dos Workflows da rodada 5 de pesquisa (01/10 e 23/10/2026). NÃO editar as subseções à mão (o --check compara com o regerado).",
+        f"     ! Motivo: levantamento pedido pelo Eric em 01/10/2026 (decisão 70, Pré-Fase 4): a viabilidade do repositório colibri e das pesquisas em que ele se apoia, o que é o \"expert atlas\" e como abrir o raciocínio do agente. Cada afirmação passou por verificação cética, e o que foi rejeitado ou descartado fica registrado com o motivo (§6.14.{N_REJ} e §6.14.{N_MAPA}). -->",
         "", "# Levantamento bibliográfico: Pré-Fase 4 (01/10/2026)", "",
         "Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md). Continua o [levantamento da Fase 3](levantamento-2026-09-11-fase-3.md) (§6.9), o "
         "[mapa de decisões](mapa-de-decisoes-fase-3.md) (§6.10), o [levantamento das LLMs locais](levantamento-2026-09-22-llms-locais.md) (§6.12) e o "
@@ -285,7 +307,7 @@ def cabecalho(dados: dict, trocas: int, medida: dict, correcoes: list[dict] | No
         "frentes: rodar modelo grande lendo os pesos do disco (repositório `github.com/JustVugg/colibri`), o atlas visual de especialistas e o raciocínio aberto do agente "
         "([roadmap](../roadmap.md), §3.1). Referências completas em [referencias.md](referencias.md).",
         "", "### 6.14 Levantamento da Pré-Fase 4", "",
-        f"Onze tópicos em duas partes, cada parte num Workflow: um pesquisador por tópico (10 a 16 afirmações com número e condição), verificadores céticos em lotes de quatro "
+        f"{_TOPICOS_POR_EXTENSO.get(len(ORDEM_R5), str(len(ORDEM_R5)))} tópicos em duas partes e três Workflows (a parte A em 01/10/2026; a parte B em duas ondas, em 23/10/2026): um pesquisador por tópico (10 a 16 afirmações com número e condição), verificadores céticos em lotes de quatro "
         f"afirmações, até {TETO} por tópico (a fonte existe? o ano vale? o número e a condição batem?), e uma síntese só com o que sobreviveu. "
         f"Totais do que já rodou: **{_plural(tot[0], 'aprovada', 'aprovadas')}, {_plural(tot[1], 'rejeitada', 'rejeitadas')}, {_plural(tot[2], 'não verificada', 'não verificadas')}**.",
         "", "| Subseção | Parte | Tópico | Aprovadas | Rejeitadas | Não verificadas |", "|---|---|---|---|---|---|",
@@ -302,14 +324,14 @@ def cabecalho(dados: dict, trocas: int, medida: dict, correcoes: list[dict] | No
     avisos = [
         f"**Correção declarada.** O contexto dado aos agentes da parte A dizia que o prompt do agente tem \"alguns milhares de tokens\". O valor medido nos registros da Fase 3 é a "
         f"mediana de {_br(medida['mediana'])} tokens (`resultados_alvo/pre_fase4/viabilidade_modelos_grandes.json`, campo `medianas_do_agente.tokens_entrada`). O script trocou a expressão por "
-        f"\"{medida['texto']}\" nas {trocas} ocorrências das sínteses e dos mapas.{razao}{prefill}",
-        "**Ajuste de grafia.** Nas afirmações de suporte parcial (§6.14.12), a seta que os verificadores usaram em faixas de números virou \"para\". Títulos de issue e citações "
+        f"\"{medida['texto']}\" nas {trocas} ocorrências das sínteses e do mapa da parte A (a parte B recebeu o número medido no contexto e não é tocada).{razao}{prefill}",
+        f"**Ajuste de grafia.** Nas afirmações de suporte parcial (§6.14.{N_REJ}), a seta que os verificadores usaram em faixas de números virou \"para\". Títulos de issue e citações "
         "literais das fontes ficam como na fonte, inclusive com travessão e seta. "
         + (f"Fora isto, a troca do aviso 1 e as correções do aviso {n_corr}, nada do texto dos agentes foi alterado." if correcoes else "Nada mais do texto dos agentes foi alterado."),
         "**O que mudou depois de a parte A ser escrita.** A linha do mapa sobre a escolha fechada por probabilidade diz que a disponibilidade no Ollama 0.34.4 não tinha sido "
         "verificada: a sonda `sondar_logprobs.py` verificou em 01/10 (o Ollama devolve a probabilidade de cada token, de antes da temperatura), e a corrida 12 do roadmap mede se "
         "ela serve de sinal. A linha sobre a telemetria de roteamento medida nesta máquina aparece como adiada: o Eric escolheu fazê-la nesta fase, como estudo lateral com o OLMoE "
-        "(corrida 13). O descarte do OLMoE como modelo do agente continua valendo; a corrida 13 mede, não adota.",
+        "(corrida 13). O descarte do OLMoE como modelo do agente continua valendo; a corrida 13 mede, não adota. Depois: a corrida 12 rodou em 06/10/2026 (análise em `resultados_alvo/pre_fase4/confianca.md`), e em 23/10/2026 o Eric fechou o colibri como motor e cancelou a corrida 13 (decisão 75): a pesquisa sobre ele fica nesta seção como registro dos achados e dos motivos.",
         "**Fontes sem revisão por pares.** O colibri é um repositório, e parte das medidas citadas vem de issues e de discussões da comunidade; as sínteses dizem quando é o caso.",
     ]
     if memoria:
@@ -323,6 +345,12 @@ def cabecalho(dados: dict, trocas: int, medida: dict, correcoes: list[dict] | No
         avisos.append(f"**Correções da revisão.** Depois de integradas, as sínteses e o mapa foram conferidos contra as afirmações verificadas (um revisor por tópico e um para o mapa). "
                       f"{_plural(len(correcoes), 'trecho foi corrigido', 'trechos foram corrigidos')} por script em {DATA_DAS_CORRECOES}; a lista, com o que mudou e o motivo de cada "
                       f"correção, está no fim do §6.14.{N_REJ}.")
+    acr = [ORDEM_R5.index(k) + 1 for k in ACRESCENTADOS]
+    avisos.append(f"**Tópicos acrescentados em {DATA_DO_ACRESCIMO}.** Os três últimos tópicos da parte B (§6.14.{acr[0]} a §6.14.{acr[-1]}: o Brainiac como segundo cérebro, "
+                  f"o codebase-memory-mcp relido pela visualização e a visualização da rede neural) foram pedidos pelo Eric em {DATA_DO_ACRESCIMO}, depois de o plano de "
+                  "01/10 fixar a numeração para onze tópicos. Entraram no fim da ordem para não mudar o número de nenhum tópico já citado; só as duas subseções finais "
+                  f"mudaram de número (as rejeitadas, de §6.14.12 para §6.14.{N_REJ}; os mapas, de §6.14.13 para §6.14.{N_MAPA}), e as citações delas no README, no "
+                  f"relatório da fase, no painel e nas correções declaradas foram atualizadas no mesmo dia. A parte B rodou em duas ondas, cada uma com o seu mapa (§6.14.{N_MAPA}).")
     linhas += ["", f"{_POR_EXTENSO[len(avisos)]} avisos sobre o texto abaixo:", ""] + [f"{i}. {a}" for i, a in enumerate(avisos, 1)] + [""]
     return "\n".join(linhas) + "\n"
 
@@ -410,12 +438,16 @@ def memorial_com_linha(s: str, dados: dict) -> str:
     """O texto do Memorial com a linha do índice deste levantamento gravada (ou regravada) logo depois da linha do
     levantamento da documentação autogerida."""
     feitos = [k for k in ORDEM_R5 if k in dados]
-    falta_b = any(TITULOS_R5[k][0] == "B" and k not in dados for k in ORDEM_R5)
-    linha = (TAG_DO_INDICE + " (§6.14), gravada por integrar_pesquisa_pre_fase4.py. ! Motivo: sem a linha o índice não leva ao levantamento nem aos mapas; ela é regravada quando a parte B da rodada for integrada. -->\n"
+    de_b = [k for k in ORDEM_R5 if TITULOS_R5[k][0] == "B"]
+    feitos_b = [k for k in de_b if k in dados]
+    tema_b = ("fidelidade do raciocínio, formatos de trilha, relatório para humanos, atribuição ao contexto, confiança por probabilidade, uso das trilhas, "
+              "Brainiac, grafos do código e do conhecimento e visualização da rede neural")
+    parte_b = (f"; os {len(de_b)} tópicos da parte B ({tema_b}) entram quando ela rodar" if not feitos_b
+               else f"; {tema_b}" if len(feitos_b) == len(de_b) else f"; da parte B, {len(feitos_b)} de {len(de_b)} tópicos ({tema_b})")
+    linha = (TAG_DO_INDICE + " (§6.14), gravada por integrar_pesquisa_pre_fase4.py. ! Motivo: sem a linha o índice não leva ao levantamento nem aos mapas; ela é regravada a cada parte da rodada integrada. -->\n"
              + MARCA_DO_INDICE + "(memorial/2-pesquisa-e-literatura/levantamento-2026-10-01-pre-fase-4.md): §6.14, "
              + f"{len(feitos)} de {len(ORDEM_R5)} tópicos integrados (o repositório colibri, as pesquisas que ele cita, inferência com os pesos fora da RAM, modelos MoE pequenos em CPU e atlas de especialistas"
-             + ("; os seis tópicos do raciocínio aberto entram com a parte B" if falta_b else "; fidelidade do raciocínio, formatos de trilha, relatório para humanos, atribuição ao contexto, confiança por probabilidade e uso das trilhas")
-             + "); §6.14.12 rejeitadas com o motivo; §6.14.13 mapas adotado, adiado, descartado.\n")
+             + parte_b + f"); §6.14.{N_REJ} rejeitadas com o motivo; §6.14.{N_MAPA} mapas adotado, adiado, descartado.\n")
     if MARCA_DO_INDICE in s:
         ini = s.rfind(TAG_DO_INDICE, 0, s.index(MARCA_DO_INDICE))
         assert ini >= 0, "linha do índice sem a tag que a acompanha"

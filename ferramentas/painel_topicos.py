@@ -73,7 +73,8 @@ NAV = [
     ("Pré-Fase 4", [
         ("colibri", "Modelos grandes pelo disco", "Dá para rodar nesta máquina um modelo gigante lendo os pesos do SSD? O que o colibri pede, o que foi medido aqui e o que se aproveita."),
         ("atlas", "Atlas", "Que verbetes a busca entrega para cada tipo de defeito e o que o modelo faz com eles: o mapa, a rota de cada caso e as trocas entre causas."),
-        ("raciocinio", "Raciocínio aberto", "Dá para ver por que o modelo respondeu o que respondeu? A trilha bruta, o relatório por caso e o que o código consegue conferir."),
+        ("raciocinio", "Raciocínio aberto", "Dá para ver por que o modelo respondeu o que respondeu? A trilha bruta, o relatório por caso, o que o código consegue conferir e o que a literatura sustenta para a arquitetura da trilha."),
+        ("cerebro", "Cérebro e memória", "Dá para mostrar a rede neural como o cérebro do agente, ao vivo? O Brainiac e os grafos do código e do conhecimento servem? O que a literatura sustenta nesta máquina e neste painel."),
     ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
@@ -677,10 +678,17 @@ def _secoes_do_levantamento(lev: str) -> list[dict]:
 
 def _pre_fase4_no_levantamento(lev: str | None) -> dict | None:
     """Do levantamento da Pré-Fase 4 (§6.14): as subseções já integradas, as chaves dos tópicos da parte A, quantos
-    tópicos ainda não rodaram e o trecho dos mapas (§6.14.13)."""
-    if not lev or "#### 6.14.13" not in lev:
+    tópicos ainda não rodaram, o trecho dos mapas e os números das subseções de rejeitadas e de mapas, lidos do
+    próprio arquivo (§6.14.15 e §6.14.16 desde 23/10/2026; eram §6.14.12 e §6.14.13)."""
+    # ! Alteração de IA - Revisar: (23/10/2026) o número da subseção dos mapas (e o das rejeitadas) passou a ser lido do
+    # arquivo por expressão regular, em vez do literal "#### 6.14.13".
+    # ! Motivo: com os três tópicos acrescentados à parte B em 23/10/2026, as duas subseções finais do levantamento
+    # mudaram de número (§6.14.15 e §6.14.16); com o literal antigo a aba do colibri deixaria de achar o mapa.
+    lev = (lev or "").replace("\r\n", "\n")
+    m_mapas = re.search(r"^#### (6\.14\.\d+) Mapas adotado", lev, re.M)
+    if not m_mapas:
         return None
-    lev = lev.replace("\r\n", "\n")
+    m_rej = re.search(r"^#### (6\.14\.\d+) Afirmações rejeitadas", lev, re.M)
     cab, linhas, _ = pt.primeira_tabela(lev)  # a primeira tabela do arquivo é a das subseções, com a parte de cada tópico
     col = {c: i for i, c in enumerate(cab)}
     parte_a = {re.sub(r"[`*]", "", r[col["Tópico"]]).strip() for r in linhas if r[col["Parte"]].strip() == "A"}
@@ -691,7 +699,8 @@ def _pre_fase4_no_levantamento(lev: str | None) -> dict | None:
     # leitor não saberia que o texto foi corrigido, nem que "15,69 GB" é a RAM que o Windows enxerga (a instalada é 16 GB).
     avisos = [m.group(1) for titulo in ("O que mudou depois de a parte A ser escrita", "Memória da máquina", "Correções da revisão")
               for m in [re.search(r"^\d+\. (\*\*" + re.escape(titulo) + r"\.\*\* .*)$", lev, re.M)] if m]
-    return {"secoes": _secoes_do_levantamento(lev), "parte_a": parte_a, "faltam": faltam, "mapas": lev[lev.index("#### 6.14.13"):],
+    return {"secoes": _secoes_do_levantamento(lev), "parte_a": parte_a, "faltam": faltam, "mapas": lev[m_mapas.start():],
+            "secao_mapas": m_mapas.group(1), "secao_rejeitadas": m_rej.group(1) if m_rej else "",
             "mudou": re.search(r"^\d+\. (\*\*O que mudou depois de a parte A ser escrita\.\*\* .*)$", lev, re.M), "avisos": avisos}
 
 
@@ -715,7 +724,7 @@ def secao_pesquisa() -> tuple[dict, str]:
     do_r5 = [t for t in topicos if t["curto"] == "Pré-Fase 4"]
     falta_r5 = r5["faltam"] if r5 else 0
     frase_r5 = (f' A rodada 5 (01/10) é a da Pré-Fase 4: {len(do_r5)} tópicos integrados, com {sum(t["aprovadas"] for t in do_r5)} afirmações aprovadas'
-                + (f', e {falta_r5} tópicos do raciocínio aberto ainda por rodar' if falta_r5 else '')
+                + (f', e {falta_r5} tópicos da parte B (raciocínio aberto, memória e visualização) ainda por rodar' if falta_r5 else '')
                 + '; o mapa de viabilidade e as sínteses dela estão na aba <a href="#colibri" data-ir="colibri|">Modelos grandes pelo disco</a>.') if do_r5 else ""
     # tabela dos tópicos com barra
     trs = []
@@ -1074,10 +1083,10 @@ def _literatura_do_colibri(lev: str | None) -> tuple[str, list[tuple[str, str, s
 {detalhes("Riscos que a literatura aponta e a mitigação de cada um", tab_riscos)}
 {detalhes("Leitura do mapa, por extenso", leitura_do_mapa)}
 <h3>As sínteses, por extenso</h3>
-<p>Cada síntese foi escrita só com as afirmações que sobreviveram à verificação. As referências completas e as afirmações rejeitadas, com o motivo, estão no levantamento (§6.14.12) e em <code>referencias.md</code>.</p>
+<p>Cada síntese foi escrita só com as afirmações que sobreviveram à verificação. As referências completas e as afirmações rejeitadas, com o motivo, estão no levantamento (§{lit["secao_rejeitadas"]}) e em <code>referencias.md</code>.</p>
 {sinteses}'''
     cartoes = [("Opções avaliadas pela literatura", f'{cont["adotado"]} adotadas', f'{cont["adiado"]} adiadas · {cont["descartado"]} descartadas, de {n} no mapa da rodada 5')]
-    fonte = f'<code>2-pesquisa-e-literatura/{LEVANTAMENTO_PRE_FASE4}</code> (§{secoes[0]["secao"]} a §{secoes[-1]["secao"]} e mapa em §6.14.13)' if secoes else None
+    fonte = f'<code>2-pesquisa-e-literatura/{LEVANTAMENTO_PRE_FASE4}</code> (§{secoes[0]["secao"]} a §{secoes[-1]["secao"]} e mapa em §{lit["secao_mapas"]})' if secoes else None
     return bloco, cartoes, fonte
 
 
@@ -1312,7 +1321,143 @@ ROTULO_AVALIACAO = {"causa_correta": "A causa respondida é a do caso", "campo_c
 CASO_PADRAO_DO_EXPLORADOR = ("fase3b_cruzada_qwen__qwen2.5-coder_3b__L1", "sin-4")
 
 
-def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None = None, confianca: dict | None = None) -> tuple[dict, str]:
+# ! Alteração de IA - Revisar: (23/10/2026) bloco "O que a literatura sustenta para a arquitetura da trilha" da aba "Raciocínio
+# aberto", lido do levantamento §6.14 (parte B, onda 1): o mapa de decisões de arquitetura com filtro por veredito, os
+# riscos, a leitura e as cinco sínteses por extenso (fidelidade do raciocínio, trilha e observabilidade, relatório para
+# humanos, atribuição ao contexto, uso das trilhas). Os mapas do §6.14 vêm um por Workflow, separados pelo nome em
+# negrito ("Parte A: ...", "Parte B, onda 1: ...", "Parte B, onda 2: ..."); _blocos_dos_mapas os separa.
+# ! Motivo: o Eric decide pelo painel, e a especificação da linha de raciocínio aberta (próximo passo) sai deste mapa;
+# sem o bloco a análise ficaria só no levantamento. Nada é digitado aqui: tudo vem do arquivo gerado por
+# integrar_pesquisa_pre_fase4.py, e a onda 2 (confiança, Brainiac, grafos, visualização) terá a sua própria aba.
+TOPICOS_RACIOCINIO = ("r5-fidelidade-do-raciocinio", "r5-trilha-e-observabilidade", "r5-relatorio-para-humanos", "r5-atribuicao-ao-contexto", "r5-uso-das-trilhas")
+TOPICOS_VISUALIZACAO = ("r5-confianca-por-probabilidade", "r5-brainiac-segundo-cerebro", "r5-codebase-memory-visual", "r5-visualizacao-da-rede-neural")
+
+
+def _blocos_dos_mapas(trecho: str) -> dict[str, str]:
+    """Os mapas do §6.14, um por Workflow, pelo nome em negrito que abre cada um; o valor é o texto até o mapa seguinte."""
+    blocos = {}
+    for m in re.finditer(r"^\*\*(Parte [^*\n]+)\*\*\n", trecho, re.M):
+        inicio = m.end()
+        prox = re.search(r"^\*\*Parte ", trecho[inicio:], re.M)
+        blocos[m.group(1)] = trecho[inicio:inicio + prox.start()] if prox else trecho[inicio:]
+    return blocos
+
+
+def _mapa_de_um_bloco(bloco: str, id_tabela: str, rotulo: str) -> tuple[str, Counter, int, str, str]:
+    """De um bloco de mapa (tabela, riscos, leitura): a tabela com filtro, a contagem por veredito, o número de linhas,
+    a tabela de riscos e a leitura em HTML."""
+    mapa, cont, n = _mapa_de_vereditos(bloco, id_tabela, rotulo)
+    _, riscos, _ = pt.primeira_tabela(bloco[bloco.index("**Riscos**"):])
+    tab_riscos = ('<div class="tabela"><table><thead><tr><th>Risco</th><th>Mitigação</th><th>Fonte</th></tr></thead><tbody>'
+                  + "".join(f'<tr data-risco="{i}"><td>{pt.inline(r[0])}</td><td>{pt.inline(r[1])}</td><td class="nota">{pt.inline(r[2])}</td></tr>' for i, r in enumerate(riscos, 1))
+                  + "</tbody></table></div>")
+    leitura_md = bloco[bloco.index("**Leitura**") + len("**Leitura**"):].strip()
+    return mapa, cont, n, tab_riscos, pt.md_doc_para_html(leitura_md)
+
+
+def _sinteses_por_extenso(secoes: list[dict]) -> str:
+    return "".join(
+        f'<details data-sintese="{esc(s["chave"])}"><summary>§{s["secao"]} {esc(s["titulo"])} ({s["aprovadas"]} afirmações aprovadas)</summary>'
+        f'<div class="relatorio">{pt.md_doc_para_html(s["texto"])}<h4>O que isso implica para o agente e para a Fase 4</h4>{leitura([pt.inline(x) for x in s["implicacoes"]])}'
+        f'<h4>O que a literatura não responde</h4>{leitura([pt.inline(x) for x in s["lacunas"]])}</div></details>' for s in secoes)
+
+
+def _literatura_do_raciocinio(lev: str | None) -> tuple[str, list[tuple[str, str, str]], str | None]:
+    """Devolve o HTML do bloco, os cartões de número-chave que ele acrescenta e a linha de fonte."""
+    lit = _pre_fase4_no_levantamento(lev)
+    blocos = _blocos_dos_mapas(lit["mapas"]) if lit else {}
+    nome = next((k for k in blocos if k.startswith("Parte B, onda 1")), None)
+    if not lit or not nome or "ainda não rodou" in blocos[nome]:
+        return ('<h2>O que a literatura sustenta para a arquitetura da trilha</h2>\n<p class="nota">A parte B da rodada 5 da pesquisa (raciocínio aberto) ainda não foi '
+                'integrada ao levantamento, como §6.14.</p>'), [], None
+    mapa, cont, n, tab_riscos, leitura_do_mapa = _mapa_de_um_bloco(blocos[nome], "tab-mapa-ra", "Filtro do mapa de arquitetura")
+    secoes = [s for s in lit["secoes"] if s["chave"] in TOPICOS_RACIOCINIO]
+    aprovadas, rejeitadas = sum(s["aprovadas"] for s in secoes), sum(s["rejeitadas"] for s in secoes)
+    bloco_html = f'''<h2>O que a literatura sustenta para a arquitetura da trilha</h2>
+<p>A parte B da rodada 5 da pesquisa (onda 1, 23/10/2026) leu a literatura sobre fidelidade do raciocínio escrito, formatos de trilha e exigências de registro, relatório para quem desenvolve, atribuição ao contexto e uso das trilhas para melhorar o sistema: {len(secoes)} tópicos, {aprovadas} afirmações aprovadas por verificadores céticos e {rejeitadas} {"rejeitada" if rejeitadas == 1 else "rejeitadas"}. O mapa dá o veredito de cada opção de arquitetura para esta máquina: <em>adotado</em> entra na arquitetura da linha de raciocínio aberta da Fase 4; <em>adiado</em> só com outra máquina, outro motor ou depois da Fase 4; <em>descartado</em> não serve, com o motivo.</p>
+{mapa}
+{detalhes("Riscos que a literatura aponta e a mitigação de cada um", tab_riscos)}
+{detalhes("Leitura do mapa, por extenso", leitura_do_mapa)}
+<h3>As sínteses, por extenso</h3>
+<p>Cada síntese foi escrita só com as afirmações que sobreviveram à verificação. As referências completas e as afirmações rejeitadas, com o motivo, estão no levantamento (§{lit["secao_rejeitadas"]}) e em <code>referencias.md</code>.</p>
+{_sinteses_por_extenso(secoes)}'''
+    cartoes = [("Opções de arquitetura da trilha avaliadas pela literatura", f'{cont["adotado"]} adotadas', f'{cont["adiado"]} adiadas · {cont["descartado"]} descartadas, de {n} no mapa da onda 1 da parte B')]
+    fonte = (f'<code>2-pesquisa-e-literatura/{LEVANTAMENTO_PRE_FASE4}</code> (§{secoes[0]["secao"]} a §{secoes[-1]["secao"]} e o mapa "Parte B, onda 1" em §{lit["secao_mapas"]})'
+             if secoes else None)
+    return bloco_html, cartoes, fonte
+
+
+# ! Alteração de IA - Revisar: (23/10/2026) aba nova "Cérebro e memória" (id cerebro), lida só do levantamento §6.14 (parte B,
+# onda 2): o mapa de viabilidade com filtro por veredito, um gráfico de vereditos por tema, os riscos, a leitura, as
+# quatro sínteses por extenso (confiança por probabilidade, Brainiac, grafos do código e do conhecimento, visualização
+# da rede neural) e uma leitura curta montada das linhas do próprio mapa.
+# ! Motivo: o Eric perguntou em 23/10/2026 se dá para mostrar a rede neural como o "cérebro" do agente no painel, ao
+# vivo, se o Brainiac serve e se o grafo do código seria um toque a mais; ele decide pelo painel, e a regra do projeto
+# é uma aba por análise. Nada é digitado aqui: tudo vem do arquivo gerado por integrar_pesquisa_pre_fase4.py.
+TEMAS_DA_LEITURA_CE = ("Cérebro ao vivo", "Rede neural como figura estática", "Atenção e ativações ao vivo", "Brainiac", "Grafo do conhecimento no painel",
+                       "Grafo do código no painel", "Confiança pela probabilidade do rótulo", "Decodificação restrita")
+
+
+def secao_cerebro(levantamento: str | None) -> tuple[dict, str]:
+    titulo = "Dá para mostrar o cérebro do agente no painel, e o Brainiac ou um grafo do código servem?"
+    lit = _pre_fase4_no_levantamento(levantamento)
+    blocos = _blocos_dos_mapas(lit["mapas"]) if lit else {}
+    nome = next((k for k in blocos if k.startswith("Parte B, onda 2")), None)
+    if not lit or not nome or "ainda não rodou" in blocos[nome]:
+        return {"temas": []}, (f'<section id="cerebro" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A onda 2 da parte B da rodada 5 da pesquisa (confiança por '
+                               'probabilidade, Brainiac, grafos, visualização da rede neural) ainda não foi integrada ao levantamento, como §6.14.</p>\n</section>')
+    bloco = blocos[nome]
+    mapa, cont, n, tab_riscos, leitura_do_mapa = _mapa_de_um_bloco(bloco, "tab-mapa-ce", "Filtro do mapa de viabilidade do painel")
+    cab, linhas, _ = pt.primeira_tabela(bloco)
+    col = {c: i for i, c in enumerate(cab)}
+    temas: list[dict] = []
+    por_tema: dict[str, list] = {}
+    for r in linhas:
+        tema = re.sub(r"[*`_]", "", r[col["Tema"]]).strip()
+        v = _veredito(r[col["Veredito"]])
+        t = next((x for x in temas if x["tema"] == tema), None)
+        if not t:
+            t = {"tema": tema, "adotado": 0, "adiado": 0, "descartado": 0, "outro": 0}
+            temas.append(t)
+        t[v] += 1
+        por_tema.setdefault(tema, []).append((v, r[col["Opção"]], r[col["Motivo"]]))
+    secoes = [s for s in lit["secoes"] if s["chave"] in TOPICOS_VISUALIZACAO]
+    aprovadas, rejeitadas = sum(s["aprovadas"] for s in secoes), sum(s["rejeitadas"] for s in secoes)
+    com_adotado = sum(1 for t in temas if t["adotado"])
+    itens_kpi = [("Opções avaliadas pela literatura", f'{cont["adotado"]} servem agora', f'{cont["adiado"]} só com outra máquina ou depois · {cont["descartado"]} não servem, de {n} no mapa da onda 2'),
+                 ("Tópicos da onda 2", f"{len(secoes)}", f'{aprovadas} afirmações aprovadas por verificadores céticos · {rejeitadas} {"rejeitada" if rejeitadas == 1 else "rejeitadas"}'),
+                 ("Temas do mapa", f"{len(temas)}", f"{com_adotado} com ao menos uma opção que serve agora")]
+    lead = (f'Em parte. Dos {n} caminhos avaliados pela onda 2 da parte B da rodada 5 da pesquisa (23/10/2026), {cont["adotado"]} servem agora nesta máquina, sem trocar o '
+            f'modelo nem o motor decididos; {cont["adiado"]} só serviriam com outra máquina, outro motor ou depois da Fase 4; {cont["descartado"]} não servem. O veredito de cada '
+            'um, com o motivo e a fonte, está no mapa abaixo; o que vale para a trilha de raciocínio entrou na especificação da trilha (Memorial, seção 5).')
+    pontos = []
+    for tema in TEMAS_DA_LEITURA_CE:
+        for v, opcao, motivo in por_tema.get(tema, []):
+            pontos.append(f"<strong>{pt.inline(opcao)}:</strong> {chip(v, v)} {pt.inline(motivo)}")
+            break
+    html_ = f'''<section id="cerebro" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Vereditos por tema</h2>
+<p>Cada barra é um tema do mapa de viabilidade; as cores dizem quantas opções daquele tema servem agora nesta máquina, quantas só serviriam com outra máquina, outro motor ou depois da Fase 4, e quantas não servem.</p>
+<div class="chart" style="height:{max(260, 28 * len(temas) + 80)}px"><canvas id="g-ce-temas"></canvas></div>
+<h2>O mapa de viabilidade, opção por opção</h2>
+<p><em>Adotado</em> serve agora, nesta máquina, sem trocar o modelo nem o motor decididos; <em>adiado</em> só serviria com outra máquina (o mapa diz quanta RAM, GPU ou disco), outro motor, ou depois da Fase 4; <em>descartado</em> não serve, com o motivo.</p>
+{mapa}
+{detalhes("Riscos que a literatura aponta e a mitigação de cada um", tab_riscos)}
+{detalhes("Leitura do mapa, por extenso", leitura_do_mapa)}
+<h2>As sínteses, por extenso</h2>
+<p>Cada síntese foi escrita só com as afirmações que sobreviveram à verificação. As referências completas e as afirmações rejeitadas, com o motivo, estão no levantamento (§{lit["secao_rejeitadas"]}) e em <code>referencias.md</code>.</p>
+{_sinteses_por_extenso(secoes)}
+<h2>Leitura</h2>
+{leitura(pontos)}
+{fontes([f'<code>2-pesquisa-e-literatura/{LEVANTAMENTO_PRE_FASE4}</code> (§{secoes[0]["secao"]} a §{secoes[-1]["secao"]} e o mapa "Parte B, onda 2" em §{lit["secao_mapas"]})' if secoes else f'<code>2-pesquisa-e-literatura/{LEVANTAMENTO_PRE_FASE4}</code>', "<code>5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md</code> (seção 14)", "decisões 61, 70 e 75; roadmap §3.1"])}
+</section>'''
+    return {"temas": temas}, html_
+
+
+def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None = None, confianca: dict | None = None, levantamento: str | None = None) -> tuple[dict, str]:
     titulo = "Dá para ver por que o modelo respondeu o que respondeu?"
     if not ind:
         return {"trilhas": [], "explorador": {"trilhas": []}}, (f'<section id="raciocinio" hidden>\n<h1>{titulo}</h1>\n<p class="lead">As trilhas ainda não foram geradas nesta máquina: falta '
@@ -1439,6 +1584,9 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
                          '<code>qwen2.5:7b</code>, respondeu uma causa que nenhum verbete entregue tratava. O relatório é gerado por script, só do arquivo bruto; as três '
                          'camadas vêm separadas, e a resposta certa aparece numa seção só.</p>\n'
                          + detalhes("Abrir o relatório do caso", '<div class="relatorio">' + _relatorio_para_html(exemplo) + "</div>"))
+    # (23/10/2026) o bloco da literatura da parte B (onda 1): mapa de arquitetura, riscos, leitura e sínteses
+    bloco_literatura, cartoes_literatura, fonte_literatura = _literatura_do_raciocinio(levantamento)
+    itens_kpi += cartoes_literatura
     html_ = f'''<section id="raciocinio" hidden>
 <h1>{titulo}</h1>
 <p class="lead">Em parte. Dá para ver tudo o que o programa fez (o que a busca pontuou e entregou, o prompt, a resposta, os tempos) e conferir por código o que o modelo declarou. O raciocínio em si não está lá: em {sem} dos {total} diagnósticos remontados o modelo não escreveu nenhum, foi direto às quatro linhas. Por isso o relatório separa três camadas e nunca trata a alegação do modelo como fato.</p>
@@ -1457,15 +1605,16 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
 {bloco_conf}
 {pe.bloco_html(explorador)}
 {bloco_exemplo}
+{bloco_literatura}
 <h2>Leitura</h2>
 {leitura([
     f"<strong>O modelo decidido não mostra o caminho.</strong> Em {sem} de {total} respostas não há texto antes das quatro linhas, embora o prompt peça uma explicação curta. O que se abre é o caminho do programa e a conferência das alegações, não um raciocínio escrito.",
     leitura_fontes,
     "<strong>O erro mais comum não é inventar, é responder uma causa que a documentação entregue não trata.</strong> Esse caso é detectável em código, na hora, e vira candidato a aviso para quem desenvolve.",
     "<strong>O relatório mostra de quem é cada nota.</strong> Quando o verbete citado tem notas escritas pelo modelo, o relatório lista quantas são e o veredito da revisão humana de cada uma; não dá para saber qual delas pesou na resposta, e isso fica escrito.",
-    ("<strong>A probabilidade do rótulo é o melhor dos três sinais, e nenhum deles é barreira.</strong> A seção da corrida 12, acima, traz os números; a especificação da trilha para a Fase 4 entra nesta aba quando a rodada B da pesquisa terminar." if tot
-     else "A especificação da trilha para a Fase 4 e a análise da probabilidade do rótulo entram nesta aba quando a rodada B da pesquisa e a corrida 12 terminarem.")])}
-{fontes(["<code>resultados_alvo/pre_fase4/confianca.json</code> e <code>.md</code> (<code>analisar_confianca.py</code>, corrida 12 em <code>resultados_alvo/pre_fase4_confianca/</code>)", "<code>resultados_alvo/pre_fase4/indicadores_raciocinio.json</code> (<code>gerar_relatorio_raciocinio.py --vitrine</code>, com <code>--check</code>)", "trilhas em <code>resultados_alvo/pre_fase4/trilhas/</code> (<code>trilha.py</code>) e relatórios em <code>resultados_alvo/pre_fase4/relatorios/</code>", "decisão 70; roadmap §3.1"])}
+    ("<strong>A probabilidade do rótulo é o melhor dos três sinais, e nenhum deles é barreira.</strong> A seção da corrida 12, acima, traz os números; o que a literatura da parte B sustenta para a arquitetura da trilha está na seção acima, e a especificação da trilha para a Fase 4 sai dela." if tot
+     else "A análise da probabilidade do rótulo entra nesta aba quando a corrida 12 terminar; o que a literatura da parte B sustenta para a arquitetura da trilha está na seção acima, e a especificação da trilha para a Fase 4 sai dela.")])}
+{fontes(["<code>resultados_alvo/pre_fase4/confianca.json</code> e <code>.md</code> (<code>analisar_confianca.py</code>, corrida 12 em <code>resultados_alvo/pre_fase4_confianca/</code>)", "<code>resultados_alvo/pre_fase4/indicadores_raciocinio.json</code> (<code>gerar_relatorio_raciocinio.py --vitrine</code>, com <code>--check</code>)", "trilhas em <code>resultados_alvo/pre_fase4/trilhas/</code> (<code>trilha.py</code>) e relatórios em <code>resultados_alvo/pre_fase4/relatorios/</code>"] + ([fonte_literatura] if fonte_literatura else []) + ["decisão 70; roadmap §3.1"])}
 </section>'''
     return dados_js, html_
 
@@ -1566,6 +1715,16 @@ function raConfianca(){
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0.4, max:1, title:{display:true, text:'AUROC (0,5 = sortear)'}}},
       plugins:{tooltip:{callbacks:{label: c => c.dataset.label + ': ' + (c.raw === null ? 'n/d' : c.formattedValue)}}}}});
 }
+function ceTemas(){
+  const Tm = (T.cerebro||{}).temas||[]; if(!Tm.length) return;
+  grafico('g-ce-temas', {type:'bar', data:{labels: Tm.map(t => t.tema), datasets:[
+      {label:'serve agora', data: Tm.map(t => t.adotado), backgroundColor: css('--bom')},
+      {label:'só com outra máquina, outro motor ou depois da Fase 4', data: Tm.map(t => t.adiado), backgroundColor: css('--s3')},
+      {label:'não serve', data: Tm.map(t => t.descartado), backgroundColor: css('--ruim')}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'opções avaliadas no mapa da onda 2'}}, y:{stacked:true, ticks:{autoSkip:false}}},
+      plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue}}}}});
+}
 function ferMcp(){
   if(!T.ferramental.mcp) return; const met = document.getElementById('sel-fer-met').value; const S = T.ferramental.mcp;
   grafico('g-fer-mcp', {type:'bar', data:{labels: S.map(x => x.tarefa), datasets:[{label:'grep, Glob e Read', data: S.map(x => Math.round(x['grep_'+met])), backgroundColor: css('--s1')}, {label:'servidor codebase-memory', data: S.map(x => Math.round(x['mcp_'+met])), backgroundColor: css('--s2')}]},
@@ -1574,7 +1733,7 @@ function ferMcp(){
 """ + pa.JS_ATLAS + pe.JS_EXPLORADOR
 
 DESENHAR_TOPICOS = {"comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
-                    "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"],
+                    "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
@@ -1677,6 +1836,8 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("colibri", d, h))
     d, h = pa.secao_atlas(ctx.get("atlas"), kpis, leitura, fontes, detalhes, validacao_do_gemini())
     partes.append(("atlas", d, h))
-    d, h = secao_raciocinio(ctx.get("indicadores_raciocinio"), ctx.get("relatorio_exemplo"), ctx.get("trilhas"), ctx.get("confianca"))
+    d, h = secao_raciocinio(ctx.get("indicadores_raciocinio"), ctx.get("relatorio_exemplo"), ctx.get("trilhas"), ctx.get("confianca"), lev.read_text(encoding="utf-8") if lev.exists() else None)
     partes.append(("raciocinio", d, h))
+    d, h = secao_cerebro(lev.read_text(encoding="utf-8") if lev.exists() else None)
+    partes.append(("cerebro", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

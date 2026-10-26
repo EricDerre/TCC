@@ -4,6 +4,8 @@
      saber que o CobaiaFront depende das extensões mbstring/output_buffering do PHP, que o
      banco é compartilhado entre os dois alvos, nem quais bugs foram deixados de propósito.
      Cada afirmação técnica aqui foi verificada executando, não deduzida do código. -->
+<!-- ! Alteração de IA - Revisar: (26/10/2026) 4 trecho(s) corrigido(s) por script no fechamento da Pré-Fase 4, depois da revisão deste documento por um revisor (frases desatualizadas, contradições entre seções, números de decisão e de ficha, texto sem travessão nem seta); a lista com o trecho antigo, o novo e o motivo de cada um está em `Documentacao/memorial/5-metodo-e-ferramental/dados/revisao-pre-fase-4-2026-10-26.json`.
+     ! Motivo: o fechamento (P7) previa um revisor por documento de texto; as correções entram declaradas, como as das sínteses da pesquisa, para o texto continuar rastreável. -->
 <!-- ! Alteração de IA - Revisar: revisão de 30/09/2026 a pedido do Eric: cabeçalho novo (nome do projeto, selos, resumo,
      estado por fase e resultado principal, mapa da documentação), seções de contribuição, citação, licença e autores,
      índice regerado a partir dos títulos, títulos sem travessão, e todos os travessões e setas do texto corrido trocados
@@ -29,9 +31,11 @@ sistemas "cobaia"), as baterias de avaliação dos modelos locais (Fases 2-A, 2-
 3 e 3-B), as ferramentas de apoio, o memorial de desenvolvimento e o projeto de
 pesquisa no padrão ABNT.
 
-**Estado em 01/10/2026:** Fases 1, 2-A, 2-B, 3 e 3-B concluídas (a 3-B com a
+<!-- ! Alteração de IA - Revisar: (26/10/2026) o parágrafo de estado e a linha da Pré-Fase 4 na tabela de fases passaram a "concluída".
+     ! Motivo: a Pré-Fase 4 fechou em 26/10/2026 (relatório fechado, parte B da pesquisa integrada, especificação da trilha aprovada, decisões 75 a 78); o README dizia "em andamento desde 01/10". -->
+**Estado em 26/10/2026:** Fases 1, 2-A, 2-B, 3 e 3-B concluídas (a 3-B com a
 troca cruzada de bibliotecas rodada em 01/10); Pré-Fase 4, uma pausa de pesquisa
-antes do agente na tela, em andamento desde 01/10; Fase 4, o agente na tela, em
+antes do agente na tela, concluída em 26/10 (decisões 75 a 78); Fase 4, o agente na tela, em
 planejamento. Modelo padrão do agente: `qwen2.5:7b` com a biblioteca no estado L1
 (decisão 52). Números, gráficos e a leitura de cada resultado estão no
 [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN).
@@ -94,7 +98,7 @@ versões da biblioteca por regras fixadas antes de rodar.
 | 2-B | Biblioteca de documentação escrita à mão, seis condições, máquina-alvo | Concluída |
 | 3 | Biblioteca gerida pelo próprio modelo, quatro modelos, três épocas | Concluída em 15/09/2026 |
 | 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
-| Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Em andamento desde 01/10/2026 |
+| Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Concluída em 26/10/2026 (relatório fechado; parte B da pesquisa integrada; especificação da trilha aprovada; corrida 13 cancelada) |
 | 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor | Em planejamento |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
 
@@ -103,7 +107,7 @@ bateria, o modelo padrão do agente é o `qwen2.5:7b` com a biblioteca no estado
 L1, a primeira época escrita por ele, curada em 29/09/2026 e guardada em
 `Programacao/AgenteCore/biblioteca_producao/`. O comparativo com o
 `qwen2.5-coder:7b`, os 36 casos inéditos, a curadoria, o experimento do
-recuperador, a ablação base × instruct e as quatro rodadas de pesquisa
+recuperador, a ablação base × instruct e as cinco rodadas de pesquisa
 bibliográfica estão no [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN), com uma
 aba por tópico; uma cópia do painel fica em
 `Documentacao/dashboard/painel-do-projeto.html`. Os números citados neste README
@@ -118,7 +122,7 @@ vêm dos registros em `resultados_alvo/` e do Memorial.
 - [Roadmap](Documentacao/memorial/roadmap.md) e [pendências](Documentacao/memorial/pendencias.md): o que falta rodar e as decisões, em fichas.
 - [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
 - Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
-- Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório inteiro na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
+- Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório, sem a `.claude/` nem a `.venv` da CobaiaAPI, na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
 
 ## Por que dois alvos
 
@@ -716,7 +720,7 @@ exigidos, 7,8 GB livres) e ficou fora da 3-B (decisão 52).
 
 <!-- ! Alteração de IA - Revisar: parágrafo abaixo com os testes da 3-B escolhidos pelo Eric em 23/09/2026, os comandos na forma que o Windows PowerShell aceita por -File (listas separadas por vírgula) e o efeito da decisão do modelo no instalador.
      ! Motivo: o texto anterior dizia "testes a escolher"; a escolha saiu (decisão 56) e o comando registrado antes nas pendências, com a lista separada por espaço, falha na vinculação de parâmetros do PowerShell (conferido em 23/09/2026 com um script de teste). O `install.py` passou a baixar o `qwen2.5:7b` e os outros modelos ficam só como registro. -->
-**Testes da 3-B escolhidos (23/09/2026, decisão 56).** Primeiro a **troca cruzada**, as bibliotecas L1 e L3 do `qwen2.5:7b` lidas pelos dois Coder nos 36 casos de avaliação:
+**Testes da 3-B escolhidos (23/09/2026, decisão 56), já rodados: os casos inéditos em 28/09 e a troca cruzada de 30/09 para 01/10.** Na ordem escolhida, primeiro a **troca cruzada**, as bibliotecas L1 e L3 do `qwen2.5:7b` lidas pelos dois Coder nos 36 casos de avaliação:
 
 ```
 powershell -ExecutionPolicy Bypass -File rodar_fase3b.ps1 -Modo cruzada -Saida fase3b_cruzada_qwen -Doador qwen2.5:7b -Versoes 1,3 -Modelos qwen2.5-coder:7b,qwen2.5-coder:3b
@@ -742,13 +746,15 @@ modelo):
      ! Motivo: o Eric pediu a aba do comparativo qwen × Coder e que o painel fosse o compilador das análises, com uma aba por tópico; a linha antiga ainda descrevia o painel só com as abas de 28/09. -->
 <!-- ! Alteração de IA - Revisar: na tabela abaixo entrou a linha de `sincronizar_orientador.py` (22/10/2026).
      ! Motivo: é o script que mantém a cópia no repositório do orientador igual ao commit deste (decisão 72); sem a linha, a tabela que lista as ferramentas deixaria de fora justamente a que o Eric roda a cada entrega. -->
+<!-- ! Alteração de IA - Revisar: na tabela abaixo, as linhas de `integrar_pesquisa_pre_fase4.py` e `correcoes_pesquisa_pre_fase4.py` citam a numeração nova do levantamento da Pré-Fase 4 (23/10/2026: 14 tópicos; rejeitadas em §6.14.15 e mapas em §6.14.16); em 26/10/2026 a contagem das correções passou a 391, com as duas ondas da parte B.
+     ! Motivo: a parte B ganhou três tópicos em 23/10/2026 e as duas subseções finais mudaram de número; a tabela citava §6.14.12 e §6.14.13. -->
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: navegação em cinco grupos (Projeto, Modelos, Biblioteca, Fases anteriores, Pesquisa e método), abas Início (estado por fase, o que depende do Eric, mapa do painel), Pendências (um cartão por ficha de `pendencias.md`, com filtro), Roadmap (fases e corridas de `roadmap.md`, com o comando pronto) e as abas dos testes, lê `resumo_fase3.json`, `comparacao_fases.json`, `decisao_modelo.json`, os resumos das Fases 2-A/2-B, os 29 blocos de `tabelas_relatorio.md` e as figuras 01–18, monta gráficos (Chart.js, paleta validada da regra de gráficos, com tema escuro) e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
 | `medir_disco.py` | Pré-Fase 4: mede a vazão de leitura do disco no desenho do `iobench` do colibri (blocos de 19 MB, 64 leituras, 8 threads), passando pelo cache do sistema e por fora dele, e grava `resultados_alvo/pre_fase4/disco.json` com a descrição da máquina. |
 | `integrar_pesquisa_documentacao.py` | Rodada 4 do levantamento (29/09/2026, qualidade da documentação autogerida): `--montar` junta pesquisa + verificação + síntese de `.superpowers/sdd/fase3b-e-fechamento/pesquisa/r4/` em `r4-final.json`; a integração grava `levantamento-2026-09-29-documentacao-autogerida.md` (§6.13), o bloco de referências e a linha no índice do Memorial; `--check`. |
-| `integrar_pesquisa_pre_fase4.py` (+ `testar_integrar_pesquisa_pre_fase4.py`) | Rodada 5 do levantamento (01/10/2026, Pré-Fase 4), em duas partes: integra ao Memorial as partes que já rodaram, com numeração fixa (§6.14.1 a §6.14.11, §6.14.12 rejeitadas, §6.14.13 mapas), regrava o bloco de referências sem repetir fonte (pela chave das outras rodadas e pelo endereço) e a linha do índice; troca pelo número medido a expressão imprecisa do contexto dado aos agentes e declara a troca; `--check`. |
-| `correcoes_pesquisa_pre_fase4.py` | As 156 correções declaradas das sínteses e do mapa da parte A da rodada 5 (trecho antigo, novo e motivo), que o integrador aplica e lista no §6.14.12 do levantamento; cada trecho tem de aparecer uma vez só no texto do agente, senão a integração para |
+| `integrar_pesquisa_pre_fase4.py` (+ `testar_integrar_pesquisa_pre_fase4.py`) | Rodada 5 do levantamento (01/10/2026, Pré-Fase 4), em duas partes, a B em duas ondas: integra ao Memorial as duas partes, com numeração fixa (§6.14.1 a §6.14.14, os três últimos acrescentados em 23/10/2026; §6.14.15 rejeitadas; §6.14.16 mapas, um por Workflow), regrava o bloco de referências sem repetir fonte (pela chave das outras rodadas e pelo endereço) e a linha do índice; troca pelo número medido a expressão imprecisa do contexto dado aos agentes e declara a troca; `--check`. |
+| `correcoes_pesquisa_pre_fase4.py` | As 391 correções declaradas das sínteses e dos mapas da rodada 5 (156 da parte A em 05/10/2026; 120 da onda 1 e 115 da onda 2 da parte B em 23/10/2026; trecho antigo, novo e motivo), que o integrador aplica e lista no §6.14.15 do levantamento; cada trecho tem de aparecer uma vez só no texto do agente, senão a integração para |
 | `gerar_pdf_abnt.py` | PDF (versão beta) do projeto de pesquisa a partir do Markdown, sem as marcações de IA (retiradas só da cópia), com folha de estilo ABNT e impressão pelo Microsoft Edge em modo sem janela; grava `Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V4-beta.pdf`. |
 | `painel_textos.py` (+ `testar_painel_textos.py`) | Leitura das fichas de `pendencias.md` (`### N. Título` + campos Estado / Quem decide / O que é / Por que importa / Opções / Recomendação / Decisão) e das tabelas de `roadmap.md` (estado por fase; corridas com a coluna Estado) para o painel, e conversão do resto dos dois documentos em HTML; o teste confere o formato dos arquivos reais. |
 | `painel_topicos.py` (+ `testar_painel_topicos.py`) | Abas por tópico do painel (30/09/2026): qwen × Coder (`comparativo_qwen_coder.json`), Fase 3-B (`fase3b_ineditos/resumo_fase3.json`, ponte, sonda, corridas), curadoria da L1 (`curadoria.json` + planilha), recuperador (`experimento_recuperador.json`), ablação base × instruct (`ablacao_base_instruct/resumo_metricas.json`), pesquisa (títulos dos levantamentos e o mapa de filtros da rodada 4) e ferramental (esta tabela e a medição do servidor MCP). Cada aba: pergunta, resposta em uma frase, números-chave, um ou dois gráficos, leitura curta e tabelas recolhidas; nenhum número digitado à mão. |

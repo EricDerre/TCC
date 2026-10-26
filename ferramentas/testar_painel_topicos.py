@@ -309,7 +309,8 @@ class TestesAbasPorTopico(unittest.TestCase):
     # ! Motivo: (1) a aba Pesquisa lia o mapa de filtros "do último levantamento da lista"; com a rodada 5 na lista ela
     # passaria a procurar o §6.13.10 no arquivo errado e a geração do painel pararia; o mapa de filtros é o da rodada
     # 4 e tem de ser lido do arquivo dela. (2) A aba "Modelos grandes pelo disco" mostra o mapa adotado, adiado,
-    # descartado da parte A, lido do levantamento §6.14.13; os vereditos contados no painel têm de ser os do arquivo.
+    # descartado da parte A, lido do levantamento §6.14.16 (era §6.14.13 até 23/10/2026; o número vem do arquivo); os
+    # vereditos contados no painel têm de ser os do arquivo.
     def teste_pesquisa_lista_a_rodada_5_e_le_o_mapa_de_filtros_da_rodada_4(self):
         secao = self.html[self.html.index('<section id="pesquisa"'):].split("</section>")[0]
         r4 = (tp.PESQUISA / "levantamento-2026-09-29-documentacao-autogerida.md").read_text(encoding="utf-8")
@@ -326,9 +327,71 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn(f"<b>{n_ref}</b>", secao)
         self.assertIn('data-ir="colibri|"', secao, "a aba Pesquisa leva ao mapa de viabilidade da aba do colibri")
 
+    # ! Alteração de IA - Revisar: (23/10/2026) teste do bloco da literatura da parte B (onda 1) na aba "Raciocínio aberto".
+    # ! Motivo: a aba mostra o mapa de arquitetura da trilha lido do levantamento §6.14 (mapa "Parte B, onda 1"); os vereditos
+    # contados no painel têm de ser os do arquivo, as cinco sínteses têm de estar lá, e a frase antiga "entra nesta aba quando
+    # a rodada B terminar" tem de sumir quando a onda 1 estiver integrada.
+    def teste_raciocinio_mostra_o_mapa_de_arquitetura_da_literatura(self):
+        r5 = (tp.PESQUISA / tp.LEVANTAMENTO_PRE_FASE4).read_text(encoding="utf-8")
+        blocos = tp._blocos_dos_mapas(r5[re.search(r"^#### 6\.14\.\d+ Mapas adotado", r5, re.M).start():])
+        self.assertTrue(any(k.startswith("Parte A") for k in blocos), list(blocos))
+        nome = next((k for k in blocos if k.startswith("Parte B, onda 1")), None)
+        if not nome or "ainda não rodou" in blocos[nome]:
+            self.skipTest("a onda 1 da parte B ainda não foi integrada ao levantamento")
+        cab, linhas, _ = pt.primeira_tabela(blocos[nome])
+        self.assertGreaterEqual(len(linhas), 18)
+        i_v = cab.index("Veredito")
+        cont = {}
+        for r in linhas:
+            v = re.sub(r"[*`_]", "", r[i_v]).strip().lower()
+            cont[v] = cont.get(v, 0) + 1
+        secao = self.html[self.html.index('<section id="raciocinio"'):].split("</section>")[0]
+        self.assertIn('id="tab-mapa-ra"', secao)
+        tab = secao[secao.index('id="tab-mapa-ra"'):].split("</table>")[0]
+        self.assertEqual(tab.count("<tr data-valor="), len(linhas))
+        filtros = secao[secao.index('data-alvo="tab-mapa-ra"'):].split("</div>")[0]
+        for v, n in cont.items():
+            self.assertIn(f'data-valor="{v}" aria-pressed="false">{v.capitalize()} ({n})</button>', filtros)
+        for chave in tp.TOPICOS_RACIOCINIO:
+            self.assertIn(f'data-sintese="{chave}"', secao)
+        for chave in tp.TOPICOS_VISUALIZACAO:
+            self.assertNotIn(f'data-sintese="{chave}"', secao)
+        self.assertNotIn("entra nesta aba quando a rodada B da pesquisa terminar", secao)
+        self.assertIn(f'{cont.get("adotado", 0)} adotadas', secao)
+        # a aba do colibri continua com o mapa da parte A, não com o da parte B
+        colibri = self.html[self.html.index('<section id="colibri"'):].split("</section>")[0]
+        cab_a, linhas_a, _ = pt.primeira_tabela(blocos[next(k for k in blocos if k.startswith("Parte A"))])
+        self.assertEqual(colibri[colibri.index('id="tab-mapa-co"'):].split("</table>")[0].count("<tr data-valor="), len(linhas_a))
+
+    # ! Alteração de IA - Revisar: (23/10/2026) teste da aba "Cérebro e memória" (onda 2 da parte B): mapa, gráfico por tema e as quatro sínteses.
+    # ! Motivo: a aba responde às perguntas do Eric de 23/10 (cérebro ao vivo, Brainiac, grafos) só com o levantamento §6.14; os
+    # vereditos contados no painel e no gráfico têm de ser os do arquivo.
+    def teste_cerebro_mostra_o_mapa_da_onda_2(self):
+        r5 = (tp.PESQUISA / tp.LEVANTAMENTO_PRE_FASE4).read_text(encoding="utf-8")
+        blocos = tp._blocos_dos_mapas(r5[re.search(r"^#### 6\.14\.\d+ Mapas adotado", r5, re.M).start():])
+        nome = next((k for k in blocos if k.startswith("Parte B, onda 2")), None)
+        if not nome or "ainda não rodou" in blocos[nome]:
+            self.skipTest("a onda 2 da parte B ainda não foi integrada ao levantamento")
+        cab, linhas, _ = pt.primeira_tabela(blocos[nome])
+        self.assertGreaterEqual(len(linhas), 18)
+        secao = self.html[self.html.index('<section id="cerebro"'):].split("</section>")[0]
+        tab = secao[secao.index('id="tab-mapa-ce"'):].split("</table>")[0]
+        self.assertEqual(tab.count("<tr data-valor="), len(linhas))
+        temas = self.dados_t["cerebro"]["temas"]
+        self.assertEqual(sum(t["adotado"] + t["adiado"] + t["descartado"] + t["outro"] for t in temas), len(linhas))
+        self.assertEqual(len(temas), len({re.sub(r"[*`_]", "", r[cab.index("Tema")]).strip() for r in linhas}))
+        self.assertIn('id="g-ce-temas"', secao)
+        self.assertIn("ceTemas", tp.DESENHAR_TOPICOS["cerebro"])
+        for chave in tp.TOPICOS_VISUALIZACAO:
+            self.assertIn(f'data-sintese="{chave}"', secao)
+        for chave in tp.TOPICOS_RACIOCINIO:
+            self.assertNotIn(f'data-sintese="{chave}"', secao)
+        self.assertIn(f'{sum(t["adotado"] for t in temas)} servem agora', secao)
+        self.assertNotIn("—", secao.split("<details")[0])
+
     def teste_colibri_mostra_o_mapa_da_literatura(self):
         r5 = (tp.PESQUISA / tp.LEVANTAMENTO_PRE_FASE4).read_text(encoding="utf-8")
-        trecho = r5[r5.index("#### 6.14.13"):]
+        trecho = r5[re.search(r"^#### 6\.14\.\d+ Mapas adotado", r5, re.M).start():]
         cab, linhas, _ = pt.primeira_tabela(trecho)
         self.assertGreaterEqual(len(linhas), 20)
         i_v = cab.index("Veredito")

@@ -1,0 +1,442 @@
+{
+ "_tag": "! Alteração de IA - Revisar: arquivo gerado em 26/10/2026 pelo script de aplicação das correções dos revisores dos documentos de texto da Pré-Fase 4 (relatório da fase, especificação da trilha, roadmap e README), no fechamento da fase (P7).",
+ "_motivo": "! Motivo: as correções entram declaradas (trecho antigo, novo e motivo, por documento e por revisor), como as das sínteses da pesquisa, para o texto continuar rastreável; cada trecho foi validado como único no arquivo, fora de comentários HTML e de tabelas geradas, antes de ser aplicado.",
+ "data": "2026-10-26",
+ "o_que": "Correções dos revisores dos documentos de texto no fechamento da Pré-Fase 4 (P7), validadas por script (trecho único por arquivo, fora de comentários e de tabelas geradas) e aplicadas pelo mesmo script.",
+ "correcoes": [
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "subseções §6.14.6 a §6.14.11 e o mapa \"Parte B, onda 1\" em §6.14.16)",
+   "para": "subseções §6.14.6 a §6.14.9 e §6.14.11, e o mapa \"Parte B, onda 1\" em §6.14.16)",
+   "motivo": "A §6.14.10 (probabilidade do rótulo) é da onda 2, como a seção 14 deste texto afirma; a onda 1 cobre §6.14.6 a §6.14.9 e §6.14.11 (tabela do §6.14 e título do mapa da onda 1).",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "Vieses no prompt mudam o rótulo sem aparecer na explicação, e citações corretas são em boa parte pós-racionalizadas (§6.14.6 e §6.14.9; no próprio Qwen2.5-7B-Instruct,",
+   "para": "Vieses no prompt mudaram a resposta de outros modelos sem que a explicação os mencionasse na maioria dos casos, e citações corretas podem ser pós-racionalizadas (até 57% num teste adversarial com um único modelo; §6.14.6 e §6.14.9; no Qwen2.5-7B-Instruct,",
+   "motivo": "O levantamento já corrigiu esta redação (lista de correções do §6.14.15): vieses mudaram a resposta de outros modelos, e citações corretas \"podem ser\" pós-racionalizadas (até 57% no pior caso de um modelo; 1 em 7 no Qwen só nas perguntas da Wikipédia, linha 18), não \"em boa parte\".",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "somaria de 47 a 78 s por caso e seria uma racionalização da resposta já dada (mapa linha 8)",
+   "para": "somaria de 47 a 78 s por caso e poderia ser uma racionalização da resposta já dada (mapa linha 8)",
+   "motivo": "A linha 8 do mapa diz que a autoexplicação \"pode ser\" uma racionalização (a fidelidade varia por modelo e por tarefa), e a correção do levantamento tirou o \"em geral\" porque nenhuma afirmação sustenta que seja o caso geral.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "multiplicaria o custo e ficou entre os menos fiéis (mapa linha 10); modelos de fronteira localizaram o passo errado em 14,2% dos casos em logs planos",
+   "para": "multiplicaria o custo (no OLMo-3-7B-Think, mediana de cerca de 3.818 tokens de cadeia) e esse modelo ficou entre os menos fiéis dos 12 testados (mapa linha 10); modelos de fronteira localizaram o passo errado em 14,2% dos casos no Who&When",
+   "motivo": "A linha 10 do mapa atribui os 3.818 tokens e a baixa fidelidade a um único modelo (OLMo-3-7B-Think, entre 12 testados) e as linhas 6 e 21 atribuem os 14,2% ao Who&When; o levantamento retirou \"um 7B de raciocínio\" em geral e \"logs planos\".",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "o OpenInference não tem campos para alternativas, justificativa nem probabilidade do rótulo (mapa linhas 1 a 3)",
+   "para": "o span DECISION do OpenInference não tem atributos dedicados para alternativas nem justificativa (candidatos e escolha vão em JSON livre) e o OpenInference não define atributo para a probabilidade do rótulo (mapa linhas 1 a 3)",
+   "motivo": "A linha 3 do mapa (redação corrigida no levantamento) limita a ausência aos atributos dedicados do span DECISION, com candidatos e escolha em JSON livre, e ao atributo de logprob; a seção 3.4 deste texto já diz isso.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "adotado; descartado; descartado; descartado | seção 7 |",
+   "para": "adotado; descartado; descartado; descartado | seção 7 (molde) e seção 1, princípio 2 (os três descartes) |",
+   "motivo": "A seção 7 trata só do molde; a segunda chamada ao modelo, o raciocínio antes da resposta e o modelo com modo de raciocínio (linhas 8 a 10 do mapa) são tratados no princípio 2 da seção 1.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "versão do Ollama, `num_ctx`, temperatura, semente, hash da biblioteca L1",
+   "para": "versão do Ollama, `top_logprobs` e modo de leitura da probabilidade, `num_ctx`, temperatura, semente, hash da biblioteca L1",
+   "motivo": "A seção 14 manda registrar a versão do Ollama, o top_logprobs e o modo de leitura no cabeçalho da corrida e aponta para a seção 3.1 (mapa da onda 2, linhas 7 e 8), mas a lista do cabeçalho na 3.1 não os tinha.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "(método, caminho, status, hashes dos corpos) e a árvore de acessibilidade da página (hash do blob) |",
+   "para": "(método, caminho, status, hashes dos corpos), a árvore de acessibilidade da página (hash do blob) e a aresta de chamada HTTP entre o front-end PHP e a rota FastAPI, montada em código a partir do tráfego capturado |",
+   "motivo": "A seção 14 diz que a aresta de chamada HTTP entre o front-end PHP e a rota FastAPI passa a ser campo do nó interceptacao (seção 3.3; mapa da onda 2, linha 19), mas a tabela da 3.3 não a lista.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "falha do próprio harness (Ollama fora do ar, resposta sem as quatro linhas, trace ausente)",
+   "para": "falha do próprio harness (Ollama fora do ar, tempo esgotado, trace ausente)",
+   "motivo": "A seção 8 trata a resposta sem as quatro linhas como tipo separado (formato_das_quatro_linhas, origem programa; mapa linha 20) e lista como incidente do harness só Ollama fora do ar, tempo esgotado e trace ausente.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "a literatura mediu só que, em logs planos, o passo decisivo foi localizado em 14,2% dos casos (mapa linha 6)",
+   "para": "a literatura mediu só que, no Who&When, o melhor método com LLMs localizou o passo decisivo em 14,2% dos casos (mapa linha 6)",
+   "motivo": "A linha 6 do mapa atribui os 14,2% ao melhor método com LLMs no Who&When, sem a expressão \"logs planos\" (retirada na correção do levantamento, que diz que o ganho da árvore sobre o log plano não foi verificado).",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "modelos de 7B deixam frases sem citação ou citam documentos inexistentes e malformados",
+   "para": "em dois modelos de 7B testados (LLaMA 2 7B Chat e Zephyr 7B), 54,5% a 62,4% das frases ficaram sem citação e houve, às vezes, citação de documentos inexistentes ou em formato errado",
+   "motivo": "A linha 17 do mapa limita o resultado a dois modelos de 7B, com 54,5% a 62,4% das frases sem citação e citação inexistente ou malformada só \"às vezes\"; o levantamento corrigiu a redação que generalizava para modelos de 7B.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "É o teste de que a FONTE acompanha o que o modelo usou, e não só o que combina com a resposta.",
+   "para": "Mede a taxa de pós-racionalização da FONTE deste agente, como consistência medida e não como fidelidade ao mecanismo interno.",
+   "motivo": "A linha 18 do mapa (corrigida no levantamento) diz que a sonda mede a taxa de pós-racionalização como consistência medida, e a linha 11 e o risco 2 mandam não chamar esses testes de fidelidade ao mecanismo interno.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "como \"a resposta não dependeu deste verbete\" (pode ser",
+   "para": "como \"sem efeito medido do contexto\" (pode ser",
+   "motivo": "O risco 7 do mapa manda registrar \"sem efeito medido do contexto, com possível conhecimento do modelo\"; \"a resposta não dependeu deste verbete\" afirma mais do que a remoção prova, e o próprio texto admite verbete redundante.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "(feito para dezenas a centenas de fontes; aqui custaria de 25 a 42 min por caso, linha 13)",
+   "para": "(avaliado em conjuntos com 32,4 a 165,8 fontes por exemplo, em média; aqui custaria de 25 a 42 min por caso, linha 13)",
+   "motivo": "A linha 13 do mapa (redação corrigida no levantamento) diz que o ContextCite foi avaliado em conjuntos com 32,4 a 165,8 fontes por exemplo, em média, e não que foi feito para dezenas a centenas de fontes.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "(exige o modelo em Transformers, que não lê GGUF nem cabe nos cerca de 7 GB livres, linha 16)",
+   "para": "(o Inseq atende só a modelos do Hugging Face Transformers e o README dele não menciona GGUF nem llama.cpp, e o modelo em precisão cheia não cabe nos cerca de 7 GB livres, linha 16)",
+   "motivo": "A linha 16 do mapa (corrigida no levantamento) diz que o README do Inseq não menciona GGUF nem llama.cpp, o que é menos do que afirmar que o Transformers não lê GGUF.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "(o Ollama 0.40.2 devolve a probabilidade por token, de antes da temperatura; sonda de 01/10/2026)",
+   "para": "(a sonda de 01/10/2026, no Ollama 0.34.4, verificou que ele devolve a probabilidade por token, de antes da temperatura; o Ollama já está na 0.40.2, e a verificação se repete antes de cada corrida, mapa da onda 2, linha 8)",
+   "motivo": "A sonda de 01/10/2026 rodou no Ollama 0.34.4 (aviso 3 do §6.14 e decisões 69 e 71); a 0.40.2 é a versão atual (decisão 73), e a linha 8 da onda 2 manda registrar a versão e verificar os logprobs antes de cada corrida.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "A biblioteca L1 continua só por acréscimo validado em código (decisões 52, 69 e 73),",
+   "para": "A biblioteca L1 continua como a de partida (decisões 52, 69 e 73) e só cresce por acréscimo validado em código (decisões 30 e 33),",
+   "motivo": "As decisões 52, 69 e 73 mantêm o qwen2.5:7b com a L1 como ponto de partida; a regra de edição só por acréscimo é a decisão 30 e a de validação em código como pré-condição é a 33.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "nunca a qualidade da justificativa: otimizar a explicação ensina o modelo a parecer certo.",
+   "para": "nunca a qualidade da justificativa (mapa linha 25): em agentes de fronteira treinados por reforço em tarefas de código, penalizar os pensamentos ruins na cadeia de raciocínio ensinou o modelo a ofuscar a intenção, efeito que aqui não foi medido, já que o modelo não é treinado.",
+   "motivo": "A linha 25 do mapa (corrigida no levantamento) só sustenta o efeito em agentes de fronteira treinados por reforço em tarefas de código, e não ao premiar a qualidade de uma justificativa numa biblioteca de verbetes.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "por isso os itens 1 a 5 têm de ser lidos em segundos diante dos 47 a 78 s de uma inferência.",
+   "para": "por isso a conferência pelo desenvolvedor, nos itens 1 a 5, tem de custar bem menos do que diagnosticar a falha sozinho, na prática segundos de leitura.",
+   "motivo": "A linha 29 do mapa (corrigida no levantamento) compara o custo de conferir com o de a pessoa fazer a tarefa sozinha, e não com os 47 a 78 s de CPU do agente.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "fecha quatro pontos desta especificação e abriu duas decisões, tomadas pelo Eric no mesmo dia (fichas 23 e 24 das",
+   "para": "fecha quatro pontos desta especificação e abriu uma só decisão, a da gramática; a aprovação da versão 1 vem da onda 1, e o Eric tomou as duas no mesmo dia (fichas 23 e 24 das",
+   "motivo": "A decisão 76 diz que a onda 1 alimenta a especificação (ficha 23) e que a onda 2 abre a ficha 24 (gramática na saída); a ficha 23 não foi aberta pela onda 2.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "e não num token qualquer, porque primeiro token e resposta em texto discordam de 10,2% a 51,4% das vezes em modelos ajustados por instrução (mapa da onda 2, linha 2)",
+   "para": "e não no primeiro token da resposta, porque primeiro token e resposta em texto discordam de 10,2% a 51,4% das vezes no MMLU com restrição média de prompt, em modelos ajustados por instrução (mapa da onda 2, linha 2)",
+   "motivo": "A linha 2 da onda 2 contrasta o token do rótulo com o primeiro token da resposta (não com \"um token qualquer\") e limita os 10,2% a 51,4% ao MMLU com restrição média de prompt, condição acrescentada na correção do levantamento.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "e logit lens, autoencoders esparsos e figuras de atenção de um modelo pequeno ficam adiados para depois da Fase 4 e rotulados como ilustrativos (linhas 23 a 25)",
+   "para": "e logit lens e figuras de atenção de um modelo pequeno ficam adiados para depois da Fase 4 e rotulados como ilustrativos (linhas 23 e 24), enquanto autoencoders esparsos e grafos de atribuição ficam descartados, com no máximo um link de referência no painel (linha 25)",
+   "motivo": "Na onda 2 a linha 25 (autoencoder esparso do Neuronpedia e circuit-tracer) é descartada, não adiada; só as linhas 23 (atenção offline) e 24 (logit lens) são adiadas.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "é a única com valor diagnóstico para quebra de contrato (linha 19)",
+   "para": "é a que o projeto escolheu por ter valor diagnóstico para quebra de contrato, sem comparação com os outros tipos de aresta da ferramenta (linha 19)",
+   "motivo": "A linha 19 da onda 2 (corrigida no levantamento) diz que é a aresta que o projeto escolheu, sem comparar o valor diagnóstico dos outros tipos de aresta; \"a única\" não é sustentado.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "até lá, o gatilho de intervenção é a amostra fixa dos 36 casos.",
+   "para": "até lá, o gatilho por probabilidade fica desligado e valem os outros dois da seção 6.1: FONTE divergente e a amostra fixa dos 36 casos.",
+   "motivo": "A seção 6.1 lista três gatilhos (probabilidade abaixo do limiar, FONTE divergente e amostra fixa) e só o primeiro depende dos limiares, então a falta deles não deixa a amostra fixa como único gatilho.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "Documentacao/memorial/5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md",
+   "de": "§6.14.6 a §6.14.11 do levantamento da Pré-Fase 4 (fidelidade do raciocínio, formatos de trilha e exigências de registro, relatório para humanos, atribuição ao contexto, uso das trilhas);",
+   "para": "§6.14.6 a §6.14.9 e §6.14.11 do levantamento da Pré-Fase 4 (fidelidade do raciocínio, formatos de trilha e exigências de registro, relatório para humanos, atribuição ao contexto, uso das trilhas); para a seção 14, o mapa \"Parte B, onda 2\" e as subseções §6.14.10 e §6.14.12 a §6.14.14;",
+   "motivo": "A §6.14.10 é da onda 2 e a lista de temas entre parênteses cobre só as cinco subseções da onda 1; a seção 14 usa o mapa da onda 2 e as §6.14.10 e §6.14.12 a §6.14.14, que a lista de fontes omitia.",
+   "revisor": "especificacao"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "a ablação base × instruct e as quatro rodadas de pesquisa",
+   "para": "a ablação base × instruct e as cinco rodadas de pesquisa",
+   "motivo": "O próprio README chama a pesquisa da Pré-Fase 4 de rodada 5 (levantamento §6.14, hoje com 14 tópicos), então são cinco rodadas de pesquisa bibliográfica no painel, não quatro.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "integra ao Memorial as partes que já rodaram, com numeração fixa",
+   "para": "integra ao Memorial as duas partes, com numeração fixa",
+   "motivo": "As partes A e B da rodada 5 já rodaram e estão integradas ao §6.14; 'as partes que já rodaram' ainda sugere que falta alguma.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "Testes da 3-B escolhidos (23/09/2026, decisão 56).** Primeiro a **troca cruzada**",
+   "para": "Testes da 3-B escolhidos (23/09/2026, decisão 56), já rodados: os casos inéditos em 28/09 e a troca cruzada de 30/09 para 01/10.** Na ordem escolhida, primeiro a **troca cruzada**",
+   "motivo": "O parágrafo apresenta os comandos como plano, com a troca cruzada antes dos inéditos, mas as duas corridas já rodaram e na ordem inversa, como o parágrafo de abertura da seção diz.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "com este repositório inteiro na subpasta `projeto/`",
+   "para": "com este repositório, sem a `.claude/` nem a `.venv` da CobaiaAPI, na subpasta `projeto/`",
+   "motivo": "A decisão 72 e a linha de `sincronizar_orientador.py` neste mesmo README dizem que a cópia deixa de fora a `.claude/` e a `.venv`, então 'inteiro' contradiz o resto do texto.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "`gerar_atlas.py` e `gerar_relatorio_raciocinio.py` (pasta `resultados_alvo/pre_fase4/`) e são conferidas por `--check`.",
+   "para": "`gerar_atlas.py` e `gerar_relatorio_raciocinio.py` (pasta `resultados_alvo/pre_fase4/`) e são conferidas por `--check`; as tabelas da seção 4.2 saem de `analisar_confianca.py`.",
+   "motivo": "A frase lista três geradores, mas as tabelas `tb_conf_` da seção 4.2 vêm de `analisar_confianca.py` (texto da seção 4.2 e linha da sonda de confiança na seção 7).",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "O repositório entra na documentação formal como trabalho relacionado, com as ressalvas de que é um projeto da comunidade",
+   "para": "O repositório deve entrar na documentação formal como trabalho relacionado (o que entra no texto do projeto ABNT e quando está na ficha 25, em aberto), com as ressalvas de que é um projeto da comunidade",
+   "motivo": "A frase dá como resolvido o que a ficha 25 (Decisão: em aberto) ainda decide, e a opção (c) da ficha deixa o colibri só no Memorial.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "a probabilidade do rótulo como sinal de incerteza (a corrida 12 mede se ela separa acerto de erro)",
+   "para": "a probabilidade do rótulo como sinal de incerteza (a corrida 12 mediu: separa acerto de erro como triagem, AUROC 0,78, seção 4.2)",
+   "motivo": "A corrida 12 já rodou em 06/10/2026 e a seção 4.2 traz a resposta (AUROC 0,783, triagem e não barreira), mas a frase no presente ainda a trata como pergunta aberta.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "O ganho medido com a biblioteca do modelo vem das notas que ele acrescentou a verbetes que já existiam.",
+   "para": "O ganho medido com a biblioteca do modelo, na medida em que existe, só pode vir das notas que ele acrescentou a verbetes que já existiam.",
+   "motivo": "A frase trata como estabelecido o que a seção 4.2 deixa abaixo do efeito mínimo detectável e a ficha 18 registra como não isolado; a tabela sustenta só que, se há ganho, ele só pode vir das notas.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "A busca funciona como teto do diagnóstico, o que a análise da Fase 3 já indicava por outro caminho.",
+   "para": "A busca pesa no diagnóstico, o que a análise da Fase 3 já indicava por outro caminho, sem ser um teto (mesmo com a rota fora da classe do caso, o modelo acerta de 35,7% a 75,0%, tabela `tb_atlas_fatias`).",
+   "motivo": "\"Teto\" contradiz a tabela `tb_atlas_fatias`: com a rota fora da classe do caso o modelo ainda acerta de 35,7% a 75,0%, então a busca pesa no diagnóstico sem limitá-lo como um teto.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "É candidato a regra de \"peça revisão humana\" na Fase 4, a decidir junto com a probabilidade do rótulo (corrida 12).",
+   "para": "É candidato a regra de \"peça revisão humana\" na Fase 4, junto com a probabilidade do rótulo, que a corrida 12 já mediu (seção 4.2; candidatos na seção 5).",
+   "motivo": "A corrida 12 já rodou e a seção 4.2 traz a medida da probabilidade do rótulo; \"a decidir junto com (corrida 12)\" é texto de antes dela.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "Duas leituras já são seguras.",
+   "para": "Duas leituras se sustentam nas corridas remontadas (a segunda com ressalva: na corrida 12, seção 4.2, a AUROC desse sinal é 0,541, perto do acaso).",
+   "motivo": "\"Já são seguras\" é texto de 01/10; a segunda leitura se apoia em grupos de 4 a 9 casos sem verbete, e a medida maior da corrida 12 (seção 4.2, 216 diagnósticos) dá AUROC 0,541 ao mesmo sinal.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "Com menos texto no contexto (1132 contra 1315 tokens de mediana), o diagnóstico leva 61,1 s contra 70,5 s.",
+   "para": "Com menos texto no contexto (1132 contra 1315 tokens de mediana), o diagnóstico leva 61,1 s contra 70,5 s; o tempo não segue só o tamanho do prompt, porque a biblioteca original, com 1056 tokens, leva 69,2 s (tabela `tb_conf_acerto`).",
+   "motivo": "A frase liga o tempo menor ao contexto menor, mas a biblioteca original tem menos tokens (1056) e leva 69,2 s, contra 61,1 s da cópia curada (tabela `tb_conf_acerto`).",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "**Decidido** (cada item com a decisão que o fixa):",
+   "para": "**Decidido** (cada item com a decisão que o fixa; a parte do Brainiac no item 5 e o item 7 vêm só do mapa da onda 2, recomendação ainda sem decisão numerada):",
+   "motivo": "O cabeçalho promete uma decisão por item, mas o item 7 e a parte do Brainiac no item 5 citam só o mapa da onda 2, e decisoes.md (até a 78) não tem decisão sobre as figuras do painel nem sobre excluir o Brainiac (a 76 só manda pesquisar).",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "(especificação, seções 6.3 e 14)",
+   "para": "(especificação aprovada pela decisão 77, seções 6.3 e 14)",
+   "motivo": "O item 3 não cita a decisão que o fixa, ao contrário do que o cabeçalho da lista promete; é a decisão 77, que aprovou a especificação (seções 6.3 e 14).",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md",
+   "de": "que é um desenho: nada dela foi implementado nem medido, e os limiares do selo de probabilidade ficam para a Fase 4",
+   "para": "que é um desenho: além do protótipo sobre as corridas gravadas (seção 4.1), nada dela foi implementado nem medido, e os limiares do selo de probabilidade ficam para a Fase 4",
+   "motivo": "A seção 4.1 mostra um protótipo que já implementa e mede, sobre as corridas gravadas, as camadas, as conferências em código e o relatório que a especificação adota, então \"nada dela\" é forte demais.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "# Roadmap de 01/10/2026",
+   "para": "# Roadmap de 26/10/2026",
+   "motivo": "O título ainda traz a data de 01/10/2026, mas o arquivo foi revisado em 22/10, 23/10 e 26/10 (fechamento da Pré-Fase 4).",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "(fichas 1–14 do bloco de 23/09)",
+   "para": "(fichas 1 a 25, em blocos por data de abertura)",
+   "motivo": "pendencias.md tem hoje as fichas 1 a 25 (o bloco de 23/09 vai da 1 à 16), não só da 1 à 14.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "| Fase | O que é | Estado em 01/10/2026 |",
+   "para": "| Fase | O que é | Estado em 26/10/2026 |",
+   "motivo": "A tabela já traz estados de 26/10/2026 (Pré-Fase 4 concluída), mas o cabeçalho da coluna ainda diz 01/10/2026.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "duas corridas opcionais não rodadas e duas conferências do Eric em aberto (ficha 17); medição da cópia curada a decidir (ficha 18)",
+   "para": "as duas corridas opcionais (5 e 7) rodaram em 06/10 e as duas conferências do Eric foram feitas (ficha 17 fechada em 06/10); a cópia curada foi medida na corrida 12 (ficha 18 fechada em 06/10, decisão 71)",
+   "motivo": "As fichas 17 e 18 fecharam em 06/10/2026 (corridas 5 e 7 rodadas, 40 linhas da curadoria conferidas, cópia curada medida na corrida 12), mas a célula ainda as dá como em aberto e a medição como a decidir.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "falta a parte B da pesquisa, ampliada em 23/10 com o brainiac, a visualização da rede neural e a releitura do codebase-memory, e a arquitetura da linha de raciocínio aberta",
+   "para": "a parte B da pesquisa, ampliada em 23/10 com o brainiac, a visualização da rede neural e a releitura do codebase-memory, rodou em duas ondas e foi integrada (decisão 76), e a especificação da trilha de raciocínio aberta foi aprovada (decisão 77)",
+   "motivo": "A parte B foi integrada (decisão 76) e a especificação da trilha aprovada (decisão 77), então 'falta a parte B' contradiz o início da própria célula (Concluída em 26/10/2026).",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "Memorial em dia (decisões até 71, achados até 4.52",
+   "para": "Memorial em dia (decisões até 78, achados até 4.53",
+   "motivo": "decisoes.md vai até a decisão 78 e já cita o achado 4.53 (decisão 73, o último citado em decisoes.md e pendencias.md; conferir se há posterior), mas a linha ainda conta até a 71 e o 4.52.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "72 / cerca de 1h10 (estimado pela ponte de 30/09: 108 em 1h46)",
+   "para": "72 / 1h20 medidos (estimativa: cerca de 1h10, pela ponte de 30/09: 108 em 1h46)",
+   "motivo": "A corrida 14 rodou em 23/10 (1h20, como diz o Estado da mesma linha) e as outras corridas feitas trazem o tempo como 'medidos', mas a célula ficou com a estimativa.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "72 / cerca de 1h30 (corrida 7: 108 em 2h19; corrida 2, só o 7B: 108 em 2h07)",
+   "para": "72 / 1h32 medidos (estimativa: cerca de 1h30; corrida 7: 108 em 2h19; corrida 2, só o 7B: 108 em 2h07)",
+   "motivo": "A corrida 15 rodou em 23/10 (1h32, como diz o Estado da mesma linha) e as outras corridas feitas trazem o tempo como 'medidos', mas a célula ficou com a estimativa.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "o `qwen2.5-coder:7b` fica até as corridas 14 e 15 da ficha 21",
+   "para": "o `qwen2.5-coder:7b` ficou até as corridas 14 e 15 da ficha 21, rodadas em 23/10 (decisão 73)",
+   "motivo": "As corridas 14 e 15 rodaram em 23/10/2026 e a ficha 21 fechou pela decisão 73, então 'fica até as corridas' descreve uma espera que já acabou.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "teste real com o único modelo dele que cabe aqui (OLMoE)",
+   "para": "teste real com o único modelo dele que cabe aqui (OLMoE), previsto como corrida 13 e cancelado pela decisão 75",
+   "motivo": "A corrida 13 (OLMoE) foi cancelada pela decisão 75, mas a coluna 'Como se responde' ainda a lista como método sem dizer que não rodou.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "e a um MoE real lendo os nossos casos",
+   "para": "e a um MoE real lendo os nossos casos (previsto na corrida 13, cancelada pela decisão 75)",
+   "motivo": "O atlas do MoE real dependia da corrida 13, cancelada pela decisão 75, mas a coluna ainda o lista como método sem dizer que não foi feito.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "B: frente 3, seis tópicos), no mesmo método das rodadas anteriores",
+   "para": "B: frente 3, seis tópicos no plano de 01/10 e nove depois da ampliação de 23/10, decisão 76; 14 tópicos no total), no mesmo método das rodadas anteriores",
+   "motivo": "A parte B passou de seis para nove tópicos (decisão 76) e o levantamento §6.14 tem 14 tópicos, como diz o parágrafo de 23/10 logo abaixo.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "As medições na máquina são as corridas 11 a 13 da tabela do §2.",
+   "para": "As medições na máquina são as corridas 11 a 13 da tabela do §2 (a 11 e a 12 rodaram; a 13 foi cancelada, decisão 75).",
+   "motivo": "A corrida 13 foi cancelada pela decisão 75, então a frase não pode mais listá-la como medição prevista sem a ressalva.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "Faltam a parte B da pesquisa (na sessão seguinte, com o rigor da parte A), a corrida 13 e a especificação do que a Fase 4 emite.",
+   "para": "Faltavam então a parte B da pesquisa (na sessão seguinte, com o rigor da parte A), a corrida 13 e a especificação do que a Fase 4 emite; o parágrafo de 23/10 e o fechamento de 26/10, abaixo, dizem o que aconteceu com cada uma.",
+   "motivo": "O parágrafo de 01/10 (atualizado até 06/10) diz no presente que faltam três coisas que o parágrafo seguinte e o fechamento de 26/10 dão como integrada, cancelada (decisão 75) e aprovada (decisão 77).",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "`qwen2.5:7b` com a biblioteca L1 curada (a medir antes do uso, ficha 18)",
+   "para": "`qwen2.5:7b` com a biblioteca L1 curada (medida na corrida 12, ficha 18 fechada: rende como a L1 inteira, decisão 71)",
+   "motivo": "A ficha 18 fechou em 06/10/2026 com a cópia curada medida na corrida 12 (decisão 71) e o §4.5 já a dá como biblioteca de partida, mas o §4.1 ainda diz que ela será medida antes do uso.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "ficha 18 (medir a cópia curada antes de usá-la)",
+   "para": "ficha 18 fechada em 06/10 (cópia curada medida na corrida 12 e mantida como biblioteca de partida, decisão 71)",
+   "motivo": "Mesma razão do §4.1: a ficha 18 está fechada e a medida existe (decisão 71), então a lista do que já está decidido não pode apresentá-la como medição por fazer.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "com a ressalva da decisão 61 (a recuperação híbrida saiu; o BM25 com sinais fica; k = 5 a medir)",
+   "para": "com as ressalvas da decisão 61 (a recuperação híbrida saiu; o BM25 com sinais fica; k = 5 a medir) e da decisão 78 (a saída restrita por gramática, adotada na 55, ficou adiada)",
+   "motivo": "A decisão 55 adotou a saída restrita por gramática e a decisão 78 (ficha 24) a adiou, mas o §4.3 só ressalva a 61, o que contradiz o §4.1 e o §4.5.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "feita em 29/09: 23 das 40 edições mantidas; a conferência da planilha pelo Eric está na ficha 17",
+   "para": "feita em 29/09: 23 das 40 edições mantidas; o Eric conferiu a planilha em 06/10 e nenhuma linha mudou (ficha 17 fechada)",
+   "motivo": "A ficha 17 fechou em 06/10/2026 com o Eric tendo conferido as 40 linhas sem mudança, então a conferência não está mais pendente na ficha.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "antes da 4, ou primeira corrida da 4 | ficha 18; modo novo no executor da 3-B | 108 inferências, cerca de 2h15",
+   "para": "antes da 4 (feita em 06/10) | ficha 18, fechada em 06/10; modo novo no executor da 3-B | feita na corrida 12, junto com a sonda de confiança (216 inferências, 04h01): a cópia curada rende como a L1 inteira, decisão 71",
+   "motivo": "A cópia curada foi medida em 06/10/2026 na corrida 12 (decisão 71), mas a linha ainda a dá como a medir, com a estimativa de 108 inferências.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "Saída restrita por gramática com enum de causas (decisão 55) | 4 | medir custo no i5 | 1 sessão",
+   "para": "Saída restrita por gramática com enum de causas (decisão 55; adiada pela decisão 78, ficha 24) | 4, só se o formato inválido passar a custar casos | medir na trilha da Fase 4 e o custo no i5 | 1 sessão, se voltar",
+   "motivo": "A decisão 78 adiou a saída restrita por gramática, mas a linha ainda a lista como ponto da Fase 4 com esforço de 1 sessão, o que contradiz o §4.1 e o §4.5.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "corrida 13, para o atlas do MoE real | feito em 01/10 com os dados do projeto (`gerar_atlas.py`, aba Atlas); falta o do MoE real",
+   "para": "corrida 13 (cancelada pela decisão 75), que daria o atlas do MoE real | feito em 01/10 com os dados do projeto (`gerar_atlas.py`, aba Atlas); o do MoE real saiu com a corrida 13",
+   "motivo": "A corrida 13 foi cancelada pela decisão 75, então o atlas do MoE real não será feito e 'falta o do MoE real' deixou de ser pendência.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "Pré-Fase 4 (medir) e 4 (usar, se a medida sustentar) | corridas 11 e 12 | uma noite de máquina e a análise",
+   "para": "Pré-Fase 4 (medida em 06/10) e 4 (usar como triagem, não como barreira) | corridas 11 e 12 | feita em 06/10: uma noite de máquina (corrida 12, 04h01) e a análise, AUROC 0,78",
+   "motivo": "A corrida 12 mediu a probabilidade do rótulo em 06/10/2026 (AUROC 0,78) e o §4.5 a fixa como triagem, mas a linha ainda trata a medição como futura e o uso como condicional.",
+   "revisor": "roadmap"
+  }
+ ]
+}

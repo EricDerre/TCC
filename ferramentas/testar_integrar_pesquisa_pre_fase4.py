@@ -6,6 +6,10 @@
 # ! Motivo: a parte B da rodada entra depois da parte A, no mesmo arquivo. Sem estes testes a segunda integração
 # poderia mudar o número de uma subseção já citada no relatório da fase, repetir o bloco de referências (e errar o
 # total do arquivo) ou trocar "dezenas de milhares de tokens" de uma fonte pelo número do nosso prompt.
+# ! Alteração de IA - Revisar: (23/10/2026) os testes passam a cobrir os 14 tópicos (três acrescentados no fim da ordem),
+# as rejeitadas e os mapas em §6.14.15 e §6.14.16, o mapa da onda 2 da parte B e o aviso do cabeçalho que declara a mudança.
+# ! Motivo: o Eric acrescentou três tópicos à parte B em 23/10/2026; sem os testes a renumeração das duas subseções finais
+# passaria sem o aviso, e a segunda onda da parte B ficaria sem lugar no bloco dos mapas.
 """Uso: python ferramentas/testar_integrar_pesquisa_pre_fase4.py"""
 from __future__ import annotations
 
@@ -65,17 +69,28 @@ class TestesDoIntegrador(unittest.TestCase):
 
     def teste_numeracao_fixa_com_e_sem_a_parte_b(self):
         so_a = {"r5-atlas-e-especializacao": _topico("r5-atlas-e-especializacao", [REF_B])}
-        com_b = {**so_a, "r5-confianca-por-probabilidade": _topico("r5-confianca-por-probabilidade", [REF_C])}
+        com_b = {**so_a, "r5-confianca-por-probabilidade": _topico("r5-confianca-por-probabilidade", [REF_C]),
+                 "r5-brainiac-segundo-cerebro": _topico("r5-brainiac-segundo-cerebro", [REF_C])}
         t1 = ip.render(so_a, {"A": MAPA}, 0, MEDIDA)
-        t2 = ip.render(com_b, {"A": MAPA, "B": MAPA}, 0, MEDIDA)
+        t2 = ip.render(com_b, {"A": MAPA, "B": MAPA, "B2": MAPA}, 0, MEDIDA)
         for t in (t1, t2):
             self.assertIn("#### 6.14.5 Atlas de especialistas", t)
-            self.assertIn("#### 6.14.12 Afirmações rejeitadas", t)
-            self.assertIn("#### 6.14.13 Mapas", t)
+            self.assertIn("#### 6.14.15 Afirmações rejeitadas", t)
+            self.assertIn("#### 6.14.16 Mapas", t)
+            self.assertNotIn("#### 6.14.12 Afirmações", t)
+            self.assertNotIn("#### 6.14.13 Mapas", t)
+            # o cabeçalho declara os três tópicos acrescentados e a mudança de número das duas subseções finais
+            self.assertIn("**Tópicos acrescentados em 23/10/2026.** Os três últimos tópicos da parte B (§6.14.12 a §6.14.14:", t)
+            self.assertIn("as rejeitadas, de §6.14.12 para §6.14.15; os mapas, de §6.14.13 para §6.14.16", t)
+            self.assertEqual(t.count("**Parte B, onda "), 2)
         self.assertNotIn("#### 6.14.10 ", t1)
+        self.assertNotIn("#### 6.14.12 ", t1)
         self.assertIn("#### 6.14.10 A probabilidade do rótulo como sinal de incerteza", t2)
+        self.assertIn("#### 6.14.12 Brainiac como segundo cérebro local", t2)
         self.assertIn("Esta parte da rodada ainda não rodou.", t1)
+        self.assertEqual(t1.count("Esta parte da rodada ainda não rodou."), 2)
         self.assertNotIn("Esta parte da rodada ainda não rodou.", t2)
+        self.assertEqual(ip.render(com_b, {"A": MAPA, "B": MAPA}, 0, MEDIDA).count("Esta parte da rodada ainda não rodou."), 1)
 
     def teste_cabecalho_da_subsecao_no_formato_que_o_painel_le(self):
         dados = {"r5-pesos-em-disco": _topico("r5-pesos-em-disco", [REF_A])}
@@ -90,13 +105,15 @@ class TestesDoIntegrador(unittest.TestCase):
         t = ip.render({"r5-pesos-em-disco": _topico("r5-pesos-em-disco", [REF_A])}, {"A": MAPA}, 3, MEDIDA)
         self.assertIn("| §6.14.3 | A | `r5-pesos-em-disco` | 2 | 1 | 0 |", t)
         self.assertIn("| §6.14.9 | B | `r5-atribuicao-ao-contexto` | ainda não rodou | | |", t)
+        self.assertIn("| §6.14.14 | B | `r5-visualizacao-da-rede-neural` | ainda não rodou | | |", t)
+        self.assertIn("Catorze tópicos em duas partes e três Workflows", t)
         self.assertIn("**2 aprovadas, 1 rejeitada, 0 não verificadas**", t)
         self.assertIn('trocou a expressão por "cerca de 1.300 tokens" nas 3 ocorrências', t)
         self.assertIn("1.285,5 tokens", t)
         self.assertIn("a entrada é cerca de 21 vezes os 61 tokens da resposta mediana", t)
 
     def teste_texto_do_script_sem_travessao_nem_seta(self):
-        t = ip.render({k: _topico(k, [REF_A]) for k in ip.ORDEM_R5}, {"A": MAPA, "B": MAPA}, 0, MEDIDA)
+        t = ip.render({k: _topico(k, [REF_A]) for k in ip.ORDEM_R5}, {"A": MAPA, "B": MAPA, "B2": MAPA}, 0, MEDIDA)
         fora_dos_cabecalhos = [l for l in t.splitlines() if not tp._TOPICO.match(l)]
         self.assertEqual(len(t.splitlines()) - len(fora_dos_cabecalhos), len(ip.ORDEM_R5))
         for l in fora_dos_cabecalhos:
@@ -164,11 +181,12 @@ class TestesDoIntegrador(unittest.TestCase):
     def teste_cabecalho_declara_a_memoria_instalada_e_o_prefill_quando_a_medida_traz(self):
         dados = {"r5-pesos-em-disco": _topico("r5-pesos-em-disco", [REF_A])}
         sem = ip.render(dados, {"A": MAPA}, 0, MEDIDA, [])
-        self.assertIn("Quatro avisos sobre o texto abaixo", sem)
+        self.assertIn("Cinco avisos sobre o texto abaixo", sem)
+        self.assertIn("5. **Tópicos acrescentados em 23/10/2026.**", sem)
         self.assertNotIn("Memória da máquina", sem)
         self.assertNotIn("prefill", sem.split("### 6.14 ")[1].split("#### 6.14.1")[0])
         com = ip.render(dados, {"A": MAPA}, 0, MEDIDA_COMPLETA, [])
-        self.assertIn("Cinco avisos sobre o texto abaixo", com)
+        self.assertIn("Seis avisos sobre o texto abaixo", com)
         self.assertIn("5. **Memória da máquina.**", com)
         self.assertIn("16,0 GB instalados", com)
         self.assertIn("15,69 GB", com)
@@ -178,7 +196,7 @@ class TestesDoIntegrador(unittest.TestCase):
         correcoes = [{"onde": "r5-pesos-em-disco", "de": "Texto da síntese.", "para": "Texto corrigido.", "motivo": "motivo x"}]
         ip.aplicar_correcoes(dados, {"A": MAPA}, correcoes)
         tudo = ip.render(dados, {"A": MAPA}, 0, MEDIDA_COMPLETA, correcoes)
-        self.assertIn("Seis avisos sobre o texto abaixo", tudo)
+        self.assertIn("Sete avisos sobre o texto abaixo", tudo)
         self.assertIn("6. **Correções da revisão.**", tudo)
         self.assertIn("as correções do aviso 6", tudo)
         self.assertIn("foi corrigido (aviso 6)", tudo)
@@ -207,13 +225,17 @@ class TestesDoIntegrador(unittest.TestCase):
             for campo in ("para", "motivo"):
                 self.assertNotIn("—", c[campo], c[campo][:80])
                 self.assertNotIn("→", c[campo], c[campo][:80])
-        # os seis lugares corrigidos: cinco tópicos da parte A e o mapa
-        self.assertEqual({c["onde"] for c in ip.CORRECOES_DA_REVISAO}, {k for k in ip.ORDEM_R5 if ip.TITULOS_R5[k][0] == "A"} | {"mapa:A"})
+        # (23/10/2026) os lugares corrigidos: os cinco tópicos da parte A e o mapa A, sempre; os da parte B e os mapas B e B2 conforme as ondas revisadas
+        lugares = {c["onde"] for c in ip.CORRECOES_DA_REVISAO}
+        self.assertTrue({k for k in ip.ORDEM_R5 if ip.TITULOS_R5[k][0] == "A"} | {"mapa:A"} <= lugares, lugares)
+        self.assertTrue(lugares <= set(ip.ORDEM_R5) | {"mapa:A", "mapa:B", "mapa:B2"}, lugares)
 
     def teste_linha_do_indice_do_memorial_e_regravavel(self):
         so_a = {k: _topico(k, [REF_A]) for k in ip.ORDEM_R5 if ip.TITULOS_R5[k][0] == "A"}
         m1 = ip.memorial_com_linha(INDICE, so_a)
-        self.assertIn("5 de 11 tópicos integrados", m1)
+        self.assertIn("5 de 14 tópicos integrados", m1)
+        self.assertIn("os 9 tópicos da parte B (fidelidade do raciocínio", m1)
+        self.assertIn("§6.14.15 rejeitadas com o motivo; §6.14.16 mapas", m1)
         self.assertEqual(ip.memorial_com_linha(m1, so_a), m1)
         linhas = m1.splitlines()
         i = next(n for n, l in enumerate(linhas) if l.startswith("- [Levantamento — qualidade da documentação autogerida"))
@@ -221,7 +243,12 @@ class TestesDoIntegrador(unittest.TestCase):
         self.assertTrue(linhas[i + 2].startswith("- [Levantamento: Pré-Fase 4 (01/10/2026)]"))
         self.assertEqual(linhas[i + 3], "- [Outra linha](memorial/y.md)")
         m2 = ip.memorial_com_linha(m1, {k: _topico(k, [REF_A]) for k in ip.ORDEM_R5})
-        self.assertIn("11 de 11 tópicos integrados", m2)
+        self.assertIn("14 de 14 tópicos integrados", m2)
+        self.assertNotIn("entram quando ela rodar", m2)
+        # com parte da B integrada, a linha diz quantos dos nove já entraram
+        m3 = ip.memorial_com_linha(m2, {**so_a, "r5-uso-das-trilhas": _topico("r5-uso-das-trilhas", [REF_A])})
+        self.assertIn("6 de 14 tópicos integrados", m3)
+        self.assertIn("da parte B, 1 de 9 tópicos", m3)
         self.assertEqual(m2.count("- [Levantamento: Pré-Fase 4 (01/10/2026)]"), 1)
         self.assertEqual(m2.count("linha do índice para o levantamento da Pré-Fase 4"), 1)
         nova = next(l for l in m2.splitlines() if l.startswith("- [Levantamento: Pré-Fase 4"))
@@ -235,7 +262,10 @@ class TestesDoIntegrador(unittest.TestCase):
         self.assertGreater(trocas, 0)
         t = ip.render(dados, mapas, trocas, ip.medidas_do_projeto())
         corpo = t[t.index("#### 6.14.1 "):]  # o aviso do cabeçalho cita a expressão antiga entre aspas
-        self.assertIsNone(re.search(r"(?<!dezenas de )(?<!centenas de )milhares de tokens", corpo))
+        # (23/10/2026) a expressão some das subseções e do mapa da parte A; a parte B pode tê-la de forma legítima (custo de um modo de raciocínio escrito)
+        secoes_a = corpo[:corpo.index("#### 6.14.6 ")] if "#### 6.14.6 " in corpo else corpo[:corpo.index(f"#### 6.14.{ip.N_REJ} ")]
+        mapa_a = corpo[corpo.index("**Parte A"):corpo.index("**Parte B")]
+        self.assertIsNone(re.search(r"(?<!dezenas de )(?<!centenas de )milhares de tokens", secoes_a + mapa_a))
         # as correções declaradas não acrescentam nem tiram ocorrências da expressão medida (o cabeçalho conta as trocas);
         # a lista das correções no §6.14.12 repete cada trecho antigo e novo, e fica fora da conta
         lista = ip.bloco_rejeitadas(dados)
@@ -243,6 +273,31 @@ class TestesDoIntegrador(unittest.TestCase):
         self.assertEqual(corpo.count(ip.medidas_do_projeto()["texto"]) - lista.count(ip.medidas_do_projeto()["texto"]), trocas)
         for k in dados:
             self.assertTrue(dados[k].get("synthesis"), k)
+
+
+    def teste_a_troca_da_expressao_do_contexto_so_vale_para_a_parte_a(self):
+        # ! Alteração de IA - Revisar: (23/10/2026) a parte B recebeu o número medido no contexto; "milhares de tokens" nela fala de outra coisa.
+        # ! Motivo: na primeira integração da onda 1 a troca pegou três frases da parte B sobre o custo de um modo de raciocínio escrito.
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as pasta:
+            a, b = Path(pasta) / "a.json", Path(pasta) / "b.json"
+            a.write_text(json.dumps({"topicos": [_topico("r5-pesos-em-disco", [REF_A], texto="O prompt do agente tem alguns milhares de tokens.")],
+                                     "mapa": dict(MAPA, leitura_pt="Entrada de milhares de tokens.")}), encoding="utf-8")
+            b.write_text(json.dumps({"topicos": [_topico("r5-fidelidade-do-raciocinio", [REF_C], texto="Um modo de raciocínio escrito gasta milhares de tokens.")],
+                                     "mapa": dict(MAPA, leitura_pt="Cadeias de milhares de tokens.")}), encoding="utf-8")
+            guardadas = ip.CORRECOES_DA_REVISAO
+            ip.CORRECOES_DA_REVISAO = []  # as correções declaradas são da parte A real, não destes dados
+            try:
+                dados, mapas, trocas = ip.carregar([("A", a), ("B", b)], MEDIDA)
+            finally:
+                ip.CORRECOES_DA_REVISAO = guardadas
+        self.assertEqual(trocas, 2)
+        self.assertEqual(dados["r5-pesos-em-disco"]["synthesis"]["texto_memorial_pt"], "O prompt do agente tem cerca de 1.300 tokens.")
+        self.assertEqual(mapas["A"]["leitura_pt"], "Entrada de cerca de 1.300 tokens.")
+        self.assertEqual(dados["r5-fidelidade-do-raciocinio"]["synthesis"]["texto_memorial_pt"], "Um modo de raciocínio escrito gasta milhares de tokens.")
+        self.assertEqual(mapas["B"]["leitura_pt"], "Cadeias de milhares de tokens.")
+        self.assertIn("do mapa da parte A (a parte B recebeu o número medido no contexto e não é tocada)", ip.render(dados, mapas, trocas, MEDIDA, []))
 
 
 if __name__ == "__main__":
