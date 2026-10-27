@@ -15,6 +15,7 @@ import socket
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 from _env_common import (
     COBAIA_API,
@@ -32,6 +33,18 @@ FRONT_PORT = 8080
 API_PORT = 8000
 
 
+def comando_api(venv_dir: Path, so: str = OS_NAME) -> list[str]:
+    """! Alteração de IA - Revisar: (26/10/2026) a CobaiaAPI sobe por `<venv>\\Scripts\\python.exe -m uvicorn`,
+    não pelo lançador `uvicorn.exe` da venv.
+    ! Motivo: na máquina-alvo i5 a venv da CobaiaAPI tinha sido criada em outra pasta de usuário
+    (`C:\\Users\\EricDerre\\...`) e os lançadores `.exe` dela (uvicorn.exe, pip.exe) saíam com código 1 sem
+    mensagem, porque carregam dentro deles o caminho antigo do python.exe; start_services só via a porta
+    8000 nunca responder e não dizia por quê. O python.exe da venv lê o `pyvenv.cfg` e continua funcionando,
+    e `-m uvicorn` chega ao mesmo servidor com os mesmos argumentos."""
+    python_venv = venv_dir / ("Scripts/python.exe" if so == "Windows" else "bin/python")
+    return [str(python_venv), "-m", "uvicorn", "app.main:app", "--port", str(API_PORT)]
+
+
 def start_services() -> tuple[subprocess.Popen, subprocess.Popen]:
     """Garante PHP/MariaDB disponíveis e sobe CobaiaFront + CobaiaAPI. Encerra
     o processo (sys.exit) se algo obrigatório estiver faltando."""
@@ -46,9 +59,11 @@ def start_services() -> tuple[subprocess.Popen, subprocess.Popen]:
         sys.exit(1)
 
     venv_dir = COBAIA_API / ".venv"
-    uvicorn = venv_dir / ("Scripts/uvicorn.exe" if OS_NAME == "Windows" else "bin/uvicorn")
-    if not uvicorn.exists():
-        log(f"{uvicorn} não encontrado. Rode install.ps1/install.sh primeiro "
+    # ! Alteração de IA - Revisar: (26/10/2026) confere o python.exe da venv e sobe a API por comando_api().
+    # ! Motivo: ver comando_api(); conferir o uvicorn.exe deixava passar uma venv cujo lançador não roda.
+    comando = comando_api(venv_dir)
+    if not Path(comando[0]).exists():
+        log(f"{comando[0]} não encontrado. Rode install.ps1/install.sh primeiro "
             "(ou implemente a CobaiaAPI se ainda não existe).")
         sys.exit(1)
 
@@ -56,10 +71,7 @@ def start_services() -> tuple[subprocess.Popen, subprocess.Popen]:
         php, "-S", f"localhost:{FRONT_PORT}", "-t", str(COBAIA_FRONT),
         *php_extension_flags(php),
     ])
-    api_proc = subprocess.Popen(
-        [str(uvicorn), "app.main:app", "--port", str(API_PORT)],
-        cwd=str(COBAIA_API),
-    )
+    api_proc = subprocess.Popen(comando, cwd=str(COBAIA_API))
     return front_proc, api_proc
 
 

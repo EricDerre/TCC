@@ -1,0 +1,28 @@
+{
+ "cobaias": {
+  "cliente_mariadb": "C:\\Users\\Eric.Derre\\AppData\\Local\\MariaDB\\mariadb-11.8.9-winx64\\bin\\mariadb.exe",
+  "edge": "156.0.4314.42",
+  "mariadbd": "C:\\Users\\Eric.Derre\\AppData\\Local\\MariaDB\\mariadb-11.8.9-winx64\\bin\\mariadbd.exe",
+  "php": "C:\\Users\\Eric.Derre\\AppData\\Local\\Microsoft\\WinGet\\Packages\\PHP.PHP.8.2_Microsoft.Winget.Source_8wekyb3d8bbwe\\php.exe",
+  "playwright_chromium_baixado": true,
+  "uvicorn_cobaia_api": "C:\\Users\\Eric.Derre\\Documents\\TCC\\Programacao\\CobaiaAPI\\.venv\\Scripts\\uvicorn.exe"
+ },
+ "gravado_em": "2026-10-26T20:15:16",
+ "maquina": {
+  "nome": "TARGET_TSP030",
+  "nucleos_logicos": 12,
+  "processador": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+  "so": "Windows-11-10.0.26200-SP0"
+ },
+ "navegador": {
+  "canal": "chromium",
+  "executavel": "C:\\Users\\Eric.Derre\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe",
+  "modo": "headless"
+ },
+ "versoes": {
+  "navegador": "156.0.8078.4",
+  "ollama": "0.40.2",
+  "playwright": "1.64.1",
+  "python": "3.14.7"
+ }
+}

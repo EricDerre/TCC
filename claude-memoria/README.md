@@ -22,6 +22,9 @@ O que o Claude Code sabe deste projeto fica **fora do repositório**: na pasta d
 | `plano-aprovado-fase-3.md` | O plano da Fase 3 aprovado em 11/09/2026, com o anexo dos desvios registrados no livro-razão. |
 | `plano-aprovado-complementar-3b.md` | O plano complementar de 21/09/2026 (fechar a pesquisa, decidir o modelo, Fase 3-B e ferramental), concluído em 01/10/2026. |
 | `plano-aprovado-pre-fase-4.md` | O plano da Pré-Fase 4 aprovado em 01/10/2026 (colibri e modelos grandes pelo disco, atlas visual, raciocínio aberto). |
+<!-- ! Alteração de IA - Revisar: linha da tabela (26/10/2026) para o plano da Fase 4, aprovado no mesmo dia em que foi escrito; a linha anterior apontava `plano-fase-4.md` como proposta.
+     ! Motivo: o Eric aprovou o plano como está e respondeu as fichas 26 a 36 (decisões 79 e 80); o arquivo passou a `plano-aprovado-fase-4.md`, e quem importar a memória em outra máquina precisa achar o plano pelo nome que ele tem agora. -->
+| `plano-aprovado-fase-4.md` | O plano da Fase 4 (o agente na tela), escrito e aprovado em 26/10/2026 (decisão 79), com as respostas das fichas 26 a 36 no cabeçalho (a 29 pela opção c, decisão 80); livro-razão em `.superpowers/sdd/fase-4/` (fora do git). |
 | `contexto\` | **Passagem de bastão entre sessões/máquinas**: o que não cabe na memória — como o harness está montado, armadilhas já pagas, estado das fases, próximas fases e o jeito de trabalhar. Um arquivo por sessão encerrada. O Claude deve ler o mais recente na primeira sessão numa máquina nova. |
 
 ## Na máquina de destino (importar — **adiciona, não substitui**)

@@ -1,0 +1,334 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "CobaiaAPI",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/produtos": {
+   "get": {
+    "tags": [
+     "produtos"
+    ],
+    "summary": "Listar Produtos",
+    "operationId": "listar_produtos_api_produtos_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ProdutoOut"
+         },
+         "type": "array",
+         "title": "Response Listar Produtos Api Produtos Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/produtos/{produto_id}": {
+   "get": {
+    "tags": [
+     "produtos"
+    ],
+    "summary": "Obter Produto",
+    "operationId": "obter_produto_api_produtos__produto_id__get",
+    "parameters": [
+     {
+      "name": "produto_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Produto Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProdutoOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/pedidos": {
+   "get": {
+    "tags": [
+     "pedidos"
+    ],
+    "summary": "Listar Pedidos",
+    "description": "Espelha vw_tbpedidos do CobaiaFront, filtrando por login_usuario (=cpf\nno domínio do CobaiaFront) em vez do id_usuario, pra bater com como\ncliente/index.php identifica o cliente logado.",
+    "operationId": "listar_pedidos_api_pedidos_get",
+    "parameters": [
+     {
+      "name": "login",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Login"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "pedidos"
+    ],
+    "summary": "Criar Pedido",
+    "description": "Mesma operação que Programacao/CobaiaFront/cliente/registrar_reserva.php\nfaz via SQL direto — mesma tabela, mesmo status inicial.",
+    "operationId": "criar_pedido_api_pedidos_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PedidoCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/pedidos/{pedido_id}/cancelar": {
+   "post": {
+    "tags": [
+     "pedidos"
+    ],
+    "summary": "Cancelar Pedido",
+    "description": "Mesma operação que cliente/cliente_cancelar.php faz via SQL direto.",
+    "operationId": "cancelar_pedido_api_pedidos__pedido_id__cancelar_post",
+    "parameters": [
+     {
+      "name": "pedido_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Pedido Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "PedidoCreate": {
+    "properties": {
+     "id_clientes": {
+      "type": "integer",
+      "title": "Id Clientes"
+     },
+     "pessoas": {
+      "type": "integer",
+      "title": "Pessoas"
+     },
+     "data_pedido": {
+      "type": "string",
+      "format": "date",
+      "title": "Data Pedido"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id_clientes",
+     "pessoas",
+     "data_pedido"
+    ],
+    "title": "PedidoCreate"
+   },
+   "ProdutoOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "nome": {
+      "type": "string",
+      "title": "Nome"
+     },
+     "resumo": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resumo"
+     },
+     "tipo": {
+      "type": "string",
+      "title": "Tipo"
+     },
+     "preco": {
+      "type": "string",
+      "title": "Preco"
+     },
+     "imagem": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Imagem"
+     },
+     "destaque": {
+      "type": "boolean",
+      "title": "Destaque"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "nome",
+     "tipo",
+     "preco",
+     "destaque"
+    ],
+    "title": "ProdutoOut"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ },
+ "x-alteracao-de-ia": "! Alteração de IA - Revisar: cópia do openapi.json gerado pela CobaiaAPI em runtime (GET /openapi.json), gravada uma vez em fixtures_fase4/ pela Fase 4 (pacote P2) com as chaves na ordem em que a API as declara.",
+ "x-motivo": "! Motivo: o contrato esperado do caso ao vivo é lido deste arquivo (contrato_do_openapi) e precisa ser o mesmo em toda corrida; a API não versiona o openapi.json, só o gera ao subir. JSON não aceita comentário, e o OpenAPI permite chaves `x-`."
+}

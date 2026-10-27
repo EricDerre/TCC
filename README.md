@@ -263,6 +263,13 @@ TCC/
 Nada precisa ser pré-instalado manualmente além disso, o instalador cuida
 do PHP, do MariaDB e do Python/venv.
 
+<!-- ! Alteração de IA - Revisar: parágrafo novo (26/10/2026, Fase 4, pacote P0) sobre a máquina sem administrador: PHP pelo winget em escopo de usuário e MariaDB pelo zip oficial em `%LOCALAPPDATA%`, que `_env_common.py` passou a procurar.
+     ! Motivo: na máquina-alvo i5 (corporativa, sem administrador) as cobaias nunca tinham subido e o MSI do `MariaDB.Server` não foi tentado por exigir elevação; sem o parágrafo, quem clonar o repositório numa máquina assim rodaria o instalador e pararia no MariaDB. -->
+**Máquina sem administrador (conferido em 26/10/2026 na máquina-alvo i5):** o PHP continua vindo do `winget` em escopo de usuário (`PHP.PHP.8.2`, zip em `%LOCALAPPDATA%\Microsoft\WinGet\Packages`), e o MariaDB foi instalado pelo zip oficial em vez do MSI: extraído em `%LOCALAPPDATA%\MariaDB\mariadb-<versão>-winx64\`, com a pasta de dados criada por `bin\mariadb-install-db.exe --datadir=%LOCALAPPDATA%\MariaDB\data --port=3306` (root sem senha). `run.py` e `install.py` acham o cliente, o servidor e o `my.ini` nesse lugar (`_env_common.py`), e o servidor sobe como processo comum, sem serviço.
+<!-- ! Alteração de IA - Revisar: a frase final passou de "o passo é manual" para o que o install.py faz agora (26/10/2026, à noite).
+     ! Motivo: `install.ensure_mariadb_installed` ganhou o caminho portátil (`instalar_mariadb_portatil`: API de downloads, pergunta, SHA-256, extração e `mariadb-install-db.exe`); o README dizia que o passo era manual. -->
+Sem administrador, o `install.py` faz isso sozinho: pergunta antes de baixar, confere o SHA-256 que o site do MariaDB publica, extrai, cria a pasta de dados e segue para o schema e o seed. `COBAIA_MARIADB_PORTATIL=1` dispensa a pergunta e força o portátil mesmo com administrador; `=0` força o MSI do winget. A API da CobaiaAPI sobe por `python -m uvicorn` da venv dela (`run.py`), não pelo lançador `uvicorn.exe`, porque uma venv movida de pasta deixa os lançadores `.exe` sem funcionar e sem mensagem.
+
 ## Instalação
 
 No Windows, `Cobaia.exe` já faz instalação + run + abrir o navegador em um
@@ -492,13 +499,42 @@ Modos disponíveis (`mode`):
 | `normal` | Comportamento padrão (default) |
 | `error_500` | Responde HTTP 500 |
 | `latency` | Atraso artificial de 2s antes de responder |
-| `type_drift` | Muda o tipo do campo `target_field` (ex.: número vira string) |
+| `type_drift` | Muda o tipo do campo `target_field` (número ou booleano vira string; string vira o inteiro 1) |
 | `field_missing` | Remove `target_field` da resposta |
 | `field_renamed` | Renomeia `target_field` para `<campo>_v2` |
-| `malformed_json` | Responde um corpo JSON sintaticamente quebrado |
+| `malformed_json` | Responde um corpo JSON sintaticamente quebrado (truncado) |
+
+<!-- ! Alteração de IA - Revisar: tabela dos quatorze modos novos da ficha 28 (26/10/2026, Fase 4, pacote P2), um por
+     causa da taxonomia do AgenteCore, com o nome da própria causa e o campo alvo padrão quando o modo usa campo.
+     ! Motivo: os sete modos acima produzem só 6 das 23 causas e só 20 dos 72 casos de avaliação reproduzem na tela;
+     a Fase 4 avalia o agente na tela e precisa de um modo por causa; a implementação está em
+     `app/fault_injection.py` (apply_fault, apply_fault_lista, resposta_especial) com um teste por modo em
+     `tests/test_fault_injection.py`. -->
+Modos acrescentados na Fase 4 (cada um leva o nome da causa que produz; `target_field` é opcional nos que
+têm campo padrão):
+
+| Modo | Efeito | Campo padrão |
+|---|---|---|
+| `escala_ou_unidade_errada` | Multiplica o campo numérico por 100 (preço em centavos) | `preco` |
+| `formato_de_data_divergente` | Data ISO vira `DD/MM/AAAA` (só nos pedidos, que têm data) | `data_pedido` |
+| `chave_de_juncao_errada` | Cada item recebe o `tipo` do item seguinte; no detalhe, o tipo de outro produto | `tipo` |
+| `contagem_inconsistente` | A lista vem com um item a menos | |
+| `nulo_inesperado` | O campo vem `null` | `tipo` |
+| `valor_fora_do_dominio` | Preço negativo, `destaque` vira `"talvez"`, `status` vira `"Pendente"` | `preco` |
+| `codificacao_incorreta` | O texto do campo sai com os acentos estragados (UTF-8 lido como Latin-1) | `nome` |
+| `registro_duplicado` | O primeiro item da lista vem repetido | |
+| `estrutura_aninhada_divergente` | O campo vira um objeto `{"valor": ..., "moeda": "BRL"}` | `preco` |
+| `colecao_no_lugar_de_objeto` | `GET /api/produtos/{id}` responde uma lista com um item em vez do objeto | |
+| `corpo_vazio` | HTTP 200 com corpo vazio | |
+| `corpo_nao_e_json` | HTTP 200 com um HTML de erro no lugar do JSON | |
+| `limite_de_requisicoes` | HTTP 429 com `Retry-After: 60` | |
+| `recurso_inexistente` | HTTP 404 mesmo com id válido (e na lista) | |
 
 `probability` (0.0–1.0, default 1.0) controla a chance da falha disparar
-por requisição, útil pra simular intermitência.
+por requisição, útil pra simular intermitência. Nos modos de item ela é
+sorteada por item; nos de lista, uma vez por lista; os de resposta inteira
+(`malformed_json`, `corpo_vazio`, `corpo_nao_e_json`, `limite_de_requisicoes`,
+`recurso_inexistente`) ignoram a probabilidade.
 
 <!-- ! Alteração de IA - Revisar: documenta o modo de ativação por variável de ambiente.
      ! Motivo: só FAULT_MODE era lido do .env; sem FAULT_TARGET_FIELD os modos com
@@ -702,6 +738,18 @@ lê **cópias** dos snapshots oficiais e nunca altera `executar_fase3.py`,
 | `gerar_relatorio_raciocinio.py` | Pré-Fase 4: gera, só da trilha, o relatório para humanos de cada diagnóstico (passo a passo nas três camadas; a resposta certa aparece numa seção só), o índice de cada corrida e os indicadores somados; `--vitrine` grava as trilhas e os relatórios versionados em `resultados_alvo/pre_fase4/` (`--check`, `--colar`). |
 | `gerar_atlas.py` | Pré-Fase 4: o atlas do projeto com os dados já medidos, pelo método do `expert_atlas` do colibri: para cada versão da biblioteca, em quantos casos de cada classe de defeito cada verbete entrou no contexto, a especialização, a validação deixando um caso de fora, as citações e as trocas entre causas de cada corrida e a rota de cada caso; grava `resultados_alvo/pre_fase4/atlas.{json,md}` (`--check`, `--colar`). |
 | `testar_pre_fase4.py` | Testes sem LLM da Pré-Fase 4 (leitura do disco, gancho das probabilidades, conta de viabilidade, sonda de confiança com Ollama de mentira, trilha, relatório de raciocínio, atlas, pastas oficiais intocadas antes e depois). |
+<!-- ! Alteração de IA - Revisar: linhas dos módulos da Fase 4 (26/10/2026, pacotes P0 a P2 do plano aprovado) e, em 27/10/2026, a linha do banco de inéditos da ficha 27.
+     ! Motivo: a Fase 4 é a do agente na tela e entrou no harness em arquivos novos (navegador, interceptador, poda, caso ao vivo, cenários, orquestrador, avaliação), mais a trilha v2 e o relatório v2 em `trilha.py` e `gerar_relatorio_raciocinio.py`; quem abre o repositório precisa achar cada um pelo nome. O banco de inéditos da Fase 4 é um arquivo a mais no mesmo molde de `banco_casos_ineditos.py` e precisa constar aqui com o seu estado (ainda não conferido pelo Eric, ainda fora do executor). -->
+| `ambiente_fase4.py` | Fase 4 (P0): grava `resultados_alvo/fase4/ambiente.json` com as versões do Python, do Playwright, do navegador e do Ollama, o canal do navegador e o que a máquina tem das cobaias (`--check` compara com a máquina atual). |
+| `navegador.py` | Fase 4 (P0): abre o Chromium fixo do Playwright em headless (ou o Edge pelo canal `msedge`) e captura a árvore de acessibilidade como texto (snapshot ARIA) e como nós (papel, nome, profundidade, atributos); `--fixture URL` grava uma amostra em `fixtures_fase4/`. |
+| `interceptador.py` | Fase 4 (P2): escuta as chamadas da página à CobaiaAPI (método, caminho, status, tempo, hash do corpo), monta a aresta "chamada HTTP" entre a página PHP e a rota, captura a árvore com os atributos do DOM dos interativos, aplica a lista de hosts permitidos (CDNs servidas do HAR em `fixtures_fase4/cdn.har`; o mapa do rodapé é bloqueado sem incidente; qualquer outro host vira incidente); `--gravar-har` regrava o HAR. |
+| `poda.py` | Fase 4 (P2): a poda em código: reduz a árvore ao que o roteiro toca e ao entorno (interativos, textos, estados, marcos; os cartões além dos três primeiros e do alvo viram uma linha de contagem), na forma textual dos casos gravados, com contagens e regras; compara o corpo HTTP com o contrato textual e devolve só o diff (campo ausente, renomeado, tipo diferente, fora do domínio, nulo, forma, corpo vazio, não JSON ou truncado) e o trecho em disputa. |
+| `caso_ao_vivo.py` | Fase 4 (P2): o caso ao vivo no formato dos casos gravados (sem gabarito): contrato lido do `openapi.json` da CobaiaAPI (`fixtures_fase4/openapi.json`, com o ajuste do `preco`), sintoma por molde em código (a conferência que falhou, o diff do corpo e o diff da árvore contra a referência em modo normal; nunca o nome do modo nem da causa) e a montagem com as chaves que o prompt congelado conhece. |
+| `cenarios_fase4.py` | Fase 4 (P2): o catálogo de cenários das duas cobaias em dados (catálogo e detalhe em `produtos_api.php`; busca, login do administrador, lista de produtos e reserva do cliente no front legado), o executor que roda os passos no Playwright capturando a árvore e parando na primeira conferência que falha, a tabela causa para modo de injeção, o cronômetro do MTTR e o critério de Task Success da Fase 5. |
+| `banco_casos_ineditos_fase4.py` | Fase 4 (ficha 27): mais 36 casos inéditos para o conjunto de avaliação (2 por célula classe × nível, ids `lex-22` a `efe-27`, no mesmo formato de `banco_casos.py`), entregues em 27/10/2026 por um agente que leu só o código das cobaias e os 14 modos novos; cada caso anota a fonte (arquivo:linha) e o modo da API que o reproduz, ou "sem modo" quando é um cenário descrito; os corpos foram cruzados com a CobaiaAPI real no mesmo dia. Esperam a conferência do Eric antes da corrida 16 e ainda não entram em `executar_fase4.py`. |
+| `executar_fase4.py` (+ `rodar_fase4.ps1`) | Fase 4: orquestrador no molde do da 3-B; modo `reproducao` (corrida 17): liga o modo de cada caso de avaliação na CobaiaAPI, roda o roteiro, poda, monta o caso ao vivo, decide se a tela reproduz o caso (regra R1) e grava `reproducao.jsonl`, `fora.json`, `condicoes_fase4.json`, a trilha v2 da corrida e o log com a linha FIM; sobe as cobaias e restaura o banco antes. |
+| `avaliar_fase4.py` | Fase 4: `--reproducao` resume a corrida 17 por classe, nível e modo, com o custo por cenário e os tamanhos, em `resultados_alvo/fase4/reproducibilidade.{json,md}` (`--check`, `--colar`). |
+| `testar_fase4.py` | Testes sem LLM da Fase 4: ambiente, parser da árvore, fixtures, hashes das áreas só de leitura, trilha v2 (leitor v1 sem perda, cabeçalho, nó de decisão, limites, diff de referência), molde e relatório v2, restauração do banco, poda, diff do contrato, interceptador, HAR, caso ao vivo, cenários, seleção dos casos da corrida 17 e a avaliação; os testes de integração com as cobaias são pulados com aviso quando as portas 8080 e 8000 não respondem. `--gravar-hashes` grava a linha de base das áreas só de leitura. |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4; desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados, nunca entra numa corrida medida (decisão 48). | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
 Cada modo grava em `resultados_alvo/<saida>/` a mesma árvore da Fase 3 (snapshots
@@ -800,6 +848,8 @@ cd Programacao\CobaiaAPI
 
 <!-- ! Alteração de IA - Revisar: o bloco de comandos abaixo ganhou `testar_sincronizar_orientador.py` (22/10/2026).
      ! Motivo: é o teste do script que grava a cópia no repositório do orientador (decisão 72); a lista de testes que rodam sem modelo precisa cobrir tudo o que o Eric roda antes de entregar. -->
+<!-- ! Alteração de IA - Revisar: o bloco ganhou `testar_fase4.py` e `testar_instalador.py` (26/10/2026).
+     ! Motivo: são os testes da Fase 4 e dos scripts da raiz (instalador sem administrador e run.py), escritos antes do código; a lista precisa cobrir tudo o que roda sem modelo. -->
 Experimentos, painel e documentação, sem chamar modelo nenhum:
 
 ```powershell
@@ -807,7 +857,9 @@ cd Programacao\AgenteCore\experimentos
 python testar_fase3.py
 python testar_fase3b.py
 python testar_pre_fase4.py
+python testar_fase4.py
 cd ..\..\..
+python testar_instalador.py
 python ferramentas/testar_painel_textos.py
 python ferramentas/testar_painel_topicos.py
 python ferramentas/testar_integrar_pesquisa_pre_fase4.py

@@ -1,0 +1,1240 @@
+{
+ "aria": "- navigation:\n  - link \"Logotipo Fornalha\":\n    - /url: index.php\n    - img \"Logotipo Fornalha\"\n  - list:\n    - listitem:\n      - link \"\":\n        - /url: index.php\n    - listitem:\n      - link \"DESTAQUES\":\n        - /url: index.php#destaques\n    - listitem:\n      - link \"PRODUTOS\":\n        - /url: index.php#produtos\n    - listitem:\n      - link \"PRODUTOS (API)\":\n        - /url: produtos_api.php\n    - listitem:\n      - button \"TIPOS\"\n    - listitem:\n      - link \"CONTATO\":\n        - /url: index.php#contato\n    - search:\n      - searchbox \"search\"\n      - button \"\"\n    - listitem:\n      - link \"\":\n        - /url: admin/index.php\n- main:\n  - heading \"Produtos via API\" [level=2]:\n    - strong: Produtos via API\n  - img\n  - heading \"Picanha ao Alho\" [level=3]:\n    - strong: Picanha ao Alho\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Picanha grelhada com alho laminado na brasa\n  - paragraph: \"destaque: Sim\"\n  - paragraph:\n    - button \"R$ 89,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Picanha Simples\" [level=3]:\n    - strong: Picanha Simples\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Corte nobre grelhado no ponto\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 84,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Fraldinha\" [level=3]:\n    - strong: Fraldinha\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Corte grelhado na brasa, fatiado na hora\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 69,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Costelona\" [level=3]:\n    - strong: Costelona\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Costela assada lentamente por horas\n  - paragraph: \"destaque: Sim\"\n  - paragraph:\n    - button \"R$ 79,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Alcatra na Pedra\" [level=3]:\n    - strong: Alcatra na Pedra\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Alcatra grelhada servida na pedra quente\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 74,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Maminha\" [level=3]:\n    - strong: Maminha\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Corte macio grelhado na brasa\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 72,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Cupim\" [level=3]:\n    - strong: Cupim\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Cupim assado lentamente, bem macio\n  - paragraph: \"destaque: Sim\"\n  - paragraph:\n    - button \"R$ 76,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Água Mineral\" [level=3]:\n    - strong: Água Mineral\n  - paragraph:\n    - strong: Bebidas\n  - paragraph: Garrafa 500ml, com ou sem gás\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 6,00\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Balde de Cerveja\" [level=3]:\n    - strong: Balde de Cerveja\n  - paragraph:\n    - strong: Bebidas\n  - paragraph: 5 long necks geladas\n  - paragraph: \"destaque: Sim\"\n  - paragraph:\n    - button \"R$ 45,00\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Refrigerante\" [level=3]:\n    - strong: Refrigerante\n  - paragraph:\n    - strong: Bebidas\n  - paragraph: Lata 350ml, diversos sabores\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 7,00\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Pão de Alho\" [level=3]:\n    - strong: Pão de Alho\n  - paragraph:\n    - strong: Acompanhamentos\n  - paragraph: Pão de alho grelhado na brasa\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 16,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Queijo Coalho\" [level=3]:\n    - strong: Queijo Coalho\n  - paragraph:\n    - strong: Acompanhamentos\n  - paragraph: Queijo coalho grelhado com mel\n  - paragraph: \"destaque: Sim\"\n  - paragraph:\n    - button \"R$ 22,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Hambúrguer Artesanal\" [level=3]:\n    - strong: Hambúrguer Artesanal\n  - paragraph:\n    - strong: Acompanhamentos\n  - paragraph: Blend da casa, pão brioche\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 32,90\"\n    - button \"Saiba Mais...\"\n  - img\n  - heading \"Abacaxi na Brasa\" [level=3]:\n    - strong: Abacaxi na Brasa\n  - paragraph:\n    - strong: Sobremesas\n  - paragraph: Com canela e açúcar\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 14,90\"\n    - button \"Saiba Mais...\"\n  - img \"logo_pequeno\"\n  - strong: O melhor churrasco da Zona Leste\n  - text: \"Av. Itaquera, 8266 - Itaquera - São Paulo - SP - CEP: 08295000  (11) 2185-9200 ✉\"\n  - link \"contato@churrasdafornalha.com.br\":\n    - /url: mailto:contato@churrasdafornalha.com.br?subject=Contato do Site&cc=matheuscs006@gmail.com\n  - iframe\n  - heading \"Links\" [level=4]\n  - list:\n    - listitem:\n      - link:\n        - /url: index.php#home\n    - listitem:\n      - link:\n        - /url: index.php#destaques\n    - listitem:\n      - link:\n        - /url: index.php#produtos\n    - listitem:\n      - link:\n        - /url: index.php#contato\n    - listitem:\n      - link:\n        - /url: admin/index.php\n  - heading \"Contato\" [level=4]\n  - paragraph:\n    - text: \n    - textbox \"Digite seu nome\"\n  - paragraph:\n    - text: ✉\n    - textbox \"Digite seu email\"\n  - paragraph:\n    - text: ✏\n    - textbox \"Digite seu comentario\"\n  - button \"enviar\": Enviar\n  - heading \"Desenvolvido por Pedro Henrique™ 2024\" [level=6]",
+ "canal": "chromium",
+ "contagem": 193,
+ "esperado": "#produtos-api-grid .saiba-mais",
+ "executavel": "C:\\Users\\Eric.Derre\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe",
+ "gravado_em": "2026-10-26T20:20:34",
+ "navegador": "156.0.8078.4",
+ "nos": [
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "navigation",
+   "profundidade": 0
+  },
+  {
+   "atributos": {
+    "url": "index.php"
+   },
+   "nome": "Logotipo Fornalha",
+   "papel": "link",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Logotipo Fornalha",
+   "papel": "img",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "list",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#destaques"
+   },
+   "nome": "DESTAQUES",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#produtos"
+   },
+   "nome": "PRODUTOS",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "produtos_api.php"
+   },
+   "nome": "PRODUTOS (API)",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "TIPOS",
+   "papel": "button",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#contato"
+   },
+   "nome": "CONTATO",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "search",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "search",
+   "papel": "searchbox",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "button",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "admin/index.php"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "main",
+   "profundidade": 0
+  },
+  {
+   "atributos": {
+    "level": "2"
+   },
+   "nome": "Produtos via API",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Produtos via API",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Picanha ao Alho",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Picanha ao Alho",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Picanha grelhada com alho laminado na brasa",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Sim",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 89,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Picanha Simples",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Picanha Simples",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Corte nobre grelhado no ponto",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 84,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Fraldinha",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Fraldinha",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Corte grelhado na brasa, fatiado na hora",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 69,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Costelona",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Costelona",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Costela assada lentamente por horas",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Sim",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 79,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Alcatra na Pedra",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Alcatra na Pedra",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Alcatra grelhada servida na pedra quente",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 74,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Maminha",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Maminha",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Corte macio grelhado na brasa",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 72,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Cupim",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Cupim",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Cupim assado lentamente, bem macio",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Sim",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 76,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Água Mineral",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Água Mineral",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Bebidas",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Garrafa 500ml, com ou sem gás",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 6,00",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Balde de Cerveja",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Balde de Cerveja",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Bebidas",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "5 long necks geladas",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Sim",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 45,00",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Refrigerante",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Refrigerante",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Bebidas",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Lata 350ml, diversos sabores",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 7,00",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Pão de Alho",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Pão de Alho",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Acompanhamentos",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Pão de alho grelhado na brasa",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 16,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Queijo Coalho",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Queijo Coalho",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Acompanhamentos",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Queijo coalho grelhado com mel",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Sim",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 22,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Hambúrguer Artesanal",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Hambúrguer Artesanal",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Acompanhamentos",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Blend da casa, pão brioche",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 32,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Abacaxi na Brasa",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Abacaxi na Brasa",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Sobremesas",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Com canela e açúcar",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 14,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "logo_pequeno",
+   "papel": "img",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "O melhor churrasco da Zona Leste",
+   "papel": "strong",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Av. Itaquera, 8266 - Itaquera - São Paulo - SP - CEP: 08295000  (11) 2185-9200 ✉",
+   "papel": "text",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "url": "mailto:contato@churrasdafornalha.com.br?subject=Contato do Site&cc=matheuscs006@gmail.com"
+   },
+   "nome": "contato@churrasdafornalha.com.br",
+   "papel": "link",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "iframe",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "4"
+   },
+   "nome": "Links",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "list",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#home"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#destaques"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#produtos"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#contato"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "admin/index.php"
+   },
+   "nome": "",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {
+    "level": "4"
+   },
+   "nome": "Contato",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "text",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Digite seu nome",
+   "papel": "textbox",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "✉",
+   "papel": "text",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Digite seu email",
+   "papel": "textbox",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "✏",
+   "papel": "text",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Digite seu comentario",
+   "papel": "textbox",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "enviar",
+   "papel": "button",
+   "profundidade": 1
+  },
+  {
+   "atributos": {
+    "level": "6"
+   },
+   "nome": "Desenvolvido por Pedro Henrique™ 2024",
+   "papel": "heading",
+   "profundidade": 1
+  }
+ ],
+ "origem": "http://localhost:8080/produtos_api.php",
+ "playwright": "1.64.1",
+ "seletor": "body",
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: fixture gravada por navegador.gravar_fixture_arvore (Fase 4, pacote P0): árvore de acessibilidade da página em `origem`, como texto (`aria`) e como nós (`nos`: papel, nome, profundidade, atributos).",
+  "motivo": "! Motivo: os testes e a poda (pacote P2) precisam de uma árvore real gravada uma vez e congelada, com a versão do Playwright e do navegador que a produziu."
+ },
+ "titulo": "Churrascaria Fornalha - Produtos (API)",
+ "url": "http://localhost:8080/produtos_api.php"
+}

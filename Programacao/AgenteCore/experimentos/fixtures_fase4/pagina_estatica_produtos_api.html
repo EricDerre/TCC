@@ -1,0 +1,85 @@
+<!doctype html>
+<!-- ! Alteração de IA - Revisar: cópia estática (26/10/2026, Fase 4, pacote P0) de `Programacao/CobaiaFront/produtos_api.php`
+     no estado "grid carregado": o menu público com os links fixos, o título, o grid com dois cartões montados como o
+     `cartaoProduto` do JavaScript da página monta (os dois produtos de `banco_casos.ARVORE_CARTOES`), o rodapé com o
+     formulário de contato (nunca enviado) e o modal escondido. Sem o menu dinâmico de tipos (vem do banco), sem CSS e
+     sem o JavaScript que chama a CobaiaAPI.
+     ! Motivo: em 26/10/2026 PHP e MariaDB não existem nesta máquina (as cobaias nunca subiram aqui), e o P0 do plano
+     aprovado precisa conferir que a captura da árvore de acessibilidade funciona na versão instalada do Playwright. A
+     amostra tirada desta cópia fica marcada como provisória; a amostra real de `produtos_api.php` substitui a conferência
+     quando as cobaias subirem. -->
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Churrascaria Fornalha - Produtos (API)</title>
+</head>
+<body class="fundofixo">
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <a href="index.php" class="navbar-brand">Churrascaria Fornalha</a>
+            <ul class="nav navbar-nav">
+                <li><a href="index.php#destaques">DESTAQUES</a></li>
+                <li><a href="index.php#produtos">PRODUTOS</a></li>
+                <li><a href="produtos_api.php">PRODUTOS (API)</a></li>
+                <li><a href="index.php#contato">CONTATO</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="container">
+        <h2 class="breadcrumb alert-danger"><strong>Produtos via API</strong></h2>
+        <div id="produtos-api-status" class="text-center text-muted"></div>
+        <div id="produtos-api-grid" class="row">
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img src="images/picanha.jpg" class="img-responsive img-rounded" alt="">
+                    <div class="caption text-right">
+                        <h3 class="text-danger"><strong>Picanha ao Alho</strong></h3>
+                        <p class="text-warning"><strong>Carnes</strong></p>
+                        <p class="text-left">Picanha grelhada com alho.</p>
+                        <p class="text-left"><small>destaque: Sim</small></p>
+                        <p>
+                            <button class="btn btn-default disable" style="cursor: default">R$ 89,90</button>
+                            <button class="btn btn-info btn-xs saiba-mais" data-id="1">Saiba Mais...</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img src="images/fraldinha.jpg" class="img-responsive img-rounded" alt="">
+                    <div class="caption text-right">
+                        <h3 class="text-danger"><strong>Fraldinha</strong></h3>
+                        <p class="text-warning"><strong>Carnes</strong></p>
+                        <p class="text-left">Fraldinha na brasa.</p>
+                        <p class="text-left"><small>destaque: Não</small></p>
+                        <p>
+                            <button class="btn btn-default disable" style="cursor: default">R$ 69,90</button>
+                            <button class="btn btn-info btn-xs saiba-mais" data-id="3">Saiba Mais...</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="panel-footer" style="background: none;">
+            <form action="rodape_contato_envia.php" name="form_contato" id="form_contato" method="post">
+                <input type="text" name="nome_contato" placeholder="Digite seu nome">
+                <input type="text" name="email_contato" placeholder="Digite seu email">
+                <textarea name="comentario_contato" cols="30" rows="5" placeholder="Digite seu comentario"></textarea>
+                <button class="btn btn-danger btn-block" aria-label="enviar" role="button">Enviar</button>
+            </form>
+            <a name="contato"></a>
+        </footer>
+    </main>
+    <div class="modal fade" id="modalDetalhe" role="dialog" style="display: none">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    <h4 id="modalDetalheTitulo"></h4>
+                </div>
+                <div class="modal-body" id="modalDetalheCorpo"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

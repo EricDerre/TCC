@@ -53,6 +53,35 @@ V = 1
 CAMADA_DO_TIPO = {"corrida": "programa", "blob": "programa", "entrada": "programa", "candidatos": "programa", "prompt": "programa",
                   "inferencia": "programa", "declaracao": "modelo", "verificacao": "verificacao", "acao": "programa"}
 ORIGENS = ("ao_vivo", "registro", "recalculado", "humano")
+# ! Alteração de IA - Revisar: versão 2 do esquema (26/10/2026, Fase 4, pacote P1): os tipos novos da especificação da
+# trilha (seção 3.3), as decisões fechadas do nó (4.2), as camadas, os papéis de evidência, os selos, a taxonomia de
+# falhas (seção 8), os limites declarados (ficha 33) e a tabela de exportação para os nomes gen_ai (3.4, só nomes).
+# O adaptador das corridas gravadas continua escrevendo a versão 1 (`V`), byte a byte como antes.
+# ! Motivo: a Fase 4 emite a trilha ao vivo e precisa do cabeçalho de corrida, do nó de decisão com alternativas e
+# divergência obrigatória e dos limites de tamanho; sem a versão separada, a vitrine da Pré-Fase 4 (três trilhas
+# regeradas e conferidas byte a byte por `gerar_relatorio_raciocinio.py --vitrine --check`) mudaria de forma.
+V2 = 2
+TIPOS_V2 = {"interceptacao": "programa", "poda": "programa", "decisao": "programa", "intervencao": "verificacao",
+            "cura": "programa", "edicao_biblioteca": "programa", "incidente": "programa", "revisao": "humano"}
+CAMADA_DO_TIPO_V2 = {**CAMADA_DO_TIPO, **TIPOS_V2}
+CAMADAS = ("programa", "modelo", "verificacao")
+DECISOES = ("interceptacao", "poda", "recuperacao", "montagem_do_prompt", "diagnostico", "cura", "edicao_biblioteca", "reexecucao")
+DECISOES_DE_CURA = ("cura", "reexecucao")
+PAPEIS_DE_EVIDENCIA = ("sinal_em_codigo", "verbete_entregue", "verbete_citado", "corpo_http", "arvore_podada", "candidato_de_seletor",
+                       "trace", "contrato", "resposta")
+PAPEIS_COM_VERBETE = ("verbete_entregue", "verbete_citado")
+SELOS = ("alto", "medio", "baixo")
+TAXONOMIA_DE_FALHAS = {
+    "programa": ("interceptacao_incompleta", "poda_removeu_evidencia", "busca_sem_verbete_relevante", "prompt_diferente_do_fixo",
+                 "formato_das_quatro_linhas"),
+    "modelo": ("rotulo_errado", "rotulo_fora_da_taxonomia", "campo_errado", "citacao_fora_do_contexto", "citacao_inexistente",
+               "causa_sem_verbete_que_a_trate"),
+    "cura": ("candidato_invalido", "candidato_ambiguo", "reexecucao_falhou"),
+    "biblioteca": ("acrescimo_recusado_pela_validacao", "texto_de_origem_proibida"),
+    "harness": ("incidente",),
+}
+LIMITES_PADRAO = {"nos_por_diagnostico": 40, "nos_por_cura": 20, "blob_inline_max_chars": 64 * 1024, "retencao_meses": 6}
+NOMES_GEN_AI = {"diagnostico": "chat", "cura": "execute_tool", "poda": "plan", "recuperacao": "retrieval"}
 # Casos de texto corrigido em 28/09/2026 (achado 4.36): as corridas anteriores a essa data leram o texto antigo, que
 # sai do git (último commit antes da correção) para a errata.
 COMMIT_ANTES_DA_CORRECAO = "6a4381f8"
@@ -73,35 +102,132 @@ def pasta_derivados() -> Path:
 
 class Trilha:
     """Escritor da trilha: acumula os eventos na ordem, numera (`seq` no arquivo, `passo` dentro de cada trilha) e
-    grava cada texto grande uma vez só, como evento `blob` identificado pelo hash; os outros eventos citam o hash."""
+    grava cada texto grande uma vez só, como evento `blob` identificado pelo hash; os outros eventos citam o hash.
+    ! Alteração de IA - Revisar: (26/10/2026, P1) o escritor ganhou a versão 2: `Trilha(versao=V2, limites, pasta_blobs)`
+    exige o cabeçalho de corrida antes de tudo (`corrida()`), `ts` em todo evento `ao_vivo`, aceita os tipos novos,
+    valida cada nó de decisão (`decisao()`), conta os nós por diagnóstico e por cura contra os limites, manda para
+    arquivo ao lado o blob acima do limite inline e fecha a corrida com fim e tamanho (`fechar()`); `carregar()` lê um
+    arquivo da versão 1 ou 2 e continua numerando de onde ele parou. `Trilha()` sem argumentos é a versão 1 de sempre.
+    ! Motivo: especificação da trilha, seções 3.1 (cabeçalho, texto grande uma vez, limites declarados), 3.2 (`ao_vivo`
+    com hora) e 4.2 (nó de decisão); o adaptador das corridas gravadas precisa continuar byte a byte igual."""
 
-    def __init__(self) -> None:
+    def __init__(self, versao: int = V, limites: dict | None = None, pasta_blobs: Path | None = None) -> None:
+        if versao not in (V, V2):
+            raise ValueError(f"versão do esquema desconhecida: {versao!r}")
+        self.versao = versao
+        self.limites = dict(LIMITES_PADRAO, **(limites or {}))
+        self.pasta_blobs = Path(pasta_blobs) if pasta_blobs else None
+        self.ts_padrao: str | None = None
         self.eventos: list[dict] = []
         self._blobs: set[str] = set()
         self._passos: dict[str, int] = {}
+        self._nos: dict[str, dict[str, int]] = {}
+
+    @property
+    def camadas(self) -> dict[str, str]:
+        return CAMADA_DO_TIPO if self.versao == V else CAMADA_DO_TIPO_V2
 
     def _novo(self, tipo: str, trilha: str | None, dados: dict, origem: str, pai: int | None, ts: str | None) -> int:
-        if tipo not in CAMADA_DO_TIPO:
+        if tipo not in self.camadas:
             raise ValueError(f"tipo de evento desconhecido: {tipo!r}")
         if origem not in ORIGENS:
             raise ValueError(f"origem desconhecida: {origem!r}")
+        if self.versao == V2:
+            if tipo != "corrida" and not self.eventos:
+                raise ValueError("cabeçalho de corrida ausente: chame corrida() antes do primeiro evento")
+            if origem == "ao_vivo" and not ts:
+                raise ValueError(f"evento {tipo!r} com origem ao_vivo sem ts")
         passo = None
         if trilha is not None:
             passo = self._passos[trilha] = self._passos.get(trilha, 0) + 1
         seq = len(self.eventos) + 1
-        self.eventos.append({"v": V, "seq": seq, "trilha": trilha, "passo": passo, "pai": pai, "tipo": tipo,
-                             "camada": CAMADA_DO_TIPO[tipo], "origem": origem, "ts": ts, "dados": dados})
+        self.eventos.append({"v": self.versao, "seq": seq, "trilha": trilha, "passo": passo, "pai": pai, "tipo": tipo,
+                             "camada": self.camadas[tipo], "origem": origem, "ts": ts, "dados": dados})
+        if ts:
+            self.ts_padrao = ts
         return seq
 
     def blob(self, texto: str, papel: str) -> str:
         h = sha(texto)
-        if h not in self._blobs:
-            self._blobs.add(h)
+        if h in self._blobs:
+            return h
+        self._blobs.add(h)
+        if self.versao == V:
             self._novo("blob", None, {"sha": h, "papel": papel, "chars": len(texto), "texto": texto}, "registro", None, None)
+            return h
+        dados: dict = {"sha": h, "papel": papel, "chars": len(texto), "texto": texto}
+        if len(texto) > self.limites["blob_inline_max_chars"]:
+            if self.pasta_blobs is None:
+                raise ValueError(f"blob de {len(texto)} caracteres acima do limite inline ({self.limites['blob_inline_max_chars']}) "
+                                 "e a trilha não tem pasta de blobs")
+            self.pasta_blobs.mkdir(parents=True, exist_ok=True)
+            (self.pasta_blobs / f"{h}.txt").write_text(texto, encoding="utf-8", newline="\n")
+            dados = {**dados, "texto": None, "arquivo": f"{self.pasta_blobs.name}/{h}.txt"}
+        self._novo("blob", None, dados, "ao_vivo", None, self.ts_padrao)
         return h
 
     def evento(self, tipo: str, trilha: str, dados: dict, origem: str, pai: int | None = None, ts: str | None = None) -> int:
+        if self.versao == V2 and tipo == "corrida":
+            raise ValueError("cabeçalho de corrida: use corrida(dados, ts)")
         return self._novo(tipo, trilha, dados, origem, pai, ts)
+
+    def corrida(self, dados: dict, ts: str | None = None, origem: str = "ao_vivo") -> int:
+        """O cabeçalho da corrida, primeiro evento da trilha v2 (seção 3.1), validado por validar_cabecalho."""
+        if self.versao != V2:
+            raise ValueError("corrida() é da versão 2; na versão 1 o adaptador grava o evento corrida por evento()")
+        if self.eventos:
+            raise ValueError("cabeçalho de corrida: só pode ser o primeiro evento")
+        validar_cabecalho(dados)
+        return self._novo("corrida", dados.get("corrida"), dados, origem, None, ts)
+
+    def decisao(self, trilha: str, no: dict, pai: int | None = None, ts: str | None = None, origem: str = "ao_vivo") -> int:
+        """Um nó de decisão (seção 4.2), validado e contado contra os limites de nós por diagnóstico e por cura."""
+        if self.versao != V2:
+            raise ValueError("nó de decisão é da versão 2 da trilha")
+        validar_no(no)
+        chave = "nos_por_cura" if no["decisao"] in DECISOES_DE_CURA else "nos_por_diagnostico"
+        contagem = self._nos.setdefault(trilha, {"nos_por_diagnostico": 0, "nos_por_cura": 0})
+        if contagem[chave] + 1 > self.limites[chave]:
+            raise ValueError(f"limite {chave} ({self.limites[chave]}) excedido na trilha {trilha!r}")
+        contagem[chave] += 1
+        return self._novo("decisao", trilha, no, origem, pai, ts)
+
+    def fechar(self, fim: str) -> None:
+        """Grava no cabeçalho a hora de fim e o tamanho do arquivo (eventos, caracteres, blobs fora da linha); o tamanho
+        é recalculado até o próprio cabeçalho parar de mudar de comprimento."""
+        if self.versao != V2 or not self.eventos or self.eventos[0]["tipo"] != "corrida":
+            raise ValueError("fechar() precisa de uma trilha v2 com o cabeçalho de corrida")
+        cab = self.eventos[0]["dados"]
+        cab["fim"] = fim
+        externos = sum(1 for e in self.eventos if e["tipo"] == "blob" and e["dados"].get("arquivo"))
+        for _ in range(6):
+            chars = sum(len(l) + 1 for l in self.linhas())
+            tamanho = {"eventos": len(self.eventos), "chars": chars, "blobs_externos": externos}
+            if cab.get("tamanho") == tamanho:
+                return
+            cab["tamanho"] = tamanho
+        raise ValueError("o tamanho do cabeçalho não estabilizou")
+
+    @classmethod
+    def carregar(cls, caminho: Path) -> "Trilha":
+        """Lê um arquivo da versão 1 ou 2 e devolve o escritor pronto para continuar numerando de onde ele parou."""
+        eventos = ler(caminho)
+        t = cls(versao=versao_do_arquivo(eventos))
+        t.eventos = eventos
+        for e in eventos:
+            if e["tipo"] == "blob":
+                t._blobs.add(e["dados"]["sha"])
+            if e["trilha"] is not None and e.get("passo") is not None:
+                t._passos[e["trilha"]] = max(t._passos.get(e["trilha"], 0), e["passo"])
+            if e["tipo"] == "decisao":
+                chave = "nos_por_cura" if e["dados"].get("decisao") in DECISOES_DE_CURA else "nos_por_diagnostico"
+                t._nos.setdefault(e["trilha"], {"nos_por_diagnostico": 0, "nos_por_cura": 0})[chave] += 1
+            if e.get("ts"):
+                t.ts_padrao = e["ts"]
+        cab = eventos[0]["dados"] if eventos and eventos[0]["tipo"] == "corrida" else {}
+        if isinstance(cab.get("limites"), dict):
+            t.limites = dict(LIMITES_PADRAO, **cab["limites"])
+        return t
 
     def linhas(self) -> list[str]:
         return [json.dumps(e, ensure_ascii=False, sort_keys=True) for e in self.eventos]
@@ -115,6 +241,161 @@ def ler(caminho: Path) -> list[dict]:
     return [json.loads(l) for l in caminho.read_text(encoding="utf-8").splitlines() if l.strip()]
 
 
+def versao_do_arquivo(eventos: list[dict]) -> int:
+    """A maior versão de esquema entre os eventos (1 quando o campo falta): o leitor v2 lê os dois."""
+    return max((int(e.get("v", V)) for e in eventos), default=V)
+
+
+def validar_cabecalho(dados: dict) -> None:
+    for chave in ("modelo", "versao_ollama", "inicio"):
+        if not isinstance(dados.get(chave), str) or not dados[chave].strip():
+            raise ValueError(f"cabeçalho de corrida sem {chave}")
+    if dados.get("versao_do_esquema") != V2:
+        raise ValueError(f"cabeçalho de corrida com versao_do_esquema {dados.get('versao_do_esquema')!r}; esperado {V2}")
+    limites = dados.get("limites")
+    if not isinstance(limites, dict) or any(k not in limites for k in LIMITES_PADRAO):
+        raise ValueError(f"cabeçalho de corrida sem os limites declarados {sorted(LIMITES_PADRAO)}")
+
+
+def cabecalho_de_corrida(modelo: str, versao_ollama: str, inicio: str, quantizacao: str | None = None, top_logprobs: int = 20,
+                         leitura_da_probabilidade: str = "primeiro_token_do_rotulo", num_ctx: int | None = None,
+                         temperatura: float | None = None, semente: int | None = None, hash_biblioteca: str | None = None,
+                         hash_prompt_fixo: str | None = None, hash_indice: str | None = None, playwright: str | None = None,
+                         navegador: str | None = None, canal: str | None = None, limites: dict | None = None,
+                         etapas_registradas: tuple | list = (), etapas_nao_registradas: tuple | list = (),
+                         corrida: str | None = None, extras: dict | None = None) -> dict:
+    """! Alteração de IA - Revisar: o cabeçalho de corrida da versão 2 (especificação, seções 3.1 e 13): modelo,
+    quantização, versão do Ollama, `top_logprobs` e modo de leitura da probabilidade, `num_ctx`, temperatura, semente,
+    hash da biblioteca, do prompt fixo e do índice BM25, versão do Playwright e do navegador, início e fim, limites
+    declarados, etapas registradas e não registradas, retenção e a decisão de gravar prompt e resposta inteiros.
+    ! Motivo: é o que permite comparar corridas quando o Ollama se atualiza sozinho (decisões 44 e 47) ou quando a
+    build do navegador muda; `fim` e `tamanho` ficam vazios até fechar()."""
+    for nome, valor in (("modelo", modelo), ("versao_ollama", versao_ollama), ("inicio", inicio)):
+        if not isinstance(valor, str) or not valor.strip():
+            raise ValueError(f"cabeçalho de corrida sem {nome}")
+    lim = dict(LIMITES_PADRAO, **(limites or {}))
+    cab = {"versao_do_esquema": V2, "corrida": corrida, "modelo": modelo, "quantizacao": quantizacao, "versao_ollama": versao_ollama,
+           "top_logprobs": top_logprobs, "leitura_da_probabilidade": leitura_da_probabilidade,
+           "num_ctx": oll.NUM_CTX if num_ctx is None else num_ctx, "temperatura": oll.TEMPERATURA if temperatura is None else temperatura,
+           "semente": semente, "hash_biblioteca": hash_biblioteca, "hash_prompt_fixo": hash_prompt_fixo, "hash_indice": hash_indice,
+           "playwright": playwright, "navegador": navegador, "canal": canal, "inicio": inicio, "fim": None, "tamanho": None,
+           "limites": lim, "etapas_registradas": list(etapas_registradas), "etapas_nao_registradas": list(etapas_nao_registradas),
+           "grava_prompt_e_resposta_completos": True, "retencao_meses": lim["retencao_meses"], **(extras or {})}
+    validar_cabecalho(cab)
+    return cab
+
+
+def origem_da_falha(tipo: str | None) -> str | None:
+    """A origem (programa, modelo, cura, biblioteca, harness) de um tipo da taxonomia de falhas, ou None se não existir."""
+    for origem, tipos in TAXONOMIA_DE_FALHAS.items():
+        if tipo in tipos:
+            return origem
+    return None
+
+
+def validar_no(no: dict) -> None:
+    """As regras dos campos do nó de decisão (especificação, seção 4.2); a divergência é obrigatória."""
+    if no.get("decisao") not in DECISOES:
+        raise ValueError(f"decisao {no.get('decisao')!r} fora de {DECISOES}")
+    alternativas = no.get("alternativas") or []
+    for a in alternativas:
+        if not isinstance(a, dict) or "opcao" not in a:
+            raise ValueError("alternativa sem o campo 'opcao'")
+    opcoes = [a["opcao"] for a in alternativas]
+    if alternativas and no.get("escolha") not in opcoes:
+        raise ValueError(f"escolha {no.get('escolha')!r} fora das alternativas {opcoes}")
+    for e in no.get("evidencia") or []:
+        if not isinstance(e, dict) or not isinstance(e.get("seq"), int) or not e.get("papel"):
+            raise ValueError("evidencia precisa apontar um evento: seq (inteiro) e papel")
+        if "texto" in e or "valor" in e:
+            raise ValueError("evidencia aponta eventos, nunca copia texto")
+    d = no.get("divergencia")
+    if not isinstance(d, dict) or any(k not in d for k in ("ha", "entre", "detalhe")):
+        raise ValueError("nó sem divergencia preenchida: precisa de {ha, entre, detalhe}")
+    if not isinstance(d["ha"], bool) or not isinstance(d["entre"], list):
+        raise ValueError("divergencia: 'ha' é True ou False e 'entre' é a lista de camadas")
+    for camada in d["entre"]:
+        if camada not in CAMADAS:
+            raise ValueError(f"divergencia.entre com camada desconhecida {camada!r}; esperado {CAMADAS}")
+    c = no.get("confianca")
+    if c is not None:
+        if not isinstance(c, dict):
+            raise ValueError("confianca precisa ser um dicionário com a probabilidade do rótulo e o selo")
+        if c.get("selo") is not None and c["selo"] not in SELOS:
+            raise ValueError(f"selo {c['selo']!r} fora de {SELOS}")
+    falha = no.get("falha")
+    if falha is not None and origem_da_falha(falha) is None:
+        raise ValueError(f"falha {falha!r} fora da taxonomia de falhas")
+    prov = no.get("prov") or {}
+    for chave in ("used", "wasDerivedFrom"):
+        if not isinstance(prov.get(chave, []), list):
+            raise ValueError(f"prov.{chave} precisa ser uma lista")
+
+
+def no_de_decisao(decisao: str, escolha, alternativas=(), evidencia=(), resultado: str | None = None, divergencia: dict | None = None,
+                  confianca: dict | None = None, prov: dict | None = None, falha: str | None = None, contraste: str | None = None,
+                  justificativa: str | None = None, extras: dict | None = None) -> dict:
+    """! Alteração de IA - Revisar: monta e valida um nó de decisão (especificação, seção 4.2): decisão fechada,
+    alternativas com escore, escolha entre elas, evidência que aponta eventos, resultado, contraste e justificativa
+    (preenchidos pelo molde do relatório), divergência obrigatória, confiança (probabilidade do rótulo e selo), falha da
+    taxonomia e as arestas PROV (`used`, `wasDerivedFrom`, `wasGeneratedBy`).
+    ! Motivo: o nó é o que leva o desenvolvedor ao ponto do erro; sem a validação, um nó sem divergência ou com texto
+    copiado na evidência entraria na trilha e o relatório não teria como marcar o conflito."""
+    no = {"decisao": decisao, "alternativas": [dict(a) for a in alternativas], "escolha": escolha,
+          "evidencia": [dict(e) for e in evidencia], "resultado": resultado, "contraste": contraste, "divergencia": divergencia,
+          "confianca": confianca, "justificativa": justificativa, "falha": falha,
+          "prov": {"used": [], "wasDerivedFrom": [], "wasGeneratedBy": None, **(prov or {})}, **(extras or {})}
+    validar_no(no)
+    return no
+
+
+def exportar_nome_gen_ai(decisao: str) -> str | None:
+    """O nome da operação gen_ai equivalente (só o nome; o esquema não muda), ou None quando não há par."""
+    return NOMES_GEN_AI.get(decisao)
+
+
+def _nos_por_trilha(eventos: list[dict]) -> dict[str, list[dict]]:
+    saida: dict[str, list[dict]] = {}
+    for e in eventos:
+        if e["tipo"] == "decisao" and e["trilha"] is not None:
+            saida.setdefault(e["trilha"], []).append({"decisao": e["dados"].get("decisao"), "escolha": e["dados"].get("escolha")})
+    return saida
+
+
+def diff_contra_referencia(nova: list[dict], referencia: list[dict]) -> dict:
+    """! Alteração de IA - Revisar: diff determinístico entre duas trilhas (especificação, seção 9): para cada trilha
+    presente nas duas, compara a sequência de nós de decisão (decisão e escolha) com casamento exato e marca o primeiro
+    nó divergente (posição a partir de 1; `obtido` None quando a nova acabou antes). Lista também as trilhas que só
+    existem num dos lados.
+    ! Motivo: regressão por trilha de referência sem custo de modelo; regras determinísticas no lugar de um juiz por
+    LLM (mapa linha 21: abaixo de 70% de precisão)."""
+    a, b = _nos_por_trilha(nova), _nos_por_trilha(referencia)
+    divergencias = []
+    for tid, ref in b.items():
+        if tid not in a:
+            continue
+        obt = a[tid]
+        for i in range(max(len(ref), len(obt))):
+            esperado = ref[i] if i < len(ref) else None
+            obtido = obt[i] if i < len(obt) else None
+            if esperado != obtido:
+                divergencias.append({"trilha": tid, "posicao": i + 1, "esperado": esperado, "obtido": obtido})
+                break
+    return {"trilhas_comparadas": len(set(a) & set(b)), "divergencias": divergencias,
+            "so_na_nova": sorted(set(a) - set(b)), "so_na_referencia": sorted(set(b) - set(a))}
+
+
+def regressoes(diff: dict, anterior: dict | None = None, limiar_ruido: int = 3) -> dict:
+    """Uma divergência só vira regressão quando se repete em duas corridas (a mesma trilha e a mesma posição em
+    `anterior`) ou quando o número de trilhas divergentes passa do limiar de ruído (0 a 3 casos em 36 entre corridas
+    iguais, relatório da Fase 3-B)."""
+    divergentes = len({d["trilha"] for d in diff["divergencias"]})
+    dentro = divergentes <= limiar_ruido
+    repetidas = {(d["trilha"], d["posicao"]) for d in (anterior or {}).get("divergencias", [])}
+    regs = [d for d in diff["divergencias"] if not dentro or (d["trilha"], d["posicao"]) in repetidas]
+    return {"divergentes": divergentes, "limiar_ruido": limiar_ruido, "dentro_do_ruido": dentro, "regressoes": regs}
+
+
 def por_trilha(eventos: list[dict]) -> dict[str, list[dict]]:
     """Os eventos agrupados pela trilha, na ordem do arquivo (os blobs, que não são de trilha nenhuma, ficam de fora)."""
     saida: dict[str, list[dict]] = {}
@@ -124,8 +405,19 @@ def por_trilha(eventos: list[dict]) -> dict[str, list[dict]]:
     return saida
 
 
-def blobs_de(eventos: list[dict]) -> dict[str, str]:
-    return {e["dados"]["sha"]: e["dados"]["texto"] for e in eventos if e["tipo"] == "blob"}
+def blobs_de(eventos: list[dict], pasta: Path | None = None) -> dict[str, str | None]:
+    """{sha: texto}; um blob gravado fora da linha (v2, acima do limite inline) vem None, ou lido do arquivo ao lado
+    quando `pasta` é dada."""
+    saida: dict[str, str | None] = {}
+    for e in eventos:
+        if e["tipo"] != "blob":
+            continue
+        texto = e["dados"].get("texto")
+        if texto is None and pasta is not None and e["dados"].get("arquivo"):
+            arquivo = Path(pasta) / Path(e["dados"]["arquivo"]).name
+            texto = arquivo.read_text(encoding="utf-8") if arquivo.exists() else None
+        saida[e["dados"]["sha"]] = texto
+    return saida
 
 
 # ------------------------------------------------------------------ o que o modelo declarou
@@ -263,10 +555,14 @@ def _texto_do_caso(caso: dict) -> str:
     return avaliar._normalizar(" ".join(str(e.get(k, "")) for k in ("contrato", "corpo", "requisicao", "arvore", "seletor_quebrado")))
 
 
-def verificar(registro: dict, caso: dict, verbetes: list[dict], decl: dict, vereditos: dict | None = None) -> list[dict]:
+def verificar(registro: dict, caso: dict, verbetes: list[dict], decl: dict, vereditos: dict | None = None,
+              com_gabarito: bool = True) -> list[dict]:
     """As conferências que o código faz sobre o que o modelo declarou, em ordem fixa. As que não dependem do gabarito
     vêm primeiro (são as que o agente poderá fazer sozinho na Fase 4); as três que dependem dele vêm por último e
-    levam `usa_gabarito`. O que não dá para conferir por código é dito (`nao_verificavel`), não omitido."""
+    levam `usa_gabarito`. O que não dá para conferir por código é dito (`nao_verificavel`), não omitido.
+    ! Alteração de IA - Revisar: (26/10/2026, P1) `com_gabarito=False`, ou registro sem gabarito, pula as três últimas.
+    ! Motivo: na Fase 4 o agente diagnostica ao vivo, sem gabarito; as oito conferências sem gabarito continuam as
+    mesmas, byte a byte, para o adaptador das corridas gravadas."""
     lido, campos = decl["lido"], decl["campos"]
     por_id = {v["id"]: v for v in verbetes}
     no_contexto = list(registro.get("verbetes_ids") or [])
@@ -309,6 +605,8 @@ def verificar(registro: dict, caso: dict, verbetes: list[dict], decl: dict, vere
     saida.append(_v("notas_nos_verbetes_citados", citadas or None, "informativo" if com_notas else "nao_se_aplica",
                     {"verbetes": com_notas, "limite": "A linha FONTE cita o verbete, não a nota: não dá para saber qual nota o modelo usou."}))
     saida.append(_v("impacto", lido["impacto"], "nao_verificavel", "a frase de impacto não tem contraparte no caso para conferir por código"))
+    if not com_gabarito or registro.get("gabarito") is None:
+        return saida
     av = avaliar.avaliar_registro(registro, set())
     saida.append(_v("causa_correta", causa, "confere" if av["causa_correta"] else "nao_confere",
                     {"gabarito": registro["gabarito"]["causa_raiz"]}, usa_gabarito=True))
@@ -316,6 +614,40 @@ def verificar(registro: dict, caso: dict, verbetes: list[dict], decl: dict, vere
                     {"gabarito": registro["gabarito"].get("campo_afetado")}, usa_gabarito=True))
     saida.append(_v("verbete_de_ouro_no_contexto", registro.get("verbete_ouro"), "confere" if av["ouro_no_contexto"] else "nao_confere",
                     {"contexto": no_contexto}, usa_gabarito=True))
+    return saida
+
+
+_FONTE_SO_IDS = re.compile(r"^\s*(\[[a-z0-9_\-]+\]\s*(,|;|\se\s)?\s*)+$")
+
+
+def conferencias_fase4(decl: dict, textos_por_id: dict[str, str]) -> list[dict]:
+    """! Alteração de IA - Revisar: as duas conferências sem gabarito que a Fase 4 acrescenta (especificação, seção 5):
+    `fonte_formato_valido` (a linha FONTE só tem identificadores no formato do projeto, `[id]` separados por vírgula,
+    ponto e vírgula ou "e", sem texto livre) e `fonte_contem_termo_da_causa` (o texto do verbete citado contém o termo
+    da causa respondida). `textos_por_id` é {id do verbete: texto renderizado}; verbete desconhecido não se aplica.
+    ! Motivo: em modelos de 7B testados na literatura, 54,5% a 62,4% das frases ficaram sem citação e houve citação
+    de documento inexistente ou em formato errado (mapa, linhas 17 e 18); as duas regras são baratas e rodam em
+    código. Ficam fora de `verificar` para o adaptador das corridas gravadas continuar byte a byte igual."""
+    campo = decl["campos"].get("fonte")
+    citadas = [f["valor"] for f in decl["fontes"]]
+    causa = decl["lido"]["causa_raiz"]
+    saida = []
+    if campo is None or not citadas:
+        saida.append(_v("fonte_formato_valido", None if campo is None else campo["valor"], "nao_se_aplica", "nenhum verbete citado na linha FONTE"))
+    else:
+        valido = bool(_FONTE_SO_IDS.match(campo["valor"]))
+        saida.append(_v("fonte_formato_valido", campo["valor"], "confere" if valido else "nao_confere",
+                        {"ids": citadas, "formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre"}))
+    if causa is None or not citadas:
+        saida.append(_v("fonte_contem_termo_da_causa", None, "nao_se_aplica", "sem causa ou sem verbete citado"))
+        return saida
+    termo = avaliar._normalizar(causa)
+    for i in citadas:
+        texto = textos_por_id.get(i)
+        if texto is None:
+            saida.append(_v("fonte_contem_termo_da_causa", i, "nao_se_aplica", "verbete não encontrado na biblioteca"))
+        else:
+            saida.append(_v("fonte_contem_termo_da_causa", i, "confere" if termo in avaliar._normalizar(texto) else "nao_confere", {"termo": termo}))
     return saida
 
 

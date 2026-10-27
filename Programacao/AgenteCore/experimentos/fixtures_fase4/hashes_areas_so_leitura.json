@@ -1,0 +1,22 @@
+{
+ "areas": {
+  "base_conhecimento": "02d833739916e060",
+  "biblioteca_producao": "d3f43d461976ebdf",
+  "fase3": "3a9a776b4b513f26",
+  "fase3b_a5": "ff78b153c55f739c",
+  "fase3b_correcao": "62550f5139c8f917",
+  "fase3b_cruzada_qwen": "79016c998b06bd51",
+  "fase3b_ineditos": "4fbb3620e5d99124",
+  "fase3b_ineditos_coder7b": "b54fa26122d5c968",
+  "fase3b_ineditos_repeticao": "0217d3eccaface15",
+  "fase3b_ponte": "fa812f48a27a6bd7",
+  "fase3b_ponte_0344": "6e6cb9bb18b98833",
+  "fase3b_ponte_0402": "527bfd2e945e3613",
+  "pre_fase4_confianca": "ebd5a7b29a5a0eb8"
+ },
+ "gravado_em": "2026-10-26T20:20:24",
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: gravado por `testar_fase4.py --gravar-hashes` (Fase 4, pacote P0): hash de conteúdo de cada área só de leitura, para o teste comparar a cada rodada.",
+  "motivo": "! Motivo: o plano aprovado exige o hash antes e depois de cada pacote; o hash é de conteúdo com CRLF lido como LF, para valer depois de um clone em outra máquina."
+ }
+}

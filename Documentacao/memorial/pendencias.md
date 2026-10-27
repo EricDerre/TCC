@@ -350,6 +350,156 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a): o projeto v4-beta já foi entregue com os itens 1 a 9, e o texto final é quando o referencial se consolida; o Memorial já guarda tudo com as fontes, então nada se perde esperando.
 - **Decisão:** em aberto
 
+## Abertas em 26/10/2026 (plano da Fase 4)
+
+<!-- ! Alteração de IA - Revisar: bloco novo com as fichas 26 a 36, abertas ao escrever o plano da Fase 4 (`claude-memoria/plano-aprovado-fase-4.md`, seção 4), uma por decisão que só o Eric pode tomar antes de o código do agente começar.
+     ! Motivo: o plano assume a recomendação de cada ficha até a resposta; sem as fichas, as escolhas (sinais de revisão, conjunto de avaliação, modos de injeção, quebra de localizador, k, limiares, verbetes novos, tamanho da trilha, prompt, cobertura da cura, cenários da Fase 5) ficariam só no plano, que o Eric não lê pelo painel. Os números citados vêm dos blocos indicados (`confianca.md`, `experimento_recuperador.md`, relatório da Pré-Fase 4) e de uma contagem por script sobre os bancos de casos em 26/10/2026. -->
+
+<!-- ! Alteração de IA - Revisar: fichas 26 a 36 fechadas em 26/10/2026 com as respostas que o Eric deu uma a uma no quadro da sessão do Claude, no mesmo dia em que aprovou o plano como está: dez pela recomendação (decisão 79) e a 29 pela opção (c), as duas formas de quebra de localizador (decisão 80). Só o Estado e a Decisão de cada ficha mudaram; o caminho do plano no comentário do bloco passou a `claude-memoria/plano-aprovado-fase-4.md`.
+     ! Motivo: o Eric pediu as perguntas no quadro em vez do painel; sem a Decisão preenchida, o painel continuaria mostrando as 11 fichas abertas e o plano aprovado apontaria para decisões ainda não registradas. -->
+### 26. Sinais de revisão humana: qual manda e o que os outros dois fazem
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A corrida 12 (06/10) mediu três sinais que o agente calcula sem gabarito para dizer "este diagnóstico merece um humano": a probabilidade que o modelo dá ao rótulo (lida nos tokens da resposta; separa acerto de erro com AUROC 0,783 nos 216 diagnósticos, bloco `tb_conf_resumo` de `resultados_alvo/pre_fase4/confianca.md`), "a causa respondida é tratada por um verbete do contexto" (AUROC 0,541) e "a causa respondida é de uma classe que a rota de busca aponta" (0,626). AUROC é a chance de um erro receber nota pior que um acerto; 0,5 é o mesmo que sortear. Nenhum dos três é barreira: metade dos erros sai confiante. O plano da Fase 4 (seção 4) precisa saber como os três entram na trilha, no relatório e no gatilho de intervenção.
+- **Por que importa:** É o que define a ordem da fila de revisão humana e o gatilho de intervenção, que custa de 141 a 234 s por caso disparado; sinal demais manda caso certo para revisão à toa, sinal de menos deixa erro passar.
+- **Opções:**
+  - (a) A probabilidade manda; os dois sinais grátis só desempatam casos de probabilidade igual e viram aviso no relatório ("a causa respondida não é tratada por nenhum verbete entregue").
+  - (b) Só a probabilidade; os outros dois ficam como campo da trilha, sem uso.
+  - (c) Os três somados numa nota única, com pesos ajustados nos 90 casos da calibração (corrida 16 do plano).
+- **Recomendação:** (a): é o sinal mais forte e o mais barato; os outros dois custam zero e ajudam quem lê o relatório, mas combiná-los numa nota única exigiria ajustar pesos em 90 casos com poucos erros.
+- **Decisão:** (a), pelo Eric em 26/10/2026, perguntada no quadro da sessão (decisão 79): a probabilidade do rótulo manda na fila de revisão humana e no gatilho de intervenção; os dois sinais grátis só desempatam probabilidade igual e viram aviso no relatório ("a causa respondida não é tratada por nenhum verbete entregue"). Entra no diagnóstico ao vivo do plano aprovado (seção 3.5, pacote P3).
+
+### 27. Conjunto de avaliação da Fase 4: os 72 casos e quantos inéditos a mais
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A decisão 73 pede "mais casos inéditos" antes de qualquer troca de modelo, e o roadmap (§7) põe os 72 casos (36 oficiais de avaliação e 36 inéditos) como conjunto de avaliação. Os 72 continuam como estão, lidos do texto. A pergunta é quantos inéditos a mais, escritos por quem e quando. Os 36 inéditos de 23/09 foram escritos por um agente que leu só o código das cobaias; o Eric conferiu 6 (ficha 12) e depois a planilha inteira (ficha 17), sem mudar nenhum. Com os modos novos da ficha 28, casos novos podem nascer já reproduzíveis na tela.
+- **Por que importa:** Com 36 casos o efeito mínimo detectável é de 19,4 pontos (resumo oficial da Fase 3, campo `efeito_minimo_detectavel`) e a variação entre corridas iguais é de 0 a 3 casos; sem mais casos, nenhuma diferença pequena da Fase 4 (tela contra texto, k, lotes da biblioteca) se separa do ruído. Escrever casos custa uma sessão de agente e a conferência do Eric.
+- **Opções:**
+  - (a) Mais 36 inéditos (6 por classe, 2 por nível), escritos por um agente que lê só o código das cobaias e os modos da ficha 28, conferidos pelo Eric antes da primeira corrida medida (corrida 16 do plano); o conjunto de avaliação passa a 108 casos.
+  - (b) Só os 72.
+  - (c) Mais 18 (3 por classe), conferidos pelo Eric.
+- **Recomendação:** (a): o custo é uma sessão de agente e uma conferência; o ganho é um conjunto de 108 casos em que uma diferença de 4 ou 5 casos deixa de ser ruído, e parte dos casos novos nasce reproduzível na tela.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): mais 36 inéditos (6 por classe, 2 por nível), escritos por um agente que lê só o código das cobaias e os modos novos da ficha 28, conferidos pelo Eric antes da corrida 16; o conjunto de avaliação passa a 108 casos (pacotes P2 e P3 do plano aprovado).
+
+### 28. Modos de injeção novos na CobaiaAPI: a tela só reproduz 20 dos 72 casos
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A CobaiaAPI tem sete modos de injeção de falha (`Programacao/CobaiaAPI/app/fault_injection.py`: `normal`, `error_500`, `latency`, `type_drift`, `field_missing`, `field_renamed`, `malformed_json`), ligados por `POST /api/admin/fault-mode`. Contagem por script em 26/10/2026 sobre os bancos de casos e a partição oficial: esses modos produzem 6 das 23 causas da taxonomia; têm uma dessas causas 11 dos 36 oficiais de avaliação, 9 dos 36 inéditos (20 dos 72) e 15 dos 54 de aprendizado; nenhum caso das classes tradução (`escala_ou_unidade_errada`, `chave_de_juncao_errada`, `contagem_inconsistente`) e efeito (`localizador_quebrado`, `estado_da_tela_divergente`) sai de um modo atual. Os outros 52 dos 72 só existem como texto. A CobaiaAPI é do grupo e pode ganhar modos; o front legado não muda.
+- **Por que importa:** A Fase 4 é "o agente na tela": com os modos atuais, só 20 dos 72 casos chegam à tela e o resto continua em texto; e a Fase 5 ("cenários cobrindo os modos injetados e a quebra de localizador") ficaria com seis cenários de contrato, todos na mesma página (`produtos_api.php`).
+- **Opções:**
+  - (a) Um modo novo por causa que a tela consegue mostrar, começando pelas classes sem nenhum modo: `escala_ou_unidade_errada` (preço em centavos), `formato_de_data_divergente` (data do pedido em outro formato), `chave_de_juncao_errada` (tipo de outro produto), `contagem_inconsistente` (lista com um item a menos), `nulo_inesperado`, `valor_fora_do_dominio`, `corpo_vazio`, `corpo_nao_e_json` (HTML com 200), `codificacao_incorreta`, `limite_de_requisicoes` (429), `recurso_inexistente` (404 em id válido), `registro_duplicado`, `estrutura_aninhada_divergente` e `colecao_no_lugar_de_objeto`, cada um com teste em `tests/test_fault_injection.py`; `localizador_quebrado` e `estado_da_tela_divergente` são armados pelo harness no navegador (ficha 29).
+  - (b) Manter os sete modos; o resto dos casos fica em texto, declarado como limitação.
+  - (c) Só os modos das classes tradução e efeito (as que não têm nenhum).
+- **Recomendação:** (a): cada modo é uma função de poucas linhas no mesmo arquivo, com teste; é o que faz a avaliação na tela cobrir as seis classes e dá à Fase 5 cenários fora de uma página só. Ordem de implementação: tradução e efeito primeiro.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): a CobaiaAPI ganha um modo novo por causa que a tela consegue mostrar, cada um com teste em `tests/test_fault_injection.py`, começando pelas classes tradução e efeito; `localizador_quebrado` e `estado_da_tela_divergente` ficam com o harness no navegador e com a variante do PHP (ficha 29). Pacote P2 do plano aprovado.
+
+### 29. Quebra de localizador: armada pelo harness no navegador ou variante no PHP
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A cura de seletor precisa de localizadores quebrados de propósito (o botão "Saiba mais" muda de texto, o grid muda de id, o cartão ganha um contêiner novo). O front PHP legado foi cedido por um integrante e é mantido intocado; ele não tem `data-testid` nem variantes de tela. Duas formas de quebrar: o harness injeta no navegador, antes de a página carregar (`add_init_script` do Playwright), uma mutação determinística do DOM (renomear id, trocar classe, mudar texto, envolver o elemento, reordenar irmãos), uma por cenário; ou o PHP ganha um modo de quebra por parâmetro de URL ou cookie.
+- **Por que importa:** Define o realismo dos cenários de "quebra de localizador" da Fase 5 e se o front legado continua intocado.
+- **Opções:**
+  - (a) Pelo harness, no navegador, com modos determinísticos documentados em `cenarios_fase4.py` e registrados na trilha como evento do programa.
+  - (b) Variante no PHP, com o front alterado.
+  - (c) Os dois, e o relatório da fase compara.
+- **Recomendação:** (a): não toca o legado, é determinístico, vale para as duas cobaias e fica na trilha; a limitação (quebra armada, não ocorrida) fica declarada.
+- **Decisão:** (c), pelo Eric em 26/10/2026, diferente da recomendação (decisão 80): as duas formas. O harness arma a quebra no navegador (mutações determinísticas por cenário em `cenarios_fase4.py`, registradas na trilha como evento do programa) e o front PHP legado ganha uma variante de quebra ligada só por parâmetro de URL ou cookie (sem ele, o front se comporta como hoje), documentada; o relatório da fase compara as duas. A regra "front intocado" do plano passa a "front só com a variante de quebra, desligada por padrão"; a cura (seção 3.6, pacote P4), os cenários (pacote P6) e a corrida 19 cobrem as duas formas.
+
+### 30. k da recuperação: 3 (como medido) ou 5
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** k é quantos verbetes a busca entrega ao prompt. Toda medição até hoje usou k = 3. O experimento do recuperador (corrida 9, `resultados_alvo/recuperador/experimento_recuperador.md`, decisão 61) mediu que o verbete certo está entre os 3 primeiros em 80,0% dos 90 casos e entre os 5 primeiros em 91,1% (nos inéditos, 69,4% nos dois). Com k = 5 o prompt cresce (mais dois verbetes de até 550 caracteres) e o tempo de prefill também; a L1 curada custa 61,1 s por diagnóstico com k = 3 (bloco `tb_conf_acerto`).
+- **Por que importa:** Muda o custo por caso e pode mudar o acerto; mas trocar k rompe a comparação com as fases anteriores, então precisa de medida própria.
+- **Opções:**
+  - (a) Medir os dois na calibração (corrida 16 do plano: L1 curada nos 90 com k = 3 e com k = 5, cerca de 1h50 a mais de máquina) e decidir pela regra pré-registrada R8 do plano: k = 5 só se acertar mais por acurácia balanceada com b + c acima de 3; empate fica com k = 3.
+  - (b) Fixar k = 5 sem medir.
+  - (c) Manter k = 3.
+- **Recomendação:** (a): é a única forma de saber se os 11 pontos de hit@5 viram acerto; custa parte de uma noite.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): a calibração (corrida 16) roda a L1 curada nos 90 casos com k = 3 e com k = 5; k = 5 só entra pela regra pré-registrada R8 do plano (acurácia balanceada maior, com b + c acima de 3; empate fica com k = 3). Pacotes P0 e P3.
+
+### 31. Limiares do selo de confiança e do gatilho: que parcela vai para revisão humana
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A especificação da trilha (seções 6.3 e 14, decisão 77) deixa para a Fase 4 fixar os limiares do selo (alto, médio, baixo) e do gatilho de intervenção e de revisão humana pela curva risco-cobertura nos 90 casos: para cada parcela dos casos de menor probabilidade mandada para revisão, quantos erros ela pega e quantos acertos revisa à toa. Na corrida 12, com a L1 curada nos 72 casos (bloco `tb_conf_revisao` de `confianca.md`): revisar 10% (7 casos) pega 4 dos 14 erros e revisa 3 acertos à toa; 20% (14 casos) pega 4 e revisa 10 à toa; 30% (22 casos) pega 7 e revisa 15 à toa, com 14,0% de risco no que sobra. A curva será refeita nos 90 na corrida 16 e os números exatos gravados em `limiares.json`; a decisão aqui é a parcela.
+- **Por que importa:** A parcela é o custo de revisão humana aceito por corrida, e a intervenção custa de 141 a 234 s por caso disparado.
+- **Opções:**
+  - (a) 30%: baixo = os 30% de menor probabilidade (gatilho de intervenção e de revisão), alto = acima da mediana dos acertos, médio = entre os dois.
+  - (b) 20%.
+  - (c) 10%.
+- **Recomendação:** (a): metade dos erros sai confiante (relatório da Pré-Fase 4 §4.2), então uma parcela pequena pega poucos erros; 30% ainda cabe no custo de intervenção (22 casos em 72, cerca de 1 hora de máquina).
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): 30%. Baixo = os 30% de menor probabilidade (gatilho de intervenção e de revisão humana), alto = acima da mediana dos acertos, médio = entre os dois; os números exatos saem da curva risco-cobertura nos 90 casos na corrida 16 e ficam em `limiares.json` antes da primeira corrida na tela (regra R7). Pacote P3.
+
+### 32. O lugar dos verbetes novos escritos pelo modelo, que a busca nunca entregou
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A L1 curada (`Programacao/AgenteCore/biblioteca_producao/`) tem 40 verbetes: os 36 originais e 4 escritos pelo modelo na época 1 (pasta `aprendidos/`). O atlas (relatório da Pré-Fase 4 §3.3, tabela `tb_atlas_verbetes`) mostrou que a busca nunca entregou nenhum deles em caso nenhum, em nenhuma corrida: eles só aumentam a biblioteca. O ganho medido da L1 veio das notas acrescentadas a verbetes que já existiam.
+- **Por que importa:** Um verbete que nunca é recuperado não ajuda e ainda concorre na busca; apagar é perder o que o modelo escreveu e contraria a regra de só acrescentar.
+- **Opções:**
+  - (a) Ficam; ganham recuperação pelo id do caso de origem (as notas já carregam `[E1 · caso · …]`) e sinais de busca calculados em código a partir do frontmatter (endpoint, entidade, status); a calibração (corrida 16) mede se passam a ser recuperados; se continuarem em zero, vão para uma pasta de espera (`aprendidos_em_espera/`), fora do índice, sem apagar.
+  - (b) Pasta de espera já, sem medir.
+  - (c) Removidos da cópia de produção (a época 1 oficial em `resultados_alvo/fase3/` continua intocada).
+- **Recomendação:** (a): a recuperação por id é exigida pelo ciclo de correção de qualquer forma, e a medida diz se o problema é o texto do verbete ou a busca; a pasta de espera é o fim previsto se nada mudar.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): os 4 verbetes ficam; ganham recuperação pelo id do caso de origem e sinais de busca calculados em código a partir do frontmatter (endpoint, entidade, status); a corrida 16 mede se passam a ser recuperados e, se continuarem em zero, vão para `aprendidos_em_espera/`, fora do índice, sem apagar. Pacote P5.
+
+### 33. Tamanho da trilha e do trace: limites, quando gravar o trace e por quanto tempo guardar
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** A especificação (seção 3.1) manda declarar no cabeçalho de cada corrida os limites da trilha: o tamanho máximo de texto gravado na própria linha (acima disso o texto vai para um arquivo ao lado, citado pelo hash), o número máximo de nós por diagnóstico e por cura, e se o trace do Playwright (a gravação do DOM, da rede e do localizador de cada passo, que o Trace Viewer abre) é gravado sempre ou só quando um passo falha. O tamanho de um trace não tem número oficial (levantamento §6.14.7); as trilhas remontadas das corridas de 36 casos estão em `resultados_alvo/pre_fase4/trilhas/`.
+- **Por que importa:** São 218 GB livres no NVMe e nenhum servidor: trace sempre ligado pesa e deixa a corrida mais lenta; trace nunca gravado tira a evidência do nó que falhou.
+- **Opções:**
+  - (a) Trace só na falha (retain-on-failure), 64 KB por texto na linha, até 40 nós por diagnóstico e 20 por cura, retenção de seis meses das corridas medidas, tudo medido na corrida 17 e gravado no fim de cada corrida.
+  - (b) Trace sempre ligado nas corridas de cura e de cenários (evidência completa; custo a medir).
+  - (c) Sem trace; só a árvore podada como evidência.
+- **Recomendação:** (a): é o que a especificação e o mapa da onda 1 (linha 26) sustentam; os limites são revistos com a medida da corrida 17.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): trace só na falha (retain-on-failure), 64 KB por texto na linha (acima disso, arquivo ao lado citado pelo hash), até 40 nós por diagnóstico e 20 por cura, retenção de seis meses das corridas medidas; limites declarados no cabeçalho de cada corrida, medidos na corrida 17 e gravados no fim de cada corrida. Pacotes P1 e P3.
+
+### 34. O prompt do diagnóstico na Fase 4: congelado byte a byte ou versão 2 com os itens da decisão 55
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** O prompt do diagnóstico (`estrategias.linear_com_biblioteca`) está congelado byte a byte desde a Fase 2-A, e o projeto ABNT (§3.4) só compara etapas com prompts idênticos. A decisão 55 adotou dois itens que mudam o prompt (um exemplar resolvido fixo no bloco estável, o "few-shot", e a forma dos rótulos, com o teste do espaço inicial do token) e adiou um terceiro (a ordem do prompt, que conflita com o cache de prefixo). Nenhum foi implementado. A Fase 4 pode manter o prompt congelado ou abrir uma versão 2.
+- **Por que importa:** Com o prompt congelado, a Fase 4 compara direto com as Fases 2-A a 3-B e a trilha de referência vale; com a versão 2, toda calibração (limiares, k, lotes da biblioteca) teria de ser refeita e as fases anteriores viram "lado a lado", não diferença testada.
+- **Opções:**
+  - (a) Congelado na Fase 4 inteira; os itens da decisão 55 viram um experimento em texto nos 90 casos (uma noite a mais, cerca de 1h30), reportado, sem entrar no agente desta fase.
+  - (b) Versão 2 medida antes da calibração (os 90 com e sem, cerca de 3h) e adotada se ganhar além de 3 casos.
+  - (c) Congelado, e os itens da decisão 55 arquivados como descartados por conflito com a comparabilidade.
+- **Recomendação:** (a): preserva a comparabilidade que a banca vai cobrar e ainda mede o que a literatura promete, com um número para a decisão na Fase 5.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): o prompt de `estrategias.linear_com_biblioteca` fica congelado byte a byte na Fase 4 inteira; os itens da decisão 55 (exemplar resolvido fixo e forma dos rótulos) viram um experimento em texto nos 90 casos, cerca de 1h30 a mais de máquina, reportado com número para a decisão na Fase 5 e sem entrar no agente desta fase. Pacotes P0 e P3.
+
+### 35. O que a cura cobre nas quebras de contrato: só o diagnóstico ou também a conferência do roteiro
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** O projeto ABNT (§2.1 e §3.4) define Task Success como "fluxo restaurado e roteiro concluído sem erro" e o MTTR como o tempo da detecção até a correção validada na reexecução. Na quebra de localizador isso é direto: o agente acha outro localizador e o roteiro passa. Na quebra de contrato (campo renomeado, tipo trocado, erro 500) o agente não corrige a API (sem patch no código-alvo, escopo decidido): ele diagnostica. Falta dizer o que conta como "correção" nesses cenários.
+- **Por que importa:** Define metade dos cenários da Fase 5 e o que o MTTR mede neles; sem a definição, o Task Success dos cenários de contrato seria sempre zero ou sempre ambíguo.
+- **Opções:**
+  - (a) Só o localizador tem cura; nas quebras de contrato o resultado é o diagnóstico conferido em código (quatro linhas válidas, causa dentro das 23, campo existente no caso), o MTTR mede da detecção até esse diagnóstico e o Task Success nesses cenários é diagnóstico com a causa e o campo certos, declarado assim no texto da Fase 5.
+  - (b) O agente também adapta a conferência do roteiro (aceitar `preco_v2` como `preco`, aceitar número em texto) e a reexecução valida: cura de contrato do lado do teste, apresentada como sugestão.
+  - (c) As duas medidas lado a lado.
+- **Recomendação:** (a): é o escopo decidido (diagnóstico e cura de localizador) e mantém o MTTR comparável entre cenários; a adaptação da conferência (b) esconderia a quebra de contrato que o agente existe para apontar.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): só o localizador tem cura; nas quebras de contrato o resultado é o diagnóstico conferido em código (quatro linhas válidas, causa dentro das 23, campo existente no caso), o MTTR mede da detecção até esse diagnóstico e o Task Success nesses cenários é diagnóstico com a causa e o campo certos, declarado assim no texto da Fase 5. Pacotes P4 e P6.
+
+### 36. Os cerca de dez cenários da Fase 5 e a linha de base manual
+- **Estado:** fechada em 26/10/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/10/2026
+- **O que é:** O protocolo (ABNT §3.4) pede cerca de dez cenários com cinco repetições, nas duas cobaias, cobrindo os modos injetados e a quebra de localizador, com o banco restaurado entre execuções, e a linha de base manual: os mesmos cenários resolvidos por integrantes do grupo, cronometrados da apresentação da falha à correção do teste. Nada disso existe ainda (nem a lista de cenários, nem a planilha, nem o script de restauração do banco). A Fase 4 deixa tudo pronto (plano, seção 3.9); a escolha dos cenários e da linha de base é do Eric e do grupo.
+- **Por que importa:** É o que a Fase 5 mede; os cenários precisam existir antes do pacote P6 para o ensaio (corrida 21) rodar, e a sessão cronometrada precisa de agenda com os integrantes.
+- **Opções:**
+  - (a) 10 cenários: 6 de contrato em `produtos_api.php` (um por modo: `error_500`, `latency`, `type_drift` em `preco`, `field_missing` em `preco`, `field_renamed` em `preco`, `malformed_json`) e 4 de localizador no front legado (busca, login do administrador, lista de produtos do administrador, reserva do cliente); linha de base por três integrantes, cada um nos dez cenários, numa sessão agendada com o protocolo escrito.
+  - (b) 12 cenários (um por classe de defeito em cada cobaia), usando os modos novos da ficha 28.
+  - (c) Decidir depois do ensaio da corrida 21.
+- **Recomendação:** (a) como mínimo, trocando cenários de contrato pelos modos novos da ficha 28 que cobrirem mais classes; três integrantes dão três tempos por cenário para a linha de base.
+- **Decisão:** (a), pelo Eric em 26/10/2026 (decisão 79): 10 cenários (6 de contrato em `produtos_api.php`, um por modo, e 4 de localizador no front legado: busca, login do administrador, lista de produtos do administrador, reserva do cliente), trocando cenários de contrato pelos modos novos da ficha 28 que cobrirem mais classes; linha de base manual por três integrantes, cada um nos dez cenários, numa sessão agendada com o protocolo escrito. Pacote P6; ensaio na corrida 21.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

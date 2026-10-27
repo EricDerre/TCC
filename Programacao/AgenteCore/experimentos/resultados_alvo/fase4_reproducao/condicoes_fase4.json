@@ -1,0 +1,53 @@
+{
+  "modo": "reproducao",
+  "criado_em": "2026-10-26T22:39:03",
+  "saida": "fase4_reproducao",
+  "versoes": {
+    "navegador": "156.0.8078.4",
+    "ollama": "0.40.2",
+    "playwright": "1.64.1",
+    "python": "3.14.7"
+  },
+  "canal": "chromium",
+  "regra_r1": "status != 200, corpo fora do JSON, diff do contrato, corpo ou árvore completa diferentes da referência em modo normal, conferência do roteiro falhou ou tempo da chamada acima do orçamento",
+  "hosts_permitidos": [
+    "localhost:8080",
+    "127.0.0.1:8080",
+    "[::1]:8080",
+    "localhost:8000",
+    "127.0.0.1:8000",
+    "[::1]:8000"
+  ],
+  "hosts_har": [
+    "code.jquery.com",
+    "ajax.googleapis.com",
+    "cdnjs.cloudflare.com",
+    "maxcdn.bootstrapcdn.com",
+    "stackpath.bootstrapcdn.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "use.fontawesome.com",
+    "kit.fontawesome.com",
+    "ka-f.fontawesome.com"
+  ],
+  "hosts_silenciosos": [
+    "maps.googleapis.com",
+    "maps.gstatic.com",
+    "www.google.com",
+    "maps.google.com"
+  ],
+  "limites": {
+    "nos_por_diagnostico": 40,
+    "nos_por_cura": 20,
+    "blob_inline_max_chars": 65536,
+    "retencao_meses": 6
+  },
+  "orcamento_de_tempo_ms": 1000,
+  "contrato": "id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano",
+  "casos": 72,
+  "reproduziveis": 37,
+  "fora": 35,
+  "modelo": null
+}

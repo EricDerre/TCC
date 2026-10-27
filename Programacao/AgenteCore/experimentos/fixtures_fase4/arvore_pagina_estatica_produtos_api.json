@@ -1,0 +1,254 @@
+{
+ "aria": "- navigation:\n  - link \"Churrascaria Fornalha\":\n    - /url: index.php\n  - list:\n    - listitem:\n      - link \"DESTAQUES\":\n        - /url: index.php#destaques\n    - listitem:\n      - link \"PRODUTOS\":\n        - /url: index.php#produtos\n    - listitem:\n      - link \"PRODUTOS (API)\":\n        - /url: produtos_api.php\n    - listitem:\n      - link \"CONTATO\":\n        - /url: index.php#contato\n- main:\n  - heading \"Produtos via API\" [level=2]:\n    - strong: Produtos via API\n  - heading \"Picanha ao Alho\" [level=3]:\n    - strong: Picanha ao Alho\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Picanha grelhada com alho.\n  - paragraph: \"destaque: Sim\"\n  - paragraph:\n    - button \"R$ 89,90\"\n    - button \"Saiba Mais...\"\n  - heading \"Fraldinha\" [level=3]:\n    - strong: Fraldinha\n  - paragraph:\n    - strong: Carnes\n  - paragraph: Fraldinha na brasa.\n  - paragraph: \"destaque: Não\"\n  - paragraph:\n    - button \"R$ 69,90\"\n    - button \"Saiba Mais...\"\n  - textbox \"Digite seu nome\"\n  - textbox \"Digite seu email\"\n  - textbox \"Digite seu comentario\"\n  - button \"enviar\": Enviar",
+ "canal": "chromium",
+ "contagem": 36,
+ "esperado": "#produtos-api-grid .saiba-mais",
+ "executavel": "C:\\Users\\Eric.Derre\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe",
+ "gravado_em": "2026-10-26T20:20:25",
+ "motivo": "PHP e MariaDB ausentes na maquina em 26/10/2026 quando a amostra foi tirada da copia estatica da pagina; a amostra real de produtos_api.php esta em arvore_produtos_api.json; esta fica como fixture de teste sem as cobaias",
+ "navegador": "156.0.8078.4",
+ "nos": [
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "navigation",
+   "profundidade": 0
+  },
+  {
+   "atributos": {
+    "url": "index.php"
+   },
+   "nome": "Churrascaria Fornalha",
+   "papel": "link",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "list",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#destaques"
+   },
+   "nome": "DESTAQUES",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#produtos"
+   },
+   "nome": "PRODUTOS",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "produtos_api.php"
+   },
+   "nome": "PRODUTOS (API)",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "listitem",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "url": "index.php#contato"
+   },
+   "nome": "CONTATO",
+   "papel": "link",
+   "profundidade": 3
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "main",
+   "profundidade": 0
+  },
+  {
+   "atributos": {
+    "level": "2"
+   },
+   "nome": "Produtos via API",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Produtos via API",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Picanha ao Alho",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Picanha ao Alho",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Picanha grelhada com alho.",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Sim",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 89,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {
+    "level": "3"
+   },
+   "nome": "Fraldinha",
+   "papel": "heading",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Fraldinha",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Carnes",
+   "papel": "strong",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Fraldinha na brasa.",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "destaque: Não",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "",
+   "papel": "paragraph",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "R$ 69,90",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Saiba Mais...",
+   "papel": "button",
+   "profundidade": 2
+  },
+  {
+   "atributos": {},
+   "nome": "Digite seu nome",
+   "papel": "textbox",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Digite seu email",
+   "papel": "textbox",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "Digite seu comentario",
+   "papel": "textbox",
+   "profundidade": 1
+  },
+  {
+   "atributos": {},
+   "nome": "enviar",
+   "papel": "button",
+   "profundidade": 1
+  }
+ ],
+ "origem": "file:///C:/Users/Eric.Derre/Documents/TCC/Programacao/AgenteCore/experimentos/fixtures_fase4/pagina_estatica_produtos_api.html",
+ "playwright": "1.64.1",
+ "provisoria": true,
+ "seletor": "body",
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: fixture gravada por navegador.gravar_fixture_arvore (Fase 4, pacote P0): árvore de acessibilidade da página em `origem`, como texto (`aria`) e como nós (`nos`: papel, nome, profundidade, atributos).",
+  "motivo": "! Motivo: os testes e a poda (pacote P2) precisam de uma árvore real gravada uma vez e congelada, com a versão do Playwright e do navegador que a produziu."
+ },
+ "titulo": "Churrascaria Fornalha - Produtos (API)",
+ "url": "file:///C:/Users/Eric.Derre/Documents/TCC/Programacao/AgenteCore/experimentos/fixtures_fase4/pagina_estatica_produtos_api.html"
+}

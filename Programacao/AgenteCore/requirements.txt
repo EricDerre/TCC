@@ -2,5 +2,11 @@
 # ! Motivo: só o matplotlib é externo — os gráficos precisam sair em PNG/SVG para entrar no
 # documento do TCC. Todo o resto (cliente do Ollama, banco de casos, avaliação) usa apenas
 # biblioteca padrão de propósito, para o instalador não ganhar dependências novas.
-# O Playwright entra aqui na Fase 3, quando o interceptador for implementado.
 matplotlib>=3.9
+# ! Alteração de IA - Revisar: Playwright fixado em 1.64.1 (26/10/2026, Fase 4, pacote P0), instalado na venv do
+# AgenteCore sem administrador, com o Chromium que ele mesmo baixa (`python -m playwright install chromium`, build
+# 156.0.8078.4 em `%LOCALAPPDATA%\ms-playwright`); a linha antiga dizia que ele entraria na Fase 3.
+# ! Motivo: o plano aprovado da Fase 4 exige a versão fixada para a build do navegador não mudar entre corridas (a
+# versão vai no cabeçalho de toda trilha, registrada em `experimentos/resultados_alvo/fase4/ambiente.json`); o
+# interceptador ficou para a Fase 4, não para a Fase 3, como a linha antiga previa.
+playwright==1.64.1

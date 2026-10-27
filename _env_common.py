@@ -248,9 +248,15 @@ def find_mysql_cli() -> str | None:
     if found:
         return found
     if OS_NAME == "Windows":
+        # ! Alteração de IA - Revisar: (26/10/2026, Fase 4, P0) também procura o MariaDB portátil (zip oficial
+        # extraído em %LOCALAPPDATA%\MariaDB\mariadb-<versão>-winx64\), aqui e nas três funções abaixo.
+        # ! Motivo: na máquina corporativa não há administrador para o MSI do winget (MariaDB.Server) e o
+        # servidor roda como processo comum a partir do zip, que é o mesmo caminho (3) de ensure_mariadb_running;
+        # sem o glob, run.py e install.py diziam "MariaDB não encontrado" com o servidor presente.
         return find_by_glob(
             r"C:\Program Files\MariaDB*\bin\mariadb.exe",
             r"C:\Program Files\MariaDB*\bin\mysql.exe",
+            os.path.expandvars(r"%LOCALAPPDATA%\MariaDB\mariadb-*-winx64\bin\mariadb.exe"),
         )
     return None
 
@@ -264,6 +270,7 @@ def find_mariadbd_server() -> str | None:
         return find_by_glob(
             r"C:\Program Files\MariaDB*\bin\mariadbd.exe",
             r"C:\Program Files\MariaDB*\bin\mysqld.exe",
+            os.path.expandvars(r"%LOCALAPPDATA%\MariaDB\mariadb-*-winx64\bin\mariadbd.exe"),
         )
     return None
 
@@ -281,13 +288,21 @@ def find_mariadb_admin() -> str | None:
         return find_by_glob(
             r"C:\Program Files\MariaDB*\bin\mariadb-admin.exe",
             r"C:\Program Files\MariaDB*\bin\mysqladmin.exe",
+            os.path.expandvars(r"%LOCALAPPDATA%\MariaDB\mariadb-*-winx64\bin\mariadb-admin.exe"),
         )
     return None
 
 
 def find_mariadb_datadir_config() -> str | None:
     if OS_NAME == "Windows":
-        return find_by_glob(r"C:\Program Files\MariaDB*\data\my.ini")
+        # ! Alteração de IA - Revisar: (26/10/2026) o my.ini do MariaDB portátil fica na pasta de dados criada por
+        # `mariadb-install-db.exe --datadir=%LOCALAPPDATA%\MariaDB\data` (ver a tag em find_mysql_cli).
+        # ! Motivo: sem o --defaults-file apontando para esse my.ini, o mariadbd portátil subiria sem saber a pasta
+        # de dados e a porta.
+        return find_by_glob(
+            r"C:\Program Files\MariaDB*\data\my.ini",
+            os.path.expandvars(r"%LOCALAPPDATA%\MariaDB\data\my.ini"),
+        )
     return None
 
 

@@ -1,0 +1,282 @@
+[
+ {
+  "id": "semt-3",
+  "classe": 3,
+  "nivel": 2,
+  "causa": "valor_fora_do_dominio",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "semt-5",
+  "classe": 3,
+  "nivel": 3,
+  "causa": "nulo_inesperado",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-4",
+  "classe": 5,
+  "nivel": 3,
+  "causa": "dado_desatualizado",
+  "requisicao": "POST /api/pedidos -> 201 | GET /api/pedidos?login=11122233344 -> 200",
+  "motivo": "sem modo para a causa dado_desatualizado"
+ },
+ {
+  "id": "efe-1",
+  "classe": 6,
+  "nivel": 1,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo do roteiro: abrir detalhes da Picanha ao Alho",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-2",
+  "classe": 6,
+  "nivel": 2,
+  "causa": "estado_da_tela_divergente",
+  "requisicao": "POST /api/pedidos/7/cancelar -> 200 | tela do cliente",
+  "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+ },
+ {
+  "id": "efe-5",
+  "classe": 6,
+  "nivel": 3,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo do roteiro: clicar em Saiba Mais da Picanha ao Alho",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "sin-7",
+  "classe": 2,
+  "nivel": 1,
+  "causa": "campo_ausente",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "sin-10",
+  "classe": 2,
+  "nivel": 2,
+  "causa": "campo_renomeado",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "tra-10",
+  "classe": 4,
+  "nivel": 1,
+  "causa": "chave_de_juncao_errada",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "tra-15",
+  "classe": 4,
+  "nivel": 3,
+  "causa": "escala_ou_unidade_errada",
+  "requisicao": "POST /api/pedidos (pessoas=4) -> GET /api/pedidos",
+  "motivo": "sem tela: a rota 'POST /api/pedidos (pessoas=4) -> GET /api/pedidos' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-10",
+  "classe": 5,
+  "nivel": 2,
+  "causa": "limite_de_requisicoes",
+  "requisicao": "GET /api/produtos (12a requisicao em 1 min)",
+  "motivo": "sem tela: a rota 'GET /api/produtos (12a requisicao em 1 min)' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-13",
+  "classe": 5,
+  "nivel": 3,
+  "causa": "registro_duplicado",
+  "requisicao": "POST /api/pedidos (clique duplo no botao)",
+  "motivo": "sem tela: a rota 'POST /api/pedidos (clique duplo no botao)' não é consumida por página nenhuma"
+ },
+ {
+  "id": "efe-7",
+  "classe": 6,
+  "nivel": 1,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo: clicar em 'Ver mais'",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-14",
+  "classe": 6,
+  "nivel": 3,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo: clicar no botao do segundo cartao",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "lex-17",
+  "classe": 1,
+  "nivel": 1,
+  "causa": "corpo_vazio",
+  "requisicao": "POST /api/pedidos",
+  "motivo": "sem tela: a rota 'POST /api/pedidos' não é consumida por página nenhuma"
+ },
+ {
+  "id": "lex-19",
+  "classe": 1,
+  "nivel": 2,
+  "causa": "corpo_nao_e_json",
+  "requisicao": "POST /api/pedidos/7/cancelar",
+  "motivo": "sem tela: a rota 'POST /api/pedidos/7/cancelar' não é consumida por página nenhuma"
+ },
+ {
+  "id": "lex-20",
+  "classe": 1,
+  "nivel": 3,
+  "causa": "resposta_truncada",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "lex-21",
+  "classe": 1,
+  "nivel": 3,
+  "causa": "codificacao_incorreta",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "sin-17",
+  "classe": 2,
+  "nivel": 1,
+  "causa": "campo_renomeado",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "sin-18",
+  "classe": 2,
+  "nivel": 2,
+  "causa": "estrutura_aninhada_divergente",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "sin-19",
+  "classe": 2,
+  "nivel": 2,
+  "causa": "colecao_no_lugar_de_objeto",
+  "requisicao": "POST /api/pedidos/7/cancelar",
+  "motivo": "sem tela: a rota 'POST /api/pedidos/7/cancelar' não é consumida por página nenhuma"
+ },
+ {
+  "id": "semt-18",
+  "classe": 3,
+  "nivel": 2,
+  "causa": "tipo_divergente",
+  "requisicao": "GET /api/produtos (modo type_drift, campo destaque)",
+  "motivo": "sem tela: a rota 'GET /api/produtos (modo type_drift, campo destaque)' não é consumida por página nenhuma"
+ },
+ {
+  "id": "semt-19",
+  "classe": 3,
+  "nivel": 2,
+  "causa": "formato_de_data_divergente",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "tra-16",
+  "classe": 4,
+  "nivel": 1,
+  "causa": "escala_ou_unidade_errada",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "tra-18",
+  "classe": 4,
+  "nivel": 2,
+  "causa": "contagem_inconsistente",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-16",
+  "classe": 5,
+  "nivel": 1,
+  "causa": "recurso_inexistente",
+  "requisicao": "GET /api/pedidos?login=55566677788",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=55566677788' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-17",
+  "classe": 5,
+  "nivel": 1,
+  "causa": "erro_interno_do_servidor",
+  "requisicao": "POST /api/pedidos/7/cancelar",
+  "motivo": "sem tela: a rota 'POST /api/pedidos/7/cancelar' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-18",
+  "classe": 5,
+  "nivel": 2,
+  "causa": "limite_de_requisicoes",
+  "requisicao": "POST /api/pedidos (6a tentativa de reserva no mesmo minuto)",
+  "motivo": "sem tela: a rota 'POST /api/pedidos (6a tentativa de reserva no mesmo minuto)' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-20",
+  "classe": 5,
+  "nivel": 3,
+  "causa": "dado_desatualizado",
+  "requisicao": "admin atualiza preco da Fraldinha para R$ 74,90 -> GET /api/produtos",
+  "motivo": "sem modo para a causa dado_desatualizado"
+ },
+ {
+  "id": "efe-16",
+  "classe": 6,
+  "nivel": 1,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo do roteiro: abrir detalhes do produto de data-id=2",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-17",
+  "classe": 6,
+  "nivel": 1,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo do roteiro: localizar o titulo 'Picanha ao Alho' como heading de nivel 2",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-18",
+  "classe": 6,
+  "nivel": 2,
+  "causa": "localizador_quebrado",
+  "requisicao": "(sem falha de rede) passo do roteiro: localizar o card do produto pelo atributo data-testid",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-19",
+  "classe": 6,
+  "nivel": 2,
+  "causa": "estado_da_tela_divergente",
+  "requisicao": "clique em 'Saiba Mais...' da Fraldinha (data-id=3); antes da resposta chegar, clique em 'Saiba Mais...' da Picanha ao Alho (data-id=1); a resposta do produto 1 chega primeiro",
+  "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+ },
+ {
+  "id": "efe-20",
+  "classe": 6,
+  "nivel": 3,
+  "causa": "estado_da_tela_divergente",
+  "requisicao": "GET /api/produtos (1a chamada, retornou 14 itens) seguido de uma nova chamada de carregarProdutos() que devolveu lista vazia",
+  "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+ },
+ {
+  "id": "efe-21",
+  "classe": 6,
+  "nivel": 3,
+  "causa": "estado_da_tela_divergente",
+  "requisicao": "GET /api/produtos",
+  "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+ }
+]
