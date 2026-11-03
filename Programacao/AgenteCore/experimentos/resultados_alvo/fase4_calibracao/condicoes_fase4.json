@@ -1,0 +1,57 @@
+{
+  "modo": "calibracao",
+  "criado_em": "2026-10-27T20:46:53",
+  "saida": "fase4_calibracao",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.2",
+  "k": [
+    3,
+    5
+  ],
+  "casos": 90,
+  "casos_da_ponte": 36,
+  "parcial": false,
+  "biblioteca": {
+    "rotulo": "L1 curada",
+    "versao": 100,
+    "hash": "1fca10f1a6f6",
+    "origem": "Programacao/AgenteCore/biblioteca_producao"
+  },
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "leitura_da_probabilidade": "primeiro_token_do_rotulo",
+  "parcela_baixa": 0.3,
+  "ponte_necessaria": false,
+  "ponte_anterior": {
+    "versao": "0.40.2",
+    "corrida": "fase3b_ponte_0402",
+    "data": "2026-10-23",
+    "modelo": "qwen2.5:7b",
+    "n": 35,
+    "b": 1,
+    "c": 0,
+    "discordantes": 1,
+    "ganhos": [
+      "sin-14"
+    ],
+    "perdas": [],
+    "pareavel": true,
+    "limite": 2,
+    "casos_de_texto_alterado": [
+      "efe-3"
+    ],
+    "acerto_nova_pct": 82.9,
+    "acerto_base_pct": 80.0
+  },
+  "regras": {
+    "R6": "versão sem ponte em pontes.json: L0 nos 36 antes de tudo; pareável com b + c até 2 (decisão 47)",
+    "R7": "limiares do selo pela curva risco-cobertura dos 90 casos, gravados em limiares.json antes da primeira corrida na tela",
+    "R8": "k = 5 só se acertar mais que k = 3 por acurácia balanceada com b + c acima de 3; empate fica com k = 3"
+  },
+  "limites": {
+    "nos_por_diagnostico": 40,
+    "nos_por_cura": 20,
+    "blob_inline_max_chars": 65536,
+    "retencao_meses": 6
+  }
+}

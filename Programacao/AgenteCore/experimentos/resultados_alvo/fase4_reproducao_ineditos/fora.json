@@ -1,0 +1,90 @@
+[
+ {
+  "id": "lex-27",
+  "classe": 1,
+  "nivel": 3,
+  "causa": "codificacao_incorreta",
+  "requisicao": "POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 3, \"data_pedido\": \"2026-12-05\"})",
+  "motivo": "sem tela: a rota 'POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 3, \"data_pedido\": \"2026-12-05\"})' não é consumida por página nenhuma"
+ },
+ {
+  "id": "semt-25",
+  "classe": 3,
+  "nivel": 2,
+  "causa": "formato_de_data_divergente",
+  "requisicao": "POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 6, \"data_pedido\": \"2026-12-20\"})",
+  "motivo": "sem tela: a rota 'POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 6, \"data_pedido\": \"2026-12-20\"})' não é consumida por página nenhuma"
+ },
+ {
+  "id": "tra-23",
+  "classe": 4,
+  "nivel": 1,
+  "causa": "escala_ou_unidade_errada",
+  "requisicao": "POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 4, \"data_pedido\": \"2026-12-19\"})",
+  "motivo": "sem tela: a rota 'POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 4, \"data_pedido\": \"2026-12-19\"})' não é consumida por página nenhuma"
+ },
+ {
+  "id": "run-26",
+  "classe": 5,
+  "nivel": 3,
+  "causa": "dado_desatualizado",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem modo para a causa dado_desatualizado"
+ },
+ {
+  "id": "run-27",
+  "classe": 5,
+  "nivel": 3,
+  "causa": "registro_duplicado",
+  "requisicao": "GET /api/pedidos?login=11122233344",
+  "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+ },
+ {
+  "id": "efe-22",
+  "classe": 6,
+  "nivel": 1,
+  "causa": "localizador_quebrado",
+  "requisicao": "GET /api/produtos",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-23",
+  "classe": 6,
+  "nivel": 1,
+  "causa": "localizador_quebrado",
+  "requisicao": "GET /api/produtos",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-24",
+  "classe": 6,
+  "nivel": 2,
+  "causa": "localizador_quebrado",
+  "requisicao": "GET /api/produtos",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-25",
+  "classe": 6,
+  "nivel": 2,
+  "causa": "localizador_quebrado",
+  "requisicao": "GET /api/produtos/3",
+  "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+ },
+ {
+  "id": "efe-26",
+  "classe": 6,
+  "nivel": 3,
+  "causa": "estado_da_tela_divergente",
+  "requisicao": "GET /api/produtos/9",
+  "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+ },
+ {
+  "id": "efe-27",
+  "classe": 6,
+  "nivel": 3,
+  "causa": "estado_da_tela_divergente",
+  "requisicao": "GET /api/produtos/2",
+  "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+ }
+]

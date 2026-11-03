@@ -1,0 +1,75 @@
+{
+  "gerado_por": "avaliar_fase4.py --pontes",
+  "modelo": "qwen2.5:7b",
+  "limite": 2,
+  "base": "resultados_alvo/fase3/<modelo>/diagnosticos__L0.jsonl (Ollama 0.34.0)",
+  "regra": "R6: versão do Ollama sem ponte aqui, L0 nos 36 de avaliação antes de tudo; pareável com b + c até o limite (decisão 47)",
+  "pontes": [
+    {
+      "versao": "0.34.1",
+      "corrida": "fase3b_ponte",
+      "data": "2026-09-21",
+      "modelo": "qwen2.5:7b",
+      "n": 35,
+      "b": 1,
+      "c": 1,
+      "discordantes": 2,
+      "ganhos": [
+        "sin-14"
+      ],
+      "perdas": [
+        "tra-10"
+      ],
+      "pareavel": true,
+      "limite": 2,
+      "casos_de_texto_alterado": [
+        "efe-3"
+      ],
+      "acerto_nova_pct": 80.0,
+      "acerto_base_pct": 80.0
+    },
+    {
+      "versao": "0.34.4",
+      "corrida": "fase3b_ponte_0344",
+      "data": "2026-09-30",
+      "modelo": "qwen2.5:7b",
+      "n": 35,
+      "b": 0,
+      "c": 1,
+      "discordantes": 1,
+      "ganhos": [],
+      "perdas": [
+        "tra-4"
+      ],
+      "pareavel": true,
+      "limite": 2,
+      "casos_de_texto_alterado": [
+        "efe-3"
+      ],
+      "acerto_nova_pct": 77.1,
+      "acerto_base_pct": 80.0
+    },
+    {
+      "versao": "0.40.2",
+      "corrida": "fase3b_ponte_0402",
+      "data": "2026-10-23",
+      "modelo": "qwen2.5:7b",
+      "n": 35,
+      "b": 1,
+      "c": 0,
+      "discordantes": 1,
+      "ganhos": [
+        "sin-14"
+      ],
+      "perdas": [],
+      "pareavel": true,
+      "limite": 2,
+      "casos_de_texto_alterado": [
+        "efe-3"
+      ],
+      "acerto_nova_pct": 82.9,
+      "acerto_base_pct": 80.0
+    }
+  ],
+  "gravado_em": "2026-10-27T18:31:28"
+}

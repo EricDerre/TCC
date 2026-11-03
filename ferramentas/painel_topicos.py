@@ -76,6 +76,15 @@ NAV = [
         ("raciocinio", "Raciocínio aberto", "Dá para ver por que o modelo respondeu o que respondeu? A trilha bruta, o relatório por caso, o que o código consegue conferir e o que a literatura sustenta para a arquitetura da trilha."),
         ("cerebro", "Cérebro e memória", "Dá para mostrar a rede neural como o cérebro do agente, ao vivo? O Brainiac e os grafos do código e do conhecimento servem? O que a literatura sustenta nesta máquina e neste painel."),
     ]),
+    # grupo da Fase 4 (27/10/2026): a corrida 17 é a primeira análise da fase; o id entra junto com a seção (secao_reproducao)
+    ("Fase 4", [
+        ("reproducao", "Reprodução na tela", "Quantos casos de avaliação a tela consegue reproduzir, com que custo por cenário e o que fica fora: a corrida 17 nos 72 casos e a mesma corrida nos 36 inéditos da ficha 27."),
+        # aba da corrida 16 (27/10/2026, P3): o id entra junto com a seção (secao_calibracao)
+        ("calibracao", "Calibração", "Qual k entra no agente, onde ficam os limiares do selo de confiança e quanto a probabilidade do rótulo separa acerto de erro: a corrida 16 nos 90 casos, com a sondagem dos logprobs e a ponte de versão."),
+        ("tela", "Tela e fixture", "O agente dá o mesmo diagnóstico ao caso lido da tela e ao mesmo caso escrito no fixture? A corrida 18 nos casos que reproduzem, com a regra R2, os selos, os rótulos de cada lado e o prompt contra a calibração."),
+        # aba da corrida 19 (01/11/2026, P4): o id entra junto com a seção (secao_cura)
+        ("cura", "Cura de seletor", "Quando o localizador de um passo quebra, o agente acha outro em código e o roteiro passa na reexecução? A corrida 19 nos quatro roteiros do front legado, com quatro modos de quebra nas duas formas, a taxa de cura, o MTTR e a regra R3."),
+    ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
         ("metodo", "Método e limites", "Como a Fase 3 foi medida, as limitações declaradas e a Fase 3-B."),
@@ -1730,11 +1739,73 @@ function ferMcp(){
   grafico('g-fer-mcp', {type:'bar', data:{labels: S.map(x => x.tarefa), datasets:[{label:'grep, Glob e Read', data: S.map(x => Math.round(x['grep_'+met])), backgroundColor: css('--s1')}, {label:'servidor codebase-memory', data: S.map(x => Math.round(x['mcp_'+met])), backgroundColor: css('--s2')}]},
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'tokens (média de 2 repetições)'}, beginAtZero:true}}}});
 }
+function repClasses(){
+  const R = T.reproducao||{}; const C = R.classes||[]; if(!C.length || !C.some(c => c.avaliacao)) return;
+  const rot = R.rotulos||{};
+  const ds = [{label:(rot.avaliacao||'avaliação')+': com tela e modo', data: C.map(c => c.avaliacao ? c.avaliacao.na_tela : null), backgroundColor: css('--s1')},
+              {label:(rot.avaliacao||'avaliação')+': reproduzem', data: C.map(c => c.avaliacao ? c.avaliacao.reproduzem : null), backgroundColor: css('--s2')}];
+  if(C.some(c => c.ineditos)) ds.push({label:(rot.ineditos||'inéditos')+': com tela e modo', data: C.map(c => c.ineditos ? c.ineditos.na_tela : null), backgroundColor: css('--s3')},
+                                      {label:(rot.ineditos||'inéditos')+': reproduzem', data: C.map(c => c.ineditos ? c.ineditos.reproduzem : null), backgroundColor: css('--s4')});
+  grafico('g-rep-classe', {type:'bar', data:{labels: C.map(c => c.classe+' '+c.nome), datasets: ds},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:2}}}}});
+}
+// aba Calibração (27/10/2026, P3): acerto, acurácia balanceada e AUROC por k; curva risco-cobertura do k escolhido
+function calK(){
+  const C = T.calibracao||{}; const K = C.por_k||[]; if(!K.length) return;
+  grafico('g-cal-k', {type:'bar', data:{labels: K.map(x => 'k = '+x.k), datasets:[
+    {label:'acerto (%)', data: K.map(x => x.acerto_pct), backgroundColor: css('--s1')},
+    {label:'acurácia balanceada (%)', data: K.map(x => x.acuracia_balanceada_pct), backgroundColor: css('--s2')},
+    {label:'AUROC da probabilidade do rótulo (x 100)', data: K.map(x => x.auroc_p == null ? null : Math.round(x.auroc_p * 1000) / 10), backgroundColor: css('--s3')}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, max:100, title:{display:true,text:'%'}}}}});
+}
+function calCurva(){
+  const C = T.calibracao||{}; const P = C.curva||[]; if(!P.length) return;
+  grafico('g-cal-curva', {type:'line', data:{labels: P.map(p => Math.round(p.cobertura * 100) + '%'),
+    datasets:[{label:'risco (erros entre os casos respondidos, %)', data: P.map(p => Math.round(p.risco * 1000) / 10), borderColor: css('--s2'), backgroundColor: css('--s2'), fill:false, pointRadius:2, tension:0}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{title:{display:true,text:'cobertura (da maior probabilidade para a menor)'}}, y:{beginAtZero:true, title:{display:true,text:'risco (%)'}}}}});
+}
+// aba Tela e fixture (01/11/2026, corrida 18): acerto na tela e no fixture por classe; rótulos dados em cada lado
+function telaClasses(){
+  const D = T.tela||{}; const C = D.por_classe||[]; if(!C.length) return;
+  const ds = [
+    {label:'casos', data: C.map(c => c.casos), backgroundColor: css('--s4')},
+    {label:'acerto na tela (18)', data: C.map(c => c.acerto_tela), backgroundColor: css('--s1')},
+    {label:'acerto no fixture', data: C.map(c => c.acerto_fixture), backgroundColor: css('--s2')},
+    {label:'mesmo rótulo nos dois (18)', data: C.map(c => c.concordam), backgroundColor: css('--s3')}];
+  if(C.some(c => c.acerto_tela_v2 != null)) ds.push({label:'acerto na tela (18b, caso revisado)', data: C.map(c => c.acerto_tela_v2), backgroundColor: css('--s5')},
+                                                     {label:'mesmo rótulo nos dois (18b)', data: C.map(c => c.concordam_v2), backgroundColor: css('--s6')});
+  grafico('g-tela-classe', {type:'bar', data:{labels: C.map(c => c.classe+' '+c.nome), datasets: ds},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:1}}}}});
+}
+function telaRotulos(){
+  const D = T.tela||{}; const R = D.rotulos||[]; if(!R.length) return;
+  const ds = [
+    {label:'é o gabarito de', data: R.map(x => x.gabarito), backgroundColor: css('--s4')},
+    {label:'rótulo dado na tela (18)', data: R.map(x => x.tela), backgroundColor: css('--s1')},
+    {label:'rótulo dado no fixture', data: R.map(x => x.fixture), backgroundColor: css('--s2')}];
+  if(R.some(x => x.tela_v2 != null)) ds.push({label:'rótulo dado na tela (18b, caso revisado)', data: R.map(x => x.tela_v2), backgroundColor: css('--s5')});
+  grafico('g-tela-rotulos', {type:'bar', data:{labels: R.map(x => x.rotulo), datasets: ds},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:2}}}}});
+}
+// aba Cura de seletor (01/11/2026, corrida 19): execuções por modo e por roteiro, empilhadas pela regra R3; MTTR por roteiro
+function curaEmpilhado(id, L, chave){
+  if(!L.length) return;
+  grafico(id, {type:'bar', data:{labels: L.map(x => x[chave]), datasets:[
+      {label:'curadas, mesmo elemento', data: L.map(x => x.mesmo_elemento), backgroundColor: css('--bom')},
+      {label:'curadas, outro elemento (R3)', data: L.map(x => x.outro_elemento), backgroundColor: css('--meio')},
+      {label:'não curadas', data: L.map(x => x.nao_curadas), backgroundColor: css('--ruim')},
+      {label:'não quebrou', data: L.map(x => x.nao_quebrou), backgroundColor: css('--s4')}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{stepSize:2}, title:{display:true, text:'execuções'}}},
+      plugins:{tooltip:{callbacks:{afterBody: it => { const x = L[it[0].dataIndex]; return 'taxa de cura ' + (x.taxa == null ? 'n/d' : x.taxa + '%') + ' · MTTR mediana ' + (x.mttr == null ? 'n/d' : x.mttr + ' s'); }}}}}});
+}
+function curaModos(){ const C = T.cura||{}; curaEmpilhado('g-cura-modo', C.por_modo||[], 'modo'); }
+function curaRoteiros(){ const C = T.cura||{}; curaEmpilhado('g-cura-roteiro', C.por_roteiro||[], 'roteiro'); }
 """ + pa.JS_ATLAS + pe.JS_EXPLORADOR
 
 DESENHAR_TOPICOS = {"comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
                     "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
-                    "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"]}
+                    "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"],
+                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaClasses", "telaRotulos"], "cura": ["curaModos", "curaRoteiros"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
 
@@ -1804,6 +1875,562 @@ def validacao_do_gemini() -> str:
 
 # ------------------------------------------------------------------ montagem
 
+# ! Alteração de IA - Revisar: aba nova (27/10/2026) "Reprodução na tela", a primeira da Fase 4: a corrida 17 sobre os
+# 72 casos de avaliação e a mesma corrida sobre os 36 inéditos da ficha 27, lidas de
+# resultados_alvo/fase4/reproducibilidade.json e reproducibilidade_ineditos.json (avaliar_fase4.py, com --check).
+# ! Motivo: a regra do painel é uma aba por análise e a corrida 17 (pacote P2) tinha ficado só no roadmap; o Eric
+# decide pelo painel quais casos a tela reproduz antes de gastar modelo (corridas 16 e 18) e de conferir os inéditos.
+# Sem os arquivos a aba mostra o estado vazio, como as da Pré-Fase 4.
+def secao_reproducao(rep: dict | None, ined: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    def por(d: dict | None, chave: str, campo: str) -> dict:
+        return {x[campo]: x for x in d[chave]} if d else {}
+
+    pc, pi = por(rep, "por_classe", "classe"), por(ined, "por_classe", "classe")
+    campos = ("casos", "na_tela", "reproduzem", "fora")
+    classes = [{"classe": i, "nome": nome,
+                "avaliacao": {k: pc[i][k] for k in campos} if i in pc else None,
+                "ineditos": {k: pi[i][k] for k in campos} if i in pi else None} for i, nome in CLASSES.items()]
+    rotulos = {"avaliacao": f'{rep["resumo"]["casos"]} de avaliação' if rep else "casos de avaliação",
+               "ineditos": f'{ined["resumo"]["casos"]} inéditos' if ined else "inéditos"}
+    dados_js = {"classes": classes, "rotulos": rotulos}
+    fontes_ = fontes(["<code>resultados_alvo/fase4/reproducibilidade.json</code> e <code>.md</code> (<code>avaliar_fase4.py --reproducao</code>, com <code>--check</code>; blocos <code>tb_f4_reproducao_*</code>)",
+                      "<code>resultados_alvo/fase4/reproducibilidade_ineditos.json</code> e <code>.md</code> (a mesma avaliação com <code>--nome reproducibilidade_ineditos</code>)",
+                      "<code>executar_fase4.py --modo reproducao</code> (regra R1; <code>--banco</code> escolhe os casos); roadmap §2.8; plano aprovado da Fase 4, seções 5 e 6; fichas 27, 28 e 29"])
+    if not rep:
+        html_ = f'''<section id="reproducao" hidden>
+<h1>Reprodução na tela: quantos casos de avaliação a tela consegue reproduzir?</h1>
+<p class="lead">A corrida 17 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/reproducibilidade.json</code>, gerado por <code>avaliar_fase4.py --reproducao</code> depois de <code>executar_fase4.py --modo reproducao --saida fase4_reproducao</code>.</p>
+{cartoes_corridas(road, numeros=["17"], sufixo="-rep")}
+{fontes_}
+</section>'''
+        return dados_js, html_
+    r = rep["resumo"]
+    ri = ined["resumo"] if ined else None
+    t, tam = rep["tempo"], rep["tamanhos"]
+    fora_motivos = "; ".join(f'{x["casos"]} {x["motivo"]}' for x in rep["fora_por_motivo"])
+    itens_kpi = [
+        ("Reproduzem na tela (corrida 17)", f'{r["reproduzem"]} de {r["casos"]}',
+         f'{fmt(r["reproduzem_pct"])}% do conjunto; {fmt(r["reproduzem_dos_na_tela_pct"])}% dos {r["na_tela"]} com tela e modo'),
+        ("Ficam fora", str(r["fora"]), fora_motivos),
+        ("Tempo por cenário", f'{fmt(t["mediana_s"], 3)} s', f'mediana; máximo {fmt(t["max_s"])} s (latência); chamada à API {fmt(t["tempo_api_mediana_ms"])} ms'),
+        ("Poda da árvore", f'{tam["arvore_antes_mediana"]} para {tam["arvore_depois_mediana"]}',
+         f'nós antes e linhas depois (medianas); corpo {tam["corpo_chars_mediana"]} e caso ao vivo {tam["caso_chars_mediana"]} caracteres'),
+        (("Inéditos da ficha 27", f'{ri["reproduzem"]} de {ri["casos"]}', f'{fmt(ri["reproduzem_pct"])}% dos {ri["casos"]}; {ri["fora"]} fora; corrida de {"/".join(reversed(ined["metadados"]["gerado_em"][:10].split("-")))}')
+         if ri else ("Inéditos da ficha 27", "ainda não rodada", "a mesma corrida sobre os 36 inéditos")),
+    ]
+
+    def linha(rotulo: str, a: dict | None, i: dict | None) -> list:
+        vazio = ("—", "—", "—", "—")
+        return [rotulo, *((a["casos"], a["na_tela"], a["reproduzem"], a["fora"]) if a else vazio),
+                *((i["casos"], i["na_tela"], i["reproduzem"], i["fora"]) if i else vazio)]
+
+    cab_duplo = ["Classe", "Casos", "Com tela e modo", "Reproduzem", "Fora", "Inéditos: casos", "Com tela e modo", "Reproduzem", "Fora"]
+    por_classe = tabela(cab_duplo, [linha(f'{c["classe"]} {c["nome"]}', c["avaliacao"], c["ineditos"]) for c in classes])
+    pn, pni = por(rep, "por_nivel", "nivel"), por(ined, "por_nivel", "nivel")
+    por_nivel = tabela([h.replace("Classe", "Nível") for h in cab_duplo], [linha(str(n), pn[n], pni.get(n)) for n in sorted(pn)])
+    pm, pmi = por(rep, "por_modo", "modo"), por(ined, "por_modo", "modo")
+    modos = sorted(set(pm) | set(pmi))
+    por_modo = tabela(["Modo de injeção", "Casos", "Reproduzem", "Inéditos: casos", "Reproduzem", "Motivos registrados"],
+                      [[f"<code>{esc(m)}</code>", pm.get(m, {}).get("casos", "—"), pm.get(m, {}).get("reproduzem", "—"),
+                        pmi.get(m, {}).get("casos", "—"), pmi.get(m, {}).get("reproduzem", "—"),
+                        esc("; ".join(dict.fromkeys(list(pm.get(m, {}).get("motivos", [])) + list(pmi.get(m, {}).get("motivos", [])))))] for m in modos], raw=True)
+
+    def linhas_casos(d: dict | None, rotulo: str) -> list[list]:
+        return [[esc(rotulo), f"<code>{esc(c['id'])}</code>", c["classe"], c["nivel"], f"<code>{esc(c['causa'])}</code>", f"<code>{esc(c['modo'])}</code>",
+                 esc(c["cenario"]), "sim" if c["reproduz"] else "não", esc(c["motivo"]), fmt(c.get("segundos"), 3)] for c in (d["casos"] if d else [])]
+
+    casos = tabela(["Corrida", "Caso", "Classe", "Nível", "Causa", "Modo", "Cenário", "Reproduz", "Motivo", "Segundos"],
+                   linhas_casos(rep, rotulos["avaliacao"]) + linhas_casos(ined, rotulos["ineditos"]), raw=True)
+    fora = tabela(["Corrida", "Caso", "Classe", "Nível", "Causa", "Por que ficou fora"],
+                  [[esc(rot), f"<code>{esc(x['id'])}</code>", x["classe"], x["nivel"], f"<code>{esc(x['causa'])}</code>", esc(x["motivo"])]
+                   for d, rot in ((rep, rotulos["avaliacao"]), (ined, rotulos["ineditos"])) if d for x in d["fora"]], raw=True)
+    n_casos = len(rep["casos"]) + (len(ined["casos"]) if ined else 0)
+    n_fora = r["fora"] + (ri["fora"] if ri else 0)
+    lead = (f'Todos os que têm um modo de injeção e uma rota com página: {r["reproduzem"]} dos {r["casos"]} casos de avaliação na corrida 17 '
+            f'({fmt(r["reproduzem_pct"])}% do conjunto, {fmt(r["reproduzem_dos_na_tela_pct"])}% dos {r["na_tela"]} com tela e modo) e, na mesma corrida sobre os inéditos da ficha 27, '
+            + (f'{ri["reproduzem"]} dos {ri["casos"]} ({fmt(ri["reproduzem_pct"])}%). ' if ri else 'os 36 inéditos ainda não foram medidos. ')
+            + f'Ficam fora {r["fora"]} dos {r["casos"]}: {fora_motivos}. Sem modelo: a regra R1 compara a chamada à API, o corpo e a árvore de acessibilidade '
+              'com a corrida de referência em modo normal e confere o roteiro.')
+    leitura_ = leitura([
+        f"<strong>Quem tem tela e modo reproduz.</strong> Na corrida 17, {r['na_tela']} casos tinham os dois e {r['reproduzem']} reproduziram (bloco <code>tb_f4_reproducao_resumo</code>); "
+        f"{r['roteiro_falhou']} deles também derrubaram uma conferência do roteiro.",
+        f"<strong>O que fica fora não é falha da tela.</strong> {esc(fora_motivos)}: as rotas de pedido não têm página, <code>dado_desatualizado</code> não tem modo de injeção "
+        "e as causas de efeito (localizador quebrado e estado da tela) são armadas pelo harness no navegador, pela ficha 29.",
+        (f"<strong>Os inéditos nasceram com os modos novos da ficha 28.</strong> {ri['na_tela']} dos {ri['casos']} têm tela e modo e "
+         + ("todos reproduzem" if ri["reproduzem"] == ri["na_tela"] else f"{ri['reproduzem']} reproduzem")
+         + f"; os {ri['fora']} fora são da mesma natureza. Eles esperam a conferência do Eric antes da corrida 16.") if ri
+        else "<strong>Os 36 inéditos da ficha 27 ainda não passaram por esta corrida.</strong>",
+        f"<strong>Custo.</strong> Mediana de {fmt(t['mediana_s'], 3)} s por cenário; os de latência chegam a {fmt(t['max_s'])} s porque o modo dorme por item da lista. "
+        f"A poda leva a árvore de {tam['arvore_antes_mediana']} nós a {tam['arvore_depois_mediana']} linhas.",
+    ])
+    html_ = f'''<section id="reproducao" hidden>
+<h1>Reprodução na tela: quantos casos de avaliação a tela consegue reproduzir?</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Por classe de defeito</h2>
+<p>Quantos casos de cada classe têm tela e modo e quantos reproduzem, nos {esc(rotulos["avaliacao"])} e nos {esc(rotulos["ineditos"])}. A classe de efeito fica fora por desenho: a quebra de localizador é armada pelo harness, não pela API.</p>
+<div class="chart"><canvas id="g-rep-classe"></canvas></div>
+{por_classe}
+<h2>Por nível e por modo de injeção</h2>
+{por_nivel}
+{detalhes(f"Por modo de injeção ({len(modos)} modos)", por_modo)}
+{detalhes(f"Todos os casos com tela e modo ({n_casos})", casos)}
+{detalhes(f"Casos fora ({n_fora})", fora)}
+<h2>A corrida no roadmap</h2>
+{cartoes_corridas(road, numeros=["17"], sufixo="-rep")}
+{leitura_}
+{fontes_}
+</section>'''
+    return dados_js, html_
+
+
+# ------------------------------------------------------------------ 19. Fase 4: calibração e ponte (corrida 16)
+
+# ! Alteração de IA - Revisar: aba nova (27/10/2026, Fase 4, pacote P3) com a leitura da corrida 16 (calibração e ponte),
+# lida de resultados_alvo/fase4/calibracao.json e limiares.json (avaliar_fase4.py --calibracao): o k que a regra R8
+# escolheu, os limiares do selo (regra R7, ficha 31), a AUROC da probabilidade do rótulo nos 90 casos com intervalo, a
+# revisão humana por parcela, a curva risco-cobertura, a ponte de versão (regra R6) e a sondagem dos logprobs; sem o
+# arquivo, o estado vazio com o cartão da corrida, como as outras abas.
+# ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 16 fixa o k e os limiares que a corrida 18
+# usa, e o Eric decide pelo painel.
+def secao_calibracao(cal: dict | None, lim: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    fontes_ = fontes(["<code>resultados_alvo/fase4/calibracao.json</code> e <code>.md</code> (<code>avaliar_fase4.py --calibracao</code>, com <code>--check</code>; blocos <code>tb_f4_calibracao_*</code>)",
+                      "<code>resultados_alvo/fase4/limiares.json</code> (regra R7, ficha 31) e <code>pontes.json</code> (regra R6, decisão 47)",
+                      "<code>executar_fase4.py --modo calibracao</code> (sondagem, ponte, L1 curada nos 90 com cada k, pelo executor congelado da Fase 3); roadmap §2.9; plano aprovado da Fase 4, seções 5, 6 e 8; fichas 30 e 31"])
+    vazio = {"por_k": [], "curva": [], "k_escolhido": None, "limiares": None, "por_selo": []}
+    if not cal:
+        html_ = f'''<section id="calibracao" hidden>
+<h1>Calibração: qual k entra no agente e onde ficam os limiares do selo?</h1>
+<p class="lead">A corrida 16 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/calibracao.json</code>, gerado por <code>avaliar_fase4.py --calibracao</code> depois de <code>executar_fase4.py --modo calibracao --saida fase4_calibracao --k 3,5</code> (noite A do plano aprovado).</p>
+{cartoes_corridas(road, numeros=["16"], sufixo="-cal")}
+{fontes_}
+</section>'''
+        return vazio, html_
+    por_k = cal["por_k"]
+    r8 = cal["r8"]
+    limi = cal.get("limiares") or {}
+    ponte = cal.get("ponte") or {}
+    son = cal.get("sondagem") or {}
+    escolhido = next((x for x in por_k if x["k"] == cal["k_escolhido"]), por_k[0])
+
+    def auroc(x: dict, sinal: str) -> dict:
+        return (x.get("sinais") or {}).get(sinal) or {}
+
+    def auroc_txt(s: dict) -> str:
+        if s.get("auroc") is None:
+            return "n/d"
+        ic = s.get("ic95")
+        return fmt(s["auroc"], 3) + (f" [{fmt(ic[0], 3)}; {fmt(ic[1], 3)}]" if ic else "")
+
+    dados_js = {"por_k": [{"k": x["k"], "n": x["n"], "acertos": x["acertos"], "acerto_pct": x["acerto_pct"], "acuracia_balanceada_pct": x["acuracia_balanceada_pct"],
+                           "auroc_p": auroc(x, "p_rotulo").get("auroc"), "auroc_conjunta": auroc(x, "p_conjunta").get("auroc")} for x in por_k],
+                "curva": [{"cobertura": p["cobertura"], "risco": p["risco"]} for p in escolhido.get("curva", [])],
+                "k_escolhido": cal["k_escolhido"], "limiares": {"baixo_ate": limi.get("baixo_ate"), "alto_a_partir_de": limi.get("alto_a_partir_de")},
+                "por_selo": cal.get("por_selo") or []}
+    a_p = auroc(escolhido, "p_rotulo")
+    # ! Alteração de IA - Revisar: (28/10/2026, leitura da corrida 16) a aba mostra os casos e os erros por selo (bloco
+    # `tb_f4_calibracao_selos` de calibracao.json): cartão "Erros com selo alto", tabela e item da leitura.
+    # ! Motivo: o selo alto é o que o agente mostra como confiável; quantos erros saem com ele é o número que a leitura
+    # da corrida 16 precisa citar, e ele só existe no JSON desde a mesma data (antes só a parcela baixa era contada).
+    por_selo = cal.get("por_selo") or []
+    alto = next((x for x in por_selo if x["selo"] == "alto"), None)
+
+    def erros_txt(x: dict) -> str:
+        return f'{x["errados"]} {"erro" if x["errados"] == 1 else "erros"} em {x["casos"]} casos ({fmt(x["erro_pct"])}%)'
+    parcela = limi.get("parcela_baixa")
+    itens_kpi = [("k escolhido (regra R8)", f'k = {cal["k_escolhido"]}', esc(r8["motivo"]))]
+    for x in por_k:
+        itens_kpi.append((f"Acerto com k = {x['k']}", f'{x["acertos"]} de {x["n"]}',
+                          f'{fmt(x["acerto_pct"])}%; acurácia balanceada {fmt(x["acuracia_balanceada_pct"])}%; {fmt(x["segundos_mediana"])} s por diagnóstico'
+                          + ("" if x.get("completo", True) else "; corrida incompleta")))
+    itens_kpi += [
+        ("Selo baixo até", fmt(limi.get("baixo_ate"), 3),
+         (f'os {fmt(100 * parcela, 0)}% de menor probabilidade ({limi.get("revisados")} casos): pegam {limi.get("erros_pegos")} de {limi.get("erros")} erros e revisam {limi.get("acertos_revisados")} acertos à toa'
+          if parcela is not None else "sem limiares")),
+        ("Selo alto a partir de", fmt(limi.get("alto_a_partir_de"), 3), "mediana da probabilidade nos acertos (ficha 31, opção a); médio fica entre os dois"),
+        ("AUROC da probabilidade do rótulo", fmt(a_p.get("auroc"), 3) if a_p.get("auroc") is not None else "n/d",
+         f'IC 95% {auroc_txt(a_p).split(" ", 1)[1] if a_p.get("ic95") else "n/d"} nos {a_p.get("n", escolhido["n"])} casos com k = {escolhido["k"]}; conjunta {fmt(auroc(escolhido, "p_conjunta").get("auroc"), 3)}'),
+        ("Ponte de versão (regra R6)", f'Ollama {ponte.get("versao", "n/d")}',
+         (f'{"pareável" if ponte.get("pareavel") else "não pareável"} com a Fase 3: b = {ponte.get("b")}, c = {ponte.get("c")} em {ponte.get("n")} casos; '
+          + ("feita nesta corrida" if ponte.get("feita_nesta_corrida") else f'já registrada em {esc(str(ponte.get("corrida")))}')) if ponte else "sem ponte registrada"),
+        ("Sondagem dos logprobs", ("ok" if son.get("ok") else "problema") if son else "não rodou",
+         (f'probabilidade de {son.get("temperatura")} da temperatura; até {son.get("top_por_posicao_max")} alternativas por posição; '
+          + (esc("; ".join(son.get("mensagens") or [])) or "sem avisos")) if son else ""),
+    ]
+    if alto:
+        itens_kpi.insert(4, ("Erros com selo alto", f'{alto["errados"]} de {alto["casos"]}',
+                             f'{fmt(alto["erro_pct"])}% dos casos com probabilidade a partir de {fmt(limi.get("alto_a_partir_de"), 3)} saem errados'
+                             + (": " + ", ".join(f"<code>{esc(c)}</code>" for c in alto["casos_errados"]) if alto["casos_errados"] else "")))
+    tab_selos = tabela(["Selo", "Casos", "Certos", "Errados", "Erro (%)", "Casos errados"],
+                       [[esc(x["selo"]), x["casos"], x["certos"], x["errados"], fmt(x["erro_pct"]), ", ".join(f"<code>{esc(c)}</code>" for c in x["casos_errados"]) or "nenhum"]
+                        for x in por_selo], raw=True) if por_selo else ""
+    bloco_selos = f"<p>Casos e erros por selo com os limiares desta corrida (regra R7; bloco <code>tb_f4_calibracao_selos</code>).</p>\n{tab_selos}" if por_selo else ""
+    tab_k = tabela(["k", "Casos", "Completo", "Acertos", "Acerto (%)", "Acurácia balanceada (%)", "Nos 36 de avaliação (%)", "Nos 54 de aprendizado (%)",
+                    "s por diagnóstico (mediana)", "Tokens de entrada (mediana)", "AUROC p do rótulo [IC 95%]", "AUROC p conjunta [IC 95%]", "Sem rótulo"],
+                   [[f'k = {x["k"]}', x["n"], "sim" if x.get("completo", True) else "não", x["acertos"], fmt(x["acerto_pct"]), fmt(x["acuracia_balanceada_pct"]),
+                     fmt(((x.get("por_particao") or {}).get("avaliacao") or {}).get("acerto_pct")), fmt(((x.get("por_particao") or {}).get("aprendizado") or {}).get("acerto_pct")),
+                     fmt(x["segundos_mediana"]), fmt(x["tokens_entrada_mediana"], 0), auroc_txt(auroc(x, "p_rotulo")), auroc_txt(auroc(x, "p_conjunta")), x["sem_rotulo"]] for x in por_k])
+    tab_rev = tabela(["k", "Parcela revisada", "Casos revisados", "Erros pegos", "Acertos revisados à toa", "Risco no que sobra"],
+                     [[f'k = {x["k"]}', f'{fmt(100 * rv["fracao"], 0)}%', rv["revisados"], f'{rv["erros_pegos"]} de {rv["erros"]}', rv["acertos_revisados"],
+                       "n/d" if rv["risco_no_que_sobra"] is None else f'{fmt(100 * rv["risco_no_que_sobra"])}%'] for x in por_k for rv in x.get("revisao", [])])
+    par = r8.get("par") or {}
+    tab_r8 = tabela(["Acurácia balanceada k = 3 (%)", "Acurácia balanceada k = 5 (%)", "b (só k = 5 acerta)", "c (só k = 3 acerta)", "p (McNemar exato)", "k escolhido", "Motivo"],
+                    [[fmt(next((x["acuracia_balanceada_pct"] for x in por_k if x["k"] == 3), None)), fmt(next((x["acuracia_balanceada_pct"] for x in por_k if x["k"] == 5), None)),
+                      par.get("b", "—"), par.get("c", "—"), fmt(par.get("p_mcnemar"), 3), f'k = {r8["k"]}', r8["motivo"]]])
+    tab_ponte = tabela(["Ollama", "Corrida da ponte", "Feita nesta corrida", "Casos pareados", "b", "c", "Pareável (limite)", "Casos de texto corrigido fora"],
+                       [[ponte.get("versao", "n/d"), ponte.get("corrida", "n/d"), "sim" if ponte.get("feita_nesta_corrida") else "não", ponte.get("n", "—"), ponte.get("b", "—"), ponte.get("c", "—"),
+                         f'{"sim" if ponte.get("pareavel") else "não"} ({ponte.get("limite")})' if ponte else "n/d", ", ".join(ponte.get("casos_de_texto_alterado") or []) or "nenhum"]])
+    tab_son = tabela(["Ollama", "Tokens com probabilidade", "Alternativas por posição (máx.)", "Bytes por token", "Texto remontado bate", "Probabilidade antes ou depois da temperatura",
+                      "Resposta igual sem logprobs", "Rótulo lido", "p do rótulo", "Avisos"],
+                     [[son.get("versao_ollama", "n/d"), son.get("tokens_com_logprob", "—"), son.get("top_por_posicao_max", "—"), "sim" if son.get("tem_bytes") else "não",
+                       "sim" if son.get("texto_bate") else "não", son.get("temperatura", "n/d"), "sim" if son.get("resposta_igual_sem_logprobs") else "não",
+                       son.get("rotulo_lido", "n/d"), fmt(son.get("p_rotulo"), 3), "; ".join(son.get("mensagens") or []) or "nenhum"]] if son else [["não rodou"] + ["—"] * 9])
+    casos = tabela(["Caso", "Partição", "Gabarito", "Rótulo", "Resultado", "p do rótulo", "p conjunta", "Segunda causa", "Selo"],
+                   [[f"<code>{esc(l['caso'])}</code>", esc(l.get("particao") or "—"), f"<code>{esc(l['gabarito'])}</code>", f"<code>{esc(l['rotulo'])}</code>",
+                     "certo" if l["acerto"] else "errado", fmt(l["p"], 3), fmt(l["p_conjunta"], 3), esc(l.get("segunda") or "—"),
+                     esc(("baixo" if l["p"] is not None and limi.get("baixo_ate") is not None and l["p"] <= limi["baixo_ate"]
+                          else "alto" if l["p"] is not None and limi.get("alto_a_partir_de") is not None and l["p"] >= limi["alto_a_partir_de"]
+                          else "médio" if l["p"] is not None else "—"))]
+                    for l in sorted(escolhido.get("casos", []), key=lambda l: (l["p"] is None, l["p"] or 0, l["caso"]))], raw=True)
+    lead = (f'A regra R8 escolheu k = {cal["k_escolhido"]}: {esc(r8["motivo"])}. Com esse k, o selo baixo vai até a probabilidade {fmt(limi.get("baixo_ate"), 3)} '
+            f'(os {fmt(100 * parcela, 0) if parcela is not None else "—"}% de menor probabilidade, que pegam {limi.get("erros_pegos")} de {limi.get("erros")} erros) e o selo alto começa em '
+            f'{fmt(limi.get("alto_a_partir_de"), 3)}; a probabilidade do rótulo separa acerto de erro com AUROC {fmt(a_p.get("auroc"), 3)} nos {escolhido["n"]} casos. '
+            + (f'A ponte de versão (Ollama {ponte.get("versao")}) {"é pareável" if ponte.get("pareavel") else "não é pareável"} com a Fase 3 (b = {ponte.get("b")}, c = {ponte.get("c")}). ' if ponte else "")
+            + (f'Sondagem dos logprobs: {"ok" if son.get("ok") else "com problema"}.' if son else ""))
+    leitura_ = leitura([
+        f"<strong>O k da Fase 4.</strong> {esc(r8['motivo'])} (bloco <code>tb_f4_calibracao_r8</code>); a corrida 18 lê o k de <code>limiares.json</code>.",
+        f"<strong>Os limiares do selo.</strong> Ficha 31 (a): baixo é a parcela de {fmt(100 * parcela, 0) if parcela is not None else '—'}% de menor probabilidade (gatilho de intervenção e de revisão humana), "
+        f"alto fica acima da mediana dos acertos; {limi.get('revisados')} casos revisados pegam {limi.get('erros_pegos')} de {limi.get('erros')} erros e deixam "
+        f"{fmt(100 * limi['risco_no_que_sobra']) if limi.get('risco_no_que_sobra') is not None else '—'}% de risco no que sobra (<code>tb_f4_calibracao_revisao</code>).",
+        f"<strong>A probabilidade é triagem, não barreira.</strong> AUROC de {fmt(a_p.get('auroc'), 3)} para o primeiro token do rótulo e {fmt(auroc(escolhido, 'p_conjunta').get('auroc'), 3)} para a conjunta com k = {escolhido['k']} "
+        "(blocos <code>tb_f4_calibracao_resumo</code> e <code>tb_f4_calibracao_por_k</code>): parte dos erros sai confiante, então o selo alto não dispensa a conferência (especificação da trilha, seção 6.3).",
+        *([f"<strong>Erros por selo.</strong> " + "; ".join(f"selo {esc(x['selo'])}: {erros_txt(x)}" for x in por_selo) + " (<code>tb_f4_calibracao_selos</code>)."] if por_selo else []),
+        (f"<strong>Ponte de versão.</strong> Ollama {ponte.get('versao')}: b = {ponte.get('b')}, c = {ponte.get('c')} contra a Fase 3, {'dentro' if ponte.get('pareavel') else 'fora'} do limite da decisão 47"
+         + (" (feita nesta corrida)." if ponte.get("feita_nesta_corrida") else f" ({esc(str(ponte.get('corrida')))}).")) if ponte else "<strong>Ponte de versão.</strong> Não registrada.",
+        f"<strong>Custo.</strong> " + "; ".join(f"k = {x['k']}: {fmt(x['segundos_mediana'])} s por diagnóstico, {fmt(x['tokens_entrada_mediana'], 0)} tokens de entrada na mediana" for x in por_k) + ".",
+    ])
+    html_ = f'''<section id="calibracao" hidden>
+<h1>Calibração: qual k entra no agente e onde ficam os limiares do selo?</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Acerto, acurácia balanceada e AUROC por k</h2>
+<p>A L1 curada nos 90 casos oficiais com cada k, pelo mesmo executor e o mesmo prompt da Fase 3; a probabilidade do rótulo é lida no primeiro token depois de CAUSA_RAIZ.</p>
+<div class="chart baixo"><canvas id="g-cal-k"></canvas></div>
+{tab_k}
+<h2>Curva risco-cobertura com k = {escolhido["k"]}</h2>
+<p>Respondendo só os casos de maior probabilidade: a cobertura (quantos são respondidos) e o risco (erros entre eles). É dela que saem os limiares.</p>
+<div class="chart baixo"><canvas id="g-cal-curva"></canvas></div>
+{tab_rev}
+{bloco_selos}
+<h2>Regra R8, ponte e sondagem</h2>
+{tab_r8}
+{detalhes("Ponte de versão (regra R6)", tab_ponte)}
+{detalhes("Sondagem dos logprobs no Ollama instalado", tab_son)}
+{detalhes(f"Caso a caso com k = {escolhido['k']} ({len(escolhido.get('casos', []))} casos, da menor probabilidade para a maior)", casos)}
+<h2>A corrida no roadmap</h2>
+{cartoes_corridas(road, numeros=["16"], sufixo="-cal")}
+{leitura_}
+{fontes_}
+</section>'''
+    return dados_js, html_
+
+
+# ------------------------------------------------------------------ 20. Fase 4: tela e fixture (corrida 18)
+
+# ! Alteração de IA - Revisar: aba nova (01/11/2026, Fase 4) com a leitura da corrida 18 (o mesmo caso lido da tela e do
+# fixture, na mesma sessão do Ollama), lida de resultados_alvo/fase4/tela.json (avaliar_fase4.py --tela): a regra R2
+# (mesmo rótulo nos dois lados, b e c, McNemar), o acerto de cada lado por classe, os selos e gatilhos na tela, os rótulos
+# dados em cada lado contra o gabarito, o prompt da tela contra o maior da calibração e o caso a caso; sem o arquivo, o
+# estado vazio com o cartão da corrida, como as outras abas.
+# ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 18 decide se o molde do sintoma e a poda
+# voltam para revisão antes da noite C (regra R2), e o Eric decide pelo painel.
+def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    fontes_ = fontes(["<code>resultados_alvo/fase4/tela.json</code> e <code>.md</code> (<code>avaliar_fase4.py --tela</code>, com <code>--check</code>; blocos <code>tb_f4_tela_*</code>); a repetição com o caso ao vivo revisado em <code>tela_v2.json</code> (<code>--nome tela_v2</code>)",
+                      "<code>executar_fase4.py --modo tela</code> (os casos que reproduzem em <code>reproducibilidade.json</code>, k e limiares de <code>limiares.json</code>, ponte de <code>pontes.json</code>; relatórios v2 por caso em <code>fase4_tela/relatorios/</code>)",
+                      "roadmap §2.10; plano aprovado da Fase 4, seções 3.3, 5 e 6 (regra R2); ficha 37"])
+    vazio = {"resumo": None, "por_classe": [], "rotulos": [], "v2": None}
+    if not tela:
+        html_ = f'''<section id="tela" hidden>
+<h1>Tela e fixture: o agente dá o mesmo diagnóstico ao caso lido da tela e ao caso escrito?</h1>
+<p class="lead">A corrida 18 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/tela.json</code>, gerado por <code>avaliar_fase4.py --tela</code> depois de <code>executar_fase4.py --modo tela --saida fase4_tela</code> (noite B do plano aprovado).</p>
+{cartoes_corridas(road, numeros=["18", "18b"], sufixo="-tela")}
+{fontes_}
+</section>'''
+        return vazio, html_
+    r = tela["resumo"]
+    casos = tela["casos"]
+    pcc = tela.get("prompt_contra_calibracao") or {}
+    n = r["casos"] or 1
+    # ! Alteração de IA - Revisar: (01/11/2026, ficha 37) a aba também lê a repetição da corrida 18 com o caso ao vivo
+    # revisado (`tela_v2.json`, corrida 18b): cartão próprio, séries nos dois gráficos, colunas por classe e a comparação
+    # caso a caso com a corrida original; sem o arquivo, mostra só a corrida 18.
+    # ! Motivo: a regra R2 é relida na repetição, e o Eric decide pelo painel se a revisão do caso ao vivo resolveu.
+    v2 = tela_v2 if tela_v2 and tela_v2.get("resumo") else None
+    r2 = v2["resumo"] if v2 else None
+    casos_v2 = {l["caso"]: l for l in (v2["casos"] if v2 else [])}
+    classes_v2 = {x["classe"]: x for x in (v2["por_classe"] if v2 else [])}
+
+    def contagem(campo: str, lista=None) -> dict:
+        c: dict = {}
+        for l in (casos if lista is None else lista):
+            chave = l.get(campo) or "sem rótulo"
+            c[chave] = c.get(chave, 0) + 1
+        return c
+
+    ct, cf, cg = contagem("rotulo_tela"), contagem("rotulo_fixture"), contagem("gabarito")
+    ct2 = contagem("rotulo_tela", list(casos_v2.values())) if v2 else {}
+    rotulos = [{"rotulo": x, "tela": ct.get(x, 0), "fixture": cf.get(x, 0), "gabarito": cg.get(x, 0), "tela_v2": ct2.get(x, 0) if v2 else None}
+               for x in sorted(set(ct) | set(cf) | set(cg) | set(ct2), key=lambda x: (-(ct.get(x, 0) + cf.get(x, 0) + cg.get(x, 0) + ct2.get(x, 0)), x))]
+    mais_tela = max(rotulos, key=lambda x: x["tela"]) if rotulos else None
+    por_classe = [{"classe": x["classe"], "nome": CLASSES.get(x["classe"], ""), "casos": x["casos"], "acerto_tela": x["acerto_tela"],
+                   "acerto_fixture": x["acerto_fixture"], "concordam": x["concordam"],
+                   "acerto_tela_v2": classes_v2.get(x["classe"], {}).get("acerto_tela") if v2 else None,
+                   "concordam_v2": classes_v2.get(x["classe"], {}).get("concordam") if v2 else None} for x in tela["por_classe"]]
+    comparacao = []
+    if v2:
+        for l in casos:
+            l2 = casos_v2.get(l["caso"])
+            if l2:
+                comparacao.append({"caso": l["caso"], "gabarito": l["gabarito"], "tela_18": l["rotulo_tela"], "tela_18b": l2["rotulo_tela"], "fixture_18b": l2["rotulo_fixture"],
+                                   "acerto_18": l["acerto_tela"], "acerto_18b": l2["acerto_tela"], "concordam_18": l["concordam"], "concordam_18b": l2["concordam"],
+                                   "mudou": l["rotulo_tela"] != l2["rotulo_tela"]})
+    ganhos = sum(1 for c in comparacao if c["acerto_18b"] and not c["acerto_18"])
+    perdas = sum(1 for c in comparacao if c["acerto_18"] and not c["acerto_18b"])
+    pior = min(por_classe, key=lambda x: (x["acerto_tela"] / x["casos"] if x["casos"] else 1, -x["casos"])) if por_classe else None
+    rotulos_diferentes = r["casos"] - r["concordam"]
+    st, sf = r.get("selos_tela") or {}, r.get("selos_fixture") or {}
+    acima = pcc.get("acima") or []
+    dentro = bool(r.get("dentro_do_limite_r2"))
+    cp = tela.get("corpo") or {}
+    sem_dif = cp.get("sem_diferenca_contra_contrato")
+    chaves_resumo = ("casos", "acerto_tela", "acerto_fixture", "concordam", "b", "c", "discordantes", "limite_r2", "dentro_do_limite_r2", "p_mcnemar",
+                     "gatilhos_tela", "divergencias_tela", "segundos_tela_mediana", "segundos_fixture_mediana", "p_tela_mediana", "p_fixture_mediana", "trilha_bytes")
+    dados_js = {"resumo": {k: r.get(k) for k in chaves_resumo}, "por_classe": por_classe, "rotulos": rotulos,
+                "v2": {"resumo": {k: r2.get(k) for k in chaves_resumo}, "ganhos": ganhos, "perdas": perdas, "mudaram": sum(1 for c in comparacao if c["mudou"])} if v2 else None}
+    itens_kpi = [
+        ("Mesmo rótulo na tela e no fixture (regra R2)", f'{r["concordam"]} de {r["casos"]}',
+         f'{fmt(100 * r["concordam"] / n)}%; só a tela acerta em {r["b"]} e só o fixture em {r["c"]}: b + c = {r["discordantes"]} contra o limite {r["limite_r2"]}, '
+         f'{"dentro" if dentro else "fora"} do limite (p = {fmt(r["p_mcnemar"], 3)})'),
+        ("Acerto na tela", f'{r["acerto_tela"]} de {r["casos"]}', f'{fmt(100 * r["acerto_tela"] / n)}%; no fixture {r["acerto_fixture"]} de {r["casos"]} ({fmt(100 * r["acerto_fixture"] / n)}%)'),
+        ("Rótulo mais dado na tela", f'{esc(mais_tela["rotulo"])} em {mais_tela["tela"]}' if mais_tela else "n/d",
+         f'no fixture em {mais_tela["fixture"]}; é o gabarito de {mais_tela["gabarito"]} dos {r["casos"]} casos' if mais_tela else ""),
+        ("Selos na tela (alto / médio / baixo)", f'{st.get("alto", 0)} / {st.get("medio", 0)} / {st.get("baixo", 0)}',
+         f'no fixture {sf.get("alto", 0)} / {sf.get("medio", 0)} / {sf.get("baixo", 0)}; mediana de p {fmt(r["p_tela_mediana"], 3)} na tela e {fmt(r["p_fixture_mediana"], 3)} no fixture'),
+        ("Gatilhos e divergências na tela", f'{r["gatilhos_tela"]} e {r["divergencias_tela"]}', f'intervenções desligadas nesta corrida ({r.get("intervencoes_tela", 0)} rodadas)'),
+        ("Prompt da tela acima do limite da calibração", f'{len(acima)} de {r["casos"]}',
+         f'limite {pcc.get("limite_mais_10_pct")} tokens (10% acima do maior da calibração, {pcc.get("maximo_da_calibracao")}); maior prompt da tela {pcc.get("maximo_da_tela")}'),
+        ("Tempo por caso", f'{fmt(r["segundos_tela_mediana"])} s', f'mediana na tela; {fmt(r["segundos_fixture_mediana"])} s no fixture; trilha da corrida com {r["trilha_bytes"]} bytes'),
+    ]
+    if sem_dif is not None:
+        itens_kpi.insert(3, ("Casos em que a poda não achou diferença contra o contrato", f'{sem_dif} de {cp.get("casos_lidos")}',
+                             f'o CORPO levou o primeiro item normal da lista: mesmo rótulo em {cp.get("sem_diferenca_concordam")}, acerto na tela em {cp.get("sem_diferenca_acerto_tela")}, '
+                             f'colecao_no_lugar_de_objeto em {cp.get("sem_diferenca_colecao_na_tela")}; com diferença de campo: mesmo rótulo em {cp.get("com_diferenca_concordam")} de {cp.get("com_diferenca_contra_contrato")}'))
+    if v2:
+        n2 = r2["casos"] or 1
+        itens_kpi.insert(1, ("Repetição com o caso ao vivo revisado (corrida 18b)", f'{r2["concordam"]} de {r2["casos"]} com o mesmo rótulo',
+                             f'acerto na tela {r2["acerto_tela"]} ({fmt(100 * r2["acerto_tela"] / n2)}%) contra {r["acerto_tela"]} na corrida 18; no fixture {r2["acerto_fixture"]}; '
+                             f'b = {r2["b"]}, c = {r2["c"]}: b + c = {r2["discordantes"]} contra o limite {r2["limite_r2"]}, {"dentro" if r2.get("dentro_do_limite_r2") else "fora"} do limite '
+                             f'(p = {fmt(r2["p_mcnemar"], 3)}); caso a caso: {ganhos} passaram a acertar na tela, {perdas} deixaram de acertar'))
+    tab_comparacao = tabela(["Caso", "Gabarito", "Rótulo na tela (18)", "Rótulo na tela (18b)", "Rótulo no fixture (18b)", "Tela 18", "Tela 18b", "Mesmo rótulo 18", "Mesmo rótulo 18b", "Rótulo da tela mudou"],
+                            [[f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(c['tela_18'] or 'sem rótulo')}</code>", f"<code>{esc(c['tela_18b'] or 'sem rótulo')}</code>",
+                              f"<code>{esc(c['fixture_18b'] or 'sem rótulo')}</code>", "certo" if c["acerto_18"] else "errado", "certo" if c["acerto_18b"] else "errado",
+                              "sim" if c["concordam_18"] else "não", "sim" if c["concordam_18b"] else "não", "sim" if c["mudou"] else "não"] for c in comparacao], raw=True) if v2 else ""
+    tab_classe = tabela(["Classe", "Casos", "Acerto na tela", "Acerto no fixture", "Mesmo rótulo"] + (["Acerto na tela (18b)", "Mesmo rótulo (18b)"] if v2 else []),
+                        [[f'{x["classe"]} {x["nome"]}', x["casos"], x["acerto_tela"], x["acerto_fixture"], x["concordam"]]
+                         + ([x["acerto_tela_v2"] if x["acerto_tela_v2"] is not None else "—", x["concordam_v2"] if x["concordam_v2"] is not None else "—"] if v2 else []) for x in por_classe])
+    tab_rotulos = tabela(["Rótulo", "Dado na tela", "Dado no fixture", "É o gabarito de"] + (["Dado na tela (18b)"] if v2 else []),
+                         [[f"<code>{esc(x['rotulo'])}</code>", x["tela"], x["fixture"], x["gabarito"]] + ([x["tela_v2"]] if v2 else []) for x in rotulos], raw=True)
+    tab_casos = tabela(["Caso", "Classe", "Gabarito", "Rótulo na tela", "Rótulo no fixture", "Tela", "Fixture", "Mesmo rótulo", "p tela", "Selo tela", "p fixture", "Selo fixture",
+                        "Gatilho", "Divergência", "s tela", "s fixture"],
+                       [[f"<code>{esc(l['caso'])}</code>", l["classe"], f"<code>{esc(l['gabarito'])}</code>", f"<code>{esc(l['rotulo_tela'] or 'sem rótulo')}</code>",
+                         f"<code>{esc(l['rotulo_fixture'] or 'sem rótulo')}</code>", "certo" if l["acerto_tela"] else "errado", "certo" if l["acerto_fixture"] else "errado",
+                         "sim" if l["concordam"] else "não", fmt(l["p_tela"], 2), esc(l.get("selo_tela") or "—"), fmt(l["p_fixture"], 2), esc(l.get("selo_fixture") or "—"),
+                         "sim" if l["gatilho_tela"] else "não", "sim" if l["divergencia_tela"] else "não", fmt(l["segundos_tela"]), fmt(l["segundos_fixture"])] for l in casos], raw=True)
+    lead = (f'{"Sim" if dentro else "Não"}. Nos {r["casos"]} casos que reproduzem, o agente dá o mesmo rótulo na tela e no fixture em {r["concordam"]} ({fmt(100 * r["concordam"] / n)}%): '
+            f'acerta {r["acerto_tela"]} na tela e {r["acerto_fixture"]} no fixture; só a tela acerta em {r["b"]}, só o fixture em {r["c"]} (b + c = {r["discordantes"]}, '
+            f'limite da regra R2 = {r["limite_r2"]}: {"dentro" if dentro else "fora"} do limite; p = {fmt(r["p_mcnemar"], 3)}). '
+            + (f'Na tela o rótulo mais dado é <code>{esc(mais_tela["rotulo"])}</code>, em {mais_tela["tela"]} casos ({mais_tela["fixture"]} no fixture; gabarito de {mais_tela["gabarito"]}). ' if mais_tela else "")
+            + f'{len(acima)} dos {r["casos"]} prompts da tela passam do limite de tokens da calibração.'
+            + (f' Na repetição com o caso ao vivo revisado (corrida 18b), o mesmo rótulo sai em {r2["concordam"]} de {r2["casos"]} e a tela acerta {r2["acerto_tela"]} '
+               f'(b + c = {r2["discordantes"]}, {"dentro" if r2.get("dentro_do_limite_r2") else "fora"} do limite da regra R2).' if v2 else ""))
+    leitura_ = leitura([
+        *([f"<strong>Repetição com o caso ao vivo revisado (corrida 18b).</strong> O mesmo rótulo passou de {r['concordam']} para {r2['concordam']} dos {r2['casos']} casos e o acerto na tela de "
+           f"{r['acerto_tela']} para {r2['acerto_tela']} (fixture {r['acerto_fixture']} e {r2['acerto_fixture']}); b + c = {r2['discordantes']} contra o limite {r2['limite_r2']}: a regra R2 "
+           f"{'passa a valer' if r2.get('dentro_do_limite_r2') else 'continua fora do limite'}. Caso a caso, {ganhos} passaram a acertar na tela e {perdas} deixaram de acertar; "
+           f"o rótulo da tela mudou em {sum(1 for c in comparacao if c['mudou'])} casos (tabela de comparação; blocos <code>tb_f4_tela_resumo</code> e <code>tb_f4_tela_casos</code> de <code>tela_v2.json</code>)."] if v2 else []),
+        (f"<strong>Regra R2 {'cumprida' if dentro else 'não cumprida'}.</strong> {rotulos_diferentes} casos recebem rótulos diferentes nos dois lados e em {r['discordantes']} só um lado acerta "
+         f"(bloco <code>tb_f4_tela_resumo</code>); o limite é {r['limite_r2']}. "
+         + ("" if dentro else "Pelo plano aprovado (regra R2), o molde do sintoma e a poda do caso ao vivo voltam para revisão antes da próxima noite com modelo.")),
+        (f"<strong>O rótulo que a tela puxa.</strong> <code>{esc(mais_tela['rotulo'])}</code> sai {mais_tela['tela']} vezes na tela, {mais_tela['fixture']} no fixture, e é o gabarito de "
+         f"{mais_tela['gabarito']} casos (tabela de rótulos): o caso ao vivo leva o modelo para uma causa que o caso escrito não sugere." if mais_tela else "<strong>Rótulos.</strong> Sem casos."),
+        *([f"<strong>Onde a tela perde.</strong> Em {sem_dif} dos {cp.get('casos_lidos')} casos a poda não achou diferença de campo contra o contrato e o CORPO levou ao modelo o primeiro item "
+           f"normal da lista (bloco <code>tb_f4_tela_corpo</code>): só {cp.get('sem_diferenca_concordam')} dão o mesmo rótulo e {cp.get('sem_diferenca_colecao_na_tela')} viram "
+           f"<code>colecao_no_lugar_de_objeto</code>; em {cp.get('sintoma_sem_medida')} o sintoma por molde diz \"Nenhuma diferença medida contra a referência\". "
+           f"Nos {cp.get('com_diferenca_contra_contrato')} casos com diferença de campo, {cp.get('com_diferenca_concordam')} dão o mesmo rótulo. As falhas de lista (contagem, duplicado, "
+           "codificação, escala, latência) não são diferenças de campo: o caso ao vivo precisa dizer o que mudou contra a referência em modo normal, que o harness já mede."] if sem_dif is not None else []),
+        (f"<strong>A pior classe na tela.</strong> {pior['classe']} {esc(pior['nome'])}: {pior['acerto_tela']} de {pior['casos']} na tela contra {pior['acerto_fixture']} no fixture "
+         f"(bloco <code>tb_f4_tela_por_classe</code>)." if pior else "<strong>Por classe.</strong> Sem dados."),
+        f"<strong>Prompt maior que o da calibração.</strong> {len(acima)} dos {r['casos']} prompts da tela passam de {pcc.get('limite_mais_10_pct')} tokens (o maior da tela tem {pcc.get('maximo_da_tela')}; "
+        f"o maior da calibração, {pcc.get('maximo_da_calibracao')}): o caso ao vivo é mais longo que o caso escrito, e os limiares do selo foram calibrados no escrito (plano, seção 3.3).",
+        f"<strong>Selos e gatilhos.</strong> Na tela {st.get('baixo', 0)} casos ficam com selo baixo e {r['gatilhos_tela']} disparam gatilho; as intervenções ficaram desligadas nesta corrida, "
+        f"então a FONTE fica declarada, não verificada. No fixture {sf.get('alto', 0)} casos têm selo alto, na tela {st.get('alto', 0)}.",
+        f"<strong>Custo.</strong> {fmt(r['segundos_tela_mediana'])} s por caso na tela e {fmt(r['segundos_fixture_mediana'])} s no fixture (medianas); a trilha v2 da corrida tem {r['trilha_bytes']} bytes.",
+    ])
+    html_ = f'''<section id="tela" hidden>
+<h1>Tela e fixture: o agente dá o mesmo diagnóstico ao caso lido da tela e ao caso escrito?</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Acerto e concordância por classe de defeito</h2>
+<p>Cada caso que reproduz foi diagnosticado duas vezes na mesma sessão do Ollama: lido da tela (roteiro, interceptação, poda e sintoma por molde) e lido do fixture (o caso escrito). O gabarito entra só nesta leitura.</p>
+<div class="chart"><canvas id="g-tela-classe"></canvas></div>
+{tab_classe}
+<h2>Que rótulos cada lado dá</h2>
+<p>Quantas vezes cada causa foi respondida na tela e no fixture, contra quantas vezes ela é o gabarito.</p>
+<div class="chart"><canvas id="g-tela-rotulos"></canvas></div>
+{tab_rotulos}
+{detalhes(f"Caso a caso ({len(casos)} casos)", tab_casos)}
+{detalhes(f"Corrida 18 contra a repetição 18b, caso a caso ({len(comparacao)} casos)", tab_comparacao) if v2 else ""}
+{detalhes(f"Prompts da tela acima do limite da calibração ({len(acima)})", "<p>" + ", ".join(f"<code>{esc(c)}</code>" for c in acima) + "</p>" if acima else "<p>nenhum</p>")}
+<h2>As corridas no roadmap</h2>
+{cartoes_corridas(road, numeros=["18", "18b"], sufixo="-tela")}
+{leitura_}
+{fontes_}
+</section>'''
+    return dados_js, html_
+
+
+# ------------------------------------------------------------------ 21. Fase 4: cura de seletor (corrida 19)
+
+# ! Alteração de IA - Revisar: aba nova (01/11/2026, Fase 4, pacote P4) com a leitura da corrida 19 (cura de seletor), lida
+# de resultados_alvo/fase4/cura.json (avaliar_fase4.py --cura): a taxa de cura pela regra R3 (uma cura só conta quando o
+# roteiro passa na reexecução; "mesmo elemento" separado de "outro elemento"), o MTTR da detecção à reexecução validada,
+# por modo de quebra, por roteiro e pelas duas formas da quebra (harness e variante do PHP, decisão 80), o rendimento de
+# cada estratégia de candidato e os casos "outro elemento"; sem o arquivo, o estado vazio com o cartão da corrida.
+# ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 19 é a primeira medida de MTTR só do agente
+# e o Eric decide pelo painel se a cura em código basta para a Fase 5.
+def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    fontes_ = fontes(["<code>resultados_alvo/fase4/cura.json</code> e <code>.md</code> (<code>avaliar_fase4.py --cura</code>, com <code>--check</code>; blocos <code>tb_f4_cura_*</code>)",
+                      "<code>executar_fase4.py --modo cura</code> (<code>cura_seletor.py</code>: candidatos em ordem fixa e verificação em código; <code>cenarios_fase4.QUEBRAS</code>: as 16 células; "
+                      "<code>Programacao/CobaiaFront/quebra.php</code>: a variante do front ligada por <code>?quebra=</code> ou cookie; relatórios v2 por execução em <code>fase4_cura/relatorios/</code>)",
+                      "roadmap §2.11; plano aprovado da Fase 4, seções 3.6, 5 (regra R3) e 6; fichas 29 (opção c, decisão 80), 35 e 36"])
+    vazio = {"resumo": None, "por_modo": [], "por_roteiro": [], "por_forma": [], "estrategias": []}
+    if not cura or not cura.get("resumo"):
+        html_ = f'''<section id="cura" hidden>
+<h1>Cura de seletor: quando o localizador quebra, o agente acha outro em código e o roteiro passa?</h1>
+<p class="lead">A corrida 19 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/cura.json</code>, gerado por <code>avaliar_fase4.py --cura</code> depois de <code>executar_fase4.py --modo cura --saida fase4_cura</code> (pacote P4 do plano aprovado, sem modelo).</p>
+{cartoes_corridas(road, numeros=["19"], sufixo="-cura")}
+{fontes_}
+</section>'''
+        return vazio, html_
+    r = cura["resumo"]
+    f = cura.get("formas") or {}
+    por_modo = [{"modo": x["modo"], "execucoes": x["execucoes"], "quebrou": x["quebrou"], "curadas": x["curadas"], "mesmo_elemento": x["mesmo_elemento"],
+                 "outro_elemento": x["outro_elemento"], "nao_curadas": x["nao_curadas"], "nao_quebrou": x["nao_quebrou"], "taxa": x["taxa_de_cura_pct"],
+                 "mttr": x["mttr_mediana_s"]} for x in cura["por_modo"]]
+    por_roteiro = [{"roteiro": x["roteiro"], "execucoes": x["execucoes"], "quebrou": x["quebrou"], "curadas": x["curadas"], "mesmo_elemento": x["mesmo_elemento"],
+                    "outro_elemento": x["outro_elemento"], "nao_curadas": x["nao_curadas"], "nao_quebrou": x["nao_quebrou"], "taxa": x["taxa_de_cura_pct"],
+                    "mttr": x["mttr_mediana_s"]} for x in cura["por_roteiro"]]
+    por_forma = [{"forma": x["forma"], "quebrou": x["quebrou"], "curadas": x["curadas"], "taxa": x["taxa_de_cura_pct"], "mttr": x["mttr_mediana_s"],
+                  "mesmo_elemento": x["mesmo_elemento"], "outro_elemento": x["outro_elemento"]} for x in cura["por_forma"]]
+    estrategias = [{"estrategia": x["estrategia"], "gerada": x["gerada"], "passou_estaticas": x["passou_estaticas"], "reexecutada": x["reexecutada"], "aplicada": x["aplicada"],
+                    "recusada_em": x["recusada_em"]} for x in cura.get("por_estrategia") or []]
+    mais_aplicada = max(estrategias, key=lambda x: x["aplicada"]) if estrategias else None
+    pior_modo = min(por_modo, key=lambda x: (x["taxa"] if x["taxa"] is not None else 101, -x["quebrou"])) if por_modo else None
+    melhor_modo = max(por_modo, key=lambda x: (x["taxa"] if x["taxa"] is not None else -1, x["quebrou"])) if por_modo else None
+    dados_js = {"resumo": {k: r.get(k) for k in ("execucoes", "quebras_detectadas", "nao_quebrou", "curadas", "nao_curadas", "taxa_de_cura_pct", "mesmo_elemento",
+                                                 "outro_elemento", "mttr_mediana_s", "mttr_min_s", "mttr_max_s", "repeticoes", "limiar_nome", "formas")},
+                "por_modo": por_modo, "por_roteiro": por_roteiro, "por_forma": por_forma, "estrategias": estrategias}
+    fh = next((x for x in por_forma if x["forma"] == "harness"), None)
+    fp = next((x for x in por_forma if x["forma"] == "php"), None)
+    itens_kpi = [
+        ("Curadas pela regra R3", f'{r["curadas"]} de {r["quebras_detectadas"]}',
+         f'{fmt(r["taxa_de_cura_pct"])}% das quebras detectadas em {r["execucoes"]} execuções ({r["repeticoes"]} repetições por célula); {r["nao_quebrou"]} execuções não quebraram'
+         if r["taxa_de_cura_pct"] is not None else f'{r["execucoes"]} execuções; nenhuma quebra detectada'),
+        ("Mesmo elemento da referência", f'{r["mesmo_elemento"]} de {r["curadas"]}',
+         f'{r["outro_elemento"]} cura(s) com outro elemento que fez o roteiro passar (regra R3, tabela abaixo)'),
+        ("MTTR do agente (mediana)", f'{fmt(r["mttr_mediana_s"])} s' if r["mttr_mediana_s"] is not None else "n/d",
+         f'da detecção à reexecução validada; mínimo {fmt(r["mttr_min_s"])} s e máximo {fmt(r["mttr_max_s"])} s' if r["mttr_mediana_s"] is not None else "nenhuma cura validada"),
+        ("Harness contra variante do PHP", f'{f.get("mesmo_resultado", 0)} de {f.get("celulas_comparadas", 0)} células com o mesmo resultado',
+         f'a árvore da página quebrada é a mesma nas duas formas em {f.get("arvore_igual", 0)} células'
+         + (f'; difere em {", ".join(f.get("arvore_diferente") or [])}' if f.get("arvore_diferente") else "")
+         + (f'; taxa de cura {fmt(fh["taxa"])}% no harness e {fmt(fp["taxa"])}% no PHP' if fh and fp and fh["taxa"] is not None and fp["taxa"] is not None else "")),
+        ("Estratégia que mais curou", f'{esc(mais_aplicada["estrategia"])} em {mais_aplicada["aplicada"]}' if mais_aplicada else "n/d",
+         "; ".join(f'{esc(x["estrategia"])} {x["aplicada"]}' for x in estrategias if x["aplicada"] and x is not mais_aplicada) or "nenhuma outra estratégia curou"),
+        ("Limiar do nome parecido", fmt(r["limiar_nome"]), "similaridade do texto normalizado, fixada no P4 e gravada em condicoes_fase4.json"),
+    ]
+    tab_modo = tabela(["Modo de quebra", "Execuções", "Quebraram", "Curadas", "Taxa de cura (%)", "Mesmo elemento", "Outro elemento", "Não curadas", "Não quebrou", "MTTR mediana (s)"],
+                      [[f"<code>{esc(x['modo'])}</code>", x["execucoes"], x["quebrou"], x["curadas"], fmt(x["taxa"]) if x["taxa"] is not None else "n/d", x["mesmo_elemento"], x["outro_elemento"],
+                        x["nao_curadas"], x["nao_quebrou"], fmt(x["mttr"]) if x["mttr"] is not None else "n/d"] for x in por_modo], raw=True)
+    tab_roteiro = tabela(["Roteiro", "Execuções", "Quebraram", "Curadas", "Taxa de cura (%)", "Mesmo elemento", "Outro elemento", "Não curadas", "Não quebrou", "MTTR mediana (s)"],
+                         [[f"<code>{esc(x['roteiro'])}</code>", x["execucoes"], x["quebrou"], x["curadas"], fmt(x["taxa"]) if x["taxa"] is not None else "n/d", x["mesmo_elemento"], x["outro_elemento"],
+                           x["nao_curadas"], x["nao_quebrou"], fmt(x["mttr"]) if x["mttr"] is not None else "n/d"] for x in por_roteiro], raw=True)
+    tab_forma = tabela(["Forma da quebra", "Quebraram", "Curadas", "Taxa de cura (%)", "Mesmo elemento", "Outro elemento", "MTTR mediana (s)"],
+                       [[esc(x["forma"]), x["quebrou"], x["curadas"], fmt(x["taxa"]) if x["taxa"] is not None else "n/d", x["mesmo_elemento"], x["outro_elemento"],
+                         fmt(x["mttr"]) if x["mttr"] is not None else "n/d"] for x in por_forma], raw=True)
+    verifs = ["resolve_um_elemento", "visivel_e_habilitado", "mesmo_papel", "nome_parecido", "efeito_na_reexecucao"]
+    tab_estr = tabela(["Estratégia", "Gerada", "Passou as estáticas", "Reexecutada", "Aplicada (curou)"] + [f"Recusada em {v}" for v in verifs],
+                      [[f"<code>{esc(x['estrategia'])}</code>", x["gerada"], x["passou_estaticas"], x["reexecutada"], x["aplicada"]] + [x["recusada_em"].get(v, 0) for v in verifs]
+                       for x in estrategias], raw=True)
+    tab_outro = tabela(["Execução", "Roteiro", "Modo", "Forma", "Estratégia", "Seletor curado", "MTTR (s)"],
+                       [[f"<code>{esc(x['id'])}</code>", esc(x["roteiro"]), f"<code>{esc(x['modo'])}</code>", esc(x["forma"]), f"<code>{esc(x['aplicado'])}</code>",
+                         f"<code>{esc(x['seletor_curado'])}</code>", fmt(x["mttr_s"]) if x.get("mttr_s") is not None else "n/d"] for x in cura.get("outro_elemento") or []], raw=True)
+    tab_nao = tabela(["Execução", "Roteiro", "Modo", "Forma", "Falha", "Reexecuções"],
+                     [[f"<code>{esc(x['id'])}</code>", esc(x["roteiro"]), f"<code>{esc(x['modo'])}</code>", esc(x["forma"]), f"<code>{esc(x.get('falha') or '')}</code>", x["reexecucoes"]]
+                      for x in cura.get("nao_curadas") or []], raw=True)
+    tab_exec = tabela(["Execução", "Localizador", "Quebrou", "Curada", "Estratégia", "Seletor curado", "Mesmo elemento", "MTTR (s)", "Reexecuções"],
+                      [[f"<code>{esc(x['id'])}</code>", f"<code>{esc(x['localizador'])}</code>", "sim" if x["quebrou"] else "não", "sim" if x["curado"] else "não",
+                        f"<code>{esc(x['aplicado'])}</code>" if x.get("aplicado") else "", f"<code>{esc(x['seletor_curado'])}</code>" if x.get("seletor_curado") else "",
+                        {True: "sim", False: "não"}.get(x["mesmo_elemento"], "n/d"), fmt(x["mttr_s"]) if x.get("mttr_s") is not None else "n/d", x["reexecucoes"]]
+                       for x in cura.get("execucoes") or []], raw=True)
+    lead = (f'{"Sim" if r["taxa_de_cura_pct"] is not None and r["taxa_de_cura_pct"] >= 50 else "Não"}, na medida da corrida 19: de {r["quebras_detectadas"]} quebras detectadas em '
+            f'{r["execucoes"]} execuções (quatro roteiros do front legado, quatro modos de quebra, {len(r.get("formas") or [])} formas, {r["repeticoes"]} repetições), '
+            f'{r["curadas"]} foram curadas pela regra R3 ({fmt(r["taxa_de_cura_pct"]) if r["taxa_de_cura_pct"] is not None else "n/d"}%), {r["mesmo_elemento"]} com o mesmo elemento da referência e '
+            f'{r["outro_elemento"]} com outro elemento que fez o roteiro passar; o MTTR do agente, da detecção à reexecução validada, tem mediana de '
+            f'{fmt(r["mttr_mediana_s"]) if r["mttr_mediana_s"] is not None else "n/d"} s. '
+            + (f'O modo mais curado é <code>{esc(melhor_modo["modo"])}</code> ({fmt(melhor_modo["taxa"])}%) e o menos, <code>{esc(pior_modo["modo"])}</code> ({fmt(pior_modo["taxa"]) if pior_modo["taxa"] is not None else "n/d"}%). '
+               if melhor_modo and pior_modo else "")
+            + (f'As duas formas de quebra dão o mesmo resultado em {f.get("mesmo_resultado", 0)} das {f.get("celulas_comparadas", 0)} células comparadas.' if f.get("celulas_comparadas") else ""))
+    leitura_ = leitura([
+        f"<strong>Regra R3.</strong> Só conta como cura a reexecução em que o roteiro inteiro passa com o candidato no lugar do localizador: {r['curadas']} de {r['quebras_detectadas']} "
+        f"(bloco <code>tb_f4_cura_resumo</code>); {r['outro_elemento']} dessas passaram com outro elemento, listado na tabela própria, e {r['nao_curadas']} não foram curadas.",
+        (f"<strong>Por modo de quebra.</strong> <code>{esc(melhor_modo['modo'])}</code> cura {melhor_modo['curadas']} de {melhor_modo['quebrou']} e <code>{esc(pior_modo['modo'])}</code> "
+         f"{pior_modo['curadas']} de {pior_modo['quebrou']} (bloco <code>tb_f4_cura_por_modo</code>): é onde a geração em código mais falha." if melhor_modo and pior_modo else "<strong>Por modo.</strong> Sem dados."),
+        (f"<strong>Estratégias.</strong> <code>{esc(mais_aplicada['estrategia'])}</code> é a que mais levou o roteiro ao fim ({mais_aplicada['aplicada']} vezes); a tabela de estratégias diz em que "
+         f"verificação cada uma foi recusada (bloco <code>tb_f4_cura_estrategias</code>)." if mais_aplicada else "<strong>Estratégias.</strong> Sem dados."),
+        (f"<strong>Harness contra PHP (decisão 80).</strong> A árvore da página quebrada é a mesma nas duas formas em {f.get('arvore_igual', 0)} das {f.get('celulas_comparadas', 0)} células e o "
+         f"resultado é o mesmo em {f.get('mesmo_resultado', 0)}" + (f"; taxa de cura {fmt(fh['taxa'])}% no harness e {fmt(fp['taxa'])}% no PHP" if fh and fp and fh["taxa"] is not None and fp["taxa"] is not None else "")
+         + " (blocos <code>tb_f4_cura_formas</code> e <code>tb_f4_cura_por_forma</code>)."),
+        f"<strong>MTTR.</strong> Mediana de {fmt(r['mttr_mediana_s']) if r['mttr_mediana_s'] is not None else 'n/d'} s, entre {fmt(r['mttr_min_s']) if r['mttr_min_s'] is not None else 'n/d'} e "
+        f"{fmt(r['mttr_max_s']) if r['mttr_max_s'] is not None else 'n/d'} s: é a primeira medida de MTTR só do agente, sem linha de base manual (a linha de base é a Fase 5).",
+        "<strong>Limitação declarada.</strong> A quebra é armada, não ocorrida; cada célula usa, no passo do alvo, o estilo de localizador que o modo quebra (por id, por classe, por texto ou "
+        "por caminho na estrutura), e a mudança de texto acrescenta uma palavra; um sinônimo ficaria abaixo do limiar do nome.",
+    ])
+    html_ = f'''<section id="cura" hidden>
+<h1>Cura de seletor: quando o localizador quebra, o agente acha outro em código e o roteiro passa?</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Cura por modo de quebra</h2>
+<p>Cada barra empilha as execuções do modo: curadas com o mesmo elemento da referência, curadas com outro elemento (regra R3), não curadas e as que não quebraram (o localizador sobreviveu à mutação).</p>
+<div class="chart"><canvas id="g-cura-modo"></canvas></div>
+{tab_modo}
+<h2>Cura por roteiro e MTTR</h2>
+<p>As mesmas contagens por roteiro do front legado; a linha do MTTR é a mediana, em segundos, da detecção à reexecução validada.</p>
+<div class="chart"><canvas id="g-cura-roteiro"></canvas></div>
+{tab_roteiro}
+<h2>As duas formas da quebra</h2>
+{tab_forma}
+{detalhes("O que cada estratégia de candidato rendeu", tab_estr)}
+{detalhes(f"Curas com outro elemento ({len(cura.get('outro_elemento') or [])})", tab_outro)}
+{detalhes(f"Execuções não curadas ({len(cura.get('nao_curadas') or [])})", tab_nao)}
+{detalhes(f"Execução a execução ({len(cura.get('execucoes') or [])})", tab_exec)}
+<h2>A corrida no roadmap</h2>
+{cartoes_corridas(road, numeros=["19"], sufixo="-cura")}
+{leitura_}
+{fontes_}
+</section>'''
+    return dados_js, html_
+
+
 def montar(ctx: dict) -> tuple[dict, str]:
     """ctx: dados (montar_dados), road, cartoes_corridas, md_para_html, md_doc_para_html, cq, blocos_cq, ineditos,
     curadoria, planilha_curadoria, recuperador, ablacao, medicao_mcp, readme. Devolve (dados_topicos, html)."""
@@ -1840,4 +2467,13 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("raciocinio", d, h))
     d, h = secao_cerebro(lev.read_text(encoding="utf-8") if lev.exists() else None)
     partes.append(("cerebro", d, h))
+    # a aba da Fase 4 existe sempre (o mapa de navegação a lista); sem as avaliações ela mostra o estado vazio
+    d, h = secao_reproducao(ctx.get("reproducao"), ctx.get("reproducao_ineditos"), road, ctx["cartoes_corridas"])
+    partes.append(("reproducao", d, h))
+    d, h = secao_calibracao(ctx.get("calibracao"), ctx.get("limiares"), road, ctx["cartoes_corridas"])
+    partes.append(("calibracao", d, h))
+    d, h = secao_tela(ctx.get("tela"), ctx.get("tela_v2"), road, ctx["cartoes_corridas"])
+    partes.append(("tela", d, h))
+    d, h = secao_cura(ctx.get("cura"), road, ctx["cartoes_corridas"])
+    partes.append(("cura", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

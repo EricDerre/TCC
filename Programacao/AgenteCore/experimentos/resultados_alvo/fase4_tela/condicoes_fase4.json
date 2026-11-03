@@ -1,0 +1,88 @@
+{
+  "modo": "tela",
+  "criado_em": "2026-11-01T11:09:25",
+  "saida": "fase4_tela",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.2",
+  "k": 3,
+  "limiares": {
+    "medida": "p_rotulo",
+    "leitura": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "baixo_ate": 0.8317943867608124,
+    "alto_a_partir_de": 0.9898271080008889,
+    "n": 90,
+    "sem_rotulo": 0,
+    "k": 3,
+    "origem": "fase4_calibracao/k3",
+    "erros": 22,
+    "revisados": 27,
+    "erros_pegos": 15,
+    "acertos_revisados": 12,
+    "risco_no_que_sobra": 0.1111,
+    "mediana_certos": 0.9898271080008889,
+    "mediana_errados": 0.7511499810137099,
+    "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+    "gravado_em": "2026-10-27T23:54:00"
+  },
+  "intervencoes": "desligadas",
+  "amostra": 0,
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "leitura_da_probabilidade": "primeiro_token_do_rotulo",
+  "parcial": false,
+  "casos": 37,
+  "origem_dos_casos": "os 37 casos que reproduzem em reproducibilidade.json (corrida 17)",
+  "biblioteca": {
+    "rotulo": "L1 curada",
+    "versao": 100,
+    "hash": "1fca10f1a6f6",
+    "origem": "Programacao/AgenteCore/biblioteca_producao"
+  },
+  "hash_prompt_fixo": "2e42cf9c31826941",
+  "hash_indice": "f246174cb3902e1e",
+  "versoes": {
+    "navegador": "156.0.8078.4",
+    "ollama": "0.40.2",
+    "playwright": "1.64.1",
+    "python": "3.14.7"
+  },
+  "canal": "chromium",
+  "hosts_permitidos": [
+    "localhost:8080",
+    "127.0.0.1:8080",
+    "[::1]:8080",
+    "localhost:8000",
+    "127.0.0.1:8000",
+    "[::1]:8000"
+  ],
+  "hosts_har": [
+    "code.jquery.com",
+    "ajax.googleapis.com",
+    "cdnjs.cloudflare.com",
+    "maxcdn.bootstrapcdn.com",
+    "stackpath.bootstrapcdn.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "use.fontawesome.com",
+    "kit.fontawesome.com",
+    "ka-f.fontawesome.com"
+  ],
+  "hosts_silenciosos": [
+    "maps.googleapis.com",
+    "maps.gstatic.com",
+    "www.google.com",
+    "maps.google.com"
+  ],
+  "limites": {
+    "nos_por_diagnostico": 40,
+    "nos_por_cura": 20,
+    "blob_inline_max_chars": 65536,
+    "retencao_meses": 6
+  },
+  "orcamento_de_tempo_ms": 1000,
+  "contrato": "id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano",
+  "regra_r2": "nos casos que reproduzem, o rótulo da tela e o do fixture, na mesma sessão do Ollama, diferem em no máximo 3 casos"
+}

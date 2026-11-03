@@ -1,0 +1,3 @@
+﻿[2026-11-01 10:27:41] lancador: processo 22520; espera RAM livre >= 6,5 GB (agora 4,6 GB; desiste as 20:27)
+[2026-11-01 11:09:05] RAM livre 6,9 GB: lancando rodar_fase4.ps1 -Modo tela -Saida fase4_tela
+[2026-11-01 12:34:04] rodar_fase4.ps1 terminou com codigo 0

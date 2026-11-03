@@ -1,5 +1,9 @@
 <?php
 include '../conn/connect.php';
+// ! Alteração de IA - Revisar: (01/11/2026, Fase 4, pacote P4) inclui quebra.php, a variante de quebra de localizador
+// ligada só por `?quebra=<modo>` ou pelo cookie `quebra`; desligada, o formulário de reserva sai como sempre saiu.
+// ! Motivo: ficha 29, opção c (decisão 80): a cura de seletor é medida também com a quebra feita no HTML que o PHP devolve.
+include_once __DIR__ . '/../quebra.php';
 
 $lista = $conn->query("select * from vw_tbpedidos where cpf like '%" . $_GET["cliente"] . "%';");
 $row = $lista->fetch_assoc();
@@ -45,7 +49,18 @@ $maxDate = $max->format('Y-m-d');
                         <div class="thumbnail">
                         <br>
                             <div class="alert alert-info" role="alert">
+                                <!-- ! Alteração de IA - Revisar: (01/11/2026, P4) o botão Reservar sai por PHP para a variante de
+                                     quebra (quebra.php): no modo id_renomeado o id enviar vira enviar_reserva, no classe_trocada a
+                                     classe btn-danger vira btn-reservar, no texto_alterado o valor vira "Reservar mesa" e no
+                                     estrutura_alterada o botão sai envolvido num div.acoes no começo do formulário. Sem modo, o
+                                     HTML é o de antes; o name=enviar nunca muda.
+                                     ! Motivo: ficha 29, opção c (decisão 80). -->
+                                <?php
+                                    $quebra_enviar = '<input type="submit" id="' . quebra_id('enviar', 'enviar_reserva') . '" name="enviar" class="btn '
+                                        . quebra_classe('btn-danger', 'btn-reservar') . ' btn-block" value="' . quebra_texto('Reservar', 'Reservar mesa') . '">';
+                                ?>
                                 <form action="registrar_reserva.php" name="reserva_login" id="reserva_login" method="POST" enctype="multipart/form-data">
+                                    <?php if (quebra_estrutura()) { echo '<div class="acoes">' . $quebra_enviar . '</div>'; } ?>
 
                                     <label for="id_pedido">Número de Pessoas:</label>
                                     <p class="input-group">
@@ -70,7 +85,7 @@ $maxDate = $max->format('Y-m-d');
 
                                     <br>
                                     <hr>
-                                    <input type="submit" id="enviar" name="enviar" class="btn btn-danger btn-block" value="Reservar">
+                                    <?php if (!quebra_estrutura()) { echo $quebra_enviar; } ?>
                                 </form>
                             </div><!-- fecha alert -->
                         </div><!-- fecha thumbnail -->

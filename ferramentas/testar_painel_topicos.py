@@ -43,6 +43,7 @@ def _ctx() -> dict:
         "relatorio3b": (gd.MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8"),
         "pend": pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"),
         **gd.contexto_pre_fase4(),
+        **gd.contexto_fase4(),
     }
 
 
@@ -75,8 +76,11 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn('<nav aria-label="Seções">', lateral.group(1))
         self.assertEqual(re.findall(r'data-alvo="([^"]+)"', lateral.group(1)), [sid for _, abas in tp.NAV for sid, _, _ in abas])
         self.assertEqual(re.findall(r'<span class="grupo">([^<]+)</span>', lateral.group(1)), [g for g, _ in tp.NAV])
-        self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Pesquisa e método", "Fases anteriores"])
-        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "pesquisa", "fases2"])
+        # ! Alteração de IA - Revisar: (27/10/2026) o grupo "Fase 4" entra depois da Pré-Fase 4, com a aba "Reprodução na tela".
+        # ! Motivo: a Fase 4 abriu em 26/10 e a corrida 17 é a primeira análise dela; o grupo fica na ordem cronológica, logo
+        # depois da pesquisa que a preparou, sem mexer na ordem por importância que o Eric pediu para os grupos anteriores.
+        self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Fase 4", "Pesquisa e método", "Fases anteriores"])
+        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "reproducao", "pesquisa", "fases2"])
         # em tela estreita a lateral vira gaveta aberta por um botão
         self.assertIn('<button class="menu" aria-controls="lateral" aria-expanded="false">', html)
         self.assertRegex(html, r"@media \(max-width:\s*900px\)\{[^}]*\.lateral\{")
@@ -488,6 +492,134 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertEqual(len(vereditos), len(linhas))
         self.assertTrue(set(vereditos) <= {"certo", "ressalva", "errado"}, vereditos)
         self.assertEqual(vereditos.count("errado"), sum(1 for r in linhas if r[1].strip().lower().startswith("errado")))
+
+    # ! Alteração de IA - Revisar: teste novo (27/10/2026) da aba "Reprodução na tela" (Fase 4).
+    # ! Motivo: a aba lê reproducibilidade.json (corrida 17) e reproducibilidade_ineditos.json (os 36 inéditos da ficha 27);
+    # os números-chave, a soma por classe e os dados do gráfico precisam bater com os JSON, e a aba tem de existir mesmo
+    # sem os arquivos (estado vazio), como as da Pré-Fase 4.
+    def teste_reproducao_usa_os_numeros_dos_json(self):
+        rep, ined = self.ctx.get("reproducao"), self.ctx.get("reproducao_ineditos")
+        secao = self.html[self.html.index('<section id="reproducao"'):].split("</section>")[0]
+        t = self.dados_t["reproducao"]
+        self.assertEqual([c["classe"] for c in t["classes"]], [1, 2, 3, 4, 5, 6])
+        self.assertIn("function repClasses(", tp.JS_TOPICOS)
+        d, h = tp.secao_reproducao(None, None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="reproducao"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertTrue(all(c["avaliacao"] is None for c in d["classes"]))
+        if not rep:
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        r = rep["resumo"]
+        self.assertIn(f'>{r["reproduzem"]} de {r["casos"]}</b>', secao)
+        self.assertEqual(sum(c["avaliacao"]["reproduzem"] for c in t["classes"]), r["reproduzem"])
+        self.assertEqual(sum(c["avaliacao"]["casos"] for c in t["classes"]), r["casos"])
+        self.assertIn(f'{tp.fmt(rep["tempo"]["mediana_s"], 3)} s', secao)
+        self.assertIn('id="g-rep-classe"', secao)
+        self.assertIn("tb_f4_reproducao_resumo", secao)
+        if ined:
+            ri = ined["resumo"]
+            self.assertIn(f'>{ri["reproduzem"]} de {ri["casos"]}</b>', secao)
+            self.assertEqual(sum(c["ineditos"]["reproduzem"] for c in t["classes"]), ri["reproduzem"])
+            self.assertEqual(t["rotulos"]["ineditos"], f'{ri["casos"]} inéditos')
+        else:
+            self.assertIn("ainda não rodada", secao)
+
+    # ! Alteração de IA - Revisar: teste novo (27/10/2026, P3) da aba "Calibração" (Fase 4, corrida 16).
+    # ! Motivo: a aba lê calibracao.json e limiares.json (avaliar_fase4.py --calibracao); os números-chave e os dados do
+    # gráfico precisam bater com o JSON, e a aba tem de existir mesmo sem os arquivos (estado vazio), como as outras.
+    def teste_calibracao_usa_os_numeros_dos_json(self):
+        cal, lim = self.ctx.get("calibracao"), self.ctx.get("limiares")
+        secao = self.html[self.html.index('<section id="calibracao"'):].split("</section>")[0]
+        t = self.dados_t["calibracao"]
+        self.assertIn("function calK(", tp.JS_TOPICOS)
+        self.assertIn("function calCurva(", tp.JS_TOPICOS)
+        d, h = tp.secao_calibracao(None, None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="calibracao"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertEqual(d["por_k"], [])
+        self.assertEqual(d["por_selo"], [])
+        if not cal:
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        # (28/10/2026) os casos e os erros por selo saem do JSON (bloco tb_f4_calibracao_selos), nunca contados à mão
+        if cal.get("por_selo"):
+            self.assertEqual(t["por_selo"], cal["por_selo"])
+            self.assertIn("tb_f4_calibracao_selos", secao)
+            alto = next(x for x in cal["por_selo"] if x["selo"] == "alto")
+            self.assertIn(f'{alto["errados"]} de {alto["casos"]}', secao)
+        self.assertEqual([x["k"] for x in t["por_k"]], [x["k"] for x in cal["por_k"]])
+        self.assertEqual([x["acertos"] for x in t["por_k"]], [x["acertos"] for x in cal["por_k"]])
+        self.assertEqual(t["k_escolhido"], cal["k_escolhido"])
+        self.assertIn(f'>k = {cal["k_escolhido"]}</b>', secao)
+        self.assertIn('id="g-cal-k"', secao)
+        self.assertIn("tb_f4_calibracao_resumo", secao)
+        if cal.get("limiares"):
+            self.assertEqual(t["limiares"]["baixo_ate"], cal["limiares"]["baixo_ate"])
+            self.assertIn(tp.fmt(cal["limiares"]["baixo_ate"], 3), secao)
+        if lim:
+            self.assertEqual(lim["k"], cal["limiares"]["k"])
+
+    def teste_tela_usa_os_numeros_dos_json(self):
+        # (01/11/2026) a aba da corrida 18 lê tela.json: regra R2, acerto por classe e rótulos por lado, nunca digitados à mão
+        tela = self.ctx.get("tela")
+        secao = self.html[self.html.index('<section id="tela"'):].split("</section>")[0]
+        t = self.dados_t["tela"]
+        self.assertIn("function telaClasses(", tp.JS_TOPICOS)
+        self.assertIn("function telaRotulos(", tp.JS_TOPICOS)
+        d, h = tp.secao_tela(None, None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="tela"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertEqual(d["por_classe"], [])
+        if not tela:
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        r = tela["resumo"]
+        # a repetição (18b): com a própria leitura como segunda corrida, a comparação fecha em zero mudanças
+        d2, h2 = tp.secao_tela(tela, tela, self.ctx["road"], gd.cartoes_corridas)
+        self.assertEqual(d2["v2"]["resumo"]["concordam"], r["concordam"])
+        self.assertEqual((d2["v2"]["ganhos"], d2["v2"]["perdas"], d2["v2"]["mudaram"]), (0, 0, 0))
+        self.assertIn("corrida 18b", h2)
+        self.assertIn("Rótulo na tela (18b)", h2)
+        v2 = self.ctx.get("tela_v2")
+        if v2:
+            self.assertEqual(t["v2"]["resumo"]["concordam"], v2["resumo"]["concordam"])
+            self.assertIn("corrida 18b", secao)
+        else:
+            self.assertIsNone(t["v2"])
+        self.assertEqual(t["resumo"]["concordam"], r["concordam"])
+        self.assertEqual(t["resumo"]["discordantes"], r["b"] + r["c"])
+        self.assertEqual([x["acerto_tela"] for x in t["por_classe"]], [x["acerto_tela"] for x in tela["por_classe"]])
+        self.assertEqual(sum(x["tela"] for x in t["rotulos"]), r["casos"])
+        self.assertEqual(sum(x["gabarito"] for x in t["rotulos"]), r["casos"])
+        self.assertIn(f'{r["concordam"]} de {r["casos"]}', secao)
+        self.assertIn('id="g-tela-classe"', secao)
+        self.assertIn("tb_f4_tela_resumo", secao)
+
+    def teste_cura_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (01/11/2026, P4) a aba da corrida 19 lê cura.json: taxa de cura, MTTR, mesmo elemento
+        # contra outro elemento (regra R3) e as duas formas de quebra, nunca digitados à mão; sem o arquivo, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; o Eric decide pelo painel.
+        cura = self.ctx.get("cura")
+        secao = self.html[self.html.index('<section id="cura"'):].split("</section>")[0]
+        self.assertIn("function curaModos(", tp.JS_TOPICOS)
+        self.assertIn("function curaRoteiros(", tp.JS_TOPICOS)
+        d, h = tp.secao_cura(None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="cura"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertEqual(d["por_modo"], [])
+        if not cura:
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        r = cura["resumo"]
+        t = self.dados_t["cura"]
+        self.assertEqual(t["resumo"]["curadas"], r["curadas"])
+        self.assertEqual([x["curadas"] for x in t["por_modo"]], [x["curadas"] for x in cura["por_modo"]])
+        self.assertEqual(sum(x["execucoes"] for x in t["por_roteiro"]), r["execucoes"])
+        self.assertIn(f'{r["curadas"]} de {r["quebras_detectadas"]}', secao)
+        self.assertIn('id="g-cura-modo"', secao)
+        self.assertIn("tb_f4_cura_resumo", secao)
+        self.assertIn("outro elemento", secao)
 
     def teste_funcoes_de_grafico_e_seletores_existem(self):
         for funcs in tp.DESENHAR_TOPICOS.values():

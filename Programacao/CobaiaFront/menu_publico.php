@@ -1,5 +1,9 @@
-<?php 
+<?php
 include "conn/connect.php";
+// ! Alteração de IA - Revisar: (01/11/2026, Fase 4, pacote P4) inclui quebra.php, a variante de quebra de localizador
+// ligada só por `?quebra=<modo>` ou pelo cookie `quebra`; desligada, o campo de busca sai como sempre saiu.
+// ! Motivo: ficha 29, opção c (decisão 80): a cura de seletor é medida também com a quebra feita no HTML que o PHP devolve.
+include_once __DIR__ . '/quebra.php';
 $lista_tipos = $conn->query("select * from tbtipos order by rotulo_tipo;");
 $row_tipos = $lista_tipos->fetch_all();
 ?>
@@ -68,12 +72,25 @@ $row_tipos = $lista_tipos->fetch_all();
                     <!-- inicio formulario de busca -->
                     <form action="produtos_busca.php" method="get" name="form-busca" id="form-busca" class="navbar-form navbar-left" role="search">
                         <div class="input-group">
-                                <input type="search" name="buscar" id="buscar" size="10" class="form-control" aria-label="search" placeholder="Buscar produto" required>
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default" type="submit">
-                                        <span class="glyphicon glyphicon-search"></span>
-                                    </button>
-                                </div>
+                                <!-- ! Alteração de IA - Revisar: (01/11/2026, P4) o campo e o botão da busca saem por PHP para a
+                                     variante de quebra (quebra.php): no modo id_renomeado o id vira buscar_v2, no classe_trocada
+                                     a classe form-control vira campo-busca, no texto_alterado o placeholder vira "Buscar produtos"
+                                     e no estrutura_alterada o campo é envolvido num span.envoltorio e sai depois do botão. Sem
+                                     modo, o HTML é o de antes, caractere a caractere nos atributos; o name=buscar nunca muda.
+                                     ! Motivo: ficha 29, opção c (decisão 80); o name é lido por produtos_busca.php e por isso
+                                     fica fora da quebra. -->
+                                <?php
+                                    $quebra_campo = '<input type="search" name="buscar" id="' . quebra_id('buscar', 'buscar_v2') . '" size="10" class="'
+                                        . quebra_classe('form-control', 'campo-busca') . '" aria-label="search" placeholder="'
+                                        . quebra_texto('Buscar produto', 'Buscar produtos') . '" required>';
+                                    $quebra_botao = '<div class="input-group-btn"><button class="btn btn-default" type="submit">'
+                                        . '<span class="glyphicon glyphicon-search"></span></button></div>';
+                                    if (quebra_estrutura()) {
+                                        echo $quebra_botao . '<span class="envoltorio">' . $quebra_campo . '</span>';
+                                    } else {
+                                        echo $quebra_campo . $quebra_botao;
+                                    }
+                                ?>
                         </div>
                     </form>
                     <!-- fim do formulario de busca -->

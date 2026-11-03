@@ -1070,6 +1070,33 @@ def contexto_pre_fase4() -> dict:
                         for p in sorted((pasta / "trilhas").glob("*.jsonl"))} if (pasta / "trilhas").exists() else {}}
 
 
+# ! Alteração de IA - Revisar: (27/10/2026) leitura das avaliações da Fase 4 para a aba "Reprodução na tela": a corrida 17
+# sobre os 72 casos de avaliação e a corrida sobre os 36 inéditos da ficha 27, gravadas por avaliar_fase4.py em
+# resultados_alvo/fase4/reproducibilidade.json e reproducibilidade_ineditos.json.
+# ! Motivo: a regra do painel é uma aba por análise, lida dos JSON versionados, e a corrida 17 (pacote P2) tinha ficado
+# só no roadmap; os dois arquivos podem faltar numa máquina que não rodou as corridas, e então a aba mostra o estado
+# vazio em vez de o painel inteiro falhar. O teste das abas usa esta mesma função, para o teste e o gerador nunca
+# lerem arquivos diferentes.
+def contexto_fase4() -> dict:
+    pasta = EXP / "resultados_alvo" / "fase4"
+
+    def le(nome: str):
+        return ler_json(pasta / nome) if (pasta / nome).exists() else None
+
+    # ! Alteração de IA - Revisar: (27/10/2026, P3) o contexto da Fase 4 passa a trazer a leitura da corrida 16
+    # (`calibracao.json`) e os limiares do selo (`limiares.json`), lidos por painel_topicos.secao_calibracao.
+    # ! Motivo: a corrida 16 é a segunda análise da Fase 4 e, pela regra do painel, vira uma aba lida dos JSON.
+    # ! Alteração de IA - Revisar: (01/11/2026) o contexto da Fase 4 passa a trazer a leitura da corrida 18 (`tela.json`),
+    # lida por painel_topicos.secao_tela.
+    # ! Motivo: a corrida 18 é a terceira análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+    # ! Alteração de IA - Revisar: (01/11/2026, P4) o contexto da Fase 4 passa a trazer a leitura da corrida 19 (`cura.json`),
+    # lida por painel_topicos.secao_cura.
+    # ! Motivo: a corrida 19 é a quarta análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+    return {"reproducao": le("reproducibilidade.json"), "reproducao_ineditos": le("reproducibilidade_ineditos.json"),
+            "calibracao": le("calibracao.json"), "limiares": le("limiares.json"), "tela": le("tela.json"), "tela_v2": le("tela_v2.json"),
+            "cura": le("cura.json")}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", default=str(SAIDA_PADRAO))
@@ -1104,6 +1131,7 @@ def main() -> None:
                         if (MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").exists() else None),
         "pend": pend,
         **contexto_pre_fase4(),
+        **contexto_fase4(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     html_final = pagina(dados, blocos, figs, pend, road, topicos_html)

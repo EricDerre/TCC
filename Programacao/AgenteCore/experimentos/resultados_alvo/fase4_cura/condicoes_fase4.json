@@ -1,0 +1,451 @@
+{
+  "modo": "cura",
+  "criado_em": "2026-11-01T19:58:28",
+  "saida": "fase4_cura",
+  "repeticoes": 5,
+  "formas": [
+    "harness",
+    "php"
+  ],
+  "roteiros": [
+    "front-busca",
+    "front-admin-login",
+    "front-admin-produtos",
+    "front-cliente-reserva"
+  ],
+  "modos_de_quebra": [
+    "id_renomeado",
+    "classe_trocada",
+    "texto_alterado",
+    "estrutura_alterada"
+  ],
+  "celulas": 160,
+  "parcial": false,
+  "limiar_nome": 0.6,
+  "estrategias": [
+    "papel_e_nome",
+    "papel_e_nome_parecido",
+    "texto_contido",
+    "data_id",
+    "caminho_do_ancestral_com_id",
+    "posicao_entre_irmaos"
+  ],
+  "verificacoes": [
+    "resolve_um_elemento",
+    "visivel_e_habilitado",
+    "mesmo_papel",
+    "nome_parecido",
+    "efeito_na_reexecucao"
+  ],
+  "tempo_limite_ms": 5000,
+  "cookie_da_quebra": "quebra",
+  "descricao_dos_modos": {
+    "id_renomeado": "o id (ou o atributo identificador) do alvo é renomeado",
+    "classe_trocada": "a classe que o localizador usa é trocada por outra",
+    "texto_alterado": "o texto do alvo (ou o seu valor ou placeholder) ganha uma palavra",
+    "estrutura_alterada": "o alvo é envolvido num contêiner novo e trocado de posição entre os irmãos"
+  },
+  "quebras": [
+    {
+      "cenario": "front-busca",
+      "modo": "id_renomeado",
+      "seletor_original": "#buscar",
+      "localizador": "#buscar",
+      "alvo": {
+        "papel": "searchbox",
+        "nome": "search",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "renomear_id",
+          "seletor": "#buscar",
+          "para": "buscar_v2"
+        }
+      ],
+      "descricao": "o campo de busca perde o id `buscar` (vira `buscar_v2`); o roteiro localiza por `#buscar`",
+      "passo_alvo": 1,
+      "pagina": "index.php"
+    },
+    {
+      "cenario": "front-busca",
+      "modo": "classe_trocada",
+      "seletor_original": "#buscar",
+      "localizador": "#form-busca input.form-control",
+      "alvo": {
+        "papel": "searchbox",
+        "nome": "search",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_classe",
+          "seletor": "#buscar",
+          "de": "form-control",
+          "para": "campo-busca"
+        }
+      ],
+      "descricao": "a classe `form-control` do campo vira `campo-busca`; o roteiro localiza por `#form-busca input.form-control`",
+      "passo_alvo": 1,
+      "pagina": "index.php"
+    },
+    {
+      "cenario": "front-busca",
+      "modo": "texto_alterado",
+      "seletor_original": "#buscar",
+      "localizador": "input[placeholder=\"Buscar produto\"]",
+      "alvo": {
+        "papel": "searchbox",
+        "nome": "search",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_atributo",
+          "seletor": "#buscar",
+          "atributo": "placeholder",
+          "para": "Buscar produtos"
+        }
+      ],
+      "descricao": "o placeholder passa de \"Buscar produto\" a \"Buscar produtos\"; o roteiro localiza pelo placeholder",
+      "passo_alvo": 1,
+      "pagina": "index.php"
+    },
+    {
+      "cenario": "front-busca",
+      "modo": "estrutura_alterada",
+      "seletor_original": "#buscar",
+      "localizador": "#form-busca > div > input",
+      "alvo": {
+        "papel": "searchbox",
+        "nome": "search",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "envolver_e_mover",
+          "seletor": "#buscar",
+          "tag": "span",
+          "classe": "envoltorio",
+          "mover": "fim"
+        }
+      ],
+      "descricao": "o campo é envolvido num `span.envoltorio` e passa para depois do botão; o roteiro localiza por `#form-busca > div > input`",
+      "passo_alvo": 1,
+      "pagina": "index.php"
+    },
+    {
+      "cenario": "front-admin-login",
+      "modo": "id_renomeado",
+      "seletor_original": "#login_usuario",
+      "localizador": "#login_usuario",
+      "alvo": {
+        "papel": "textbox",
+        "nome": "Login",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "renomear_id",
+          "seletor": "#login_usuario",
+          "para": "usuario"
+        }
+      ],
+      "descricao": "o campo de login perde o id `login_usuario` (vira `usuario`, com o `for` do rótulo); o roteiro localiza por `#login_usuario`",
+      "passo_alvo": 1,
+      "pagina": "admin/login.php"
+    },
+    {
+      "cenario": "front-admin-login",
+      "modo": "classe_trocada",
+      "seletor_original": "button[type=submit]",
+      "localizador": "button.btn-primary",
+      "alvo": {
+        "papel": "button",
+        "nome": "Entrar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_classe",
+          "seletor": "form button[type=submit]",
+          "de": "btn-primary",
+          "para": "btn-entrar"
+        }
+      ],
+      "descricao": "a classe `btn-primary` do botão Entrar vira `btn-entrar`; o roteiro localiza por `button.btn-primary`",
+      "passo_alvo": 4,
+      "pagina": "admin/login.php"
+    },
+    {
+      "cenario": "front-admin-login",
+      "modo": "texto_alterado",
+      "seletor_original": "button[type=submit]",
+      "localizador": "role=button[name=\"Entrar\"]",
+      "alvo": {
+        "papel": "button",
+        "nome": "Entrar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_texto",
+          "seletor": "form button[type=submit]",
+          "de": "Entrar",
+          "para": "Entrar agora"
+        }
+      ],
+      "descricao": "o botão passa de \"Entrar\" a \"Entrar agora\"; o roteiro localiza pelo papel e pelo nome \"Entrar\"",
+      "passo_alvo": 4,
+      "pagina": "admin/login.php"
+    },
+    {
+      "cenario": "front-admin-login",
+      "modo": "estrutura_alterada",
+      "seletor_original": "button[type=submit]",
+      "localizador": ".login-form form > button",
+      "alvo": {
+        "papel": "button",
+        "nome": "Entrar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "envolver_e_mover",
+          "seletor": "form button[type=submit]",
+          "tag": "div",
+          "classe": "acoes",
+          "mover": "inicio"
+        }
+      ],
+      "descricao": "o botão é envolvido num `div.acoes` e passa para antes dos campos; o roteiro localiza por `.login-form form > button`",
+      "passo_alvo": 4,
+      "pagina": "admin/login.php"
+    },
+    {
+      "cenario": "front-admin-produtos",
+      "modo": "id_renomeado",
+      "seletor_original": "button.delete[data-id='1']",
+      "localizador": "button[data-id='1']",
+      "alvo": {
+        "papel": "button",
+        "nome": "EXCLUIR",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "renomear_atributo",
+          "seletor": "button.delete",
+          "atributo": "data-id",
+          "para": "data-produto",
+          "todos": true
+        }
+      ],
+      "descricao": "o atributo `data-id` dos botões EXCLUIR vira `data-produto` (a página não tem id em elemento nenhum); o roteiro localiza por `button[data-id='1']`",
+      "passo_alvo": 10,
+      "pagina": "admin/produtos_lista.php"
+    },
+    {
+      "cenario": "front-admin-produtos",
+      "modo": "classe_trocada",
+      "seletor_original": "button.delete[data-id='1']",
+      "localizador": "button.delete[data-id='1']",
+      "alvo": {
+        "papel": "button",
+        "nome": "EXCLUIR",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_classe",
+          "seletor": "button.delete",
+          "de": "delete",
+          "para": "remover",
+          "todos": true
+        }
+      ],
+      "descricao": "a classe `delete` dos botões EXCLUIR vira `remover`; o roteiro localiza por `button.delete[data-id='1']`",
+      "passo_alvo": 10,
+      "pagina": "admin/produtos_lista.php"
+    },
+    {
+      "cenario": "front-admin-produtos",
+      "modo": "texto_alterado",
+      "seletor_original": "button.delete[data-id='1']",
+      "localizador": "role=button[name=/EXCLUIR$/] >> nth=0",
+      "alvo": {
+        "papel": "button",
+        "nome": "EXCLUIR",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_texto",
+          "seletor": "button.delete",
+          "de": "EXCLUIR",
+          "para": "EXCLUIR ITEM",
+          "todos": true
+        }
+      ],
+      "descricao": "os botões passam de \"EXCLUIR\" a \"EXCLUIR ITEM\"; o roteiro localiza pelo papel e pelo nome terminado em \"EXCLUIR\", primeira ocorrência",
+      "passo_alvo": 10,
+      "pagina": "admin/produtos_lista.php"
+    },
+    {
+      "cenario": "front-admin-produtos",
+      "modo": "estrutura_alterada",
+      "seletor_original": "button.delete[data-id='1']",
+      "localizador": "table.table tbody tr:first-child td:last-child > button",
+      "alvo": {
+        "papel": "button",
+        "nome": "EXCLUIR",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "envolver_e_mover",
+          "seletor": "button.delete",
+          "tag": "div",
+          "classe": "acoes",
+          "mover": "inicio",
+          "todos": true
+        }
+      ],
+      "descricao": "cada botão EXCLUIR é envolvido num `div.acoes` e passa para antes do link ALTERAR; o roteiro localiza pelo caminho na primeira linha da tabela",
+      "passo_alvo": 10,
+      "pagina": "admin/produtos_lista.php"
+    },
+    {
+      "cenario": "front-cliente-reserva",
+      "modo": "id_renomeado",
+      "seletor_original": "#enviar",
+      "localizador": "#enviar",
+      "alvo": {
+        "papel": "button",
+        "nome": "Reservar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "renomear_id",
+          "seletor": "#enviar",
+          "para": "enviar_reserva"
+        }
+      ],
+      "descricao": "o botão Reservar perde o id `enviar` (vira `enviar_reserva`); o roteiro localiza por `#enviar`",
+      "passo_alvo": 10,
+      "pagina": "cliente/index.php"
+    },
+    {
+      "cenario": "front-cliente-reserva",
+      "modo": "classe_trocada",
+      "seletor_original": "#enviar",
+      "localizador": "#reserva_login input.btn-danger",
+      "alvo": {
+        "papel": "button",
+        "nome": "Reservar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_classe",
+          "seletor": "#enviar",
+          "de": "btn-danger",
+          "para": "btn-reservar"
+        }
+      ],
+      "descricao": "a classe `btn-danger` do botão Reservar vira `btn-reservar`; o roteiro localiza por `#reserva_login input.btn-danger`",
+      "passo_alvo": 10,
+      "pagina": "cliente/index.php"
+    },
+    {
+      "cenario": "front-cliente-reserva",
+      "modo": "texto_alterado",
+      "seletor_original": "#enviar",
+      "localizador": "input[value=\"Reservar\"]",
+      "alvo": {
+        "papel": "button",
+        "nome": "Reservar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "trocar_atributo",
+          "seletor": "#enviar",
+          "atributo": "value",
+          "para": "Reservar mesa"
+        }
+      ],
+      "descricao": "o botão passa de \"Reservar\" a \"Reservar mesa\"; o roteiro localiza pelo valor \"Reservar\"",
+      "passo_alvo": 10,
+      "pagina": "cliente/index.php"
+    },
+    {
+      "cenario": "front-cliente-reserva",
+      "modo": "estrutura_alterada",
+      "seletor_original": "#enviar",
+      "localizador": "#reserva_login > input[type=submit]",
+      "alvo": {
+        "papel": "button",
+        "nome": "Reservar",
+        "ocorrencia": 1
+      },
+      "mutacoes": [
+        {
+          "op": "envolver_e_mover",
+          "seletor": "#enviar",
+          "tag": "div",
+          "classe": "acoes",
+          "mover": "inicio"
+        }
+      ],
+      "descricao": "o botão é envolvido num `div.acoes` e passa para o começo do formulário; o roteiro localiza por `#reserva_login > input[type=submit]`",
+      "passo_alvo": 10,
+      "pagina": "cliente/index.php"
+    }
+  ],
+  "versoes": {
+    "navegador": "156.0.8078.4",
+    "ollama": "0.40.2",
+    "playwright": "1.64.1",
+    "python": "3.14.7"
+  },
+  "canal": "chromium",
+  "modelo": null,
+  "regra_r3": "uma cura só conta quando a conferência final do roteiro passa na reexecução; o relatório separa mesmo elemento do alvo original de outro elemento que fez o roteiro passar (pela impressão do DOM: tag, type, name, action do formulário, data-nome, href)",
+  "mttr": "da detecção (o passo do alvo falhou) à reexecução validada (o roteiro chegou ao fim), descontado o tempo de restaurar o banco entre as duas",
+  "hosts_permitidos": [
+    "localhost:8080",
+    "127.0.0.1:8080",
+    "[::1]:8080",
+    "localhost:8000",
+    "127.0.0.1:8000",
+    "[::1]:8000"
+  ],
+  "hosts_har": [
+    "code.jquery.com",
+    "ajax.googleapis.com",
+    "cdnjs.cloudflare.com",
+    "maxcdn.bootstrapcdn.com",
+    "stackpath.bootstrapcdn.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "use.fontawesome.com",
+    "kit.fontawesome.com",
+    "ka-f.fontawesome.com"
+  ],
+  "hosts_silenciosos": [
+    "maps.googleapis.com",
+    "maps.gstatic.com",
+    "www.google.com",
+    "maps.google.com"
+  ],
+  "limites": {
+    "nos_por_diagnostico": 40,
+    "nos_por_cura": 20,
+    "blob_inline_max_chars": 65536,
+    "retencao_meses": 6
+  }
+}

@@ -13,6 +13,8 @@
 """Caso ao vivo da Fase 4 (pacote P2): contrato do openapi, sintoma por molde e montagem no formato gravado."""
 from __future__ import annotations
 
+import json
+
 CHAVES_DA_ENTRADA = ("requisicao", "status", "contrato", "corpo", "sintoma", "observacao", "arvore", "seletor_quebrado")
 OBRIGATORIAS = ("requisicao", "status", "contrato", "corpo", "sintoma")
 _TIPOS_OPENAPI = {"integer": "inteiro", "string": "texto", "number": "numero", "boolean": "booleano", "null": "nulo",
@@ -109,9 +111,204 @@ def _frases_do_corpo(diff_corpo: dict) -> list[str]:
     return frases
 
 
-def sintoma_por_molde(conferencia: dict | None, diff_corpo: dict | None, diff_arvore_: dict | None, status: int | None = None) -> str:
+# ------------------------------------------------------------------ diff do corpo contra a referência em modo normal
+
+# ! Alteração de IA - Revisar: (01/11/2026, ficha 37 opção a) o caso ao vivo passa a comparar o corpo HTTP com o corpo da
+# corrida de referência em modo normal do mesmo cenário: itens a menos ou a mais (pelo `id`), itens repetidos, valores
+# diferentes item a item e o tempo da chamada contra o orçamento; `frases_da_referencia` escreve isso no SINTOMA,
+# `corpo_do_caso` troca o CORPO quando a poda não achou diferença de campo contra o contrato, e
+# `linhas_diff_da_referencia` dá os sinais em código para o evento de poda e o nó de decisão.
+# ! Motivo: na corrida 18 (roadmap §2.10) 22 casos foram ao modelo com o primeiro produto normal da lista no CORPO,
+# porque a poda só olhava o contrato; 11 viraram colecao_no_lugar_de_objeto e, nas falhas de lista e de latência, o
+# sintoma dizia "Nenhuma diferença medida contra a referência". O harness já media tudo isso na regra R1.
+LIMITE_DE_VALORES = 60
+LIMITE_DE_EXEMPLOS = 2
+
+
+def _valor(v) -> str:
+    return json.dumps(v, ensure_ascii=False)[:80]
+
+
+def _compacto(valor, limite: int = 400) -> str:
+    texto = json.dumps(valor, ensure_ascii=False)
+    return texto if len(texto) <= limite else texto[:limite - 3] + "..."
+
+
+def _forma(dado) -> str:
+    return "lista" if isinstance(dado, list) else "objeto" if isinstance(dado, dict) else "outro"
+
+
+def _nome_do_item(item) -> str:
+    if isinstance(item, dict) and item.get("nome") not in (None, ""):
+        return f' ("{item["nome"]}")'
+    return ""
+
+
+def diff_referencia(corpo_ref: str | None, corpo_atual: str | None, tempo_ref_ms: float | None, tempo_ms: float | None,
+                    orcamento_ms: float = 1000, chave: str = "id") -> dict | None:
+    """O corpo atual contra o da referência em modo normal. Listas de objetos são casadas pela `chave` (o `id`):
+    `faltam` e `sobram` (ids), `duplicados` (id e vezes), `valores` (id, campo, referencia, recebido, item a item, até
+    LIMITE_DE_VALORES) e `exemplos` (os primeiros itens que diferem, compactos); objetos são comparados campo a campo.
+    `lento` é o tempo da chamada acima do orçamento (o mesmo da regra R1). Sem referência ou sem JSON de um lado, None."""
+    if corpo_ref is None or corpo_atual is None:
+        return None
+    try:
+        ref, atual = json.loads(corpo_ref), json.loads(corpo_atual)
+    except (ValueError, TypeError):
+        return None
+    saida: dict = {"forma": _forma(atual), "forma_ref": _forma(ref), "itens": len(atual) if isinstance(atual, list) else 1 if isinstance(atual, dict) else None,
+                   "itens_ref": len(ref) if isinstance(ref, list) else 1 if isinstance(ref, dict) else None,
+                   "faltam": [], "sobram": [], "duplicados": [], "valores": [], "valores_a_mais": 0, "exemplos": [], "nomes": {},
+                   "tempo_ms": tempo_ms, "tempo_ref_ms": tempo_ref_ms,
+                   "lento": tempo_ms is not None and orcamento_ms is not None and tempo_ms > orcamento_ms, "igual": False}
+    valores: list[dict] = []
+    exemplos: list = []
+
+    def comparar(item_ref: dict, item_atual: dict, ident) -> bool:
+        diferente = False
+        for campo, v_ref in item_ref.items():
+            if campo in item_atual and item_atual[campo] != v_ref:
+                valores.append({"id": ident, "campo": campo, "referencia": _valor(v_ref), "recebido": _valor(item_atual[campo])})
+                diferente = True
+        return diferente
+
+    if isinstance(ref, list) and isinstance(atual, list):
+        com_chave = all(isinstance(x, dict) and x.get(chave) is not None for x in ref + atual) and ref and atual
+        if com_chave:
+            ref_por_id: dict = {}
+            for x in ref:
+                ref_por_id.setdefault(x[chave], x)
+            vezes: dict = {}
+            atu_por_id: dict = {}
+            for x in atual:
+                vezes[x[chave]] = vezes.get(x[chave], 0) + 1
+                atu_por_id.setdefault(x[chave], x)
+            saida["faltam"] = [i for i in ref_por_id if i not in atu_por_id]
+            saida["sobram"] = [i for i in atu_por_id if i not in ref_por_id]
+            saida["duplicados"] = [{"id": i, "vezes": n} for i, n in vezes.items() if n > 1]
+            saida["nomes"] = {str(i): x.get("nome") for i, x in list(ref_por_id.items()) + list(atu_por_id.items()) if isinstance(x, dict)}
+            for i, x in atu_por_id.items():
+                if i in ref_por_id and (comparar(ref_por_id[i], x, i) or vezes[i] > 1) and len(exemplos) < LIMITE_DE_EXEMPLOS:
+                    exemplos.append(_compacto(x) + (f" (aparece {vezes[i]} vezes)" if vezes[i] > 1 else ""))
+        else:
+            for pos, (a, b) in enumerate(zip(ref, atual)):
+                if isinstance(a, dict) and isinstance(b, dict):
+                    if comparar(a, b, pos + 1) and len(exemplos) < LIMITE_DE_EXEMPLOS:
+                        exemplos.append(_compacto(b))
+                elif a != b:
+                    valores.append({"id": pos + 1, "campo": None, "referencia": _valor(a), "recebido": _valor(b)})
+    elif isinstance(ref, dict) and isinstance(atual, dict):
+        comparar(ref, atual, None)
+    saida["valores"], saida["valores_a_mais"] = valores[:LIMITE_DE_VALORES], max(0, len(valores) - LIMITE_DE_VALORES)
+    saida["exemplos"] = exemplos
+    saida["igual"] = (saida["forma"] == saida["forma_ref"] and saida["itens"] == saida["itens_ref"]
+                      and not (saida["faltam"] or saida["sobram"] or saida["duplicados"] or valores))
+    return saida
+
+
+def _por_campo(valores: list[dict]) -> list[tuple[str, list[dict]]]:
+    grupos: dict = {}
+    for v in valores:
+        grupos.setdefault(v["campo"], []).append(v)
+    return list(grupos.items())
+
+
+def _clausulas_de_lista(d: dict) -> list[str]:
+    """As cláusulas de contagem: o que falta, o que sobra e o que se repete, com o nome do item quando há."""
+    nomes = d.get("nomes") or {}
+    partes = []
+    if d["faltam"]:
+        ids = ", ".join(f"{i}{_nome_do_item({'nome': nomes.get(str(i))})}" for i in d["faltam"])
+        partes.append(("falta o id " if len(d["faltam"]) == 1 else "faltam os ids ") + ids)
+    if d["sobram"]:
+        ids = ", ".join(f"{i}{_nome_do_item({'nome': nomes.get(str(i))})}" for i in d["sobram"])
+        partes.append(("sobra o id " if len(d["sobram"]) == 1 else "sobram os ids ") + ids)
+    for dup in d["duplicados"]:
+        partes.append(f"o id {dup['id']}{_nome_do_item({'nome': nomes.get(str(dup['id']))})} aparece {dup['vezes']} vezes")
+    return partes
+
+
+def _segundos(ms: float) -> str:
+    return f"{ms / 1000:.1f}".replace(".", ",") + " s"
+
+
+def frases_da_referencia(d: dict | None, ignorar_campos=()) -> list[str]:
+    """As frases do SINTOMA sobre a referência em modo normal: contagem da lista, valores item a item, tempo da chamada.
+    `ignorar_campos` são os campos que o diff contra o contrato já descreveu (não repetir o mesmo campo em duas frases)."""
+    if not d:
+        return []
+    frases = []
+    if d["forma"] == "lista" and d["forma_ref"] == "lista":
+        clausulas = _clausulas_de_lista(d)
+        if clausulas:
+            frases.append(f"A lista veio com {d['itens']} itens; a referência em modo normal tem {d['itens_ref']}: " + "; ".join(clausulas) + ".")
+    for campo, grupo in _por_campo(d["valores"]):
+        if campo in ignorar_campos:
+            continue
+        ex = grupo[0]
+        if d["forma"] == "lista":
+            quantos = f"{len(grupo)} {'item' if len(grupo) == 1 else 'itens'}"
+            frases.append(f"O campo {campo} veio diferente da referência em modo normal em {quantos}, por exemplo no id {ex['id']}: "
+                          f"{ex['recebido']} em vez de {ex['referencia']}.")
+        else:
+            frases.append(f"O campo {campo} veio {ex['recebido']}; na referência em modo normal, {ex['referencia']}.")
+    if d["lento"]:
+        frases.append(f"A chamada levou {_segundos(d['tempo_ms'])}"
+                      + (f"; na referência em modo normal, {d['tempo_ref_ms']:.0f} ms." if d.get("tempo_ref_ms") is not None else "."))
+    return frases
+
+
+def corpo_do_caso(diff_corpo: dict | None, diff_ref: dict | None) -> str:
+    """O CORPO do caso ao vivo: o trecho em disputa da poda quando o corpo não é JSON ou tem diferença de campo contra o
+    contrato (e sem referência); senão, a forma e a contagem da lista contra a referência em modo normal, o que falta,
+    sobra ou se repete, os campos diferentes e um ou dois itens de exemplo (ou o primeiro item, quando nada difere)."""
+    if not diff_corpo:
+        return ""
+    trecho = diff_corpo.get("trecho") or ""
+    if diff_corpo.get("corpo") != "json" or diff_corpo.get("diferencas") or not diff_ref:
+        return trecho
+    d = diff_ref
+    if d["forma"] == "lista" and d["forma_ref"] == "lista":
+        if d["igual"]:
+            return f"lista com {d['itens']} itens, igual à referência em modo normal; primeiro item: {trecho}"
+        partes = [f"lista com {d['itens']} itens (referência em modo normal: {d['itens_ref']})"] + _clausulas_de_lista(d)
+        partes += [f"{campo} diferente em {len(grupo)} {'item' if len(grupo) == 1 else 'itens'}" for campo, grupo in _por_campo(d["valores"])]
+        texto = "; ".join(partes)
+        return texto + ("; por exemplo: " + "; ".join(d["exemplos"]) if d["exemplos"] else f"; primeiro item: {trecho}")
+    if d["forma"] == "objeto" and d["valores"]:
+        return trecho + " (contra a referência em modo normal: " + ", ".join(f"{v['campo']} {v['recebido']} em vez de {v['referencia']}" for v in d["valores"]) + ")"
+    return trecho
+
+
+def linhas_diff_da_referencia(d: dict | None) -> list[dict]:
+    """Uma linha de sinal em código por diferença contra a referência (campo, tipo, esperado, recebido), para o evento de
+    poda do corpo e para a justificativa do nó de decisão."""
+    if not d:
+        return []
+    linhas = []
+    esperado_itens = f"{d['itens_ref']} itens (referência em modo normal)"
+    if d["faltam"]:
+        linhas.append({"campo": "itens", "tipo": "itens_a_menos", "esperado": esperado_itens, "recebido": _clausulas_de_lista({**d, "sobram": [], "duplicados": []})[0]})
+    if d["sobram"]:
+        linhas.append({"campo": "itens", "tipo": "itens_a_mais", "esperado": esperado_itens, "recebido": _clausulas_de_lista({**d, "faltam": [], "duplicados": []})[0]})
+    if d["duplicados"]:
+        linhas.append({"campo": "itens", "tipo": "itens_repetidos", "esperado": esperado_itens, "recebido": "; ".join(_clausulas_de_lista({**d, "faltam": [], "sobram": []}))})
+    for campo, grupo in _por_campo(d["valores"]):
+        ex = grupo[0]
+        linhas.append({"campo": campo, "tipo": "valor_diferente_da_referencia", "esperado": f"{ex['referencia']} (referência em modo normal)",
+                       "recebido": ex["recebido"] + (f" em {len(grupo)} itens" if d["forma"] == "lista" else "")})
+    if d["lento"]:
+        linhas.append({"campo": "tempo_ms", "tipo": "tempo_acima_do_orcamento",
+                       "esperado": (f"{d['tempo_ref_ms']:.0f} ms (referência em modo normal)" if d.get("tempo_ref_ms") is not None else "dentro do orçamento"),
+                       "recebido": f"{d['tempo_ms']:.0f} ms"})
+    return linhas
+
+
+def sintoma_por_molde(conferencia: dict | None, diff_corpo: dict | None, diff_arvore_: dict | None, status: int | None = None,
+                      diff_ref: dict | None = None) -> str:
     """O sintoma observado, escrito por código: o que a conferência do roteiro esperava e viu, o que o corpo tem de
-    diferente do contrato e o que a tela tem de diferente da referência. Nunca cita o modo de falha nem a causa."""
+    diferente do contrato, o que mudou contra a referência em modo normal (lista, valores, tempo) e o que a tela tem de
+    diferente da referência. Nunca cita o modo de falha nem a causa."""
     frases = []
     if status is not None and status != 200:
         frases.append(f"A requisição respondeu HTTP {status}.")
@@ -119,6 +316,7 @@ def sintoma_por_molde(conferencia: dict | None, diff_corpo: dict | None, diff_ar
         frases.append(f"A conferência '{conferencia.get('nome')}' falhou: esperava {conferencia.get('esperado')}; viu {conferencia.get('observado')}.")
     if diff_corpo:
         frases += _frases_do_corpo(diff_corpo)
+    frases += frases_da_referencia(diff_ref, {x.get("campo") for x in (diff_corpo or {}).get("diferencas") or [] if x.get("campo")})
     if diff_arvore_:
         if diff_arvore_.get("a_menos"):
             frases.append(f"A tela mostra {diff_arvore_['a_menos']} linha(s) a menos que a referência; faltam: "

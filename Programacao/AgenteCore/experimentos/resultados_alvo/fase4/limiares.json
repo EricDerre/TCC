@@ -1,0 +1,20 @@
+{
+  "medida": "p_rotulo",
+  "leitura": "primeiro_token_do_rotulo",
+  "parcela_baixa": 0.3,
+  "baixo_ate": 0.8317943867608124,
+  "alto_a_partir_de": 0.9898271080008889,
+  "n": 90,
+  "sem_rotulo": 0,
+  "k": 3,
+  "origem": "fase4_calibracao/k3",
+  "erros": 22,
+  "revisados": 27,
+  "erros_pegos": 15,
+  "acertos_revisados": 12,
+  "risco_no_que_sobra": 0.1111,
+  "mediana_certos": 0.9898271080008889,
+  "mediana_errados": 0.7511499810137099,
+  "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+  "gravado_em": "2026-10-27T23:54:00"
+}

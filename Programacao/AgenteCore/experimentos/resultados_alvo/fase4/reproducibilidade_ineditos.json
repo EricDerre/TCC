@@ -1,0 +1,830 @@
+{
+  "metadados": {
+    "gerado_em": "2026-10-27T17:54:36",
+    "corrida": "fase4_reproducao_ineditos",
+    "fonte": "reproducao.jsonl e fora.json gravados por executar_fase4.py --modo reproducao"
+  },
+  "resumo": {
+    "casos": 36,
+    "na_tela": 25,
+    "reproduzem": 25,
+    "fora": 11,
+    "reproduzem_pct": 69.4,
+    "reproduzem_dos_na_tela_pct": 100.0,
+    "roteiro_falhou": 8,
+    "com_erro": 0
+  },
+  "por_classe": [
+    {
+      "classe": 1,
+      "casos": 6,
+      "na_tela": 5,
+      "reproduzem": 5,
+      "fora": 1,
+      "reproduzem_pct": 83.3
+    },
+    {
+      "classe": 2,
+      "casos": 6,
+      "na_tela": 6,
+      "reproduzem": 6,
+      "fora": 0,
+      "reproduzem_pct": 100.0
+    },
+    {
+      "classe": 3,
+      "casos": 6,
+      "na_tela": 5,
+      "reproduzem": 5,
+      "fora": 1,
+      "reproduzem_pct": 83.3
+    },
+    {
+      "classe": 4,
+      "casos": 6,
+      "na_tela": 5,
+      "reproduzem": 5,
+      "fora": 1,
+      "reproduzem_pct": 83.3
+    },
+    {
+      "classe": 5,
+      "casos": 6,
+      "na_tela": 4,
+      "reproduzem": 4,
+      "fora": 2,
+      "reproduzem_pct": 66.7
+    },
+    {
+      "classe": 6,
+      "casos": 6,
+      "na_tela": 0,
+      "reproduzem": 0,
+      "fora": 6,
+      "reproduzem_pct": 0.0
+    }
+  ],
+  "por_nivel": [
+    {
+      "nivel": 1,
+      "casos": 12,
+      "na_tela": 9,
+      "reproduzem": 9,
+      "fora": 3,
+      "reproduzem_pct": 75.0
+    },
+    {
+      "nivel": 2,
+      "casos": 12,
+      "na_tela": 9,
+      "reproduzem": 9,
+      "fora": 3,
+      "reproduzem_pct": 75.0
+    },
+    {
+      "nivel": 3,
+      "casos": 12,
+      "na_tela": 7,
+      "reproduzem": 7,
+      "fora": 5,
+      "reproduzem_pct": 58.3
+    }
+  ],
+  "por_modo": [
+    {
+      "modo": "chave_de_juncao_errada",
+      "casos": 2,
+      "reproduzem": 2,
+      "motivos": [
+        "corpo diferente da referência em modo normal"
+      ]
+    },
+    {
+      "modo": "codificacao_incorreta",
+      "casos": 3,
+      "reproduzem": 3,
+      "motivos": [
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 5 linha(s) a menos e 5 a mais",
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 6 linha(s) a menos e 6 a mais",
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 7 linha(s) a menos e 7 a mais"
+      ]
+    },
+    {
+      "modo": "colecao_no_lugar_de_objeto",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "diff do contrato: forma_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 2 linha(s) a menos e 2 a mais"
+      ]
+    },
+    {
+      "modo": "contagem_inconsistente",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 10 linha(s) a menos e 0 a mais; conferência 'grid com 14 cartões' falhou"
+      ]
+    },
+    {
+      "modo": "corpo_nao_e_json",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "corpo nao_json; corpo diferente da referência em modo normal; árvore diferente da referência: 140 linha(s) a menos e 1 a mais; conferência 'grid com 14 cartões' falhou"
+      ]
+    },
+    {
+      "modo": "corpo_vazio",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "corpo vazio; árvore diferente da referência: 144 linha(s) a menos e 1 a mais; conferência 'grid carregado antes do detalhe' falhou"
+      ]
+    },
+    {
+      "modo": "escala_ou_unidade_errada",
+      "casos": 2,
+      "reproduzem": 2,
+      "motivos": [
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais"
+      ]
+    },
+    {
+      "modo": "estrutura_aninhada_divergente",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "diff do contrato: tipo_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais"
+      ]
+    },
+    {
+      "modo": "field_missing",
+      "casos": 2,
+      "reproduzem": 2,
+      "motivos": [
+        "diff do contrato: ausente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais; conferência 'preço do primeiro cartão' falhou",
+        "diff do contrato: ausente; corpo diferente da referência em modo normal; árvore diferente da referência: 28 linha(s) a menos e 28 a mais"
+      ]
+    },
+    {
+      "modo": "field_renamed",
+      "casos": 2,
+      "reproduzem": 2,
+      "motivos": [
+        "diff do contrato: renomeado; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 0 a mais",
+        "diff do contrato: renomeado; corpo diferente da referência em modo normal; árvore diferente da referência: 15 linha(s) a menos e 15 a mais"
+      ]
+    },
+    {
+      "modo": "latency",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "tempo de resposta 2008 ms acima do orçamento de 1000 ms"
+      ]
+    },
+    {
+      "modo": "limite_de_requisicoes",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "status 429; diff do contrato: ausente, forma_diferente, inesperado; corpo diferente da referência em modo normal; árvore diferente da referência: 140 linha(s) a menos e 1 a mais; conferência 'grid com 14 cartões' falhou"
+      ]
+    },
+    {
+      "modo": "nulo_inesperado",
+      "casos": 2,
+      "reproduzem": 2,
+      "motivos": [
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 15 linha(s) a menos e 15 a mais",
+        "diff do contrato: nulo_inesperado; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais"
+      ]
+    },
+    {
+      "modo": "recurso_inexistente",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "status 404; diff do contrato: ausente, forma_diferente, inesperado; árvore diferente da referência: 144 linha(s) a menos e 1 a mais; conferência 'grid carregado antes do detalhe' falhou"
+      ]
+    },
+    {
+      "modo": "registro_duplicado",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 0 linha(s) a menos e 10 a mais; conferência 'grid com 14 cartões' falhou"
+      ]
+    },
+    {
+      "modo": "type_drift",
+      "casos": 1,
+      "reproduzem": 1,
+      "motivos": [
+        "diff do contrato: tipo_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais"
+      ]
+    },
+    {
+      "modo": "valor_fora_do_dominio",
+      "casos": 2,
+      "reproduzem": 2,
+      "motivos": [
+        "corpo diferente da referência em modo normal",
+        "corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais; conferência 'preço do primeiro cartão' falhou"
+      ]
+    }
+  ],
+  "fora_por_motivo": [
+    {
+      "motivo": "armada pelo harness (ficha 29)",
+      "casos": 6
+    },
+    {
+      "motivo": "sem modo para a causa dado_desatualizado",
+      "casos": 1
+    },
+    {
+      "motivo": "sem tela",
+      "casos": 4
+    }
+  ],
+  "tempo": {
+    "mediana_s": 0.268,
+    "max_s": 30.689,
+    "soma_s": 38.4,
+    "tempo_api_mediana_ms": 15.9
+  },
+  "tamanhos": {
+    "arvore_antes_mediana": 193,
+    "arvore_depois_mediana": 39,
+    "corpo_chars_mediana": 1888,
+    "caso_chars_mediana": 2618
+  },
+  "casos": [
+    {
+      "id": "lex-22",
+      "classe": 1,
+      "nivel": 1,
+      "causa": "corpo_nao_e_json",
+      "modo": "corpo_nao_e_json",
+      "campo": null,
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo nao_json; corpo diferente da referência em modo normal; árvore diferente da referência: 140 linha(s) a menos e 1 a mais; conferência 'grid com 14 cartões' falhou",
+      "status": 200,
+      "tempo_ms": 11.3,
+      "segundos": 0.238,
+      "arvore_antes": 54,
+      "arvore_depois": 21,
+      "corpo_chars": 73,
+      "caso_chars": 2148,
+      "erro": null
+    },
+    {
+      "id": "lex-23",
+      "classe": 1,
+      "nivel": 1,
+      "causa": "corpo_vazio",
+      "modo": "corpo_vazio",
+      "campo": null,
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "corpo vazio; árvore diferente da referência: 144 linha(s) a menos e 1 a mais; conferência 'grid carregado antes do detalhe' falhou",
+      "status": 200,
+      "tempo_ms": 8.2,
+      "segundos": 0.173,
+      "arvore_antes": 54,
+      "arvore_depois": 21,
+      "corpo_chars": 0,
+      "caso_chars": 2048,
+      "erro": null
+    },
+    {
+      "id": "lex-24",
+      "classe": 1,
+      "nivel": 2,
+      "causa": "codificacao_incorreta",
+      "modo": "codificacao_incorreta",
+      "campo": "resumo",
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 5 linha(s) a menos e 5 a mais",
+      "status": 200,
+      "tempo_ms": 24.5,
+      "segundos": 0.581,
+      "arvore_antes": 197,
+      "arvore_depois": 42,
+      "corpo_chars": 141,
+      "caso_chars": 2873,
+      "erro": null
+    },
+    {
+      "id": "lex-25",
+      "classe": 1,
+      "nivel": 2,
+      "causa": "codificacao_incorreta",
+      "modo": "codificacao_incorreta",
+      "campo": "nome",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 6 linha(s) a menos e 6 a mais",
+      "status": 200,
+      "tempo_ms": 16.8,
+      "segundos": 0.355,
+      "arvore_antes": 193,
+      "arvore_depois": 45,
+      "corpo_chars": 2071,
+      "caso_chars": 3024,
+      "erro": null
+    },
+    {
+      "id": "lex-26",
+      "classe": 1,
+      "nivel": 3,
+      "causa": "codificacao_incorreta",
+      "modo": "codificacao_incorreta",
+      "campo": "nome",
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 7 linha(s) a menos e 7 a mais",
+      "status": 200,
+      "tempo_ms": 15.3,
+      "segundos": 0.553,
+      "arvore_antes": 197,
+      "arvore_depois": 48,
+      "corpo_chars": 152,
+      "caso_chars": 3111,
+      "erro": null
+    },
+    {
+      "id": "sin-22",
+      "classe": 2,
+      "nivel": 1,
+      "causa": "campo_ausente",
+      "modo": "field_missing",
+      "campo": "nome",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "diff do contrato: ausente; corpo diferente da referência em modo normal; árvore diferente da referência: 28 linha(s) a menos e 28 a mais",
+      "status": 200,
+      "tempo_ms": 19.9,
+      "segundos": 0.253,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 1752,
+      "caso_chars": 2619,
+      "erro": null
+    },
+    {
+      "id": "sin-23",
+      "classe": 2,
+      "nivel": 1,
+      "causa": "campo_renomeado",
+      "modo": "field_renamed",
+      "campo": "resumo",
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "diff do contrato: renomeado; corpo diferente da referência em modo normal; árvore diferente da referência: 15 linha(s) a menos e 15 a mais",
+      "status": 200,
+      "tempo_ms": 14.0,
+      "segundos": 0.555,
+      "arvore_antes": 197,
+      "arvore_depois": 39,
+      "corpo_chars": 148,
+      "caso_chars": 2546,
+      "erro": null
+    },
+    {
+      "id": "sin-24",
+      "classe": 2,
+      "nivel": 2,
+      "causa": "estrutura_aninhada_divergente",
+      "modo": "estrutura_aninhada_divergente",
+      "campo": "tipo",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "diff do contrato: tipo_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais",
+      "status": 200,
+      "tempo_ms": 20.7,
+      "segundos": 0.249,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2404,
+      "caso_chars": 2820,
+      "erro": null
+    },
+    {
+      "id": "sin-25",
+      "classe": 2,
+      "nivel": 2,
+      "causa": "colecao_no_lugar_de_objeto",
+      "modo": "colecao_no_lugar_de_objeto",
+      "campo": null,
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "diff do contrato: forma_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 2 linha(s) a menos e 2 a mais",
+      "status": 200,
+      "tempo_ms": 13.1,
+      "segundos": 0.565,
+      "arvore_antes": 197,
+      "arvore_depois": 41,
+      "corpo_chars": 146,
+      "caso_chars": 2753,
+      "erro": null
+    },
+    {
+      "id": "sin-26",
+      "classe": 2,
+      "nivel": 3,
+      "causa": "campo_ausente",
+      "modo": "field_missing",
+      "campo": "preco",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "diff do contrato: ausente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais; conferência 'preço do primeiro cartão' falhou",
+      "status": 200,
+      "tempo_ms": 13.9,
+      "segundos": 0.24,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 1888,
+      "caso_chars": 2661,
+      "erro": null
+    },
+    {
+      "id": "sin-27",
+      "classe": 2,
+      "nivel": 3,
+      "causa": "campo_renomeado",
+      "modo": "field_renamed",
+      "campo": "imagem",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "diff do contrato: renomeado; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 0 a mais",
+      "status": 200,
+      "tempo_ms": 21.5,
+      "segundos": 0.253,
+      "arvore_antes": 179,
+      "arvore_depois": 39,
+      "corpo_chars": 2110,
+      "caso_chars": 2381,
+      "erro": null
+    },
+    {
+      "id": "semt-22",
+      "classe": 3,
+      "nivel": 1,
+      "causa": "nulo_inesperado",
+      "modo": "nulo_inesperado",
+      "campo": "preco",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "diff do contrato: nulo_inesperado; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais",
+      "status": 200,
+      "tempo_ms": 15.0,
+      "segundos": 0.268,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2070,
+      "caso_chars": 2521,
+      "erro": null
+    },
+    {
+      "id": "semt-23",
+      "classe": 3,
+      "nivel": 1,
+      "causa": "valor_fora_do_dominio",
+      "modo": "valor_fora_do_dominio",
+      "campo": "preco",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais; conferência 'preço do primeiro cartão' falhou",
+      "status": 200,
+      "tempo_ms": 14.7,
+      "segundos": 0.247,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2082,
+      "caso_chars": 2797,
+      "erro": null
+    },
+    {
+      "id": "semt-24",
+      "classe": 3,
+      "nivel": 2,
+      "causa": "tipo_divergente",
+      "modo": "type_drift",
+      "campo": "destaque",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "diff do contrato: tipo_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais",
+      "status": 200,
+      "tempo_ms": 36.2,
+      "segundos": 0.269,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2096,
+      "caso_chars": 2624,
+      "erro": null
+    },
+    {
+      "id": "semt-26",
+      "classe": 3,
+      "nivel": 3,
+      "causa": "nulo_inesperado",
+      "modo": "nulo_inesperado",
+      "campo": "resumo",
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 15 linha(s) a menos e 15 a mais",
+      "status": 200,
+      "tempo_ms": 12.6,
+      "segundos": 0.528,
+      "arvore_antes": 197,
+      "arvore_depois": 39,
+      "corpo_chars": 122,
+      "caso_chars": 2618,
+      "erro": null
+    },
+    {
+      "id": "semt-27",
+      "classe": 3,
+      "nivel": 3,
+      "causa": "valor_fora_do_dominio",
+      "modo": "valor_fora_do_dominio",
+      "campo": "id",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal",
+      "status": 200,
+      "tempo_ms": 16.2,
+      "segundos": 0.268,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2083,
+      "caso_chars": 2474,
+      "erro": null
+    },
+    {
+      "id": "tra-22",
+      "classe": 4,
+      "nivel": 1,
+      "causa": "escala_ou_unidade_errada",
+      "modo": "escala_ou_unidade_errada",
+      "campo": "preco",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais",
+      "status": 200,
+      "tempo_ms": 34.6,
+      "segundos": 0.287,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2096,
+      "caso_chars": 2694,
+      "erro": null
+    },
+    {
+      "id": "tra-24",
+      "classe": 4,
+      "nivel": 2,
+      "causa": "chave_de_juncao_errada",
+      "modo": "chave_de_juncao_errada",
+      "campo": "tipo",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal",
+      "status": 200,
+      "tempo_ms": 20.8,
+      "segundos": 0.276,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2068,
+      "caso_chars": 2469,
+      "erro": null
+    },
+    {
+      "id": "tra-25",
+      "classe": 4,
+      "nivel": 2,
+      "causa": "contagem_inconsistente",
+      "modo": "contagem_inconsistente",
+      "campo": null,
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 10 linha(s) a menos e 0 a mais; conferência 'grid com 14 cartões' falhou",
+      "status": 200,
+      "tempo_ms": 21.5,
+      "segundos": 0.232,
+      "arvore_antes": 183,
+      "arvore_depois": 39,
+      "corpo_chars": 1928,
+      "caso_chars": 2603,
+      "erro": null
+    },
+    {
+      "id": "tra-26",
+      "classe": 4,
+      "nivel": 3,
+      "causa": "chave_de_juncao_errada",
+      "modo": "chave_de_juncao_errada",
+      "campo": "id",
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal",
+      "status": 200,
+      "tempo_ms": 16.6,
+      "segundos": 0.228,
+      "arvore_antes": 193,
+      "arvore_depois": 39,
+      "corpo_chars": 2068,
+      "caso_chars": 2469,
+      "erro": null
+    },
+    {
+      "id": "tra-27",
+      "classe": 4,
+      "nivel": 3,
+      "causa": "escala_ou_unidade_errada",
+      "modo": "escala_ou_unidade_errada",
+      "campo": "preco",
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais",
+      "status": 200,
+      "tempo_ms": 11.5,
+      "segundos": 0.519,
+      "arvore_antes": 197,
+      "arvore_depois": 42,
+      "corpo_chars": 149,
+      "caso_chars": 2778,
+      "erro": null
+    },
+    {
+      "id": "run-22",
+      "classe": 5,
+      "nivel": 1,
+      "causa": "limite_de_requisicoes",
+      "modo": "limite_de_requisicoes",
+      "campo": null,
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "status 429; diff do contrato: ausente, forma_diferente, inesperado; corpo diferente da referência em modo normal; árvore diferente da referência: 140 linha(s) a menos e 1 a mais; conferência 'grid com 14 cartões' falhou",
+      "status": 429,
+      "tempo_ms": 15.5,
+      "segundos": 0.158,
+      "arvore_antes": 54,
+      "arvore_depois": 21,
+      "corpo_chars": 43,
+      "caso_chars": 2512,
+      "erro": null
+    },
+    {
+      "id": "run-23",
+      "classe": 5,
+      "nivel": 1,
+      "causa": "recurso_inexistente",
+      "modo": "recurso_inexistente",
+      "campo": null,
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "status 404; diff do contrato: ausente, forma_diferente, inesperado; árvore diferente da referência: 144 linha(s) a menos e 1 a mais; conferência 'grid carregado antes do detalhe' falhou",
+      "status": 404,
+      "tempo_ms": 10.1,
+      "segundos": 0.166,
+      "arvore_antes": 54,
+      "arvore_depois": 21,
+      "corpo_chars": 35,
+      "caso_chars": 2518,
+      "erro": null
+    },
+    {
+      "id": "run-24",
+      "classe": 5,
+      "nivel": 2,
+      "causa": "registro_duplicado",
+      "modo": "registro_duplicado",
+      "campo": null,
+      "cenario": "api-catalogo",
+      "reproduz": true,
+      "motivo": "corpo diferente da referência em modo normal; árvore diferente da referência: 0 linha(s) a menos e 10 a mais; conferência 'grid com 14 cartões' falhou",
+      "status": 200,
+      "tempo_ms": 15.9,
+      "segundos": 0.202,
+      "arvore_antes": 203,
+      "arvore_depois": 39,
+      "corpo_chars": 2230,
+      "caso_chars": 2652,
+      "erro": null
+    },
+    {
+      "id": "run-25",
+      "classe": 5,
+      "nivel": 2,
+      "causa": "tempo_de_resposta_excedido",
+      "modo": "latency",
+      "campo": null,
+      "cenario": "api-detalhe",
+      "reproduz": true,
+      "motivo": "tempo de resposta 2008 ms acima do orçamento de 1000 ms",
+      "status": 200,
+      "tempo_ms": 2008.2,
+      "segundos": 30.689,
+      "arvore_antes": 197,
+      "arvore_depois": 42,
+      "corpo_chars": 135,
+      "caso_chars": 2536,
+      "erro": null
+    }
+  ],
+  "fora": [
+    {
+      "id": "lex-27",
+      "classe": 1,
+      "nivel": 3,
+      "causa": "codificacao_incorreta",
+      "requisicao": "POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 3, \"data_pedido\": \"2026-12-05\"})",
+      "motivo": "sem tela: a rota 'POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 3, \"data_pedido\": \"2026-12-05\"})' não é consumida por página nenhuma"
+    },
+    {
+      "id": "semt-25",
+      "classe": 3,
+      "nivel": 2,
+      "causa": "formato_de_data_divergente",
+      "requisicao": "POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 6, \"data_pedido\": \"2026-12-20\"})",
+      "motivo": "sem tela: a rota 'POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 6, \"data_pedido\": \"2026-12-20\"})' não é consumida por página nenhuma"
+    },
+    {
+      "id": "tra-23",
+      "classe": 4,
+      "nivel": 1,
+      "causa": "escala_ou_unidade_errada",
+      "requisicao": "POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 4, \"data_pedido\": \"2026-12-19\"})",
+      "motivo": "sem tela: a rota 'POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 4, \"data_pedido\": \"2026-12-19\"})' não é consumida por página nenhuma"
+    },
+    {
+      "id": "run-26",
+      "classe": 5,
+      "nivel": 3,
+      "causa": "dado_desatualizado",
+      "requisicao": "GET /api/pedidos?login=11122233344",
+      "motivo": "sem modo para a causa dado_desatualizado"
+    },
+    {
+      "id": "run-27",
+      "classe": 5,
+      "nivel": 3,
+      "causa": "registro_duplicado",
+      "requisicao": "GET /api/pedidos?login=11122233344",
+      "motivo": "sem tela: a rota 'GET /api/pedidos?login=11122233344' não é consumida por página nenhuma"
+    },
+    {
+      "id": "efe-22",
+      "classe": 6,
+      "nivel": 1,
+      "causa": "localizador_quebrado",
+      "requisicao": "GET /api/produtos",
+      "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+    },
+    {
+      "id": "efe-23",
+      "classe": 6,
+      "nivel": 1,
+      "causa": "localizador_quebrado",
+      "requisicao": "GET /api/produtos",
+      "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+    },
+    {
+      "id": "efe-24",
+      "classe": 6,
+      "nivel": 2,
+      "causa": "localizador_quebrado",
+      "requisicao": "GET /api/produtos",
+      "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+    },
+    {
+      "id": "efe-25",
+      "classe": 6,
+      "nivel": 2,
+      "causa": "localizador_quebrado",
+      "requisicao": "GET /api/produtos/3",
+      "motivo": "armada pelo harness (ficha 29): localizador_quebrado"
+    },
+    {
+      "id": "efe-26",
+      "classe": 6,
+      "nivel": 3,
+      "causa": "estado_da_tela_divergente",
+      "requisicao": "GET /api/produtos/9",
+      "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+    },
+    {
+      "id": "efe-27",
+      "classe": 6,
+      "nivel": 3,
+      "causa": "estado_da_tela_divergente",
+      "requisicao": "GET /api/produtos/2",
+      "motivo": "armada pelo harness (ficha 29): estado_da_tela_divergente"
+    }
+  ]
+}

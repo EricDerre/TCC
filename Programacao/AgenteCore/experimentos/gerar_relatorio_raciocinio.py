@@ -296,8 +296,25 @@ def _prob(v) -> str:
 
 
 def _ids_da_evidencia(no: dict) -> list[str]:
-    """Só os verbetes que a evidência do nó aponta pelo id: é tudo o que o molde pode citar."""
-    return [e["id"] for e in no.get("evidencia") or [] if e.get("id") and e.get("papel") in PAPEIS_COM_VERBETE]
+    """Só os verbetes que a evidência do nó aponta pelo id, cada um uma vez: é tudo o que o molde pode citar.
+    ! Alteração de IA - Revisar: (27/10/2026, P3) o mesmo id não entra duas vezes.
+    ! Motivo: no diagnóstico ao vivo o verbete citado na FONTE também foi entregue pela busca e aparece na evidência
+    com os dois papéis; a fumaça da corrida 18 mostrou a justificativa listando os três verbetes duas vezes."""
+    vistos: list[str] = []
+    for e in no.get("evidencia") or []:
+        if e.get("id") and e.get("papel") in PAPEIS_COM_VERBETE and e["id"] not in vistos:
+            vistos.append(e["id"])
+    return vistos
+
+
+def _ids_entregues(no: dict) -> list[str]:
+    """Só os verbetes que a busca entregou (papel `verbete_entregue`): um verbete citado na FONTE fora do contexto
+    não pode aparecer como entregue (a frase da FONTE é que diz que ele ficou fora)."""
+    vistos: list[str] = []
+    for e in no.get("evidencia") or []:
+        if e.get("id") and e.get("papel") == "verbete_entregue" and e["id"] not in vistos:
+            vistos.append(e["id"])
+    return vistos
 
 
 def _segunda(no: dict) -> dict | None:
@@ -318,6 +335,8 @@ def contraste_por_molde(no: dict) -> str:
     """"Por que esta e não a segunda", só com os campos do nó: escolha, segunda alternativa, probabilidades e os
     verbetes da evidência."""
     segunda = _segunda(no)
+    if no.get("escolha") is None:
+        return "sem rótulo: a resposta não tem a linha CAUSA_RAIZ, nenhuma causa a contrastar"
     if segunda is None:
         return f"{no['escolha']} sem alternativa registrada no nó"
     ids = _ids_da_evidencia(no)
@@ -326,10 +345,15 @@ def contraste_por_molde(no: dict) -> str:
     return texto + (f"; verbete(s) na evidência: {', '.join(ids)}" if ids else "; nenhum verbete entregue na evidência")
 
 
-def _campo_e_sinal(no: dict, por_seq: dict[int, dict]) -> tuple[str | None, str | None]:
-    """O campo e o sinal em código que a evidência aponta (evento de poda com o diff contra o contrato, ou o campo
-    declarado na trilha); sem eventos, só o que o nó trouxer em `campo`."""
-    campo, sinal = no.get("campo"), None
+def _campo_e_sinal(no: dict, por_seq: dict[int, dict]) -> tuple[str | None, str | None, str | None]:
+    """O campo, o sinal em código que a evidência aponta (evento de poda com o diff contra o contrato, ou o campo
+    declarado na trilha) e onde o sinal está (na resposta HTTP ou na tela); sem eventos, só o que o nó trouxer em `campo`.
+    ! Alteração de IA - Revisar: (27/10/2026, P3) a poda da árvore (alvo `arvore`) nunca dá o campo (o diff dela diz
+    "arvore") e o sinal dela é dito como presente na tela, não na resposta HTTP; diff sem campo (corpo truncado,
+    vazio ou não JSON) vira só "esperado X, recebido Y".
+    ! Motivo: na fumaça da corrida 18 a justificativa dizia que "o sinal arvore: esperado 22 linha(s) ... está presente
+    na resposta HTTP", porque o único diff do caso era o da árvore; o molde só pode dizer o que o evento mede."""
+    campo, sinal, onde = no.get("campo"), None, None
     tid = None
     for e in no.get("evidencia") or []:
         ev = por_seq.get(e["seq"])
@@ -338,16 +362,24 @@ def _campo_e_sinal(no: dict, por_seq: dict[int, dict]) -> tuple[str | None, str 
         tid = tid or ev.get("trilha")
         if ev["tipo"] == "poda" and ev["dados"].get("diff"):
             d = ev["dados"]["diff"][0]
-            campo = campo or d.get("campo")
-            sinal = sinal or f"{d.get('campo')}: esperado {d.get('esperado')}, recebido {d.get('recebido')}"
+            da_arvore = ev["dados"].get("alvo") == "arvore"
+            if not da_arvore:
+                campo = campo or d.get("campo")
+            if sinal is None:
+                sinal = (f"{d['campo']}: " if d.get("campo") else "") + f"esperado {d.get('esperado')}, recebido {d.get('recebido')}"
+                onde = "na tela" if da_arvore else "na resposta HTTP"
         elif e.get("papel") == "sinal_em_codigo" and ev["dados"].get("sinal"):
             sinal = sinal or str(ev["dados"]["sinal"])
+            onde = onde or "no caso"
     if campo is None and tid is not None:
         for ev in por_seq.values():
             if ev.get("trilha") == tid and ev["tipo"] == "declaracao" and ev["dados"].get("campo") == "campo" and ev["dados"].get("lido"):
-                campo = ev["dados"]["lido"]
+                lido = str(ev["dados"]["lido"])
+                # "CAMPO: nenhum" é a resposta prevista pelo prompt quando não há campo: não vira "no campo nenhum"
+                if "nenhum" not in lido.lower():
+                    campo = lido
                 break
-    return campo, sinal
+    return campo, sinal, onde
 
 
 def frase_de_incerteza(no: dict, campo: str | None) -> str | None:
@@ -364,17 +396,25 @@ def justificativa_por_molde(no: dict, eventos: list[dict] | None = None, verific
     do nó, nos eventos apontados pela evidência, nas conferências e nas intervenções recebidas."""
     por_seq = {e["seq"]: e for e in (eventos or [])}
     escolha = no["escolha"]
-    campo, sinal = _campo_e_sinal(no, por_seq)
-    ids = _ids_da_evidencia(no)
+    campo, sinal, onde = _campo_e_sinal(no, por_seq)
+    ids = _ids_entregues(no)
     partes = []
-    base = f"O agente respondeu {escolha}" + (f" no campo {campo}" if campo else "")
+    # ! Alteração de IA - Revisar: (27/10/2026, P3, revisão) sem rótulo a frase diz que a linha CAUSA_RAIZ não veio, e a
+    # frase dos entregues cita só os verbetes que a busca entregou (papel verbete_entregue).
+    # ! Motivo: o revisor do P3 reproduziu "O agente respondeu None" numa resposta sem a linha, e um verbete citado na
+    # FONTE fora do contexto saindo como "entregue" na mesma justificativa que o dizia fora do contexto.
+    base = (f"O agente respondeu {escolha}" + (f" no campo {campo}" if campo else "")) if escolha is not None \
+        else "O agente não escreveu a linha CAUSA_RAIZ (nenhuma causa respondida)"
     motivos = []
     if sinal:
-        motivos.append(f"o sinal {sinal} está presente na resposta HTTP")
+        motivos.append(f"o sinal {sinal} está presente {onde or 'na resposta HTTP'}")
     if ids:
         motivos.append(f"o verbete {ids[0]} estava entre os entregues ao modelo" if len(ids) == 1
                        else f"os verbetes {', '.join(ids)} estavam entre os entregues ao modelo")
-    partes.append(base + (" porque " + " e ".join(motivos) if motivos else ", com a evidência registrada nos eventos do nó") + ".")
+    if escolha is None:
+        partes.append(base + ("; " + " e ".join(motivos) if motivos else "") + ".")
+    else:
+        partes.append(base + (" porque " + " e ".join(motivos) if motivos else ", com a evidência registrada nos eventos do nó") + ".")
     segunda = _segunda(no)
     if segunda is not None:
         frase = f"A segunda causa, {segunda['opcao']}, ficou com probabilidade {_prob(segunda.get('escore'))}"
@@ -386,13 +426,26 @@ def justificativa_por_molde(no: dict, eventos: list[dict] | None = None, verific
         fora = [v["alvo"] for v in fontes if v.get("resultado") == "nao_confere"]
         partes.append(f"A FONTE cita {len(fontes)} verbete(s), " + ("todos presentes no contexto." if not fora
                       else f"{len(fora)} fora do contexto entregue ({', '.join(fora)})."))
+    # ! Alteração de IA - Revisar: (27/10/2026, P3) a frase da intervenção passa a dizer o tipo dela (remoção, troca por
+    # verbete errado, inferência sem documentação, repetição da inferência de base) e marca quando a probabilidade
+    # registrada é só um limite inferior; sem `tipo` a frase continua a da remoção, byte a byte.
+    # ! Motivo: diagnostico_ao_vivo.py roda as quatro intervenções da especificação (6.1) e passa todas ao molde; com a
+    # frase única, "a remoção do verbete None" apareceria para a inferência sem documentação e para a repetição.
     for i in intervencoes:
         v = i.get("verbete")
+        tipo = i.get("tipo") or "remocao"
+        if i.get("rotulo_antes") is None:
+            partes.append(f"A intervenção {tipo} não teve rótulo de base para comparar.")
+            continue
+        sujeito = {"remocao": f"A remoção do verbete {v}", "troca": f"A troca do verbete {v} por um verbete errado",
+                   "sem_documentacao": "A inferência sem documentação",
+                   "repeticao_da_base": "A repetição da inferência de base"}.get(tipo, f"A intervenção {tipo}")
+        limite = " (a probabilidade registrada é só um limite inferior: o rótulo saiu das alternativas devolvidas)" if i.get("limite_inferior") else ""
         if i.get("mudou_rotulo"):
-            partes.append(f"A remoção do verbete {v} mudou a resposta (de {i.get('rotulo_antes')} para {i.get('rotulo_depois')}), "
-                          "então ele pesou na decisão.")
+            partes.append(f"{sujeito} mudou a resposta (de {i.get('rotulo_antes')} para {i.get('rotulo_depois')})"
+                          + (", então ele pesou na decisão." if tipo == "remocao" else ".") + limite)
         else:
-            partes.append(f"A remoção do verbete {v} não mudou a resposta: sem efeito medido do contexto.")
+            partes.append(f"{sujeito} não mudou a resposta" + (": sem efeito medido do contexto." if tipo in ("remocao", "troca") else ".") + limite)
     if any(v.get("regra") == "impacto" and v.get("resultado") == "nao_verificavel" for v in verificacoes):
         partes.append("O que não dá para conferir por código: a frase de impacto.")
     d = no.get("divergencia") or {}
@@ -401,9 +454,50 @@ def justificativa_por_molde(no: dict, eventos: list[dict] | None = None, verific
                       + (f" (entre {' e '.join(d['entre'])})" if d.get("entre") else "") + (f": {d['detalhe']}." if d.get("detalhe") else "."))
     if no.get("falha"):
         partes.append(f"Este nó está marcado com a falha {no['falha']} (origem: {tr.origem_da_falha(no['falha'])}).")
+    if no.get("intervencoes_puladas"):
+        partes.append(f"As intervenções não rodaram: {no['intervencoes_puladas']}.")
     incerteza = frase_de_incerteza(no, campo)
     if incerteza:
         partes.append(incerteza)
+    return " ".join(partes)
+
+
+# ! Alteração de IA - Revisar: (01/11/2026, Fase 4, pacote P4) o molde da justificativa da cura de seletor, escrito em
+# código a partir do evento `cura` da trilha (cura_seletor.evento_de_cura): o passo que falhou, quantos candidatos foram
+# gerados, quantos passaram as quatro verificações estáticas, qual levou o roteiro ao fim e se é o mesmo elemento da
+# referência; sem cura, diz a falha da taxonomia e os candidatos recusados na reexecução.
+# ! Motivo: o nó `cura` leva a justificativa como o nó `diagnostico` (especificação, seção 7), e ela precisa sair de dados
+# medidos, nunca de texto livre; o relatório marca "gerada por molde" ao apresentá-la.
+ROTULO_DA_VERIFICACAO_DA_CURA = {"resolve_um_elemento": "um elemento", "visivel_e_habilitado": "visível e habilitado", "mesmo_papel": "mesmo papel",
+                                 "nome_parecido": "nome parecido", "efeito_na_reexecucao": "efeito na reexecução"}
+
+
+def justificativa_da_cura(cura: dict) -> str:
+    cands = cura.get("candidatos") or []
+    gerados = [c for c in cands if c.get("gerado")]
+    estaticos = [c for c in gerados if c.get("passou_estaticas")]
+    recusados = [c for c in gerados if c.get("reexecutado") and not c.get("aplicado")]
+    ap = cura.get("aplicado") or {}
+    partes = [f"O passo {cura.get('passo')} ({cura.get('localizador')}) falhou: {_cel(cura.get('erro') or 'o localizador não resolveu')}."]
+    partes.append(f"Dos {len(cands)} candidatos previstos, {len(gerados)} foram gerados da árvore podada e do alvo da referência; "
+                  f"{len(estaticos)} passaram as quatro verificações em código (um elemento só, visível e habilitado, mesmo papel, nome parecido acima de "
+                  f"{cura.get('limiar_nome')}).")
+    if cura.get("curado") and ap:
+        frase = f"O primeiro que passou, `{ap.get('estrategia')}` ({ap.get('seletor')}), levou o roteiro ao fim na reexecução"
+        mesmo = cura.get("mesmo_elemento")
+        frase += (" e resolve o mesmo elemento da referência." if mesmo else (", mas resolve outro elemento, não o alvo da referência." if mesmo is False
+                                                                              else "; a impressão do elemento não foi comparada."))
+        partes.append(frase)
+        if recusados:
+            partes.append("Antes dele, " + "; ".join(f"`{c['estrategia']}` foi recusado na reexecução ({_cel((c.get('efeito') or {}).get('detalhe'))})" for c in recusados) + ".")
+    else:
+        if recusados:
+            partes.append("Nenhum levou o roteiro ao fim: " + "; ".join(f"`{c['estrategia']}` ({_cel((c.get('efeito') or {}).get('detalhe'))})" for c in recusados)
+                          + f". Falha registrada: {cura.get('falha')}.")
+        else:
+            partes.append(f"Nenhum chegou à reexecução. Falha registrada: {cura.get('falha')}.")
+    if cura.get("mttr_s") is not None:
+        partes.append(f"Da detecção à reexecução validada: {_num(cura.get('mttr_s'), 1)} s.")
     return " ".join(partes)
 
 
@@ -428,7 +522,11 @@ def _resumo_do_evento(e: dict, blobs: dict) -> str:
         return f"{sum(1 for i in d.get('itens') or [] if i.get('escolhido'))} de {len(d.get('itens') or [])} verbetes entregues"
     if tipo == "entrada":
         return f"caso {d.get('caso')}"
-    if tipo in ("cura", "acao", "incidente", "revisao", "edicao_biblioteca", "prompt"):
+    if tipo == "cura":
+        ap = d.get("aplicado") or {}
+        return (f"{'curado' if d.get('curado') else 'não curado'}: {len(d.get('candidatos') or [])} candidatos, {d.get('reexecucoes', 0)} reexecução(ões)"
+                + (f"; aplicado {ap.get('estrategia')}" if ap else "") + (f"; MTTR {_num(d.get('mttr_s'), 1)} s" if d.get("mttr_s") is not None else ""))
+    if tipo in ("acao", "incidente", "revisao", "edicao_biblioteca", "prompt"):
         return _cel(json.dumps({k: v for k, v in d.items() if not isinstance(v, (dict, list))}, ensure_ascii=False))[:160]
     return ""
 
@@ -454,6 +552,15 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
     com_gabarito = [v for v in ver if v.get("usa_gabarito")]
     nos = [e for e in por_tipo.get("decisao", [])]
     diag = next((e["dados"] for e in reversed(nos) if e["dados"].get("decisao") == "diagnostico"), None)
+    # ! Alteração de IA - Revisar: (01/11/2026, P4) a trilha de uma execução da cura de seletor (sem modelo) tem o evento
+    # `cura` e os nós `cura` e `reexecucao` no lugar do diagnóstico: o veredito diz a cura, a evidência lista todos os
+    # candidatos com o resultado de cada verificação, o contraste é o do nó `cura` e a linha de ação traz a sugestão de
+    # localizador (o agente não altera a aplicação).
+    # ! Motivo: plano aprovado, seção 3.6 ("o relatório mostra todos os candidatos com o resultado de cada verificação")
+    # e seção 3.2 ("apresenta como sugestão no relatório"); sem isso o relatório da corrida 19 diria "nenhum nó de
+    # diagnóstico" e esconderia a cura.
+    no_cura = next((e["dados"] for e in reversed(nos) if e["dados"].get("decisao") == "cura"), None)
+    cura = (por_tipo.get("cura") or [{"dados": None}])[-1]["dados"]
     intervencoes = [e["dados"] for e in por_tipo.get("intervencao", [])]
     podas = [e for e in por_tipo.get("poda", [])]
     interceptacoes = [e for e in por_tipo.get("interceptacao", [])]
@@ -474,10 +581,42 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
                 "", f"**IMPACTO (declarado):** {valor('impacto')}", ""]
     if diag is not None:
         veredito += [f"Justificativa ({MARCA_DO_MOLDE}): {diag.get('justificativa') or justificativa_por_molde(diag, eventos, sem_gabarito, intervencoes)}", ""]
+    elif cura is not None:
+        ap = cura.get("aplicado") or {}
+        mesmo = cura.get("mesmo_elemento")
+        if cura.get("curado"):
+            veredito = [f"**Cura de seletor:** aplicada: `{ap.get('estrategia')}` (`{_cel(ap.get('seletor'))}`) · reexecução validada · "
+                        + ("mesmo elemento da referência: sim" if mesmo else ("**outro elemento** fez o roteiro passar (regra R3)" if mesmo is False else "mesmo elemento: não comparado")), ""]
+        else:
+            veredito = [f"**Cura de seletor:** não curado · falha: `{_cel(cura.get('falha'))}` · {cura.get('reexecucoes', 0)} reexecução(ões) sem levar o roteiro ao fim", ""]
+        veredito += [f"Passo {cura.get('passo')} do roteiro, localizador `{_cel(cura.get('localizador'))}`: {_cel(cura.get('erro') or 'o localizador não resolveu')}", ""]
+        if cura.get("mttr_s") is not None:
+            veredito += [f"Da detecção à reexecução validada: {_num(cura.get('mttr_s'), 1)} s (detecção {_cel(cura.get('deteccao'))}; validação {_cel(cura.get('validacao'))}).", ""]
+        veredito += [f"Justificativa ({MARCA_DO_MOLDE}): {(no_cura or {}).get('justificativa') or justificativa_da_cura(cura)}", ""]
     else:
         veredito += ["Nenhum nó de decisão de diagnóstico nesta trilha.", ""]
 
     evidencia = []
+    if cura is not None:
+        alvo = cura.get("alvo") or {}
+        evidencia += [f"Alvo registrado na corrida de referência: {_cel(alvo.get('papel'))} \"{_cel(alvo.get('nome'))}\" (ocorrência {alvo.get('ocorrencia')}; "
+                      f"tag `{_cel(alvo.get('tag'))}`; caminho `{_cel(alvo.get('caminho'))}`; atributos "
+                      f"{_cel(json.dumps({k: v for k, v in (alvo.get('atributos') or {}).items() if v}, ensure_ascii=False))}).", "",
+                      f"Candidatos na ordem fixa (limiar do nome {cura.get('limiar_nome')}); verificações na ordem fixa:", ""]
+        linhas_c = []
+        for c in cura.get("candidatos") or []:
+            v = c.get("verificacoes") or {}
+            if not c.get("gerado"):
+                linhas_c.append([f"`{c['estrategia']}`", f"não gerado: {_cel(c.get('motivo'))}"] + ["não se aplica"] * 5 + [""])
+                continue
+            celulas = []
+            for chave in ROTULO_DA_VERIFICACAO_DA_CURA:
+                r = (v.get(chave) or {}).get("resultado")
+                rot = {"confere": "confere", "nao_confere": "**não confere**", "nao_se_aplica": "não se aplica", "nao_tentado": "não tentado"}.get(r, _cel(r))
+                det = (v.get(chave) or {}).get("detalhe")
+                celulas.append(rot + (f" ({_cel(det)})" if det and r in ("nao_confere", "confere") and chave in ("nome_parecido", "efeito_na_reexecucao") else ""))
+            linhas_c.append([f"`{c['estrategia']}`", f"`{_cel(c.get('seletor'))}`"] + celulas + ["**sim**" if c.get("aplicado") else ""])
+        evidencia += [_tabela(["Estratégia", "Seletor"] + list(ROTULO_DA_VERIFICACAO_DA_CURA.values()) + ["Aplicado"], linhas_c), ""]
     if podas:
         for e in podas:
             d = e["dados"]
@@ -493,29 +632,36 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
         d = e["dados"]
         evidencia += [f"Interceptação (evento {e['seq']}): `{d.get('metodo')} {d.get('caminho')}` status {d.get('status')}; corpo `{d.get('corpo')}`, "
                       f"árvore `{d.get('arvore')}`.", ""]
-    if not podas and not interceptacoes:
+    if not podas and not interceptacoes and cura is None:
         texto_caso = blobs.get(entrada.get("texto")) if entrada.get("texto") else None
         evidencia += ["Não houve interceptação nem poda nesta trilha: o caso entrou em texto." + ("" if texto_caso is None else " Como foi posto no prompt:"), ""]
         if texto_caso is not None:
             evidencia += [_bloco(texto_caso), ""]
 
     contraste = []
-    if diag is not None:
-        contraste += [diag.get("contraste") or contraste_por_molde(diag), ""]
-        alternativas = sorted(diag.get("alternativas") or [], key=lambda a: -(a.get("escore") if isinstance(a.get("escore"), (int, float)) else -1))
+    no_principal = diag if diag is not None else no_cura
+    if no_principal is not None:
+        contraste += [no_principal.get("contraste") or (contraste_por_molde(diag) if diag is not None else ""), ""]
+        alternativas = sorted(no_principal.get("alternativas") or [], key=lambda a: -(a.get("escore") if isinstance(a.get("escore"), (int, float)) else -1))
         if alternativas:
             contraste += [_tabela(["Alternativa", "Probabilidade ou escore", "Escolhida"],
-                                  [[_cel(a.get("opcao")), _prob(a.get("escore")), "sim" if a.get("opcao") == diag.get("escolha") else ""] for a in alternativas]), ""]
+                                  [[_cel(a.get("opcao")), _prob(a.get("escore")) if diag is not None else f"{a.get('escore')} de 5 verificações",
+                                    "sim" if a.get("opcao") == no_principal.get("escolha") else ""] for a in alternativas]), ""]
     else:
         contraste += ["Sem nó de diagnóstico, não há contraste.", ""]
 
-    fonte = [f"Linha FONTE como veio: {valor('fonte')}; verbetes citados: " + (", ".join(f"`{_cel(c.get('valor'))}`" for c in citadas) or "nenhum") + ".", ""]
+    if cura is not None and diag is None:
+        fonte = ["Não se aplica: a cura de seletor roda sem modelo; nenhum verbete foi citado.", ""]
+    else:
+        fonte = [f"Linha FONTE como veio: {valor('fonte')}; verbetes citados: " + (", ".join(f"`{_cel(c.get('valor'))}`" for c in citadas) or "nenhum") + ".", ""]
     conf_fonte = [v for v in sem_gabarito if str(v.get("regra", "")).startswith("fonte_") or v.get("regra") == "rotulo_sustentado_por_verbete_do_contexto"]
     if conf_fonte:
         fonte += [_tabela(["Conferência", "Sobre", "Resultado", "Evidência"],
                           [[ROTULO_DA_REGRA.get(v["regra"], v["regra"]), f"`{_cel(v['alvo'])}`" if v.get("alvo") else "",
                             ROTULO_DO_RESULTADO.get(v["resultado"], v["resultado"]), _evidencia(v)] for v in conf_fonte]), ""]
-    if intervencoes:
+    if cura is not None and diag is None:
+        pass
+    elif intervencoes:
         fonte += [_tabela(["Intervenção", "Verbete", "Rótulo antes", "Rótulo depois", "p antes", "p depois", "Efeito"],
                           [[_cel(i.get("tipo")), f"`{_cel(i.get('verbete'))}`", _cel(i.get("rotulo_antes")), _cel(i.get("rotulo_depois")),
                             _prob(i.get("p_antes")), _prob(i.get("p_depois")),
@@ -527,9 +673,21 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
 
     campo_decl = (decl.get("campo") or {}).get("lido")
     onde = next((f"`{e['dados'].get('metodo')} {e['dados'].get('caminho')}`" for e in interceptacoes), None)
-    acao = [("Confira o campo `" + _cel(campo_decl) + "`" if campo_decl else "Confira a resposta") + (f" em {onde}" if onde else " no caso de entrada")
-            + " e compare com o contrato esperado pela interface.", "",
-            f"Comando para reexecutar o caso: `{comando_reexecucao}`" if comando_reexecucao else "Comando de reexecução: não registrado nesta trilha.", ""]
+    if cura is not None and diag is None:
+        ap = cura.get("aplicado") or {}
+        if cura.get("curado"):
+            acao = [f"Sugestão (o agente não altera a aplicação): no passo {cura.get('passo')} do roteiro, trocar o localizador `{_cel(cura.get('localizador'))}` por "
+                    f"`{_cel(ap.get('seletor'))}` (estratégia `{ap.get('estrategia')}`)"
+                    + (", que resolve o mesmo elemento da referência." if cura.get("mesmo_elemento") else
+                       (" e conferir à mão: o roteiro passou, mas com outro elemento, não o alvo da referência." if cura.get("mesmo_elemento") is False else ".")), ""]
+        else:
+            acao = [f"Sugestão (o agente não altera a aplicação): nenhum candidato levou o roteiro ao fim no passo {cura.get('passo')} "
+                    f"(localizador `{_cel(cura.get('localizador'))}`); o roteiro precisa de um localizador novo escrito à mão. Falha registrada: `{_cel(cura.get('falha'))}`.", ""]
+        acao += [f"Comando para reexecutar o caso: `{comando_reexecucao}`" if comando_reexecucao else "Comando de reexecução: não registrado nesta trilha.", ""]
+    else:
+        acao = [("Confira o campo `" + _cel(campo_decl) + "`" if campo_decl else "Confira a resposta") + (f" em {onde}" if onde else " no caso de entrada")
+                + " e compare com o contrato esperado pela interface.", "",
+                f"Comando para reexecutar o caso: `{comando_reexecucao}`" if comando_reexecucao else "Comando de reexecução: não registrado nesta trilha.", ""]
 
     linhas_arvore = [[str(e["seq"]), str(e.get("passo")), e["tipo"], e["camada"], e["origem"], _cel(e.get("ts")), _resumo_do_evento(e, blobs)] for e in seq]
     arvore = [f"<details><summary>{len(seq)} eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>", "",
@@ -549,6 +707,8 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
                            [[ROTULO_DA_REGRA.get(v["regra"], v["regra"]), f"`{_cel(v['alvo'])}`" if v.get("alvo") else "nada",
                              f"`{_cel((v.get('evidencia') or {}).get('gabarito'))}`" if isinstance(v.get("evidencia"), dict) and v["evidencia"].get("gabarito") else "",
                              ROTULO_DO_RESULTADO.get(v["resultado"], v["resultado"])] for v in com_gabarito]), ""]
+    elif cura is not None and diag is None:
+        arvore += ["Sem gabarito nem modelo: a cura de seletor é toda em código; a regra R3 separa o mesmo elemento da referência de outro que fez o roteiro passar.", ""]
     else:
         arvore += ["Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.", ""]
 

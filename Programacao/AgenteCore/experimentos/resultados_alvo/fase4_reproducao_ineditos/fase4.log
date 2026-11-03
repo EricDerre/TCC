@@ -1,0 +1,38 @@
+[2026-10-27 17:52:48] INÍCIO reproducao (banco ineditos_fase4): 36 casos, 25 reproduzíveis na tela, 11 fora
+[2026-10-27 17:53:05] referência api-catalogo: passou em 0.58 s; árvore 193 nós, 39 linhas
+[2026-10-27 17:53:05] referência api-detalhe produto 1: passou em 0.597 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:06] [1/25] lex-22 (corpo_nao_e_json): REPRODUZ: corpo nao_json; corpo diferente da referência em modo normal; árvore diferente da referência: 140 linha(s) a menos e 1 a mais; conferência 'grid com 14 cartões' falhou (0.238 s)
+[2026-10-27 17:53:07] referência api-detalhe produto 6: passou em 0.716 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:07] [2/25] lex-23 (corpo_vazio): REPRODUZ: corpo vazio; árvore diferente da referência: 144 linha(s) a menos e 1 a mais; conferência 'grid carregado antes do detalhe' falhou (0.173 s)
+[2026-10-27 17:53:07] referência api-detalhe produto 14: passou em 0.521 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:08] [3/25] lex-24 (codificacao_incorreta em resumo): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 5 linha(s) a menos e 5 a mais (0.581 s)
+[2026-10-27 17:53:09] [4/25] lex-25 (codificacao_incorreta em nome): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 6 linha(s) a menos e 6 a mais (0.355 s)
+[2026-10-27 17:53:09] referência api-detalhe produto 11: passou em 0.607 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:10] [5/25] lex-26 (codificacao_incorreta em nome): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 7 linha(s) a menos e 7 a mais (0.553 s)
+[2026-10-27 17:53:10] [6/25] sin-22 (field_missing em nome): REPRODUZ: diff do contrato: ausente; corpo diferente da referência em modo normal; árvore diferente da referência: 28 linha(s) a menos e 28 a mais (0.253 s)
+[2026-10-27 17:53:11] referência api-detalhe produto 10: passou em 0.549 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:12] [7/25] sin-23 (field_renamed em resumo): REPRODUZ: diff do contrato: renomeado; corpo diferente da referência em modo normal; árvore diferente da referência: 15 linha(s) a menos e 15 a mais (0.555 s)
+[2026-10-27 17:53:12] [8/25] sin-24 (estrutura_aninhada_divergente em tipo): REPRODUZ: diff do contrato: tipo_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais (0.249 s)
+[2026-10-27 17:53:13] referência api-detalhe produto 4: passou em 0.566 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:13] [9/25] sin-25 (colecao_no_lugar_de_objeto): REPRODUZ: diff do contrato: forma_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 2 linha(s) a menos e 2 a mais (0.565 s)
+[2026-10-27 17:53:14] [10/25] sin-26 (field_missing em preco): REPRODUZ: diff do contrato: ausente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais; conferência 'preço do primeiro cartão' falhou (0.24 s)
+[2026-10-27 17:53:14] [11/25] sin-27 (field_renamed em imagem): REPRODUZ: diff do contrato: renomeado; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 0 a mais (0.253 s)
+[2026-10-27 17:53:14] [12/25] semt-22 (nulo_inesperado em preco): REPRODUZ: diff do contrato: nulo_inesperado; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais (0.268 s)
+[2026-10-27 17:53:15] [13/25] semt-23 (valor_fora_do_dominio em preco): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais; conferência 'preço do primeiro cartão' falhou (0.247 s)
+[2026-10-27 17:53:15] [14/25] semt-24 (type_drift em destaque): REPRODUZ: diff do contrato: tipo_diferente; corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais (0.269 s)
+[2026-10-27 17:53:16] referência api-detalhe produto 12: passou em 0.519 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:16] [15/25] semt-26 (nulo_inesperado em resumo): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 15 linha(s) a menos e 15 a mais (0.528 s)
+[2026-10-27 17:53:17] [16/25] semt-27 (valor_fora_do_dominio em id): REPRODUZ: corpo diferente da referência em modo normal (0.268 s)
+[2026-10-27 17:53:17] [17/25] tra-22 (escala_ou_unidade_errada em preco): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais (0.287 s)
+[2026-10-27 17:53:17] [18/25] tra-24 (chave_de_juncao_errada em tipo): REPRODUZ: corpo diferente da referência em modo normal (0.276 s)
+[2026-10-27 17:53:18] [19/25] tra-25 (contagem_inconsistente): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 10 linha(s) a menos e 0 a mais; conferência 'grid com 14 cartões' falhou (0.232 s)
+[2026-10-27 17:53:18] [20/25] tra-26 (chave_de_juncao_errada em id): REPRODUZ: corpo diferente da referência em modo normal (0.228 s)
+[2026-10-27 17:53:19] referência api-detalhe produto 2: passou em 0.56 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:19] [21/25] tra-27 (escala_ou_unidade_errada em preco): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais (0.519 s)
+[2026-10-27 17:53:20] [22/25] run-22 (limite_de_requisicoes): REPRODUZ: status 429; diff do contrato: ausente, forma_diferente, inesperado; corpo diferente da referência em modo normal; árvore diferente da referência: 140 linha(s) a menos e 1 a mais; conferência 'grid com 14 cartões' falhou (0.158 s)
+[2026-10-27 17:53:20] referência api-detalhe produto 5: passou em 0.555 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:21] [23/25] run-23 (recurso_inexistente): REPRODUZ: status 404; diff do contrato: ausente, forma_diferente, inesperado; árvore diferente da referência: 144 linha(s) a menos e 1 a mais; conferência 'grid carregado antes do detalhe' falhou (0.166 s)
+[2026-10-27 17:53:21] [24/25] run-24 (registro_duplicado): REPRODUZ: corpo diferente da referência em modo normal; árvore diferente da referência: 0 linha(s) a menos e 10 a mais; conferência 'grid com 14 cartões' falhou (0.202 s)
+[2026-10-27 17:53:21] referência api-detalhe produto 7: passou em 0.535 s; árvore 197 nós, 42 linhas
+[2026-10-27 17:53:52] [25/25] run-25 (latency): REPRODUZ: tempo de resposta 2008 ms acima do orçamento de 1000 ms (30.689 s)
+[2026-10-27 17:53:53] FIM reproducao: 25 de 25 casos reproduzem na tela; 11 fora; duração 64 s; trilha 340419 bytes

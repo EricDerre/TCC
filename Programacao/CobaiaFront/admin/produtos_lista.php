@@ -1,6 +1,10 @@
-<?php 
+<?php
 include 'acesso_com.php';
 include '../conn/connect.php';
+// ! Alteração de IA - Revisar: (01/11/2026, Fase 4, pacote P4) inclui quebra.php, a variante de quebra de localizador
+// ligada só por `?quebra=<modo>` ou pelo cookie `quebra`; desligada, a lista de produtos sai como sempre saiu.
+// ! Motivo: ficha 29, opção c (decisão 80): a cura de seletor é medida também com a quebra feita no HTML que o PHP devolve.
+include_once __DIR__ . '/../quebra.php';
 $lista = $conn->query("select * from vw_tbprodutos");
 $row = $lista->fetch_assoc();
 $rows = $lista->num_rows;
@@ -67,17 +71,26 @@ $rows = $lista->num_rows;
                             <img src="../images/<?php echo $row['imagem_produto'];?>" width="100px">
                         </td>
                         <td >
-                            <a href="produtos_atualiza.php?id_produto=<?php echo $row['id_produto']?>" role="button" class="btn btn-warning btn-block btn-xs"> 
+                            <!-- ! Alteração de IA - Revisar: (01/11/2026, P4) o botão EXCLUIR sai por PHP para a variante de quebra
+                                 (quebra.php): no modo id_renomeado o atributo data-id vira data-produto (a página não tem id em
+                                 elemento nenhum), no classe_trocada a classe delete vira remover, no texto_alterado o botão diz
+                                 "EXCLUIR ITEM" e no estrutura_alterada ele sai envolvido num div.acoes antes do link ALTERAR. Sem
+                                 modo, o HTML é o de antes; o script no fim da página acompanha a classe e o atributo.
+                                 ! Motivo: ficha 29, opção c (decisão 80). -->
+                            <?php
+                                // a quebra de linha entre os dois spans fica como no HTML original: ela entra no nome acessível do
+                                // botão (o ícone, um espaço e o texto), e as duas formas de quebra precisam ter o mesmo nome
+                                $quebra_botao_excluir = '<button data-nome="' . $row['descri_produto'] . '" ' . quebra_atributo('data-id', 'data-produto')
+                                    . '="' . $row['id_produto'] . '" class="' . quebra_classe('delete', 'remover') . ' btn btn-xs btn-block btn-danger">' . "\n"
+                                    . '<span class="glyphicon glyphicon-trash"></span>' . "\n" . '<span class="hidden-xs">' . quebra_texto('EXCLUIR', 'EXCLUIR ITEM')
+                                    . '</span>' . "\n" . '</button>';
+                                if (quebra_estrutura()) { echo '<div class="acoes">' . $quebra_botao_excluir . '</div>'; }
+                            ?>
+                            <a href="produtos_atualiza.php?id_produto=<?php echo $row['id_produto']?>" role="button" class="btn btn-warning btn-block btn-xs">
                                 <span class="glyphicon glyphicon-refresh"></span>
                                 <span class="hidden-xs">ALTERAR</span>
                             </a>
-                            <button 
-                                data-nome="<?php echo $row['descri_produto'];?>" 
-                                data-id="<?php echo $row['id_produto'];?>"
-                                class="delete btn btn-xs btn-block btn-danger">
-                                <span class="glyphicon glyphicon-trash"></span>
-                                <span class="hidden-xs">EXCLUIR</span>
-                            </button>
+                            <?php if (!quebra_estrutura()) { echo $quebra_botao_excluir; } ?>
                         </td>
                     </tr>
                     <?php }while($row = $lista->fetch_assoc());?>
@@ -113,9 +126,14 @@ $rows = $lista->num_rows;
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script type="text/javascript">
-    $('.delete').on('click',function(){
+    // ! Alteração de IA - Revisar: (01/11/2026, P4) a classe e o atributo lidos aqui acompanham a variante de quebra
+    // (quebra.php): sem modo, continuam '.delete' e 'id'.
+    // ! Motivo: no modo classe_trocada o botão sai como .remover e no id_renomeado o data-id vira data-produto; sem
+    // acompanhar, o clique não abriria o modal e a quebra no PHP não seria comparável à armada pelo harness, em que o
+    // manipulador já está ligado ao elemento quando a mutação acontece.
+    $('.<?php echo quebra_classe('delete', 'remover'); ?>').on('click',function(){
         var nome = $(this).data('nome'); //busca o nome com a descrição (data-nome)
-        var id = $(this).data('id'); // busca o id (data-id)
+        var id = $(this).data('<?php echo quebra_atributo('id', 'produto'); ?>'); // busca o id (data-id)
         //console.log(id + ' - ' + nome); //exibe no console
         $('span.nome').text(nome); // insere o nome do item na confirmação
         $('a.delete-yes').attr('href','produtos_excluir.php?id_produto='+id); //chama o arquivo php para excluir o produto

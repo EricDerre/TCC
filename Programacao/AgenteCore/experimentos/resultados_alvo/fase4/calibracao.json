@@ -1,0 +1,3940 @@
+{
+  "metadados": {
+    "gerado_em": "2026-10-28T00:06:38",
+    "corrida": "fase4_calibracao",
+    "fonte": "k<n>/<modelo>/diagnosticos__L100.jsonl e logprobs__L100.jsonl, sondagem_logprobs.json, ponte/ e pontes.json da corrida",
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.2",
+    "parcial": false
+  },
+  "por_k": [
+    {
+      "k": 3,
+      "n": 90,
+      "casos_esperados": 90,
+      "completo": true,
+      "acertos": 68,
+      "acerto_pct": 75.6,
+      "acuracia_balanceada_pct": 81.5,
+      "sem_rotulo": 0,
+      "sem_probabilidade": 0,
+      "segundos_mediana": 55.365,
+      "tokens_entrada_mediana": 1106.5,
+      "tokens_entrada_max": 1281,
+      "sinais": {
+        "p_rotulo": {
+          "n": 90,
+          "casos": 90,
+          "erros": 22,
+          "auroc": 0.7988,
+          "ic95": [
+            0.6701,
+            0.9021
+          ],
+          "replicas_validas": 2000
+        },
+        "p_conjunta": {
+          "n": 90,
+          "casos": 90,
+          "erros": 22,
+          "auroc": 0.7914,
+          "ic95": [
+            0.6614,
+            0.897
+          ],
+          "replicas_validas": 2000
+        }
+      },
+      "revisao": [
+        {
+          "fracao": 0.1,
+          "revisados": 9,
+          "erros_pegos": 7,
+          "erros": 22,
+          "acertos_revisados": 2,
+          "risco_no_que_sobra": 0.1852
+        },
+        {
+          "fracao": 0.2,
+          "revisados": 18,
+          "erros_pegos": 10,
+          "erros": 22,
+          "acertos_revisados": 8,
+          "risco_no_que_sobra": 0.1667
+        },
+        {
+          "fracao": 0.3,
+          "revisados": 27,
+          "erros_pegos": 15,
+          "erros": 22,
+          "acertos_revisados": 12,
+          "risco_no_que_sobra": 0.1111
+        }
+      ],
+      "curva": [
+        {
+          "cobertura": 0.0111,
+          "risco": 0.0,
+          "limiar": 0.9999200031999147
+        },
+        {
+          "cobertura": 0.0222,
+          "risco": 0.0,
+          "limiar": 0.9999100040498785
+        },
+        {
+          "cobertura": 0.0333,
+          "risco": 0.0,
+          "limiar": 0.9998900060497782
+        },
+        {
+          "cobertura": 0.0444,
+          "risco": 0.0,
+          "limiar": 0.9997100420459355
+        },
+        {
+          "cobertura": 0.0556,
+          "risco": 0.0,
+          "limiar": 0.9997100420459355
+        },
+        {
+          "cobertura": 0.0667,
+          "risco": 0.0,
+          "limiar": 0.9995700924367502
+        },
+        {
+          "cobertura": 0.0778,
+          "risco": 0.0,
+          "limiar": 0.9995401057837792
+        },
+        {
+          "cobertura": 0.0889,
+          "risco": 0.0,
+          "limiar": 0.9995001249791693
+        },
+        {
+          "cobertura": 0.1,
+          "risco": 0.1111111111111111,
+          "limiar": 0.9994601457737595
+        },
+        {
+          "cobertura": 0.1111,
+          "risco": 0.1,
+          "limiar": 0.9994401567707347
+        },
+        {
+          "cobertura": 0.1222,
+          "risco": 0.09090909090909091,
+          "limiar": 0.9994301624191388
+        },
+        {
+          "cobertura": 0.1333,
+          "risco": 0.08333333333333333,
+          "limiar": 0.9993901860121756
+        },
+        {
+          "cobertura": 0.1444,
+          "risco": 0.07692307692307693,
+          "limiar": 0.9992802591378032
+        },
+        {
+          "cobertura": 0.1556,
+          "risco": 0.07142857142857142,
+          "limiar": 0.9992003199146837
+        },
+        {
+          "cobertura": 0.1667,
+          "risco": 0.06666666666666667,
+          "limiar": 0.9991903279614445
+        },
+        {
+          "cobertura": 0.1778,
+          "risco": 0.0625,
+          "limiar": 0.999170344354722
+        },
+        {
+          "cobertura": 0.1889,
+          "risco": 0.058823529411764705,
+          "limiar": 0.9990304702979247
+        },
+        {
+          "cobertura": 0.2,
+          "risco": 0.05555555555555555,
+          "limiar": 0.999000499833375
+        },
+        {
+          "cobertura": 0.2111,
+          "risco": 0.05263157894736842,
+          "limiar": 0.9989105938342207
+        },
+        {
+          "cobertura": 0.2222,
+          "risco": 0.05,
+          "limiar": 0.9986409243808998
+        },
+        {
+          "cobertura": 0.2333,
+          "risco": 0.047619047619047616,
+          "limiar": 0.9986109656025524
+        },
+        {
+          "cobertura": 0.2444,
+          "risco": 0.045454545454545456,
+          "limiar": 0.9982515303571615
+        },
+        {
+          "cobertura": 0.2556,
+          "risco": 0.043478260869565216,
+          "limiar": 0.9967154061196637
+        },
+        {
+          "cobertura": 0.2667,
+          "risco": 0.08333333333333333,
+          "limiar": 0.9966257057696892
+        },
+        {
+          "cobertura": 0.2778,
+          "risco": 0.08,
+          "limiar": 0.996575875730162
+        },
+        {
+          "cobertura": 0.2889,
+          "risco": 0.07692307692307693,
+          "limiar": 0.9963466896361552
+        },
+        {
+          "cobertura": 0.3,
+          "risco": 0.07407407407407407,
+          "limiar": 0.99560966581827
+        },
+        {
+          "cobertura": 0.3111,
+          "risco": 0.07142857142857142,
+          "limiar": 0.9953309341360974
+        },
+        {
+          "cobertura": 0.3222,
+          "risco": 0.10344827586206896,
+          "limiar": 0.9949030338395759
+        },
+        {
+          "cobertura": 0.3333,
+          "risco": 0.1,
+          "limiar": 0.9941969033915222
+        },
+        {
+          "cobertura": 0.3444,
+          "risco": 0.0967741935483871,
+          "limiar": 0.9940875477468198
+        },
+        {
+          "cobertura": 0.3556,
+          "risco": 0.09375,
+          "limiar": 0.9940577255677224
+        },
+        {
+          "cobertura": 0.3667,
+          "risco": 0.09090909090909091,
+          "limiar": 0.9929946526468036
+        },
+        {
+          "cobertura": 0.3778,
+          "risco": 0.08823529411764706,
+          "limiar": 0.9912881698401698
+        },
+        {
+          "cobertura": 0.3889,
+          "risco": 0.08571428571428572,
+          "limiar": 0.990198352362848
+        },
+        {
+          "cobertura": 0.4,
+          "risco": 0.08333333333333333,
+          "limiar": 0.9900003324950223
+        },
+        {
+          "cobertura": 0.4111,
+          "risco": 0.08108108108108109,
+          "limiar": 0.9899706329305431
+        },
+        {
+          "cobertura": 0.4222,
+          "risco": 0.07894736842105263,
+          "limiar": 0.9896835830712346
+        },
+        {
+          "cobertura": 0.4333,
+          "risco": 0.07692307692307693,
+          "limiar": 0.9896044115514919
+        },
+        {
+          "cobertura": 0.4444,
+          "risco": 0.075,
+          "limiar": 0.9887537176083843
+        },
+        {
+          "cobertura": 0.4556,
+          "risco": 0.07317073170731707,
+          "limiar": 0.9887438301206457
+        },
+        {
+          "cobertura": 0.4667,
+          "risco": 0.07142857142857142,
+          "limiar": 0.9872322087457924
+        },
+        {
+          "cobertura": 0.4778,
+          "risco": 0.06976744186046512,
+          "limiar": 0.9864624678609416
+        },
+        {
+          "cobertura": 0.4889,
+          "risco": 0.06818181818181818,
+          "limiar": 0.9848066022315235
+        },
+        {
+          "cobertura": 0.5,
+          "risco": 0.06666666666666667,
+          "limiar": 0.9817486113391868
+        },
+        {
+          "cobertura": 0.5111,
+          "risco": 0.08695652173913043,
+          "limiar": 0.9804829721433531
+        },
+        {
+          "cobertura": 0.5222,
+          "risco": 0.0851063829787234,
+          "limiar": 0.980237882037857
+        },
+        {
+          "cobertura": 0.5333,
+          "risco": 0.10416666666666667,
+          "limiar": 0.9749393646702189
+        },
+        {
+          "cobertura": 0.5444,
+          "risco": 0.10204081632653061,
+          "limiar": 0.9705134671135036
+        },
+        {
+          "cobertura": 0.5556,
+          "risco": 0.1,
+          "limiar": 0.96641686556822
+        },
+        {
+          "cobertura": 0.5667,
+          "risco": 0.09803921568627451,
+          "limiar": 0.959992314770207
+        },
+        {
+          "cobertura": 0.5778,
+          "risco": 0.09615384615384616,
+          "limiar": 0.9574134056313703
+        },
+        {
+          "cobertura": 0.5889,
+          "risco": 0.09433962264150944,
+          "limiar": 0.9563895211632223
+        },
+        {
+          "cobertura": 0.6,
+          "risco": 0.09259259259259259,
+          "limiar": 0.941585615320641
+        },
+        {
+          "cobertura": 0.6111,
+          "risco": 0.10909090909090909,
+          "limiar": 0.9404469857359241
+        },
+        {
+          "cobertura": 0.6222,
+          "risco": 0.10714285714285714,
+          "limiar": 0.9304192388032628
+        },
+        {
+          "cobertura": 0.6333,
+          "risco": 0.10526315789473684,
+          "limiar": 0.8813944706198884
+        },
+        {
+          "cobertura": 0.6444,
+          "risco": 0.10344827586206896,
+          "limiar": 0.8801173747557489
+        },
+        {
+          "cobertura": 0.6556,
+          "risco": 0.1016949152542373,
+          "limiar": 0.8757715585195026
+        },
+        {
+          "cobertura": 0.6667,
+          "risco": 0.1,
+          "limiar": 0.8650395937296091
+        },
+        {
+          "cobertura": 0.6778,
+          "risco": 0.09836065573770492,
+          "limiar": 0.8531157868191416
+        },
+        {
+          "cobertura": 0.6889,
+          "risco": 0.11290322580645161,
+          "limiar": 0.8507048821815633
+        },
+        {
+          "cobertura": 0.7,
+          "risco": 0.1111111111111111,
+          "limiar": 0.8407760034222677
+        },
+        {
+          "cobertura": 0.7111,
+          "risco": 0.109375,
+          "limiar": 0.8317943867608124
+        },
+        {
+          "cobertura": 0.7222,
+          "risco": 0.12307692307692308,
+          "limiar": 0.792216948345155
+        },
+        {
+          "cobertura": 0.7333,
+          "risco": 0.12121212121212122,
+          "limiar": 0.7774390735443857
+        },
+        {
+          "cobertura": 0.7444,
+          "risco": 0.11940298507462686,
+          "limiar": 0.7736079950758993
+        },
+        {
+          "cobertura": 0.7556,
+          "risco": 0.1323529411764706,
+          "limiar": 0.7599140075986345
+        },
+        {
+          "cobertura": 0.7667,
+          "risco": 0.14492753623188406,
+          "limiar": 0.7583350291696698
+        },
+        {
+          "cobertura": 0.7778,
+          "risco": 0.15714285714285714,
+          "limiar": 0.7514128834963295
+        },
+        {
+          "cobertura": 0.7889,
+          "risco": 0.16901408450704225,
+          "limiar": 0.7508870785310903
+        },
+        {
+          "cobertura": 0.8,
+          "risco": 0.16666666666666666,
+          "limiar": 0.749079619534746
+        },
+        {
+          "cobertura": 0.8111,
+          "risco": 0.1643835616438356,
+          "limiar": 0.7404627132643965
+        },
+        {
+          "cobertura": 0.8222,
+          "risco": 0.17567567567567569,
+          "limiar": 0.6789281326201134
+        },
+        {
+          "cobertura": 0.8333,
+          "risco": 0.17333333333333334,
+          "limiar": 0.6653114513980284
+        },
+        {
+          "cobertura": 0.8444,
+          "risco": 0.17105263157894737,
+          "limiar": 0.6599837932136875
+        },
+        {
+          "cobertura": 0.8556,
+          "risco": 0.16883116883116883,
+          "limiar": 0.6426275246256908
+        },
+        {
+          "cobertura": 0.8667,
+          "risco": 0.1794871794871795,
+          "limiar": 0.6053551308644586
+        },
+        {
+          "cobertura": 0.8778,
+          "risco": 0.189873417721519,
+          "limiar": 0.6003094540336653
+        },
+        {
+          "cobertura": 0.8889,
+          "risco": 0.1875,
+          "limiar": 0.597518519904954
+        },
+        {
+          "cobertura": 0.9,
+          "risco": 0.18518518518518517,
+          "limiar": 0.5845575749573877
+        },
+        {
+          "cobertura": 0.9111,
+          "risco": 0.1951219512195122,
+          "limiar": 0.5765633834750007
+        },
+        {
+          "cobertura": 0.9222,
+          "risco": 0.20481927710843373,
+          "limiar": 0.5687353882704784
+        },
+        {
+          "cobertura": 0.9333,
+          "risco": 0.21428571428571427,
+          "limiar": 0.5681953462122149
+        },
+        {
+          "cobertura": 0.9444,
+          "risco": 0.2235294117647059,
+          "limiar": 0.5334606335486932
+        },
+        {
+          "cobertura": 0.9556,
+          "risco": 0.22093023255813954,
+          "limiar": 0.5243216222651753
+        },
+        {
+          "cobertura": 0.9667,
+          "risco": 0.21839080459770116,
+          "limiar": 0.48415992659270535
+        },
+        {
+          "cobertura": 0.9778,
+          "risco": 0.22727272727272727,
+          "limiar": 0.44321956485277253
+        },
+        {
+          "cobertura": 0.9889,
+          "risco": 0.23595505617977527,
+          "limiar": 0.42092525610695825
+        },
+        {
+          "cobertura": 1.0,
+          "risco": 0.24444444444444444,
+          "limiar": 0.30071569363810147
+        }
+      ],
+      "por_particao": {
+        "avaliacao": {
+          "n": 36,
+          "acertos": 31,
+          "acerto_pct": 86.1
+        },
+        "aprendizado": {
+          "n": 54,
+          "acertos": 37,
+          "acerto_pct": 68.5
+        }
+      },
+      "p_mediana_certos": 0.99,
+      "p_mediana_errados": 0.751,
+      "casos": [
+        {
+          "caso": "lex-1",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9995700924367502,
+          "p_conjunta": 0.9995501012348142,
+          "margem": 0.9992605080970836,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 16.05,
+          "tokens_entrada": 1118,
+          "k": 3
+        },
+        {
+          "caso": "lex-2",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.7736079950758993,
+          "p_conjunta": 0.7244083690218969,
+          "margem": 0.6497463373879371,
+          "segunda": "erro_interno_do_servidor",
+          "segundos": 60.82,
+          "tokens_entrada": 1150,
+          "k": 3
+        },
+        {
+          "caso": "lex-3",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_vazio",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": false,
+          "p": 0.9994601457737595,
+          "p_conjunta": 0.999420168167486,
+          "margem": 0.9992970837637506,
+          "segunda": "resposta_truncada",
+          "segundos": 55.78,
+          "tokens_entrada": 1023,
+          "k": 3
+        },
+        {
+          "caso": "lex-4",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "codificacao_incorreta",
+          "rotulo": "codificacao_incorreta",
+          "acerto": true,
+          "p": 0.9986109656025524,
+          "p_conjunta": 0.9982315655262033,
+          "margem": 0.9980417265018662,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 40.77,
+          "tokens_entrada": 1085,
+          "k": 3
+        },
+        {
+          "caso": "lex-5",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9998900060497782,
+          "p_conjunta": 0.9998600097995427,
+          "margem": 0.9998477942179017,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 48.93,
+          "tokens_entrada": 1189,
+          "k": 3
+        },
+        {
+          "caso": "sin-1",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.48415992659270535,
+          "p_conjunta": 0.48146102306637184,
+          "margem": 0.07084275053575378,
+          "segunda": "tipo_divergente",
+          "segundos": 49.84,
+          "tokens_entrada": 1081,
+          "k": 3
+        },
+        {
+          "caso": "sin-2",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_renomeado",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.7508870785310903,
+          "p_conjunta": 0.7508795696978492,
+          "margem": 0.5229669443334678,
+          "segunda": "campo_ausente",
+          "segundos": 30.93,
+          "tokens_entrada": 1103,
+          "k": 3
+        },
+        {
+          "caso": "sin-3",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "estrutura_aninhada_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": true,
+          "p": 0.9992003199146837,
+          "p_conjunta": 0.9991203870864463,
+          "margem": 0.9990539085014165,
+          "segunda": "campo_ausente",
+          "segundos": 57.11,
+          "tokens_entrada": 1171,
+          "k": 3
+        },
+        {
+          "caso": "sin-4",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "colecao_no_lugar_de_objeto",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": true,
+          "p": 0.8801173747557489,
+          "p_conjunta": 0.879782993689768,
+          "margem": 0.8396548885239306,
+          "segunda": "tipo_divergente",
+          "segundos": 61.37,
+          "tokens_entrada": 1183,
+          "k": 3
+        },
+        {
+          "caso": "sin-5",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_ausente",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.7583350291696698,
+          "p_conjunta": 0.7529699191410807,
+          "margem": 0.618440989158946,
+          "segunda": "campo_ausente",
+          "segundos": 50.93,
+          "tokens_entrada": 1139,
+          "k": 3
+        },
+        {
+          "caso": "semt-1",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.7774390735443857,
+          "p_conjunta": 0.7774235249184015,
+          "margem": 0.5947500689037211,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 56.88,
+          "tokens_entrada": 1116,
+          "k": 3
+        },
+        {
+          "caso": "semt-2",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.9563895211632223,
+          "p_conjunta": 0.95637995731583,
+          "margem": 0.9501103670316584,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 47.14,
+          "tokens_entrada": 1103,
+          "k": 3
+        },
+        {
+          "caso": "semt-3",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": true,
+          "p": 0.9940875477468198,
+          "p_conjunta": 0.9922303410619892,
+          "margem": 0.992314862866212,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 65.85,
+          "tokens_entrada": 1062,
+          "k": 3
+        },
+        {
+          "caso": "semt-4",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "formato_de_data_divergente",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": true,
+          "p": 0.9997100420459355,
+          "p_conjunta": 0.9996300684415587,
+          "margem": 0.9994740352601444,
+          "segunda": "tipo_divergente",
+          "segundos": 52.44,
+          "tokens_entrada": 1044,
+          "k": 3
+        },
+        {
+          "caso": "semt-5",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "nulo_inesperado",
+          "rotulo": "nulo_inesperado",
+          "acerto": true,
+          "p": 0.9887537176083843,
+          "p_conjunta": 0.9886845072705418,
+          "margem": 0.9837808568541668,
+          "segunda": "campo_ausente",
+          "segundos": 52.21,
+          "tokens_entrada": 1034,
+          "k": 3
+        },
+        {
+          "caso": "tra-1",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "escala_ou_unidade_errada",
+          "acerto": true,
+          "p": 0.9963466896361552,
+          "p_conjunta": 0.9962072108633482,
+          "margem": 0.9944240957070771,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 77.55,
+          "tokens_entrada": 1281,
+          "k": 3
+        },
+        {
+          "caso": "tra-2",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "nome_nulo_vindo_da_view",
+          "acerto": false,
+          "p": 0.8507048821815633,
+          "p_conjunta": 0.8264383137645605,
+          "margem": 0.7693594014294841,
+          "segunda": "campo_ausente",
+          "segundos": 59.91,
+          "tokens_entrada": 1077,
+          "k": 3
+        },
+        {
+          "caso": "tra-3",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.792216948345155,
+          "p_conjunta": 0.7922090262152822,
+          "margem": 0.6016954045459139,
+          "segunda": "chave_de_juncao_errada",
+          "segundos": 34.51,
+          "tokens_entrada": 1134,
+          "k": 3
+        },
+        {
+          "caso": "tra-4",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.9817486113391868,
+          "p_conjunta": 0.9789839802172131,
+          "margem": 0.9723341657075056,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 69.94,
+          "tokens_entrada": 1157,
+          "k": 3
+        },
+        {
+          "caso": "tra-5",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "contagem_inconsistente",
+          "acerto": false,
+          "p": 0.7599140075986345,
+          "p_conjunta": 0.759777235387135,
+          "margem": 0.549190838137983,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 64.14,
+          "tokens_entrada": 1095,
+          "k": 3
+        },
+        {
+          "caso": "run-1",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "erro_interno_do_servidor",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": true,
+          "p": 0.9848066022315235,
+          "p_conjunta": 0.971455321902327,
+          "margem": 0.9848058918260922,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 63.75,
+          "tokens_entrada": 1079,
+          "k": 3
+        },
+        {
+          "caso": "run-2",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "tempo_de_resposta_excedido",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": true,
+          "p": 0.9993901860121756,
+          "p_conjunta": 0.9993502112042366,
+          "margem": 0.9993249983280074,
+          "segunda": "limite_de_requisicoes",
+          "segundos": 60.49,
+          "tokens_entrada": 959,
+          "k": 3
+        },
+        {
+          "caso": "run-3",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "limite_de_requisicoes",
+          "rotulo": "limite_de_requisicoes",
+          "acerto": true,
+          "p": 0.5243216222651753,
+          "p_conjunta": 0.5242744354426103,
+          "margem": 0.5243216222651753,
+          "segunda": null,
+          "segundos": 60.96,
+          "tokens_entrada": 1039,
+          "k": 3
+        },
+        {
+          "caso": "run-4",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "dado_desatualizado",
+          "rotulo": "dado_desatualizado",
+          "acerto": true,
+          "p": 0.9967154061196637,
+          "p_conjunta": 0.9966356720765783,
+          "margem": 0.9959984099073033,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 65.35,
+          "tokens_entrada": 1128,
+          "k": 3
+        },
+        {
+          "caso": "run-5",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "registro_duplicado",
+          "rotulo": "registro_duplicado",
+          "acerto": true,
+          "p": 0.9982515303571615,
+          "p_conjunta": 0.998041919545692,
+          "margem": 0.9979158026090743,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 49.17,
+          "tokens_entrada": 1122,
+          "k": 3
+        },
+        {
+          "caso": "efe-1",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": false,
+          "p": 0.9804829721433531,
+          "p_conjunta": 0.9804143407374303,
+          "margem": 0.9666962594642979,
+          "segunda": "localizador_quebrado",
+          "segundos": 70.38,
+          "tokens_entrada": 1199,
+          "k": 3
+        },
+        {
+          "caso": "efe-2",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estado_da_tela_divergente",
+          "acerto": true,
+          "p": 0.6426275246256908,
+          "p_conjunta": 0.6422035303929257,
+          "margem": 0.3030421866937046,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 59.49,
+          "tokens_entrada": 981,
+          "k": 3
+        },
+        {
+          "caso": "efe-3",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.5845575749573877,
+          "p_conjunta": 0.5835471646096669,
+          "margem": 0.35115020894028814,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 32.04,
+          "tokens_entrada": 1091,
+          "k": 3
+        },
+        {
+          "caso": "efe-4",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.5681953462122149,
+          "p_conjunta": 0.5670033879793583,
+          "margem": 0.206618252678826,
+          "segunda": "tipo_divergente",
+          "segundos": 57.63,
+          "tokens_entrada": 1120,
+          "k": 3
+        },
+        {
+          "caso": "efe-5",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9929946526468036,
+          "p_conjunta": 0.9926570918534904,
+          "margem": 0.9929943698423063,
+          "segunda": "nulo_inesperado",
+          "segundos": 70.09,
+          "tokens_entrada": 1245,
+          "k": 3
+        },
+        {
+          "caso": "lex-6",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "recurso_inexistente",
+          "acerto": false,
+          "p": 0.5765633834750007,
+          "p_conjunta": 0.5765403214009063,
+          "margem": 0.3237566546813068,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 66.59,
+          "tokens_entrada": 1139,
+          "k": 3
+        },
+        {
+          "caso": "lex-7",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "corpo_vazio",
+          "rotulo": "corpo_vazio",
+          "acerto": true,
+          "p": 0.9995001249791693,
+          "p_conjunta": 0.9994501512222747,
+          "margem": 0.9994746718024301,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 61.72,
+          "tokens_entrada": 1094,
+          "k": 3
+        },
+        {
+          "caso": "lex-8",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "codificacao_incorreta",
+          "rotulo": "codificacao_incorreta",
+          "acerto": true,
+          "p": 0.749079619534746,
+          "p_conjunta": 0.7489447973375916,
+          "margem": 0.7490784011078978,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 63.78,
+          "tokens_entrada": 1116,
+          "k": 3
+        },
+        {
+          "caso": "lex-9",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.99560966581827,
+          "p_conjunta": 0.9706105233129441,
+          "margem": 0.9790350015761325,
+          "segunda": "corpo_vazio",
+          "segundos": 65.01,
+          "tokens_entrada": 1069,
+          "k": 3
+        },
+        {
+          "caso": "lex-10",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9999100040498785,
+          "p_conjunta": 0.999880007199712,
+          "margem": 0.9998793792370243,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 51.97,
+          "tokens_entrada": 1211,
+          "k": 3
+        },
+        {
+          "caso": "lex-11",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "codificacao_incorreta",
+          "rotulo": "codificacao_incorreta",
+          "acerto": true,
+          "p": 0.9995401057837792,
+          "p_conjunta": 0.9990804230702485,
+          "margem": 0.9995381864837375,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 56.89,
+          "tokens_entrada": 1127,
+          "k": 3
+        },
+        {
+          "caso": "lex-12",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.9899706329305431,
+          "p_conjunta": 0.9756123049695457,
+          "margem": 0.9807503541004933,
+          "segunda": "corpo_vazio",
+          "segundos": 68.67,
+          "tokens_entrada": 1179,
+          "k": 3
+        },
+        {
+          "caso": "sin-6",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.959992314770207,
+          "p_conjunta": 0.9593109621355279,
+          "margem": 0.9406418724337033,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 31.91,
+          "tokens_entrada": 1068,
+          "k": 3
+        },
+        {
+          "caso": "sin-7",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.9900003324950223,
+          "p_conjunta": 0.9897627609249522,
+          "margem": 0.98978679753681,
+          "segunda": "campo_renomeado",
+          "segundos": 48.49,
+          "tokens_entrada": 1021,
+          "k": 3
+        },
+        {
+          "caso": "sin-8",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "colecao_no_lugar_de_objeto",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": true,
+          "p": 0.9887438301206457,
+          "p_conjunta": 0.9882693469672547,
+          "margem": 0.9851983085454318,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 54.25,
+          "tokens_entrada": 1172,
+          "k": 3
+        },
+        {
+          "caso": "sin-9",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_renomeado",
+          "rotulo": "campo_renomeado",
+          "acerto": true,
+          "p": 0.9705134671135036,
+          "p_conjunta": 0.9620585186201828,
+          "margem": 0.9579007540449272,
+          "segunda": "tipo_divergente",
+          "segundos": 58.27,
+          "tokens_entrada": 1134,
+          "k": 3
+        },
+        {
+          "caso": "sin-10",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_renomeado",
+          "rotulo": "campo_renomeado",
+          "acerto": true,
+          "p": 0.9940577255677224,
+          "p_conjunta": 0.99291521625209,
+          "margem": 0.9934967369825866,
+          "segunda": "tipo_divergente",
+          "segundos": 64.79,
+          "tokens_entrada": 1074,
+          "k": 3
+        },
+        {
+          "caso": "sin-11",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "estrutura_aninhada_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": true,
+          "p": 0.9997100420459355,
+          "p_conjunta": 0.9995800881876533,
+          "margem": 0.9995973655823468,
+          "segunda": "campo_ausente",
+          "segundos": 51.33,
+          "tokens_entrada": 1138,
+          "k": 3
+        },
+        {
+          "caso": "sin-12",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_ausente",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.6789281326201134,
+          "p_conjunta": 0.6771855275259699,
+          "margem": 0.5178152459091716,
+          "segunda": "resposta_truncada",
+          "segundos": 49.63,
+          "tokens_entrada": 1093,
+          "k": 3
+        },
+        {
+          "caso": "sin-13",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "estrutura_aninhada_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": true,
+          "p": 0.9991903279614445,
+          "p_conjunta": 0.9990704323159717,
+          "margem": 0.9988779510344568,
+          "segunda": "tipo_divergente",
+          "segundos": 55.06,
+          "tokens_entrada": 1229,
+          "k": 3
+        },
+        {
+          "caso": "sin-14",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_renomeado",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.30071569363810147,
+          "p_conjunta": 0.2997459489284604,
+          "margem": 0.12830398370269352,
+          "segunda": "tipo_divergente",
+          "segundos": 50.59,
+          "tokens_entrada": 1137,
+          "k": 3
+        },
+        {
+          "caso": "sin-15",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "colecao_no_lugar_de_objeto",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": true,
+          "p": 0.980237882037857,
+          "p_conjunta": 0.9800124532502926,
+          "margem": 0.9628958131201409,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 39.38,
+          "tokens_entrada": 1179,
+          "k": 3
+        },
+        {
+          "caso": "semt-6",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.44321956485277253,
+          "p_conjunta": 0.4424313357593465,
+          "margem": 0.20018947092855477,
+          "segunda": "tipo_divergente",
+          "segundos": 47.41,
+          "tokens_entrada": 1100,
+          "k": 3
+        },
+        {
+          "caso": "semt-7",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": false,
+          "p": 0.6053551308644586,
+          "p_conjunta": 0.6052582817916528,
+          "margem": 0.39883553998622673,
+          "segunda": "tipo_divergente",
+          "segundos": 37.62,
+          "tokens_entrada": 1044,
+          "k": 3
+        },
+        {
+          "caso": "semt-8",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "nulo_inesperado",
+          "rotulo": "nulo_inesperado",
+          "acerto": true,
+          "p": 0.8317943867608124,
+          "p_conjunta": 0.8317527980812,
+          "margem": 0.7428016035449515,
+          "segunda": "tipo_divergente",
+          "segundos": 64.04,
+          "tokens_entrada": 1090,
+          "k": 3
+        },
+        {
+          "caso": "semt-9",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.9949030338395759,
+          "p_conjunta": 0.9948930848589825,
+          "margem": 0.9910780842844769,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 35.82,
+          "tokens_entrada": 1104,
+          "k": 3
+        },
+        {
+          "caso": "semt-10",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.9912881698401698,
+          "p_conjunta": 0.9912782570080355,
+          "margem": 0.9876848871837632,
+          "segunda": "campo_ausente",
+          "segundos": 31.76,
+          "tokens_entrada": 1095,
+          "k": 3
+        },
+        {
+          "caso": "semt-11",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": true,
+          "p": 0.96641686556822,
+          "p_conjunta": 0.9658082146880704,
+          "margem": 0.9440651007889801,
+          "segunda": "estado_da_tela_divergente",
+          "segundos": 38.92,
+          "tokens_entrada": 1061,
+          "k": 3
+        },
+        {
+          "caso": "semt-12",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "formato_de_data_divergente",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": true,
+          "p": 0.8407760034222677,
+          "p_conjunta": 0.840733965673049,
+          "margem": 0.6909124435986583,
+          "segunda": "tipo_divergente",
+          "segundos": 33.86,
+          "tokens_entrada": 1051,
+          "k": 3
+        },
+        {
+          "caso": "semt-13",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.597518519904954,
+          "p_conjunta": 0.5975005946182375,
+          "margem": 0.28005742376509685,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 55.07,
+          "tokens_entrada": 1262,
+          "k": 3
+        },
+        {
+          "caso": "semt-14",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "nulo_inesperado",
+          "rotulo": "nulo_inesperado",
+          "acerto": true,
+          "p": 0.7404627132643965,
+          "p_conjunta": 0.7404256910542962,
+          "margem": 0.4900713169216329,
+          "segunda": "tipo_divergente",
+          "segundos": 49.25,
+          "tokens_entrada": 1135,
+          "k": 3
+        },
+        {
+          "caso": "semt-15",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": true,
+          "p": 0.6653114513980284,
+          "p_conjunta": 0.6652249665309848,
+          "margem": 0.49660752242539963,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 49.43,
+          "tokens_entrada": 1052,
+          "k": 3
+        },
+        {
+          "caso": "tra-6",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "escala_ou_unidade_errada",
+          "acerto": true,
+          "p": 0.9953309341360974,
+          "p_conjunta": 0.9951716939261922,
+          "margem": 0.9918755097608473,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 36.43,
+          "tokens_entrada": 1248,
+          "k": 3
+        },
+        {
+          "caso": "tra-7",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "campo_renomeado",
+          "acerto": false,
+          "p": 0.6003094540336653,
+          "p_conjunta": 0.5490861105249629,
+          "margem": 0.24298461583504882,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 51.72,
+          "tokens_entrada": 1202,
+          "k": 3
+        },
+        {
+          "caso": "tra-8",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.8757715585195026,
+          "p_conjunta": 0.8734276330057761,
+          "margem": 0.8083263677806929,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 35.31,
+          "tokens_entrada": 1153,
+          "k": 3
+        },
+        {
+          "caso": "tra-9",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": false,
+          "p": 0.9404469857359241,
+          "p_conjunta": 0.9403435422569888,
+          "margem": 0.8813077093355487,
+          "segunda": "escala_ou_unidade_errada",
+          "segundos": 61.92,
+          "tokens_entrada": 1088,
+          "k": 3
+        },
+        {
+          "caso": "tra-10",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "chave_de_juncao_errada",
+          "acerto": true,
+          "p": 0.9986409243808998,
+          "p_conjunta": 0.99855105074208,
+          "margem": 0.9978581530915654,
+          "segunda": "campo_ausente",
+          "segundos": 47.3,
+          "tokens_entrada": 1020,
+          "k": 3
+        },
+        {
+          "caso": "tra-11",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.9864624678609416,
+          "p_conjunta": 0.9848066022315235,
+          "margem": 0.9864536550138119,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 59.34,
+          "tokens_entrada": 1069,
+          "k": 3
+        },
+        {
+          "caso": "tra-12",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.5687353882704784,
+          "p_conjunta": 0.5687297009450325,
+          "margem": 0.25934456467751826,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 49.63,
+          "tokens_entrada": 1141,
+          "k": 3
+        },
+        {
+          "caso": "tra-13",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "chave_de_juncao_errada",
+          "acerto": true,
+          "p": 0.9941969033915222,
+          "p_conjunta": 0.9941074296965936,
+          "margem": 0.99371331671973,
+          "segunda": "campo_ausente",
+          "segundos": 55.74,
+          "tokens_entrada": 1268,
+          "k": 3
+        },
+        {
+          "caso": "tra-14",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.8813944706198884,
+          "p_conjunta": 0.8801525801548424,
+          "margem": 0.8813802481861606,
+          "segunda": "tipo_divergente",
+          "segundos": 59.64,
+          "tokens_entrada": 1038,
+          "k": 3
+        },
+        {
+          "caso": "tra-15",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.42092525610695825,
+          "p_conjunta": 0.4209168376860206,
+          "margem": 0.2437330100655666,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 45.99,
+          "tokens_entrada": 1047,
+          "k": 3
+        },
+        {
+          "caso": "run-6",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "erro_interno_do_servidor",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": true,
+          "p": 0.9872322087457924,
+          "p_conjunta": 0.9834288376486423,
+          "margem": 0.9872320936544797,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 46.08,
+          "tokens_entrada": 1152,
+          "k": 3
+        },
+        {
+          "caso": "run-7",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "recurso_inexistente",
+          "rotulo": "recurso_inexistente",
+          "acerto": true,
+          "p": 0.9574134056313703,
+          "p_conjunta": 0.9573846836600332,
+          "margem": 0.9573991560068351,
+          "segunda": "registro_duplicado",
+          "segundos": 59.91,
+          "tokens_entrada": 1086,
+          "k": 3
+        },
+        {
+          "caso": "run-8",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "recurso_inexistente",
+          "rotulo": "recurso_inexistente",
+          "acerto": true,
+          "p": 0.9304192388032628,
+          "p_conjunta": 0.9303820227780362,
+          "margem": 0.9304192388032628,
+          "segunda": null,
+          "segundos": 55.86,
+          "tokens_entrada": 1106,
+          "k": 3
+        },
+        {
+          "caso": "run-9",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "tempo_de_resposta_excedido",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": true,
+          "p": 0.999170344354722,
+          "p_conjunta": 0.9991203870864463,
+          "margem": 0.9987800424485789,
+          "segunda": "tipo_divergente",
+          "segundos": 50.46,
+          "tokens_entrada": 1182,
+          "k": 3
+        },
+        {
+          "caso": "run-10",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "limite_de_requisicoes",
+          "rotulo": "limite_de_requisicoes",
+          "acerto": true,
+          "p": 0.6599837932136875,
+          "p_conjunta": 0.659937595965085,
+          "margem": 0.6599835485031978,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 36.18,
+          "tokens_entrada": 1059,
+          "k": 3
+        },
+        {
+          "caso": "run-11",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "dado_desatualizado",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": false,
+          "p": 0.9749393646702189,
+          "p_conjunta": 0.9748418756082862,
+          "margem": 0.964729490795555,
+          "segunda": "estado_da_tela_divergente",
+          "segundos": 60.05,
+          "tokens_entrada": 1043,
+          "k": 3
+        },
+        {
+          "caso": "run-12",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "erro_interno_do_servidor",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": true,
+          "p": 0.941585615320641,
+          "p_conjunta": 0.9388871387707763,
+          "margem": 0.941585315772292,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 65.33,
+          "tokens_entrada": 1133,
+          "k": 3
+        },
+        {
+          "caso": "run-13",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "registro_duplicado",
+          "rotulo": "registro_duplicado",
+          "acerto": true,
+          "p": 0.8531157868191416,
+          "p_conjunta": 0.8529195927513559,
+          "margem": 0.8531157868191416,
+          "segunda": null,
+          "segundos": 55.66,
+          "tokens_entrada": 976,
+          "k": 3
+        },
+        {
+          "caso": "run-14",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "dado_desatualizado",
+          "rotulo": "dado_desatualizado",
+          "acerto": true,
+          "p": 0.9994301624191388,
+          "p_conjunta": 0.9993402177520919,
+          "margem": 0.9993596597507941,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 67.04,
+          "tokens_entrada": 1107,
+          "k": 3
+        },
+        {
+          "caso": "run-15",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "tempo_de_resposta_excedido",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": true,
+          "p": 0.9994401567707347,
+          "p_conjunta": 0.9993701984083321,
+          "margem": 0.9992687463918418,
+          "segunda": "limite_de_requisicoes",
+          "segundos": 62.92,
+          "tokens_entrada": 1051,
+          "k": 3
+        },
+        {
+          "caso": "efe-6",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.8650395937296091,
+          "p_conjunta": 0.8647022940657643,
+          "margem": 0.742194362672207,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 41.64,
+          "tokens_entrada": 1192,
+          "k": 3
+        },
+        {
+          "caso": "efe-7",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9896835830712346,
+          "p_conjunta": 0.9894361931005016,
+          "margem": 0.9896835830712346,
+          "segunda": null,
+          "segundos": 52.88,
+          "tokens_entrada": 1170,
+          "k": 3
+        },
+        {
+          "caso": "efe-8",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estado_da_tela_divergente",
+          "acerto": true,
+          "p": 0.9896044115514919,
+          "p_conjunta": 0.9888328210698892,
+          "margem": 0.9842085877785389,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 31.14,
+          "tokens_entrada": 1088,
+          "k": 3
+        },
+        {
+          "caso": "efe-9",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9989105938342207,
+          "p_conjunta": 0.99855105074208,
+          "margem": 0.9989105262120541,
+          "segunda": "campo_ausente",
+          "segundos": 49.66,
+          "tokens_entrada": 1181,
+          "k": 3
+        },
+        {
+          "caso": "efe-10",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": false,
+          "p": 0.7514128834963295,
+          "p_conjunta": 0.7494317697047348,
+          "margem": 0.6500136756477748,
+          "segunda": "tipo_divergente",
+          "segundos": 71.66,
+          "tokens_entrada": 1179,
+          "k": 3
+        },
+        {
+          "caso": "efe-11",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "localizador_quebrado",
+          "acerto": false,
+          "p": 0.5334606335486932,
+          "p_conjunta": 0.5332419595201774,
+          "margem": 0.08349316907446103,
+          "segunda": "contagem_inconsistente",
+          "segundos": 50.51,
+          "tokens_entrada": 1057,
+          "k": 3
+        },
+        {
+          "caso": "efe-12",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9992802591378032,
+          "p_conjunta": 0.9989405616015499,
+          "margem": 0.9992797837096197,
+          "segunda": "nulo_inesperado",
+          "segundos": 56.73,
+          "tokens_entrada": 1234,
+          "k": 3
+        },
+        {
+          "caso": "efe-13",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "dado_desatualizado",
+          "acerto": false,
+          "p": 0.9966257057696892,
+          "p_conjunta": 0.9965958074469932,
+          "margem": 0.9947677900492765,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 70.88,
+          "tokens_entrada": 1136,
+          "k": 3
+        },
+        {
+          "caso": "efe-14",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.999000499833375,
+          "p_conjunta": 0.99855105074208,
+          "margem": 0.9989231792222644,
+          "segunda": "nulo_inesperado",
+          "segundos": 56.25,
+          "tokens_entrada": 1206,
+          "k": 3
+        },
+        {
+          "caso": "efe-15",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estado_da_tela_divergente",
+          "acerto": true,
+          "p": 0.9990304702979247,
+          "p_conjunta": 0.998391295354733,
+          "margem": 0.9984226917665722,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 60.78,
+          "tokens_entrada": 1004,
+          "k": 3
+        },
+        {
+          "caso": "lex-13",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_vazio",
+          "rotulo": "corpo_vazio",
+          "acerto": true,
+          "p": 0.990198352362848,
+          "p_conjunta": 0.9895054560581938,
+          "margem": 0.9818831514173257,
+          "segunda": "resposta_truncada",
+          "segundos": 62.78,
+          "tokens_entrada": 1026,
+          "k": 3
+        },
+        {
+          "caso": "lex-14",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9999200031999147,
+          "p_conjunta": 0.9998900060497782,
+          "margem": 0.9998837969932861,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 63.36,
+          "tokens_entrada": 1081,
+          "k": 3
+        },
+        {
+          "caso": "lex-15",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.996575875730162,
+          "p_conjunta": 0.978856720571841,
+          "margem": 0.9958514780250902,
+          "segunda": "erro_interno_do_servidor",
+          "segundos": 45.75,
+          "tokens_entrada": 1174,
+          "k": 3
+        }
+      ]
+    },
+    {
+      "k": 5,
+      "n": 90,
+      "casos_esperados": 90,
+      "completo": true,
+      "acertos": 65,
+      "acerto_pct": 72.2,
+      "acuracia_balanceada_pct": 75.7,
+      "sem_rotulo": 0,
+      "sem_probabilidade": 0,
+      "segundos_mediana": 60.5,
+      "tokens_entrada_mediana": 1469.0,
+      "tokens_entrada_max": 1668,
+      "sinais": {
+        "p_rotulo": {
+          "n": 90,
+          "casos": 90,
+          "erros": 25,
+          "auroc": 0.7929,
+          "ic95": [
+            0.6771,
+            0.893
+          ],
+          "replicas_validas": 2000
+        },
+        "p_conjunta": {
+          "n": 90,
+          "casos": 90,
+          "erros": 25,
+          "auroc": 0.816,
+          "ic95": [
+            0.7014,
+            0.9104
+          ],
+          "replicas_validas": 2000
+        }
+      },
+      "revisao": [
+        {
+          "fracao": 0.1,
+          "revisados": 9,
+          "erros_pegos": 7,
+          "erros": 25,
+          "acertos_revisados": 2,
+          "risco_no_que_sobra": 0.2222
+        },
+        {
+          "fracao": 0.2,
+          "revisados": 18,
+          "erros_pegos": 12,
+          "erros": 25,
+          "acertos_revisados": 6,
+          "risco_no_que_sobra": 0.1806
+        },
+        {
+          "fracao": 0.3,
+          "revisados": 27,
+          "erros_pegos": 16,
+          "erros": 25,
+          "acertos_revisados": 11,
+          "risco_no_que_sobra": 0.1429
+        }
+      ],
+      "curva": [
+        {
+          "cobertura": 0.0111,
+          "risco": 0.0,
+          "limiar": 0.999940001799964
+        },
+        {
+          "cobertura": 0.0222,
+          "risco": 0.0,
+          "limiar": 0.9999300024499428
+        },
+        {
+          "cobertura": 0.0333,
+          "risco": 0.0,
+          "limiar": 0.9997600287976961
+        },
+        {
+          "cobertura": 0.0444,
+          "risco": 0.0,
+          "limiar": 0.9997400337970709
+        },
+        {
+          "cobertura": 0.0556,
+          "risco": 0.0,
+          "limiar": 0.9997200391963416
+        },
+        {
+          "cobertura": 0.0667,
+          "risco": 0.0,
+          "limiar": 0.9997000449955004
+        },
+        {
+          "cobertura": 0.0778,
+          "risco": 0.0,
+          "limiar": 0.9996100760401144
+        },
+        {
+          "cobertura": 0.0889,
+          "risco": 0.0,
+          "limiar": 0.9993602047563164
+        },
+        {
+          "cobertura": 0.1,
+          "risco": 0.0,
+          "limiar": 0.999170344354722
+        },
+        {
+          "cobertura": 0.1111,
+          "risco": 0.0,
+          "limiar": 0.9989505510571132
+        },
+        {
+          "cobertura": 0.1222,
+          "risco": 0.0,
+          "limiar": 0.9989205829901047
+        },
+        {
+          "cobertura": 0.1333,
+          "risco": 0.0,
+          "limiar": 0.9988906158221247
+        },
+        {
+          "cobertura": 0.1444,
+          "risco": 0.07692307692307693,
+          "limiar": 0.9988306841831426
+        },
+        {
+          "cobertura": 0.1556,
+          "risco": 0.07142857142857142,
+          "limiar": 0.9984012793176064
+        },
+        {
+          "cobertura": 0.1667,
+          "risco": 0.06666666666666667,
+          "limiar": 0.998391295354733
+        },
+        {
+          "cobertura": 0.1778,
+          "risco": 0.0625,
+          "limiar": 0.9982016190284373
+        },
+        {
+          "cobertura": 0.1889,
+          "risco": 0.058823529411764705,
+          "limiar": 0.9980918228892425
+        },
+        {
+          "cobertura": 0.2,
+          "risco": 0.05555555555555555,
+          "limiar": 0.9978922244851703
+        },
+        {
+          "cobertura": 0.2111,
+          "risco": 0.10526315789473684,
+          "limiar": 0.9978922244851703
+        },
+        {
+          "cobertura": 0.2222,
+          "risco": 0.1,
+          "limiar": 0.996645638483131
+        },
+        {
+          "cobertura": 0.2333,
+          "risco": 0.09523809523809523,
+          "limiar": 0.9963068365656366
+        },
+        {
+          "cobertura": 0.2444,
+          "risco": 0.09090909090909091,
+          "limiar": 0.9960378700318798
+        },
+        {
+          "cobertura": 0.2556,
+          "risco": 0.08695652173913043,
+          "limiar": 0.9960179494736855
+        },
+        {
+          "cobertura": 0.2667,
+          "risco": 0.08333333333333333,
+          "limiar": 0.9958685579859061
+        },
+        {
+          "cobertura": 0.2778,
+          "risco": 0.12,
+          "limiar": 0.9955101098295706
+        },
+        {
+          "cobertura": 0.2889,
+          "risco": 0.11538461538461539,
+          "limiar": 0.9954404265608253
+        },
+        {
+          "cobertura": 0.3,
+          "risco": 0.1111111111111111,
+          "limiar": 0.9950522804878706
+        },
+        {
+          "cobertura": 0.3111,
+          "risco": 0.10714285714285714,
+          "limiar": 0.9944653727971767
+        },
+        {
+          "cobertura": 0.3222,
+          "risco": 0.10344827586206896,
+          "limiar": 0.993322394956684
+        },
+        {
+          "cobertura": 0.3333,
+          "risco": 0.1,
+          "limiar": 0.9931138191549688
+        },
+        {
+          "cobertura": 0.3444,
+          "risco": 0.0967741935483871,
+          "limiar": 0.9929549336550829
+        },
+        {
+          "cobertura": 0.3556,
+          "risco": 0.09375,
+          "limiar": 0.9916649309247814
+        },
+        {
+          "cobertura": 0.3667,
+          "risco": 0.09090909090909091,
+          "limiar": 0.9883681788434628
+        },
+        {
+          "cobertura": 0.3778,
+          "risco": 0.08823529411764706,
+          "limiar": 0.9883187616699604
+        },
+        {
+          "cobertura": 0.3889,
+          "risco": 0.08571428571428572,
+          "limiar": 0.987913634034516
+        },
+        {
+          "cobertura": 0.4,
+          "risco": 0.08333333333333333,
+          "limiar": 0.9864131459706061
+        },
+        {
+          "cobertura": 0.4111,
+          "risco": 0.08108108108108109,
+          "limiar": 0.9845998145585205
+        },
+        {
+          "cobertura": 0.4222,
+          "risco": 0.07894736842105263,
+          "limiar": 0.9842158954999253
+        },
+        {
+          "cobertura": 0.4333,
+          "risco": 0.07692307692307693,
+          "limiar": 0.9824753741806646
+        },
+        {
+          "cobertura": 0.4444,
+          "risco": 0.1,
+          "limiar": 0.9791308388283662
+        },
+        {
+          "cobertura": 0.4556,
+          "risco": 0.0975609756097561,
+          "limiar": 0.9764712216658364
+        },
+        {
+          "cobertura": 0.4667,
+          "risco": 0.09523809523809523,
+          "limiar": 0.9756806002211995
+        },
+        {
+          "cobertura": 0.4778,
+          "risco": 0.11627906976744186,
+          "limiar": 0.9747931347330377
+        },
+        {
+          "cobertura": 0.4889,
+          "risco": 0.11363636363636363,
+          "limiar": 0.9724661609823168
+        },
+        {
+          "cobertura": 0.5,
+          "risco": 0.1111111111111111,
+          "limiar": 0.9718051087760714
+        },
+        {
+          "cobertura": 0.5111,
+          "risco": 0.10869565217391304,
+          "limiar": 0.9691556989190496
+        },
+        {
+          "cobertura": 0.5222,
+          "risco": 0.10638297872340426,
+          "limiar": 0.9662139393344511
+        },
+        {
+          "cobertura": 0.5333,
+          "risco": 0.10416666666666667,
+          "limiar": 0.9652964719580883
+        },
+        {
+          "cobertura": 0.5444,
+          "risco": 0.10204081632653061,
+          "limiar": 0.9620777599829681
+        },
+        {
+          "cobertura": 0.5556,
+          "risco": 0.12,
+          "limiar": 0.9605108506122598
+        },
+        {
+          "cobertura": 0.5667,
+          "risco": 0.11764705882352941,
+          "limiar": 0.9584096335219368
+        },
+        {
+          "cobertura": 0.5778,
+          "risco": 0.11538461538461539,
+          "limiar": 0.954631382427948
+        },
+        {
+          "cobertura": 0.5889,
+          "risco": 0.11320754716981132,
+          "limiar": 0.946693397592654
+        },
+        {
+          "cobertura": 0.6,
+          "risco": 0.12962962962962962,
+          "limiar": 0.9420471053279662
+        },
+        {
+          "cobertura": 0.6111,
+          "risco": 0.12727272727272726,
+          "limiar": 0.9372548956126777
+        },
+        {
+          "cobertura": 0.6222,
+          "risco": 0.125,
+          "limiar": 0.9331866915755904
+        },
+        {
+          "cobertura": 0.6333,
+          "risco": 0.12280701754385964,
+          "limiar": 0.9302889892275135
+        },
+        {
+          "cobertura": 0.6444,
+          "risco": 0.13793103448275862,
+          "limiar": 0.9208206460172238
+        },
+        {
+          "cobertura": 0.6556,
+          "risco": 0.13559322033898305,
+          "limiar": 0.9093183737290018
+        },
+        {
+          "cobertura": 0.6667,
+          "risco": 0.13333333333333333,
+          "limiar": 0.907020706018716
+        },
+        {
+          "cobertura": 0.6778,
+          "risco": 0.13114754098360656,
+          "limiar": 0.9056883650913714
+        },
+        {
+          "cobertura": 0.6889,
+          "risco": 0.12903225806451613,
+          "limiar": 0.8917495137673243
+        },
+        {
+          "cobertura": 0.7,
+          "risco": 0.14285714285714285,
+          "limiar": 0.8776038351389117
+        },
+        {
+          "cobertura": 0.7111,
+          "risco": 0.15625,
+          "limiar": 0.8766127029003842
+        },
+        {
+          "cobertura": 0.7222,
+          "risco": 0.16923076923076924,
+          "limiar": 0.8619396692818475
+        },
+        {
+          "cobertura": 0.7333,
+          "risco": 0.16666666666666666,
+          "limiar": 0.8366244457874319
+        },
+        {
+          "cobertura": 0.7444,
+          "risco": 0.1791044776119403,
+          "limiar": 0.8284655700081316
+        },
+        {
+          "cobertura": 0.7556,
+          "risco": 0.17647058823529413,
+          "limiar": 0.817266535895309
+        },
+        {
+          "cobertura": 0.7667,
+          "risco": 0.17391304347826086,
+          "limiar": 0.8059287015529625
+        },
+        {
+          "cobertura": 0.7778,
+          "risco": 0.17142857142857143,
+          "limiar": 0.7879741454540727
+        },
+        {
+          "cobertura": 0.7889,
+          "risco": 0.16901408450704225,
+          "limiar": 0.771059296357977
+        },
+        {
+          "cobertura": 0.8,
+          "risco": 0.18055555555555555,
+          "limiar": 0.7579711157018877
+        },
+        {
+          "cobertura": 0.8111,
+          "risco": 0.1917808219178082,
+          "limiar": 0.7485853900995073
+        },
+        {
+          "cobertura": 0.8222,
+          "risco": 0.20270270270270271,
+          "limiar": 0.7441519731661763
+        },
+        {
+          "cobertura": 0.8333,
+          "risco": 0.21333333333333335,
+          "limiar": 0.7436312490596602
+        },
+        {
+          "cobertura": 0.8444,
+          "risco": 0.21052631578947367,
+          "limiar": 0.7319742084496292
+        },
+        {
+          "cobertura": 0.8556,
+          "risco": 0.22077922077922077,
+          "limiar": 0.7299056498307357
+        },
+        {
+          "cobertura": 0.8667,
+          "risco": 0.21794871794871795,
+          "limiar": 0.679668567748505
+        },
+        {
+          "cobertura": 0.8778,
+          "risco": 0.22784810126582278,
+          "limiar": 0.6766507622193328
+        },
+        {
+          "cobertura": 0.8889,
+          "risco": 0.225,
+          "limiar": 0.6721794065886334
+        },
+        {
+          "cobertura": 0.9,
+          "risco": 0.2222222222222222,
+          "limiar": 0.6515637735159321
+        },
+        {
+          "cobertura": 0.9111,
+          "risco": 0.23170731707317074,
+          "limiar": 0.6163686725966051
+        },
+        {
+          "cobertura": 0.9222,
+          "risco": 0.24096385542168675,
+          "limiar": 0.5885814259504458
+        },
+        {
+          "cobertura": 0.9333,
+          "risco": 0.23809523809523808,
+          "limiar": 0.564672139689987
+        },
+        {
+          "cobertura": 0.9444,
+          "risco": 0.24705882352941178,
+          "limiar": 0.5040549444937475
+        },
+        {
+          "cobertura": 0.9556,
+          "risco": 0.2558139534883721,
+          "limiar": 0.5017165300290112
+        },
+        {
+          "cobertura": 0.9667,
+          "risco": 0.25287356321839083,
+          "limiar": 0.4902744218755297
+        },
+        {
+          "cobertura": 0.9778,
+          "risco": 0.26136363636363635,
+          "limiar": 0.39748821226766495
+        },
+        {
+          "cobertura": 0.9889,
+          "risco": 0.2696629213483146,
+          "limiar": 0.3692209624247694
+        },
+        {
+          "cobertura": 1.0,
+          "risco": 0.2777777777777778,
+          "limiar": 0.3098893440202041
+        }
+      ],
+      "por_particao": {
+        "avaliacao": {
+          "n": 36,
+          "acertos": 28,
+          "acerto_pct": 77.8
+        },
+        "aprendizado": {
+          "n": 54,
+          "acertos": 37,
+          "acerto_pct": 68.5
+        }
+      },
+      "p_mediana_certos": 0.986,
+      "p_mediana_errados": 0.758,
+      "casos": [
+        {
+          "caso": "lex-1",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9989205829901047,
+          "p_conjunta": 0.9989105938342207,
+          "margem": 0.9979927603833824,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 54.8,
+          "tokens_entrada": 1457,
+          "k": 5
+        },
+        {
+          "caso": "lex-2",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.9724661609823168,
+          "p_conjunta": 0.9494712768533998,
+          "margem": 0.9657207981635793,
+          "segunda": "erro_interno_do_servidor",
+          "segundos": 64.02,
+          "tokens_entrada": 1468,
+          "k": 5
+        },
+        {
+          "caso": "lex-3",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_vazio",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": false,
+          "p": 0.9605108506122598,
+          "p_conjunta": 0.9604628262703477,
+          "margem": 0.9349399431250636,
+          "segunda": "resposta_truncada",
+          "segundos": 57.17,
+          "tokens_entrada": 1393,
+          "k": 5
+        },
+        {
+          "caso": "lex-4",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "codificacao_incorreta",
+          "rotulo": "codificacao_incorreta",
+          "acerto": true,
+          "p": 0.998391295354733,
+          "p_conjunta": 0.9981117849253199,
+          "margem": 0.9972913117455153,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 58.1,
+          "tokens_entrada": 1369,
+          "k": 5
+        },
+        {
+          "caso": "lex-5",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9944653727971767,
+          "p_conjunta": 0.9944454836886125,
+          "margem": 0.9894950972583372,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 60.09,
+          "tokens_entrada": 1564,
+          "k": 5
+        },
+        {
+          "caso": "sin-1",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.4902744218755297,
+          "p_conjunta": 0.4716821175749543,
+          "margem": 0.10565848147996032,
+          "segunda": "nulo_inesperado",
+          "segundos": 55.35,
+          "tokens_entrada": 1397,
+          "k": 5
+        },
+        {
+          "caso": "sin-2",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_renomeado",
+          "rotulo": "campo_renomeado",
+          "acerto": true,
+          "p": 0.999170344354722,
+          "p_conjunta": 0.9965958074469932,
+          "margem": 0.9988853439620784,
+          "segunda": "tipo_divergente",
+          "segundos": 59.38,
+          "tokens_entrada": 1419,
+          "k": 5
+        },
+        {
+          "caso": "sin-3",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "estrutura_aninhada_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": true,
+          "p": 0.9978922244851703,
+          "p_conjunta": 0.9978123963003815,
+          "margem": 0.9972752605576015,
+          "segunda": "tipo_divergente",
+          "segundos": 65.87,
+          "tokens_entrada": 1538,
+          "k": 5
+        },
+        {
+          "caso": "sin-4",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "colecao_no_lugar_de_objeto",
+          "rotulo": "campo_renomeado",
+          "acerto": false,
+          "p": 0.3098893440202041,
+          "p_conjunta": 0.2716909695348658,
+          "margem": 0.11208561351786667,
+          "segunda": "tipo_divergente",
+          "segundos": 58.05,
+          "tokens_entrada": 1529,
+          "k": 5
+        },
+        {
+          "caso": "sin-5",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_renomeado",
+          "acerto": false,
+          "p": 0.9791308388283662,
+          "p_conjunta": 0.8388276640419043,
+          "margem": 0.8425092089859768,
+          "segunda": "campo_ausente",
+          "segundos": 64.91,
+          "tokens_entrada": 1471,
+          "k": 5
+        },
+        {
+          "caso": "semt-1",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "tipo_divergente",
+          "rotulo": "escala_ou_unidade_errada",
+          "acerto": false,
+          "p": 0.3692209624247694,
+          "p_conjunta": 0.36917665856756304,
+          "margem": -0.09544336991566399,
+          "segunda": "tipo_divergente",
+          "segundos": 70.53,
+          "tokens_entrada": 1537,
+          "k": 5
+        },
+        {
+          "caso": "semt-2",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.9056883650913714,
+          "p_conjunta": 0.905670251505206,
+          "margem": 0.8914195658971146,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 65.13,
+          "tokens_entrada": 1492,
+          "k": 5
+        },
+        {
+          "caso": "semt-3",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": true,
+          "p": 0.9954404265608253,
+          "p_conjunta": 0.9938489953627918,
+          "margem": 0.9942146981614965,
+          "segunda": "estado_da_tela_divergente",
+          "segundos": 56.32,
+          "tokens_entrada": 1354,
+          "k": 5
+        },
+        {
+          "caso": "semt-4",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "formato_de_data_divergente",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": true,
+          "p": 0.9999300024499428,
+          "p_conjunta": 0.9998700084496338,
+          "margem": 0.9999176864335884,
+          "segunda": "tipo_divergente",
+          "segundos": 60.67,
+          "tokens_entrada": 1483,
+          "k": 5
+        },
+        {
+          "caso": "semt-5",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "nulo_inesperado",
+          "rotulo": "nulo_inesperado",
+          "acerto": true,
+          "p": 0.9916649309247814,
+          "p_conjunta": 0.991595516809139,
+          "margem": 0.9851793896562232,
+          "segunda": "campo_ausente",
+          "segundos": 54.75,
+          "tokens_entrada": 1326,
+          "k": 5
+        },
+        {
+          "caso": "tra-1",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "escala_ou_unidade_errada",
+          "acerto": true,
+          "p": 0.9883187616699604,
+          "p_conjunta": 0.98817052497374,
+          "margem": 0.9839737203042129,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 58.03,
+          "tokens_entrada": 1563,
+          "k": 5
+        },
+        {
+          "caso": "tra-2",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "chave_de_juncao_errada",
+          "acerto": true,
+          "p": 0.9845998145585205,
+          "p_conjunta": 0.9845210497239912,
+          "margem": 0.983276677761386,
+          "segunda": "campo_ausente",
+          "segundos": 63.58,
+          "tokens_entrada": 1506,
+          "k": 5
+        },
+        {
+          "caso": "tra-3",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.7485853900995073,
+          "p_conjunta": 0.7485704185414214,
+          "margem": 0.5236765243629713,
+          "segunda": "chave_de_juncao_errada",
+          "segundos": 49.84,
+          "tokens_entrada": 1480,
+          "k": 5
+        },
+        {
+          "caso": "tra-4",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.9372548956126777,
+          "p_conjunta": 0.9348866378361133,
+          "margem": 0.9367716618303356,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 68.34,
+          "tokens_entrada": 1488,
+          "k": 5
+        },
+        {
+          "caso": "tra-5",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "contagem_inconsistente",
+          "acerto": false,
+          "p": 0.7436312490596602,
+          "p_conjunta": 0.7434899725440328,
+          "margem": 0.5343696207951475,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 66.11,
+          "tokens_entrada": 1383,
+          "k": 5
+        },
+        {
+          "caso": "run-1",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "erro_interno_do_servidor",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": true,
+          "p": 0.8059287015529625,
+          "p_conjunta": 0.8045436956328328,
+          "margem": 0.8059278640407573,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 63.84,
+          "tokens_entrada": 1438,
+          "k": 5
+        },
+        {
+          "caso": "run-2",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "tempo_de_resposta_excedido",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": true,
+          "p": 0.9982016190284373,
+          "p_conjunta": 0.9981517101952171,
+          "margem": 0.9979969486944211,
+          "segunda": "estado_da_tela_divergente",
+          "segundos": 54.83,
+          "tokens_entrada": 1297,
+          "k": 5
+        },
+        {
+          "caso": "run-3",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "limite_de_requisicoes",
+          "rotulo": "[limite_de_requisicoes]",
+          "acerto": false,
+          "p": 0.8766127029003842,
+          "p_conjunta": 0.7795487908094206,
+          "margem": 0.7532479695891225,
+          "segunda": "limite_de_requisicoes",
+          "segundos": 59.13,
+          "tokens_entrada": 1479,
+          "k": 5
+        },
+        {
+          "caso": "run-4",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "dado_desatualizado",
+          "rotulo": "dado_desatualizado",
+          "acerto": true,
+          "p": 0.9931138191549688,
+          "p_conjunta": 0.9930542341133886,
+          "margem": 0.98999699283499,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 61.47,
+          "tokens_entrada": 1428,
+          "k": 5
+        },
+        {
+          "caso": "run-5",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "registro_duplicado",
+          "rotulo": "registro_duplicado",
+          "acerto": true,
+          "p": 0.9996100760401144,
+          "p_conjunta": 0.998980520023177,
+          "margem": 0.9996094229625937,
+          "segunda": "campo_ausente",
+          "segundos": 69.18,
+          "tokens_entrada": 1385,
+          "k": 5
+        },
+        {
+          "caso": "efe-1",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": false,
+          "p": 0.8776038351389117,
+          "p_conjunta": 0.8775511804884587,
+          "margem": 0.7606843801322669,
+          "segunda": "localizador_quebrado",
+          "segundos": 64.5,
+          "tokens_entrada": 1517,
+          "k": 5
+        },
+        {
+          "caso": "efe-2",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estado_da_tela_divergente",
+          "acerto": true,
+          "p": 0.9584096335219368,
+          "p_conjunta": 0.9579497072889727,
+          "margem": 0.9281965433768447,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 54.89,
+          "tokens_entrada": 1300,
+          "k": 5
+        },
+        {
+          "caso": "efe-3",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.564672139689987,
+          "p_conjunta": 0.5635382885913036,
+          "margem": 0.3360466430539657,
+          "segunda": "resposta_truncada",
+          "segundos": 61.9,
+          "tokens_entrada": 1570,
+          "k": 5
+        },
+        {
+          "caso": "efe-4",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.8619396692818475,
+          "p_conjunta": 0.8619396692818475,
+          "margem": 0.8156876427926063,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 60.12,
+          "tokens_entrada": 1484,
+          "k": 5
+        },
+        {
+          "caso": "efe-5",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.987913634034516,
+          "p_conjunta": 0.987646933359538,
+          "margem": 0.9879132440114672,
+          "segunda": "nulo_inesperado",
+          "segundos": 70.97,
+          "tokens_entrada": 1563,
+          "k": 5
+        },
+        {
+          "caso": "lex-6",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "recurso_inexistente",
+          "acerto": false,
+          "p": 0.7299056498307357,
+          "p_conjunta": 0.729883752989695,
+          "margem": 0.7121208299281729,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 58.16,
+          "tokens_entrada": 1540,
+          "k": 5
+        },
+        {
+          "caso": "lex-7",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "corpo_vazio",
+          "rotulo": "corpo_vazio",
+          "acerto": true,
+          "p": 0.9997000449955004,
+          "p_conjunta": 0.9996300684415587,
+          "margem": 0.9996480045841579,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 51.9,
+          "tokens_entrada": 1429,
+          "k": 5
+        },
+        {
+          "caso": "lex-8",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "codificacao_incorreta",
+          "rotulo": "codificacao_incorreta",
+          "acerto": true,
+          "p": 0.7319742084496292,
+          "p_conjunta": 0.73186442055266,
+          "margem": 0.7319725093294798,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 56.79,
+          "tokens_entrada": 1398,
+          "k": 5
+        },
+        {
+          "caso": "lex-9",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.9963068365656366,
+          "p_conjunta": 0.9882594643231983,
+          "margem": 0.9923438604831657,
+          "segunda": "corpo_vazio",
+          "segundos": 59.43,
+          "tokens_entrada": 1465,
+          "k": 5
+        },
+        {
+          "caso": "lex-10",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9997200391963416,
+          "p_conjunta": 0.9996900480450353,
+          "margem": 0.9996434963583414,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 66.44,
+          "tokens_entrada": 1650,
+          "k": 5
+        },
+        {
+          "caso": "lex-11",
+          "classe": 1,
+          "particao": "avaliacao",
+          "gabarito": "codificacao_incorreta",
+          "rotulo": "codificacao_incorreta",
+          "acerto": true,
+          "p": 0.9997600287976961,
+          "p_conjunta": 0.9989006047782276,
+          "margem": 0.9997572175439469,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 62.03,
+          "tokens_entrada": 1546,
+          "k": 5
+        },
+        {
+          "caso": "lex-12",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": false,
+          "p": 0.5885814259504458,
+          "p_conjunta": 0.5874876819953826,
+          "margem": 0.20973334648596653,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 58.38,
+          "tokens_entrada": 1559,
+          "k": 5
+        },
+        {
+          "caso": "sin-6",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.9764712216658364,
+          "p_conjunta": 0.9708240811185702,
+          "margem": 0.9669766020780693,
+          "segunda": "resposta_truncada",
+          "segundos": 52.95,
+          "tokens_entrada": 1400,
+          "k": 5
+        },
+        {
+          "caso": "sin-7",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_ausente",
+          "rotulo": "campo_ausente",
+          "acerto": true,
+          "p": 0.9302889892275135,
+          "p_conjunta": 0.9234394936553444,
+          "margem": 0.923531406246163,
+          "segunda": "campo_renomeado",
+          "segundos": 78.55,
+          "tokens_entrada": 1352,
+          "k": 5
+        },
+        {
+          "caso": "sin-8",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "colecao_no_lugar_de_objeto",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": true,
+          "p": 0.9756806002211995,
+          "p_conjunta": 0.9754757288074044,
+          "margem": 0.9691377997594093,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 69.87,
+          "tokens_entrada": 1518,
+          "k": 5
+        },
+        {
+          "caso": "sin-9",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_renomeado",
+          "rotulo": "campo_ausente",
+          "acerto": false,
+          "p": 0.9955101098295706,
+          "p_conjunta": 0.9747249016017939,
+          "margem": 0.975049219422532,
+          "segunda": "campo_renomeado",
+          "segundos": 60.37,
+          "tokens_entrada": 1569,
+          "k": 5
+        },
+        {
+          "caso": "sin-10",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_renomeado",
+          "rotulo": "campo_renomeado",
+          "acerto": true,
+          "p": 0.9662139393344511,
+          "p_conjunta": 0.9655571371937403,
+          "margem": 0.9659486793129921,
+          "segunda": "tipo_divergente",
+          "segundos": 64.34,
+          "tokens_entrada": 1527,
+          "k": 5
+        },
+        {
+          "caso": "sin-11",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "estrutura_aninhada_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": true,
+          "p": 0.9958685579859061,
+          "p_conjunta": 0.9957391034880926,
+          "margem": 0.9932148304234086,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 67.5,
+          "tokens_entrada": 1461,
+          "k": 5
+        },
+        {
+          "caso": "sin-12",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "campo_ausente",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.7441519731661763,
+          "p_conjunta": 0.7407219205726719,
+          "margem": 0.5610953943378784,
+          "segunda": "resposta_truncada",
+          "segundos": 57.59,
+          "tokens_entrada": 1410,
+          "k": 5
+        },
+        {
+          "caso": "sin-13",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "estrutura_aninhada_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": true,
+          "p": 0.9824753741806646,
+          "p_conjunta": 0.9823673078332628,
+          "margem": 0.9667254542895205,
+          "segunda": "chave_de_juncao_errada",
+          "segundos": 79.84,
+          "tokens_entrada": 1668,
+          "k": 5
+        },
+        {
+          "caso": "sin-14",
+          "classe": 2,
+          "particao": "avaliacao",
+          "gabarito": "campo_renomeado",
+          "rotulo": "chave_de_juncao_errada",
+          "acerto": false,
+          "p": 0.39748821226766495,
+          "p_conjunta": 0.3974524399383398,
+          "margem": 0.10386854562282877,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 73.71,
+          "tokens_entrada": 1572,
+          "k": 5
+        },
+        {
+          "caso": "sin-15",
+          "classe": 2,
+          "particao": "aprendizado",
+          "gabarito": "colecao_no_lugar_de_objeto",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": false,
+          "p": 0.9208206460172238,
+          "p_conjunta": 0.9198726890334801,
+          "margem": 0.8481617902441556,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 51.61,
+          "tokens_entrada": 1543,
+          "k": 5
+        },
+        {
+          "caso": "semt-6",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "colecao_no_lugar_de_objeto",
+          "acerto": false,
+          "p": 0.5017165300290112,
+          "p_conjunta": 0.5016312454682993,
+          "margem": 0.2592180896373807,
+          "segunda": "resposta_truncada",
+          "segundos": 74.56,
+          "tokens_entrada": 1539,
+          "k": 5
+        },
+        {
+          "caso": "semt-7",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.7879741454540727,
+          "p_conjunta": 0.7879662657520168,
+          "margem": 0.6947258966299013,
+          "segunda": "campo_ausente",
+          "segundos": 64.08,
+          "tokens_entrada": 1491,
+          "k": 5
+        },
+        {
+          "caso": "semt-8",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "nulo_inesperado",
+          "rotulo": "nulo_inesperado",
+          "acerto": true,
+          "p": 0.6515637735159321,
+          "p_conjunta": 0.6515051354150698,
+          "margem": 0.3358565491381503,
+          "segunda": "tipo_divergente",
+          "segundos": 55.69,
+          "tokens_entrada": 1382,
+          "k": 5
+        },
+        {
+          "caso": "semt-9",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "campo_renomeado",
+          "acerto": false,
+          "p": 0.6766507622193328,
+          "p_conjunta": 0.6714135586813709,
+          "margem": 0.38747193415298603,
+          "segunda": "tipo_divergente",
+          "segundos": 60.86,
+          "tokens_entrada": 1461,
+          "k": 5
+        },
+        {
+          "caso": "semt-10",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "tipo_divergente",
+          "acerto": true,
+          "p": 0.771059296357977,
+          "p_conjunta": 0.7710361649260595,
+          "margem": 0.6592275721562268,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 58.06,
+          "tokens_entrada": 1484,
+          "k": 5
+        },
+        {
+          "caso": "semt-11",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": true,
+          "p": 0.954631382427948,
+          "p_conjunta": 0.9528860045059947,
+          "margem": 0.9270909476868446,
+          "segunda": "estado_da_tela_divergente",
+          "segundos": 44.91,
+          "tokens_entrada": 1353,
+          "k": 5
+        },
+        {
+          "caso": "semt-12",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "formato_de_data_divergente",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": true,
+          "p": 0.9989505510571132,
+          "p_conjunta": 0.9989006047782276,
+          "margem": 0.9980651058672103,
+          "segunda": "tipo_divergente",
+          "segundos": 48.64,
+          "tokens_entrada": 1490,
+          "k": 5
+        },
+        {
+          "caso": "semt-13",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "tipo_divergente",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": false,
+          "p": 0.5040549444937475,
+          "p_conjunta": 0.5039995014992739,
+          "margem": 0.2001620620342489,
+          "segunda": "tipo_divergente",
+          "segundos": 88.38,
+          "tokens_entrada": 1577,
+          "k": 5
+        },
+        {
+          "caso": "semt-14",
+          "classe": 3,
+          "particao": "avaliacao",
+          "gabarito": "nulo_inesperado",
+          "rotulo": "nulo_inesperado",
+          "acerto": true,
+          "p": 0.9093183737290018,
+          "p_conjunta": 0.9092547236706189,
+          "margem": 0.8575046381889073,
+          "segunda": "chave_de_juncao_errada",
+          "segundos": 72.21,
+          "tokens_entrada": 1582,
+          "k": 5
+        },
+        {
+          "caso": "semt-15",
+          "classe": 3,
+          "particao": "aprendizado",
+          "gabarito": "valor_fora_do_dominio",
+          "rotulo": "valor_fora_do_dominio",
+          "acerto": true,
+          "p": 0.9950522804878706,
+          "p_conjunta": 0.991020558163515,
+          "margem": 0.9928941220586439,
+          "segunda": "tipo_divergente",
+          "segundos": 81.76,
+          "tokens_entrada": 1383,
+          "k": 5
+        },
+        {
+          "caso": "tra-6",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "escala_ou_unidade_errada",
+          "acerto": true,
+          "p": 0.9842158954999253,
+          "p_conjunta": 0.984058433553937,
+          "margem": 0.9822818860582089,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 57.15,
+          "tokens_entrada": 1530,
+          "k": 5
+        },
+        {
+          "caso": "tra-7",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "campo_renomeado",
+          "acerto": false,
+          "p": 0.9420471053279662,
+          "p_conjunta": 0.8839188669719322,
+          "margem": 0.8863011265061516,
+          "segunda": "campo_ausente",
+          "segundos": 63.2,
+          "tokens_entrada": 1637,
+          "k": 5
+        },
+        {
+          "caso": "tra-8",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.907020706018716,
+          "p_conjunta": 0.9056340254196723,
+          "margem": 0.8815225718665973,
+          "segunda": "resposta_truncada",
+          "segundos": 51.64,
+          "tokens_entrada": 1509,
+          "k": 5
+        },
+        {
+          "caso": "tra-9",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "formato_de_data_divergente",
+          "acerto": false,
+          "p": 0.9747931347330377,
+          "p_conjunta": 0.9746859133854994,
+          "margem": 0.9499101237944173,
+          "segunda": "escala_ou_unidade_errada",
+          "segundos": 62.5,
+          "tokens_entrada": 1517,
+          "k": 5
+        },
+        {
+          "caso": "tra-10",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "chave_de_juncao_errada",
+          "acerto": true,
+          "p": 0.9984012793176064,
+          "p_conjunta": 0.9983413770379336,
+          "margem": 0.9982677674248801,
+          "segunda": "campo_ausente",
+          "segundos": 79.5,
+          "tokens_entrada": 1449,
+          "k": 5
+        },
+        {
+          "caso": "tra-11",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.9929549336550829,
+          "p_conjunta": 0.9910601997786685,
+          "margem": 0.9929458471481551,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 53.65,
+          "tokens_entrada": 1394,
+          "k": 5
+        },
+        {
+          "caso": "tra-12",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "escala_ou_unidade_errada",
+          "acerto": true,
+          "p": 0.9620777599829681,
+          "p_conjunta": 0.9619815570171982,
+          "margem": 0.9360330342930636,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 66.47,
+          "tokens_entrada": 1603,
+          "k": 5
+        },
+        {
+          "caso": "tra-13",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "chave_de_juncao_errada",
+          "rotulo": "chave_de_juncao_errada",
+          "acerto": true,
+          "p": 0.817266535895309,
+          "p_conjunta": 0.8171848133279159,
+          "margem": 0.7952686736277168,
+          "segunda": "colecao_no_lugar_de_objeto",
+          "segundos": 72.09,
+          "tokens_entrada": 1550,
+          "k": 5
+        },
+        {
+          "caso": "tra-14",
+          "classe": 4,
+          "particao": "aprendizado",
+          "gabarito": "contagem_inconsistente",
+          "rotulo": "contagem_inconsistente",
+          "acerto": true,
+          "p": 0.8366244457874319,
+          "p_conjunta": 0.8360557345480322,
+          "margem": 0.8366236740025684,
+          "segunda": "tipo_divergente",
+          "segundos": 55.37,
+          "tokens_entrada": 1366,
+          "k": 5
+        },
+        {
+          "caso": "tra-15",
+          "classe": 4,
+          "particao": "avaliacao",
+          "gabarito": "escala_ou_unidade_errada",
+          "rotulo": "tipo_divergente",
+          "acerto": false,
+          "p": 0.7579711157018877,
+          "p_conjunta": 0.7579635360286291,
+          "margem": 0.573628645452537,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 76.84,
+          "tokens_entrada": 1378,
+          "k": 5
+        },
+        {
+          "caso": "run-6",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "erro_interno_do_servidor",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": true,
+          "p": 0.946693397592654,
+          "p_conjunta": 0.9408702821140472,
+          "margem": 0.9466932731225154,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 60.63,
+          "tokens_entrada": 1441,
+          "k": 5
+        },
+        {
+          "caso": "run-7",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "recurso_inexistente",
+          "rotulo": "recurso_inexistente",
+          "acerto": true,
+          "p": 0.9718051087760714,
+          "p_conjunta": 0.9717662373491541,
+          "margem": 0.9717948554663003,
+          "segunda": "registro_duplicado",
+          "segundos": 46.59,
+          "tokens_entrada": 1301,
+          "k": 5
+        },
+        {
+          "caso": "run-8",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "recurso_inexistente",
+          "rotulo": "recurso_inexistente",
+          "acerto": true,
+          "p": 0.9652964719580883,
+          "p_conjunta": 0.9652675134983086,
+          "margem": 0.9652920040488916,
+          "segunda": "resposta_truncada",
+          "segundos": 53.47,
+          "tokens_entrada": 1429,
+          "k": 5
+        },
+        {
+          "caso": "run-9",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "tempo_de_resposta_excedido",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": true,
+          "p": 0.999940001799964,
+          "p_conjunta": 0.9998500112494375,
+          "margem": 0.9999319319849611,
+          "segunda": "tipo_divergente",
+          "segundos": 60.95,
+          "tokens_entrada": 1485,
+          "k": 5
+        },
+        {
+          "caso": "run-10",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "limite_de_requisicoes",
+          "rotulo": "[limite_de_requisicoes]",
+          "acerto": false,
+          "p": 0.8284655700081316,
+          "p_conjunta": 0.7958058738129692,
+          "margem": 0.6569600797977463,
+          "segunda": "limite_de_requisicoes",
+          "segundos": 58.57,
+          "tokens_entrada": 1387,
+          "k": 5
+        },
+        {
+          "caso": "run-11",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "dado_desatualizado",
+          "rotulo": "dado_desatualizado",
+          "acerto": true,
+          "p": 0.9864131459706061,
+          "p_conjunta": 0.9863638265463035,
+          "margem": 0.9791702198939605,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 54.94,
+          "tokens_entrada": 1327,
+          "k": 5
+        },
+        {
+          "caso": "run-12",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "erro_interno_do_servidor",
+          "rotulo": "erro_interno_do_servidor",
+          "acerto": true,
+          "p": 0.8917495137673243,
+          "p_conjunta": 0.88188818975189,
+          "margem": 0.8917492547886195,
+          "segunda": "corpo_nao_e_json",
+          "segundos": 52.42,
+          "tokens_entrada": 1447,
+          "k": 5
+        },
+        {
+          "caso": "run-13",
+          "classe": 5,
+          "particao": "avaliacao",
+          "gabarito": "registro_duplicado",
+          "rotulo": "registro_duplicado",
+          "acerto": true,
+          "p": 0.6721794065886334,
+          "p_conjunta": 0.6719576239806022,
+          "margem": 0.6721794065886334,
+          "segunda": null,
+          "segundos": 51.43,
+          "tokens_entrada": 1276,
+          "k": 5
+        },
+        {
+          "caso": "run-14",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "dado_desatualizado",
+          "rotulo": "dado_desatualizado",
+          "acerto": true,
+          "p": 0.9960378700318798,
+          "p_conjunta": 0.9959283118919845,
+          "margem": 0.9958519752996094,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 56.11,
+          "tokens_entrada": 1429,
+          "k": 5
+        },
+        {
+          "caso": "run-15",
+          "classe": 5,
+          "particao": "aprendizado",
+          "gabarito": "tempo_de_resposta_excedido",
+          "rotulo": "tempo_de_resposta_excedido",
+          "acerto": true,
+          "p": 0.9691556989190496,
+          "p_conjunta": 0.9690975513215598,
+          "margem": 0.9478812817498456,
+          "segunda": "limite_de_requisicoes",
+          "segundos": 53.57,
+          "tokens_entrada": 1371,
+          "k": 5
+        },
+        {
+          "caso": "efe-6",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.679668567748505,
+          "p_conjunta": 0.6794646977602078,
+          "margem": 0.4540456096692077,
+          "segunda": "tempo_de_resposta_excedido",
+          "segundos": 61.06,
+          "tokens_entrada": 1465,
+          "k": 5
+        },
+        {
+          "caso": "efe-7",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9331866915755904,
+          "p_conjunta": 0.9329534240623506,
+          "margem": 0.9331864181619439,
+          "segunda": "campo_ausente",
+          "segundos": 75.54,
+          "tokens_entrada": 1461,
+          "k": 5
+        },
+        {
+          "caso": "efe-8",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estado_da_tela_divergente",
+          "acerto": true,
+          "p": 0.9980918228892425,
+          "p_conjunta": 0.9973036417217132,
+          "margem": 0.9971929959089709,
+          "segunda": "estrutura_aninhada_divergente",
+          "segundos": 60.8,
+          "tokens_entrada": 1452,
+          "k": 5
+        },
+        {
+          "caso": "efe-9",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.996645638483131,
+          "p_conjunta": 0.9963566531528691,
+          "margem": 0.9966454298774373,
+          "segunda": "nulo_inesperado",
+          "segundos": 69.12,
+          "tokens_entrada": 1548,
+          "k": 5
+        },
+        {
+          "caso": "efe-10",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "dado_desatualizado",
+          "acerto": false,
+          "p": 0.6163686725966051,
+          "p_conjunta": 0.6163378549334233,
+          "margem": 0.38872187852314444,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 67.63,
+          "tokens_entrada": 1546,
+          "k": 5
+        },
+        {
+          "caso": "efe-11",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estrutura_aninhada_divergente",
+          "acerto": false,
+          "p": 0.9988306841831426,
+          "p_conjunta": 0.9987707561399508,
+          "margem": 0.9981836684844914,
+          "segunda": "localizador_quebrado",
+          "segundos": 82.7,
+          "tokens_entrada": 1419,
+          "k": 5
+        },
+        {
+          "caso": "efe-12",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9988906158221247,
+          "p_conjunta": 0.9986509108400758,
+          "margem": 0.9988902359761515,
+          "segunda": "nulo_inesperado",
+          "segundos": 60.3,
+          "tokens_entrada": 1528,
+          "k": 5
+        },
+        {
+          "caso": "efe-13",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "dado_desatualizado",
+          "acerto": false,
+          "p": 0.9978922244851703,
+          "p_conjunta": 0.9978423311212906,
+          "margem": 0.9964196307686974,
+          "segunda": "valor_fora_do_dominio",
+          "segundos": 63.05,
+          "tokens_entrada": 1486,
+          "k": 5
+        },
+        {
+          "caso": "efe-14",
+          "classe": 6,
+          "particao": "avaliacao",
+          "gabarito": "localizador_quebrado",
+          "rotulo": "localizador_quebrado",
+          "acerto": true,
+          "p": 0.9883681788434628,
+          "p_conjunta": 0.987874118279475,
+          "margem": 0.9883400807828122,
+          "segunda": "nulo_inesperado",
+          "segundos": 65.87,
+          "tokens_entrada": 1546,
+          "k": 5
+        },
+        {
+          "caso": "efe-15",
+          "classe": 6,
+          "particao": "aprendizado",
+          "gabarito": "estado_da_tela_divergente",
+          "rotulo": "estado_da_tela_divergente",
+          "acerto": true,
+          "p": 0.9993602047563164,
+          "p_conjunta": 0.9988506609965937,
+          "margem": 0.9993498266278669,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 57.51,
+          "tokens_entrada": 1323,
+          "k": 5
+        },
+        {
+          "caso": "lex-13",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_vazio",
+          "rotulo": "corpo_vazio",
+          "acerto": true,
+          "p": 0.9960179494736855,
+          "p_conjunta": 0.9955300202308706,
+          "margem": 0.994592103534695,
+          "segunda": "resposta_truncada",
+          "segundos": 49.63,
+          "tokens_entrada": 1291,
+          "k": 5
+        },
+        {
+          "caso": "lex-14",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "resposta_truncada",
+          "rotulo": "resposta_truncada",
+          "acerto": true,
+          "p": 0.9997400337970709,
+          "p_conjunta": 0.9997300364467198,
+          "margem": 0.9995776746955697,
+          "segunda": "formato_de_data_divergente",
+          "segundos": 55.31,
+          "tokens_entrada": 1414,
+          "k": 5
+        },
+        {
+          "caso": "lex-15",
+          "classe": 1,
+          "particao": "aprendizado",
+          "gabarito": "corpo_nao_e_json",
+          "rotulo": "corpo_nao_e_json",
+          "acerto": true,
+          "p": 0.993322394956684,
+          "p_conjunta": 0.9734585825154577,
+          "margem": 0.9882271625566774,
+          "segunda": "erro_interno_do_servidor",
+          "segundos": 60.14,
+          "tokens_entrada": 1470,
+          "k": 5
+        }
+      ]
+    }
+  ],
+  "r8": {
+    "k": 3,
+    "motivo": "k = 3 acerta mais por acurácia balanceada (81,5% contra 75,7%)",
+    "par": {
+      "n_comuns": 90,
+      "b": 5,
+      "c": 8,
+      "p_mcnemar": 0.5811,
+      "g_cohen": -0.115,
+      "delta_pp": -3.3,
+      "ganhos": [
+        "run-11",
+        "semt-7",
+        "sin-2",
+        "tra-12",
+        "tra-2"
+      ],
+      "perdas": [
+        "lex-12",
+        "run-10",
+        "run-3",
+        "semt-1",
+        "semt-13",
+        "sin-15",
+        "sin-4",
+        "sin-9"
+      ],
+      "rotulos_diferentes": 19
+    }
+  },
+  "k_escolhido": 3,
+  "limiares": {
+    "medida": "p_rotulo",
+    "leitura": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "baixo_ate": 0.8317943867608124,
+    "alto_a_partir_de": 0.9898271080008889,
+    "n": 90,
+    "sem_rotulo": 0,
+    "k": 3,
+    "origem": "fase4_calibracao/k3",
+    "erros": 22,
+    "revisados": 27,
+    "erros_pegos": 15,
+    "acertos_revisados": 12,
+    "risco_no_que_sobra": 0.1111,
+    "mediana_certos": 0.9898271080008889,
+    "mediana_errados": 0.7511499810137099,
+    "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois"
+  },
+  "por_selo": [
+    {
+      "selo": "baixo",
+      "casos": 27,
+      "certos": 12,
+      "errados": 15,
+      "erro_pct": 55.6,
+      "casos_errados": [
+        "efe-10",
+        "efe-11",
+        "efe-4",
+        "lex-6",
+        "semt-6",
+        "semt-7",
+        "sin-12",
+        "sin-14",
+        "sin-2",
+        "sin-5",
+        "tra-12",
+        "tra-15",
+        "tra-3",
+        "tra-5",
+        "tra-7"
+      ]
+    },
+    {
+      "selo": "medio",
+      "casos": 26,
+      "certos": 22,
+      "errados": 4,
+      "erro_pct": 15.4,
+      "casos_errados": [
+        "efe-1",
+        "run-11",
+        "tra-2",
+        "tra-9"
+      ]
+    },
+    {
+      "selo": "alto",
+      "casos": 37,
+      "certos": 34,
+      "errados": 3,
+      "erro_pct": 8.1,
+      "casos_errados": [
+        "efe-13",
+        "lex-3",
+        "semt-9"
+      ]
+    }
+  ],
+  "ponte": {
+    "versao": "0.40.2",
+    "corrida": "fase3b_ponte_0402",
+    "data": "2026-10-23",
+    "modelo": "qwen2.5:7b",
+    "n": 35,
+    "b": 1,
+    "c": 0,
+    "discordantes": 1,
+    "ganhos": [
+      "sin-14"
+    ],
+    "perdas": [],
+    "pareavel": true,
+    "limite": 2,
+    "casos_de_texto_alterado": [
+      "efe-3"
+    ],
+    "acerto_nova_pct": 82.9,
+    "acerto_base_pct": 80.0,
+    "feita_nesta_corrida": false
+  },
+  "sondagem": {
+    "ok": true,
+    "mensagens": [
+      "a resposta com logprobs difere da resposta sem logprobs no mesmo prompt"
+    ],
+    "temperatura": "antes",
+    "razao": 1.034,
+    "tokens_com_logprob": 63,
+    "top_por_posicao_max": 20,
+    "tem_bytes": true,
+    "texto_bate": true,
+    "tokens_que_partem_caractere": 0,
+    "resposta_igual_sem_logprobs": false,
+    "rotulo_lido": "resposta_truncada",
+    "p_rotulo": 0.9996329545997562,
+    "versao_ollama": "0.40.2",
+    "modelo": "qwen2.5:7b",
+    "caso": "lex-1"
+  },
+  "condicoes": {
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.2",
+    "k": [
+      3,
+      5
+    ],
+    "casos": 90,
+    "casos_da_ponte": 36,
+    "parcial": false,
+    "biblioteca": {
+      "rotulo": "L1 curada",
+      "versao": 100,
+      "hash": "1fca10f1a6f6",
+      "origem": "Programacao/AgenteCore/biblioteca_producao"
+    },
+    "top_logprobs": 20,
+    "teto_tokens": 600,
+    "leitura_da_probabilidade": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "ponte_necessaria": false
+  }
+}

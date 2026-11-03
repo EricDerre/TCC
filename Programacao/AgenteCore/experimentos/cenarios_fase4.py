@@ -94,8 +94,17 @@ CENARIOS += [
      "passos": _LOGIN_ADMIN + [
          {"acao": "abrir", "url": "admin/produtos_lista.php"},
          {"acao": "esperar", "seletor": "table.table tbody tr"},
-         {"acao": "conferir", "nome": "14 produtos com botão de excluir", "tipo": "contagem", "seletor": "button.delete[data-id]", "esperado": 14},
+         # ! Alteração de IA - Revisar: (01/11/2026, P4) a contagem passa a ser das linhas da tabela, e o roteiro ganha o
+         # clique no botão EXCLUIR do produto 1, a espera do modal de confirmação e a conferência do nome do produto no
+         # modal; o roteiro nunca clica em "Confirmar", então produtos_excluir.php não roda.
+         # ! Motivo: a cura de seletor (plano, seção 3.6) precisa de um passo que resolva um elemento só e cujo efeito a
+         # reexecução confira ("o modal abre"); contar `button.delete[data-id]` resolveria 14 elementos e, no modo de
+         # quebra por classe, a contagem falharia antes do passo do alvo.
+         {"acao": "conferir", "nome": "14 produtos na tabela", "tipo": "contagem", "seletor": "table.table tbody tr", "esperado": 14},
          {"acao": "conferir", "nome": "título da lista", "tipo": "texto", "seletor": "h2.breadcrumb", "padrao": "Lista de Produtos"},
+         {"acao": "clicar", "seletor": "button.delete[data-id='1']"},
+         {"acao": "esperar", "seletor": "#modalEdit", "ate_ms": 10000},
+         {"acao": "conferir", "nome": "modal de exclusão com o nome do produto", "tipo": "texto", "seletor": "#modalEdit span.nome", "padrao": r"\S"},
      ]},
     {"id": "front-cliente-reserva", "cobaia": "front", "titulo": "Reserva do cliente", "pagina": "cliente/index.php",
      "alvo": {"papel": "button", "nome": "Reservar", "ocorrencia": 1}, "restaura_banco": True,
@@ -247,15 +256,23 @@ def _descrever(passo: dict) -> str:
 
 # ------------------------------------------------------------------ executor
 
-def rodar_cenario(cenario_: dict, pagina, inter=None, base: str = BASE_PADRAO, capturar: bool = True, tempo_limite_ms: int = 60000) -> dict:
+def rodar_cenario(cenario_: dict, pagina, inter=None, base: str = BASE_PADRAO, capturar: bool = True, tempo_limite_ms: int = 60000,
+                  antes_do_passo=None) -> dict:
     """Roda os passos no Playwright, capturando a árvore depois de cada passo (com os atributos do DOM quando há
     interceptador) e parando na primeira conferência que falha ou no primeiro passo que estoura o tempo: esse é o
-    momento da detecção. Devolve passou, passo_falho, conferencia_falha, erro, conferencias, tempos_ms, capturas, chamadas."""
+    momento da detecção. Devolve passou, passo_falho, conferencia_falha, erro, conferencias, tempos_ms, capturas, chamadas.
+    ! Alteração de IA - Revisar: (01/11/2026, P4) `antes_do_passo(i, passo, pagina)` é chamado antes de cada passo, e a
+    detecção também fica em `t_deteccao` (relógio monotônico, em segundos).
+    ! Motivo: a corrida de referência da cura descreve o alvo do passo antes de executá-lo, e o MTTR (da detecção à
+    reexecução validada) precisa de um relógio com fração de segundo; `deteccao` em ISO só tem segundos inteiros."""
     inicio = agora()
     t0 = time.monotonic()
     r: dict = {"id": cenario_["id"], "inicio": inicio, "fim": None, "segundos": None, "passou": True, "passo_falho": None,
-               "conferencia_falha": None, "erro": None, "conferencias": [], "tempos_ms": [], "capturas": [], "chamadas": [], "deteccao": None}
+               "conferencia_falha": None, "erro": None, "conferencias": [], "tempos_ms": [], "capturas": [], "chamadas": [], "deteccao": None,
+               "t_deteccao": None}
     for i, passo in enumerate(cenario_["passos"]):
+        if antes_do_passo is not None:
+            antes_do_passo(i, passo, pagina)
         t_passo = time.monotonic()
         acao = passo.get("acao")
         try:
@@ -286,12 +303,257 @@ def rodar_cenario(cenario_: dict, pagina, inter=None, base: str = BASE_PADRAO, c
                 r["capturas"].append({"erro": f"{type(e).__name__}: {str(e)[:200]}", "contagem": 0, "nos": [], "aria": ""})
         if not r["passou"]:
             r["deteccao"] = agora()
+            r["t_deteccao"] = time.monotonic()
             break
     r["fim"] = agora()
     r["segundos"] = round(time.monotonic() - t0, 3)
     if inter is not None:
         r["chamadas"] = inter.registros()
     return r
+
+
+# ------------------------------------------------------------------ P4: quebra de localizador (ficha 29, opção c)
+
+# ! Alteração de IA - Revisar: (01/11/2026, Fase 4, pacote P4) o catálogo das quebras de localizador (decisão 80): quatro
+# modos (renomear o id, trocar a classe, alterar o texto e alterar a estrutura, que envolve o elemento num contêiner novo
+# e o troca de posição entre os irmãos) sobre os quatro roteiros do front legado (ficha 36), armados de duas formas: pelo
+# harness, no navegador (`armar_quebra` injeta por `add_init_script` um script determinístico que aplica as mutações no
+# DOMContentLoaded, depois dos scripts embutidos da página e antes de o roteiro agir), e pela variante do front PHP
+# (`Programacao/CobaiaFront/quebra.php`, ligada pelo cookie `quebra=<modo>` ou pelo parâmetro de URL de mesmo nome,
+# desligada por padrão). Cada célula (roteiro, modo) declara o passo do alvo, o localizador que esse passo usa na célula
+# (o estilo de localizador que o modo quebra: por id, por classe, por texto ou por caminho na estrutura), o alvo (papel e
+# nome na árvore de acessibilidade) e as mutações, as mesmas nas duas formas; `cenario_com_localizador` monta o roteiro
+# da célula sem mudar o catálogo, e `script_de_quebra` gera o script a partir das mutações, em dados.
+# ! Motivo: os roteiros da ficha 36 localizam por id e classe (`#buscar`, `button.delete[data-id]`), e uma mutação de
+# texto ou de estrutura não quebraria esses localizadores: das 16 células só 3 quebrariam. Com cada modo atacando o
+# estilo de localizador que ele quebra, as 16 células da corrida 19 medem a cura (plano, P4: 4 roteiros x 4 modos x 5
+# repetições) e a limitação (quebra armada, não ocorrida; o estilo do localizador escolhido por célula) fica declarada no
+# roadmap. O texto muda por acréscimo de uma palavra ("Entrar agora"), porque a estratégia "papel igual e nome parecido"
+# do plano (seção 3.6) é a que cobre mudança de texto; um sinônimo ("Acessar") ficaria abaixo do limiar do nome e é
+# limitação declarada. Na lista de produtos, que não tem id em elemento nenhum, o modo do id renomeia o atributo
+# identificador `data-id`; no login, o botão não tem id, então o modo do id renomeia o campo de login (o passo que quebra
+# é o do campo, e o alvo da célula é o campo).
+MODOS_DE_QUEBRA = ("id_renomeado", "classe_trocada", "texto_alterado", "estrutura_alterada")
+DESCRICAO_DO_MODO = {
+    "id_renomeado": "o id (ou o atributo identificador) do alvo é renomeado",
+    "classe_trocada": "a classe que o localizador usa é trocada por outra",
+    "texto_alterado": "o texto do alvo (ou o seu valor ou placeholder) ganha uma palavra",
+    "estrutura_alterada": "o alvo é envolvido num contêiner novo e trocado de posição entre os irmãos",
+}
+FORMAS_DE_QUEBRA = ("harness", "php")
+COOKIE_DA_QUEBRA = "quebra"
+# ! Alteração de IA - Revisar: (01/11/2026, fumaça do P4) a variante do PHP ganha o cookie `quebra_pagina`, com a página da
+# célula (o SCRIPT_NAME servido pelo PHP, sem a barra inicial): o modo só vale nessa página.
+# ! Motivo: na fumaça, com o cookie `quebra` valendo em toda página, o modo id_renomeado da lista de produtos renomeou
+# também o campo de login (admin/login.php), e o roteiro quebrou no login, antes do passo do alvo; a mutação do harness
+# é por seletor e só alcança a página do alvo, então as duas formas não eram comparáveis.
+COOKIE_DA_PAGINA = "quebra_pagina"
+ROTEIROS_DA_CURA = ("front-busca", "front-admin-login", "front-admin-produtos", "front-cliente-reserva")
+OPERACOES_DE_QUEBRA = ("renomear_id", "renomear_atributo", "trocar_classe", "trocar_atributo", "trocar_texto", "envolver_e_mover")
+TEMPO_LIMITE_QUEBRA_MS = 5000     # o passo do alvo espera 5 s antes de contar como quebrado (na referência ele resolve em menos de 1 s)
+
+
+def _primeiro_passo_com(cenario_id: str, seletor: str) -> int:
+    for i, p in enumerate(cenario(cenario_id)["passos"]):
+        if p.get("seletor") == seletor:
+            return i
+    raise KeyError(f"{cenario_id}: nenhum passo usa o seletor {seletor!r}")
+
+
+# a página (SCRIPT_NAME sem a barra inicial) em que a variante do PHP aplica a quebra de cada roteiro
+PAGINA_DA_QUEBRA = {"front-busca": "index.php", "front-admin-login": "admin/login.php", "front-admin-produtos": "admin/produtos_lista.php",
+                    "front-cliente-reserva": "cliente/index.php"}
+
+
+def _q(cenario_id: str, modo: str, seletor_original: str, localizador: str, alvo: dict, mutacoes: list[dict], descricao: str) -> dict:
+    return {"cenario": cenario_id, "modo": modo, "seletor_original": seletor_original, "localizador": localizador, "alvo": alvo,
+            "mutacoes": mutacoes, "descricao": descricao, "passo_alvo": _primeiro_passo_com(cenario_id, seletor_original),
+            "pagina": PAGINA_DA_QUEBRA[cenario_id]}
+
+
+_BUSCA = {"papel": "searchbox", "nome": "search", "ocorrencia": 1}
+_ENTRAR = {"papel": "button", "nome": "Entrar", "ocorrencia": 1}
+_LOGIN = {"papel": "textbox", "nome": "Login", "ocorrencia": 1}
+_EXCLUIR = {"papel": "button", "nome": "EXCLUIR", "ocorrencia": 1}
+_RESERVAR = {"papel": "button", "nome": "Reservar", "ocorrencia": 1}
+_BOTAO_LOGIN = "form button[type=submit]"
+QUEBRAS: list[dict] = [
+    _q("front-busca", "id_renomeado", "#buscar", "#buscar", _BUSCA,
+       [{"op": "renomear_id", "seletor": "#buscar", "para": "buscar_v2"}],
+       "o campo de busca perde o id `buscar` (vira `buscar_v2`); o roteiro localiza por `#buscar`"),
+    _q("front-busca", "classe_trocada", "#buscar", "#form-busca input.form-control", _BUSCA,
+       [{"op": "trocar_classe", "seletor": "#buscar", "de": "form-control", "para": "campo-busca"}],
+       "a classe `form-control` do campo vira `campo-busca`; o roteiro localiza por `#form-busca input.form-control`"),
+    _q("front-busca", "texto_alterado", "#buscar", 'input[placeholder="Buscar produto"]', _BUSCA,
+       [{"op": "trocar_atributo", "seletor": "#buscar", "atributo": "placeholder", "para": "Buscar produtos"}],
+       "o placeholder passa de \"Buscar produto\" a \"Buscar produtos\"; o roteiro localiza pelo placeholder"),
+    _q("front-busca", "estrutura_alterada", "#buscar", "#form-busca > div > input", _BUSCA,
+       [{"op": "envolver_e_mover", "seletor": "#buscar", "tag": "span", "classe": "envoltorio", "mover": "fim"}],
+       "o campo é envolvido num `span.envoltorio` e passa para depois do botão; o roteiro localiza por `#form-busca > div > input`"),
+    _q("front-admin-login", "id_renomeado", "#login_usuario", "#login_usuario", _LOGIN,
+       [{"op": "renomear_id", "seletor": "#login_usuario", "para": "usuario"}],
+       "o campo de login perde o id `login_usuario` (vira `usuario`, com o `for` do rótulo); o roteiro localiza por `#login_usuario`"),
+    _q("front-admin-login", "classe_trocada", "button[type=submit]", "button.btn-primary", _ENTRAR,
+       [{"op": "trocar_classe", "seletor": _BOTAO_LOGIN, "de": "btn-primary", "para": "btn-entrar"}],
+       "a classe `btn-primary` do botão Entrar vira `btn-entrar`; o roteiro localiza por `button.btn-primary`"),
+    _q("front-admin-login", "texto_alterado", "button[type=submit]", 'role=button[name="Entrar"]', _ENTRAR,
+       [{"op": "trocar_texto", "seletor": _BOTAO_LOGIN, "de": "Entrar", "para": "Entrar agora"}],
+       "o botão passa de \"Entrar\" a \"Entrar agora\"; o roteiro localiza pelo papel e pelo nome \"Entrar\""),
+    _q("front-admin-login", "estrutura_alterada", "button[type=submit]", ".login-form form > button", _ENTRAR,
+       [{"op": "envolver_e_mover", "seletor": _BOTAO_LOGIN, "tag": "div", "classe": "acoes", "mover": "inicio"}],
+       "o botão é envolvido num `div.acoes` e passa para antes dos campos; o roteiro localiza por `.login-form form > button`"),
+    _q("front-admin-produtos", "id_renomeado", "button.delete[data-id='1']", "button[data-id='1']", _EXCLUIR,
+       [{"op": "renomear_atributo", "seletor": "button.delete", "atributo": "data-id", "para": "data-produto", "todos": True}],
+       "o atributo `data-id` dos botões EXCLUIR vira `data-produto` (a página não tem id em elemento nenhum); o roteiro localiza por `button[data-id='1']`"),
+    _q("front-admin-produtos", "classe_trocada", "button.delete[data-id='1']", "button.delete[data-id='1']", _EXCLUIR,
+       [{"op": "trocar_classe", "seletor": "button.delete", "de": "delete", "para": "remover", "todos": True}],
+       "a classe `delete` dos botões EXCLUIR vira `remover`; o roteiro localiza por `button.delete[data-id='1']`"),
+    # o nome acessível do botão é "<ícone> EXCLUIR" (o glyphicon entra no nome pelo conteúdo do CSS), por isso o localizador
+    # casa o nome terminado em EXCLUIR; com " ITEM" acrescentado ele deixa de casar
+    _q("front-admin-produtos", "texto_alterado", "button.delete[data-id='1']", "role=button[name=/EXCLUIR$/] >> nth=0", _EXCLUIR,
+       [{"op": "trocar_texto", "seletor": "button.delete", "de": "EXCLUIR", "para": "EXCLUIR ITEM", "todos": True}],
+       "os botões passam de \"EXCLUIR\" a \"EXCLUIR ITEM\"; o roteiro localiza pelo papel e pelo nome terminado em \"EXCLUIR\", primeira ocorrência"),
+    _q("front-admin-produtos", "estrutura_alterada", "button.delete[data-id='1']", "table.table tbody tr:first-child td:last-child > button", _EXCLUIR,
+       [{"op": "envolver_e_mover", "seletor": "button.delete", "tag": "div", "classe": "acoes", "mover": "inicio", "todos": True}],
+       "cada botão EXCLUIR é envolvido num `div.acoes` e passa para antes do link ALTERAR; o roteiro localiza pelo caminho na primeira linha da tabela"),
+    _q("front-cliente-reserva", "id_renomeado", "#enviar", "#enviar", _RESERVAR,
+       [{"op": "renomear_id", "seletor": "#enviar", "para": "enviar_reserva"}],
+       "o botão Reservar perde o id `enviar` (vira `enviar_reserva`); o roteiro localiza por `#enviar`"),
+    _q("front-cliente-reserva", "classe_trocada", "#enviar", "#reserva_login input.btn-danger", _RESERVAR,
+       [{"op": "trocar_classe", "seletor": "#enviar", "de": "btn-danger", "para": "btn-reservar"}],
+       "a classe `btn-danger` do botão Reservar vira `btn-reservar`; o roteiro localiza por `#reserva_login input.btn-danger`"),
+    _q("front-cliente-reserva", "texto_alterado", "#enviar", 'input[value="Reservar"]', _RESERVAR,
+       [{"op": "trocar_atributo", "seletor": "#enviar", "atributo": "value", "para": "Reservar mesa"}],
+       "o botão passa de \"Reservar\" a \"Reservar mesa\"; o roteiro localiza pelo valor \"Reservar\""),
+    _q("front-cliente-reserva", "estrutura_alterada", "#enviar", "#reserva_login > input[type=submit]", _RESERVAR,
+       [{"op": "envolver_e_mover", "seletor": "#enviar", "tag": "div", "classe": "acoes", "mover": "inicio"}],
+       "o botão é envolvido num `div.acoes` e passa para o começo do formulário; o roteiro localiza por `#reserva_login > input[type=submit]`"),
+]
+
+
+def quebra(cenario_id: str, modo: str) -> dict:
+    for q in QUEBRAS:
+        if q["cenario"] == cenario_id and q["modo"] == modo:
+            return q
+    raise KeyError(f"quebra desconhecida: {cenario_id!r} em modo {modo!r}")
+
+
+def validar_quebras(quebras: list[dict], cenarios: list[dict]) -> list[str]:
+    """Os erros do catálogo de quebras (vazio quando está certo): célula repetida, roteiro fora da cura, modo desconhecido,
+    seletor original que nenhum passo do roteiro usa, passo do alvo que não é o primeiro com esse seletor, campo em
+    branco, operação desconhecida ou mutação sem seletor."""
+    erros, vistos = [], set()
+    ids = {c["id"] for c in cenarios}
+    for q in quebras:
+        chave = (q.get("cenario"), q.get("modo"))
+        if chave in vistos:
+            erros.append(f"{chave}: célula repetida")
+        vistos.add(chave)
+        if q.get("cenario") not in ROTEIROS_DA_CURA or q.get("cenario") not in ids:
+            erros.append(f"{chave}: roteiro fora de ROTEIROS_DA_CURA ou do catálogo")
+            continue
+        if q.get("modo") not in MODOS_DE_QUEBRA:
+            erros.append(f"{chave}: modo desconhecido")
+        passos = cenario(q["cenario"])["passos"]
+        usados = [i for i, p in enumerate(passos) if p.get("seletor") == q.get("seletor_original")]
+        if not usados:
+            erros.append(f"{chave}: nenhum passo usa o seletor original {q.get('seletor_original')!r}")
+        elif q.get("passo_alvo") != usados[0]:
+            erros.append(f"{chave}: passo_alvo {q.get('passo_alvo')} não é o primeiro passo com o seletor original ({usados[0]})")
+        for campo in ("localizador", "descricao", "pagina"):
+            if not q.get(campo):
+                erros.append(f"{chave}: sem {campo}")
+        alvo = q.get("alvo") or {}
+        if not (alvo.get("papel") and alvo.get("nome")):
+            erros.append(f"{chave}: alvo sem papel ou nome")
+        if not q.get("mutacoes"):
+            erros.append(f"{chave}: sem mutações")
+        for m in q.get("mutacoes") or []:
+            if m.get("op") not in OPERACOES_DE_QUEBRA:
+                erros.append(f"{chave}: operação {m.get('op')!r} desconhecida")
+            if not m.get("seletor"):
+                erros.append(f"{chave}: mutação sem seletor")
+    return erros
+
+
+def cenario_com_localizador(cenario_: dict, quebra_: dict) -> dict:
+    """Uma cópia do roteiro em que todo passo que usa o seletor original do alvo passa a usar o localizador da célula, com
+    o tempo limite da quebra; o catálogo não muda."""
+    import copy
+    novo = copy.deepcopy(cenario_)
+    for p in novo["passos"]:
+        if p.get("seletor") == quebra_["seletor_original"]:
+            p["seletor"] = quebra_["localizador"]
+            p["ate_ms"] = TEMPO_LIMITE_QUEBRA_MS
+    novo["quebra"] = {"modo": quebra_["modo"], "localizador": quebra_["localizador"], "seletor_original": quebra_["seletor_original"],
+                      "passo_alvo": quebra_["passo_alvo"]}
+    return novo
+
+
+def script_de_quebra(mutacoes: list[dict], modo: str = "") -> str:
+    """O script que o harness injeta antes de a página carregar: no DOMContentLoaded aplica as mutações, em ordem, sobre o
+    DOM já montado (os scripts embutidos da página já rodaram e os manipuladores de evento ficam nos mesmos elementos),
+    e anota em `<html data-quebra data-quebra-aplicada>` o modo e quantas mutações encontraram o seletor."""
+    import json as _json
+    return r"""(() => {
+  const modo = %s;
+  const mutacoes = %s;
+  const aplicar = () => {
+    let feitas = 0;
+    for (const m of mutacoes) {
+      try {
+        const alvos = m.todos ? Array.from(document.querySelectorAll(m.seletor)) : [document.querySelector(m.seletor)].filter(Boolean);
+        if (!alvos.length) continue;
+        for (const el of alvos) {
+          if (m.op === 'renomear_id') {
+            const de = el.id;
+            el.id = m.para;
+            if (de) document.querySelectorAll('label[for="' + CSS.escape(de) + '"]').forEach((l) => l.setAttribute('for', m.para));
+          } else if (m.op === 'renomear_atributo') {
+            const v = el.getAttribute(m.atributo);
+            if (v !== null) { el.removeAttribute(m.atributo); el.setAttribute(m.para, v); }
+          } else if (m.op === 'trocar_classe') {
+            el.classList.replace(m.de, m.para);
+          } else if (m.op === 'trocar_atributo') {
+            el.setAttribute(m.atributo, m.para);
+          } else if (m.op === 'trocar_texto') {
+            const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            let n;
+            while ((n = w.nextNode())) { if (n.nodeValue.includes(m.de)) n.nodeValue = n.nodeValue.replace(m.de, m.para); }
+          } else if (m.op === 'envolver_e_mover') {
+            const pai = el.parentNode;
+            const w = document.createElement(m.tag || 'div');
+            w.className = m.classe || '';
+            pai.insertBefore(w, el);
+            w.appendChild(el);
+            if (m.mover === 'fim') pai.appendChild(w);
+            else if (m.mover === 'inicio') pai.insertBefore(w, pai.firstChild);
+            else if (m.mover && m.mover.startsWith('antes_de:')) { const ref = pai.querySelector(m.mover.slice(9)); if (ref) pai.insertBefore(w, ref); }
+          }
+        }
+        feitas++;
+      } catch (e) { console.error('quebra ' + modo + ': ' + e); }
+    }
+    document.documentElement.dataset.quebra = modo;
+    document.documentElement.dataset.quebraAplicada = String(feitas);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicar); else aplicar();
+})();
+""" % (_json.dumps(modo, ensure_ascii=False), _json.dumps(mutacoes, ensure_ascii=False))
+
+
+def armar_quebra(pagina, quebra_: dict, forma: str, base: str = BASE_PADRAO) -> dict:
+    """Arma a quebra da célula na página antes de navegar: `harness` injeta o script por `add_init_script`; `php` grava o
+    cookie `quebra=<modo>` no contexto, que a variante do front lê em toda página. Devolve o que foi armado."""
+    if forma not in FORMAS_DE_QUEBRA:
+        raise ValueError(f"forma {forma!r} fora de {FORMAS_DE_QUEBRA}")
+    if forma == "harness":
+        pagina.add_init_script(script_de_quebra(quebra_["mutacoes"], quebra_["modo"]))
+        return {"forma": forma, "modo": quebra_["modo"], "mutacoes": len(quebra_["mutacoes"]), "como": "add_init_script no DOMContentLoaded"}
+    pagina.context.add_cookies([{"name": COOKIE_DA_QUEBRA, "value": quebra_["modo"], "url": base},
+                                {"name": COOKIE_DA_PAGINA, "value": quebra_["pagina"], "url": base}])
+    return {"forma": forma, "modo": quebra_["modo"], "mutacoes": len(quebra_["mutacoes"]),
+            "como": f"cookies {COOKIE_DA_QUEBRA}={quebra_['modo']} e {COOKIE_DA_PAGINA}={quebra_['pagina']} lidos por quebra.php"}
 
 
 # ------------------------------------------------------------------ cronômetro e critério da Fase 5
