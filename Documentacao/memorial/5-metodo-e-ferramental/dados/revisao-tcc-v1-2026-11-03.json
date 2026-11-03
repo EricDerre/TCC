@@ -1,0 +1,218 @@
+{
+ "_tag": "! Alteração de IA - Revisar: registro das 35 correções propostas por um revisor (agente) e aplicadas por script em 03/11/2026 no texto fonte do TCC v1 (Documentacao/TCC - ABNT 14724 - V1.md), com o trecho antigo, o novo e o motivo de cada uma.",
+ "_motivo": "! Motivo: o documento provisório foi escrito em parte por agentes e em parte pelo Claude a partir do Memorial; a conferência independente dos números e das citações é o que deixa o texto rastreável, como nas revisões da Pré-Fase 4, e o registro versionado permite ao grupo ver o que mudou e por quê.",
+ "data": "2026-11-03",
+ "o_que": "Correções do revisor do TCC v1 (números das seções 1 a 5, 6.8 e 7, resumo e abstract conferidos contra o Memorial; coerência entre seções; citações contra a lista de referências), validadas por script (trecho único, fora de comentário, sem travessão) e aplicadas pelo mesmo script.",
+ "correcoes": [
+  {
+   "onde": "RESUMO",
+   "de": "mais 72 casos inéditos, serve à comparação",
+   "para": "mais 36 casos inéditos, serve à comparação",
+   "motivo": "Nas fontes o 72 é sempre 36 casos oficiais de avaliação mais 36 inéditos da Fase 3-B (roadmap §7, fase-3b-relatorio §4); os inéditos usados na comparação de modelos são 36, e os outros 36 da Fase 4 (ficha 27, roadmap §4.6) ainda não entraram em comparação de modelos."
+  },
+  {
+   "onde": "ABSTRACT",
+   "de": "plus 72 unseen cases",
+   "para": "plus 36 unseen cases",
+   "motivo": "Nas fontes o 72 é sempre 36 casos oficiais de avaliação mais 36 inéditos da Fase 3-B (roadmap §7, fase-3b-relatorio §4); os inéditos usados na comparação de modelos são 36."
+  },
+  {
+   "onde": "RESUMO",
+   "de": "duas aplicações-alvo construídas pelo grupo (um front-end legado em PHP e uma API em FastAPI)",
+   "para": "duas aplicações-alvo sob controle do grupo (um front-end legado em PHP, cedido por um integrante, e uma API em FastAPI, construída para o projeto)",
+   "motivo": "O README (tabela dos alvos), a decisão 1 e achados-do-ambiente-cobaia §4.1 dizem que o CobaiaFront é site legado cedido por um integrante e mantido intocado, e a seção 6.1 do documento já diz 'site legado cedido'."
+  },
+  {
+   "onde": "ABSTRACT",
+   "de": "two target applications built by the group (a legacy PHP front end and a FastAPI back end)",
+   "para": "two target applications under the group's control (a legacy PHP front end contributed by a group member and a FastAPI back end built for the project)",
+   "motivo": "O README (tabela dos alvos), a decisão 1 e achados-do-ambiente-cobaia §4.1 dizem que o CobaiaFront é site legado cedido por um integrante e mantido intocado, e a seção 6.1 do documento já diz 'site legado cedido'."
+  },
+  {
+   "onde": "RESUMO",
+   "de": "a cura de seletor funcionando nas quebras armadas pelo ambiente, com tempo de reparo",
+   "para": "a cura de seletor funcionando nas quebras de localizador armadas de forma controlada (pelo ambiente de teste e por uma variante do front-end), com tempo de reparo",
+   "motivo": "roadmap §2.11 e decisão 80: as 160 execuções da corrida 19 são 80 por forma de quebra (harness no navegador e variante do front PHP), e 'pelo ambiente' cobria só uma das duas."
+  },
+  {
+   "onde": "ABSTRACT",
+   "de": "locator healing working on the breakages armed by the environment, with agent repair time",
+   "para": "locator healing working on locator breakages armed in a controlled way (by the test environment and by a front-end variant), with agent repair time",
+   "motivo": "roadmap §2.11 e decisão 80: as 160 execuções da corrida 19 são 80 por forma de quebra (harness no navegador e variante do front PHP)."
+  },
+  {
+   "onde": "1.3 Estrutura do Trabalho",
+   "de": "as cinco fases do trabalho",
+   "para": "as fases do trabalho (1 a 5, com 2-A, 2-B, 3-B e a Pré-Fase 4)",
+   "motivo": "A tabela da seção 5.1 e o roadmap §1 listam oito fases (1, 2-A, 2-B, 3, 3-B, Pré-Fase 4, 4 e 5), e 'cinco' contradiz a tabela."
+  },
+  {
+   "onde": "3 Justificativa",
+   "de": "o diagnóstico de causa raiz com o modelo escolhido alcançou 75,0% de acerto nos 36 casos de avaliação na ponte de versão 0.34.4",
+   "para": "o diagnóstico de causa raiz com o modelo escolhido, lendo a biblioteca original, alcançou 75,0% de acerto nos 36 casos de avaliação numa repetição de controle em outra versão do runtime (ponte de versão 0.34.4)",
+   "motivo": "roadmap §2.3: a corrida 10 (ponte 0.34.4) repetiu a biblioteca original (L0) nos 36 casos, então os 75,0% (58,9 a 86,2) são do qwen2.5:7b com L0 e não com a L1 que a decisão 52 adota; 'ponte de versão' também não era explicada na primeira menção."
+  },
+  {
+   "onde": "4.1.2 Fundamentos de aprendizado de máquina",
+   "de": "capítulos identificados pelo sumário da 3. ed.)",
+   "para": "capítulos identificados pelo sumário da 3. ed.; conteúdo a conferir no exemplar)",
+   "motivo": "O V3 §2.2 traz essa ressalva, e correcoes-aplicadas.md §5.1 (item 9) e pendencias.md dizem que o conteúdo dos capítulos 7 e 10 não foi conferido no exemplar (só a edição foi confirmada em 30/09)."
+  },
+  {
+   "onde": "4.1.4 Gestão da janela de contexto",
+   "de": "com os tokenizadores reais dos modelos avaliados",
+   "para": "com os tokenizadores reais do Granite e do Qwen2.5 (o phi4-mini deu 3,19)",
+   "motivo": "achados-dos-modelos.md §4.18: Granite 2,62, Qwen2.5 2,83 e phi4-mini 3,19 caracteres por token, e a faixa de 2,6 a 2,8 não cobre o phi4-mini (fase-3-relatorio-por-modelo.md também a atribui a Granite e Qwen2.5)."
+  },
+  {
+   "onde": "5.1 Etapas do Trabalho (tabela)",
+   "de": "| 6 modelos nas condições A0 a A5, na máquina-alvo |",
+   "para": "| 6 modelos nas condições A0 a A2 e 3 deles nas A3 a A5, na máquina-alvo |",
+   "motivo": "fase-2b-relatorio-por-modelo.md §1 e decisão 24: A0 a A2 rodaram nos 6 modelos e A3 a A5 só em granite4.2:8b, qwen2.5-coder:3b e phi4-mini:3.8b, como a seção 6.3 do documento já diz."
+  },
+  {
+   "onde": "5.1 Etapas do Trabalho (tabela)",
+   "de": "| Concluída (21/09 a 06/10/2026) |",
+   "para": "| Concluída (21/09 a 06/10/2026, mais as corridas 14 e 15 de 23/10/2026) |",
+   "motivo": "roadmap §2 (corridas 14 e 15, feitas em 23/10/2026) e fase-3b-relatorio §4.3: a seção 6.5 do documento relata a ponte 0.40.2 e a repetição dos inéditos de 23/10 como parte da 3-B."
+  },
+  {
+   "onde": "5.1 Etapas do Trabalho (tabela)",
+   "de": "Em andamento desde 26/10/2026: pacotes P0 a P4 feitos, corridas 16 a 19 feitas",
+   "para": "Em andamento desde 26/10/2026: pacotes de trabalho P0 a P4 feitos (de P0 a P8) e corridas 16 a 19 feitas (de 16 a 22)",
+   "motivo": "Decisão 79 e roadmap §4.6: o plano tem nove pacotes (P0 a P8) e sete corridas (16 a 22); 'pacote' não era explicado na primeira menção."
+  },
+  {
+   "onde": "5.2 Infraestrutura",
+   "de": "16 GB de memória instalada, sem GPU utilizável",
+   "para": "16 GB de memória instalada (o Windows enxerga 15,7 GB, valor citado na seção 6.3), sem GPU utilizável",
+   "motivo": "pre-fase-4-relatorio.md §2.2 (RAM instalada 16,0 GB; o sistema enxerga 15,69 GB) e fase-2b-relatorio §1 (15,7 GB): a seção 6.3 diz 15,7 GB e a 6.6 diz 16,0 GB sem explicar a diferença."
+  },
+  {
+   "onde": "5.3 Aplicações-alvo",
+   "de": "ambas construídas e controladas pelo grupo: uma aplicação monolítica legada em PHP",
+   "para": "ambas controladas pelo grupo (o site legado foi cedido por um integrante e mantido sem alteração, salvo a variante de quebra da Fase 4, desligada por padrão; a API foi construída para o projeto): uma aplicação monolítica legada em PHP",
+   "motivo": "README (tabela dos alvos), decisões 1 e 80 e achados-do-ambiente-cobaia §4.1: o CobaiaFront foi cedido e só ganhou a variante de quebra desligada por padrão, e a seção 6.1 do documento já diz 'site legado cedido'."
+  },
+  {
+   "onde": "5.5 Diagnóstico ao Vivo",
+   "de": "(causa, evidência, correção sugerida e confiança declarada)",
+   "para": "(CAUSA_RAIZ, CAMPO, IMPACTO e FONTE: a causa raiz, o campo afetado, o impacto para o usuário e os verbetes da biblioteca que o modelo diz ter usado)",
+   "motivo": "estrategias.py (_FORMATO e _FORMATO_COM_FONTE) e trilha.py (_CAMPOS): as quatro linhas são CAUSA_RAIZ, CAMPO, IMPACTO e FONTE, como a seção 4.1.7 do próprio documento diz."
+  },
+  {
+   "onde": "5.5 Diagnóstico ao Vivo",
+   "de": "a Pré-Fase 4 mediu que ela separa acertos de erros com área sob a curva ROC (AUROC) de 0,78",
+   "para": "a Pré-Fase 4 mediu que a probabilidade conjunta dos tokens do rótulo separa acertos de erros com área sob a curva ROC (AUROC) de 0,78",
+   "motivo": "pre-fase-4-relatorio.md §4.2: 0,783 é a probabilidade conjunta dos tokens do rótulo; o primeiro token sozinho, que o agente lê, deu 0,765 na corrida 12 (0,799 na calibração da corrida 16, roadmap §2.9)."
+  },
+  {
+   "onde": "5.5 Diagnóstico ao Vivo",
+   "de": "três camadas em cada nó (o que o agente viu, o que fez e por quê)",
+   "para": "três camadas em cada nó (o que o programa fez, o que o modelo declarou e o que o código conferiu)",
+   "motivo": "especificacao-trilha-e-relatorio.md §4.1 (camadas programa, modelo e verificação) e roadmap §3.1; a seção 6.6 do documento já as descreve assim."
+  },
+  {
+   "onde": "5.5 Diagnóstico ao Vivo",
+   "de": "o contraste e a divergência entre elas e a probabilidade do rótulo",
+   "para": "o contraste, a divergência entre o declarado pelo modelo e o medido pelo código e a probabilidade do rótulo",
+   "motivo": "especificacao-trilha-e-relatorio.md §4.2: a divergência é entre o que o modelo declarou e o que o código mediu, como diz a seção 4.1.8 do documento."
+  },
+  {
+   "onde": "5.7 Métricas e inferência estatística",
+   "de": "mais potente que as alternativas conservadoras de uso corrente.",
+   "para": "mais potente que as alternativas conservadoras de uso corrente (suporte parcial na revisão da literatura: a leitura do artigo quanto ao conjunto exato de procedimentos comparados permanece a conferir).",
+   "motivo": "O V3 §3.4 traz essa ressalva, e levantamento-2026-09-11-fase-3.md (afirmação parcial sobre García e Herrera) e referencias.md (suporte parcial, conferir) mantêm a pendência."
+  },
+  {
+   "onde": "5.7 Métricas e inferência estatística",
+   "de": "Cada corrida da Fase 4 tem uma regra de leitura pré-registrada no plano da fase, numerada de R1 a R5, com o que conta",
+   "para": "As corridas da Fase 4 têm regras de leitura pré-registradas no plano da fase, numeradas de R1 a R8, com o que conta",
+   "motivo": "plano-aprovado-fase-4.md §5 lista R1 a R8 (R6 ponte, R7 limiares, R8 k), e a seção 6.7 do documento já cita a R8."
+  },
+  {
+   "onde": "6.8 Discussão",
+   "de": "qwen2.5:7b com a biblioteca que ele mesmo escreveu (decisão 52), chegou a 75,0% de acerto",
+   "para": "qwen2.5:7b (decisão 52, que o adota com a biblioteca que ele mesmo escreveu), chegou, lendo a biblioteca original, a 75,0% de acerto",
+   "motivo": "roadmap §2.3: a ponte 0.34.4 (corrida 10) repetiu só a biblioteca original (L0) nos 36 casos, então 75,0%, 79,6%, 80,6% e 82,5% são de L0, não da biblioteca que o modelo escreveu."
+  },
+  {
+   "onde": "6.8 Discussão",
+   "de": "O que a literatura previa se confirmou em dois pontos e se mostrou menor em um terceiro.",
+   "para": "O que a literatura previa serviu de premissa em um ponto, se confirmou em outro e se mostrou menor em um terceiro.",
+   "motivo": "fase-3b-relatorio.md §6 trata Sclar et al. como 'analogia, não previsão', e nenhuma medida do projeto mede a sensibilidade ao formato do prompt, que é premissa do prompt congelado (metricas-e-desenho-experimental.md, item 7)."
+  },
+  {
+   "onde": "6.8 Discussão",
+   "de": "Confirmou-se a sensibilidade ao formato do prompt (SCLAR et al., 2024), razão pela qual o prompt ficou congelado desde a Fase 3;",
+   "para": "Serviu de premissa a sensibilidade ao formato do prompt (SCLAR et al., 2024), razão pela qual o prompt ficou congelado desde a Fase 3;",
+   "motivo": "fase-3b-relatorio.md §6 trata Sclar et al. como 'analogia, não previsão', e nenhuma medida do projeto confirma a sensibilidade ao formato."
+  },
+  {
+   "onde": "6.8 Discussão",
+   "de": "a probabilidade do primeiro token do rótulo separa acertos de erros com AUROC de 0,78 na sonda de confiança",
+   "para": "a probabilidade conjunta dos tokens do rótulo separa acertos de erros com AUROC de 0,78 na sonda de confiança",
+   "motivo": "pre-fase-4-relatorio.md §4.2: 0,783 [0,684 a 0,882] é a probabilidade conjunta dos tokens do rótulo, e o primeiro token sozinho deu 0,765 na corrida 12."
+  },
+  {
+   "onde": "6.8 Discussão",
+   "de": "As falhas são injetadas, não ocorridas, em duas aplicações construídas pelo grupo;",
+   "para": "As falhas são injetadas, não ocorridas, em duas aplicações sob controle do grupo, uma delas cedida por um integrante;",
+   "motivo": "README (tabela dos alvos) e decisão 1: o CobaiaFront foi cedido, não construído, e a seção 6.1 do documento já diz 'site legado cedido'."
+  },
+  {
+   "onde": "REFERÊNCIAS (AUTOPSIAS 2026b sem chamada no texto)",
+   "de": "Acesso em: 23 out. 2026.\n\nAUTOPSIAS. **brainiac-cli: local-first second-brain CLI**. Versão 0.20.44. PyPI, 2026b. Disponível em: https://pypi.org/project/brainiac-cli/. Acesso em: 23 out. 2026.",
+   "para": "Acesso em: 23 out. 2026.",
+   "motivo": "A entrada AUTOPSIAS 2026b (brainiac-cli no PyPI) não tem chamada no texto, e a lista deve conter só obras citadas (NBR 6023)."
+  },
+  {
+   "onde": "REFERÊNCIAS (AUTOPSIAS CHANGELOG, 2026d para 2026b)",
+   "de": "Versão 0.20.44. Repositório GitHub Autopsias/brainiac, 2026d.",
+   "para": "Versão 0.20.44. Repositório GitHub Autopsias/brainiac, 2026b.",
+   "motivo": "Com a entrada 2026b removida, as letras da mesma autoria e ano passam a a, b, c na ordem da lista (NBR 10520)."
+  },
+  {
+   "onde": "REFERÊNCIAS (AUTOPSIAS benchmark, 2026e para 2026c)",
+   "de": "Repositório GitHub Autopsias/brainiac, 2026e.",
+   "para": "Repositório GitHub Autopsias/brainiac, 2026c.",
+   "motivo": "Com a entrada 2026b removida, as letras da mesma autoria e ano passam a a, b, c na ordem da lista (NBR 10520)."
+  },
+  {
+   "onde": "4.2.3 (chamada AUTOPSIAS, 2026e para 2026c)",
+   "de": "(AUTOPSIAS, 2026e)",
+   "para": "(AUTOPSIAS, 2026c)",
+   "motivo": "Acompanha a nova letra da entrada docs/benchmark-results.md na lista."
+  },
+  {
+   "onde": "4.2.3 (chamada AUTOPSIAS, 2026d para 2026b, primeira)",
+   "de": "falhas específicas de Windows (AUTOPSIAS, 2026d)",
+   "para": "falhas específicas de Windows (AUTOPSIAS, 2026b)",
+   "motivo": "Acompanha a nova letra da entrada CHANGELOG.md na lista."
+  },
+  {
+   "onde": "4.2.3 (chamada AUTOPSIAS, 2026d para 2026b, segunda)",
+   "de": "vetores efetivamente aleatórios, sem aviso (AUTOPSIAS, 2026d)",
+   "para": "vetores efetivamente aleatórios, sem aviso (AUTOPSIAS, 2026b)",
+   "motivo": "Acompanha a nova letra da entrada CHANGELOG.md na lista."
+  },
+  {
+   "onde": "4.2.1 (chamada ARIZE AI, 2026a sem 2026b)",
+   "de": "(ARIZE AI, 2026a)",
+   "para": "(ARIZE AI, 2026)",
+   "motivo": "A lista tem uma só obra de ARIZE AI em 2026, e a letra só se usa quando há mais de uma da mesma autoria e ano (NBR 10520)."
+  },
+  {
+   "onde": "REFERÊNCIAS (ARIZE AI 2026a)",
+   "de": "Repositório Arize-ai/openinference, branch main, 2026a.",
+   "para": "Repositório Arize-ai/openinference, branch main, 2026.",
+   "motivo": "A lista tem uma só obra de ARIZE AI em 2026, e a letra só se usa quando há mais de uma da mesma autoria e ano (NBR 10520)."
+  },
+  {
+   "onde": "Apêndice B (mapa do repositório)",
+   "de": "| Bibliotecas de documentação por modelo e época; cópia curada | Programacao/AgenteCore/base_conhecimento e biblioteca_producao |",
+   "para": "| Bibliotecas de documentação: original, por modelo e época, e cópia curada | Programacao/AgenteCore/base_conhecimento (original), Programacao/AgenteCore/experimentos/resultados_alvo/fase3/bibliotecas (por modelo e época) e Programacao/AgenteCore/biblioteca_producao (cópia curada) |",
+   "motivo": "Conferido no disco: as bibliotecas por modelo e época ficam em experimentos/resultados_alvo/fase3/bibliotecas, e base_conhecimento é só a original (L0)."
+  }
+ ]
+}

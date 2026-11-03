@@ -3,7 +3,9 @@
 # na pasta `projeto/` do clone do repositório do orientador (unicid-projeto-software-2026-2/squad-24-projeto), apaga de
 # `projeto/` o que saiu daqui, deixa de fora a `.venv` da CobaiaAPI e a `.claude/`, escreve o commit e a contagem no bloco
 # SINCRONIZACAO do README do clone e avisa se algum arquivo copiado seria ignorado pelo `.gitignore` do clone. Ensaio por
-# padrão; `--aplicar` grava; `--check` devolve 1 fora de sincronia (para as baterias de verificação).
+# padrão; `--aplicar` grava; `--check` devolve 1 fora de sincronia (para as baterias de verificação). Desde 03/11/2026
+# aceita `--commit <ref>` para copiar um commit que não seja o HEAD: é o que `replicar_commits_orientador.py` usa para
+# replicar os commits do principal um a um no clone (decisão 84).
 # ! Motivo: o professor orientador pediu o TCC replicado no repositório da disciplina (decisão 72, 22/10/2026), e este
 # repositório continua o principal, onde toda alteração sai primeiro. Copiar à mão milhares de arquivos a cada entrega
 # erraria (arquivo editado sem commit indo junto, arquivo apagado aqui sobrevivendo lá); o script copia só o que está no
@@ -16,7 +18,8 @@ Uso (a partir da raiz do repositório principal):
     python ferramentas/sincronizar_orientador.py            # ensaio: só lista o que mudaria
     python ferramentas/sincronizar_orientador.py --aplicar  # copia, apaga o que saiu e atualiza o README do clone
     python ferramentas/sincronizar_orientador.py --check    # 0 em sincronia, 1 fora de sincronia, 2 erro de uso
-Opções: --origem (padrão: a raiz deste repositório), --destino (padrão: ../squad-24-projeto), --tudo (lista tudo).
+Opções: --origem (padrão: a raiz deste repositório), --destino (padrão: ../squad-24-projeto), --tudo (lista tudo),
+        --commit <ref> (padrão: HEAD; qualquer commit do principal, para a réplica commit a commit).
 Depois de --aplicar, no clone: git add -A && git commit -m "Sincroniza com o commit <hash> do principal" && git push
 """
 from __future__ import annotations
@@ -82,10 +85,11 @@ def excluido(caminho: str) -> bool:
     return caminho.startswith(EXCLUSOES)
 
 
-def listar_rastreados(origem: Path, relatorio: Relatorio) -> list[tuple[str, str]]:
-    """Pares (caminho, sha) dos blobs do commit HEAD, já sem as exclusões; submódulo e link simbólico viram aviso."""
+def listar_rastreados(origem: Path, relatorio: Relatorio, commit: str = "HEAD") -> list[tuple[str, str]]:
+    """Pares (caminho, sha) dos blobs do commit pedido (HEAD por padrão), já sem as exclusões; submódulo e link simbólico
+    viram aviso."""
     pares: list[tuple[str, str]] = []
-    for item in git(origem, "ls-tree", "-r", "-z", "HEAD").split("\0"):
+    for item in git(origem, "ls-tree", "-r", "-z", commit).split("\0"):
         if not item:
             continue
         meta, caminho = item.split("\t", 1)
@@ -147,7 +151,7 @@ def ignorados_pelo_clone(destino: Path, caminhos: list[str]) -> list[str]:
         return []
     entrada = "".join(f"{SUBPASTA}/{c}\0" for c in caminhos).encode("utf-8")
     proc = subprocess.run(["git", "-C", str(destino), "check-ignore", "--no-index", "--stdin", "-z"],
-                          input=entrada, capture_output=True)
+                          check=False, input=entrada, capture_output=True)
     if proc.returncode not in (0, 1):  # 0: algum ignorado; 1: nenhum
         raise RuntimeError(proc.stderr.decode("utf-8", "replace").strip())
     prefixo = SUBPASTA + "/"
@@ -172,17 +176,18 @@ def atualizar_readme(destino: Path, relatorio: Relatorio, total: int) -> None:
     readme.write_bytes((antes + INICIO + quebra + linha + quebra + FIM + depois).encode("utf-8"))
 
 
-def sincronizar(origem: Path, destino: Path, aplicar: bool) -> Relatorio:
+def sincronizar(origem: Path, destino: Path, aplicar: bool, commit: str = "HEAD") -> Relatorio:
+    """Copia o commit pedido (HEAD por padrão) para `<destino>/projeto/`; `commit` é qualquer ref do principal."""
     origem, destino = Path(origem).resolve(), Path(destino).resolve()
     if not (origem / ".git").exists():
         raise ErroDeUso(f"origem sem .git: {origem}")
     if not (destino / ".git").exists():
         raise ErroDeUso(f"destino não é um clone git: {destino}")
     rel = Relatorio()
-    rel.commit = git(origem, "rev-parse", "--short", "HEAD").strip()
-    rel.data = git(origem, "log", "-1", "--date=format:%d/%m/%Y", "--format=%cd", "HEAD").strip()
+    rel.commit = git(origem, "rev-parse", "--short", commit).strip()
+    rel.data = git(origem, "log", "-1", "--date=format:%d/%m/%Y", "--format=%cd", commit).strip()
     rel.sujo = bool(git(origem, "status", "--porcelain").strip())
-    pares = listar_rastreados(origem, rel)
+    pares = listar_rastreados(origem, rel, commit)
     alvo = destino / SUBPASTA
     pendentes: list[tuple[str, str]] = []
     for caminho, sha in pares:
@@ -231,9 +236,10 @@ def main(argv: list[str] | None = None) -> int:
     modo.add_argument("--aplicar", action="store_true", help="grava no clone (sem isso é só ensaio)")
     modo.add_argument("--check", action="store_true", help="sai com 1 se a cópia estiver fora de sincronia")
     ap.add_argument("--tudo", action="store_true", help="lista todos os arquivos de cada categoria")
+    ap.add_argument("--commit", default="HEAD", help="commit do principal a copiar (padrão: HEAD)")
     args = ap.parse_args(argv)
     try:
-        rel = sincronizar(args.origem, args.destino, aplicar=args.aplicar)
+        rel = sincronizar(args.origem, args.destino, aplicar=args.aplicar, commit=args.commit)
     except ErroDeUso as erro:
         print(f"erro: {erro}", file=sys.stderr)
         return 2

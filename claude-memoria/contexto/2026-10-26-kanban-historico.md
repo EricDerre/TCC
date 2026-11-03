@@ -69,3 +69,59 @@ Não houve cartão que o GitHub tenha recusado criar ou mover. Dois cartões (#4
 ## 6. Como repetir para um cartão novo
 
 Formulário com os campos na URL, por exemplo `https://github.com/unicid-projeto-software-2026-2/squad-24-projeto/issues/new?template=task.yml&title=...&projects=unicid-projeto-software-2026-2%2F24&task_id=...&descricao=...&criterios_aceite=...&feature_ref=...` (valores codificados para URL). Os menus Tipo de Tarefa e Sprint não aceitam valor pela URL e precisam de clique. Depois de criar, o campo Status fica no painel lateral da issue (seção Projects); se a seção não aparecer logo após a criação, recarregar a página.
+
+<!-- ! Alteração de IA - Revisar: seção nova (03/11/2026) com os 12 cartões da Fase 4 criados no Kanban do orientador (issues #52 a #63) e os cinco cartões existentes movidos no mesmo dia, com número, ID, título, tipo, feature, sprint e coluna.
+     ! Motivo: o Eric pediu em 03/11/2026 "vamos replicar os commits que fizemos no principal para lá também, atualizando o kanban tbm"; sem esta seção a próxima sessão não saberia que os pacotes P0 a P4 e as corridas 16 a 19 já têm cartão (e com que número), nem que P5 a P8 já estão no quadro, e repetiria ou duplicaria o trabalho. Mesmo método da seção 1: formulário task.yml com os campos na URL, menus no navegador, Status no painel da issue e fechamento como concluída; a lista foi confirmada pelo Eric no quadro de perguntas da sessão antes da criação. -->
+## 7. Cartões da Fase 4 (03/11/2026)
+
+Pedido do Eric em 03/11/2026: levar ao Kanban o que foi concluído desde 26/10 (Fase 4) e o que está em curso, com o mesmo método dos 23 cartões históricos. Levantamento, só leitura, em `Documentacao/memorial/roadmap.md` (§1, §2 linhas 16 a 19, §2.8 a §2.11 e §4.6), `decisoes.md` (decisões 79 a 82), `pendencias.md` (fichas 25 a 38), `claude-memoria/plano-aprovado-fase-4.md` (§5 e §6) e nos commits 3befaa2e, 4f3b3e26 e 633ebb27. O Eric confirmou a lista no quadro de perguntas ("Sim, criar os 11", "Sim, mover os 5" e "Sim, criar" o cartão da ficha 25).
+
+### 7.1 Os 12 cartões criados
+
+| Issue | ID | Título | Tipo | Feature | Sprint | Coluna |
+|---|---|---|---|---|---|---|
+| #52 | TSK-F4-002 | Fase 4, pacotes P0 e P1: ambiente da Fase 4 (Playwright, Chromium, PHP 8.2 e MariaDB portátil), fixtures reais, trilha v2 e relatório v2 | Desenvolvimento | FT001 / FT004 | 2 (Outubro) | Producao, fechada |
+| #53 | TSK-F4-003 | Fase 4, pacote P2: caso ao vivo na tela (interceptador, poda, sintoma por molde, seis cenários) e corrida 17 de reprodução (37 de 72 casos reproduzem) | Desenvolvimento | FT004 / FT001 | 2 | Producao, fechada |
+| #54 | TSK-F4-004 | Fase 4: banco de 36 casos inéditos (ficha 27, lex-22 a efe-27) e corrida 17 sobre eles (25 de 36 reproduzem) | Testes | FT004 | 2 | Producao, fechada |
+| #55 | TSK-F4-005 | Fase 4, pacote P3: diagnóstico ao vivo com selo de confiança e corrida 16 de calibração (k = 3, limiares do selo, ponte 0.40.2) | Desenvolvimento | FT004 | 2 | Producao, fechada |
+| #56 | TSK-F4-006 | Fase 4: corridas 18 e 18b (diagnóstico lido da tela contra o fixture), revisão do caso ao vivo e regra R2 como limitação declarada (fichas 37 e 38, decisões 81 e 82) | Testes | FT004 | 3 (Novembro) | Producao, fechada |
+| #57 | TSK-F4-007 | Fase 4, pacote P4: cura de seletor em código (seis candidatos, 16 quebras nas duas formas) e corrida 19 (160 de 160 curadas, MTTR mediana 0,639 s) | Desenvolvimento | FT005 | 3 | Producao, fechada |
+| #58 | TSK-F4-008 | Fase 4, pacote P5: biblioteca em produção e ciclo de correção; corrida 20 (regras R4 e R5) | Desenvolvimento | FT003 | 3 | A Fazer |
+| #59 | TSK-F4-009 | Fase 4, pacote P6: cenários da Fase 5, MTTR e Task Success; corrida 21 (ensaio dos dez cenários) | Desenvolvimento | FT006 | 3 | Backlog |
+| #60 | TSK-F4-010 | Fase 4, pacote P7: avaliação da própria trilha (mutações, intervenções, pós-racionalização); corrida 22 | Testes | FT004 | 3 | Backlog |
+| #61 | TSK-F4-011 | Fase 4, pacote P8: painel da Fase 4, relatório da fase e documentação (roadmap, README, handoff) | Documentacao | EP001 | 3 | Backlog |
+| #62 | TSK-DOC-007 | Réplica dos commits do repositório principal (26/10 a 03/11/2026) na pasta projeto/ deste repositório (decisão 72) | Deploy | EP001 | 3 | A Fazer |
+| #63 | TSK-DOC-008 | Projeto de pesquisa ABNT versão 5: achados da Pré-Fase 4 no texto formal (ficha 25, opção b) | Documentacao | EP001 | 3 | A Fazer |
+
+Numeração dos IDs: F4 continua de TSK-F4-001 (#26, o plano da Fase 4) e DOC continua de TSK-DOC-006 (#46). Sprint 2 (Outubro) para o que foi feito até 31/10 e Sprint 3 (Novembro) de 01/11 em diante, inclusive os pacotes planejados. Os critérios de aceite dos seis cartões concluídos entraram marcados; os dos seis planejados, em aberto. Os caminhos de evidência usam o prefixo `projeto/`, como na seção 2. O script descartável que montou as URLs (`kanban_fase4.py`, mesma forma do de 26/10) ficou só no scratchpad da sessão.
+
+### 7.2 Cartões existentes movidos no mesmo dia (com o sim do Eric)
+
+| Issue | ID | O que mudou |
+|---|---|---|
+| #25 | TSK-PF4-005 (fechamento da Pré-Fase 4) | Do Backlog para Producao; fechada como concluída (feito em 26/10, P7 da Pré-Fase 4). |
+| #26 | TSK-F4-001 (plano da Fase 4) | Do Backlog para Producao; fechada como concluída (aprovado em 26/10, decisão 79). |
+| #28 | TSK-DOC-002 (.docx do TCC) | De A Fazer para Fazendo (versão 1 provisória em escrita em 03/11). |
+| #18 | FT004 (diagnóstico de causa raiz) | De Refinamento para Fazendo (P3 feito; P5 e P7 ainda pendentes). |
+| #19 | FT005 (self-healing de localizadores) | Do Backlog para Testes em DEV (P4 feito e medido na corrida 19; falta a Fase 5). |
+
+Ficaram como estavam: #14 (EP001, Fazendo), #20 (FT006, Backlog) e #27 (TSK-DOC-001, Fazendo).
+
+### 7.3 Estado do quadro ao fim (filtros `-status:Producao` e `status:Producao`)
+
+- No Status: 9 (Status Reports #5 a #13; os #3 e #4 aparecem em Producao, fechados, e não foram tocados por esta sessão).
+- Backlog: 4 (#20, #59, #60, #61).
+- Refinamento: 0.
+- A Fazer: 3 (#58, #62, #63).
+- Fazendo: 4 (#14, #18, #27, #28).
+- Merge, Testes em HOM: 0.
+- Testes em DEV: 1 (#19).
+- Producao: 42 (os 32 de 26/10, mais #3, #4, #25, #26 e os seis novos #52 a #57).
+
+Nenhum cartão recusado pelo GitHub. Em três issues (#56, #59 e #60) o painel de projeto não apareceu logo após a criação; recarregar a página resolveu, como em 26/10. A sessão do GitHub no navegador interno do aplicativo tinha expirado antes do primeiro cartão (o formulário redirecionou para o login); o Eric entrou de novo e a criação seguiu, sem credenciais digitadas pela IA.
+
+### 7.4 O que não foi feito e o que fica para o Eric
+
+- Nada foi commitado; este registro é o único arquivo do repositório principal tocado por esta sessão.
+- A réplica dos três commits no clone do orientador (#62) e o commit e push lá são do Eric, com a ferramenta `ferramentas/replicar_commits_orientador.py` em preparação na sessão principal.
+- Os 36 casos inéditos da ficha 27 (#54) seguem à espera da conferência do Eric; o cartão diz isso na descrição.

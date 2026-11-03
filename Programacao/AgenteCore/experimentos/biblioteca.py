@@ -75,7 +75,16 @@ OBRIGATORIOS = ("id", "titulo", "sistema", "entidade_principal", "tipo", "status
 # caracteres renderizados por verbete ≈ 308 tokens (2,6 chars/token, o pior caso medido na
 # Fase 2-A), então os 3 verbetes recuperados somam no máximo ~1.700 tokens de notas dentro
 # do num_ctx de 8192; 6 notas por verbete evita que um verbete vire um diário.
-SECOES = ("Resumo", "Sinais", "Causa", "Como confirmar", "Notas do modelo")
+SECOES = ("Resumo", "Sinais", "Causa", "Como confirmar", "Notas do modelo", "Solução sugerida", "Solução aplicada")
+# ! Alteração de IA - Revisar: (03/11/2026, Fase 4, pacote P5) duas seções novas, "Solução sugerida" e "Solução aplicada",
+# escritas só pela operação "correção" do ciclo de correção (biblioteca_fase4.corrigir): uma linha por caso corrigido,
+# no formato `- [<caso> · <data>] <texto>`, com um teto próprio de caracteres renderizados (TETO_CHARS_CORRECOES).
+# ! Motivo: roadmap §4.2 (requisito do Eric, 28/09/2026): quando o defeito documentado por uma nota do modelo é corrigido
+# no sistema, o verbete passa a guardar o erro, a solução sugerida e a solução aplicada, sem apagar nada; sem as seções
+# na tupla, validar() acusaria "seção desconhecida" na primeira correção e a cópia corrigida ficaria inválida.
+SECOES_DA_CORRECAO = ("Solução sugerida", "Solução aplicada")
+TETO_CHARS_CORRECOES = 600
+LINHA_DA_CORRECAO_RE = re.compile(r"^- \[([a-z]+-\d+) · (\d{4}-\d{2}-\d{2})\] (.+)$")
 TETO_CHARS_NOTAS_VERBETE = 800
 TETO_NOTAS_POR_VERBETE = 6
 # Uma nota por linha, no formato que aplicar_edicao grava:
@@ -278,11 +287,44 @@ def render_notas(v: dict) -> str:
     return " Notas: " + " ".join(partes) if partes else ""
 
 
+def correcoes(v: dict) -> list[dict]:
+    """! Alteração de IA - Revisar: (03/11/2026, P5) as linhas das seções "Solução sugerida" e "Solução aplicada", uma por
+    caso corrigido: {caso, data, sugerida, aplicada}; as duas seções são casadas pelo caso.
+    ! Motivo: o ciclo de correção grava uma linha por caso em cada seção (biblioteca_fase4.corrigir); quem lê o verbete
+    (render_correcoes, a conferência da correção e o avaliador) precisa do par sugerida/aplicada por caso num lugar só."""
+    por_caso: dict[str, dict] = {}
+    for secao, chave in (("Solução sugerida", "sugerida"), ("Solução aplicada", "aplicada")):
+        for linha in v["secoes"].get(secao, "").splitlines():
+            m = LINHA_DA_CORRECAO_RE.match(linha.strip())
+            if not m:
+                continue
+            item = por_caso.setdefault(m.group(1), {"caso": m.group(1), "data": m.group(2), "sugerida": "", "aplicada": ""})
+            item[chave] = m.group(3)
+            item["data"] = m.group(2)
+    return list(por_caso.values())
+
+
+def render_correcoes(v: dict) -> str:
+    """! Alteração de IA - Revisar: (03/11/2026, P5) o trecho que as correções acrescentam ao verbete no prompt: por caso
+    corrigido, a data, a solução sugerida (o que o modelo escreveu) e a solução aplicada (o que a evidência mostrou);
+    vazio quando o verbete não tem as seções, de modo que todo verbete de hoje renderiza igual.
+    ! Motivo: a sonda de 28/09/2026 (roadmap §3) mostrou que o modelo não percebe a correção quando a documentação não a
+    registra; o texto entra no bloco variável dos verbetes (o prompt fixo não muda) e é medido contra TETO_CHARS_CORRECOES
+    em validar(), como as notas contra o teto delas."""
+    partes = []
+    for c in correcoes(v):
+        partes.append(_frase(f"Correção ({c['data']}, caso {c['caso']}): solução sugerida: {c['sugerida'] or 'nenhuma registrada'}; "
+                             f"solução aplicada: {c['aplicada'] or 'nenhuma registrada'}"))
+    return " " + " ".join(partes) if partes else ""
+
+
 def render(v: dict) -> str:
     """Verbete inteiro que vai ao prompt: a parte original mais as notas do modelo. Para
     a biblioteca original (base_conhecimento/), que não tem notas, é igual a
-    render_base(v)."""
-    return render_base(v) + render_notas(v)
+    render_base(v).
+    ! Alteração de IA - Revisar: (03/11/2026, P5) mais as correções, quando o verbete as tem (render_correcoes).
+    ! Motivo: ver render_correcoes; para os verbetes sem correção a saída é byte a byte a de antes."""
+    return render_base(v) + render_notas(v) + render_correcoes(v)
 
 
 CABECALHO = ("DOCUMENTAÇÃO DO SISTEMA (fonte da verdade — consulte antes de concluir; "
@@ -398,6 +440,19 @@ def validar(verbetes: list[dict], casos: list[dict], limiar_sobreposicao: float 
         if n_notas > TETO_NOTAS_POR_VERBETE:
             problemas.append(f"{rot}: {n_notas} notas do modelo "
                              f"(teto {TETO_NOTAS_POR_VERBETE})")
+        # ! Alteração de IA - Revisar: (03/11/2026, P5) as correções renderizadas têm teto próprio, e uma seção de
+        # correção com linha fora do formato `- [caso · data] texto` é acusada aqui, como a nota malformada.
+        # ! Motivo: o texto das correções entra no prompt pelo render(); sem teto, um verbete corrigido muitas vezes
+        # estouraria o num_ctx em silêncio; sem a checagem de formato, uma linha mal gravada sumiria do parse.
+        tam_corr = len(render_correcoes(v))
+        if tam_corr > TETO_CHARS_CORRECOES:
+            problemas.append(f"{rot}: correções renderizadas com {tam_corr} caracteres "
+                             f"(teto {TETO_CHARS_CORRECOES})")
+        for secao in SECOES_DA_CORRECAO:
+            for n_linha, linha in enumerate((l for l in v["secoes"].get(secao, "").splitlines() if l.strip()), 1):
+                if not LINHA_DA_CORRECAO_RE.match(linha.strip()):
+                    problemas.append(f"{rot}: linha {n_linha} da seção '{secao}' fora do formato "
+                                     "'- [caso · data] texto'")
         # ! Alteração de IA - Revisar: verbete de tipo 'aprendido' (escrito pelo modelo na
         # Fase 3) tem de estar em aprendidos/ e apontar as causas raiz de que fala.
         # ! Motivo: sem a pasta, um verbete aprendido ficaria misturado com a documentação

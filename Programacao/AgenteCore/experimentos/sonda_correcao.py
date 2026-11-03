@@ -11,6 +11,16 @@
 # esta sonda precisa da época de aprendizado (diagnóstico + proposta + validação em código), que
 # o executor oficial já faz — por isso reaproveita rodar_epoca e os auxiliares da 3-B em vez de
 # reimplementar. Nada em resultados_alvo/fase3/ é escrito: a saída é uma pasta nova.
+# ! Alteração de IA - Revisar: (03/11/2026, Fase 4, pacote P5) a sonda pode ser chamada de novo com a recuperação
+# por id ligada (`--recuperacao-por-id`: biblioteca_fase4.com_recuperacao_por_id troca, só durante a sonda, o
+# contexto_e_prompt do executor congelado para acrescentar os verbetes ligados ao caso pelo id) e lendo outra
+# biblioteca de origem (`--origem <pasta de uma época fechada>`, por exemplo a época de correções da corrida 20);
+# o que a sonda fazia em main() saiu para rodar_sonda(), que o modo `biblioteca` de executar_fase4.py chama na
+# mesma sessão do Ollama, e resumo_da_sonda() resume os registros (rótulo, acerto, propostas, aceitas, motivos,
+# abstenção, se a resposta menciona a correção, os verbetes que vieram pelo id) para o avaliador.
+# ! Motivo: plano aprovado, P5 ("a sonda de 28/09 repetida com recuperação por id muda o que o modelo propõe"):
+# a leitura de 28/09 (roadmap §3) disse que a busca por palavras não trouxe as notas do caso; repetir a mesma sonda
+# com só esse ponto mudado é o que mede a diferença.
 """Uso (na pasta experimentos, com o Ollama no ar e nenhum modelo residente):
 
     RESULTADOS_DIR=resultados_alvo python sonda_correcao.py --saida fase3b_correcao \\
@@ -37,6 +47,15 @@ import executar_fase3
 import executar_fase3b
 
 MAX_TEXTO = 900  # caracteres impressos por resposta crua (o JSONL guarda tudo)
+MARCAS_DE_CORRECAO = ("solucao aplicada", "solucao sugerida", "corrigid", "nao ocorre mais", "deixou de ocorrer", "ja registra",
+                      "ja esta documentad", "ja foi resolvid", "ja esta corrig")
+
+
+def menciona_correcao(texto: str) -> bool:
+    """A resposta do modelo (diagnóstico ou proposta) fala da correção registrada na documentação?"""
+    import biblioteca as bib
+    norm = bib.normalizar(texto or "")
+    return any(m in norm for m in MARCAS_DE_CORRECAO)
 
 
 def _casos(ids: list[str]) -> list[dict]:
@@ -104,7 +123,7 @@ def _diff_epocas(antes: Path, depois: Path) -> None:
         print("\n!! arquivos removidos (não deveria acontecer):", removidos)
 
 
-def main() -> None:
+def montar_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--saida", required=True, help="pasta nova em <RESULTADOS> (nunca 'fase3')")
     ap.add_argument("--modelo", required=True)
@@ -113,7 +132,59 @@ def main() -> None:
     ap.add_argument("--k", type=int, default=3)
     ap.add_argument("--max-tokens-diagnostico", type=int, default=600)
     ap.add_argument("--max-tokens-proposta", type=int, default=700)
-    args = ap.parse_args()
+    ap.add_argument("--recuperacao-por-id", action="store_true",
+                    help="P5: os verbetes ligados ao caso pelo id entram no contexto depois dos k da busca")
+    ap.add_argument("--origem", default=None,
+                    help="P5: pasta de uma época fechada a ler no lugar de fase3/bibliotecas/<modelo>/epoca-<versao>")
+    return ap
+
+
+def rodar_sonda(modelo: str, casos: list[dict], origem: Path, versao: int, pasta: Path, pasta_bib: Path, k: int, mt_diag: int, mt_prop: int,
+                digest: str, versao_ollama: str | None, recuperacao_por_id: bool = False) -> dict:
+    """Uma época de aprendizado do executor congelado sobre uma cópia da época de origem, só com `casos` em
+    aprendizado (o modelo vê a causa correta e propõe), com ou sem a recuperação por id; devolve os caminhos dos
+    JSONL e o resumo. Quem chama já preparou o modelo (um por vez) e descarrega depois."""
+    import biblioteca_fase4 as bf
+    particao = _particao_so_aprendizado(casos)
+    pasta.mkdir(parents=True, exist_ok=True)
+    hash_copia = executar_fase3b._preparar_copia(origem, pasta_bib / f"epoca-{versao}")
+    n = versao + 1
+    if recuperacao_por_id:
+        with bf.com_recuperacao_por_id():
+            executar_fase3.rodar_epoca(modelo, n, casos, particao, n, k, mt_diag, mt_prop, pasta, pasta_bib, digest, versao_ollama)
+    else:
+        executar_fase3.rodar_epoca(modelo, n, casos, particao, n, k, mt_diag, mt_prop, pasta, pasta_bib, digest, versao_ollama)
+    arq_diag, arq_prop = pasta / f"diagnosticos__L{versao}.jsonl", pasta / f"propostas__E{n}.jsonl"
+    return {"hash_lido": hash_copia, "epoca": n, "diagnosticos": arq_diag, "propostas": arq_prop,
+            "resumo": resumo_da_sonda(arq_diag, arq_prop, k, recuperacao_por_id)}
+
+
+def resumo_da_sonda(arq_diag: Path, arq_prop: Path, k: int, recuperacao_por_id: bool) -> list[dict]:
+    """Por caso: rótulo e acerto do diagnóstico, as propostas (quantas, aceitas, motivos de recusa, abstenção), se a
+    resposta menciona a correção registrada e quais verbetes vieram pelo id (os que ficaram depois dos k da busca)."""
+    import executar_bateria
+    import avaliar
+    diag = {r["caso"]: r for r in executar_bateria.ler_jsonl(arq_diag)}
+    prop = {r["caso"]: r for r in executar_bateria.ler_jsonl(arq_prop)}
+    saida = []
+    for cid, d in diag.items():
+        p_ = prop.get(cid) or {}
+        rotulo = avaliar.extrair(d.get("resposta", ""))["causa_raiz"]
+        gabarito = (d.get("gabarito") or {}).get("causa_raiz")
+        acertou = rotulo is not None and gabarito is not None and avaliar._normalizar(rotulo) == avaliar._normalizar(gabarito)
+        ids = d.get("verbetes_ids") or []
+        saida.append({"caso": cid, "rotulo": rotulo, "acertou": acertou, "n_propostas": p_.get("n_propostas", 0), "n_aceitas": p_.get("n_aceitas", 0),
+                      "abstencao": bool(p_.get("nenhuma")), "motivos": list(p_.get("motivos_rejeicao") or []),
+                      "menciona_correcao": menciona_correcao(d.get("resposta", "")) or menciona_correcao(p_.get("resposta", "")),
+                      "por_id": ids[k:] if recuperacao_por_id else [], "verbetes_ids": ids,
+                      "segundos": round((d.get("segundos") or 0) + (p_.get("segundos") or 0), 2),
+                      "decisoes": [{"operacao": x.get("operacao"), "verbete": x.get("verbete"), "aceita": x.get("aceita"), "motivo": x.get("motivo")}
+                                   for x in p_.get("decisoes") or []]})
+    return saida
+
+
+def main() -> None:
+    args = montar_parser().parse_args()
 
     print(caminhos.descricao())
     casos = _casos(args.casos)
@@ -122,31 +193,31 @@ def main() -> None:
     c3b = executar_fase3b.preparar_saida(args.saida, particao)
     slug = executar_fase3._slug(args.modelo)
     pasta, pasta_bib = c3b["raiz"] / slug, c3b["bibliotecas"] / slug
-    origem = c3_of["bibliotecas"] / slug / f"epoca-{args.versao}"
+    origem = Path(args.origem) if args.origem else c3_of["bibliotecas"] / slug / f"epoca-{args.versao}"
     if not origem.exists():
         raise SystemExit(f"sem {origem}")
     pasta.mkdir(parents=True, exist_ok=True)
     digest, versao_ollama = executar_fase3b._preparar_modelo(args.modelo)
-    hash_copia = executar_fase3b._preparar_copia(origem, pasta_bib / f"epoca-{args.versao}")
+    n = args.versao + 1
+    resultado: dict = {}
+
+    def _rodar() -> None:
+        resultado.update(rodar_sonda(args.modelo, casos, origem, args.versao, pasta, pasta_bib, args.k, args.max_tokens_diagnostico,
+                                     args.max_tokens_proposta, digest, versao_ollama, recuperacao_por_id=args.recuperacao_por_id))
+
     (c3b["raiz"] / "condicoes_3b.json").write_text(json.dumps({
         "modo": "correcao", "modelo": args.modelo, "versao_lida": args.versao,
         "casos": args.casos, "k": args.k, "condicao": executar_fase3.CONDICAO,
-        "hash_snapshot_lido": hash_copia, "versao_ollama": versao_ollama,
+        "recuperacao_por_id": args.recuperacao_por_id, "versao_ollama": versao_ollama,
         "origem": str(origem)}, ensure_ascii=False, indent=1), encoding="utf-8")
-    n = args.versao + 1
-    print(f"\nsonda: {args.modelo} lê epoca-{args.versao} (hash {hash_copia}) e roda a época {n} "
-          f"só com {args.casos} em aprendizado")
-
-    def _rodar() -> None:
-        executar_fase3.rodar_epoca(args.modelo, n, casos, particao, n, args.k,
-                                   args.max_tokens_diagnostico, args.max_tokens_proposta,
-                                   pasta, pasta_bib, digest, versao_ollama)
-
+    print(f"\nsonda: {args.modelo} lê {origem.name} e roda a época {n} só com {args.casos} em aprendizado"
+          f"{' (recuperação por id ligada)' if args.recuperacao_por_id else ''}")
     executar_fase3b._com_modelo_descarregado(args.modelo, _rodar)
 
     _imprimir_jsonl(pasta / f"diagnosticos__L{args.versao}.jsonl", "diagnósticos")
     _imprimir_jsonl(pasta / f"propostas__E{n}.jsonl", "propostas e decisão do validador")
     _diff_epocas(pasta_bib / f"epoca-{args.versao}", pasta_bib / f"epoca-{n}")
+    (c3b["raiz"] / "sonda.json").write_text(json.dumps(resultado.get("resumo", []), ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\nResultados em {c3b['raiz']}")
 
 

@@ -526,7 +526,16 @@ def _resumo_do_evento(e: dict, blobs: dict) -> str:
         ap = d.get("aplicado") or {}
         return (f"{'curado' if d.get('curado') else 'não curado'}: {len(d.get('candidatos') or [])} candidatos, {d.get('reexecucoes', 0)} reexecução(ões)"
                 + (f"; aplicado {ap.get('estrategia')}" if ap else "") + (f"; MTTR {_num(d.get('mttr_s'), 1)} s" if d.get("mttr_s") is not None else ""))
-    if tipo in ("acao", "incidente", "revisao", "edicao_biblioteca", "prompt"):
+    if tipo == "edicao_biblioteca":
+        # ! Alteração de IA - Revisar: (03/11/2026, P5) o resumo do evento de edição da biblioteca: a proposta (número, operação,
+        # verbete e o que aconteceu com ela) ou a correção (verbete e estado).
+        # ! Motivo: o genérico de antes só despejava os campos escalares em JSON; a árvore da trilha precisa dizer em uma
+        # linha se a edição entrou, ficou para revisão ou foi recusada e por qual código.
+        if d.get("etapa") == "correcao":
+            return f"correção de [{d.get('verbete')}] pelo caso {d.get('caso')}: {d.get('estado_antes')} para {d.get('estado_depois')}"
+        estado = "aplicada" if d.get("aplicada") else ("para revisão humana" if d.get("para_revisao") else f"recusada: {d.get('codigo')}")
+        return f"proposta {d.get('numero')}: {d.get('operacao')} em [{d.get('verbete')}]: {estado}"
+    if tipo in ("acao", "incidente", "revisao", "prompt"):
         return _cel(json.dumps({k: v for k, v in d.items() if not isinstance(v, (dict, list))}, ensure_ascii=False))[:160]
     return ""
 
@@ -562,6 +571,14 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
     no_cura = next((e["dados"] for e in reversed(nos) if e["dados"].get("decisao") == "cura"), None)
     cura = (por_tipo.get("cura") or [{"dados": None}])[-1]["dados"]
     intervencoes = [e["dados"] for e in por_tipo.get("intervencao", [])]
+    # ! Alteração de IA - Revisar: (03/11/2026, P5) a trilha de um caso de aprendizado da corrida 20 tem, depois do diagnóstico,
+    # a inferência de proposta, um evento `edicao_biblioteca` por bloco e o nó `edicao_biblioteca`; a de um caso do ciclo de
+    # correção tem o evento e o nó com a operação `correcao`. O veredito ganha a linha "Biblioteca" e a evidência a tabela das
+    # propostas com o veredito da Fase 3, o filtro do P5 e o resultado.
+    # ! Motivo: plano aprovado, seção 3.7 e 3.8: o relatório por caso mostra o que entrou na biblioteca e o que o código
+    # recusou; sem isso a corrida 20 ficaria com a decisão de edição só na árvore de eventos.
+    nos_bib = [e["dados"] for e in nos if e["dados"].get("decisao") == "edicao_biblioteca"]
+    edicoes = [e["dados"] for e in por_tipo.get("edicao_biblioteca", [])]
     podas = [e for e in por_tipo.get("poda", [])]
     interceptacoes = [e for e in por_tipo.get("interceptacao", [])]
     caso = entrada.get("caso", tid)
@@ -595,8 +612,37 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
         veredito += [f"Justificativa ({MARCA_DO_MOLDE}): {(no_cura or {}).get('justificativa') or justificativa_da_cura(cura)}", ""]
     else:
         veredito += ["Nenhum nó de decisão de diagnóstico nesta trilha.", ""]
+    for no_bib in nos_bib:
+        if no_bib.get("operacao") == "correcao":
+            estados = no_bib.get("estados") or {}
+            veredito += [f"**Biblioteca (ciclo de correção):** {'corrigido' if no_bib.get('escolha') == 'corrigido' else 'não corrigido'}: "
+                         + (", ".join(f"[{v}] {a} para {b}" for v, (a, b) in ((k, tuple(x)) for k, x in estados.items())) or "nenhum verbete mudou de estado") + ".", ""]
+        else:
+            aplicadas = no_bib.get("aplicadas") or []
+            seguradas = no_bib.get("para_revisao") or []
+            recusadas = no_bib.get("recusadas") or []
+            veredito += [f"**Biblioteca:** {len(aplicadas)} edição(ões) aplicada(s)" + (f" ({', '.join(f'[{v}]' for v in aplicadas)})" if aplicadas else "")
+                         + f", {len(seguradas)} para revisão humana" + (f" ({', '.join(f'[{v}]' for v in seguradas)})" if seguradas else "")
+                         + f", {len(recusadas)} recusada(s)" + (f" ({', '.join(str(r.get('codigo')) for r in recusadas)})" if recusadas else "")
+                         + (f" · falha: `{no_bib.get('falha')}`" if no_bib.get("falha") else "") + ".", ""]
+        veredito += [f"Justificativa ({MARCA_DO_MOLDE}): {no_bib.get('justificativa') or ''}", ""]
 
     evidencia = []
+    propostas_bib = [d for d in edicoes if d.get("etapa") == "proposta"]
+    if propostas_bib:
+        evidencia += ["Propostas de edição da biblioteca, na ordem em que o modelo as escreveu (o validador da Fase 3 decide primeiro; depois os filtros do P5):", "",
+                      _tabela(["Proposta", "Operação", "Verbete", "Validador da Fase 3", "Filtro do P5", "Resultado", "Peso"],
+                              [[str(d.get("numero")), _cel(d.get("operacao")), f"`{_cel(d.get('verbete'))}`",
+                                "aceita" if (d.get("veredito_fase3") or {}).get("aceita") else f"recusada: `{_cel((d.get('veredito_fase3') or {}).get('motivo'))}`",
+                                _cel(d.get("filtro") or "nenhum"),
+                                "**aplicada**" if d.get("aplicada") else ("para revisão humana" if d.get("para_revisao") else f"recusada: `{_cel(d.get('codigo'))}`"),
+                                _cel(d.get("peso"))] for d in propostas_bib]), ""]
+    correcoes_bib = [d for d in edicoes if d.get("etapa") == "correcao"]
+    for d in correcoes_bib:
+        ev = d.get("evidencia") or {}
+        evidencia += [f"Ciclo de correção do verbete [{_cel(d.get('verbete'))}] pelo caso {_cel(d.get('caso'))}: estado {_cel(d.get('estado_antes'))} para {_cel(d.get('estado_depois'))}; "
+                      f"evidência: reexecução {'passou' if ev.get('passou_depois') else 'falhou'}, fio {'mudou' if ev.get('ha_diff_http') else 'igual'}, "
+                      f"árvore {'mudou' if ev.get('ha_diff_arvore') else 'igual'}.", ""]
     if cura is not None:
         alvo = cura.get("alvo") or {}
         evidencia += [f"Alvo registrado na corrida de referência: {_cel(alvo.get('papel'))} \"{_cel(alvo.get('nome'))}\" (ocorrência {alvo.get('ocorrencia')}; "

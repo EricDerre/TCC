@@ -84,6 +84,8 @@ NAV = [
         ("tela", "Tela e fixture", "O agente dá o mesmo diagnóstico ao caso lido da tela e ao mesmo caso escrito no fixture? A corrida 18 nos casos que reproduzem, com a regra R2, os selos, os rótulos de cada lado e o prompt contra a calibração."),
         # aba da corrida 19 (01/11/2026, P4): o id entra junto com a seção (secao_cura)
         ("cura", "Cura de seletor", "Quando o localizador de um passo quebra, o agente acha outro em código e o roteiro passa na reexecução? A corrida 19 nos quatro roteiros do front legado, com quatro modos de quebra nas duas formas, a taxa de cura, o MTTR e a regra R3."),
+        # aba da corrida 20 (03/11/2026, P5): o id entra junto com a seção (secao_biblioteca)
+        ("biblioteca", "Biblioteca em produção", "O que o agente propõe para a biblioteca passa pelos filtros em código, melhora os inéditos (regra R5) e o ciclo de correção marca o que foi corrigido (regra R4)? A corrida 20: lote, filtros, reavaliação, correção e a sonda com recuperação por id."),
     ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
@@ -1800,12 +1802,27 @@ function curaEmpilhado(id, L, chave){
 }
 function curaModos(){ const C = T.cura||{}; curaEmpilhado('g-cura-modo', C.por_modo||[], 'modo'); }
 function curaRoteiros(){ const C = T.cura||{}; curaEmpilhado('g-cura-roteiro', C.por_roteiro||[], 'roteiro'); }
+// aba Biblioteca em produção (03/11/2026, corrida 20): o que cada filtro barrou e a regra R5 nos inéditos
+function bibFiltros(){
+  const B = T.biblioteca||{}; const F = B.filtros||[];
+  if(!F.length) return;
+  grafico('g-bib-filtros', {type:'bar', data:{labels: F.map(x => x.filtro), datasets:[{label:'propostas barradas ou seguradas', data: F.map(x => x.recusas), backgroundColor: css('--s3')}]},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'propostas'}}}}});
+}
+function bibReavaliacao(){
+  const B = T.biblioteca||{}; const R = B.reavaliacao;
+  if(!R) return;
+  grafico('g-bib-reavaliacao', {type:'bar', data:{labels:['acerto com a cópia curada (%)', 'acerto com o lote (%)', 'b: passaram a acertar', 'c: passaram a errar'],
+      datasets:[{label:'regra R5 nos inéditos', data:[R.acerto_base_pct, R.acerto_novo_pct, R.b, R.c], backgroundColor:[css('--s2'), css('--s1'), css('--bom'), css('--ruim')]}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}});
+}
 """ + pa.JS_ATLAS + pe.JS_EXPLORADOR
 
 DESENHAR_TOPICOS = {"comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
                     "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"],
-                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaClasses", "telaRotulos"], "cura": ["curaModos", "curaRoteiros"]}
+                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaClasses", "telaRotulos"], "cura": ["curaModos", "curaRoteiros"],
+                    "biblioteca": ["bibFiltros", "bibReavaliacao"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
 
@@ -2431,6 +2448,120 @@ def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, s
     return dados_js, html_
 
 
+# ------------------------------------------------------------------ Fase 4: biblioteca em produção e ciclo de correção (corrida 20)
+
+# ! Alteração de IA - Revisar: (03/11/2026, Fase 4, pacote P5) a aba "Biblioteca em produção", lida de
+# resultados_alvo/fase4/biblioteca.json (avaliar_fase4.py --biblioteca): o lote, o que cada filtro barrou, a regra R5 nos
+# inéditos, a regra R4 no ciclo de correção, a sonda repetida com recuperação por id e a recuperação dos verbetes aprendidos.
+# ! Motivo: regra do painel (uma aba por análise, números só dos JSON); a corrida 20 é a quinta análise da Fase 4.
+def secao_biblioteca(bibl: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    fontes_ = fontes(["<code>resultados_alvo/fase4/biblioteca.json</code> e <code>.md</code> (<code>avaliar_fase4.py --biblioteca</code>, com <code>--check</code>; blocos <code>tb_f4_biblioteca_*</code>)",
+                      "<code>executar_fase4.py --modo biblioteca</code> (<code>biblioteca_fase4.py</code>: os 13 filtros em código da decisão 65, a operação de correção, a recuperação por id, a regra R5; "
+                      "<code>sonda_correcao.py --recuperacao-por-id</code>; relatórios v2 por caso em <code>fase4_biblioteca/relatorios/</code>)",
+                      "roadmap §2.12 e §4.2; plano aprovado da Fase 4, seções 3.7, 5 (regras R4 e R5) e 6; fichas 32 e 26; decisão 65"])
+    vazio = {"resumo": None, "filtros": [], "reavaliacao": None, "correcao": None}
+    if not bibl or not bibl.get("resumo") or not bibl["resumo"].get("casos"):
+        html_ = f'''<section id="biblioteca" hidden>
+<h1>Biblioteca em produção: o que o agente propõe passa pelos filtros, melhora os inéditos e o ciclo de correção marca o que foi corrigido?</h1>
+<p class="lead">A corrida 20 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/biblioteca.json</code>, gerado por <code>avaliar_fase4.py --biblioteca</code> depois de <code>executar_fase4.py --modo biblioteca --saida fase4_biblioteca</code> (pacote P5 do plano aprovado, com modelo, noite C).</p>
+{cartoes_corridas(road, numeros=["20"], sufixo="-bib")}
+{fontes_}
+</section>'''
+        return vazio, html_
+    r = bibl["resumo"]
+    lote = bibl.get("lote") or {}
+    reav = bibl.get("reavaliacao")
+    corr = bibl.get("correcao")
+    sonda = bibl.get("sonda")
+    rec_ = bibl.get("recuperacao") or {}
+    filtros_ = [{"filtro": x["filtro"], "recusas": x["recusas"]} for x in bibl.get("filtros") or []]
+    mais_barra = max(filtros_, key=lambda x: x["recusas"]) if filtros_ and any(x["recusas"] for x in filtros_) else None
+    sem_rec = rec_.get("aprendidos_sem_recuperacao") or []
+    dados_js = {"resumo": {k: r.get(k) for k in ("casos", "da_tela", "do_fixture", "acertos_diagnostico", "acerto_pct", "propostas", "aceitas", "abstencoes", "para_revisao",
+                                                 "recusadas_p5", "recusadas_fase3", "inferencias", "segundos")},
+                "filtros": filtros_, "reavaliacao": ({k: reav.get(k) for k in ("n", "b", "c", "acerto_base_pct", "acerto_novo_pct", "veredito", "p_mcnemar")} if reav else None),
+                "correcao": ({k: corr.get(k) for k in ("universo", "desligados", "marcados", "acertos", "falsos_positivos", "perdidos", "precisao_pct", "revocacao_pct", "kappa")} if corr else None)}
+    itens_kpi = [
+        ("Edições no lote", f'{r["aceitas"]} de {r["propostas"]}',
+         f'propostas do modelo nos {r["casos"]} casos de aprendizado ({r["da_tela"]} da tela, {r["do_fixture"]} do fixture); {r["abstencoes"]} abstenções (NENHUMA); peso somado {lote.get("peso", 0)}'),
+        ("Barradas e seguradas", f'{r["recusadas_p5"] + r["para_revisao"]} pelos filtros do P5',
+         f'{r["recusadas_p5"]} recusadas pelos 13 filtros em código e {r["para_revisao"]} seguradas para revisão humana pela regra dos 40%; {r["recusadas_fase3"]} recusadas antes, pelo validador da Fase 3'),
+        ("Regra R5 nos inéditos", f'{reav["veredito"]}: b = {reav["b"]}, c = {reav["c"]}' if reav else "não medida",
+         f'acerto {fmt(reav["acerto_base_pct"])}% com a cópia curada e {fmt(reav["acerto_novo_pct"])}% com o lote nos {reav["n"]} inéditos pareados (p = {fmt(reav["p_mcnemar"], 3)})' if reav else "sem reavaliação"),
+        ("Regra R4, ciclo de correção", f'precisão {fmt(corr["precisao_pct"])}%, revocação {fmt(corr["revocacao_pct"])}%' if corr and corr.get("precisao_pct") is not None else
+         (f'{corr["marcados"]} marcada(s) de {corr["desligados"]} desligado(s)' if corr else "não medida"),
+         f'{corr["marcados"]} marcada(s) corrigido em {corr["universo"]} casos com sintoma antes ({corr["desligados"]} com o modo desligado): {corr["acertos"]} certa(s), {corr["falsos_positivos"]} falso(s) positivo(s), {corr["perdidos"]} perdida(s)' if corr else "sem ciclo de correção"),
+        ("Sonda com recuperação por id", f'{sonda["mudaram_proposta"]} de {sonda["casos"] - sonda["sem_sonda_anterior"]} mudaram a proposta' if sonda and sonda["casos"] > sonda["sem_sonda_anterior"] else (f'{sonda["casos"]} casos' if sonda else "não repetida"),
+         f'{sonda["mencionam_correcao"]} mencionam a correção registrada; {sonda["abstencoes"]} NENHUMA; {sonda["com_verbete_por_id"]} com verbete pelo id; {sonda["sem_sonda_anterior"]} sem sonda anterior' if sonda else "a sonda de 28/09 não foi repetida"),
+        ("Verbetes aprendidos (ficha 32)", f'{len(sem_rec)} de {len(rec_.get("aprendidos_na_calibracao") or {})} nunca recuperados',
+         f'na calibração com k = {r.get("k")}; nesta corrida {rec_.get("casos_com_verbete_por_id", 0)} caso(s) receberam verbete pelo id'),
+    ]
+    tab_filtros = tabela(["Filtro em código (decisão 65)", "Propostas barradas ou seguradas"], [[f"<code>{esc(x['filtro'])}</code>", x["recusas"]] for x in filtros_], raw=True)
+    tab_lote = tabela(["Verbete", "Operação", "Caso", "Peso", "Granularidade"],
+                      [[f"<code>{esc(e['verbete'])}</code>", esc(e["operacao"]), f"<code>{esc(e['caso'])}</code>", e.get("peso"), esc(e.get("granularidade") or "")] for e in lote.get("lista") or []], raw=True)
+    tab_rev = tabela(["Verbete", "Operação", "Caso", "Peso"], [[f"<code>{esc(e['verbete'])}</code>", esc(e["operacao"]), f"<code>{esc(e['caso'])}</code>", e.get("peso")] for e in lote.get("revisao") or []], raw=True)
+    tab_corr = tabela(["Caso", "Modo", "Verbetes", "Modo desligado", "Reproduziu antes", "Passou depois", "Fio mudou", "Árvore mudou", "Marcado", "Motivo"],
+                      [[f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['modo'])}</code>", ", ".join(f"<code>{esc(v)}</code>" for v in c.get("verbetes") or []), "sim" if c["desligado"] else "não",
+                        "sim" if c["reproduziu_antes"] else "não", "sim" if c["passou_depois"] else "não", "sim" if c["ha_diff_http"] else "não", "sim" if c["ha_diff_arvore"] else "não",
+                        "sim" if c["marcado"] else "não", esc(c.get("motivo") or "")] for c in (corr or {}).get("por_caso") or []], raw=True)
+    tab_sonda = tabela(["Caso", "Rótulo agora", "Acertou", "Propostas", "Aceitas", "NENHUMA", "Motivos", "Menciona a correção", "Verbetes pelo id", "Rótulo em 28/09", "Propostas em 28/09", "Mudou"],
+                       [[f"<code>{esc(x['caso'])}</code>", esc(x["rotulo"] or ""), "sim" if x["acertou"] else "não", x["n_propostas"], x["n_aceitas"], "sim" if x["abstencao"] else "não",
+                         ", ".join(f"<code>{esc(m)}</code>" for m in x["motivos"]) or "nenhum", "sim" if x["menciona_correcao"] else "não", ", ".join(f"<code>{esc(v)}</code>" for v in x["por_id"]) or "nenhum",
+                         esc(x["rotulo_anterior"] or "n/d"), x["n_propostas_anterior"] if x["n_propostas_anterior"] is not None else "n/d",
+                         "sem sonda anterior" if x["mudou_proposta"] is None else ("sim" if x["mudou_proposta"] else "não")] for x in (sonda or {}).get("por_caso") or []], raw=True)
+    tab_rec = tabela(["Verbete aprendido", f"Vezes na calibração (k = {r.get('k')})", "Vezes pelo id nesta corrida"],
+                     [[f"<code>{esc(v)}</code>", n, (rec_.get("verbetes_por_id") or {}).get(v, 0)] for v, n in sorted((rec_.get("aprendidos_na_calibracao") or {}).items())], raw=True)
+    tab_casos = tabela(["Caso", "Origem", "Rótulo", "Acertou", "Selo", "Propostas", "Aceitas", "Para revisão", "Recusadas", "NENHUMA", "Pelo id", "Verbetes editados"],
+                       [[f"<code>{esc(c['caso'])}</code>", esc(c["origem"] or ""), esc(c["rotulo"] or ""), "sim" if c["acertou"] else "não", esc(c["selo"] or ""), c["n_propostas"], c["n_aceitas"], c["para_revisao"],
+                         ", ".join(f"<code>{esc(m)}</code>" for m in c.get("recusadas") or []), "sim" if c["abstencao"] else "não", ", ".join(f"<code>{esc(v)}</code>" for v in c.get("recuperacao_por_id") or []),
+                         ", ".join(f"<code>{esc(v)}</code>" for v in c.get("verbetes_editados") or [])] for c in bibl.get("casos") or []], raw=True)
+    lead = (f'Na corrida 20, o modelo propôs {r["propostas"]} edições nos {r["casos"]} casos de aprendizado e {r["aceitas"]} entraram no lote; os filtros em código barraram {r["recusadas_p5"]} e '
+            f'seguraram {r["para_revisao"]} para revisão humana (o validador da Fase 3 recusou {r["recusadas_fase3"]} antes). '
+            + (f'Nos {reav["n"]} inéditos, o lote {"entra" if reav["veredito"] == "aceito" else "fica em espera"} pela regra R5: b = {reav["b"]} passaram a acertar e c = {reav["c"]} passaram a errar '
+               f'({fmt(reav["acerto_base_pct"])}% para {fmt(reav["acerto_novo_pct"])}% de acerto). ' if reav else "A regra R5 não foi medida. ")
+            + (f'No ciclo de correção, a marca corrigido teve precisão {fmt(corr["precisao_pct"])}% e revocação {fmt(corr["revocacao_pct"])}% contra os {corr["desligados"]} casos com o modo desligado (regra R4). '
+               if corr and corr.get("precisao_pct") is not None else (f'No ciclo de correção, {corr["marcados"]} de {corr["desligados"]} casos desligados foram marcados. ' if corr else ""))
+            + (f'Na sonda repetida com recuperação por id, {sonda["mudaram_proposta"]} caso(s) mudaram a proposta em relação a 28/09 e {sonda["mencionam_correcao"]} mencionam a correção registrada.' if sonda else ""))
+    leitura_ = leitura([
+        f"<strong>Lote e filtros.</strong> {r['aceitas']} edições entraram (peso {lote.get('peso', 0)}); "
+        + (f"o filtro que mais barrou foi <code>{esc(mais_barra['filtro'])}</code> ({mais_barra['recusas']})" if mais_barra else "nenhum filtro do P5 barrou proposta")
+        + f" (blocos <code>tb_f4_biblioteca_filtros</code> e <code>tb_f4_biblioteca_rejeicoes</code>); {r['abstencoes']} abstenções contam como saída válida.",
+        (f"<strong>Regra R5.</strong> b = {reav['b']}, c = {reav['c']} nos {reav['n']} inéditos: {reav['veredito']} (bloco <code>tb_f4_biblioteca_reavaliacao</code>); a base é {esc(reav.get('origem_da_base') or 'n/d')}."
+         if reav else "<strong>Regra R5.</strong> Não medida."),
+        (f"<strong>Regra R4.</strong> {corr['marcados']} marcadas, {corr['acertos']} certas, {corr['falsos_positivos']} falsos positivos e {corr['perdidos']} perdidas em {corr['universo']} casos com sintoma antes "
+         f"(bloco <code>tb_f4_biblioteca_correcao</code>); kappa {fmt(corr['kappa'], 3) if corr.get('kappa') is not None else 'n/d'}." if corr else "<strong>Regra R4.</strong> Não medida."),
+        (f"<strong>Sonda.</strong> {sonda['casos']} casos reapresentados com os verbetes do próprio caso no contexto: {sonda['mudaram_proposta']} mudaram a proposta, {sonda['mencionam_correcao']} mencionam a correção, "
+         f"{sonda['abstencoes']} abstiveram-se (bloco <code>tb_f4_biblioteca_sonda</code>)." if sonda else "<strong>Sonda.</strong> Não repetida."),
+        f"<strong>Ficha 32.</strong> {len(sem_rec)} verbetes aprendidos nunca entraram num contexto da calibração ({', '.join(f'<code>{esc(v)}</code>' for v in sem_rec) or 'nenhum'}); "
+        "a decisão da ficha os manda para <code>aprendidos_em_espera/</code> (<code>biblioteca_fase4.py --espera</code>, comando do Eric).",
+        "<strong>O que não muda sozinho.</strong> A biblioteca de produção só recebe o lote por <code>biblioteca_fase4.py --promover</code>, depois da planilha de revisão humana preenchida (porta final da decisão 65).",
+    ])
+    html_ = f'''<section id="biblioteca" hidden>
+<h1>Biblioteca em produção: o que o agente propõe passa pelos filtros, melhora os inéditos e o ciclo de correção marca o que foi corrigido?</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>O que cada filtro barrou</h2>
+<p>Os 13 filtros em código da decisão 65, na ordem fixa; a regra dos 40% segura (não recusa) a nota em verbete presente em 40% ou mais dos contextos da calibração.</p>
+<div class="chart"><canvas id="g-bib-filtros"></canvas></div>
+{tab_filtros}
+<h2>Regra R5: o lote nos inéditos</h2>
+<div class="chart"><canvas id="g-bib-reavaliacao"></canvas></div>
+{detalhes(f"Edições do lote ({lote.get('edicoes', 0)})", tab_lote)}
+{detalhes(f"Seguradas para revisão humana ({lote.get('para_revisao', 0)})", tab_rev)}
+<h2>Regra R4: o ciclo de correção</h2>
+{tab_corr}
+<h2>A sonda de 28/09 repetida com recuperação por id</h2>
+{tab_sonda}
+{detalhes("Verbetes aprendidos: recuperação na calibração e pelo id", tab_rec)}
+{detalhes(f"Caso a caso ({len(bibl.get('casos') or [])})", tab_casos)}
+<h2>A corrida no roadmap</h2>
+{cartoes_corridas(road, numeros=["20"], sufixo="-bib")}
+{leitura_}
+{fontes_}
+</section>'''
+    return dados_js, html_
+
+
 def montar(ctx: dict) -> tuple[dict, str]:
     """ctx: dados (montar_dados), road, cartoes_corridas, md_para_html, md_doc_para_html, cq, blocos_cq, ineditos,
     curadoria, planilha_curadoria, recuperador, ablacao, medicao_mcp, readme. Devolve (dados_topicos, html)."""
@@ -2476,4 +2607,6 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("tela", d, h))
     d, h = secao_cura(ctx.get("cura"), road, ctx["cartoes_corridas"])
     partes.append(("cura", d, h))
+    d, h = secao_biblioteca(ctx.get("biblioteca"), road, ctx["cartoes_corridas"])
+    partes.append(("biblioteca", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

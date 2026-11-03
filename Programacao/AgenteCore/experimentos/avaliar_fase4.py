@@ -24,7 +24,16 @@
 # e os não curados, em `cura.{json,md}` (blocos `tb_f4_cura_*`).
 # ! Motivo: plano aprovado, P4 ("Mede": a primeira medida de MTTR só do agente, a taxa de cura e onde a geração em código
 # falha) e regra R3; decisão 80 (as duas formas comparadas pelo relatório).
+# ! Alteração de IA - Revisar: (03/11/2026, pacote P5) a leitura da corrida 20 (`--biblioteca`): quantos casos de aprendizado
+# vieram da tela e do fixture, o acerto do diagnóstico, quantas propostas cada filtro barrou (os 13 da decisão 65 e o validador
+# da Fase 3), o lote (edições, peso, para revisão humana), a regra R5 (b e c na reavaliação dos 36 inéditos contra a base), a
+# regra R4 (precisão e revocação da marca corrigido contra o conjunto desligado), a sonda de 28/09 repetida com a recuperação
+# por id (caso a caso contra a leitura de 28/09) e a recuperação dos verbetes aprendidos (ficha 32), em `biblioteca.{json,md}`
+# (blocos `tb_f4_biblioteca_*`). O gabarito dos inéditos entra aqui, nunca no executor.
+# ! Motivo: plano aprovado, P5 ("Mede": quantas propostas cada filtro barra, se um lote melhora os inéditos, a precisão do
+# ciclo de correção em código, o que o modelo propõe quando recebe as notas do próprio caso) e regras R4 e R5.
 """Uso (em Programacao/AgenteCore/experimentos):
+  RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --biblioteca --saida fase4_biblioteca [--check] [--colar] [--pasta ...]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --reproducao --saida fase4_reproducao [--check] [--colar]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --cura --saida fase4_cura [--check] [--colar] [--pasta ...]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --reproducao --saida fase4_reproducao_ineditos --nome reproducibilidade_ineditos --titulo "..." [--check]
@@ -78,6 +87,9 @@ TITULO_TELA = "Diagnóstico ao vivo e o mesmo caso do fixture (corrida 18)"
 LIMITE_R2 = 3   # regra R2: a variação entre corridas iguais (0 a 3 casos em 36, relatório da Fase 3-B)
 NOME_CURA, PREFIXO_CURA = "cura", "tb_f4_cura_"
 TITULO_CURA = "Cura de seletor (corrida 19)"
+NOME_BIBLIOTECA = "biblioteca"
+PREFIXO_BIBLIOTECA = "tb_f4_biblioteca_"
+TITULO_BIBLIOTECA = "Biblioteca em produção e ciclo de correção (corrida 20)"
 RELATORIO = caminhos.AQUI.parent.parent.parent / "Documentacao" / "memorial" / "3-resultados-e-analises" / "fase-4-relatorio.md"
 
 
@@ -728,6 +740,188 @@ def render_cura(dado: dict) -> str:
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
 
 
+# ------------------------------------------------------------------ corrida 20: biblioteca em produção e ciclo de correção (R4 e R5)
+
+def ler_biblioteca(saida: str) -> dict:
+    """Tudo o que a leitura da corrida 20 precisa: condições, biblioteca.jsonl, as propostas, lote.json, a reavaliação (os
+    registros do lote e os da base, com o gabarito dos inéditos juntado aqui), correcoes.jsonl, sonda.json e a trilha."""
+    import biblioteca_fase4 as bf
+    import executar_fase3b as e3b
+    raiz = caminhos.fase3(saida)["raiz"]
+    cond = _json(raiz / "condicoes_fase4.json") or {}
+    slug = executar_fase3._slug(cond.get("modelo") or ex.MODELO_PADRAO)
+    registros = executar_bateria.ler_jsonl(raiz / "biblioteca.jsonl")
+    propostas = executar_bateria.ler_jsonl(raiz / slug / f"propostas__E{ex.EPOCA_DO_LOTE}.jsonl")
+    lote = _json(raiz / "lote.json")
+    try:
+        por_id_ined = {c["id"]: c for c in e3b._casos_ineditos()}
+    except SystemExit:
+        por_id_ined = {}
+
+    def com_gabarito(regs: list[dict]) -> list[dict]:
+        return [{**r, "gabarito": por_id_ined[r["caso"]]["gabarito"]} for r in regs if r.get("caso") in por_id_ined]
+
+    novo = com_gabarito(executar_bateria.ler_jsonl(raiz / slug / f"reavaliacao__E{ex.EPOCA_DO_LOTE}.jsonl"))
+    if cond.get("base_ineditos") == "propria":
+        base = com_gabarito(executar_bateria.ler_jsonl(raiz / slug / f"reavaliacao__L{dv.VERSAO_CURADA}.jsonl"))
+    else:
+        arq_base = caminhos.RESULTADOS / ex.CORRIDA12 / slug / f"diagnosticos__L{dv.VERSAO_CURADA}.jsonl"
+        hash_curada = (cond.get("biblioteca") or {}).get("hash")
+        base = com_gabarito([r for r in executar_bateria.ler_jsonl(arq_base) if not hash_curada or r.get("biblioteca_versao") == hash_curada])
+    reavaliacao = {"base": base, "novo": novo, "origem_da_base": (lote or {}).get("origem_da_base") or cond.get("origem_da_base")} if novo else None
+    correcoes = executar_bateria.ler_jsonl(raiz / "correcoes.jsonl")
+    sonda = _json(raiz / "sonda.json")
+    if sonda is not None and not sonda.get("anterior"):
+        sonda["anterior"] = bf.sonda_anterior()
+    diag = executar_bateria.ler_jsonl(raiz / slug / f"diagnosticos__L{dv.VERSAO_CURADA}.jsonl")
+    inferencias = len(diag) + len(propostas) + len(novo) + (len(base) if cond.get("base_ineditos") == "propria" else 0) + 2 * len((sonda or {}).get("casos") or [])
+    segundos = sum((r.get("segundos_diagnostico") or 0) + (r.get("segundos_proposta") or 0) for r in registros) + sum(r.get("segundos") or 0 for r in novo) \
+        + sum(x.get("segundos") or 0 for x in (sonda or {}).get("casos") or [])
+    arq_trilha = raiz / "trilha_biblioteca.jsonl"
+    trilha_info = ({"bytes": arq_trilha.stat().st_size, "eventos": sum(1 for l in arq_trilha.read_text(encoding="utf-8").splitlines() if l.strip())}
+                   if arq_trilha.exists() else None)
+    por_id_corrida: Counter = Counter(v for r in registros for v in r.get("recuperacao_por_id") or [])
+    recuperacao = {"aprendidos_na_calibracao": cond.get("recuperacao_dos_aprendidos") or {},
+                   "por_id_nesta_corrida": {"casos_com_verbete_por_id": sum(1 for r in registros if r.get("recuperacao_por_id")), "verbetes": dict(por_id_corrida)}}
+    return {"condicoes": cond, "registros": registros, "propostas": propostas, "lote": lote, "reavaliacao": reavaliacao, "correcoes": correcoes, "sonda": sonda,
+            "recuperacao": recuperacao, "trilha_info": trilha_info, "inferencias": inferencias, "segundos": round(segundos, 1)}
+
+
+def _sonda_resumida(sonda: dict | None) -> dict | None:
+    if not sonda or not sonda.get("casos"):
+        return None
+    anterior = sonda.get("anterior") or {}
+    por_caso = []
+    for x in sonda["casos"]:
+        a = anterior.get(x["caso"])
+        mudou = None if a is None else ((x.get("n_propostas"), x.get("n_aceitas"), sorted(x.get("motivos") or []), bool(x.get("abstencao")))
+                                        != (a.get("n_propostas"), a.get("n_aceitas"), sorted(a.get("motivos") or []), bool(a.get("abstencao"))))
+        por_caso.append({"caso": x["caso"], "rotulo": x.get("rotulo"), "acertou": x.get("acertou"), "n_propostas": x.get("n_propostas"), "n_aceitas": x.get("n_aceitas"),
+                         "abstencao": bool(x.get("abstencao")), "motivos": list(x.get("motivos") or []), "menciona_correcao": bool(x.get("menciona_correcao")),
+                         "por_id": list(x.get("por_id") or []), "segundos": x.get("segundos"),
+                         "rotulo_anterior": a.get("rotulo") if a else None, "acertou_anterior": a.get("acertou") if a else None,
+                         "n_propostas_anterior": a.get("n_propostas") if a else None, "n_aceitas_anterior": a.get("n_aceitas") if a else None,
+                         "motivos_anteriores": list(a.get("motivos") or []) if a else [], "mudou_proposta": mudou})
+    return {"casos": len(por_caso), "acertos": sum(1 for x in por_caso if x["acertou"]), "mudaram_proposta": sum(1 for x in por_caso if x["mudou_proposta"] is True),
+            "sem_sonda_anterior": sum(1 for x in por_caso if x["mudou_proposta"] is None), "mencionam_correcao": sum(1 for x in por_caso if x["menciona_correcao"]),
+            "abstencoes": sum(1 for x in por_caso if x["abstencao"]), "com_verbete_por_id": sum(1 for x in por_caso if x["por_id"]),
+            "origem": sonda.get("origem"), "epoca": sonda.get("epoca"), "por_caso": por_caso}
+
+
+def resumir_biblioteca(bruto: dict, gerado_em: str | None = None, corrida: str | None = None) -> dict:
+    """A leitura da corrida 20: os casos de aprendizado (tela e fixture, acerto), as propostas e o que cada filtro barrou, o
+    lote, a regra R5 na reavaliação dos inéditos, a regra R4 no ciclo de correção, a sonda contra 28/09 e a recuperação dos
+    aprendidos."""
+    import biblioteca_fase4 as bf
+    cond = bruto.get("condicoes") or {}
+    registros = bruto.get("registros") or []
+    propostas = bruto.get("propostas") or []
+    m = bf.metricas_da_rodada(propostas)
+    lote_b = bruto.get("lote") or {}
+    fech = lote_b.get("fechamento") or {}
+    edicoes = lote_b.get("edicoes") or []
+    para_revisao = lote_b.get("para_revisao") or []
+    reav = bruto.get("reavaliacao")
+    reavaliacao = None
+    if reav and reav.get("novo"):
+        r5 = bf.avaliar_lote(reav.get("base") or [], reav["novo"])
+        reavaliacao = {**r5, "acerto_base_pct": _pct(r5["acerto_base"], r5["n"]), "acerto_novo_pct": _pct(r5["acerto_novo"], r5["n"]), "origem_da_base": reav.get("origem_da_base")}
+    correcoes = bruto.get("correcoes") or []
+    r4 = bf.regra_r4(correcoes) if correcoes else None
+    correcao = ({**r4, "por_caso": [{k: c.get(k) for k in ("caso", "cenario", "modo", "verbetes", "desligado", "reproduziu_antes", "passou_depois", "ha_diff_http",
+                                                                "ha_diff_arvore", "sintoma_sumiu", "marcado", "motivo", "estados", "segundos")} for c in correcoes]}
+                if r4 else None)
+    sonda = _sonda_resumida(bruto.get("sonda"))
+    rec_b = bruto.get("recuperacao") or {}
+    na_cal = rec_b.get("aprendidos_na_calibracao") or {}
+    por_id_c = rec_b.get("por_id_nesta_corrida") or {}
+    acertos = sum(1 for r in registros if r.get("acertou"))
+    compacto = ("caso", "classe", "nivel", "origem", "reproduz", "modo", "cenario", "rotulo", "acertou", "p_rotulo", "selo", "divergencia", "falha", "n_propostas", "n_aceitas",
+                "para_revisao", "recusadas", "abstencao", "recuperacao_por_id", "verbetes_editados", "segundos_diagnostico", "segundos_proposta")
+    return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida,
+                          "fonte": "biblioteca.jsonl, propostas__E101.jsonl, lote.json, reavaliacao__E101.jsonl, correcoes.jsonl e sonda.json gravados por executar_fase4.py --modo biblioteca",
+                          "parcial": bool(cond.get("parcial"))},
+            "resumo": {"casos": len(registros), "da_tela": sum(1 for r in registros if r.get("origem") == "tela"), "do_fixture": sum(1 for r in registros if r.get("origem") == "fixture"),
+                       "acertos_diagnostico": acertos, "acerto_pct": _pct(acertos, len(registros)), "propostas": m["propostas"], "aceitas": m["aceitas"],
+                       "abstencoes": m["abstencoes"], "para_revisao": m["para_revisao"], "recusadas_p5": sum(m["recusadas_p5"].values()),
+                       "recusadas_fase3": sum(m["recusadas_fase3"].values()), "taxa_de_rejeicao_pct": m["taxa_de_rejeicao_pct"], "peso_aceito": m["peso_aceito"],
+                       "casos_com_verbete_por_id": por_id_c.get("casos_com_verbete_por_id", sum(1 for r in registros if r.get("recuperacao_por_id"))),
+                       "inferencias": bruto.get("inferencias"), "segundos": bruto.get("segundos"), "trilha_bytes": (bruto.get("trilha_info") or {}).get("bytes"),
+                       "trilha_eventos": (bruto.get("trilha_info") or {}).get("eventos"), "k": cond.get("k"), "hash_biblioteca": (cond.get("biblioteca") or {}).get("hash"),
+                       "hash_do_lote": fech.get("hash"), "base_ineditos": cond.get("base_ineditos")},
+            "filtros": [{"filtro": f, "recusas": m["por_filtro"].get(f, 0)} for f in bf.FILTROS],
+            "rejeicoes": {"fase3": m["recusadas_fase3"], "p5": m["recusadas_p5"]},
+            "lote": {"edicoes": len(edicoes), "para_revisao": len(para_revisao), "hash": fech.get("hash"), "n_notas": fech.get("n_notas"), "n_verbetes": fech.get("n_verbetes"),
+                     "n_verbetes_novos": fech.get("n_verbetes_novos"), "por_tipo": dict(sorted(Counter(e.get("operacao") for e in edicoes).items())),
+                     "peso": sum(e.get("peso") or 0 for e in edicoes), "aceitas_por_tipo": m["aceitas_por_tipo"],
+                     "lista": [{k: e.get(k) for k in ("verbete", "operacao", "caso", "peso", "granularidade")} for e in edicoes],
+                     "revisao": [{k: e.get(k) for k in ("verbete", "operacao", "caso", "peso")} for e in para_revisao], "conflitos": lote_b.get("conflitos") or []},
+            "reavaliacao": reavaliacao, "correcao": correcao, "sonda": sonda,
+            "recuperacao": {"aprendidos_na_calibracao": na_cal, "aprendidos_sem_recuperacao": bf.aprendidos_sem_recuperacao(na_cal),
+                            "casos_com_verbete_por_id": por_id_c.get("casos_com_verbete_por_id", 0), "verbetes_por_id": por_id_c.get("verbetes") or {}},
+            "regra_r4": {"texto": bf.REGRA_R4, "cumprida": None},
+            "regra_r5": {"texto": bf.REGRA_R5, "veredito": reavaliacao["veredito"] if reavaliacao else None},
+            "casos": [{k: r.get(k) for k in compacto} for r in registros],
+            "condicoes": {k: cond.get(k) for k in ("k", "casos", "com_tela", "ineditos", "base_ineditos", "origem_da_base", "conjunto_de_correcao", "casos_da_sonda",
+                                                    "parcelas_para_revisao", "parcela_para_revisao", "inferencias_previstas", "parcial", "teto_proposta")}}
+
+
+def render_biblioteca(dado: dict) -> str:
+    r = dado["resumo"]
+    lote = dado["lote"]
+    reav = dado.get("reavaliacao")
+    corr = dado.get("correcao")
+    sonda = dado.get("sonda")
+    rec_ = dado.get("recuperacao") or {}
+    blocos = [
+        a3b.tab("tb_f4_biblioteca_resumo", ["Casos de aprendizado", "Da tela", "Do fixture", "Acertos do diagnóstico", "Acerto (%)", "Propostas", "Aceitas (lote)", "Abstenções (NENHUMA)",
+                                            "Para revisão humana", "Recusadas pelos filtros do P5", "Recusadas pela Fase 3", "Taxa de rejeição (%)", "Casos com verbete pelo id",
+                                            "Inferências", "Segundos", "Trilha (bytes)", "k", "Base dos inéditos"],
+                [[str(r["casos"]), str(r["da_tela"]), str(r["do_fixture"]), str(r["acertos_diagnostico"]), _n(r["acerto_pct"]), str(r["propostas"]), str(r["aceitas"]), str(r["abstencoes"]),
+                  str(r["para_revisao"]), str(r["recusadas_p5"]), str(r["recusadas_fase3"]), _n(r["taxa_de_rejeicao_pct"]), str(r["casos_com_verbete_por_id"]), _n(r.get("inferencias")),
+                  _n(r.get("segundos")), _n(r.get("trilha_bytes")), _n(r.get("k")), _n(r.get("base_ineditos"))]]),
+        a3b.tab("tb_f4_biblioteca_filtros", ["Filtro em código (decisão 65)", "Propostas barradas ou seguradas"], [[f"`{x['filtro']}`", str(x["recusas"])] for x in dado["filtros"]]),
+        a3b.tab("tb_f4_biblioteca_rejeicoes", ["Quem recusou", "Código", "Propostas"],
+                [["validador da Fase 3", f"`{k}`", str(v)] for k, v in (dado["rejeicoes"].get("fase3") or {}).items()]
+                + [["filtros do P5", f"`{k}`", str(v)] for k, v in (dado["rejeicoes"].get("p5") or {}).items()] or [["nenhuma recusa", "", ""]]),
+        a3b.tab("tb_f4_biblioteca_lote", ["Edições no lote", "Para revisão humana", "Peso somado", "Por tipo", "Hash do lote", "Notas na cópia", "Verbetes", "Verbetes novos"],
+                [[str(lote["edicoes"]), str(lote["para_revisao"]), str(lote["peso"]), ", ".join(f"`{k}` {v}" for k, v in lote["por_tipo"].items()) or "nenhuma",
+                  _n(lote["hash"]), _n(lote["n_notas"]), _n(lote["n_verbetes"]), _n(lote["n_verbetes_novos"])]]),
+        a3b.tab("tb_f4_biblioteca_reavaliacao", ["Inéditos pareados", "Acerto com a cópia curada (%)", "Acerto com o lote (%)", "b (passaram a acertar)", "c (passaram a errar)",
+                                                  "p (McNemar exato)", "Veredito R5", "Casos que mudaram", "Base"],
+                [[str(reav["n"]), _n(reav["acerto_base_pct"]), _n(reav["acerto_novo_pct"]), str(reav["b"]), str(reav["c"]), _n(reav["p_mcnemar"]), reav["veredito"],
+                  ", ".join(f"`{c}`" for c in reav["ganhos"] + reav["perdas"]) or "nenhum", _n(reav.get("origem_da_base"))]] if reav else [["não medida"] + [""] * 8]),
+        a3b.tab("tb_f4_biblioteca_correcao", ["Casos com sintoma antes", "Modo desligado", "Modo mantido", "Marcados corrigido", "Certos", "Falsos positivos", "Perdidos",
+                                              "Precisão (%)", "Revocação (%)", "Kappa", "Sem sintoma antes"],
+                [[str(corr["universo"]), str(corr["desligados"]), str(corr["mantidos"]), str(corr["marcados"]), str(corr["acertos"]), str(corr["falsos_positivos"]), str(corr["perdidos"]),
+                  _n(corr["precisao_pct"]), _n(corr["revocacao_pct"]), _n(corr["kappa"]), ", ".join(f"`{c}`" for c in corr["sem_sintoma_antes"]) or "nenhum"]] if corr else [["não medida"] + [""] * 10]),
+        a3b.tab("tb_f4_biblioteca_correcao_casos", ["Caso", "Modo", "Verbetes", "Modo desligado", "Reproduziu antes", "Passou depois", "Fio mudou", "Árvore mudou", "Marcado", "Motivo"],
+                [[f"`{c['caso']}`", f"`{c['modo']}`", ", ".join(f"`{v}`" for v in c.get("verbetes") or []), _sim(c["desligado"]), _sim(c["reproduziu_antes"]), _sim(c["passou_depois"]),
+                  _sim(c["ha_diff_http"]), _sim(c["ha_diff_arvore"]), _sim(c["marcado"]), _n(c.get("motivo"))] for c in (corr or {}).get("por_caso") or []] or [["nenhum"] + [""] * 9]),
+        a3b.tab("tb_f4_biblioteca_sonda", ["Caso", "Rótulo agora", "Acertou", "Propostas", "Aceitas", "NENHUMA", "Motivos de recusa", "Menciona a correção", "Verbetes pelo id",
+                                           "Rótulo em 28/09", "Propostas em 28/09", "Aceitas em 28/09", "Mudou a proposta"],
+                [[f"`{x['caso']}`", _n(x["rotulo"]), _sim(x["acertou"]), str(x["n_propostas"]), str(x["n_aceitas"]), _sim(x["abstencao"]), ", ".join(f"`{m}`" for m in x["motivos"]) or "nenhum",
+                  _sim(x["menciona_correcao"]), ", ".join(f"`{v}`" for v in x["por_id"]) or "nenhum", _n(x["rotulo_anterior"]), _n(x["n_propostas_anterior"]), _n(x["n_aceitas_anterior"]),
+                  "sem sonda anterior" if x["mudou_proposta"] is None else _sim(x["mudou_proposta"])] for x in (sonda or {}).get("por_caso") or []] or [["não medida"] + [""] * 12]),
+        a3b.tab("tb_f4_biblioteca_revisao", ["Verbete", "Operação", "Caso", "Peso", "Parcela na calibração (%)"],
+                [[f"`{e['verbete']}`", _n(e["operacao"]), f"`{e['caso']}`", _n(e["peso"]), _n(round(100 * (dado["condicoes"].get("parcelas_para_revisao") or {}).get(e["verbete"], 0), 1))]
+                 for e in lote["revisao"]] or [["nenhuma"] + [""] * 4]),
+        a3b.tab("tb_f4_biblioteca_recuperacao", ["Verbete aprendido", "Vezes na calibração (k = 3)", "Vezes pelo id nesta corrida"],
+                [[f"`{v}`", str(n), str((rec_.get("verbetes_por_id") or {}).get(v, 0))] for v, n in sorted((rec_.get("aprendidos_na_calibracao") or {}).items())] or [["nenhum", "", ""]]),
+        a3b.tab("tb_f4_biblioteca_casos", ["Caso", "Origem", "Rótulo", "Acertou", "Selo", "Propostas", "Aceitas", "Para revisão", "Recusadas", "NENHUMA", "Pelo id", "Verbetes editados", "Segundos"],
+                [[f"`{c['caso']}`", _n(c["origem"]), _n(c["rotulo"]), _sim(c["acertou"]), _n(c["selo"]), str(c["n_propostas"]), str(c["n_aceitas"]), str(c["para_revisao"]),
+                  ", ".join(f"`{m}`" for m in c.get("recusadas") or []) or "", _sim(c["abstencao"]), ", ".join(f"`{v}`" for v in c.get("recuperacao_por_id") or []) or "",
+                  ", ".join(f"`{v}`" for v in c.get("verbetes_editados") or []) or "", _n(round((c.get("segundos_diagnostico") or 0) + (c.get("segundos_proposta") or 0), 1))]
+                 for c in dado["casos"]] or [["nenhum"] + [""] * 12]),
+    ]
+    cab = pf.cabecalho(TITULO_BIBLIOTECA, "avaliar_fase4.py", "biblioteca.jsonl, propostas, lote.json, reavaliacao, correcoes.jsonl e sonda.json da corrida", dado["metadados"]["gerado_em"][:10])
+    cab += ["", "Cada caso de aprendizado foi diagnosticado (da tela quando reproduz, do fixture nos outros) e, na continuação do mesmo prompt, o modelo propôs edições; "
+                "o validador congelado da Fase 3 decide primeiro e os 13 filtros em código da decisão 65 depois; a regra dos 40% segura para revisão humana a nota em "
+                "verbete presente em 40% ou mais dos contextos da calibração. A regra R5 compara o lote com a cópia curada nos 36 inéditos (b e c); a regra R4 compara "
+                "a marca corrigido do ciclo de correção com o conjunto de casos cujo modo o harness desligou. A sonda repete a de 28/09/2026 com a recuperação por id ligada.", ""]
+    return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
+
+
 # ------------------------------------------------------------------ pontes de versão (regra R6)
 
 def pontes_conhecidas(modelo: str = ex.MODELO_PADRAO) -> dict:
@@ -762,7 +956,7 @@ def pontes_conhecidas(modelo: str = ex.MODELO_PADRAO) -> dict:
 def nome_dos_arquivos(pedido: str | None, modo: str) -> str:
     """O nome dos arquivos da leitura em resultados_alvo/fase4: o pedido por --nome ou o padrão do modo
     (reproducibilidade, calibracao, tela)."""
-    padrao = {"reproducao": NOME, "calibracao": NOME_CALIBRACAO, "tela": NOME_TELA, "cura": NOME_CURA}[modo]
+    padrao = {"reproducao": NOME, "calibracao": NOME_CALIBRACAO, "tela": NOME_TELA, "cura": NOME_CURA, "biblioteca": NOME_BIBLIOTECA}[modo]
     return pedido or padrao
 
 
@@ -790,6 +984,7 @@ def montar_parser() -> argparse.ArgumentParser:
     ap.add_argument("--tela", action="store_true", help="avalia a corrida 18 (diagnóstico ao vivo contra o fixture, regra R2)")
     ap.add_argument("--pontes", action="store_true", help="regrava resultados_alvo/fase4/pontes.json a partir das pontes já rodadas")
     ap.add_argument("--cura", action="store_true", help="avalia a corrida 19 (cura de seletor, regra R3)")
+    ap.add_argument("--biblioteca", action="store_true", help="avalia a corrida 20 (biblioteca em produção e ciclo de correção, regras R4 e R5)")
     ap.add_argument("--saida", default="fase4_reproducao")
     # ! Alteração de IA - Revisar: (01/11/2026, ficha 37) `--nome` sem padrão fixo: cada modo tem o seu (reproducibilidade,
     # tela) e `--tela --nome tela_v2` grava a leitura da repetição da corrida 18 sem regravar `tela.{json,md}`.
@@ -807,9 +1002,9 @@ def main() -> int:
     ap = montar_parser()
     args = ap.parse_args()
     print(caminhos.descricao())
-    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura") if getattr(args, m)]
+    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca") if getattr(args, m)]
     if len(modos) != 1:
-        ap.error("informe um de --reproducao, --calibracao, --tela, --cura ou --pontes")
+        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca ou --pontes")
     pasta = Path(args.pasta) if args.pasta else pasta_fase4()
     oficial = pasta.resolve() == pasta_fase4().resolve()
 
@@ -822,6 +1017,18 @@ def main() -> int:
 
     if args.pontes:
         return _conferir_ou_gravar_json(pasta / "pontes.json", pontes_conhecidas(), args.check)
+    if args.biblioteca:
+        bruto = ler_biblioteca(args.saida)
+        if not bruto["registros"]:
+            print(f"sem biblioteca.jsonl em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        nome_b = nome_dos_arquivos(args.nome, "biblioteca")
+        if args.colar and nome_b != NOME_BIBLIOTECA:
+            ap.error("--colar só com o nome padrão")
+        dado = resumir_biblioteca(bruto, corrida=args.saida)
+        return pf.fechar(nome_b, dado, render_biblioteca(dado), PREFIXO_BIBLIOTECA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
     if args.cura:
         bruto = ler_cura(args.saida)
         if not bruto["registros"]:

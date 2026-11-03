@@ -21,6 +21,11 @@
 # a avaliacao do modo e avaliar_fase4.py --cura.
 # ! Motivo: plano aprovado, secao 6 (corrida 19: rodar_fase4.ps1 -Modo cura -Saida fase4_cura -Repeticoes 5) e ficha 29 c
 # (as duas formas de quebra comparadas); uma fumaca com um roteiro e uma repeticao nunca grava derivado oficial.
+# ! Alteracao de IA - Revisar: em 03/11/2026 (pacote P5) ganhou o modo biblioteca (corrida 20, com modelo: as mesmas
+# conferencias de calibracao e tela), -BaseIneditos (a base da regra R5: corrida12 ou propria), -SemSonda e -SemCorrecao
+# (fumaca) e -TetoProposta; a avaliacao do modo e avaliar_fase4.py --biblioteca.
+# ! Motivo: plano aprovado, secao 6 (corrida 20: rodar_fase4.ps1 -Modo biblioteca -Saida fase4_biblioteca) e regras R4 e R5;
+# a corrida le a biblioteca de producao e nunca escreve nela (o lote so e promovido depois da revisao do Eric).
 #
 # Uso (PowerShell, de dentro de experimentos\):
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo reproducao -Saida fase4_reproducao
@@ -28,6 +33,7 @@
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo calibracao -Saida fase4_calibracao -K 3,5
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo tela -Saida fase4_tela
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo cura -Saida fase4_cura -Repeticoes 5
+#   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo biblioteca -Saida fase4_biblioteca
 #   -Casos N        limita aos N primeiros casos (0 = todos); com N > 0 a avaliacao grava na pasta da corrida, nao em fase4\
 #   -Canal X        chromium (padrao) ou msedge
 #   -Resultados X   pasta de resultados (padrao resultados_alvo)
@@ -43,8 +49,12 @@
 #   -Formas X       cura: formas da quebra separadas por virgula (padrao harness,php)
 #   -Roteiros X     cura: so estes roteiros do front legado, separados por virgula (fumaca); com filtro a avaliacao grava na pasta da corrida
 #   -Modos X        cura: so estes modos de quebra, separados por virgula (fumaca)
+#   -BaseIneditos X biblioteca: base da regra R5 nos 36 ineditos: corrida12 (padrao, a copia curada da corrida 12) ou propria (diagnosticar na mesma sessao)
+#   -SemSonda       biblioteca: nao repete a sonda de correcao (fumaca)
+#   -SemCorrecao    biblioteca: nao roda o ciclo de correcao (fumaca)
+#   -TetoProposta N biblioteca: teto de tokens de saida da proposta de edicao (padrao 700)
 param(
-    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura")][string]$Modo,
+    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca")][string]$Modo,
     [Parameter(Mandatory = $true)][string]$Saida,
     [int]$Casos = 0,
     [ValidateSet("chromium", "msedge")][string]$Canal = "chromium",
@@ -60,7 +70,11 @@ param(
     [int]$Repeticoes = 5,
     [string]$Formas = "harness,php",
     [string]$Roteiros = "",
-    [string]$Modos = ""
+    [string]$Modos = "",
+    [ValidateSet("corrida12", "propria")][string]$BaseIneditos = "corrida12",
+    [switch]$SemSonda,
+    [switch]$SemCorrecao,
+    [int]$TetoProposta = 700
 )
 $ErrorActionPreference = "Stop"
 $env:PYTHONIOENCODING = "utf-8"
@@ -70,7 +84,7 @@ $env:RESULTADOS_DIR = $Resultados
 $Aqui = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $Aqui
 $Inicio = Get-Date
-$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela")
+$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca")
 $Venv = Join-Path $Aqui "..\.venv\Scripts\python.exe"
 if (-not (Test-Path $Venv)) {
     Write-Host "!! venv do AgenteCore nao encontrada em $Venv (rode install.py primeiro)"
@@ -185,6 +199,11 @@ if ($Modo -eq "cura") {
     if ($Modos) { $Argumentos += @("--modos", $Modos) }
     # fumaca ou corrida filtrada: a avaliacao grava na pasta da corrida, nunca em resultados_alvo\fase4
     $CuraParcial = ($Roteiros -ne "") -or ($Modos -ne "") -or ($Repeticoes -ne 5) -or ($Formas -ne "harness,php")
+}
+if ($Modo -eq "biblioteca") {
+    $Argumentos += @("--base-ineditos", $BaseIneditos, "--teto-proposta", "$TetoProposta")
+    if ($SemSonda) { $Argumentos += @("--sem-sonda") }
+    if ($SemCorrecao) { $Argumentos += @("--sem-correcao") }
 }
 Marco ("executar_fase4.py " + (($Argumentos | Select-Object -Skip 1) -join " "))
 & $Venv @Argumentos

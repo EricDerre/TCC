@@ -337,8 +337,10 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 
 <!-- ! Alteração de IA - Revisar: ficha 25 aberta em 26/10/2026, no fechamento da Pré-Fase 4 (P7).
      ! Motivo: o handoff de 22/10 previa, no fechamento da fase, uma ficha sobre o texto da Pré-Fase 4 para o projeto ABNT, que só se aplica com o sim do Eric; o item 10 do projeto (referencial do TCC final) é o único ainda aberto na entrega, e as sínteses do colibri citam documentos do repositório com letras e títulos inconsistentes, o que precisa ser unificado antes de entrar no texto formal. -->
+<!-- ! Alteração de IA - Revisar: ficha 25 fechada em 03/11/2026 pela opção (b), com a mudança de alvo que o Eric pediu (documento do TCC no molde do orientador em vez de versão 5 do projeto de pesquisa); só o Estado e a Decisão mudaram.
+     ! Motivo: o Eric respondeu a ficha nesta sessão ("pode seguir a opção B, para termos um novo documento provisório") e pediu o molde do orientador e a norma do próprio documento; sem a Decisão preenchida o painel seguiria mostrando a ficha aberta. -->
 ### 25. Levar os achados da Pré-Fase 4 ao texto do projeto ABNT: o quê e quando
-- **Estado:** aberta
+- **Estado:** fechada em 03/11/2026
 - **Quem decide:** Eric
 - **Aberta em:** 26/10/2026
 - **O que é:** A Pré-Fase 4 produziu três coisas que cabem no texto formal: fundamentação (o levantamento §6.14, 14 tópicos com 617 referências no arquivo, sobre modelos grandes pelo disco, atlas, raciocínio aberto, confiança por probabilidade, memória e visualização), método (a especificação da trilha de raciocínio aberta, versão 1, decisão 77) e resultados (o veredito do colibri, o atlas dos dados do projeto e a sonda de confiança, corrida 12). O projeto de pesquisa ABNT está na versão 4-beta (30/09/2026) e só o item 10 (referencial do TCC final) ficou para a entrega. As sínteses do colibri citam os documentos do repositório `JustVugg/colibri` com letras (2026a, 2026b) e títulos que não batem entre si; para o texto formal, as citações precisam ser unificadas numa entrada ABNT por documento.
@@ -348,7 +350,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Agora, numa versão 5 do projeto de pesquisa: as mesmas três partes, com revisão ABNT das citações antes da próxima reunião com o orientador.
   - (c) Só o raciocínio aberto e a confiança entram no texto formal; o colibri e o atlas ficam no Memorial como trabalho avaliado e descartado.
 - **Recomendação:** (a): o projeto v4-beta já foi entregue com os itens 1 a 9, e o texto final é quando o referencial se consolida; o Memorial já guarda tudo com as fontes, então nada se perde esperando.
-- **Decisão:** em aberto
+- **Decisão:** (b), pelo Eric em 03/11/2026 (decisão 83), com um acréscimo: o documento provisório sai já no molde do orientador (`Template_TCC_ABNT.docx` e a estrutura de `TCC/README.md` do repositório da disciplina) e na norma do TCC (NBR 14724), não como versão 5 do projeto de pesquisa. A versão 1 é gerada por `ferramentas/gerar_tcc_docx.py` a partir de `Documentacao/TCC - ABNT 14724 - V1.md` (texto com as três partes da ficha e tudo o que as Fases 1 a 4 já mediram, números copiados do Memorial com a origem em comentário), gravada em `Documentacao/TCC_v1_20261103.docx` e copiada para a pasta `TCC/` do clone. A revisão ABNT das citações do colibri e a leitura do grupo ficam para a versão 2, antes da próxima reunião com o orientador.
 
 ## Abertas em 26/10/2026 (plano da Fase 4)
 

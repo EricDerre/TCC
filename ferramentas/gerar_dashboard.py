@@ -1092,9 +1092,12 @@ def contexto_fase4() -> dict:
     # ! Alteração de IA - Revisar: (01/11/2026, P4) o contexto da Fase 4 passa a trazer a leitura da corrida 19 (`cura.json`),
     # lida por painel_topicos.secao_cura.
     # ! Motivo: a corrida 19 é a quarta análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+    # ! Alteração de IA - Revisar: (03/11/2026, P5) o contexto da Fase 4 passa a trazer a leitura da corrida 20 (`biblioteca.json`),
+    # lida por painel_topicos.secao_biblioteca.
+    # ! Motivo: a corrida 20 é a quinta análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
     return {"reproducao": le("reproducibilidade.json"), "reproducao_ineditos": le("reproducibilidade_ineditos.json"),
             "calibracao": le("calibracao.json"), "limiares": le("limiares.json"), "tela": le("tela.json"), "tela_v2": le("tela_v2.json"),
-            "cura": le("cura.json")}
+            "cura": le("cura.json"), "biblioteca": le("biblioteca.json")}
 
 
 def main() -> None:

@@ -92,17 +92,27 @@ def caminho_dos_limiares() -> Path:
 
 # ------------------------------------------------------------------ contexto e prompt (sem gabarito)
 
-def contexto_ao_vivo(verbetes: list[dict], indice: rec.Indice, caso: dict, k: int = 3) -> dict:
+def contexto_ao_vivo(verbetes: list[dict], indice: rec.Indice, caso: dict, k: int = 3, extras=()) -> dict:
     """O ramo A2 de recuperacao.contexto sem pedir gabarito: os k verbetes que a busca entrega, no mesmo envelope; o
-    verbete de ouro e a causa plantada ficam None, porque o agente não sabe a resposta."""
+    verbete de ouro e a causa plantada ficam None, porque o agente não sabe a resposta.
+    ! Alteração de IA - Revisar: (03/11/2026, P5) `extras` são verbetes recuperados pelo id do caso (ficha 32 e o ciclo
+    de correção: as notas `[E1 · <caso> · …]` e o caso de origem dos verbetes aprendidos), postos DEPOIS dos k da busca,
+    sem repetir os que a busca já entregou; os ids deles ficam em `por_id`.
+    ! Motivo: a sonda de 28/09/2026 (roadmap §3) mostrou que a busca por palavras não trazia as notas ligadas ao caso
+    reapresentado; os k da busca continuam na frente para o contexto de um caso sem notas ser byte a byte o de antes."""
     sel = rec.recuperar(indice, caso, k)
-    return {"texto": rec._envelope(sel), "verbetes_ids": [v["id"] for v in sel], "verbete_ouro": None, "causa_plantada": None}
+    ids = [v["id"] for v in sel]
+    por_id = [v for v in extras if v["id"] not in ids]
+    todos = sel + por_id
+    return {"texto": rec._envelope(todos), "verbetes_ids": [v["id"] for v in todos], "verbete_ouro": None, "causa_plantada": None,
+            "por_id": [v["id"] for v in por_id]}
 
 
-def montar_prompt(verbetes: list[dict], indice: rec.Indice, caso: dict, k: int = 3) -> tuple[dict, str]:
+def montar_prompt(verbetes: list[dict], indice: rec.Indice, caso: dict, k: int = 3, extras=()) -> tuple[dict, str]:
     """O contexto ao vivo e o prompt congelado (estrategias.linear_com_biblioteca): byte a byte o mesmo que
-    executar_fase3.contexto_e_prompt monta para um caso gravado com a mesma entrada."""
-    ctx = contexto_ao_vivo(verbetes, indice, caso, k)
+    executar_fase3.contexto_e_prompt monta para um caso gravado com a mesma entrada (com `extras`, os verbetes
+    recuperados pelo id do caso entram depois dos k da busca)."""
+    ctx = contexto_ao_vivo(verbetes, indice, caso, k, extras)
     return ctx, estrategias.linear_com_biblioteca(caso, ctx["texto"])
 
 
@@ -412,7 +422,7 @@ def _sustentada_por(causa: str | None, ctx: dict, por_id: dict) -> list[str]:
 
 def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], indice: rec.Indice, *, k: int, modelo: str, comum: dict,
                  limiares: dict | None = None, intervencoes: str = "desligadas", amostra=(), top: int = TOP_LOGPROBS,
-                 teto: int = TETO_TOKENS, evidencia=(), ts: str | None = None, causas: list[str] | None = None) -> dict:
+                 teto: int = TETO_TOKENS, evidencia=(), ts: str | None = None, causas: list[str] | None = None, extras=()) -> dict:
     """Diagnostica um caso (ao vivo ou lido do fixture, sempre sem gabarito) e emite tudo na trilha v2: candidatos,
     prompt, inferencia, declaracao (uma por linha e por verbete citado), verificacao (as oito sem gabarito mais as duas
     da Fase 4), as intervenções (cada uma com a própria inferencia e um evento intervencao ligados à inferência de
@@ -424,9 +434,14 @@ def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], 
     causas = causas or _causas_normalizadas()
     por_id = {v["id"]: v for v in verbetes}
     t0 = time.monotonic()
-    ctx, prompt = montar_prompt(verbetes, indice, caso, k)
+    # ! Alteração de IA - Revisar: (03/11/2026, P5) `extras` (verbetes recuperados pelo id do caso) entram no contexto depois
+    # dos k da busca e ficam registrados no evento `candidatos` (`por_id`).
+    # ! Motivo: ficha 32 e o ciclo de correção (plano, seção 3.7, item 4): as notas do próprio caso chegam ao modelo sem
+    # depender da busca por palavras, e a trilha diz quais verbetes vieram por esse caminho.
+    ctx, prompt = montar_prompt(verbetes, indice, caso, k, extras)
     sinais, itens = tr.candidatos(indice, caso, k)
-    s_cand = trilha.evento("candidatos", tid, {"k": k, "sinais": sinais, "itens": itens, "hash_indice": hash_indice(indice)}, "ao_vivo", ts=ts)
+    s_cand = trilha.evento("candidatos", tid, {"k": k, "sinais": sinais, "itens": itens, "hash_indice": hash_indice(indice), "por_id": ctx.get("por_id") or []},
+                           "ao_vivo", ts=ts)
     sha_prompt = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:12]
     s_prompt = trilha.evento("prompt", tid, {"etapa": "diagnostico", "sha": trilha.blob(prompt, "prompt"), "prompt_sha256": sha_prompt,
                                              "chars": len(prompt), "hash_prompt_fixo": hash_prompt_fixo(verbetes, ctx, caso, prompt),

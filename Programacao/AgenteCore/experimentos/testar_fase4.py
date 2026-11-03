@@ -1448,7 +1448,7 @@ def teste_diagnostico_ao_vivo_emite_no_intervencoes_e_justificativa():
 
 def teste_executar_fase4_calibracao_e_tela_partes_puras():
     import executar_fase4 as ex
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura")   # (01/11/2026, P4) o modo cura entrou na tupla
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca")   # (01/11, P4) cura e (03/11, P5) biblioteca entraram na tupla
 
     def reg(caso: str, causa: str, resposta: str) -> dict:
         return {"caso": caso, "gabarito": {"causa_raiz": causa, "campo_afetado": None},
@@ -1615,8 +1615,11 @@ def teste_rodar_fase4_ps1_com_bom_sem_travessao_e_modos_novos():
     assert "—" not in texto and "–" not in texto and "→" not in texto
     # ! Alteração de IA - Revisar: (01/11/2026, P4) o modo `cura`, `-Repeticoes` e `-Formas` entram no `.ps1`.
     # ! Motivo: a corrida 19 é `rodar_fase4.ps1 -Modo cura -Saida fase4_cura -Repeticoes 5` (plano aprovado, seção 6).
-    assert 'ValidateSet("reproducao", "calibracao", "tela", "cura")' in texto, "os modos novos entram no ValidateSet"
+    # ! Alteração de IA - Revisar: (03/11/2026, P5) o modo `biblioteca` e `-BaseIneditos` entram no `.ps1`.
+    # ! Motivo: a corrida 20 é `rodar_fase4.ps1 -Modo biblioteca -Saida fase4_biblioteca` (plano aprovado, seção 6).
+    assert 'ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca")' in texto, "os modos novos entram no ValidateSet"
     assert "[int]$Repeticoes = 5" in texto and "[string]$Formas" in texto and "--repeticoes" in texto and "--formas" in texto
+    assert '[string]$BaseIneditos = "corrida12"' in texto and "--base-ineditos" in texto and '($Modo -eq "biblioteca")' in texto
     for trecho in ("[string]$K", "[switch]$Intervencoes", "RamLivreGB", "api/version", "--pasta", "[int][math]::Floor($duracao.TotalHours)",
                    "testar_fase4.py", "executar_fase4.py", "avaliar_fase4.py"):
         assert trecho in texto, trecho
@@ -2070,7 +2073,7 @@ def teste_quebra_armada_pelo_harness_e_deterministica():
 def teste_executar_fase4_modo_cura_partes_puras():
     import cenarios_fase4 as cen
     import executar_fase4 as ex
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura")
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca")
     ap = ex.montar_parser()
     a = ap.parse_args(["--modo", "cura", "--saida", "x"])
     assert a.repeticoes == 5 and a.formas == "harness,php" and a.roteiros is None and a.modos is None
@@ -2198,6 +2201,635 @@ def teste_avaliar_fase4_cura_aplica_a_regra_r3_com_check():
     assert ap.parse_args(["--cura", "--saida", "fase4_cura"]).cura is True
     vazio = av.resumir_cura([], condicoes, gerado_em="2026-11-01T18:00:00", corrida="x")
     assert vazio["resumo"]["execucoes"] == 0 and vazio["resumo"]["taxa_de_cura_pct"] is None and av.render_cura(vazio)
+
+
+# ----------------------------------------------------------------------------- P5: biblioteca em produção e ciclo de correção
+
+# ! Alteração de IA - Revisar: testes do pacote P5 (03/11/2026): biblioteca em produção e ciclo de correção, escritos antes do
+# módulo `biblioteca_fase4.py`, do modo `biblioteca` de `executar_fase4.py`, de `avaliar_fase4.py --biblioteca`, da recuperação
+# por id em `diagnostico_ao_vivo.py` e `sonda_correcao.py`, e das seções "Solução sugerida" e "Solução aplicada" em `biblioteca.py`.
+# A primeira rodada falha por ModuleNotFoundError em `biblioteca_fase4` (o RED aceito para módulo novo) e por AssertionError nos
+# módulos que já existem.
+# ! Motivo: o plano aprovado (seção 5, P5) pede os testes antes: cada filtro em código recusa o exemplo mínimo que o motiva e
+# aceita o contraexemplo; a operação "correção" nunca remove bytes e só avança o estado; o gatilho marca `corrigido` só com a
+# evidência dos dois diffs; a recuperação por id traz as notas do caso e nada mais; a regra dos 40% manda para revisão a nota do
+# verbete mais recuperado da calibração; um lote com c > b fica em espera; nenhum texto de corpo HTTP entra em proposta sem
+# validação. Os números da calibração vêm dos registros oficiais da corrida 16 (`fase4_calibracao/k3`), nunca digitados à mão.
+
+CASO_DE_TESTE_P5 = {"id": "sin-1", "classe": 2, "nivel": 1, "entrada": {"requisicao": "GET /api/produtos", "status": 200,
+                                                                       "contrato": "id: inteiro | nome: texto | preco: numero",
+                                                                       "corpo": '[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes"}]',
+                                                                       "sintoma": "O botão do cartão mostra undefined no lugar do preço.",
+                                                                       "observacao": "O campo preco não veio na resposta."},
+                    "gabarito": {"causa_raiz": "campo_ausente", "campo_afetado": "preco", "termos_esperados": [], "termos_proibidos": []}}
+
+
+def _copia_da_curada(pasta_bib: Path) -> Path:
+    """`<pasta_bib>/epoca-100` = cópia fechada da L1 curada (hash conferido por executar_fase3b._preparar_copia)."""
+    import diagnostico_ao_vivo as dv
+    import executar_fase3b as e3b
+    destino = pasta_bib / "epoca-100"
+    e3b._preparar_copia(dv.PASTA_CURADA, destino)
+    return destino
+
+
+def teste_biblioteca_fase4_origem_estado_e_recuperacao_por_id():
+    import biblioteca as bib
+    import biblioteca_fase4 as bf
+    import diagnostico_ao_vivo as dv
+    import trilha as tr
+    verbetes, indice = _curada()
+    por_id = {v["id"]: v for v in verbetes}
+    assert bf.ORIGENS == ("humano", "modelo", "sistema_sob_teste") and bf.ESTADOS == ("nao_corrigido", "corrigido")
+    assert bf.origem_do_verbete(por_id["campo_ausente"]) == "humano" and bf.origem_do_verbete(por_id["atualizacao_imediata"]) == "modelo"
+    # o estado é lido do `status`: 'ativo' de um verbete com defeito documentado vale como não corrigido; 'corrigido' só depois da correção
+    assert bf.estado_do_verbete(por_id["campo_ausente"]) == "nao_corrigido"
+    assert bf.estado_do_verbete({"meta": {"status": "corrigido"}, "secoes": {}}) == "corrigido"
+    # os casos ligados a um verbete: pelas notas `[E1 · caso · …]` e, nos verbetes escritos pelo modelo, pelo caso de origem do comentário
+    assert bf.casos_do_verbete(por_id["campo_ausente"]) == ["sin-1"]
+    assert bf.casos_do_verbete(por_id["interface-frontend"]) == ["efe-10"], bf.casos_do_verbete(por_id["interface-frontend"])
+    assert bf.casos_do_verbete(por_id["corpo_vazio"]) == ["lex-13"], "o mesmo caso duas vezes conta uma vez"
+    assert bf.casos_do_verbete(por_id["contrato-pedido"]) == []
+    # a recuperação por id traz as notas do caso e nada mais
+    assert [v["id"] for v in bf.verbetes_do_caso(verbetes, "sin-1")] == ["campo_ausente"]
+    assert sorted(v["id"] for v in bf.verbetes_do_caso(verbetes, "lex-5")) == ["contrato-produto", "resposta_truncada"]
+    assert [v["id"] for v in bf.verbetes_do_caso(verbetes, "efe-10")] == ["interface-frontend"]
+    assert bf.verbetes_do_caso(verbetes, "efe-3") == [] and bf.verbetes_do_caso(verbetes, "lex-1") == []
+    notas = bf.notas_do_caso(verbetes, "lex-5")
+    assert len(notas) == 2 and {n["verbete"] for n in notas} == {"contrato-produto", "resposta_truncada"} and all(n["caso"] == "lex-5" for n in notas)
+    assert all(n["caso"] == "sin-1" for n in bf.notas_do_caso(verbetes, "sin-1")) and len(bf.notas_do_caso(verbetes, "sin-1")) == 1
+    assert bf.sugestao_do_modelo(por_id["campo_ausente"], "sin-1").startswith("Adicionar nota sobre a remoção de campos")
+    assert bf.sugestao_do_modelo(por_id["interface-frontend"], "efe-10") == por_id["interface-frontend"]["secoes"]["Resumo"].replace("\n", " ")
+    assert bf.sugestao_do_modelo(por_id["campo_ausente"], "lex-1") == ""
+    # o contexto com id: os k da busca na frente, os do id depois, sem repetição; o prompt continua repartível (prompt fixo intacto)
+    caso = dict(CASO_DE_TESTE_P5)
+    ctx = bf.contexto_com_id(verbetes, indice, caso, 3)
+    base = dv.contexto_ao_vivo(verbetes, indice, caso, 3)
+    assert ctx["verbetes_ids"][:3] == base["verbetes_ids"] and ctx["verbete_ouro"] is None and ctx["causa_plantada"] is None
+    assert "campo_ausente" in ctx["verbetes_ids"] and ctx["por_id"] == [i for i in ["campo_ausente"] if i not in base["verbetes_ids"]]
+    assert len(ctx["verbetes_ids"]) == len(set(ctx["verbetes_ids"]))
+    ctx2, prompt2 = dv.montar_prompt(verbetes, indice, caso, 3, extras=bf.verbetes_do_caso(verbetes, "sin-1"))
+    assert ctx2["verbetes_ids"] == ctx["verbetes_ids"] and ctx2["texto"] == ctx["texto"]
+    partes = tr.partes_do_prompt(verbetes, ctx2, caso, prompt2)
+    assert [p["id"] for p in partes if p["papel"] == "verbete"] == ctx2["verbetes_ids"]
+    assert dv.hash_prompt_fixo(verbetes, ctx2, caso, prompt2) == dv.hash_prompt_fixo(verbetes, base, caso, dv.montar_prompt(verbetes, indice, caso, 3)[1])
+    sem = bf.contexto_com_id(verbetes, indice, {**caso, "id": "lex-1"}, 3)
+    assert sem["por_id"] == [] and sem["verbetes_ids"] == dv.contexto_ao_vivo(verbetes, indice, {**caso, "id": "lex-1"}, 3)["verbetes_ids"]
+    # as seções da correção são aceitas pelo validador da biblioteca e renderizadas só quando existem
+    assert "Solução sugerida" in bib.SECOES and "Solução aplicada" in bib.SECOES
+    assert bib.render_correcoes(por_id["campo_ausente"]) == "" and bib.render(por_id["campo_ausente"]) == bib.render_base(por_id["campo_ausente"]) + bib.render_notas(por_id["campo_ausente"])
+
+
+def teste_biblioteca_fase4_cada_filtro_recusa_o_exemplo_minimo_e_aceita_o_contraexemplo():
+    import biblioteca as bib
+    import biblioteca_fase4 as bf
+    verbetes, _ = _curada()
+    por_id = {v["id"]: v for v in verbetes}
+    assert bf.FILTROS == ("evidencia_obrigatoria", "atomicidade", "abstencao_valida", "fonte_confiavel", "granularidade", "peso_por_tipo",
+                          "redundancia", "proveniencia", "auditoria_por_etapa", "conflito_deterministico", "metricas_por_rodada",
+                          "revisao_humana_amostral", "regra_dos_40"), "os 13 filtros em código da decisão 65, na ordem do plano"
+    caso = dict(CASO_DE_TESTE_P5)
+    termos = bf.termos_de_evidencia(caso)
+    assert {"preco", "200", "undefined"} <= termos and "api" not in termos, termos
+    # 1. evidência obrigatória: o MOTIVO cita a evidência do caso
+    assert bf.filtro_evidencia_obrigatoria({"OPERACAO": "nota", "MOTIVO": "Para enriquecer a documentação do sistema."}, caso)["codigo"] == "sem_evidencia_do_caso"
+    assert bf.filtro_evidencia_obrigatoria({"OPERACAO": "nota", "MOTIVO": "O corpo veio sem a chave preco e o botão mostrou undefined."}, caso) is None
+    assert bf.filtro_evidencia_obrigatoria({"OPERACAO": "retificacao", "TRECHO": "curto", "MOTIVO": "o campo preco sumiu"}, caso)["codigo"] == "sem_evidencia_do_caso"
+    # 2. atomicidade: uma alegação curta, sem lista
+    assert bf.filtro_atomicidade({"TEXTO": "O campo some. O botão quebra. A tela fica em branco e o log cresce."})["codigo"] == "texto_nao_atomico"
+    assert bf.filtro_atomicidade({"TEXTO": "Primeiro: a; segundo: b; terceiro: c, tudo junto numa frase só de enumeração."})["codigo"] == "texto_nao_atomico"
+    assert bf.filtro_atomicidade({"TEXTO": "Quando o campo preco falta, o botão imprime undefined. Conferir o modo field_missing."}) is None
+    # 3. abstenção válida: NENHUMA é saída válida e contada à parte; resposta sem bloco e sem NENHUMA continua sem_bloco
+    import evolucao_biblioteca as evo
+    assert bf.classificar_resposta(evo.parsear_propostas("NENHUMA")) == "abstencao"
+    assert bf.classificar_resposta(evo.parsear_propostas("não sei")) == "sem_bloco"
+    assert bf.classificar_resposta(evo.parsear_propostas("PROPOSTA 1\nOPERACAO: nota\nVERBETE: [x]\nTEXTO: t\nMOTIVO: m\nFIM")) == "propostas"
+    # 4. fonte confiável: mensagem de erro entre aspas e endpoint conferidos contra o código das cobaias e o openapi.json
+    fontes = bf.fontes_das_cobaias()
+    rotas = bf.rotas_do_openapi()
+    assert "GET /api/produtos/{id}" in rotas and "GET /api/produtos" in rotas, rotas
+    assert bf.filtro_fonte_confiavel({"TEXTO": 'A API responde "Produto nao localizado na base" quando o id não existe.'}, fontes, rotas)["codigo"] == "mensagem_nao_encontrada_no_codigo"
+    assert bf.filtro_fonte_confiavel({"TEXTO": 'A API responde "Produto não encontrado" quando o id não existe.'}, fontes, rotas) is None
+    assert bf.filtro_fonte_confiavel({"TEXTO": "A rota GET /api/produtos/99/detalhe não existe no serviço."}, fontes, rotas)["codigo"] == "endpoint_fora_do_openapi"
+    assert bf.filtro_fonte_confiavel({"TEXTO": "A rota GET /api/produtos/99 devolve 404 quando o id não existe."}, fontes, rotas) is None
+    # 5. granularidade: retificar (propõe texto) ou sinalizar (só aponta); sinalização sem trecho específico é recusada
+    alvo = por_id["campo_ausente"]
+    resumo = alvo["secoes"]["Resumo"]
+    assert bf.granularidade({"OPERACAO": "retificacao", "TEXTO": "Este trecho pode estar desatualizado; verificar se ainda vale."}) == "sinalizar"
+    assert bf.granularidade({"OPERACAO": "retificacao", "TEXTO": "O modo field_missing remove o campo-alvo e nenhuma chave nova aparece."}) == "retificar"
+    assert bf.granularidade({"OPERACAO": "nota", "TEXTO": "x"}) is None
+    assert bf.filtro_granularidade({"OPERACAO": "retificacao", "TRECHO": resumo, "TEXTO": "Este trecho pode estar desatualizado; verificar."}, alvo)["codigo"] == "sinalizacao_sem_trecho"
+    assert bf.filtro_granularidade({"OPERACAO": "retificacao", "TRECHO": "nem com nulo", "TEXTO": "Este trecho pode estar desatualizado; verificar."}, alvo) is None
+    # 6. peso por tipo de edição: nota 1, sinalização 1, retificação 2, verbete novo 3; orçamento por verbete e rodada
+    assert bf.PESO_POR_TIPO == {"nota": 1, "sinalizacao": 1, "retificacao": 2, "novo_verbete": 3} and bf.ORCAMENTO_DE_PESO_POR_VERBETE == 4
+    assert bf.peso_da_edicao("retificacao", "sinalizar") == 1 and bf.peso_da_edicao("retificacao", "retificar") == 2 and bf.peso_da_edicao("novo_verbete", None) == 3
+    assert bf.filtro_peso_por_tipo("retificacao", "retificar", "campo_ausente", {"campo_ausente": 3})["codigo"] == "peso_acima_do_orcamento"
+    assert bf.filtro_peso_por_tipo("nota", None, "campo_ausente", {"campo_ausente": 3}) is None
+    # 7. redundância por n-gramas: paráfrase de uma nota existente é recusada; texto novo entra
+    nota_existente = bib.notas(alvo)[0]["texto"]
+    assert bf.similaridade_ngramas(nota_existente, bib.render(alvo)) == 1.0 and bf.similaridade_ngramas("nada a ver com isso aqui", bib.render(alvo)) == 0.0
+    assert bf.filtro_redundancia({"TEXTO": nota_existente.replace("Adicionar", "Incluir")}, alvo)["codigo"] == "redundante"
+    assert bf.filtro_redundancia({"TEXTO": "Quando o campo preco falta, o botão imprime undefined. Conferir o modo field_missing."}, alvo) is None
+    # 8. proveniência por edição: caso de origem, modelo e época; sem caso, recusada
+    edicao = {"caso": "sin-1", "modelo": "qwen2.5:7b", "epoca": 101, "operacao": "nota", "verbete": "campo_ausente"}
+    assert bf.filtro_proveniencia({**edicao, "caso": None}, {"sin-1"})["codigo"] == "sem_proveniencia"
+    assert bf.filtro_proveniencia({**edicao, "caso": "lex-9"}, {"sin-1"})["codigo"] == "sem_proveniencia"
+    assert bf.filtro_proveniencia(edicao, {"sin-1"}) is None
+    prov = bf.proveniencia(edicao, "2026-11-03")
+    assert prov == {"origem": "modelo", "caso": "sin-1", "modelo": "qwen2.5:7b", "epoca": 101, "data": "2026-11-03"}
+    # 9. auditoria por etapa: admissão e atualização separadas; proposta sobre caso já corrigido no verbete é recusada
+    assert bf.filtro_auditoria_por_etapa("campo_ausente", "sin-1", {"campo_ausente": ["sin-1"]})["codigo"] == "proposta_sobre_caso_corrigido"
+    assert bf.filtro_auditoria_por_etapa("campo_ausente", "sin-1", {"campo_renomeado": ["sin-9"]}) is None
+    aud = bf.auditoria(verbetes, {"campo_ausente": ["sin-1"]}, [{"verbete": "corpo_vazio", "caso": "lex-13"}])
+    assert aud["admissao"] == [{"verbete": "corpo_vazio", "caso": "lex-13"}] and [a["verbete"] for a in aud["atualizacao"]] == ["campo_ausente"]
+    assert aud["atualizacao"][0]["casos_corrigidos"] == ["sin-1"] and aud["atualizacao"][0]["notas_do_caso"] == 1
+    # 10. resolução determinística de conflito: duas retificações do mesmo trecho que se contradizem; a de correção vence, depois a mais recente
+    a = {"verbete": "campo_ausente", "operacao": "retificacao", "trecho": "nem com nulo", "texto": "vem com nulo", "data": "2026-11-01", "ordem": 1, "evidencia": "retificacao"}
+    b = {"verbete": "campo_ausente", "operacao": "retificacao", "trecho": "Nem com nulo", "texto": "vem vazio", "data": "2026-11-03", "ordem": 2, "evidencia": "retificacao"}
+    c = {"verbete": "campo_ausente", "operacao": "retificacao", "trecho": "nem com nulo", "texto": "vem com nulo", "data": "2026-11-02", "ordem": 3, "evidencia": "correcao"}
+    d = {"verbete": "corpo_vazio", "operacao": "nota", "trecho": None, "texto": "outra", "data": "2026-11-03", "ordem": 4, "evidencia": "nota"}
+    res = bf.resolver_conflito([a, b, c, d])
+    assert [r["ordem"] for r in res if r["prevalece"]] == [3, 4] and [r["ordem"] for r in res if r.get("codigo") == "superada_por_conflito"] == [1, 2]
+    assert bf.resolver_conflito([a, b])[1]["prevalece"] is True, "sem evidência de correção vence a mais recente"
+    assert all(r["prevalece"] for r in bf.resolver_conflito([a, d]))
+    # 11. métricas por rodada, sem intervenção humana
+    regs = [{"caso": "sin-1", "abstencao": False, "decisoes": [{"aceita": True, "motivo": None, "edicao": {"operacao": "nota"}, "filtro": None, "peso": 1},
+                                                              {"aceita": False, "motivo": "para_revisao_humana", "edicao": {"operacao": "nota"}, "filtro": "regra_dos_40", "peso": 1}]},
+            {"caso": "lex-2", "abstencao": True, "decisoes": []},
+            {"caso": "lex-9", "abstencao": False, "decisoes": [{"aceita": False, "motivo": "redundante", "edicao": None, "filtro": "redundancia", "peso": None},
+                                                              {"aceita": False, "motivo": "texto_curto", "edicao": None, "filtro": None, "peso": None}]}]
+    m = bf.metricas_da_rodada(regs)
+    assert m["casos"] == 3 and m["abstencoes"] == 1 and m["propostas"] == 4 and m["aceitas"] == 1 and m["para_revisao"] == 1
+    assert m["recusadas_fase3"] == {"texto_curto": 1} and m["recusadas_p5"] == {"redundante": 1} and m["por_filtro"]["redundancia"] == 1 and m["por_filtro"]["regra_dos_40"] == 1
+    assert m["aceitas_por_tipo"] == {"nota": 1} and m["peso_aceito"] == 1 and m["taxa_de_rejeicao_pct"] == 50.0
+    # 12. revisão humana amostral dirigida: primeiro o que a regra dos 40% segurou, depois o maior peso, depois o verbete mais recuperado
+    edicoes = [{"verbete": "corpo_vazio", "operacao": "nota", "peso": 1, "para_revisao": False}, {"verbete": "entidade-produto", "operacao": "nota", "peso": 1, "para_revisao": True},
+               {"verbete": "campo_ausente", "operacao": "retificacao", "peso": 2, "para_revisao": False}, {"verbete": "contrato-pedido", "operacao": "nota", "peso": 1, "para_revisao": False}]
+    amostra = bf.amostra_para_revisao(edicoes, {"entidade-produto": .47, "contrato-pedido": .26, "corpo_vazio": .02}, n=3)
+    assert [e["verbete"] for e in amostra] == ["entidade-produto", "campo_ausente", "contrato-pedido"], [e["verbete"] for e in amostra]
+    planilha = bf.planilha_de_revisao(edicoes, {"entidade-produto": .47}, "fase4_biblioteca")
+    assert "| # |" in planilha and "entidade-produto" in planilha and "—" not in planilha and "→" not in planilha
+    assert bf.revisao_preenchida(planilha) is False and bf.revisao_preenchida(planilha.replace("| (em branco) |", "| Correta |")) is True
+    # 13. regra dos 40%: verbete em 40% ou mais dos contextos da calibração manda a nota para revisão humana antes de entrar
+    assert bf.filtro_regra_dos_40("entidade-produto", {"entidade-produto": .467, "corpo_vazio": .02})["codigo"] == "para_revisao_humana"
+    assert bf.filtro_regra_dos_40("corpo_vazio", {"entidade-produto": .467, "corpo_vazio": .02}) is None
+    assert bf.filtro_regra_dos_40("verbete-novo", {}) is None
+    # nenhum texto vindo de resposta HTTP entra sem validação: um trecho literal do corpo com 20 caracteres ou mais é barrado
+    corpo = caso["entrada"]["corpo"]
+    assert bf.filtro_texto_de_origem_proibida({"TEXTO": 'O catálogo devolve "nome": "Picanha ao Alho", "resumo": "Picanha grelhada" e por isso o cartão quebra.'}, corpo)["codigo"] == "texto_de_origem_proibida"
+    assert bf.filtro_texto_de_origem_proibida({"TEXTO": "O catálogo devolve o nome e o resumo do produto, mas sem o preço, e por isso o cartão quebra."}, corpo) is None
+    assert bf.filtro_texto_de_origem_proibida({"TEXTO": "qualquer coisa"}, None) is None
+    # o aplicador dos filtros na ordem fixa: a primeira recusa decide; o que passa leva granularidade, peso e a marca de revisão
+    campos_ok = {"OPERACAO": "nota", "VERBETE": "campo_ausente", "TEXTO": "Quando o campo preco falta, o botão imprime undefined. Conferir o modo field_missing.",
+                 "MOTIVO": "O corpo veio sem a chave preco e o botão mostrou undefined."}
+    ctx_f = {"parcelas": {"entidade-produto": .467}, "corpo_http": corpo, "corrigidos": {}, "pesos_usados": {}, "casos_da_rodada": {"sin-1"},
+             "fontes": fontes, "rotas": rotas}
+    v = bf.filtrar_proposta(campos_ok, {**edicao, "texto": campos_ok["TEXTO"]}, caso, alvo, ctx_f)
+    assert v == {"aceita": True, "codigo": None, "filtro": None, "detalhe": None, "granularidade": None, "peso": 1, "para_revisao": False}, v
+    v2 = bf.filtrar_proposta({**campos_ok, "VERBETE": "entidade-produto"}, {**edicao, "verbete": "entidade-produto", "texto": campos_ok["TEXTO"]}, caso, por_id["entidade-produto"], ctx_f)
+    assert v2["aceita"] is True and v2["para_revisao"] is True and v2["filtro"] == "regra_dos_40" and v2["codigo"] == "para_revisao_humana"
+    v3 = bf.filtrar_proposta({**campos_ok, "MOTIVO": "para melhorar"}, {**edicao, "texto": campos_ok["TEXTO"]}, caso, alvo, ctx_f)
+    assert v3["aceita"] is False and v3["filtro"] == "evidencia_obrigatoria" and v3["codigo"] == "sem_evidencia_do_caso"
+    assert set(bf.CODIGOS_P5) >= {"sem_evidencia_do_caso", "texto_nao_atomico", "mensagem_nao_encontrada_no_codigo", "endpoint_fora_do_openapi", "sinalizacao_sem_trecho",
+                                  "peso_acima_do_orcamento", "redundante", "sem_proveniencia", "proposta_sobre_caso_corrigido", "superada_por_conflito",
+                                  "texto_de_origem_proibida", "para_revisao_humana"}
+
+
+def teste_biblioteca_fase4_regra_dos_40_manda_para_revisao_o_verbete_mais_recuperado_da_calibracao():
+    """Os contextos reais da corrida 16 (k = 3, o k escolhido pela regra R8): a parcela de contextos em que cada verbete entrou."""
+    import biblioteca_fase4 as bf
+    import executar_bateria
+    arq = RA / "fase4_calibracao" / "k3" / "qwen2.5_7b" / "diagnosticos__L100.jsonl"
+    if not arq.exists():
+        print("  (pulado com aviso: sem os registros da corrida 16 nesta máquina)")
+        return
+    regs = executar_bateria.ler_jsonl(arq)
+    parcelas = bf.parcela_nos_contextos(regs)
+    assert len(regs) == 90 and abs(sum(parcelas.values()) - 3.0) < 1e-9, "k = 3 verbetes por contexto"
+    mais = max(parcelas, key=parcelas.get)
+    assert parcelas[mais] >= bf.PARCELA_PARA_REVISAO
+    revisao = bf.verbetes_para_revisao(parcelas)
+    assert revisao[0] == mais and all(parcelas[v] >= 0.4 for v in revisao) and all(parcelas[v] < 0.4 for v in parcelas if v not in revisao)
+    assert bf.filtro_regra_dos_40(mais, parcelas)["codigo"] == "para_revisao_humana"
+    raro = min(parcelas, key=parcelas.get)
+    assert bf.filtro_regra_dos_40(raro, parcelas) is None
+    # os quatro verbetes aprendidos nunca entraram num contexto da calibração com k = 3 (ficha 32): a medida que decide a pasta de espera
+    import biblioteca as bib
+    import diagnostico_ao_vivo as dv
+    aprendidos = [v["id"] for v in bib.carregar(dv.PASTA_CURADA) if v["pasta"] == "aprendidos"]
+    rec = bf.recuperacao_dos_aprendidos(regs, aprendidos)
+    assert set(rec) == set(aprendidos) and all(isinstance(n, int) for n in rec.values())
+    assert bf.aprendidos_sem_recuperacao(rec) == sorted(a for a in aprendidos if rec[a] == 0)
+
+
+def _biblioteca_de_teste() -> tuple[Path, Path]:
+    """Uma cópia da L1 curada numa pasta temporária (epoca-100 fechada) e a pasta pai."""
+    pasta_bib = _temp() / "bibliotecas" / "qwen2.5_7b"
+    pasta_bib.mkdir(parents=True)
+    return pasta_bib, _copia_da_curada(pasta_bib)
+
+
+def teste_biblioteca_fase4_correcao_nunca_remove_bytes_e_so_avanca_o_estado():
+    import biblioteca as bib
+    import biblioteca_fase4 as bf
+    import evolucao_biblioteca as evo
+    import executar_fase3b as e3b
+    pasta_bib, antes = _biblioteca_de_teste()
+    depois = pasta_bib / "epoca-102"
+    evo.copiar_biblioteca(antes, depois)
+    evo._limpar_gerados(depois)
+    arq = depois / "erros" / "campo_ausente.md"
+    texto_antes = arq.read_text(encoding="utf-8")
+    sugerida = bf.sugestao_do_modelo(next(v for v in bib.carregar(antes) if v["id"] == "campo_ausente"), "sin-1")
+    aplicada = "Em 03/11/2026 o cenário api-catalogo voltou a passar com o modo field_missing desligado: o corpo de GET /api/produtos voltou a trazer o campo preco."
+    caminho = bf.corrigir(depois, "campo_ausente", "sin-1", sugerida, aplicada, "2026-11-03")
+    assert caminho == arq
+    texto_depois = arq.read_text(encoding="utf-8")
+    corpo_antes = bib._parse_frontmatter(texto_antes)[1].rstrip("\n")
+    meta_depois, corpo_depois = bib._parse_frontmatter(texto_depois)
+    assert corpo_depois.startswith(corpo_antes), "o corpo antigo é prefixo do novo: nada foi removido"
+    assert meta_depois["status"] == "corrigido" and "## Solução sugerida" in corpo_depois and "## Solução aplicada" in corpo_depois
+    assert f"- [sin-1 · 2026-11-03] {sugerida}" in corpo_depois and f"- [sin-1 · 2026-11-03] {aplicada}" in corpo_depois
+    assert "status avançou de ativo para corrigido" in texto_depois and "de IA - Revisar" in texto_depois
+    # todas as linhas do arquivo antigo continuam no novo, na ordem (só a linha do status mudou de valor)
+    linhas_antes = [l for l in texto_antes.splitlines() if not l.startswith("status:")]
+    linhas_depois = texto_depois.splitlines()
+    pos = -1
+    for l in linhas_antes:
+        pos = linhas_depois.index(l, pos + 1)
+    v = next(x for x in bib.carregar(depois) if x["id"] == "campo_ausente")
+    assert bf.estado_do_verbete(v) == "corrigido" and bf.casos_corrigidos(v) == ["sin-1"]
+    r = bib.render_correcoes(v)
+    assert r.startswith(" Correção") and sugerida[:30] in r and aplicada[:30] in r and "—" not in r and "→" not in r
+    assert bib.render(v) == bib.render_base(v) + bib.render_notas(v) + r
+    assert bib.validar(bib.carregar(depois), e3b.TODOS_OS_CASOS, teto_global=None) == [], "as seções novas são aceitas pelo validador"
+    assert bf.conferir_correcao(antes, depois, {"campo_ausente": ["sin-1"]}) == []
+    # o invariante de só acréscimo da Fase 3 continua valendo: tudo o que ele acusa, fora o avanço permitido do status, é violação
+    assert any("'status' mudou" in x for x in evo.conferir_somente_acrescimo(antes, depois))
+    # uma segunda correção no mesmo verbete (outro caso) acrescenta linhas e não repete o avanço do estado
+    bf.corrigir(depois, "campo_ausente", "sin-2", "", "Em 03/11/2026 o cenário api-detalhe voltou a passar.", "2026-11-03")
+    t2 = arq.read_text(encoding="utf-8")
+    assert t2.count("## Solução aplicada") == 1 and "- [sin-2 · 2026-11-03] (sem nota do modelo para este caso)" in t2 and t2.count("status avançou") == 1
+    assert bf.conferir_correcao(antes, depois, {"campo_ausente": ["sin-1", "sin-2"]}) == []
+    # o estado só avança: voltar para 'ativo' é acusado; remover a nota apontada é acusado; corrigir um verbete obsoleto é recusado
+    recuado = pasta_bib / "epoca-recuada"
+    evo.copiar_biblioteca(depois, recuado)
+    arq_r = recuado / "erros" / "campo_ausente.md"
+    arq_r.write_text(arq_r.read_text(encoding="utf-8").replace("status: corrigido", "status: ativo"), encoding="utf-8")
+    assert any("recuou" in x for x in bf.conferir_correcao(depois, recuado, {})), bf.conferir_correcao(depois, recuado, {})
+    sem_nota = pasta_bib / "epoca-sem-nota"
+    evo.copiar_biblioteca(depois, sem_nota)
+    arq_s = sem_nota / "erros" / "campo_ausente.md"
+    arq_s.write_text("\n".join(l for l in arq_s.read_text(encoding="utf-8").splitlines() if "[E1 · sin-1 · nota]" not in l) + "\n", encoding="utf-8")
+    assert any("sumiu" in x or "removid" in x or "acréscimo" in x for x in bf.conferir_correcao(antes, sem_nota, {"campo_ausente": ["sin-1", "sin-2"]}))
+    obsoleto = depois / "erros" / "corpo_vazio.md"
+    texto_original = obsoleto.read_text(encoding="utf-8")
+    obsoleto.write_text(texto_original.replace("status: ativo", "status: obsoleto"), encoding="utf-8")
+    try:
+        bf.corrigir(depois, "corpo_vazio", "lex-13", "x", "y", "2026-11-03")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("correção de verbete obsoleto aceita")
+    obsoleto.write_text(texto_original, encoding="utf-8")     # a cópia volta ao que era: o fechamento abaixo confere só as correções
+    # o teto das correções renderizadas vale no validador da biblioteca
+    longa = "x" * (bf.TETO_CHARS_CORRECOES + 10)
+    bf.corrigir(depois, "campo_renomeado", "sin-9", "", longa, "2026-11-03")
+    problemas = bib.validar(bib.carregar(depois), e3b.TODOS_OS_CASOS, teto_global=None)
+    assert any("campo_renomeado" in p and "correç" in p.lower() for p in problemas), problemas
+    # fechar a época de correções: validação, invariante com o avanço permitido, índice, diff e fechamento.json
+    arq_c = depois / "erros" / "campo_renomeado.md"
+    arq_c.write_text(arq_c.read_text(encoding="utf-8").replace(longa, "curta"), encoding="utf-8")
+    fechamento = bf.fechar_correcoes(pasta_bib, 102, "qwen2.5:7b", e3b.TODOS_OS_CASOS, {"campo_ausente": ["sin-1", "sin-2"], "campo_renomeado": ["sin-9"]},
+                                      versao_ollama="0.40.2", anterior=100)
+    assert fechamento["hash"] == evo.hash_biblioteca(depois) and evo.snapshot_fechado(depois) and (pasta_bib / "diff__E102.md").exists()
+    assert fechamento["n_verbetes"] == 40 and fechamento["correcoes"] == 3 and (depois / "INDICE.md").exists()
+
+
+def teste_biblioteca_fase4_gatilho_marca_corrigido_so_com_os_dois_diffs():
+    import biblioteca_fase4 as bf
+    contrato = "id: inteiro | nome: texto | preco: numero"
+    arvore_quebrada = 'document "Catálogo"\n  main\n    button "Saiba Mais..." data-id="1"\n'
+    arvore_boa = 'document "Catálogo"\n  main\n    button "Saiba Mais..." data-id="1"\n    button "Saiba Mais..." data-id="2"\n    text "R$ 89,90"\n'
+    corpo_quebrado = '[{"id": 1, "nome": "Picanha ao Alho"}, {"id": 2, "nome": "Costela"}]'
+    corpo_bom = '[{"id": 1, "nome": "Picanha ao Alho", "preco": 89.9}, {"id": 2, "nome": "Costela", "preco": 59.9}]'
+    antes = {"passou": False, "corpo": corpo_quebrado, "tempo_ms": 12.0, "arvore": arvore_quebrada,
+             "conferencia_falha": {"nome": "preço no botão", "passou": False, "esperado": "R$", "observado": "undefined"}}
+    depois = {"passou": True, "corpo": corpo_bom, "tempo_ms": 11.0, "arvore": arvore_boa, "conferencia_falha": None}
+    ev = bf.evidencia_de_correcao(antes, depois, contrato)
+    assert ev["passou_depois"] is True and ev["ha_diff_http"] is True and ev["ha_diff_arvore"] is True and ev["sintoma_sumiu"] is True
+    assert ev["diff_http"]["diferencas_contrato_antes"] == 1 and ev["diff_http"]["diferencas_contrato_depois"] == 0 and ev["diff_http"]["campos_que_voltaram"] == ["preco"]
+    assert ev["diff_arvore"]["a_mais"] == 2 and ev["diff_arvore"]["a_menos"] == 0
+    d = bf.detectar_correcao(ev)
+    assert d["corrigido"] is True and d["motivo"]
+    # passou, mas nada mudou no fio: não marca
+    ev2 = bf.evidencia_de_correcao({**antes, "corpo": corpo_bom}, depois, contrato)
+    assert ev2["ha_diff_http"] is False and bf.detectar_correcao(ev2)["corrigido"] is False and "fio" in bf.detectar_correcao(ev2)["motivo"]
+    # passou e o fio mudou, mas a árvore é a mesma: não marca
+    ev3 = bf.evidencia_de_correcao({**antes, "arvore": arvore_boa}, depois, contrato)
+    assert ev3["ha_diff_arvore"] is False and bf.detectar_correcao(ev3)["corrigido"] is False and "árvore" in bf.detectar_correcao(ev3)["motivo"]
+    # o modo continua ligado: a reexecução ainda falha, nada a marcar
+    ev4 = bf.evidencia_de_correcao(antes, {**antes, "tempo_ms": 13.0}, contrato)
+    assert ev4["passou_depois"] is False and bf.detectar_correcao(ev4)["corrigido"] is False
+    # a latência: o corpo é o mesmo, mas o tempo da chamada contra o orçamento conta como diferença no fio
+    ev5 = bf.evidencia_de_correcao({**antes, "corpo": corpo_bom, "tempo_ms": 2100.0}, {**depois, "tempo_ms": 15.0}, contrato)
+    assert ev5["ha_diff_http"] is True and ev5["diff_http"]["lento_antes"] is True and ev5["diff_http"]["lento_depois"] is False
+    # a solução aplicada sai do molde: determinística, sem o nome da causa, sem travessão
+    frase = bf.solucao_aplicada_por_molde("sin-1", "api-catalogo", "field_missing", ev, "2026-11-03")
+    assert frase == bf.solucao_aplicada_por_molde("sin-1", "api-catalogo", "field_missing", ev, "2026-11-03")
+    assert "2026-11-03" in frase and "api-catalogo" in frase and "field_missing" in frase and "preco" in frase and "campo_ausente" not in frase
+    assert "—" not in frase and "→" not in frase and len(frase) <= bf.TETO_CHARS_CORRECOES
+    # regra R4 sobre registros sintéticos: precisão e revocação da marca contra o conjunto desligado
+    regs = [{"caso": "a", "desligado": True, "reproduziu_antes": True, "marcado": True}, {"caso": "b", "desligado": True, "reproduziu_antes": True, "marcado": False},
+            {"caso": "c", "desligado": False, "reproduziu_antes": True, "marcado": False}, {"caso": "d", "desligado": False, "reproduziu_antes": True, "marcado": True},
+            {"caso": "e", "desligado": True, "reproduziu_antes": False, "marcado": False}]
+    r4 = bf.regra_r4(regs)
+    assert r4 == {"universo": 4, "desligados": 2, "mantidos": 2, "marcados": 2, "acertos": 1, "falsos_positivos": 1, "perdidos": 1, "precisao_pct": 50.0,
+                  "revocacao_pct": 50.0, "sem_sintoma_antes": ["e"], "kappa": 0.0}, r4
+
+
+def teste_biblioteca_fase4_lote_com_c_maior_que_b_fica_em_espera():
+    import biblioteca_fase4 as bf
+
+    def reg(caso: str, causa: str, resposta: str) -> dict:
+        return {"caso": caso, "gabarito": {"causa_raiz": causa, "campo_afetado": None}, "resposta": f"CAUSA_RAIZ: {resposta}\nCAMPO: nenhum\nIMPACTO: x.\nFONTE: nenhum"}
+
+    base = [reg("a", "x", "x"), reg("b", "y", "z"), reg("c", "w", "w"), reg("d", "u", "u")]
+    melhor = [reg("a", "x", "x"), reg("b", "y", "y"), reg("c", "w", "w"), reg("d", "u", "t")]      # b = 1 (b), c = 1 (d)
+    pior = [reg("a", "x", "y"), reg("b", "y", "z"), reg("c", "w", "v"), reg("d", "u", "u")]        # b = 0, c = 2
+    empate = bf.avaliar_lote(base, melhor)
+    assert (empate["n"], empate["b"], empate["c"]) == (4, 1, 1) and empate["veredito"] == "aceito" and empate["ganhos"] == ["b"] and empate["perdas"] == ["d"]
+    assert empate["acerto_base"] == 3 and empate["acerto_novo"] == 3 and 0 <= empate["p_mcnemar"] <= 1
+    esp = bf.avaliar_lote(base, pior)
+    assert esp["veredito"] == "em_espera" and (esp["b"], esp["c"]) == (0, 2) and "c = 2" in esp["motivo"] and "b = 0" in esp["motivo"]
+    assert bf.avaliar_lote(base, base)["veredito"] == "aceito"
+    assert bf.avaliar_lote(base, [reg("a", "x", "x")])["n"] == 1, "só os casos pareados contam"
+    assert bf.REGRA_R5.startswith("um lote de acréscimos entra se")
+
+
+def _proposta(numero: int, operacao: str, verbete: str, texto: str, motivo: str, trecho: str = "") -> str:
+    campos = [f"PROPOSTA {numero}", f"OPERACAO: {operacao}", f"VERBETE: [{verbete}]"]
+    if trecho:
+        campos.append(f"TRECHO: {trecho}")
+    campos += [f"TEXTO: {texto}", f"MOTIVO: {motivo}", "FIM"]
+    return "\n".join(campos)
+
+
+def teste_biblioteca_fase4_propor_p5_com_ollama_de_mentira_e_trilha_v2():
+    import biblioteca as bib
+    import biblioteca_fase4 as bf
+    import diagnostico_ao_vivo as dv
+    import evolucao_biblioteca as evo
+    import executar_fase3
+    import executar_fase3b as e3b
+    import recuperacao as rec
+    pasta_bib, leitura = _biblioteca_de_teste()
+    raiz = evo.abrir_epoca(pasta_bib, 101, [])
+    verbetes = bib.carregar(leitura)
+    indice = rec.Indice(verbetes)
+    por_id = {v["id"]: v for v in verbetes}
+    caso = {**CASO_DE_TESTE_P5}
+    extras = bf.verbetes_do_caso(verbetes, caso["id"])
+    ctx, prompt_diag = dv.montar_prompt(verbetes, indice, caso, 3, extras=extras)
+    resposta_diag = "O preço não veio.\nCAUSA_RAIZ: campo_ausente\nCAMPO: preco\nIMPACTO: o botão mostra undefined.\nFONTE: [campo_ausente]"
+    registro_diag = {"caso": caso["id"], "resposta": resposta_diag, "verbetes_ids": ctx["verbetes_ids"]}
+    texto_ok = "Quando o campo preco falta no catálogo, o botão do cartão imprime undefined; conferir o modo field_missing."
+    motivo_ok = "O corpo veio sem a chave preco e o botão mostrou undefined."
+    respostas = {
+        "sin-1": _proposta(1, "nota", "campo_ausente", texto_ok, motivo_ok) + "\n\n" + _proposta(2, "nota", "entidade-produto", texto_ok.replace("catálogo", "grid"), motivo_ok),
+        "lex-9": _proposta(1, "nota", "corpo_nao_e_json", 'O catálogo devolve "nome": "Picanha ao Alho", "resumo": "Picanha grelhada" quando o corpo vem cortado pela metade.',
+                           "O corpo veio sem a chave preco e com status 200."),
+        "lex-2": "NENHUMA",
+    }
+    chamadas: list = []
+    fila = [respostas["sin-1"], respostas["lex-9"], respostas["lex-2"]]     # as três chamadas, na ordem em que o teste as faz
+
+    def responder(prompt: str, corpo: dict):
+        assert "CORREÇÃO DESTE CASO" in prompt, "só a proposta passa por aqui"
+        return fila.pop(0), .9, []
+
+    comum = {**_comum_de_teste(), "epoca": 101, "biblioteca_epoca": 100}
+    # entidade-produto entra nos visíveis como se a busca o tivesse entregue (está em 46,7% dos contextos da calibração)
+    ctx_validacao = {"raiz": raiz, "verbetes": bib.carregar(raiz), "casos": e3b.TODOS_OS_CASOS, "ids_visiveis": set(ctx["verbetes_ids"]) | {"campo_ausente", "entidade-produto"},
+                     "epoca": 101, "caso_id": caso["id"], "modelo": "qwen2.5:7b", "novos_nesta_epoca": 0, "aceitas_no_caso": 0, "k": 3}
+    filtros_ctx = {"parcelas": {"entidade-produto": .467, "contrato-produto": .422}, "corpo_http": caso["entrada"]["corpo"], "corrigidos": {}, "pesos_usados": {},
+                   "casos_da_rodada": {"sin-1", "lex-9", "lex-2"}, "fontes": bf.fontes_das_cobaias(), "rotas": bf.rotas_do_openapi(), "data": "2026-11-03"}
+    t = trilha.Trilha(versao=trilha.V2)
+    t.corrida(_cabecalho(), ts=TS)
+    tid = "fase4_biblioteca/qwen2.5_7b/sin-1"
+    s_ent = t.evento("entrada", tid, {"caso": "sin-1", "classe": 2, "nivel": 1, "origem": "fixture"}, "ao_vivo", ts=TS)
+    with _ollama_de_mentira_v2(responder, chamadas):
+        r1 = bf.propor_p5("qwen2.5:7b", caso, registro_diag, ctx, prompt_diag, verbetes, 700, comum, ctx_validacao, pasta_bib, 0, filtros_ctx,
+                          trilha=t, tid=tid, evidencia=[{"seq": s_ent, "papel": "sinal_em_codigo"}], ts=TS)
+    assert len(chamadas) == 1 and chamadas[0]["prompt"].startswith(prompt_diag + "\n\n" + resposta_diag + "\n\n"), "a proposta continua o prompt do diagnóstico byte a byte"
+    assert r1["caso"] == "sin-1" and r1["tipo"] == "proposta" and r1["fase"] == "4" and r1["epoca"] == 101 and r1["n_propostas"] == 2 and r1["n_aceitas"] == 1
+    # a busca já entregou campo_ausente a este caso: nada veio só pelo id, mas o verbete ligado fica registrado
+    assert r1["abstencao"] is False and r1["recuperacao_por_id"] == ctx["por_id"] and r1["verbetes_ligados"] == [v["id"] for v in extras]
+    assert r1["hash_biblioteca_apos"] == evo.hash_biblioteca(raiz)
+    d1, d2 = r1["decisoes"]
+    assert d1["aceita"] is True and d1["motivo"] is None and d1["edicao"]["verbete"] == "campo_ausente" and d1["filtro"] is None and d1["peso"] == 1
+    assert d2["aceita"] is False and d2["motivo"] == "para_revisao_humana" and d2["filtro"] == "regra_dos_40" and d2["edicao"]["verbete"] == "entidade-produto"
+    assert r1["para_revisao"] == [d2["edicao"]] and r1["filtros"][0]["fase3"]["aceita"] is True and r1["filtros"][1]["p5"]["codigo"] == "para_revisao_humana"
+    assert d1["proveniencia"] == {"origem": "modelo", "caso": "sin-1", "modelo": "qwen2.5:7b", "epoca": 101, "data": "2026-11-03"}
+    notas = bib.notas(next(v for v in bib.carregar(raiz) if v["id"] == "campo_ausente"))
+    assert [n["caso"] for n in notas] == ["sin-1", "sin-1"] and notas[-1]["epoca"] == 101 and notas[-1]["texto"] == texto_ok
+    assert not any(n["epoca"] == 101 for n in bib.notas(next(v for v in bib.carregar(raiz) if v["id"] == "entidade-produto"))), "a nota segurada não entra na cópia"
+    assert filtros_ctx["pesos_usados"] == {"campo_ausente": 1}
+    # a trilha: inferência da proposta, um evento edicao_biblioteca por bloco e o nó de decisão por último
+    ev = [e for e in t.eventos if e["trilha"] == tid]
+    inf = [e for e in ev if e["tipo"] == "inferencia"]
+    eds = [e for e in ev if e["tipo"] == "edicao_biblioteca"]
+    nos = [e for e in ev if e["tipo"] == "decisao"]
+    assert len(inf) == 1 and inf[0]["dados"]["etapa"] == "proposta" and len(eds) == 2 and len(nos) == 1 and nos[0]["seq"] > eds[-1]["seq"]
+    assert eds[0]["dados"]["aplicada"] is True and eds[0]["dados"]["origem"] == "modelo" and eds[0]["dados"]["proveniencia"]["caso"] == "sin-1"
+    assert eds[1]["dados"]["aplicada"] is False and eds[1]["dados"]["para_revisao"] is True and eds[1]["dados"]["filtro"] == "regra_dos_40"
+    no = nos[0]["dados"]
+    assert no["decisao"] == "edicao_biblioteca" and no["escolha"] == "proposta_1" and no["resultado"] == "lote" and no["falha"] is None
+    assert [a["opcao"] for a in no["alternativas"]] == ["proposta_1", "proposta_2", "nenhuma"] and no["divergencia"]["ha"] is False
+    assert no["prov"]["wasDerivedFrom"] == ["sin-1"] and no["prov"]["wasGeneratedBy"] == inf[0]["seq"] and "campo_ausente" in no["prov"]["used"]
+    assert any(e["papel"] == "sinal_em_codigo" for e in no["evidencia"]) and any(e["papel"] == "resposta" for e in no["evidencia"])
+    assert no["justificativa"] and "—" not in no["justificativa"] and no["contraste"]
+    assert r1["no"] == no and r1["seq_decisao"] == nos[0]["seq"]
+    # segundo caso: texto de corpo HTTP na proposta é barrado antes de qualquer gravação; o nó aponta a falha da taxonomia
+    caso2 = {**caso, "id": "lex-9", "entrada": {**caso["entrada"], "requisicao": "GET /api/produtos", "sintoma": "O catálogo fica vazio.", "status": 200,
+                                                "corpo": caso["entrada"]["corpo"][:40]},
+             "gabarito": {"causa_raiz": "corpo_nao_e_json", "campo_afetado": None, "termos_esperados": [], "termos_proibidos": []}}
+    ctx_b, prompt_b = dv.montar_prompt(verbetes, indice, caso2, 3, extras=bf.verbetes_do_caso(verbetes, "lex-9"))
+    ctx_validacao.update({"caso_id": "lex-9", "aceitas_no_caso": 0, "ids_visiveis": set(ctx_b["verbetes_ids"]) | {"corpo_nao_e_json"}})
+    filtros_ctx["corpo_http"] = caso["entrada"]["corpo"]
+    tid2 = "fase4_biblioteca/qwen2.5_7b/lex-9"
+    t.evento("entrada", tid2, {"caso": "lex-9", "origem": "fixture"}, "ao_vivo", ts=TS)
+    hash_antes = evo.hash_biblioteca(raiz)
+    with _ollama_de_mentira_v2(responder, chamadas):
+        r2 = bf.propor_p5("qwen2.5:7b", caso2, {"caso": "lex-9", "resposta": "CAUSA_RAIZ: corpo_nao_e_json\nCAMPO: nenhum\nIMPACTO: x.\nFONTE: [corpo_nao_e_json]",
+                                                "verbetes_ids": ctx_b["verbetes_ids"]}, ctx_b, prompt_b, verbetes, 700, comum, ctx_validacao, pasta_bib, 1, filtros_ctx,
+                          trilha=t, tid=tid2, ts=TS)
+    assert r2["n_aceitas"] == 0 and r2["decisoes"][0]["motivo"] == "texto_de_origem_proibida" and r2["decisoes"][0]["edicao"] is None
+    assert evo.hash_biblioteca(raiz) == hash_antes
+    no2 = r2["no"]
+    assert no2["escolha"] == "nenhuma" and no2["resultado"] == "recusada" and no2["falha"] == "texto_de_origem_proibida" and no2["divergencia"]["ha"] is True
+    # terceiro caso: NENHUMA é abstenção válida, sem gravação e sem falha
+    caso3 = {**caso2, "id": "lex-2"}
+    ctx_c, prompt_c = dv.montar_prompt(verbetes, indice, caso3, 3)
+    ctx_validacao.update({"caso_id": "lex-2", "aceitas_no_caso": 0, "ids_visiveis": set(ctx_c["verbetes_ids"]) | {"corpo_nao_e_json"}})
+    tid3 = "fase4_biblioteca/qwen2.5_7b/lex-2"
+    t.evento("entrada", tid3, {"caso": "lex-2", "origem": "fixture"}, "ao_vivo", ts=TS)
+    with _ollama_de_mentira_v2(responder, chamadas):
+        r3 = bf.propor_p5("qwen2.5:7b", caso3, {"caso": "lex-2", "resposta": "CAUSA_RAIZ: corpo_nao_e_json\nCAMPO: nenhum\nIMPACTO: x.\nFONTE: nenhum",
+                                                "verbetes_ids": ctx_c["verbetes_ids"]}, ctx_c, prompt_c, verbetes, 700, comum, ctx_validacao, pasta_bib, 1, filtros_ctx,
+                          trilha=t, tid=tid3, ts=TS)
+    assert r3["abstencao"] is True and r3["n_propostas"] == 0 and r3["decisoes"] == [] and r3["no"]["resultado"] == "abstencao" and r3["no"]["escolha"] == "nenhuma"
+    assert r3["no"]["falha"] is None and r3["no"]["divergencia"]["ha"] is False
+    # a época reconstruída do JSONL tem o mesmo hash (retomada da corrida), e fecha pelo fechamento da Fase 3
+    import shutil as sh
+    sh.rmtree(raiz)
+    raiz2 = evo.abrir_epoca(pasta_bib, 101, [r1, r2, r3])
+    assert evo.hash_biblioteca(raiz2) == r1["hash_biblioteca_apos"]
+    fechamento = evo.fechar_epoca(pasta_bib, 101, "qwen2.5:7b", e3b.TODOS_OS_CASOS, 1, versao_ollama="0.40.2")
+    assert fechamento["aceitas_na_epoca"] == 1 and fechamento["n_notas"] == 13
+    # o relatório v2 do caso mostra a decisão da biblioteca
+    t.fechar(fim="2026-11-03T22:00:00")
+    md = grr.relatorio_do_caso_v2(t.eventos, tid, comando_reexecucao="python executar_fase4.py --modo biblioteca --casos 1")
+    assert "Biblioteca" in md and "entidade-produto" in md and "revisão humana" in md and "—" not in md
+    md2 = grr.relatorio_do_caso_v2(t.eventos, tid2)
+    assert "texto_de_origem_proibida" in md2
+    # a sonda com recuperação por id: o contexto do executor congelado ganha os verbetes ligados ao caso pelo id, só para esses casos
+    with bf.com_recuperacao_por_id(verbetes):
+        ctx_e10, prompt_e10 = executar_fase3.contexto_e_prompt(verbetes, indice, next(c for c in e3b.TODOS_OS_CASOS if c["id"] == "efe-10"), 3)
+        ctx_e3, _ = executar_fase3.contexto_e_prompt(verbetes, indice, next(c for c in e3b.TODOS_OS_CASOS if c["id"] == "efe-3"), 3)
+    assert "interface-frontend" in ctx_e10["verbetes_ids"] and ctx_e10["texto"].endswith(bib.render(por_id["interface-frontend"])) and ctx_e10["verbete_ouro"]
+    assert prompt_e10 == executar_fase3.linear_com_biblioteca(next(c for c in e3b.TODOS_OS_CASOS if c["id"] == "efe-10"), ctx_e10["texto"])
+    assert ctx_e3["verbetes_ids"] == rec.contexto(verbetes, indice, next(c for c in e3b.TODOS_OS_CASOS if c["id"] == "efe-3"), "A2", 3)["verbetes_ids"]
+    assert executar_fase3.contexto_e_prompt(verbetes, indice, next(c for c in e3b.TODOS_OS_CASOS if c["id"] == "efe-10"), 3)[0]["verbetes_ids"] == \
+        rec.contexto(verbetes, indice, next(c for c in e3b.TODOS_OS_CASOS if c["id"] == "efe-10"), "A2", 3)["verbetes_ids"], "fora do bloco, o executor volta ao normal"
+    import sonda_correcao
+    ap = sonda_correcao.montar_parser()
+    a = ap.parse_args(["--saida", "x", "--modelo", "qwen2.5:7b", "--casos", "efe-3", "--recuperacao-por-id", "--origem", str(leitura)])
+    assert a.recuperacao_por_id is True and a.origem == str(leitura) and ap.parse_args(["--saida", "x", "--modelo", "m", "--casos", "efe-3"]).recuperacao_por_id is False
+    assert sonda_correcao.menciona_correcao("A documentação já registra a solução aplicada: o campo voltou.") is True
+    assert sonda_correcao.menciona_correcao("Adicionar nota sobre a remoção de campos.") is False
+
+
+def teste_executar_fase4_modo_biblioteca_partes_puras():
+    import executar_fase4 as ex
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca")
+    ap = ex.montar_parser()
+    a = ap.parse_args(["--modo", "biblioteca", "--saida", "x"])
+    assert a.base_ineditos == "corrida12" and a.sem_sonda is False and a.sem_correcao is False and a.teto_proposta == 700
+    assert ap.parse_args(["--modo", "biblioteca", "--saida", "x", "--base-ineditos", "propria"]).base_ineditos == "propria"
+    # o conjunto de correção: metade dos casos ligados a notas e com tela fica com o modo desligado, metade mantido; a partilha é determinística
+    ids = ["lex-2", "lex-9", "run-7", "semt-13", "sin-1", "sin-13", "sin-15", "sin-9", "tra-12", "tra-3"]
+    conj = ex.conjunto_de_correcao(ids)
+    assert sorted(conj["desligados"] + conj["mantidos"]) == sorted(ids) and len(conj["desligados"]) == 5 and len(conj["mantidos"]) == 5
+    assert conj == ex.conjunto_de_correcao(list(reversed(ids))) and conj["regra"].startswith("sha256")
+    assert ex.conjunto_de_correcao(["a"]) == {"desligados": ["a"], "mantidos": [], "regra": conj["regra"]}
+    assert ex.conjunto_de_correcao([])["desligados"] == []
+    # os casos de aprendizado ligados a notas da L1 curada e com tela: os dez conhecidos
+    lig = ex.casos_ligados_com_tela()
+    assert [c["id"] for c in lig] == ids, [c["id"] for c in lig]
+    assert all(c["modo"] and c["cenario"] and c["verbetes"] for c in lig) and lig[4]["verbetes"] == ["campo_ausente"]
+    # os registros compactos da corrida
+    d = {"caso": "sin-1", "classe": 2, "nivel": 1, "origem": "tela", "reproduz": True, "modo": "field_missing", "campo": "preco", "cenario": "api-catalogo",
+         "diagnostico": {"no": {"escolha": "campo_ausente", "confianca": {"p_rotulo": .9, "selo": "alto"}, "divergencia": {"ha": False}, "falha": None},
+                         "registro": {"segundos": 60.0, "tokens_entrada": 1100}, "gatilhos": {"algum": False}},
+         "acertou": True, "proposta": {"n_propostas": 2, "n_aceitas": 1, "abstencao": False, "segundos": 50.0, "tokens_entrada": 1800, "recuperacao_por_id": ["campo_ausente"],
+                                       "decisoes": [{"aceita": True, "motivo": None, "filtro": None, "operacao": "nota", "verbete": "campo_ausente", "peso": 1},
+                                                    {"aceita": False, "motivo": "para_revisao_humana", "filtro": "regra_dos_40", "operacao": "nota", "verbete": "entidade-produto", "peso": 1}],
+                                       "para_revisao": [{"verbete": "entidade-produto"}]},
+         "segundos_cenario": 3.2}
+    reg = ex.registro_da_biblioteca(d)
+    assert reg["caso"] == "sin-1" and reg["origem"] == "tela" and reg["rotulo"] == "campo_ausente" and reg["acertou"] is True and reg["p_rotulo"] == .9
+    assert reg["n_propostas"] == 2 and reg["n_aceitas"] == 1 and reg["para_revisao"] == 1 and reg["recusadas"] == [] and reg["abstencao"] is False
+    assert reg["recuperacao_por_id"] == ["campo_ausente"] and reg["segundos_diagnostico"] == 60.0 and reg["segundos_proposta"] == 50.0 and reg["verbetes_editados"] == ["campo_ausente"]
+    c = {"caso": "sin-1", "cenario": "api-catalogo", "modo": "field_missing", "campo": "preco", "verbetes": ["campo_ausente"], "desligado": True,
+         "antes": {"passou": False, "reproduz": True}, "depois": {"passou": True}, "evidencia": {"ha_diff_http": True, "ha_diff_arvore": True, "sintoma_sumiu": True},
+         "deteccao": {"corrigido": True, "motivo": "ok"}, "estados": {"campo_ausente": ("nao_corrigido", "corrigido")}, "segundos": 4.5}
+    rc = ex.registro_da_correcao(c)
+    assert rc["caso"] == "sin-1" and rc["desligado"] is True and rc["reproduziu_antes"] is True and rc["passou_depois"] is True and rc["marcado"] is True
+    assert rc["ha_diff_http"] is True and rc["ha_diff_arvore"] is True and rc["verbetes"] == ["campo_ausente"] and rc["estados"]["campo_ausente"] == ["nao_corrigido", "corrigido"]
+
+
+def _bruto_da_biblioteca_de_mentira() -> dict:
+    def diag(caso: str, causa: str, resposta: str, origem: str = "fixture") -> dict:
+        return {"caso": caso, "classe": 1, "nivel": 1, "origem": origem, "reproduz": origem == "tela", "modo": "field_missing", "cenario": "api-catalogo", "rotulo": resposta,
+                "acertou": resposta == causa, "p_rotulo": .9, "selo": "alto", "segundos_diagnostico": 60.0, "segundos_proposta": 50.0, "tokens_entrada": 1100,
+                "n_propostas": 1, "n_aceitas": 1 if caso != "lex-9" else 0, "para_revisao": 1 if caso == "sin-1" else 0, "abstencao": caso == "lex-2",
+                "recusadas": ["redundante"] if caso == "lex-9" else [], "recuperacao_por_id": ["campo_ausente"] if caso == "sin-1" else [],
+                "verbetes_editados": ["campo_ausente"] if caso == "sin-1" else (["corpo_nao_e_json"] if caso == "lex-2" else [])}
+
+    def reg(caso: str, causa: str, resposta: str) -> dict:
+        return {"caso": caso, "gabarito": {"causa_raiz": causa, "campo_afetado": None}, "resposta": f"CAUSA_RAIZ: {resposta}\nCAMPO: nenhum\nIMPACTO: x.\nFONTE: nenhum"}
+
+    propostas = [{"caso": "sin-1", "abstencao": False, "n_propostas": 2, "n_aceitas": 1, "segundos": 50.0,
+                  "decisoes": [{"aceita": True, "motivo": None, "filtro": None, "operacao": "nota", "verbete": "campo_ausente", "peso": 1, "edicao": {"operacao": "nota", "verbete": "campo_ausente", "caso": "sin-1", "texto": "t"}},
+                               {"aceita": False, "motivo": "para_revisao_humana", "filtro": "regra_dos_40", "operacao": "nota", "verbete": "entidade-produto", "peso": 1,
+                                "edicao": {"operacao": "nota", "verbete": "entidade-produto", "caso": "sin-1", "texto": "t2"}}]},
+                 {"caso": "lex-9", "abstencao": False, "n_propostas": 1, "n_aceitas": 0, "segundos": 40.0,
+                  "decisoes": [{"aceita": False, "motivo": "redundante", "filtro": "redundancia", "operacao": "nota", "verbete": "corpo_nao_e_json", "peso": None, "edicao": None}]},
+                 {"caso": "lex-2", "abstencao": True, "n_propostas": 0, "n_aceitas": 0, "segundos": 30.0, "decisoes": []}]
+    base = [reg("lex-16", "x", "x"), reg("lex-17", "y", "z"), reg("sin-16", "w", "w"), reg("efe-21", "u", "u")]
+    novo = [reg("lex-16", "x", "x"), reg("lex-17", "y", "y"), reg("sin-16", "w", "w"), reg("efe-21", "u", "u")]
+    correcoes = [{"caso": "sin-1", "cenario": "api-catalogo", "modo": "field_missing", "verbetes": ["campo_ausente"], "desligado": True, "reproduziu_antes": True, "passou_depois": True,
+                  "ha_diff_http": True, "ha_diff_arvore": True, "marcado": True, "motivo": "ok", "estados": {"campo_ausente": ["nao_corrigido", "corrigido"]}, "segundos": 4.0},
+                 {"caso": "lex-9", "cenario": "api-catalogo", "modo": "corpo_nao_e_json", "verbetes": ["corpo_nao_e_json"], "desligado": False, "reproduziu_antes": True, "passou_depois": False,
+                  "ha_diff_http": False, "ha_diff_arvore": False, "marcado": False, "motivo": "ainda falha", "estados": {}, "segundos": 3.0},
+                 {"caso": "tra-3", "cenario": "api-catalogo", "modo": "chave_de_juncao_errada", "verbetes": ["chave_de_juncao_errada"], "desligado": True, "reproduziu_antes": True, "passou_depois": True,
+                  "ha_diff_http": True, "ha_diff_arvore": False, "marcado": False, "motivo": "árvore igual", "estados": {}, "segundos": 3.5}]
+    sonda = {"casos": [{"caso": "efe-10", "rotulo": "estado_da_tela_divergente", "acertou": True, "n_propostas": 1, "n_aceitas": 0, "abstencao": False, "motivos": ["duplicada"],
+                        "menciona_correcao": True, "por_id": ["interface-frontend"], "segundos": 120.0},
+                       {"caso": "efe-3", "rotulo": "campo_ausente", "acertou": True, "n_propostas": 2, "n_aceitas": 0, "abstencao": False, "motivos": ["teto_notas_verbete", "duplicada"],
+                        "menciona_correcao": False, "por_id": [], "segundos": 110.0},
+                       {"caso": "sin-1", "rotulo": "campo_ausente", "acertou": True, "n_propostas": 0, "n_aceitas": 0, "abstencao": True, "motivos": [],
+                        "menciona_correcao": False, "por_id": ["campo_ausente"], "segundos": 90.0}],
+             "anterior": {"efe-10": {"rotulo": "dado_desatualizado", "acertou": False, "n_propostas": 2, "n_aceitas": 1, "motivos": ["teto_notas_verbete"]},
+                          "efe-3": {"rotulo": "campo_ausente", "acertou": True, "n_propostas": 2, "n_aceitas": 0, "motivos": ["teto_notas_verbete", "duplicada"]}}}
+    return {"condicoes": {"modo": "biblioteca", "k": 3, "casos": 3, "parcial": False, "base_ineditos": "corrida12", "conjunto_de_correcao": {"desligados": ["sin-1", "tra-3"], "mantidos": ["lex-9"]},
+                          "parcelas_para_revisao": {"entidade-produto": .467, "contrato-produto": .422}, "biblioteca": {"hash": "1fca10f1a6f6"}},
+            "registros": [diag("sin-1", "campo_ausente", "campo_ausente", "tela"), diag("lex-9", "corpo_nao_e_json", "corpo_vazio"), diag("lex-2", "corpo_nao_e_json", "corpo_nao_e_json")],
+            "propostas": propostas, "lote": {"edicoes": [{"verbete": "campo_ausente", "operacao": "nota", "caso": "sin-1", "peso": 1}], "para_revisao": [{"verbete": "entidade-produto", "operacao": "nota", "caso": "sin-1", "peso": 1}],
+                                             "fechamento": {"hash": "abc123", "n_notas": 13, "n_verbetes": 40, "n_verbetes_novos": 4}},
+            "reavaliacao": {"base": base, "novo": novo, "origem_da_base": "pre_fase4_confianca (corrida 12, Ollama 0.34.4)"},
+            "correcoes": correcoes, "sonda": sonda, "recuperacao": {"aprendidos_na_calibracao": {"atualizacao_imediata": 0, "interface-estados": 0, "interface-frontend": 0, "rotas-inexistentes": 0},
+                                                                   "por_id_nesta_corrida": {"casos_com_verbete_por_id": 1, "verbetes": {"campo_ausente": 1}}},
+            "trilha_info": {"bytes": 1000, "eventos": 50}, "inferencias": 11, "segundos": 900.0}
+
+
+def teste_avaliar_fase4_biblioteca_aplica_r4_e_r5_com_check():
+    import avaliar_fase4 as av
+    import pre_fase4 as pf
+    bruto = _bruto_da_biblioteca_de_mentira()
+    dado = av.resumir_biblioteca(bruto, gerado_em="2026-11-03T23:00:00", corrida="fase4_biblioteca")
+    r = dado["resumo"]
+    assert r["casos"] == 3 and r["da_tela"] == 1 and r["do_fixture"] == 2 and r["acertos_diagnostico"] == 2 and r["propostas"] == 3 and r["aceitas"] == 1
+    assert r["abstencoes"] == 1 and r["para_revisao"] == 1 and r["recusadas_p5"] == 1 and r["recusadas_fase3"] == 0 and r["casos_com_verbete_por_id"] == 1
+    f = {x["filtro"]: x for x in dado["filtros"]}
+    assert f["redundancia"]["recusas"] == 1 and f["regra_dos_40"]["recusas"] == 1 and f["evidencia_obrigatoria"]["recusas"] == 0 and len(dado["filtros"]) == 13
+    assert dado["lote"]["edicoes"] == 1 and dado["lote"]["para_revisao"] == 1 and dado["lote"]["hash"] == "abc123"
+    r5 = dado["reavaliacao"]
+    assert (r5["n"], r5["b"], r5["c"]) == (4, 1, 0) and r5["veredito"] == "aceito" and r5["acerto_base_pct"] == 75.0 and r5["acerto_novo_pct"] == 100.0
+    r4 = dado["correcao"]
+    assert r4["universo"] == 3 and r4["desligados"] == 2 and r4["marcados"] == 1 and r4["precisao_pct"] == 100.0 and r4["revocacao_pct"] == 50.0
+    assert [x["caso"] for x in r4["por_caso"]] == ["sin-1", "lex-9", "tra-3"] and r4["por_caso"][2]["motivo"] == "árvore igual"
+    s = dado["sonda"]
+    assert s["casos"] == 3 and s["mudaram_proposta"] == 1 and s["sem_sonda_anterior"] == 1 and s["mencionam_correcao"] == 1 and s["abstencoes"] == 1
+    assert [x["caso"] for x in s["por_caso"]] == ["efe-10", "efe-3", "sin-1"] and s["por_caso"][0]["rotulo_anterior"] == "dado_desatualizado" and s["por_caso"][2]["rotulo_anterior"] is None
+    assert dado["recuperacao"]["aprendidos_sem_recuperacao"] == ["atualizacao_imediata", "interface-estados", "interface-frontend", "rotas-inexistentes"]
+    assert dado["regra_r4"]["cumprida"] is None or isinstance(dado["regra_r4"]["cumprida"], bool)
+    assert dado["regra_r5"]["veredito"] == "aceito"
+    md = av.render_biblioteca(dado)
+    for bloco in ("tb_f4_biblioteca_resumo", "tb_f4_biblioteca_filtros", "tb_f4_biblioteca_rejeicoes", "tb_f4_biblioteca_lote", "tb_f4_biblioteca_reavaliacao",
+                  "tb_f4_biblioteca_correcao", "tb_f4_biblioteca_sonda", "tb_f4_biblioteca_revisao", "tb_f4_biblioteca_recuperacao", "tb_f4_biblioteca_casos"):
+        assert f"<!-- tabela:{bloco} -->" in md, bloco
+    assert "—" not in md and "→" not in md and "75,0" in md and "100,0" in md
+    pasta = _temp()
+    assert pf.fechar(av.NOME_BIBLIOTECA, dado, md, av.PREFIXO_BIBLIOTECA, pasta=pasta, doc=pasta / "nao_existe.md") == 0
+    assert pf.fechar(av.NOME_BIBLIOTECA, dado, md, av.PREFIXO_BIBLIOTECA, check=True, pasta=pasta, doc=pasta / "nao_existe.md") == 0
+    assert av.NOME_BIBLIOTECA == "biblioteca" and av.PREFIXO_BIBLIOTECA == "tb_f4_biblioteca_" and av.TITULO_BIBLIOTECA == "Biblioteca em produção e ciclo de correção (corrida 20)"
+    assert av.nome_dos_arquivos(None, "biblioteca") == "biblioteca"
+    assert av.montar_parser().parse_args(["--biblioteca", "--saida", "fase4_biblioteca"]).biblioteca is True
+    vazio = av.resumir_biblioteca({"condicoes": {}, "registros": [], "propostas": [], "lote": None, "reavaliacao": None, "correcoes": [], "sonda": None, "recuperacao": None,
+                                   "trilha_info": None, "inferencias": 0, "segundos": 0.0}, gerado_em="2026-11-03T23:00:00", corrida="x")
+    assert vazio["resumo"]["casos"] == 0 and vazio["reavaliacao"] is None and av.render_biblioteca(vazio)
 
 
 # ----------------------------------------------------------------------------- P0: a amostra real (fica por último)

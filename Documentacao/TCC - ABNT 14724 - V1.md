@@ -1,0 +1,683 @@
+<!-- ! Alteração de IA - Revisar: arquivo novo (03/11/2026): texto fonte da versão 1 provisória do documento do TCC, no molde do orientador (`Template_TCC_ABNT.docx`, estrutura de `TCC/README.md` do repositório da disciplina) e na NBR 14724, gerado em .docx por `ferramentas/gerar_tcc_docx.py`. As seções 1 a 5 e a 6.8, a 7, o glossário e os apêndices foram escritas a partir do projeto de pesquisa V3 (`Documentacao/Projeto de Pesquisa - ABNT 15287_2025 - V3.md`, itens 1 a 9 da revisão ABNT já aplicados) e do Memorial; as seções 4.1.7 a 4.2.4 e 6.1 a 6.7 foram redigidas por agentes de apoio a partir dos levantamentos e dos relatórios por fase, com cada número copiado da fonte indicada em comentário logo depois da frase. Os comentários não vão para o Word. Depois da montagem, um revisor (agente) conferiu cerca de 250 números das seções escritas pelo Claude e as 62 referências contra as chamadas do texto; as 35 correções dele (casos inéditos contados duas vezes no resumo, site legado cedido e não construído, probabilidade conjunta dos tokens do rótulo, as três camadas da trilha, letras das entradas AUTOPSIAS e ARIZE AI, entre outras) foram aplicadas por script em 03/11/2026 e estão listadas, com o trecho antigo, o novo e o motivo, em `Documentacao/memorial/5-metodo-e-ferramental/dados/revisao-tcc-v1-2026-11-03.json`.
+     ! Motivo: o Eric fechou a ficha 25 pela opção (b) em 03/11/2026 (decisão 83): um documento provisório agora, para o grupo ver o que melhorar, já no molde e nas regras do documento final. O Markdown é a fonte versionada e revisável (tags de IA, origem dos números, revisão por script); o .docx é regenerado dele a cada versão. Números sem origem no Memorial ficaram marcados [conferir]. -->
+
+## Dados
+
+- **Universidade:** Universidade Cidade de São Paulo - UNICID
+- **Curso:** Curso de Ciência da Computação
+- **Autores:** Eric Conde Derre | Erick do Carmo Esteves | Guilherme Penha dos Santos | João Victor Fonseca Silva | Kennedy Fernando de Oliveira Gundim | Leandro Henrique da Silva Patricio | Pedro Henrique Torres Gonçalves
+- **Título:** Desenvolvimento de um agente de QA end-to-end (E2E) autônomo com capacidades de self-healing
+- **Subtítulo:** Focado na fronteira de integração
+- **Natureza:** Trabalho de Conclusão de Curso apresentado ao Curso de Ciência da Computação da Universidade Cidade de São Paulo (UNICID), como requisito parcial para obtenção do título de Bacharel em Ciência da Computação.
+- **Orientador:** Orientador: Prof. [conferir o nome completo e a titulação do orientador]
+- **Local:** São Paulo
+- **Ano:** 2026
+- **Versão:** 1
+- **Data:** 03/11/2026
+
+# AGRADECIMENTOS
+
+[Opcional. Versão provisória: o grupo decide se mantém a seção e o que escrever.]
+
+# RESUMO
+
+A automação de testes de ponta a ponta (end-to-end, E2E) tem custo alto de manutenção: uma mudança na interface quebra os localizadores dos roteiros, e uma mudança silenciosa no formato dos dados devolvidos por uma API (deriva de contrato) quebra a esteira de integração contínua sem apontar a causa. Este trabalho desenvolve e mede um agente de garantia de qualidade (QA) E2E autônomo, com capacidade de autocura (self-healing) de localizadores e de diagnóstico de causa raiz na fronteira de integração entre a interface e a API, executando um modelo de linguagem grande (LLM) inteiramente na máquina do usuário, sem GPU dedicada e sem serviço em nuvem. O método é experimental e aplicado: duas aplicações-alvo sob controle do grupo (um front-end legado em PHP, cedido por um integrante, e uma API em FastAPI, construída para o projeto) recebem falhas injetadas de forma determinística, organizadas numa taxonomia de 23 causas em seis classes e três níveis de dificuldade; um banco de 90 casos fixos, mais 36 casos inéditos, serve à comparação de modelos locais quantizados em três condições (sem documentação, com uma biblioteca de documentação recuperada e com a biblioteca editada pelo próprio modelo atrás de validação em código), com acurácia balanceada como métrica primária, intervalos de Wilson e testes pareados. As fases concluídas escolheram o modelo (qwen2.5:7b com a biblioteca que ele mesmo escreveu), mediram a probabilidade do rótulo como sinal de triagem para revisão humana, descartaram a leitura dos pesos de modelos grandes a partir do disco nesta máquina e especificaram uma trilha de raciocínio aberta, com um nó por decisão do agente e um relatório por caso para o desenvolvedor. A Fase 4, em andamento, levou o agente à tela: interceptação de rede e da árvore de acessibilidade com Playwright, poda em código, diagnóstico ao vivo com selo de confiança e cura de seletor com candidatos verificados em código e reexecução do roteiro. Os resultados parciais mostram a cura de seletor funcionando nas quebras de localizador armadas de forma controlada (pelo ambiente de teste e por uma variante do front-end), com tempo de reparo do agente abaixo de um segundo, e o diagnóstico ao vivo abaixo do mesmo caso lido do arquivo, limitação declarada e em investigação. A Fase 5 medirá o tempo médio de reparo e o sucesso da tarefa contra uma linha de base manual. Este é um documento provisório, escrito para o grupo e o orientador verificarem o que falta.
+
+Palavras-chave: testes end-to-end; self-healing; modelos de linguagem locais; diagnóstico de causa raiz; deriva de contrato de API.
+
+# ABSTRACT
+
+End-to-end (E2E) test automation is expensive to maintain: a user interface change breaks the locators used by test scripts, and a silent change in the data returned by an API (contract drift) breaks the continuous integration pipeline without pointing to the cause. This work develops and measures an autonomous E2E quality assurance (QA) agent with self-healing of locators and root-cause diagnosis at the integration boundary between the user interface and the API, running a large language model (LLM) entirely on the user's machine, without a dedicated GPU and without cloud services. The method is experimental and applied: two target applications under the group's control (a legacy PHP front end contributed by a group member and a FastAPI back end built for the project) receive deterministically injected faults, organized in a taxonomy of 23 root causes in six classes and three difficulty levels; a bank of 90 fixed cases, plus 36 unseen cases, supports the comparison of quantized local models under three conditions (no documentation, a retrieved documentation library, and a library edited by the model itself behind code validation), with balanced accuracy as the primary metric, Wilson intervals and paired tests. The completed phases selected the model (qwen2.5:7b with the library it wrote itself), measured the label probability as a triage signal for human review, discarded disk-streamed inference of large models on this machine, and specified an open reasoning trail with one node per agent decision and a per-case report for developers. Phase 4, in progress, brought the agent to the screen: network and accessibility-tree interception with Playwright, code-based pruning, live diagnosis with a confidence seal, and locator healing with code-verified candidates and script re-execution. Partial results show locator healing working on locator breakages armed in a controlled way (by the test environment and by a front-end variant), with agent repair time under one second, and live diagnosis below the same case read from a fixture, a declared limitation under investigation. Phase 5 will measure mean time to repair and task success against a manual baseline. This is a provisional document, written for the group and the advisor to check what is missing.
+
+Keywords: end-to-end testing; self-healing; local language models; root-cause diagnosis; API contract drift.
+
+# LISTA DE ABREVIATURAS E SIGLAS
+
+- **API** Application Programming Interface (interface de programação de aplicações)
+- **AUROC** Area Under the Receiver Operating Characteristic curve (área sob a curva ROC)
+- **BM25** Best Matching 25 (função de ordenação por relevância lexical)
+- **CI/CD** Continuous Integration / Continuous Delivery (integração e entrega contínuas)
+- **CoT** Chain of Thought (cadeia de pensamento)
+- **CPU** Central Processing Unit (unidade central de processamento)
+- **CSS** Cascading Style Sheets (folhas de estilo em cascata)
+- **DOM** Document Object Model (modelo de objetos do documento)
+- **E2E** End-to-End (de ponta a ponta)
+- **GBNF** GGML BNF (formato de gramática que restringe a saída do modelo a uma lista fechada)
+- **GPU** Graphics Processing Unit (unidade de processamento gráfico)
+- **HTML** HyperText Markup Language (linguagem de marcação de hipertexto)
+- **HTTP** HyperText Transfer Protocol (protocolo de transferência de hipertexto)
+- **IA** Inteligência Artificial
+- **IC** Intervalo de Confiança
+- **JSON** JavaScript Object Notation (notação de objetos em JavaScript)
+- **JSONL** JSON Lines (arquivo com um objeto JSON por linha)
+- **LLM** Large Language Model (modelo de linguagem grande)
+- **MoE** Mixture of Experts (mistura de especialistas)
+- **MTTR** Mean Time To Repair (tempo médio de reparo)
+- **NVMe** Non-Volatile Memory Express (interface do disco de estado sólido)
+- **PHP** PHP: Hypertext Preprocessor (linguagem de programação do front-end legado)
+- **QA** Quality Assurance (garantia de qualidade)
+- **RAG** Retrieval-Augmented Generation (geração aumentada por recuperação)
+- **RAM** Random Access Memory (memória de acesso aleatório)
+- **SDLC** Software Development Life Cycle (ciclo de vida de desenvolvimento de software)
+- **SVG** Scalable Vector Graphics (gráfico vetorial)
+- **UNICID** Universidade Cidade de São Paulo
+
+# 1 INTRODUÇÃO
+
+## 1.1 Contextualização e Delimitação do Tema
+
+A automação de testes end-to-end (E2E) tradicional enfrenta um alto custo de manutenção devido à fragilidade crônica de seus scripts. Uma alteração simples no CSS do front-end, ou a mudança invisível do tipo de um dado devolvido por uma API, fenômeno conhecido como *contract drift* (deriva de contrato), quebra instantaneamente a esteira de CI/CD (integração contínua e entrega contínua), gerando perda de tempo em triagens manuais exaustivas.
+
+Embora a automação moderna baseada em inteligência artificial ofereça avanços, a literatura e a prática industrial mostram que a IA não tem o intuito de substituir os engenheiros de qualidade (QA) ou os desenvolvedores, mas sim de assumir as tarefas repetitivas. Dessa forma, os profissionais mantêm o controle sobre decisões de risco, estratégias de cobertura e testes exploratórios complexos.
+
+Neste escopo, o presente trabalho delimita-se ao desenvolvimento de um agente de QA E2E autônomo com capacidades de *self-healing* (autocura), focado na fronteira de integração entre a interface e a API (front-to-back). O agente executa um modelo de linguagem grande (LLM) inteiramente na máquina do usuário, sem GPU dedicada e sem serviço em nuvem, e trata duas famílias de falha: a quebra do localizador que o roteiro de teste usa para encontrar um elemento na tela, que ele cura e reexecuta, e a quebra do contrato da API, que ele diagnostica e entrega ao desenvolvedor com a causa raiz, a evidência e o grau de confiança.
+
+## 1.2 Problema de Pesquisa
+
+Diante do cenário de fragilidade dos testes automatizados e das limitações de infraestrutura corporativa, levanta-se a seguinte questão de pesquisa: como um modelo de linguagem grande (LLM), aliado à interceptação bidimensional (a árvore de acessibilidade da interface e o tráfego de rede entre ela e a API), pode diagnosticar autonomamente falhas na fronteira de integração front-to-back, sem a necessidade de acoplamento à lógica interna do servidor, operando sob restrições de hardware local?
+
+A pergunta tem três partes, e cada uma recebe uma resposta medida neste trabalho: se um modelo pequeno, quantizado e rodando em CPU acerta a causa raiz com frequência suficiente para ser útil (Fases 2-A, 2-B e 3); se o agente sabe quando não sabe, para chamar o humano em vez de errar com confiança (Pré-Fase 4 e Fase 4); e se a cura de localizador e o diagnóstico ao vivo funcionam na tela de verdade, com o tempo de reparo medido (Fases 4 e 5).
+
+## 1.3 Estrutura do Trabalho
+
+O documento segue a estrutura do modelo do curso. A seção 2 enuncia o objetivo geral e os objetivos específicos; a seção 3 justifica o trabalho. A seção 4 reúne a fundamentação teórica: a evolução da automação E2E e o conceito de autocura, o aprendizado de máquina como base dos sistemas adaptativos, a gestão da janela de contexto dos modelos de linguagem, a detecção de quebra de contrato, a recuperação de conhecimento, o raciocínio aberto e a confiança por probabilidade, a memória mantida pelo próprio modelo, e os trabalhos relacionados, inclusive os que foram avaliados e descartados. A seção 5 descreve a metodologia: as fases do trabalho (1 a 5, com 2-A, 2-B, 3-B e a Pré-Fase 4), a infraestrutura local, as aplicações-alvo e a injeção de falhas, o protocolo de escolha do modelo, o diagnóstico ao vivo com a trilha de raciocínio aberta, a cura de seletor, as métricas e a inferência estatística. A seção 6 apresenta e discute os resultados, fase a fase, com os números copiados dos relatórios gerados por script no Memorial de Desenvolvimento do projeto. A seção 7 retoma os objetivos, declara as limitações e aponta o que falta. Seguem as referências, o glossário e os apêndices.
+
+# 2 OBJETIVOS
+
+## 2.1 Objetivo Geral
+
+Desenvolver, implementar e mensurar a eficácia de um agente de QA E2E autônomo, utilizando um LLM executado localmente para realizar o *self-healing* dos localizadores de scripts de teste e para produzir o diagnóstico de causa raiz a partir da análise conjunta da interface e da interceptação de rede, facilitando a depuração pela equipe.
+
+## 2.2 Objetivos Específicos
+
+- Levantar a fundamentação teórica e preparar o ambiente base, pesquisando metodologias de automação com LLMs, extração de árvores de acessibilidade e quebra de contrato de APIs;
+- Prototipar a camada de inferência local, configurando o orquestrador e o runtime de modelos (Ollama) para executar um modelo da família Qwen2.5 em variante quantizada, com porte e variante (instrução geral ou código) definidos experimentalmente, integralmente na máquina do usuário, sem dependência de infraestrutura em nuvem;
+- Implementar o módulo de filtragem de contexto (poda da árvore de acessibilidade) para impedir o estouro da janela de contexto do LLM;
+- Desenvolver o agente de interceptação e self-healing, integrando a automação do navegador para capturar as requisições HTTP e codificar a lógica autônoma de correção de localizadores e de diagnóstico;
+- Mensurar e validar a precisão e o desempenho do agente contra as aplicações de teste, utilizando injeção determinística de falhas, com fuzzing de mutação de API reservado a fases posteriores como complemento.
+
+# 3 JUSTIFICATIVA
+
+Este trabalho justifica-se pela necessidade de desenvolver ferramentas de assistência focadas em acelerar a análise de causa raiz para as equipes técnicas. Tradicionalmente, quando ocorre uma falha silenciosa na integração cliente-servidor, perdem-se horas cruzando capturas de tela com logs de servidor para entender o desvio.
+
+O agente proposto atua como um copiloto de depuração: ao unir a leitura estruturada da interface renderizada à interceptação nativa de rede do framework Playwright, ele pré-processa a falha e entrega ao desenvolvedor um diagnóstico rápido de onde o contrato da API divergiu do esperado pela interface. O projeto visa melhorar o tempo de resposta da equipe frente a bugs de API e reduzir o desgaste com a manutenção de rotinas frágeis, permitindo que o profissional foque na revisão da qualidade e na garantia da integridade da arquitetura de software.
+
+Há ainda uma justificativa de viabilidade. A maior parte das equipes não dispõe de GPU nem pode enviar dados da aplicação a um serviço externo; se o agente só funcionasse com uma GPU em nuvem, a ferramenta não seria utilizável fora do ambiente acadêmico. Por isso o trabalho mede o que um modelo quantizado consegue fazer em uma máquina corporativa comum, sem direitos de administrador, e declara onde ele não basta. Os resultados parciais sustentam a aposta: a cura de seletor curou todas as 160 quebras de localizador armadas na corrida 19, com tempo de reparo do agente de 0,639 s na mediana, sem modelo de linguagem e sem GPU <!-- fonte: roadmap.md §2.11, bloco tb_f4_cura_resumo -->, e o diagnóstico de causa raiz com o modelo escolhido, lendo a biblioteca original, alcançou 75,0% de acerto nos 36 casos de avaliação numa repetição de controle em outra versão do runtime (ponte de versão 0.34.4) <!-- fonte: roadmap.md §2.3, tabela da ponte de versão 0.34.4, linha qwen2.5:7b -->.
+
+# 4 FUNDAMENTAÇÃO TEÓRICA
+
+Este trabalho fundamenta-se nos avanços documentados na literatura técnico-científica sobre a adoção de modelos generativos no ciclo de vida de desenvolvimento de software (SDLC), nos fundamentos clássicos de aprendizado de máquina e em cinco rodadas de levantamento bibliográfico feitas ao longo do projeto, cujas afirmações foram verificadas uma a uma contra as fontes antes de entrar no Memorial de Desenvolvimento. A seção 4.1 apresenta os conceitos que sustentam o desenho do agente; a seção 4.2 situa o trabalho entre os trabalhos relacionados, inclusive os que foram avaliados e descartados, com o motivo.
+
+## 4.1 Conceitos Fundamentais
+
+### 4.1.1 Evolução da automação E2E e o conceito de self-healing
+
+A automação de testes de software transitou de scripts manuais lineares para abordagens complexas de ponta a ponta (end-to-end, E2E), projetadas para simular o comportamento de um usuário real em toda a pilha tecnológica da aplicação. Inicialmente, a automação E2E baseava-se em localizadores estáticos dentro do Document Object Model (DOM), a estrutura HTML da página. Contudo, essa dependência tornava os testes frágeis e suscetíveis a quebras mediante qualquer alteração visual ou estrutural na interface gráfica.
+
+Para mitigar esse problema, o conceito de autocura (*self-healing*) emergiu na interseção entre engenharia de software e inteligência artificial. Em sistemas distribuídos, a autocura refere-se à capacidade de um sistema detectar falhas ativamente, diagnosticar sua causa raiz e aplicar correções de forma autônoma. No contexto de testes de qualidade (QA), um agente dotado de self-healing utiliza algoritmos de busca e processamento de linguagem natural para identificar dinamicamente novos localizadores na interface ou interpretar desvios nas respostas do servidor (deriva de contrato) quando o script original falha, restaurando assim o fluxo de execução sem a necessidade de intervenção humana imediata.
+
+Cabe delimitar o grau de autonomia adotado neste trabalho. A correção de localizador é gerada e **aplicada automaticamente** pelo agente em uma reexecução de verificação, o que permite medir objetivamente se o fluxo do teste foi de fato restaurado (Task Success). Contudo, a alteração não é incorporada de forma definitiva ao repositório de testes sem revisão: ela é registrada e **apresentada ao desenvolvedor como sugestão**. Essa delimitação preserva o caráter de copiloto descrito na justificativa, sem abrir mão da verificação automática necessária à avaliação quantitativa.
+
+### 4.1.2 Fundamentos de aprendizado de máquina e adaptação
+
+A transição de sistemas baseados em regras estritas para sistemas adaptativos (como os testes com self-healing) encontra sua base teórica no aprendizado de máquina. Segundo Faceli et al. (2025), os algoritmos de aprendizado de máquina permitem que sistemas computacionais extraiam padrões intrínsecos a partir de dados para a tomada de decisão autônoma, superando as limitações da programação puramente determinística. Em vez de falhar imediatamente ante uma mudança no DOM, o sistema dotado de inteligência artificial utiliza o reconhecimento de padrões para inferir a intenção original do teste e sugerir a correção.
+
+A mesma obra fornece o instrumental de avaliação adotado neste projeto. O Capítulo 10, dedicado à avaliação de modelos preditivos, trata da partição dos dados entre treino e teste, da matriz de confusão e das métricas dela derivadas (acurácia, precisão, revocação e F1), bem como de suas médias macro e micro em problemas de classificação multiclasse, que é a forma assumida pela tarefa de diagnóstico deste trabalho: atribuir à falha observada uma entre várias causas raiz possíveis. O Capítulo 7, sobre métodos conexionistas, cobre as redes neurais profundas que servem de base à arquitetura de transformadores empregada pelos LLMs, situando o modelo de linguagem utilizado no mesmo arcabouço teórico (FACELI et al., 2025; capítulos identificados pelo sumário da 3. ed.; conteúdo a conferir no exemplar).
+
+### 4.1.3 Automação E2E e inteligência artificial
+
+Estudos recentes, como o GenIA-E2ETest (JÚNIOR et al., 2025), compõem a base metodológica que atesta a eficácia dos LLMs na interpretação de intenções textuais e tradução para comandos automatizados de interação com elementos de interface. A implementação do Playwright Healer Agent (BISWAS, 2026) sustenta o diferencial arquitetural deste trabalho, ao indicar que a interceptação do tráfego de rede aliada à IA reduz os falsos positivos do diagnóstico.
+
+### 4.1.4 Gestão da janela de contexto em LLMs
+
+A literatura mostra que sobrecarregar a memória de contexto (*context window*) dos LLMs com HTML puro degrada seu raciocínio, fenômeno conhecido como diluição de atenção (*attention dilution*). Metodologias focadas em podar e limpar a árvore de elementos antes do processamento, como o Prune4Web (ZHANG, J. et al., 2026), formam a espinha dorsal das técnicas de filtragem utilizadas neste projeto para viabilizar inferências precisas com custo computacional reduzido.
+
+Complementarmente, Joseph (2026) mostra que a extração da árvore de acessibilidade (*accessibility tree*) constitui, por si só, uma estratégia de redução de contexto de baixo custo, por expor apenas a projeção semântica dos elementos (seu papel, nome acessível e valor) em vez da árvore HTML completa. Este projeto adota essa abordagem como substrato: a poda é aplicada **sobre a árvore de acessibilidade**, e não sobre o DOM bruto, que passa a ser consultado apenas pontualmente, durante a resolução de um localizador na etapa de autocura.
+
+O limite dessa janela não é contado em caracteres, e sim em *tokens*, as unidades discretas em que o texto é convertido pela tokenização, etapa que antecede qualquer processamento pelo modelo. A correspondência entre caracteres e tokens, e a fertilidade (tokens por palavra) que dela decorre, variam conforme o idioma e o tokenizador empregado. Para o português, Corrêa et al. (2026) medem, em corpus de cerca de 600 mil palavras, 2,88 caracteres por token no tokenizador nativo do modelo Tucano 2 e entre 2,71 e 2,72 caracteres por token nos tokenizadores de três modelos abertos recentes, faixa compatível com os 2,6 a 2,8 caracteres por token apurados nos ensaios preliminares deste projeto com os tokenizadores reais do Granite e do Qwen2.5 (o phi4-mini deu 3,19) <!-- fonte: Projeto de Pesquisa V3 §2.4, que cita tokenizacao-e-arquitetura.md (§6.7) -->. A diferença entre tokenizadores não é marginal: segundo Corrêa et al. (2024), o mesmo texto de 7.400 palavras em português consumiu 9.937 tokens com o tokenizador do TeenyTinyLlama e 14.813 com o do Sabiá-7B. A consequência prática é que o orçamento de contexto não pode ser fechado pela regra prática de estimar um token a cada quatro caracteres, formulada para o inglês: a estimativa por caracteres serve para montar o prompt, e é a contagem real de tokens devolvida pelo runtime depois de cada inferência que confirma se o orçamento foi respeitado.
+
+Disso decorre a distinção entre a janela nominal e a janela efetivamente útil. Quando o prompt excede o limite configurado, o runtime Ollama descarta silenciosamente o início da conversa, sem qualquer campo de aviso na resposta de sua interface de programação, registrando o corte apenas em log de depuração (KULIGOWSKI, 2026), e é justamente no início do prompt que ficam as instruções e o esquema da resposta esperada. Ainda que o conteúdo caiba na janela, a posição em que é colocado altera o desempenho. Liu et al. (2024) medem uma curva em U de aproveitamento no GPT-3.5-Turbo: com vinte documentos fornecidos ao modelo, o acerto é de 75,8% quando o documento relevante está na primeira posição, cai para 53,8% quando está na décima posição, no meio da lista, e sobe para 63,2% na última; no meio do contexto, o desempenho fica abaixo dos 56,1% obtidos pelo mesmo modelo sem contexto algum. Cuconasu et al. (2024) reproduzem o efeito em modelos abertos: no Llama2-7B, com um documento correto e 18 distratores, a acurácia é de 0,3781 quando o documento correto está junto à pergunta e de 0,1795 quando está no meio do contexto, comportamento consistente também em Falcon-7B, MPT-7B e Phi-2 (2,7B). As duas constatações, corte silencioso no início e perda no meio, sustentam duas providências adotadas neste projeto: ordenar o prompt do conteúdo mais estável para o mais variável, e estimar, no início de cada época, o consumo de tokens do maior prompt da época, conferindo a contagem real devolvida pelo runtime depois de cada inferência (um caso que ultrapasse o orçamento interrompe a época em vez de ser truncado em silêncio), em vez de confiar na capacidade nominal declarada pelo runtime.
+
+### 4.1.5 Detecção de quebra de contrato de API
+
+A verificação automatizada de contratos entre cliente e servidor é discutida em texto técnico da InstaTunnel (2026), que caracteriza a deriva de contrato (*API drift*) como uma classe de falha que escapa aos testes unitários de cada lado isoladamente, por se manifestar apenas na fronteira de integração. O texto destaca que alterações silenciosas de tipo, remoção de campos e renomeações são detectáveis por comparação estrutural da resposta observada contra o contrato esperado, princípio que fundamenta o gatilho de erro adotado neste projeto, no qual a interceptação de rede compara a forma (chaves e tipos) do dado recebido com a esperada pela interface consumidora.
+
+### 4.1.6 Recuperação de conhecimento prévio e base mantida pelo próprio modelo
+
+Shi, Li e Chen (2025) mostram que a geração aumentada por recuperação (*retrieval-augmented generation*, RAG), quando sensível à funcionalidade do trecho analisado, melhora a localização de falhas por LLMs ao fornecer ao modelo apenas o conhecimento pertinente ao defeito em questão, em vez de ampliar indiscriminadamente o contexto. Neste trabalho, o princípio é aplicado por meio de uma base de conhecimento curada sobre a aplicação-alvo, organizada por módulo e por entidade de negócio, contendo regras de negócio e defeitos previamente conhecidos, recuperada seletivamente no momento do diagnóstico. Essa base é construída previamente, de forma análoga ao conhecimento acumulado por um analista de QA sobre o sistema que testa, e não implica inspeção da lógica interna do servidor em tempo de execução, preservando a delimitação de escopo da seção 1.2.
+
+A recuperação, porém, transfere ao material recuperado parte da responsabilidade pelo diagnóstico, e a literatura mede o custo de recuperar material incorreto. Wu, Wu e Zou (2024), em seis modelos de ponta e mais de mil e duzentas perguntas distribuídas por seis domínios, observam que os modelos abandonam conhecimento interno correto e adotam o conteúdo recuperado incorreto em mais de 60% dos casos, com adesão tanto maior quanto menor a confiança do modelo na própria resposta. Pelo lado da segurança, Zou et al. (2025) mostram que bastam cinco textos maliciosos por pergunta-alvo, inseridos em uma base com milhões de textos, para induzir em 90% dos casos a resposta escolhida pelo atacante. Daí a exigência, adotada neste trabalho, de que todo item da base de conhecimento, tanto os escritos à mão quanto os acrescentados depois, passe por uma conferência determinística, escrita em código, e não pelo julgamento do próprio modelo, antes de ficar disponível para recuperação.
+
+Uma extensão natural dessa base é deixar que o próprio modelo a mantenha, acrescentando o que apura ao longo das execuções sem que seus pesos sejam alterados. Suzgun et al. (2025) demonstram que essa forma de aprendizado em tempo de teste produz ganho expressivo em modelos grandes, mas registram o limite que interessa diretamente a este projeto: em modelos menores os ganhos são atenuados por falta de competência para escrever bons registros, e o desempenho chega a cair quando material de baixa qualidade é recuperado; o gargalo está em quem escreve, e não em quem lê. Zhang, G. et al. (2026) quantificam o efeito de um portão de admissão calculado majoritariamente em código, que rejeitou 63,1% dos itens candidatos e elevou o F1 da tarefa de 0,541 para 0,583 com 31% menos latência, sendo que quatro dos cinco sinais avaliados são regras determinísticas que custam menos de 65 ms, contra 2.580 ms do único sinal julgado por outro modelo de linguagem. É esse arranjo, base mantida pelo modelo com a admissão de cada item decidida em código, que a Fase 3 deste trabalho submeteu a teste (seção 6.4).
+
+<!-- ! Alteração de IA - Revisar: trecho novo (03/11/2026) da seção 4 do documento provisório do TCC, com as subseções 4.1.7 a 4.1.10 e 4.2.1 a 4.2.4, escrito a partir dos levantamentos de 11/09, 29/09 e 01/10/2026, do relatório da Pré-Fase 4 e da lista de referências do Memorial.
+     ! Motivo: a seção 4 do documento provisório parava na 4.1.6, e o resumo e a seção 1.3 já anunciam o raciocínio aberto, a confiança por probabilidade, a memória mantida pelo modelo e os trabalhos relacionados descartados; sem este trecho o texto prometeria o que não entrega. Cada número vem copiado da fonte indicada no comentário logo depois da frase; onde a fonte marca a afirmação como parcial, o comentário diz isso. -->
+
+### 4.1.7 Raciocínio aberto: o que o modelo escreve é o que decidiu a resposta?
+
+O raciocínio aberto é o registro bruto de tudo o que o agente fez em cada diagnóstico, do qual se gera um relatório para humanos. Abrir o raciocínio supõe que o texto escrito pelo modelo para justificar uma resposta seja o que a decidiu (a fidelidade da explicação), e a literatura mostra que, por padrão, não é. Turpin et al. (2023) inseriram vieses no prompt: o modelo mudou de resposta, a explicação quase nunca os mencionou e o acerto caiu até 36%. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.6 --> Modelos com modo de raciocínio não resolveram o problema: o Claude 3.7 Sonnet mencionou a dica que usou em 25% dos casos e o DeepSeek-R1 em 39% (CHEN et al., 2025). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.6; o §6.14.7 repete as médias de 25% e 39% como parciais, por não conferidas no corpo do artigo --> As citações sofrem do mesmo mal: até 57% foram pós-racionalizações, isto é, o modelo citou o documento que continha a afirmação já decidida, num teste adverso com um único modelo (WALLAT et al., 2024). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.6 e §6.14.16; valor inferido de figura, afirmação marcada como parcial na fonte --> Pedir raciocínio antes da resposta pouco ajuda: o ganho da cadeia de raciocínio está em matemática e lógica simbólica (SPRAGUE et al., 2025), e o raciocínio em estágios não ajudou modelos de 1,5 a 8B nas medições do projeto. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.6 -->
+
+Por isso o qwen2.5:7b responde em quatro linhas fixas (CAUSA_RAIZ, CAMPO, IMPACTO e FONTE), sem escrever raciocínio. A linha FONTE, em que ele diz quais verbetes da biblioteca usou, entra na trilha como declaração e só passa a verificada quando uma intervenção em código muda o rótulo ou a probabilidade: remover o verbete citado, trocá-lo por um errado ou refazer a inferência sem documentação (MADSEN; CHANDAR; REDDY, 2024). O resultado chama-se consistência medida, e não fidelidade, pois mede a autoconsistência da saída, não o mecanismo interno (PARCALABESCU; FRANK, 2024). Nenhum trabalho encontrado mede a fidelidade de um classificador de rótulo fechado de 7B quantizado, sem cadeia de raciocínio.
+
+### 4.1.8 Trilha de raciocínio, relatório para humanos e atribuição ao contexto
+
+A trilha é um arquivo JSONL (uma linha JSON por evento) local, sem coletor nem servidor, com cabeçalho por corrida e um registro por caso. Nenhum padrão de registro para agentes de IA serve de esquema para o nó de decisão: as operações das convenções do OpenTelemetry estão todas em status Development (OPENTELEMETRY GENAI SIG, 2026), e o tipo de registro (span) DECISION do OpenInference não tem campo de justificativa (ARIZE AI, 2026). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.7 --> O projeto definiu então um nó tipado por decisão (alternativas, evidência, resultado e um campo obrigatório de divergência entre o declarado pelo modelo e o medido pelo código), ligado por arestas do vocabulário de proveniência W3C PROV, que permitem seguir um diagnóstico errado até o verbete de origem (SOUZA et al., 2025).
+
+O relatório para o desenvolvedor sai da trilha por código, sem segunda chamada ao modelo, porque uma explicação fluente aumenta a adesão à resposta errada; ela só reduziu a dependência excessiva quando conferir custava menos que resolver a tarefa sozinho (VASCONCELOS et al., 2023), e a inconsistência visível baixou a concordância com a resposta errada de 83,3% para 69,7% (KIM et al., 2025). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.8 --> Por isso o relatório abre com o veredito e o selo de confiança (seção 4.1.9) e deixa a árvore recolhida, ordem inferida pelo projeto. O ponto do erro é localizado por regras em código: o melhor modelo no benchmark TRAIL acertou 11% na métrica conjunta de categoria e local do erro (DESHPANDE et al., 2025). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.11 -->
+
+A atribuição ao contexto distingue a fonte que causou a resposta da que apenas a sustenta (COHEN-WANG et al., 2024); mede-se removendo um verbete do prompt, refazendo a inferência e vendo a queda da probabilidade do rótulo. Com os três verbetes da busca lexical BM25, isso soma de 141 a 234 s por caso, estimativa sobre os 47 a 78 s de cada diagnóstico, e por isso a remoção roda só por gatilho ou em amostra. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.9 --> A remoção mede influência, não correção: como a documentação errada plantada no prompt foi seguida em 93% a 96% das respostas no pior cenário da Fase 2-B (seção 6.3), deve apontar o verbete errado como causa. <!-- fonte: memoria-gerida-pelo-modelo.md §6.6 e fase-2b-relatorio-por-modelo.md §6 (93,3% e 95,6%); o levantamento §6.14.9 escreve a faixa como 81% a 96% -->
+
+### 4.1.9 A probabilidade do rótulo como sinal de incerteza
+
+A probabilidade que o modelo atribui ao token do rótulo (a causa raiz escolhida entre 23), guardada como logprob (seu logaritmo), é o sinal de confiança mais barato do agente: sai da mesma inferência e não custa CPU a mais. Na corrida 12, com o qwen2.5:7b em quantização de 4 bits (Q4_K_M), esse sinal separou acerto de erro com AUROC de 0,78 (a probabilidade de um caso certo receber escore maior que um errado), embora metade dos erros tenha saído confiante. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.10; pre-fase-4-relatorio.md §5 (metade dos erros com probabilidade acima de 0,85) --> Serve, portanto, de triagem para a revisão humana, e não de barreira: revisar os 10% de menor probabilidade pega 14 dos 46 erros. <!-- fonte: pre-fase-4-relatorio.md §5 -->
+
+Três achados da literatura orientam o uso do sinal. A quantização em 4 bits (GPTQ) diminuiu a confiança no rótulo verdadeiro em tarefas de escolha fechada (PROSKURINA et al., 2024), e não se encontrou estudo de calibração para o formato Q4_K_M; por isso a AUROC é uma medida local. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.10 --> Em modelos ajustados por instrução, a probabilidade do primeiro token e a resposta escrita chegam a discordar em 51,4% das questões (WANG, X. et al., 2024); por isso o agente lê o token que inicia o rótulo depois de CAUSA_RAIZ:. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.10 --> A entropia semântica exige 10 gerações por pergunta (FARQUHAR et al., 2024), de 8 a 13 minutos por caso nesta CPU. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.10 -->
+
+Na trilha, a probabilidade é selo de confiança, útil porque refletir no texto a confiança interna do modelo melhorou a discriminação humana (STEYVERS et al., 2025), e gatilho das intervenções da seção 4.1.7 e da revisão humana, nunca verificador. O limiar de abstenção sai da curva risco-cobertura, que mostra a fração de casos respondidos e o erro entre eles, aceitando perder alcance para ganhar precisão (HSU et al., 2024), e é recalibrado quando mudam o modelo, a quantização ou a biblioteca. Cada corrida registra a versão do Ollama e o modo de leitura: a documentação não diz se o valor vem antes ou depois da temperatura, e o projeto verificou por experimento que vem antes (OLLAMA, 2025).
+
+### 4.1.10 Memória mantida pelo próprio modelo e os filtros da documentação autogerida
+
+A biblioteca de documentação do agente é uma memória mantida pelo próprio modelo: na Fase 3, cada modelo ganhou uma cópia própria dos verbetes, os registros da biblioteca, e pôde acrescentar e alterar texto, nunca apagar nem esvaziar. Esse aprendizado em tempo de teste, sem alterar pesos, tem precedente medido no Voyager (WANG, G. et al., 2023) e no ExpeL (ZHAO et al., 2024), mas também riscos. Reescrever a memória inteira a cada passo pode colapsá-la: o contexto do Dynamic Cheatsheet passou de 18.282 para 122 tokens num único passo (ZHANG, Q. et al., 2025). <!-- fonte: memoria-gerida-pelo-modelo.md §6.6 --> O modelo tende ainda a copiar o que a memória diz em vez de julgar o fato, o *experience following* de Xiong et al. (2025), e o projeto mediu algo equivalente: a documentação errada plantada no prompt foi seguida em 93% a 96% das respostas no pior cenário da Fase 2-B (seção 6.3). <!-- fonte: memoria-gerida-pelo-modelo.md §6.6 e fase-2b-relatorio-por-modelo.md §6 (93,3% e 95,6%) --> No mesmo estudo, só a adição estrita, com experiências validadas, ganhou de 15,5 a 25,5 pontos sobre acrescentar tudo. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.11 -->
+
+Para a documentação autogerida da Fase 4, os filtros foram separados em adotados, adiados e descartados, sob uma regra: o modelo propõe e o código decide, como já faz o validador da Fase 3, com 30 regras de rejeição. <!-- fonte: memoria-gerida-pelo-modelo.md §6.6 --> Entre os adotados estão exigir, de toda retificação (correção de trecho de verbete existente), o trecho apontado e o caso de origem, pois foi a operação de pior resultado da Fase 3, com 4 corretas, 3 parciais e 15 erradas; e dirigir a revisão humana pelo risco, pois 41% das edições aceitas estavam erradas apesar do validador. <!-- fonte: levantamento-2026-09-29-documentacao-autogerida.md §6.13.10 --> Ficam adiadas a restrição da saída por gramática e a verificação por execução, até medir o custo nesta CPU. São descartados o corte pela confiança declarada, o modelo como juiz final e a autocrítica do próprio modelo, que piorou o resultado até em modelos maiores: o GPT-4 caiu de 95,5% para 89,0% no GSM8K após duas rodadas (HUANG et al., 2024). <!-- fonte: levantamento-2026-09-29-documentacao-autogerida.md §6.13.2 e §6.13.10 -->
+
+## 4.2 Trabalhos Relacionados
+
+### 4.2.1 Self-healing de localizadores e agentes autônomos de QA
+
+O reparo automático de testes antecede os modelos de linguagem: o reparo visual de testes web corrigiu em média 81% das quebras, em 2.672 casos de teste (STOCCO; YANDRAPALLY; MESBAH, 2018). <!-- fonte: levantamento-2026-09-11-fase-3.md §6.9.7 --> Boa parte da cura é determinística: Joseph (2026) monta uma hierarquia de dez níveis de localizadores a partir da árvore de acessibilidade e passou 31 de 31 testes, redescobrindo o seletor obsoleto em menos de 1 s, sem modelo de linguagem e com custo de API zero. <!-- fonte: levantamento-2026-09-11-fase-3.md §6.9.7 --> Com agentes de linguagem o quadro é mais modesto: um pipeline multiagente com Playwright aprovou 204 de 636 execuções (32,1%), e 2 das 7 famílias que convergiram o fizeram por atalho, como enfraquecer uma asserção (LEE, 2026). <!-- fonte: levantamento-2026-09-11-fase-3.md §6.9.7; afirmação marcada como parcial na fonte --> O healer do Playwright, agente de reparo da ferramenta, não tem medida de eficácia publicada (MICROSOFT, 2025). Para este trabalho, a cura de seletor só vale depois de verificada em código e reexecutada. Num levantamento de 102 estudos sobre modelos de linguagem em teste de software, dominam a preparação de casos de teste e o reparo de programas (WANG, J. et al., 2024); nenhuma fonte verificada avalia modelos de 1,5 a 8B quantizados, só em CPU, no diagnóstico de causa raiz de quebra de contrato, lacuna que este trabalho ocupa. <!-- fonte: levantamento-2026-09-11-fase-3.md §6.9.16 e §6.9.7 (lacunas) -->
+
+### 4.2.2 Modelos grandes lendo os pesos do disco: o repositório colibri
+
+O colibri é um motor de inferência em C, mantido pela comunidade, para modelos de mistura de especialistas (MoE) maiores que a memória da máquina: num MoE, um roteador escolhe poucos blocos de pesos (os especialistas) por token, e o motor deixa na RAM a parte comum e lê do disco os especialistas fora do cache (JUSTVUGG, 2026). A ideia vem da mistura de especialistas de Jacobs et al. (1991), tornada esparsa por Shazeer et al. (2017); para modelos densos, o "LLM in a flash" explora a esparsidade de ativações ReLU (ALIZADEH et al., 2024), que o qwen2.5:7b, com ativação SwiGLU, não tem. O projeto concluiu que o colibri não serve de motor do agente nesta máquina: o qwen2.5:7b é denso e cabe na RAM livre. O GLM-5.2, modelo de referência do repositório, pede cerca de 400 GB livres em NVMe segundo o repositório (372,0 GB na conta do projeto, seção 6.6), e a máquina tem 218 GB; a RAM instalada, 16 GB, é exatamente o mínimo declarado. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.1; pre-fase-4-relatorio.md §2.2, bloco tb_viab_familias (372,0 GB); o pano de fundo de MoE e de LLM in a flash vem de §6.14.2 e §6.14.3 --> A medição mais próxima (i5-12600K, 32 GB, Windows 11, só CPU) deu 0,08 tok/s (tokens por segundo), cerca de 13 minutos para os 61 tokens da resposta mediana do agente, contra 47 a 78 s por diagnóstico (BOPOF, 2026). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.1 --> Como a conclusão usa medidas de terceiros, sem revisão por pares, ela entra como limitação. Do colibri se aproveitam, sem trocar de motor, a separação entre otimizações exatas e com perda e a escolha entre opções fechadas por probabilidade.
+
+### 4.2.3 Segundo cérebro local e grafos do código (Brainiac e codebase-memory)
+
+O Brainiac guarda notas em Markdown, com um índice reconstruível, e funde a busca lexical BM25 com a busca por vetores (AUTOPSIAS, 2026a). O projeto não o adotou: reintroduziria a busca híbrida que já havia descartado; o ganho dela sobre a busca vetorial, que o próprio Brainiac mede em texto científico, é modesto, de 0,673 para 0,699 de nDCG@10, medida da qualidade dos 10 primeiros resultados (AUTOPSIAS, 2026c); e o modelo de embeddings, de cerca de 568 MB, disputaria RAM com o qwen2.5:7b, enquanto o histórico de versões registra falhas específicas de Windows (AUTOPSIAS, 2026b). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.12 --> Ficam três princípios, sem a ferramenta: registro só por acréscimo, com hash (impressão digital do conteúdo); Markdown como fonte da verdade; e falha explícita em artefato derivado, lição do caso em que a busca rodou 36 minutos sobre vetores efetivamente aleatórios, sem aviso (AUTOPSIAS, 2026b). <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.12 --> O codebase-memory-mcp expõe o código como um grafo de conhecimento: o agente que o consulta teve 83% de qualidade de resposta, contra 92% do que explora arquivo por arquivo, com cerca de 10 vezes menos tokens (VOGEL et al., 2026), e foi retirado do projeto porque a economia medida ficou abaixo de 20%. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.13 --> Como figura de diagnóstico o grafo também é arriscado: visualizações úteis levaram profissionais a confiar demais em saídas erradas do modelo (LI, H. et al., 2025). O painel de resultados do projeto recebe só um grafo pequeno do conhecimento, em SVG, ao lado da probabilidade do rótulo.
+
+### 4.2.4 O que a literatura descartou para este projeto
+
+A pesquisa da Pré-Fase 4 cobriu catorze tópicos e classificou cada opção como adotada, adiada (serviria com outra máquina, outro motor ou depois da Fase 4) ou descartada, sempre com o motivo. <!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14 e §6.14.16 -->
+
+Tabela: Opções avaliadas na Pré-Fase 4 e o veredito do projeto
+| Opção avaliada | Veredito | Motivo principal |
+|---|---|---|
+| Ler do disco os pesos de um MoE gigante (colibri) | Descartado | Não cabe nos 218 GB livres, e a medição mais próxima deu 0,08 tok/s |
+| Cadeia de raciocínio antes do rótulo | Descartado | Ganho concentrado em matemática e lógica simbólica, e o texto não prova a decisão |
+| Segunda chamada ao modelo para explicar, localizar o erro ou julgar | Descartado | Somaria de 47 a 78 s por caso, e o melhor modelo no benchmark TRAIL acertou 11% |
+| Probabilidade do rótulo como selo e gatilho de revisão | Adotado | Sai da mesma inferência e serve de triagem, não de verificador |
+| Remoção de verbete por gatilho ou amostra | Adotado | Três inferências extras, de 141 a 234 s por caso |
+| Pontuar as 23 causas, gramática GBNF e Shapley exato | Adiado | Exigem outro motor, medição prévia ou custo que só cabe depois da Fase 4 |
+Fonte: levantamento da Pré-Fase 4, seção 6.14.16 (mapas), elaborado pelos autores.
+<!-- fonte: levantamento-2026-10-01-pre-fase-4.md §6.14.16, mapas da parte A (colibri, confiança por amostragem) e da parte B, ondas 1 e 2 (raciocínio, intervenções, atribuição) -->
+
+# 5 METODOLOGIA
+
+A pesquisa caracteriza-se como aplicada e experimental: constrói uma arquitetura de software e a submete a medições pré-registradas, com as regras de leitura fixadas antes de cada corrida. Esta seção descreve as etapas do trabalho, a infraestrutura, as aplicações-alvo e a injeção de falhas, o protocolo de escolha do modelo e da biblioteca, o diagnóstico ao vivo com a trilha de raciocínio aberta, a cura de seletor, as métricas e a inferência estatística, e a rastreabilidade do que foi feito.
+
+## 5.1 Etapas do Trabalho
+
+A execução organiza-se em fases numeradas, cada uma ligada a um objetivo específico da seção 2.2. A Fase 1 preparou o ambiente e as duas aplicações-alvo, com o instalador único, os modos de injeção de falha e o banco de 90 casos (primeiro objetivo). As Fases 2-A, 2-B e 3 compararam os modelos de linguagem locais em três condições, primeiro sem documentação, depois com uma biblioteca de documentação recuperada e, por fim, com a biblioteca editada pelo próprio modelo em épocas atrás de validação em código, e decidiram o modelo e o estado da biblioteca a adotar (segundo objetivo). A Fase 3-B rodou os testes complementares que a análise da Fase 3 pediu: pontes de versão do runtime, casos inéditos, troca cruzada de bibliotecas, sonda de correção, experimento do recuperador e ablação entre modelo base e modelo de instrução. A Pré-Fase 4 foi uma pausa de pesquisa em três frentes antes de levar o agente à tela: modelos grandes lendo os pesos do disco, atlas visual das competências do modelo e raciocínio aberto. A Fase 4, em andamento, implementa a filtragem de contexto, a interceptação de rede, o diagnóstico ao vivo e a autocura de localizadores (terceiro e quarto objetivos). A Fase 5 medirá o tempo médio de reparo (MTTR) e o Task Success contra a linha de base manual (quinto objetivo).
+
+Tabela: Fases do trabalho, o que cada uma mede e o estado em 03/11/2026
+| Fase | O que é | Estado |
+|---|---|---|
+| 1, ambiente e cobaias | Instalador único, CobaiaFront (PHP legado) e CobaiaAPI (FastAPI) com 7 modos de injeção de falha, banco de 90 casos | Concluída |
+| 2-A, prompts sem documentação | 6 modelos e estratégias de prompt, na máquina de desenvolvimento | Concluída |
+| 2-B, biblioteca recuperada | 6 modelos nas condições A0 a A2 e 3 deles nas A3 a A5, na máquina-alvo | Concluída (07 a 09/09/2026) |
+| 3, biblioteca gerida pelo modelo | 4 modelos, 3 épocas, 90 casos (13 a 15/09/2026, 57h59 de máquina) | Concluída e analisada; decisão 52 |
+| 3-B, testes complementares | Pontes de versão, casos inéditos, troca cruzada, sonda de correção, recuperador e ablação | Concluída (21/09 a 06/10/2026, mais as corridas 14 e 15 de 23/10/2026) |
+| Pré-Fase 4, pesquisa | Modelos grandes pelo disco, atlas das competências, raciocínio aberto | Concluída em 26/10/2026 |
+| 4, agente na tela | Interceptador Playwright, poda em código, diagnóstico ao vivo, cura de seletor, biblioteca em produção com ciclo de correção | Em andamento desde 26/10/2026: pacotes de trabalho P0 a P4 feitos (de P0 a P8) e corridas 16 a 19 feitas (de 16 a 22) |
+| 5, medição de valor | MTTR e Task Success contra linha de base manual, nas duas cobaias | Não iniciada; protocolo escrito |
+Fonte: roadmap do projeto (Memorial), seção 1, estado por fase.
+<!-- fonte: roadmap.md §1 (tabela "Onde estamos, por fase"), colunas O que é e Estado -->
+
+## 5.2 Infraestrutura e Orquestração Local
+
+A ferramenta de orquestração do navegador é o Playwright, em Python, com o Chromium que ele mesmo instala. O Playwright comunica-se com o navegador por protocolo nativo e tem suporte embutido à interceptação de chamadas de rede e à leitura da árvore de acessibilidade, o que permite ao agente ver, ao mesmo tempo, o que a tela mostra e o que a API respondeu. O processamento semântico usa um modelo da família Qwen2.5 em variante quantizada, executado integralmente na máquina local pelo runtime Ollama; a quantização reduz a precisão numérica dos pesos do modelo e o consumo de memória a ponto de viabilizar a inferência em CPU, sem GPU dedicada. A comunicação entre o orquestrador e o modelo ocorre pela interface HTTP do próprio runtime, restrita à interface de loopback da máquina, sem exposição à rede externa e sem serviço de tunelamento. O framework FastAPI permanece em uso no projeto, porém no papel de API da aplicação-alvo submetida aos testes.
+
+As medições valem para a máquina-alvo, um notebook corporativo com processador Intel Core i5, 16 GB de memória instalada (o Windows enxerga 15,7 GB, valor citado na seção 6.3), sem GPU utilizável e sem direitos de administrador; o modelo compete por memória com o navegador automatizado, o servidor da aplicação e o banco de dados, e por isso só um modelo é carregado por vez. Para as aplicações-alvo subirem nessa máquina, o instalador do projeto passou a cobrir o PHP instalado pelo gerenciador de pacotes do Windows e um MariaDB portátil na pasta do usuário, sem administrador <!-- fonte: roadmap.md §1, célula da Fase 4 (PHP 8.2.35 pelo winget e MariaDB 11.8.9 portátil) -->. Duas regras de desenho vieram da Fase 3-B e valem para todas as medições seguintes: uma ponte de versão antes de toda medição, porque o runtime de inferência se atualiza sozinho e a mesma configuração pode dar rótulos diferentes entre versões; e o padrão de usar o modelo com a biblioteca que ele mesmo escreveu, porque o ganho da biblioteca não acompanha quando muda quem a lê (decisão 69) <!-- fonte: decisoes.md, decisão 69; roadmap.md §7 -->.
+
+## 5.3 Aplicações-alvo, Taxonomia e Injeção de Falhas
+
+São utilizadas duas aplicações de características deliberadamente distintas, ambas controladas pelo grupo (o site legado foi cedido por um integrante e mantido sem alteração, salvo a variante de quebra da Fase 4, desligada por padrão; a API foi construída para o projeto): uma aplicação monolítica legada em PHP, com renderização no servidor e acesso direto ao banco de dados (CobaiaFront), e uma API JSON em FastAPI consumida por requisições assíncronas (CobaiaAPI). A primeira exercita a abrangência do agente frente a sistemas legados; a segunda concentra os cenários de quebra de contrato, objeto central do trabalho.
+
+As quebras de contrato são simuladas, de forma dominante, por injeção determinística de falhas por modo: a aplicação-alvo expõe modos de falha fixos, e cada cenário é gravado como caso fixo, de modo que o mesmo caso seja idêntico entre modelos e entre rodadas. A Fase 1 entregou 7 modos de injeção na CobaiaAPI e a Fase 4 acrescentou 14 modos novos, para que a tela reproduza as causas que antes só existiam no caso escrito <!-- fonte: roadmap.md §1 (Fase 1: 7 modos; Fase 4: 14 modos novos na CobaiaAPI) -->. Técnicas de fuzzing (injeção de dados anômalos) e de mutação dinâmica ficam reservadas a fases posteriores, como complemento, e não como base da comparação.
+
+Os casos seguem uma taxonomia de 23 causas raiz, nomes de domínio que o modelo escolhe de uma lista fechada, organizadas em seis classes inspiradas nas fases de um compilador (léxica, sintática, semântica, tradução, tempo de execução e efeito) e em três níveis de dificuldade, do sinal local e explícito ao defeito que só aparece cruzando duas requisições ou a requisição contra a tela. A taxonomia completa está no Apêndice A. O banco oficial tem 90 casos fixos, divididos em 54 casos de aprendizado, nos quais o modelo recebe a causa correta e pode propor edições na biblioteca, e 36 casos de avaliação, que nunca recebem retorno. A Fase 3-B acrescentou 36 casos inéditos, nunca vistos por nenhum modelo nem por nenhuma biblioteca, e a Fase 4 outros 36, de modo que o conjunto de avaliação da Fase 4 reúne 108 casos <!-- fonte: roadmap.md §4.6 ("mais 36 inéditos (108 casos)"); pendencias.md ficha 27 -->.
+
+## 5.4 Escolha do Modelo e da Biblioteca de Documentação
+
+A escolha do modelo e do seu porte foi definida experimentalmente, por comparação entre as variantes sob o mesmo hardware, segundo uma regra fixada antes da execução dos testes (decisões 36 e 46): a acurácia balanceada do diagnóstico nos casos de avaliação nunca vistos pelo modelo, com veto às configurações em que a biblioteca editada pelo próprio modelo reduza acertos anteriores (autoenvenenamento) e desempate pela licença de uso. Latência por inferência e pico de memória entram na análise de robustez da escolha (fronteira de custo contra acerto e sensibilidade aos pesos), e não como critério primário.
+
+O regime de biblioteca mantida pelo próprio modelo, discutido na seção 4.1.6, foi submetido a teste na Fase 3: cada modelo avaliado recebe uma cópia própria da biblioteca, permanecendo a original (L0) intocada como ponto de partida comum. A edição autorizada é apenas por acréscimo (nota em um item existente, retificação que aponte o trecho equivocado ou item novo), nunca por remoção, de modo que toda alteração permaneça auditável pela comparação entre versões sucessivas. Nenhuma proposta de edição é incorporada sem passar antes por uma conferência escrita em código, e não pelo julgamento de outro modelo de linguagem. O ciclo é repetido por três épocas, guardando-se a cópia da biblioteca ao final de cada uma (L1, L2 e L3), para que o desempenho possa ser lido época a época. A recuperação dos verbetes no momento do diagnóstico usa a função de ordenação lexical BM25 com sinais calculados em código, com k igual a 3 verbetes por consulta, valor escolhido na Fase 4 depois de medir k igual a 3 e k igual a 5 na calibração <!-- fonte: roadmap.md §4.6 (k = 3 e k = 5 medidos na calibração) e §2.9 -->.
+
+Uma amostra das edições aceitas na biblioteca, até trinta por modelo, sorteadas de forma determinística, foi avaliada segundo rubrica escrita previamente (correta, parcial ou errada): a rubrica é aplicada em primeira passada por um assistente de inteligência artificial, que confere cada edição contra o código da aplicação-alvo, e ratificada por um único revisor do grupo; por haver um só revisor, o resultado é reportado como proporção, sem medida de concordância. A cópia da biblioteca L1 do modelo escolhido foi curada para uso em produção, com o veredito de cada edição dado em primeira passada por um assistente de inteligência artificial e conferido por um integrante do grupo (decisão 60): 23 das 40 edições foram mantidas <!-- fonte: roadmap.md §7 (curadoria da cópia L1 em biblioteca_producao/) -->, e a cópia curada foi medida antes de ser usada (decisão 71).
+
+## 5.5 Diagnóstico ao Vivo e Trilha de Raciocínio Aberta
+
+Na Fase 4 o diagnóstico deixa o caso escrito e passa a ser feito sobre a tela. O fluxo de um caso é o seguinte: o navegador executa um roteiro de teste; o interceptador grava cada chamada de rede e a árvore de acessibilidade da página; a poda em código reduz a árvore e o corpo da resposta ao que importa para o passo em curso, encurtando listas e textos longos sem suprimir chaves nem tipos, porque a quebra de contrato se manifesta na forma do dado, e não na sua quantidade; o caso ao vivo é montado com o sintoma descrito por molde e com o que mudou contra uma corrida de referência em modo normal (forma e contagem da lista, itens a menos, a mais ou repetidos, valores item a item e o tempo da chamada), no corpo e no sintoma (decisão 81); a recuperação traz os verbetes da biblioteca; e o modelo responde com o prompt congelado byte a byte desde a Fase 3, para que os resultados continuem comparáveis.
+
+A resposta do modelo tem quatro linhas conferidas em código (CAUSA_RAIZ, CAMPO, IMPACTO e FONTE: a causa raiz, o campo afetado, o impacto para o usuário e os verbetes da biblioteca que o modelo diz ter usado), e a probabilidade é lida no primeiro token do rótulo da causa, antes de qualquer amostragem. Essa probabilidade é o sinal de triagem para revisão humana: a Pré-Fase 4 mediu que a probabilidade conjunta dos tokens do rótulo separa acertos de erros com área sob a curva ROC (AUROC) de 0,78 <!-- fonte: roadmap.md §7 (confiança pela probabilidade do rótulo, AUROC 0,78, corrida 12) -->, e a Fase 4 a usa como selo de confiança em três faixas (alto, médio e baixo), com os limiares lidos da curva risco-cobertura na corrida de calibração, não escolhidos à mão. A saída restrita por gramática (lista fechada das causas imposta na decodificação) foi adiada, porque a literatura mostra que a restrição muda a probabilidade do rótulo, o único sinal interno barato do projeto (decisão 78).
+
+Tudo o que o agente faz fica numa trilha de raciocínio aberta, especificada na Pré-Fase 4 e aprovada como base da Fase 4 (decisão 77): um arquivo de linhas JSON com cabeçalho de corrida; três camadas em cada nó (o que o programa fez, o que o modelo declarou e o que o código conferiu); um nó por decisão, com as alternativas consideradas, a evidência de cada uma, o contraste, a divergência entre o declarado pelo modelo e o medido pelo código e a probabilidade do rótulo; conferências em código; intervenções e atribuição ao contexto por gatilho ou por amostra; uma justificativa por molde, que não deixa o modelo escrever prosa livre sobre a própria decisão; uma taxonomia de falhas do próprio agente; e regressão contra trilhas de referência. Da trilha sai um relatório por caso para o desenvolvedor, em seis seções em ordem fixa <!-- fonte: Memorial, índice (especificacao-trilha-e-relatorio.md); roadmap.md §1, célula da Fase 4 (P1) -->. A trilha é também a matéria-prima da interface para o analista prevista para depois da Fase 4 (seção 7).
+
+## 5.6 Cura de Seletor
+
+A cura de seletor trata a quebra de localizador, a primeira família de falha da seção 1.1. Em cada célula do experimento, uma corrida de referência registra o alvo de cada passo do roteiro; a quebra é então armada de duas formas, comparadas entre si (decisão 80): pelo próprio ambiente de teste, que muda o DOM da página no navegador antes de o roteiro rodar, e por uma variante do front-end PHP, ligada só por parâmetro de URL ou cookie, que entrega o HTML já alterado. Quatro modos de quebra são usados: identificador renomeado, classe trocada, texto alterado e estrutura alterada. O roteiro roda até o passo do alvo falhar (detecção); seis estratégias geram candidatos a localizador a partir da árvore de acessibilidade podada (papel e nome, papel e nome parecido, texto contido, atributo de dados, caminho a partir de um ancestral com identificador e posição entre irmãos); cada candidato passa por quatro verificações estáticas em código na página aberta, e o primeiro que passa é aplicado numa reexecução do roteiro desde o começo, com a quebra armada de novo. O roteiro chegar ao fim é a cura (regra R3), e a impressão do elemento no DOM (tag, tipo, nome, ação do formulário, atributo de dados e endereço) diz se o candidato resolveu o mesmo elemento da referência ou outro <!-- fonte: roadmap.md §2.11 (protocolo da corrida 19) -->. O MTTR do agente é medido da detecção à reexecução validada, descontado o tempo de restaurar o banco entre as duas; a linha de base manual é a Fase 5.
+
+## 5.7 Métricas, Inferência Estatística e Regras Pré-registradas
+
+A métrica primária de comparação entre modelos e entre versões da biblioteca é a acurácia balanceada, isto é, a média das revocações obtidas em cada classe. A escolha é justificada, e não herdada: Opitz (2024) mostra que acurácia, F1 micro, macro e ponderada, kappa e coeficiente de correlação de Matthews diferem sistematicamente em viés e em sensibilidade à prevalência das classes, de modo que a métrica principal precisa ser argumentada e acompanhada das demais; e Collot et al. (2026) demonstram que a acurácia balanceada é a métrica alinhada à comparação de modelos sob desbalanceamento, por não depender da escolha arbitrária de uma classe positiva, propriedade decisiva aqui, porque o modo de falha previsto é o colapso do modelo em um único rótulo, que a acurácia simples não distingue de acerto genuíno.
+
+Toda proporção é reportada com intervalo de confiança de 95% pelo método de escore de Wilson, e não pelo intervalo de Wald: Bowyer, Aitchison e Ivanova (2025) medem que, com cerca de cem itens, o intervalo de Wald entrega apenas 92,5% de cobertura real, degradando em amostras menores. Como todos os contrastes incidem sobre os mesmos casos, a comparação entre duas condições usa o teste de McNemar pareado; para as quatro versões da biblioteca (L0 a L3), o teste conjunto é o Q de Cochran, seguido, quando significativo, de comparações par a par com correção de Holm, procedimento que García e Herrera (2008) apontam como mais potente que as alternativas conservadoras de uso corrente (suporte parcial na revisão da literatura: a leitura do artigo quanto ao conjunto exato de procedimentos comparados permanece a conferir). Ao lado de cada valor-p é reportado o tamanho de efeito pelo g de Cohen. Além do acerto agregado, é contabilizado o número de trocas de rótulo (*flips*), casos individuais que mudam de resposta entre duas condições ainda que a média se mantenha: Dutta et al. (2024) medem que até 13,6% das respostas individuais trocam de rótulo entre esquemas de quantização do mesmo modelo com diferença de acurácia de até dois pontos percentuais. A comparação entre etapas só é feita com prompts idênticos, byte a byte: Sclar et al. (2024), avaliando 320 formatos semanticamente equivalentes em cerca de 53 tarefas, medem variação de até 76 pontos de acurácia e amplitude mediana de 6,4 pontos decorrentes apenas do formato do prompt.
+
+Para a autocura e a medição de valor, o Tempo Médio de Reparo (MTTR) é o intervalo entre a detecção da falha pelo agente e a restauração verificada do fluxo de execução, isto é, o instante em que a correção proposta é validada com sucesso na reexecução. O Task Success é a proporção de cenários em que o fluxo foi restaurado e o roteiro de teste concluiu sem erro, sobre o total de cenários de falha injetados. Como grupo de controle, na Fase 5 os mesmos cenários serão resolvidos manualmente por três integrantes do grupo, com o tempo cronometrado desde a apresentação da falha até a correção do teste, em cerca de dez cenários distintos com cinco repetições cada, com o banco de dados restaurado ao estado inicial entre execuções, o modo de falha fixado por cenário e a versão do navegador mantida constante pelo próprio orquestrador <!-- fonte: Projeto de Pesquisa V3 §3.4; roadmap.md §4.6 (dez cenários e três integrantes na linha de base) -->.
+
+As corridas da Fase 4 têm regras de leitura pré-registradas no plano da fase, numeradas de R1 a R8, com o que conta como cumprido e o limite a partir do qual o resultado vira limitação declarada; a seção 6.7 reporta cada corrida contra a sua regra.
+
+## 5.8 Rastreabilidade e Apoio de Inteligência Artificial
+
+Todo o trabalho fica registrado num Memorial de Desenvolvimento versionado junto com o código, no repositório público do projeto: as decisões numeradas (84 até esta versão), com quem decidiu e o fundamento; os achados experimentais; os relatórios por fase; os levantamentos bibliográficos, com cada afirmação verificada contra a fonte e as rejeitadas registradas com o motivo; e as pendências, uma ficha por decisão em aberto. Nenhum número de resultado é digitado à mão: as tabelas são geradas por script a partir dos registros das corridas, com uma opção de conferência que falha se o texto divergir do arquivo de origem, e este documento copia os números dos relatórios e anota a origem de cada um em comentário do texto fonte.
+
+O desenvolvimento contou com um agente de apoio de inteligência artificial (Claude Code), usado para escrever código, documentação e as rodadas de pesquisa bibliográfica. Toda alteração feita por ele leva uma marcação fixa no próprio arquivo, com o que foi feito e o motivo, para revisão humana, e as regras de uso (o que o agente pode e não pode fazer, a economia de tokens, os verificadores em código) estão documentadas no Memorial. O grupo mantém também uma cópia fiel do repositório no repositório da disciplina, atualizada commit a commit, e o quadro de tarefas do orientador.
+
+# 6 RESULTADOS E DISCUSSÃO
+
+Esta seção apresenta os resultados fase a fase, na ordem em que foram obtidos, e os discute à luz da fundamentação teórica na seção 6.8. Todos os números vêm dos relatórios do Memorial de Desenvolvimento, gerados por script a partir dos registros das corridas; a origem de cada número está anotada no texto fonte deste documento. Os tempos de inferência valem só para a máquina-alvo descrita na seção 5.2.
+
+## 6.1 Fase 1: ambiente, aplicações-alvo e injeção de falhas
+
+A Fase 1 montou o ambiente das medições: um instalador único; o site legado cedido (CobaiaFront, em PHP), mantido intocado; a CobaiaAPI (Python e FastAPI), que serve JSON sobre o mesmo banco; 7 modos de injeção de falha (defeitos provocados de propósito); e um banco de 90 casos. <!-- fonte: roadmap.md §1 --> Como o site cedido não fazia nenhuma requisição JSON, a fronteira de contrato que a pesquisa exige teve de ser construída. <!-- fonte: achados-do-ambiente-cobaia.md §4.1 -->
+
+O banco do site estava incompleto: a tabela tbusuarios não tinha as colunas nome e cpf que a view exige e seu ENUM de nível só admitia 'sup', o que tornava uma conta de cliente fisicamente impossível, e o esquema foi reconstruído por engenharia reversa das consultas reais, sem alterar nenhum arquivo PHP. <!-- fonte: achados-do-ambiente-cobaia.md §4.2 -->
+
+Ficaram fixadas as decisões 1 a 4 (dois alvos separados, FastAPI, banco único, aba de API no próprio site), 6 (instalador único para Windows e Linux), 9 (Chromium do Playwright) e 17 (.gitignore revisto porque o ambiente virtual versionado, de 67 MB, era inutilizável fora da máquina de origem). <!-- fonte: decisoes.md, decisões 1 a 4, 6, 9 e 17; achados-do-ambiente-cobaia.md §4.11 --> Limitações declaradas: o alvo é em parte construído pelo projeto; quatro fixtures (casos de teste fixos) tinham sintomas que o código real não produz (achado 4.20), corrigidos antes da Fase 3 (decisão 34); e os 7 modos produzem 6 das 23 causas (a Fase 4 acrescentou 14 modos). <!-- fonte: decisoes.md, decisões 34 e 79; roadmap.md §1 -->
+
+## 6.2 Fase 2-A: diagnóstico sem documentação, seis modelos locais
+
+A Fase 2-A mediu o que seis modelos locais diagnosticam sem documentação do sistema. Cada um, em quantização Q4_K_M (pesos comprimidos), respondeu a 90 fixtures do cobaia real (6 classes de defeito × 3 níveis × 5 casos, com 23 causas raiz) em três estratégias de prompt, o que deu 1.620 inferências no Ollama, só em CPU, no Ryzen 7 5800H, com temperatura 0,1; a métrica foi o acerto da causa raiz (rótulo de um conjunto fechado), com intervalo de confiança (IC) de Wilson e teste exato de McNemar. <!-- fonte: fase-2a-relatorio-por-modelo.md §1 -->
+
+Só o granite4.2:8b chegou perto da meta de 70–80%, com 67,8% de acerto a 45,7 s por caso, seguido de qwen2.5:7b (53,3% em 17,1 s), qwen2.5-coder:7b (48,9%), qwen2.5-coder:3b (25,6%), phi4-mini:3.8b (23,3%) e qwen2.5-coder:1.5b (5,6%). <!-- fonte: fase-2a-relatorio-por-modelo.md §2 --> Estruturar o raciocínio em estágios não ajudou: nos 540 pares, o prompt linear acertou 37,4% e os estágios com nomes de compilador e de domínio, 33,5% e 33,9%, e a diferença entre linear e compilador (p = 0,037) vem toda do granite4.2:8b, que deixou 15 e 18 respostas sem CAUSA_RAIZ em 90. <!-- fonte: fase-2a-relatorio-por-modelo.md §3 --> A classe do defeito previu a dificuldade e o nível não: runtime foi a mais fácil (média de 60,0) e tradução a mais difícil (18,9). <!-- fonte: fase-2a-relatorio-por-modelo.md §4.1 e §4.2 --> Os erros seguiram três modos: confusão entre causas vizinhas, colapso num rótulo (92% das respostas do qwen2.5-coder:1.5b em corpo_nao_e_json) e rótulo inventado (25,6% das respostas do phi4-mini:3.8b). <!-- fonte: fase-2a-relatorio-por-modelo.md §5 -->
+
+A fase fixou o prompt linear da 2-B (decisão 19) e deixou a hipótese de que a biblioteca age em tradução e efeito, classes que dependem de conhecer o sistema. <!-- fonte: fase-2a-relatorio-por-modelo.md §9; decisoes.md, decisão 19 --> Limitações declaradas: uma execução por condição a temperatura 0,1, IC de ±10 pontos percentuais (pp) com 90 casos, 23 rótulos fechados e só Q4_K_M, uma máquina e o português. <!-- fonte: fase-2a-relatorio-por-modelo.md §8 -->
+
+## 6.3 Fase 2-B: biblioteca de documentação recuperada
+
+A Fase 2-B (07 a 09/09/2026) repetiu os 90 casos na máquina-alvo, um notebook corporativo (Intel i5-1235U, 15,7 GB de RAM, sem GPU dedicada), refazendo nela a linha de base (decisão 25), que reproduziu o acerto do Ryzen, mas com tempo 2× maior (1,6–2,3×). <!-- fonte: roadmap.md §1; fase-2b-relatorio-por-modelo.md §1 e §2; decisoes.md, decisão 25 --> Com 36 verbetes, as condições foram A0 (sem biblioteca), A1 (biblioteca inteira no prompt), A2 (3 verbetes recuperados por BM25 e sinais calculados em código), A3 (só o verbete certo), A4 (3 verbetes plausíveis mas errados) e A5 (um verbete errado e um registro de incidente falso), em 2.610 inferências; A3 a A5 rodaram só em granite4.2:8b, qwen2.5-coder:3b e phi4-mini:3.8b (decisão 24). <!-- fonte: fase-2b-relatorio-por-modelo.md §1; decisoes.md, decisão 24 -->
+
+A biblioteca recuperada ficou igual ou acima da inteira nos seis modelos: três modelos cruzaram a meta de 70%, e o qwen2.5-coder:3b foi de 23,3% a 63,3% (+40 pp), sem perder um caso, a 29,7 s por caso. A hipótese da 2-A se confirmou pela metade: o ganho médio dos seis modelos foi de +26,7 pp em efeito e de só +4,5 pp em tradução. <!-- fonte: fase-2b-relatorio-por-modelo.md §3, §5 e §8 -->
+
+Tabela: Acerto por condição de biblioteca, por modelo (Δ em pp e p de McNemar contra A0)
+| Modelo | A0 | A1 inteira | Δ | p | A2 recuperada | Δ | p | IC 95% de A2 |
+|---|---|---|---|---|---|---|---|---|
+| granite4.2:8b | 66,7% | 61,1% | −5,6 | 0,50 | 76,7% | +10,0 | 0,12 | 66,9–84,2 |
+| qwen2.5-coder:7b | 50,0% | 63,3% | +13,3 | 0,07 | 72,2% | +22,2 | 0,0005 | 62,2–80,4 |
+| qwen2.5:7b | 57,8% | 62,2% | +4,4 | 0,50 | 70,0% | +12,2 | 0,07 | 59,9–78,5 |
+| qwen2.5-coder:3b | 23,3% | 32,2% | +8,9 | 0,06 | 63,3% | +40,0 | <0,001 | 53,0–72,6 |
+| phi4-mini:3.8b | 23,3% | 22,2% | −1,1 | 1,00 | 25,6% | +2,3 | 0,79 | 17,7–35,4 |
+| qwen2.5-coder:1.5b | 5,6% | 6,7% | +1,1 | 1,00 | 16,7% | +11,1 | 0,002 | 10,4–25,7 |
+Fonte: relatório da Fase 2-B (Memorial), tabela gerada por avaliar.py. <!-- fonte: fase-2b-relatorio-por-modelo.md §3 -->
+
+O teto é a recuperação: com só o verbete certo (A3), o granite4.2:8b acertou 100,0% e o qwen2.5-coder:3b 92,2%, mas o recuperador pôs o verbete certo entre os três (hit@3) em 78,9% dos casos. <!-- fonte: fase-2b-relatorio-por-modelo.md §4 --> Documentação errada foi obedecida: com 3 verbetes errados (A4), o granite4.2:8b caiu de 66,7% a 22,2%, e com A5 ele e o qwen2.5-coder:3b repetiram a causa plantada em 93,3% e 95,6% das respostas, como a literatura previa para evidência parafraseada (LI, Y. et al., 2025). <!-- fonte: fase-2b-relatorio-por-modelo.md §6 --> Precisões maiores (q8_0 e fp16) não tiraram o qwen2.5-coder:1.5b do piso: de 5,6% (Q4_K_M) a 8,9%. <!-- fonte: fase-2b-relatorio-por-modelo.md §7 -->
+
+A 2-B fixou a biblioteca recuperada, nunca a inteira, como modo de operação e condicionou a gestão da biblioteca pelo próprio modelo a validação por código (decisão 28), levando essa gestão à Fase 3 (decisão 13'). <!-- fonte: fase-2b-relatorio-por-modelo.md §12; decisoes.md, decisões 13' e 28 --> Limitações declaradas: uma execução por condição a temperatura 0,1, recuperação igual para os seis modelos (o hit@3 de 78,9% é constante do experimento), A5 como pior caso construído e só o português. <!-- fonte: fase-2b-relatorio-por-modelo.md §11 -->
+
+## 6.4 Fase 3: biblioteca editada pelo próprio modelo e a escolha do modelo
+
+A Fase 3 testou se o próprio modelo melhora a documentação que consulta sem estragá-la. Quatro modelos (granite4.2:8b, qwen2.5:7b, qwen2.5-coder:7b e qwen2.5-coder:3b) diagnosticaram os 90 casos com a condição A2 e, em três épocas, propuseram acréscimos à própria cópia da biblioteca (nota, retificação ou verbete novo), aceitos só após validação em código (decisões 30 a 33). <!-- fonte: fase-3-relatorio-por-modelo.md §1; decisoes.md, decisões 30 a 33 --> Os casos foram partidos em 54 de aprendizado, em que o modelo vê a causa correta, e 36 de avaliação, sem esse retorno (decisão 31); L0 é a biblioteca original e L1 a L3 são as versões após cada época; a bateria rodou de 13 a 15/09/2026, em 57h59, com 2.088 inferências. <!-- fonte: fase-3-relatorio-por-modelo.md §1; roadmap.md §1; decisoes.md, decisão 31 -->
+
+Nos 36 casos de avaliação só o qwen2.5:7b saiu do lugar: de 77,8% a 88,9% de acerto em L1, com 4 casos ganhos e nenhum perdido, e de 81,2% a 91,7% de acurácia balanceada (média do acerto por causa raiz), a métrica primária. <!-- fonte: fase-3-relatorio-por-modelo.md §3, blocos curva_acerto e curva_balanceada -->
+
+Tabela: Acerto da causa raiz por modelo e versão da biblioteca, nos 36 e nos 54 casos
+| Modelo | L0 (36) | L1 (36) | L2 (36) | L3 (36) | L0 (54) | L1 (54) | L2 (54) | L3 (54) |
+|---|---|---|---|---|---|---|---|---|
+| granite4.2:8b | 80,6% | 80,6% | 80,6% | 80,6% | 74,1% | 75,9% | 70,4% | 72,2% |
+| qwen2.5-coder:7b | 75,0% | 75,0% | 75,0% | 77,8% | 68,5% | 74,1% | 72,2% | 68,5% |
+| qwen2.5:7b | 77,8% | 88,9% | 83,3% | 86,1% | 66,7% | 68,5% | 68,5% | 72,2% |
+| qwen2.5-coder:3b | 69,4% | 72,2% | 72,2% | 72,2% | 63,0% | 63,0% | 63,0% | 64,8% |
+Fonte: relatório da Fase 3 (Memorial), tabela gerada por avaliar_fase3.py. <!-- fonte: fase-3-relatorio-por-modelo.md §3, bloco curva_acerto -->
+
+Nenhuma das 36 comparações pareadas contra L0 teve p < 0,05, e a maior diferença, +11,1 pp, ficou abaixo do efeito mínimo detectável de 19,4 pp com 36 casos (a menor diferença que o teste exato aponta como significativa, supondo 20% de pares discordantes). <!-- fonte: fase-3-relatorio-por-modelo.md §4, blocos pareado e mde --> O granite4.2:8b, o mais caro (131,3 s por diagnóstico e 26h58 de bateria, contra 66,8 s e 13h53 do qwen2.5:7b), não escreveu nada que entrasse (0 de 181 propostas aceitas, 133 barradas por texto_longo, isto é, texto acima de 280 caracteres) e por isso tem curva plana. <!-- fonte: fase-3-relatorio-por-modelo.md §6 e §9 --> Das 63 edições revisadas, 23 eram corretas, 17 parciais e 23 erradas, e 21 das corretas repetiam o verbete original, de modo que o ganho de L1 não pode ser creditado à verdade do que foi escrito. <!-- fonte: fase-3-relatorio-por-modelo.md §7 -->
+
+Hipóteses e vereditos:
+
+- H1, "Nos 36 de avaliação, acerto com L3 > L0 nos modelos de 7–8B (McNemar exato, α = 0,05)": não confirmada, pois o maior ganho foi +8,3 pp (qwen2.5:7b, p = 0,25) e nenhum p ficou abaixo de 0,05. <!-- fonte: fase-3-relatorio-por-modelo.md §2, H1 -->
+- H2, "O ganho concentra-se nas classes em que a recuperação é fraca (tradução: hit@3 = 46,7%), via aumento do hit@3 da biblioteca do modelo": não confirmada, pois o hit@3 do qwen2.5:7b nos 90 casos foi de 80,0 em L0 a 77,8 em L1. <!-- fonte: fase-3-relatorio-por-modelo.md §2, H2 -->
+- H3, "Nos 54 de aprendizado o ganho é maior que nos 36; a diferença quantifica a memorização": não confirmada e, no vencedor, invertida, pois o qwen2.5:7b ganhou +11,1 pp nos 36 e +1,8 nos 54 em L1. <!-- fonte: fase-3-relatorio-por-modelo.md §2, H3 -->
+- H4, "A taxa de aceitação das propostas cresce com o porte; o 3B tem mais rejeições por formato": parcial, pois o 3B teve mais rejeições por formato (bloco_malformado em 91 de 151), mas o granite4.2:8b, o maior, teve 0 de 181 propostas aceitas. <!-- fonte: fase-3-relatorio-por-modelo.md §2, H4 -->
+- H5, "Autoenvenenamento (casos certos em L(n) que viram errados em L(n+1), nos 36) fica abaixo de 10%; se superar o ganho, o modelo é vetado": confirmada, pois o máximo foi 5,6% (qwen2.5:7b, de L1 para L2) e nenhum modelo foi vetado. <!-- fonte: fase-3-relatorio-por-modelo.md §2, H5 -->
+- H6, "A curva não é monótona: reportar o melhor L e o L3, nunca só o último": confirmada, pois a acurácia balanceada do qwen2.5:7b nos 36 foi 81,2%, 91,7% (L1), 84,2% e 86,2%. <!-- fonte: fase-3-relatorio-por-modelo.md §2, H6 -->
+
+Limitações declaradas: 36 casos de avaliação, com efeito mínimo detectável de 19,4 pp; os mesmos 36 casos da 2-B, de modo que só casos inéditos fecham a dúvida sobre memorização; um único revisor das edições (primeira passada por IA, aceita na decisão 56); uma execução por condição; e cada modelo ter lido a biblioteca que escreveu, o que confunde escritor e leitor, limitação que a Fase 3-B testou depois (decisão 69). <!-- fonte: analise-decisoria-modelo-final.md §9; decisoes.md, decisões 56 e 69 -->
+
+A escolha seguiu uma regra fixada antes da bateria (decisão 36) e reafirmada antes da leitura dos resultados (decisão 46): ordenar pela acurácia balanceada nos 36 casos, vetar autoenvenenamento máximo acima de 10%, desempatar pela licença e depois pela época mais baixa, e só então examinar a robustez. <!-- fonte: analise-decisoria-modelo-final.md §2 --> Venceu o qwen2.5:7b em L1, com 91,7% de acurácia balanceada (acerto de 88,9%), à frente da própria L3 (86,2%), do qwen2.5-coder:7b em L3 (84,2%) e do granite4.2:8b (83,3%), sem veto, e foi o melhor em 77,6% das 2.000 reamostragens dos 36 casos e em 50,0% nas dos 90. <!-- fonte: analise-decisoria-modelo-final.md §3 e §4, blocos dm_regra_36 e dm_bootstrap --> Confirmada em 22/09/2026 (decisão 52), a escolha leva à Fase 4 o qwen2.5:7b com a cópia L1, depois da curadoria humana das 40 edições da época 1 (decisões 52 e 60). <!-- fonte: decisoes.md, decisões 52 e 60 -->
+
+## 6.5 Fase 3-B: pontes de versão, casos inéditos, troca cruzada e o confronto qwen2.5:7b contra qwen2.5-coder:7b
+
+A Fase 3-B mediu as limitações da Fase 3 que tinham teste barato (decisão 56). <!-- fonte: fase-3b-relatorio.md §1 --> Como o Ollama, servidor local que executa os modelos, se atualiza sozinho, a decisão 47 exige uma ponte de versão antes de qualquer inferência nova: repete-se a biblioteca original (L0) nos 36 casos de avaliação e contam-se os casos que só a ponte acertou (b) e os que só a Fase 3 acertou (c), e com b mais c até 2 por modelo a corrida seguinte é pareável (comparável caso a caso) com a Fase 3. <!-- fonte: decisoes.md decisão 47; fase-3b-relatorio.md §7 -->
+
+A Fase 3 rodou em Ollama 0.34.0 e as pontes em 0.34.1, 0.34.4 e 0.40.2; em 0.34.4 o qwen2.5-coder:7b saiu do limite (b/c 3/1, p = 0,6250); em 0.40.2 os dois modelos de 7 bilhões de parâmetros ficaram pareáveis (b/c 1/0 cada); e entre corridas do mesmo modelo com a mesma entrada de 0 a 3 casos em 36 mudam de acerto, de modo que com uma corrida por versão não se separa a versão do acaso. <!-- fonte: fase-3b-relatorio.md §3 e §4.3 -->
+
+Para testar se o ganho generaliza, escreveram-se 36 casos inéditos, só a partir do código do sistema-cobaia, que somados aos 36 oficiais formam 72 casos de avaliação; cada modelo os leu com a biblioteca original e com as versões que ele mesmo escreveu, L1 (a original mais as edições aceitas na época 1) e L3 (com as das três épocas). <!-- fonte: fase-3b-relatorio.md §4; roadmap.md §2.1 --> O ganho da L1 no qwen2.5:7b, de 77,8% a 88,9% nos oficiais, não reapareceu nos inéditos (de 75,0% a 72,2%); nos 72 casos, a L1 leva o acerto de 76,4% a 80,6% (b/c 4/1, p = 0,375) e a L3 a 83,3% (b/c 6/1, p = 0,125), abaixo do efeito mínimo detectável de 13,9 pontos, e a hipótese H1 segue não confirmada. <!-- fonte: fase-3b-relatorio.md §4 -->
+
+Na troca cruzada, os dois modelos Coder (qwen2.5-coder:7b e qwen2.5-coder:3b) leram, nos 36 oficiais, as bibliotecas L1 e L3 escritas pelo qwen2.5:7b, o doador, contra o próprio L0 da ponte na mesma versão do Ollama (0.34.4): o Coder 7B foi de 80,6% a 83,3% (3 ganhos, 2 perdas, p = 1,0); o Coder 3B caiu de 72,2% a 61,1% (1 ganho, 5 perdas, p = 0,2188) e passou a responder corpo_nao_e_json, causa ausente dos 36 casos, em 7 respostas contra 2; lida por quem a escreveu, a mesma L1 rende 88,9%. <!-- fonte: fase-3b-relatorio.md §5 --> A decisão 69 fixou, por isso, o padrão do agente: o modelo com a biblioteca que ele mesmo escreveu, e não a biblioteca como peça independente; trocar o modelo que lê exige medir de novo. <!-- fonte: decisoes.md decisão 69 -->
+
+O qwen2.5:7b e o qwen2.5-coder:7b foram confrontados caso a caso pelo teste de McNemar exato: nos 36 oficiais o qwen lidera com todas as versões da biblioteca (tabela), e na regra pré-registrada da decisão 36 o qwen2.5:7b com a L1 fica em primeiro, com 91,7% de acurácia balanceada, contra 84,2% da melhor combinação do Coder, em 4º. <!-- fonte: comparativo-qwen25-7b-vs-coder-7b.md §1 e §5 -->
+
+Tabela: Confronto entre qwen2.5:7b e qwen2.5-coder:7b nos 36 casos de avaliação (Δ é Coder menos qwen)
+| Fase 3 · confronto caso a caso | n | ambos acertam | nenhum | só o Coder | só o qwen | Δ | p (McNemar exato) |
+|---|---|---|---|---|---|---|---|
+| F3 · L0 · 36 de avaliação | 36 | 23 | 4 | 4 | 5 | -2,8 pp | 1,0000 |
+| F3 · L1 · 36 de avaliação | 36 | 26 | 3 | 1 | 6 | -13,9 pp | 0,1250 |
+| F3 · L3 · 36 de avaliação | 36 | 26 | 3 | 2 | 5 | -8,3 pp | 0,4531 |
+Fonte: comparativo qwen2.5:7b contra qwen2.5-coder:7b (Memorial), seção 5, bloco cq_confronto_f3 gerado por comparar_qwen_coder.py. <!-- fonte: comparativo-qwen25-7b-vs-coder-7b.md §5, bloco cq_confronto_f3 -->
+
+Nos 36 inéditos, na corrida 7, o Coder passa à frente dentro do ruído, com 86,1% contra 72,2% usando a L1 de cada um (b/c 6/1, p = 0,125), mas o placar nos 72 casos é 7/7 (p = 1,000); a repetição de 23/10/2026 (corridas 14 e 15) deu 83,3% contra 72,2% (b/c 5/1, p = 0,219) e 6/7 nos 72 casos. <!-- fonte: fase-3b-relatorio.md §4.1 e §4.3 --> A decisão 73 manteve a decisão 52 (qwen2.5:7b com a L1): o saldo é reproduzível, mas não separa os dois no teste pareado e some quando os 36 oficiais entram; fica como limitação declarada, e o plano da Fase 4 passou a prever mais casos inéditos. <!-- fonte: decisoes.md decisão 73 -->
+
+Limitações declaradas: um doador e dois leitores da família Qwen2.5, só as versões L1 e L3 e uma corrida por condição; a direção inversa (o qwen2.5:7b lendo a biblioteca de outro modelo) não rodou, e só a diferença do 3B contra o doador com a L1 tem p abaixo de 0,05 (p = 0,002); os 36 inéditos foram escritos por IA e conferidos contra o código. <!-- fonte: fase-3b-relatorio.md §5 e §8 -->
+
+## 6.6 Pré-Fase 4: modelos grandes pelo disco, atlas das competências, confiança por probabilidade e a especificação da trilha
+
+A Pré-Fase 4, de 01/10/2026 (decisão 70) a 26/10/2026, foi uma pausa de pesquisa, sem código do agente, com três frentes: modelos grandes lendo os pesos do disco, atlas visual das competências e raciocínio aberto. <!-- fonte: decisoes.md decisão 70; roadmap.md §3.1 -->
+
+Na primeira frente, avaliou-se o colibri, motor de inferência para modelos de mistura de especialistas (MoE), que lê do disco, a cada token, os pesos de que o roteador precisa. Na máquina de medição (i5-1235U, 16,0 GB de RAM, 218,1 GB livres no NVMe), o GLM-5.2 pede 372,0 GB de disco e não cabe, 2 modelos grandes cabem mas ficam no mínimo de RAM declarado, sem medida publicada, e só o OLMoE roda com folga; numa máquina de 32 GB, o GLM-5.2 levaria 12,7 minutos só de geração para uma resposta do tamanho da nossa mediana, 11,4 vezes o tempo total de um diagnóstico de hoje. <!-- fonte: pre-fase-4-relatorio.md §2.2 --> A decisão 75 fechou o colibri como motor do agente e cancelou a corrida 13, mantendo a pesquisa. <!-- fonte: decisoes.md decisão 75 -->
+
+Na segunda frente, o método do atlas de especialistas do colibri foi aplicado aos dados do projeto, com os verbetes da biblioteca no lugar dos especialistas e as classes de defeito no lugar dos tópicos: com a biblioteca original, o atlas prevê a classe de um caso pelos verbetes da rota de busca, deixando o próprio caso de fora, em 65,6% dos 90 casos da bateria oficial, contra um acaso de 16,7%, e em 63,9% dos inéditos; os verbetes que o modelo escreveu não são entregues pela busca e aparecem com zero casos. <!-- fonte: pre-fase-4-relatorio.md §3.2 e §3.3 -->
+
+Na terceira frente, a corrida 12 (06/10/2026, Ollama 0.34.4) gravou a probabilidade de cada token do rótulo nos 72 casos que nenhuma biblioteca viu, com o qwen2.5:7b lendo a biblioteca original, a L1 inteira e a cópia curada da L1: 216 diagnósticos, 46 erros. <!-- fonte: pre-fase-4-relatorio.md §4.2 --> A AUROC, medida de quão bem um sinal separa erros de acertos, é 0,783 [0,684 a 0,882] para a probabilidade conjunta do rótulo, contra 0,541 e 0,626 de dois sinais sem custo de inferência (verbete do contexto e classe da rota); mas 23 dos 46 erros têm probabilidade acima de 0,85, e revisar os 10% de menor probabilidade pega 14 dos 46 erros (tabela), de modo que o sinal é triagem, não barreira. <!-- fonte: pre-fase-4-relatorio.md §4.2 -->
+
+Tabela: Revisão humana dos casos de menor probabilidade do rótulo (corrida 12)
+| Recorte | Parcela revisada | Casos revisados | Erros pegos | Acertos revisados à toa | Risco no que sobra |
+|---|---|---|---|---|---|
+| todas as versões | 10% | 22 | 14 de 46 | 8 | 16,5% |
+| todas as versões | 30% | 65 | 26 de 46 | 39 | 13,2% |
+Fonte: relatório da Pré-Fase 4 (Memorial), seção 4.2, bloco tb_conf_revisao gerado por analisar_confianca.py. <!-- fonte: pre-fase-4-relatorio.md §4.2, bloco tb_conf_revisao -->
+
+A cópia curada da L1 rendeu como a L1 inteira (80,6% contra 81,9% nos 72 casos), e a decisão 71 a manteve como biblioteca de partida da Fase 4. <!-- fonte: pre-fase-4-relatorio.md §4.2; decisoes.md decisão 71 -->
+
+A parte B da pesquisa rodou em nove tópicos e duas ondas de agentes porque nove tópicos num só Workflow passariam de 30 agentes por onda (decisão 76); a onda 1 trouxe 79 afirmações, 78 verificadas, e a onda 2, 64, todas verificadas. <!-- fonte: decisoes.md decisão 76; pre-fase-4-relatorio.md §4.3 --> A especificação da trilha de raciocínio aberta (versão 1), saída da onda 1, foi aprovada como base da Fase 4 (decisão 77): um arquivo JSONL por corrida, uma linha por evento, com cabeçalho da corrida (modelo, versão do Ollama e hashes); em cada nó de decisão, o que o programa fez, o que o modelo declarou e o que o código conferiu ficam separados; e não há segunda chamada ao modelo para explicar ou julgar, que custaria de 47 a 78 s por inferência. <!-- fonte: decisoes.md decisão 77; especificacao-trilha-e-relatorio.md §1 a §3 --> A saída restrita por gramática (23 causas) foi adiada (decisão 78), porque altera a probabilidade do rótulo, e a Fase 4 confere em código as quatro linhas da resposta. <!-- fonte: decisoes.md decisão 78 -->
+
+Limitações declaradas: a conta do colibri usa medidas publicadas por terceiros, com outro modelo; as trilhas das corridas gravadas são remontadas; a sonda tem uma corrida por biblioteca e 46 erros em 216 diagnósticos, com intervalos largos. <!-- fonte: pre-fase-4-relatorio.md §6 -->
+
+## 6.7 Fase 4 (em andamento até 01/11/2026): o agente na tela
+
+A Fase 4 faz o qwen2.5:7b com a L1 curada diagnosticar o que o navegador vê. O plano foi aprovado em 26/10/2026 como escrito (decisão 79): interceptador Playwright, poda da árvore de acessibilidade (a página descrita por papel e nome dos elementos), diagnóstico ao vivo, cura de seletor, biblioteca em produção e cenários para a Fase 5, em nove pacotes (P0 a P8) e nas corridas 16 a 22, com ponte de versão do Ollama antes de toda medição. <!-- fonte: roadmap.md §4.6 --> A ficha 29 foi a única fora da recomendação (decisão 80): a quebra de localizador (o seletor de um elemento deixa de achá-lo) é armada de duas formas, pelo harness (código que executa os cenários) no navegador e por uma variante do front PHP legado, e o relatório da fase compara as duas. <!-- fonte: roadmap.md §4.6 -->
+
+Os pacotes P0 a P4 estão feitos. O P0 (26/10) instalou Playwright 1.64.1 e Chromium 156.0.8078.4 e levou as cobaias (os sistemas sob teste) a rodar na máquina de medição com PHP 8.2.35 e MariaDB 11.8.9 portátil, sem administrador. <!-- fonte: roadmap.md §1 --> O P1 entregou a trilha e o relatório versão 2; o P2 criou 14 modos novos de injeção de falha na CobaiaAPI, porque os antigos reproduziam na tela só 20 dos 72 casos; o P3, o diagnóstico ao vivo; o P4, a cura de seletor. <!-- fonte: roadmap.md §1 e §4.6 -->
+
+Na corrida 17 (26/10/2026, sem modelo), dos 72 casos de avaliação 37 têm tela e modo e os 37 reproduzem na tela (51,4%), com mediana de 0,275 s por cenário, e dos 36 inéditos da ficha 27 reproduzem 25 (69,4%). <!-- fonte: roadmap.md §2.8 --> A corrida 16 (27/10/2026, modo calibracao, Ollama 0.40.2, 90 casos oficiais) escolheu k = 3 verbetes por prompt pela regra R8, com 68 acertos em 90 contra 65 com k = 5, reaproveitou a ponte de 0.40.2 (b = 1, c = 0) e gravou os limiares do selo de confiança: baixo até p = 0,832 (15 erros em 27 casos) e alto a partir de p = 0,990 (3 erros em 37 casos). <!-- fonte: roadmap.md §2.9 -->
+
+Nas corridas 18 e 18b (01/11/2026, modo tela), os 37 casos que reproduzem foram diagnosticados na mesma sessão do Ollama, lidos da tela e do caso escrito (fixture), e a regra R2 admitia no máximo 3 casos de discordância (b mais c). <!-- fonte: roadmap.md §2.10 --> Na corrida 18 o acerto foi de 43,2% na tela contra 83,8% no fixture (b = 1, c = 16, p = 0,0003), porque em 22 dos 37 casos, sem diferença de campo contra o contrato, a poda do corpo levou ao modelo o primeiro produto normal da lista, e a decisão 81 passou a levar ao caso ao vivo (o caso montado a partir da tela) o que mudou contra a referência em modo normal. <!-- fonte: roadmap.md §2.10; decisoes.md decisão 81 --> Na corrida 18b o acerto na tela subiu a 70,3% (b = 2, c = 7, b + c = 9, p = 0,180); a R2 seguiu não cumprida, agora por confusão entre rótulos vizinhos, e a decisão 82 fez da 18b a corrida 18 válida e registrou a R2 como limitação declarada. <!-- fonte: roadmap.md §2.10 -->
+
+Na corrida 19 (01/11/2026, modo cura, sem modelo), quatro roteiros do front legado, quatro modos de quebra, as duas formas da decisão 80 e cinco repetições somaram 160 execuções, todas com quebra detectada e todas curadas pela regra R3 (roteiro concluído na reexecução), pelo mesmo elemento da referência. <!-- fonte: roadmap.md §2.11 --> O MTTR do agente (da detecção da quebra à reexecução validada) teve mediana de 0,639 s (mínimo 0,355, máximo 0,887), e as duas formas deram a mesma árvore em 16 das 16 células. <!-- fonte: roadmap.md §2.11 -->
+
+Faltam o P5 (biblioteca em produção e ciclo de correção; corrida 20), o P6 (cenários da Fase 5; corrida 21), o P7 (avaliação da própria trilha; corrida 22) e o P8 (painel, relatório e documentação). <!-- fonte: plano-aprovado-fase-4.md §5 e §6 --> Limitações declaradas: a quebra é armada, não ocorrida; o MTTR é só do agente, sem linha de base manual; a R2 não foi cumprida.
+
+## 6.8 Discussão
+
+Os resultados respondem à pergunta de pesquisa em três partes. A primeira, se um modelo pequeno, quantizado e rodando em CPU acerta a causa raiz com frequência útil, tem resposta positiva com limites: o modelo escolhido, qwen2.5:7b (decisão 52, que o adota com a biblioteca que ele mesmo escreveu), chegou, lendo a biblioteca original, a 75,0% de acerto (intervalo de confiança de 95% de 58,9 a 86,2) e 79,6% de acurácia balanceada nos 36 casos de avaliação na ponte de versão 0.34.4, e o qwen2.5-coder:7b, a 80,6% (65,0 a 90,2) e 82,5% na mesma ponte <!-- fonte: roadmap.md §2.3, tabela da ponte de versão 0.34.4 -->. A diferença entre os dois fica dentro do ruído entre corridas iguais, e a decisão 73 manteve a escolha, declarando o saldo do Coder nos casos inéditos como limitação <!-- fonte: decisoes.md, decisão 73 -->. O que a literatura previa serviu de premissa em um ponto, se confirmou em outro e se mostrou menor em um terceiro. Serviu de premissa a sensibilidade ao formato do prompt (SCLAR et al., 2024), razão pela qual o prompt ficou congelado desde a Fase 3; e confirmou-se o risco de aderir a material recuperado incorreto (WU; WU; ZOU, 2024), razão da validação em código de cada edição. Mostrou-se menor do que o esperado o ganho da biblioteca editada pelo próprio modelo: como Suzgun et al. (2025) apontam para modelos pequenos, o gargalo está em quem escreve, e o ganho não acompanha a biblioteca quando muda quem a lê (decisão 69); a cópia curada rende como a biblioteca inteira (decisão 71).
+
+A segunda parte, se o agente sabe quando não sabe, tem uma resposta medida: a probabilidade conjunta dos tokens do rótulo separa acertos de erros com AUROC de 0,78 na sonda de confiança <!-- fonte: roadmap.md §7 (corrida 12) -->, o que a torna um sinal de triagem, não uma barreira; é a leitura que o selo de confiança da Fase 4 adota, com os limiares calibrados na corrida 16 e não escolhidos à mão. A trilha de raciocínio aberta, por sua vez, foi desenhada a partir do que a literatura sustenta sobre fidelidade do raciocínio: o texto que o modelo escreve sobre a própria decisão não é prova de que a decisão foi tomada por aquele motivo, e por isso a trilha registra o que o agente viu, o que fez e as conferências em código, com a justificativa por molde no lugar da prosa livre (seções 4.1.7 e 4.1.8).
+
+A terceira parte, se a cura e o diagnóstico funcionam na tela, tem resposta parcial. A cura de seletor curou 160 das 160 quebras armadas na corrida 19, com MTTR do agente de 0,639 s na mediana (mínimo 0,355, máximo 0,887), sem modelo de linguagem, e as duas formas de armar a quebra deram a mesma árvore de acessibilidade e o mesmo resultado em 16 das 16 células comparadas <!-- fonte: roadmap.md §2.11, blocos tb_f4_cura_resumo e tb_f4_cura_formas -->. A taxa de 100% vem do desenho da corrida, e está declarada como limitação: cada modo de quebra ataca o estilo de localizador que ele quebra, e a mudança de texto acrescenta uma palavra; um sinônimo no lugar do texto ficaria abaixo do limiar do nome e não seria curado <!-- fonte: roadmap.md §2.11, limitações declaradas -->. O diagnóstico ao vivo ficou abaixo do mesmo caso lido do arquivo: depois da revisão do caso ao vivo (decisão 81), o modelo deu o mesmo rótulo na tela e no arquivo em 26 dos 37 casos (eram 16 antes da revisão), e a regra R2 ficou registrada como não cumprida, com a diferença restante atribuída a confusões entre rótulos vizinhos da taxonomia (decisão 82) <!-- fonte: decisoes.md, decisão 82 -->. Esse é o resultado mais importante para a Fase 5: o que o agente vê na tela ainda não é tão informativo quanto o caso que um humano escreveu, e o ciclo de correção da biblioteca (pacote P5) é a próxima tentativa de fechar essa distância.
+
+Três limitações atravessam todas as fases. As falhas são injetadas, não ocorridas, em duas aplicações sob controle do grupo, uma delas cedida por um integrante; os tempos valem para uma máquina, com um modelo carregado por vez; e a linha de base manual, que dá sentido ao MTTR, ainda não foi medida. A quarta limitação é de método: parte do texto e do código foi escrita por um agente de apoio de inteligência artificial, com marcação para revisão em cada trecho; a revisão humana dessas marcações é parte da entrega final.
+
+# 7 CONCLUSÃO
+
+O trabalho propôs um agente de QA E2E autônomo com autocura de localizadores e diagnóstico de causa raiz na fronteira de integração, executando um modelo de linguagem inteiramente na máquina do usuário. Dos cinco objetivos específicos, o primeiro (fundamentação e ambiente) e o segundo (camada de inferência local, com o modelo e a biblioteca escolhidos por regra pré-registrada) estão cumpridos; o terceiro (filtragem de contexto) está implementado e medido na Fase 4; o quarto (interceptação, cura e diagnóstico ao vivo) está implementado, com a cura medida e o diagnóstico ao vivo abaixo do caso escrito, limitação declarada e em investigação; o quinto (medição contra a linha de base manual) é a Fase 5.
+
+As contribuições são de método e de artefato. De método: uma taxonomia de 23 causas raiz em seis classes e três níveis, com casos fixos reproduzíveis; a comparação de modelos locais sob regra fixada antes dos testes, com acurácia balanceada, intervalos de Wilson e testes pareados; a biblioteca de documentação editada pelo próprio modelo atrás de validação em código, com o limite medido; a probabilidade do rótulo como sinal de triagem; a trilha de raciocínio aberta com um nó por decisão e relatório por caso; e regras de leitura pré-registradas para cada corrida. De artefato: o repositório público com as duas aplicações-alvo, o instalador, o harness de experimentos, as bibliotecas por modelo e época, o painel do projeto e o Memorial com todas as decisões.
+
+O que falta está no roadmap do projeto: os pacotes P5 a P8 da Fase 4 (biblioteca em produção com ciclo de correção, ensaio dos cenários, avaliação da própria trilha e painel da fase) e as corridas 20 a 22; a Fase 5, com o MTTR e o Task Success contra a linha de base manual; a interface para o analista, com um indicador de progresso enquanto o modelo pensa e um painel central dos resultados da análise do modelo, com a árvore de decisão de cada caso montada a partir da trilha, a ser especificada ao fim da Fase 4; a revisão humana das marcações de inteligência artificial; e a revisão final das referências na norma. Este documento é a primeira versão do texto e será regerado a cada etapa concluída.
+
+# REFERÊNCIAS
+
+ALIZADEH, K.; MIRZADEH, I.; BELENKO, D.; KHATAMIFARD, K.; CHO, M.; DEL MUNDO, C. C.; RASTEGARI, M.; FARAJTABAR, M. LLM in a flash: efficient large language model inference with limited memory. In: **Annual Meeting of the Association for Computational Linguistics**, 62., 2024. Proceedings [...]. [S. l.]: ACL, 2024. Disponível em: https://arxiv.org/abs/2312.11514. Acesso em: 01 out. 2026.
+
+ARIZE AI. **OpenInference: Decision Spans (spec/decision_spans.md)**. Repositório Arize-ai/openinference, branch main, 2026. Disponível em: https://github.com/Arize-ai/openinference/blob/main/spec/decision_spans.md. Acesso em: 23 out. 2026.
+
+AUTOPSIAS. **Brainiac: a local second brain for any LLM (README.md)**. Repositório GitHub Autopsias/brainiac, 2026a. Disponível em: https://raw.githubusercontent.com/Autopsias/brainiac/main/README.md. Acesso em: 23 out. 2026.
+
+AUTOPSIAS. **CHANGELOG.md**. Versão 0.20.44. Repositório GitHub Autopsias/brainiac, 2026b. Disponível em: https://raw.githubusercontent.com/Autopsias/brainiac/main/CHANGELOG.md. Acesso em: 23 out. 2026.
+
+AUTOPSIAS. **docs/benchmark-results.md**. Repositório GitHub Autopsias/brainiac, 2026c. Disponível em: https://raw.githubusercontent.com/Autopsias/brainiac/main/docs/benchmark-results.md. Acesso em: 23 out. 2026.
+
+BISWAS, S. Enhancing End-to-End Test Stability Through AI-Assisted Self-Healing: A Case Study of Playwright Healer Agent Implementation. **International Journal of Scientific Engineering and Research**, v. 14, n. 1, p. 1-12, jan. 2026. Disponível em: https://www.researchgate.net/publication/399515915. Acesso em: 23 set. 2026.
+
+BOPOF. **[Performance]: native Windows 11 (MinGW), i5-12600K / 32 GB / WD SN770, 0.08 a 0.14 tok/s**. Issue n. 113, repositório JustVugg/colibri, GitHub, 2026. Disponível em: https://github.com/JustVugg/colibri/issues/113. Acesso em: 01 out. 2026.
+
+BOWYER, S.; AITCHISON, L.; IVANOVA, D. R. Position: Don't Use the CLT in LLM Evals With Fewer Than a Few Hundred Datapoints. In: **International Conference on Machine Learning (ICML)**, 42., 2025. Disponível em: https://arxiv.org/abs/2503.01747. Acesso em: 11 set. 2026.
+
+CHEN, Y.; BENTON, J.; RADHAKRISHNAN, A.; UESATO, J.; DENISON, C.; SCHULMAN, J.; SOMANI, A.; HASE, P.; WAGNER, M.; ROGER, F.; MIKULIK, V.; BOWMAN, S. R.; LEIKE, J.; KAPLAN, J.; PEREZ, E. Reasoning models don't always say what they think. **arXiv preprint** arXiv:2505.05410, 2025. Disponível em: https://arxiv.org/abs/2505.05410. Acesso em: 23 out. 2026.
+
+COHEN-WANG, B.; SHAH, H.; GEORGIEV, K.; MĄDRY, A. ContextCite: Attributing Model Generation to Context. In: **Advances in Neural Information Processing Systems (NeurIPS)**, 2024. arXiv:2409.00729. Disponível em: https://arxiv.org/abs/2409.00729. Acesso em: 23 out. 2026.
+
+COLLOT, S.; FRASER, C.; ZHAO, J.; SHEN, W. F.; WILLI, T.; LEONTIADIS, I. Balanced Accuracy: The Right Metric for Evaluating LLM Judges, Explained through Youden's J statistic. In: **Conference of the European Chapter of the Association for Computational Linguistics (EACL): Industry Track**, 2026, Rabat, Marrocos. p. 927-936. Disponível em: https://aclanthology.org/2026.eacl-industry.69/. Acesso em: 11 set. 2026.
+
+CORRÊA, N. K.; FALK, S.; FATIMAH, S.; SEN, A.; OLIVEIRA, N. de. TeenyTinyLlama: Open-Source Tiny Language Models Trained in Brazilian Portuguese. **Machine Learning with Applications**, v. 16, art. 100558, 2024. Disponível em: https://arxiv.org/abs/2401.16640. Acesso em: 11 set. 2026.
+
+CORRÊA, N. K.; SEN, A.; FATIMAH, S.; FALK, S.; LANDGRAF, L.; KASTNER, J.; FLEK, L. Tucano 2 Cool: Better Open Source LLMs for Portuguese. **arXiv preprint** arXiv:2603.03543, 2026. Disponível em: https://arxiv.org/abs/2603.03543. Acesso em: 11 set. 2026.
+
+CUCONASU, F.; TRAPPOLINI, G.; SICILIANO, F.; FILICE, S.; CAMPAGNANO, C.; MAAREK, Y.; TONELLOTTO, N.; SILVESTRI, F. The Power of Noise: Redefining Retrieval for RAG Systems. In: **International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)**, 47., Washington, DC. Nova York: ACM, 2024. p. 719-729. Disponível em: https://arxiv.org/abs/2401.14887. Acesso em: 11 set. 2026.
+
+DESHPANDE, D.; GANGAL, V.; MEHTA, H.; KRISHNAN, J.; KANNAPPAN, A.; QIAN, R. TRAIL: Trace Reasoning and Agentic Issue Localization. **arXiv preprint** arXiv:2505.08638v3, 2025. Disponível em: https://arxiv.org/abs/2505.08638. Acesso em: 23 out. 2026.
+
+DUTTA, A.; KRISHNAN, S.; KWATRA, N.; RAMJEE, R. Accuracy is Not All You Need. In: **Advances in Neural Information Processing Systems (NeurIPS)**, 37., 2024. Disponível em: https://arxiv.org/abs/2407.09141. Acesso em: 11 set. 2026.
+
+FACELI, K.; LORENA, A. C.; GAMA, J.; ALMEIDA, T. A.; CARVALHO, A. C. P. L. F. **Inteligência Artificial: uma abordagem de aprendizado de máquina**. 3. ed. Rio de Janeiro: LTC, 2025. Disponível em: https://www.grupogen.com.br/livro-inteligencia-artificial-uma-abordagem-de-aprendizado-de-maquina-katti-faceli-ana-carolina-lorena-joao-gama-tiago-a-de-almeida-e-andre-c-p-l-f-de-carvalho-editora-ltc-9788521639206. Acesso em: 11 set. 2026.
+
+FARQUHAR, S.; KOSSEN, J.; KUHN, L.; GAL, Y. Detecting hallucinations in large language models using semantic entropy. **Nature**, v. 630, p. 625-630, 2024. DOI: 10.1038/s41586-024-07421-0. Acesso em: 23 out. 2026.
+
+GARCÍA, S.; HERRERA, F. An Extension on "Statistical Comparisons of Classifiers over Multiple Data Sets" for all Pairwise Comparisons. **Journal of Machine Learning Research**, v. 9, p. 2677-2694, 2008. Disponível em: https://www.jmlr.org/papers/volume9/garcia08a/garcia08a.pdf. Acesso em: 11 set. 2026.
+
+HSU, D.; NEU, M.; FARRAG, M.; KINDI, R. **Leveraging AI for efficient incident response**. Engineering at Meta, 24 jun. 2024. Disponível em: https://engineering.fb.com/2024/06/24/data-infrastructure/leveraging-ai-for-efficient-incident-response/. Acesso em: 23 out. 2026.
+
+HUANG, J.; CHEN, X.; MISHRA, S.; ZHENG, H. S.; YU, A. W.; SONG, X.; ZHOU, D. Large Language Models Cannot Self-Correct Reasoning Yet. In: **International Conference on Learning Representations (ICLR)**, 2024. arXiv:2310.01798. Disponível em: https://arxiv.org/abs/2310.01798. Acesso em: 23 out. 2026.
+
+INSTATUNNEL. **Automated Contract Testing: How to Detect API Drift Before It Reaches Production**. Medium, abr. 2026. Disponível em: https://medium.com/@instatunnel/automated-contract-testing-how-to-detect-api-drift-before-it-reaches-production-6c2a77baa2a3. Acesso em: 29 set. 2026.
+
+JACOBS, R. A.; JORDAN, M. I.; NOWLAN, S. J.; HINTON, G. E. Adaptive Mixtures of Local Experts. **Neural Computation**, v. 3, n. 1, p. 79-87, 1991. DOI: 10.1162/neco.1991.3.1.79. Acesso em: 01 out. 2026.
+
+JOSEPH, R. N. Beyond LLM-based test automation: a zero-cost self-healing approach using DOM accessibility tree extraction. **arXiv preprint** arXiv:2603.20358 [cs.SE], 2026. Disponível em: https://arxiv.org/abs/2603.20358. Acesso em: 11 set. 2026.
+
+JÚNIOR, E.; VALEJO, A. D. B.; VALVERDE-REBAZA, J.; NEVES, V. GenIA-E2ETest: A Generative AI-Based Approach for End-to-End Test Automation. In: **Simpósio Brasileiro de Engenharia de Software (SBES)**, set. 2025, Recife, PE. Disponível em: https://sol.sbc.org.br/index.php/sbes/article/view/37006. Acesso em: 23 set. 2026.
+
+JUSTVUGG. **colibri: motor de inferência com especialistas transmitidos do disco**. Versão 1.12.1, 2026. Disponível em: https://github.com/JustVugg/colibri. Acesso em: 01 out. 2026.
+
+KIM, S. S. Y.; VAUGHAN, J. W.; LIAO, Q. V.; LOMBROZO, T.; RUSSAKOVSKY, O. Fostering Appropriate Reliance on Large Language Models: The Role of Explanations, Sources, and Inconsistencies. In: **CHI CONFERENCE ON HUMAN FACTORS IN COMPUTING SYSTEMS**, 2025, New York. Proceedings [...]. New York: ACM, 2025. Disponível em: https://arxiv.org/abs/2502.08554. Acesso em: 23 out. 2026.
+
+KULIGOWSKI, A. **Chat History and Embedding Truncation Happens Silently with No User-Visible Indication**. Issue n. 14259, repositório ollama/ollama, GitHub, fev. 2026. Disponível em: https://github.com/ollama/ollama/issues/14259. Acesso em: 11 set. 2026.
+
+LEE, H. Practical Limits of Autonomous Test Repair: A Multi-Agent Case Study with LLM-Driven Discovery and Self-Correction. **arXiv preprint** arXiv:2605.01471, 2026. DOI: 10.48550/arXiv.2605.01471. Disponível em: https://arxiv.org/abs/2605.01471. Acesso em: 11 set. 2026.
+
+LI, H.; APPLEBY, G.; ALPERIN, K.; GOMEZ, S. R.; SUH, A. The Role of Visualization in LLM-Assisted Knowledge Graph Systems: Effects on User Trust, Exploration, and Workflows. **arXiv preprint** arXiv:2505.21512, 2025. Disponível em: https://arxiv.org/abs/2505.21512. Acesso em: 23 out. 2026.
+
+LI, Y. et al. Investigating Context-Faithfulness in Large Language Models: The Roles of Memory Strength and Evidence Style. In: **ACL**, 2025. Disponível em: https://arxiv.org/abs/2409.10955. Acesso em: 03 nov. 2026.
+
+LIU, N. F.; LIN, K.; HEWITT, J.; PARANJAPE, A.; BEVILACQUA, M.; PETRONI, F.; LIANG, P. Lost in the Middle: How Language Models Use Long Contexts. **Transactions of the Association for Computational Linguistics**, v. 12, p. 157-173, 2024. Disponível em: https://aclanthology.org/2024.tacl-1.9/. Acesso em: 11 set. 2026.
+
+MADSEN, A.; CHANDAR, S.; REDDY, S. Are self-explanations from large language models faithful? In: **Findings of the Association for Computational Linguistics: ACL 2024**, 2024. Disponível em: https://arxiv.org/abs/2401.07927. Acesso em: 23 out. 2026.
+
+MICROSOFT. **Playwright: release notes (release-notes-js.md)**. Versões 1.51 a 1.60, 2025. Disponível em: https://raw.githubusercontent.com/microsoft/playwright/main/docs/src/release-notes-js.md. Acesso em: 23 out. 2026.
+
+OLLAMA. **Ollama API: generate a completion; release v0.12.11**. Documentação oficial e notas de release no GitHub, 2025. Disponível em: https://docs.ollama.com/api/generate. Acesso em: 23 out. 2026.
+
+OPENTELEMETRY GENAI SIG. **Semantic conventions for generative client AI spans (gen-ai-spans.md)**. In: OPENTELEMETRY. semantic-conventions-genai: especificação de convenções semânticas para IA generativa. 2026. Disponível em: https://github.com/open-telemetry/semantic-conventions-genai. Acesso em: 23 out. 2026.
+
+OPITZ, J. A Closer Look at Classification Evaluation Metrics and a Critical Reflection of Common Evaluation Practice. **Transactions of the Association for Computational Linguistics**, v. 12, p. 820-836, 2024. Disponível em: https://aclanthology.org/2024.tacl-1.46/. Acesso em: 11 set. 2026.
+
+PARCALABESCU, L.; FRANK, A. On measuring faithfulness or self-consistency of natural language explanations. In: **Annual Meeting of the Association for Computational Linguistics**, 62., 2024. Proceedings [...]. ACL, 2024. Disponível em: https://arxiv.org/abs/2311.07466. Acesso em: 23 out. 2026.
+
+PROSKURINA, I.; BRUN, L.; METZLER, G.; VELCIN, J. When quantization affects confidence of large language models? In: **Findings of the Association for Computational Linguistics: NAACL 2024**, 2024. Disponível em: https://arxiv.org/abs/2405.00632. Acesso em: 23 out. 2026.
+
+SCLAR, M.; CHOI, Y.; TSVETKOV, Y.; SUHR, A. Quantifying Language Models' Sensitivity to Spurious Features in Prompt Design or: How I Learned to Start Worrying about Prompt Formatting. In: **International Conference on Learning Representations (ICLR)**, 12., 2024, Viena. Disponível em: https://arxiv.org/abs/2310.11324. Acesso em: 11 set. 2026.
+
+SHAZEER, N.; MIRHOSEINI, A.; MAZIARZ, K.; DAVIS, A.; LE, Q.; HINTON, G.; DEAN, J. Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer. In: **International Conference on Learning Representations (ICLR)**, 2017. Disponível em: https://arxiv.org/abs/1701.06538. Acesso em: 01 out. 2026.
+
+SHI, X.; LI, Z.; CHEN, A. R. Enhancing LLM-based Fault Localization with a Functionality-Aware Retrieval-Augmented Generation Framework. **arXiv preprint**, 2025.
+
+SOUZA, R.; GUEROUDJI, A.; DEWITT, S.; ROSENDO, D.; GHOSAL, T.; ROSS, R.; BALAPRAKASH, P.; FERREIRA DA SILVA, R. PROV-AGENT: Unified Provenance for Tracking AI Agent Interactions in Agentic Workflows. In: **IEEE International Conference on e-Science**, 21., 2025, Chicago. arXiv:2508.02866, 2025. Disponível em: https://arxiv.org/abs/2508.02866. Acesso em: 23 out. 2026.
+
+SPRAGUE, Z.; YIN, F.; RODRIGUEZ, J. D.; JIANG, D.; WADHWA, M.; SINGHAL, P.; ZHAO, X.; YE, X.; MAHOWALD, K.; DURRETT, G. To CoT or not to CoT? Chain-of-thought helps mainly on math and symbolic reasoning. In: **International Conference on Learning Representations (ICLR)**, 2025. arXiv:2409.12183. Disponível em: https://arxiv.org/abs/2409.12183. Acesso em: 23 out. 2026.
+
+STEYVERS, M.; TEJEDA, H.; KUMAR, A.; BELEM, C.; KARNY, S.; HU, X.; MAYER, L.; SMYTH, P. What large language models know and what people think they know. **Nature Machine Intelligence**, 2025. DOI: 10.1038/s42256-024-00976-7. Disponível em: https://arxiv.org/abs/2401.13835. Acesso em: 23 out. 2026.
+
+STOCCO, A.; YANDRAPALLY, R.; MESBAH, A. Visual web test repair. In: **Proceedings of the 2018 26th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE 2018)**, Lake Buena Vista, FL, USA. New York: ACM, 2018. p. 503-514. DOI: 10.1145/3236024.3236063. Disponível em: https://dl.acm.org/doi/10.1145/3236024.3236063. Acesso em: 11 set. 2026.
+
+SUZGUN, M.; YUKSEKGONUL, M.; BIANCHI, F.; JURAFSKY, D.; ZOU, J. Dynamic Cheatsheet: Test-Time Learning with Adaptive Memory. **arXiv preprint** arXiv:2504.07952, 2025. Disponível em: https://arxiv.org/abs/2504.07952. Acesso em: 11 set. 2026.
+
+TURPIN, M.; MICHAEL, J.; PEREZ, E.; BOWMAN, S. R. Language models don't always say what they think: unfaithful explanations in chain-of-thought prompting. In: **Advances in Neural Information Processing Systems (NeurIPS)**, 2023. Disponível em: https://arxiv.org/abs/2305.04388. Acesso em: 23 out. 2026.
+
+VASCONCELOS, H.; JÖRKE, M.; GRUNDE-MCLAUGHLIN, M.; GERSTENBERG, T.; BERNSTEIN, M. S.; KRISHNA, R. Explanations Can Reduce Overreliance on AI Systems During Decision-Making. **Proceedings of the ACM on Human-Computer Interaction (CSCW)**, v. 7, 2023. DOI: 10.1145/3579605. Disponível em: https://arxiv.org/abs/2212.06823. Acesso em: 23 out. 2026.
+
+VOGEL, M.; MEYER-ESCHENBACH, F.; KOHLER, S.; GRÜNEWALD, E.; BALZER, F. Codebase-Memory: Tree-Sitter-Based Knowledge Graphs for LLM Code Exploration via MCP. **arXiv preprint** arXiv:2603.27277, 2026. Disponível em: https://arxiv.org/abs/2603.27277. Acesso em: 23 out. 2026.
+
+WALLAT, J.; HEUSS, M.; DE RIJKE, M.; ANAND, A. Correctness is not faithfulness in RAG attributions. **arXiv preprint** arXiv:2412.18004, 2024. Disponível em: https://arxiv.org/abs/2412.18004. Acesso em: 23 out. 2026.
+
+WANG, G.; XIE, Y.; JIANG, Y.; MANDLEKAR, A.; XIAO, C.; ZHU, Y.; FAN, L.; ANANDKUMAR, A. Voyager: An Open-Ended Embodied Agent with Large Language Models. **arXiv preprint** arXiv:2305.16291, 2023. DOI: 10.48550/arXiv.2305.16291. Disponível em: https://arxiv.org/abs/2305.16291. Acesso em: 11 set. 2026.
+
+WANG, J.; HUANG, Y.; CHEN, C.; LIU, Z.; WANG, S.; WANG, Q. Software Testing with Large Language Models: Survey, Landscape, and Vision. **IEEE Transactions on Software Engineering**, v. 50, n. 4, p. 911-936, 2024. DOI: 10.1109/TSE.2024.3368208. Disponível em: https://arxiv.org/abs/2307.07221. Acesso em: 13 set. 2026.
+
+WANG, X.; MA, B.; HU, C.; WEBER-GENZEL, L.; RÖTTGER, P.; KREUTER, F.; HOVY, D.; PLANK, B. "My answer is C": first-token probabilities do not match text answers in instruction-tuned language models. In: **Findings of the Association for Computational Linguistics: ACL 2024**, 2024. Disponível em: https://arxiv.org/abs/2402.14499. Acesso em: 23 out. 2026.
+
+WU, K.; WU, E.; ZOU, J. ClashEval: Quantifying the Tug-of-War Between an LLM's Internal Prior and External Evidence. In: **Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track**, 37., 2024. Disponível em: https://arxiv.org/abs/2404.10198. Acesso em: 11 set. 2026.
+
+XIONG, Z.; LIN, Y.; XIE, W.; HE, P.; LIU, Z.; TANG, J.; LAKKARAJU, H.; XIANG, Z. How Memory Management Impacts LLM Agents: An Empirical Study of Experience-Following Behavior. **arXiv preprint** arXiv:2505.16067v2, 2025. Disponível em: https://arxiv.org/abs/2505.16067. Acesso em: 23 out. 2026.
+
+ZHANG, G.; JIANG, W.; WANG, X.; BEHR, A.; ZHAO, K.; FRIEDMAN, J.; CHU, X.; ANOUN, A. Adaptive Memory Admission Control for LLM Agents. **arXiv preprint** arXiv:2603.04549, 2026. Disponível em: https://arxiv.org/abs/2603.04549. Acesso em: 11 set. 2026.
+
+ZHANG, J. et al. Prune4Web: DOM Tree Pruning Programming for Web Agent. In: **AAAI Conference on Artificial Intelligence**, 2026.
+
+ZHANG, Q.; HU, C.; UPASANI, S.; MA, B.; HONG, F.; KAMANURU, V.; RAINTON, J.; WU, C.; JI, M.; LI, H.; THAKKER, U.; ZOU, J.; OLUKOTUN, K. Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models. **arXiv preprint** arXiv:2510.04618 [cs.CL], 6 out. 2025. Disponível em: https://arxiv.org/abs/2510.04618. Acesso em: 11 set. 2026.
+
+ZHAO, A.; HUANG, D.; XU, Q.; LIN, M.; LIU, Y.-J.; HUANG, G. ExpeL: LLM Agents Are Experiential Learners. In: **Proceedings of the AAAI Conference on Artificial Intelligence (AAAI-24)**, v. 38, n. 17, p. 19632-19642, 2024. DOI: 10.1609/aaai.v38i17.29936. Disponível em: https://arxiv.org/abs/2308.10144. Acesso em: 11 set. 2026.
+
+ZOU, W.; GENG, R.; WANG, B.; JIA, J. PoisonedRAG: Knowledge Corruption Attacks to Retrieval-Augmented Generation of Large Language Models. In: **USENIX Security Symposium**, 34., 2025, Seattle. p. 3827-3844. Disponível em: https://www.usenix.org/conference/usenixsecurity25/presentation/zou-poisonedrag. Acesso em: 11 set. 2026.
+
+# GLOSSÁRIO
+
+**Acurácia balanceada:** média das revocações obtidas em cada classe, isto é, da proporção de acertos dentro de cada classe verdadeira, com o mesmo peso para todas elas. Diferentemente da acurácia simples, não é inflada quando o modelo passa a responder sempre o rótulo mais frequente, razão pela qual é a métrica primária de comparação.
+
+**API (Application Programming Interface):** conjunto de definições e protocolos padronizados que permite a comunicação e a troca de dados entre diferentes sistemas de software.
+
+**Árvore de acessibilidade (accessibility tree):** estrutura derivada do DOM que expõe apenas a semântica dos elementos de uma página (seu papel, nome acessível e valor), originalmente destinada a tecnologias assistivas. Por ser bem menor que a árvore HTML completa, é a base da filtragem de contexto e da geração de candidatos na cura de seletor.
+
+**Biblioteca de documentação (L0, L1, L2, L3):** a base de conhecimento sobre a aplicação-alvo, organizada em verbetes (contratos, erros, defeitos conhecidos, regras de negócio). L0 é a biblioteca original, escrita pelo grupo; L1, L2 e L3 são as cópias ao fim de cada época da Fase 3, editadas pelo modelo atrás de validação em código.
+
+**Caso ao vivo:** o caso de diagnóstico montado pelo agente a partir da tela, com a chamada de rede, a árvore de acessibilidade podada, o sintoma descrito por molde e o que mudou contra a corrida de referência em modo normal; contrapõe-se ao caso escrito (fixture), redigido à mão no banco de casos.
+
+**Casos inéditos:** casos de diagnóstico escritos depois das bibliotecas e nunca vistos por nenhum modelo nem usados em nenhuma edição, para medir o que o modelo generaliza.
+
+**Corrida:** uma execução numerada do harness de experimentos, com comando, duração, regra de leitura e resultado registrados no roadmap do projeto.
+
+**Contract drift (deriva de contrato):** alteração silenciosa ou não documentada na estrutura dos dados devolvidos por uma API (como a mudança de um tipo numérico para texto), quebrando as expectativas da interface que consome esses dados.
+
+**Cura de seletor:** a correção automática do localizador de um elemento da tela quando o roteiro de teste deixa de encontrá-lo: candidatos gerados da árvore de acessibilidade, verificados em código e aplicados numa reexecução do roteiro.
+
+**DOM (Document Object Model):** representação estruturada em forma de árvore do conteúdo de um documento HTML, utilizada pelos navegadores para renderizar páginas e permitir interações via scripts.
+
+**End-to-end (E2E):** abordagem de teste de software que valida o fluxo completo de uma aplicação, de ponta a ponta, simulando o comportamento de um usuário real desde a interface gráfica até a camada de banco de dados.
+
+**Época (Fase 3):** cada passagem completa do conjunto de casos pelo agente durante a Fase 3, ao final da qual as edições aprovadas pela conferência em código são consolidadas em uma nova cópia da biblioteca. Não há atualização dos pesos do modelo entre épocas: o que muda é o texto da biblioteca.
+
+**FastAPI:** framework web em Python para a construção de APIs. Neste trabalho, é a tecnologia da API da aplicação-alvo submetida aos testes.
+
+**Fertilidade (tokens por palavra):** razão entre o número de tokens produzidos pelo tokenizador e o número de palavras do texto original. Quanto maior a fertilidade, mais caro em contexto e em tempo fica o mesmo texto; para os tokenizadores de uso corrente ela é maior em português do que em inglês.
+
+**Fuzzing:** técnica de teste que fornece dados inválidos, inesperados ou aleatórios como entrada para um sistema, a fim de expor falhas de validação ou exceções não tratadas.
+
+**LLM (Large Language Model, modelo de linguagem grande):** modelo de inteligência artificial treinado em grande volume de texto, capaz de interpretar contexto e gerar linguagem natural e código estruturado.
+
+**MTTR (Mean Time To Repair, tempo médio de reparo):** intervalo entre a detecção de uma falha e a restauração verificada do funcionamento. Neste trabalho, é medido entre a detecção da falha pelo agente e a validação bem-sucedida da correção proposta na reexecução.
+
+**Ollama:** runtime de código aberto para execução local de modelos de linguagem, responsável por baixar, carregar e executar os modelos na própria máquina, sem serviço em nuvem.
+
+**Playwright:** framework de automação de navegadores, com interceptação nativa do tráfego de rede e leitura da árvore de acessibilidade; neste trabalho, usado em Python com o Chromium.
+
+**Poda (DOM pruning):** redução de contexto que descarta, antes do envio ao modelo, os nós da árvore de acessibilidade e as partes do corpo da resposta que não importam para o passo em análise, preservando chaves, tipos e o caminho até o elemento de interesse.
+
+**Ponte de versão:** corrida de controle repetida numa versão nova do runtime de inferência, para saber se a mudança de versão por si só altera os rótulos antes de comparar resultados obtidos em versões diferentes.
+
+**Probabilidade do rótulo:** a probabilidade que o modelo atribui ao primeiro token da causa escolhida, lida antes da amostragem; usada como sinal de confiança e de triagem para revisão humana.
+
+**QA (Quality Assurance, garantia de qualidade):** conjunto de atividades e processos de engenharia de software voltados a garantir que a aplicação atenda aos requisitos antes do lançamento.
+
+**Quantização:** compressão de modelos de linguagem que reduz a precisão numérica dos pesos, diminuindo o consumo de memória e viabilizando a inferência em hardware modesto, ao custo de uma perda controlada de precisão.
+
+**Qwen2.5 e Qwen2.5-Coder:** família de modelos de linguagem de código aberto avaliada neste projeto em variante quantizada: a variante de instrução geral (Qwen2.5) e a variante voltada a programação (Qwen2.5-Coder); o porte e a variante adotados foram definidos experimentalmente.
+
+**RAG (Retrieval-Augmented Generation, geração aumentada por recuperação):** técnica em que se recupera, de uma base de conhecimento externa, apenas o material pertinente à pergunta, fornecendo-o ao modelo junto com a solicitação.
+
+**Selo de confiança:** a faixa (alta, média ou baixa) em que a probabilidade do rótulo cai, com os limiares lidos da curva risco-cobertura na corrida de calibração; decide se o diagnóstico vai para revisão humana.
+
+**Self-healing (autocura):** capacidade de um sistema, ou de um script de automação, de detectar falhas de execução e aplicar correções para continuar operando sem intervenção humana imediata; neste trabalho, restrita ao localizador, com a correção apresentada ao desenvolvedor como sugestão.
+
+**Task Success (sucesso da tarefa):** proporção de cenários de falha em que o agente restaurou o fluxo de execução e o roteiro de teste concluiu sem erro, sobre o total de cenários submetidos.
+
+**Tokenização:** conversão do texto em unidades discretas (tokens) antes de qualquer processamento pelo modelo de linguagem; é a unidade em que se contam a janela de contexto e o custo de cada inferência.
+
+**Trilha de raciocínio aberta:** o registro, em arquivo de linhas JSON, de tudo o que o agente viu, fez e decidiu num caso, com um nó por decisão (alternativas, evidências, contraste, divergência e probabilidade do rótulo), de onde sai o relatório por caso para o desenvolvedor.
+
+**Validação em código:** conferência determinística, escrita em código e não feita por outro modelo de linguagem, pela qual toda edição proposta na biblioteca precisa passar antes de ser incorporada.
+
+# APÊNDICE A - Taxonomia de causas raiz
+
+A taxonomia organiza as causas raiz em seis classes, cada uma com a pergunta que o analista faz para chegar a ela, e em três níveis de dificuldade. O modelo escolhe a causa de uma lista fechada de 23 nomes de domínio.
+
+Tabela: As seis classes da taxonomia e a pergunta de cada uma
+| Classe | Pergunta | O que cobre |
+|---|---|---|
+| Léxica | O corpo da resposta é sequer legível? | Falhas em que o dado não chega em forma processável |
+| Sintática | A forma da resposta bate com a esperada? | Estrutura divergente: campo ausente, renomeado, aninhamento errado |
+| Semântica | Os tipos e os domínios fazem sentido? | Forma correta, conteúdo incompatível: tipo trocado, valor fora do domínio, formato de data |
+| Tradução | O mapeamento entre as camadas está correto? | Dado válido, porém traduzido errado: escala, unidade, chave de junção trocada |
+| Tempo de execução | O comportamento no tempo e no estado está correto? | Latência, limite de requisições, cache servindo dado velho, duplicação |
+| Efeito | O que o usuário de fato vê está correto? | Falha observável só na interface, sem erro de rede aparente |
+Fonte: módulo taxonomia.py do harness de experimentos (dicionário CLASSES), elaborado pelos autores.
+
+Tabela: Os três níveis de dificuldade
+| Nível | Critério |
+|---|---|
+| Fácil | Sinal local e explícito: status de erro, corpo que não parseia, campo claramente ausente. Detectável por regra determinística |
+| Médio | HTTP 200 e corpo válido, mas o contrato divergiu (tipo, enum, formato). Exige comparar com o contrato esperado |
+| Difícil | HTTP 200, corpo válido e tipos corretos. A falha é de lógica ou estado, normalmente só visível cruzando duas requisições ou requisição contra a tela |
+Fonte: módulo taxonomia.py do harness de experimentos (dicionário NIVEIS), elaborado pelos autores.
+
+Tabela: As 23 causas raiz, na ordem da lista fechada que o modelo recebe
+| Número | Causa raiz | Número | Causa raiz |
+|---|---|---|---|
+| 1 | corpo_nao_e_json | 13 | escala_ou_unidade_errada |
+| 2 | corpo_vazio | 14 | chave_de_juncao_errada |
+| 3 | resposta_truncada | 15 | contagem_inconsistente |
+| 4 | codificacao_incorreta | 16 | tempo_de_resposta_excedido |
+| 5 | campo_ausente | 17 | limite_de_requisicoes |
+| 6 | campo_renomeado | 18 | dado_desatualizado |
+| 7 | estrutura_aninhada_divergente | 19 | registro_duplicado |
+| 8 | colecao_no_lugar_de_objeto | 20 | erro_interno_do_servidor |
+| 9 | tipo_divergente | 21 | recurso_inexistente |
+| 10 | valor_fora_do_dominio | 22 | localizador_quebrado |
+| 11 | formato_de_data_divergente | 23 | estado_da_tela_divergente |
+| 12 | nulo_inesperado | | |
+Fonte: módulo taxonomia.py do harness de experimentos (lista CAUSAS_RAIZ), elaborado pelos autores.
+
+# APÊNDICE B - Onde está cada coisa no repositório
+
+O repositório público do projeto (EricDerre/TCC) tem uma cópia fiel no repositório da disciplina, na pasta projeto/. A tabela indica onde cada parte deste documento pode ser conferida.
+
+Tabela: Mapa do repositório
+| O que | Onde |
+|---|---|
+| Aplicações-alvo e instalador | Programacao/CobaiaFront, Programacao/CobaiaAPI, install.py e run.py na raiz |
+| Harness de experimentos, taxonomia e bancos de casos | Programacao/AgenteCore/experimentos |
+| Bibliotecas de documentação: original, por modelo e época, e cópia curada | Programacao/AgenteCore/base_conhecimento (original), Programacao/AgenteCore/experimentos/resultados_alvo/fase3/bibliotecas (por modelo e época) e Programacao/AgenteCore/biblioteca_producao (cópia curada) |
+| Resultados das corridas na máquina-alvo | Programacao/AgenteCore/experimentos/resultados_alvo |
+| Decisões numeradas e histórico por commit | Documentacao/memorial/1-decisoes-e-historico |
+| Levantamentos bibliográficos e referências | Documentacao/memorial/2-pesquisa-e-literatura |
+| Relatórios por fase, análise decisória e achados | Documentacao/memorial/3-resultados-e-analises |
+| Especificação da trilha de raciocínio aberta e ferramental | Documentacao/memorial/5-metodo-e-ferramental |
+| Roadmap, pendências em fichas e painel do projeto | Documentacao/memorial/roadmap.md, pendencias.md e Documentacao/dashboard |
+| Este documento (texto fonte e gerador) | Documentacao/TCC - ABNT 14724 - V1.md e ferramentas/gerar_tcc_docx.py |
+Fonte: elaborado pelos autores.

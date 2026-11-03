@@ -34,7 +34,25 @@
 # grava (reserva do cliente) e o tempo da restauração entre a detecção e a reexecução é descontado do MTTR.
 # ! Motivo: plano aprovado, P4 e seção 6 (corrida 19: 4 roteiros x 4 modos x 5 repetições, nas duas formas da ficha 29 c);
 # a cura nunca altera a aplicação e só vale na reexecução de verificação (projeto ABNT §2.1).
+# ! Alteração de IA - Revisar: (03/11/2026, pacote P5) o modo `biblioteca` (corrida 20, noite C, com modelo), em quatro fases na
+# mesma sessão do Ollama: (A) os 54 casos de aprendizado da partição da Fase 3, cada um lido da tela quando tem modo, cenário e
+# reproduz pela regra R1 (a classe `Tela`, como na corrida 18) e do fixture nos outros, diagnosticado por diagnostico_ao_vivo
+# com os verbetes ligados ao caso recuperados pelo id (ficha 32) e, na continuação literal do prompt, a proposta de edição
+# (biblioteca_fase4.propor_p5: o validador congelado da Fase 3, os 13 filtros em código da decisão 65 e a regra dos 40% da
+# calibração), gravada na cópia epoca-101 só quando passa por tudo; a época fecha pelo fechamento da Fase 3; (B) a regra R5:
+# os 36 inéditos da 3-B diagnosticados com a epoca-101 (o lote) e pareados com a cópia curada (corrida 12, `--base-ineditos
+# corrida12`, ou diagnosticados de novo na mesma sessão com `propria`), b e c em `lote.json`; (C) o ciclo de correção, sem
+# modelo: os casos de aprendizado ligados a notas da L1 e com tela, metade com o modo desligado (partilha determinística por
+# hash, `conjunto_de_correcao`) e metade mantido, cada um rodado antes (modo ligado) e depois; o gatilho em código marca
+# `corrigido` só com a evidência dos dois diffs e a operação "correção" grava as seções na epoca-102, fechada por
+# biblioteca_fase4.fechar_correcoes; a regra R4 compara a marca com o conjunto desligado; (D) a sonda de 28/09 repetida
+# (sonda_correcao.rodar_sonda) com a recuperação por id ligada, sobre a epoca-102, com efe-3, efe-10 e os casos desligados.
+# Grava `biblioteca.jsonl` (um por caso de aprendizado), `correcoes.jsonl`, `lote.json`, `sonda.json`, `condicoes_fase4.json`,
+# a trilha v2 (`trilha_biblioteca.jsonl`) e os relatórios v2 por caso; a leitura é avaliar_fase4.py --biblioteca.
+# ! Motivo: plano aprovado, P5 e seção 6 (corrida 20) e regras R4 e R5; a biblioteca de produção não muda na corrida: o lote
+# aceito só é promovido por biblioteca_fase4.py --promover, depois da planilha de revisão humana preenchida pelo Eric.
 """Uso (em Programacao/AgenteCore/experimentos):
+  RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo biblioteca --saida fase4_biblioteca [--base-ineditos corrida12|propria] [--casos N] [--sem-sonda] [--sem-correcao]
   RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo reproducao --saida fase4_reproducao [--casos N] [--canal chromium] [--banco avaliacao|ineditos_fase4|todos]
   RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo cura --saida fase4_cura [--repeticoes 5] [--formas harness,php] [--roteiros front-busca,...] [--modos id_renomeado,...]
   RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo calibracao --saida fase4_calibracao [--k 3,5] [--casos N]
@@ -83,8 +101,13 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     except Exception:  # noqa: BLE001
         pass
 
-MODOS = ("reproducao", "calibracao", "tela", "cura")
+MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca")
 REPETICOES_PADRAO = 5                     # corrida 19: cinco repetições por célula (plano, seção 6)
+BASES_DOS_INEDITOS = ("corrida12", "propria")
+CORRIDA12 = "pre_fase4_confianca"         # corrida 12 (06/10/2026): a cópia curada nos 72 casos, k = 3, Ollama 0.34.4 (ponte 0.40.2 pareável)
+TETO_PROPOSTA_PADRAO = 700                # o mesmo teto de saída da proposta da Fase 3 (sonda_correcao --max-tokens-proposta)
+EPOCA_DO_LOTE = 101                       # epoca-100 é a L1 curada; 101 o lote; 102 as correções; 103 a sonda
+EPOCA_DAS_CORRECOES = 102
 MODELO_PADRAO = "qwen2.5:7b"
 K_PADRAO = "3,5"                          # ficha 30 (a): a calibração mede os dois
 RAM_MINIMA_GB = {"qwen2.5:7b": 6.5}       # o mesmo valor de rodar_fase3b.ps1 ($RamMinima), medido na Fase 2-B
@@ -400,6 +423,71 @@ def registro_da_cura(d: dict) -> dict:
 
 
 # ------------------------------------------------------------------ cobaias e API
+
+# ! Alteração de IA - Revisar: (03/11/2026, P5) partes puras do modo `biblioteca`: a partilha determinística do conjunto de
+# correção, os casos de aprendizado ligados a notas da L1 curada e com tela, e os registros compactos da corrida.
+# ! Motivo: a regra R4 precisa de um conjunto desligado conhecido e auditável (a partilha por hash não depende da ordem dos
+# casos, como a partição da Fase 3), e o avaliador lê `biblioteca.jsonl` e `correcoes.jsonl` por estas chaves.
+def conjunto_de_correcao(ids: list[str]) -> dict:
+    """Os casos ligados a notas e com tela partilhados em dois: a primeira metade (arredondada para cima) da ordem por
+    sha256('correcao:' + id) tem o modo de falha desligado na reexecução; a outra fica com o modo ligado."""
+    import hashlib
+    import math
+    regra = "sha256('correcao:' + id) ordena os casos ligados a notas e com tela; a primeira metade (arredondada para cima) tem o modo desligado, a outra fica com o modo ligado"
+    ordem = sorted(set(ids), key=lambda i: hashlib.sha256(f"correcao:{i}".encode("utf-8")).hexdigest())
+    n = math.ceil(len(ordem) / 2)
+    return {"desligados": sorted(ordem[:n]), "mantidos": sorted(ordem[n:]), "regra": regra}
+
+
+def casos_ligados_com_tela(verbetes: list[dict] | None = None) -> list[dict]:
+    """Os casos de aprendizado (partição da Fase 3) ligados a notas ou verbetes da L1 curada e que têm modo e tela, por id,
+    com os verbetes ligados; é o universo do ciclo de correção."""
+    import biblioteca_fase4 as bf
+    import diagnostico_ao_vivo as dv
+    verbetes = verbetes if verbetes is not None else bib.carregar(dv.PASTA_CURADA)
+    particao = e3b._particao_oficial(e3b._oficial())
+    aprendizado = [c for c in e3b.TODOS_OS_CASOS if evo.particao_de(particao, c["id"]) == "aprendizado"]
+    por_id = {i["id"]: i for i in selecionar_casos(aprendizado)["reproduziveis"]}
+    saida = []
+    for cid in sorted(por_id):
+        ligados = [v["id"] for v in bf.verbetes_do_caso(verbetes, cid)]
+        if ligados:
+            saida.append({**por_id[cid], "verbetes": ligados})
+    return saida
+
+
+def registro_da_biblioteca(d: dict) -> dict:
+    """A linha de biblioteca.jsonl de um caso de aprendizado: origem (tela ou fixture), o diagnóstico (rótulo, acerto, selo),
+    a proposta (quantas, aceitas, para revisão, recusadas, abstenção) e os verbetes que vieram pelo id."""
+    import biblioteca_fase4 as bf
+    diag = d.get("diagnostico") or {}
+    no = diag.get("no") or {}
+    conf = no.get("confianca") or {}
+    prop = d.get("proposta") or {}
+    decisoes = prop.get("decisoes") or []
+    return {"caso": d["caso"], "classe": d.get("classe"), "nivel": d.get("nivel"), "origem": d.get("origem"), "reproduz": d.get("reproduz"), "modo": d.get("modo"),
+            "campo": d.get("campo"), "cenario": d.get("cenario"), "rotulo": no.get("escolha"), "acertou": d.get("acertou"), "p_rotulo": conf.get("p_rotulo"),
+            "selo": conf.get("selo"), "divergencia": (no.get("divergencia") or {}).get("ha"), "falha": no.get("falha"), "gatilho": (diag.get("gatilhos") or {}).get("algum"),
+            "segundos_diagnostico": (diag.get("registro") or {}).get("segundos"), "tokens_entrada": (diag.get("registro") or {}).get("tokens_entrada"),
+            "segundos_proposta": prop.get("segundos"), "tokens_entrada_proposta": prop.get("tokens_entrada"),
+            "n_propostas": prop.get("n_propostas", 0), "n_aceitas": prop.get("n_aceitas", 0), "para_revisao": len(prop.get("para_revisao") or []),
+            "recusadas": [x.get("motivo") for x in decisoes if not x.get("aceita") and x.get("motivo") != bf.CODIGO_DE_REVISAO],
+            "abstencao": bool(prop.get("abstencao")), "recuperacao_por_id": list(prop.get("recuperacao_por_id") or []),
+            "verbetes_ligados": list(prop.get("verbetes_ligados") or []), "verbetes_editados": [x.get("verbete") for x in decisoes if x.get("aceita")],
+            "segundos_cenario": d.get("segundos_cenario")}
+
+
+def registro_da_correcao(c: dict) -> dict:
+    """A linha de correcoes.jsonl de um caso do ciclo de correção: o que o harness fez (desligou ou manteve o modo), o que a
+    reexecução mostrou, a evidência dos dois diffs, a marca do gatilho e os estados dos verbetes antes e depois."""
+    ev = c.get("evidencia") or {}
+    antes, depois = c.get("antes") or {}, c.get("depois") or {}
+    return {"caso": c["caso"], "cenario": c.get("cenario"), "modo": c.get("modo"), "campo": c.get("campo"), "verbetes": list(c.get("verbetes") or []),
+            "desligado": bool(c.get("desligado")), "reproduziu_antes": bool(antes.get("reproduz")), "passou_antes": bool(antes.get("passou")),
+            "passou_depois": bool(depois.get("passou")), "ha_diff_http": bool(ev.get("ha_diff_http")), "ha_diff_arvore": bool(ev.get("ha_diff_arvore")),
+            "sintoma_sumiu": bool(ev.get("sintoma_sumiu")), "marcado": bool((c.get("deteccao") or {}).get("corrigido")), "motivo": (c.get("deteccao") or {}).get("motivo"),
+            "estados": {k: list(v) for k, v in (c.get("estados") or {}).items()}, "segundos": c.get("segundos"), "diff_http": ev.get("diff_http"), "diff_arvore": ev.get("diff_arvore")}
+
 
 def ligar_modo(modo: str, campo: str | None, token: str = TOKEN_PADRAO, url: str = URL_ADMIN) -> dict:
     corpo = json.dumps(corpo_admin(modo, campo)).encode("utf-8")
@@ -1417,6 +1505,398 @@ def rodar_cura(args: argparse.Namespace) -> int:
 
 # ! Alteração de IA - Revisar: (27/10/2026) o parser saiu de `main` para `montar_parser` e ganhou `--banco`.
 # ! Motivo: o teste confere o padrão e as escolhas da opção sem rodar a corrida, e `main` continua igual por fora.
+# ------------------------------------------------------------------ a corrida 20: biblioteca em produção e ciclo de correção
+
+def _lado_da_correcao(d: dict) -> dict:
+    """O que biblioteca_fase4.evidencia_de_correcao precisa de uma corrida do cenário: passou, corpo, tempo, árvore podada,
+    a conferência que falhou e o veredito da regra R1."""
+    chamada = d.get("chamada") or {}
+    podada = d.get("podada") or {}
+    return {"passou": bool(d["r"]["passou"]), "corpo": d.get("corpo"), "tempo_ms": chamada.get("tempo_ms"), "arvore": podada.get("texto") or "",
+            "conferencia_falha": d["r"].get("conferencia_falha"), "reproduz": bool((d.get("veredito") or {}).get("reproduz")), "status": d.get("status")}
+
+
+def rodar_biblioteca(args: argparse.Namespace) -> int:
+    """Corrida 20 (plano, P5, noite C): as quatro fases descritas no cabeçalho do arquivo, retomáveis (cada fase sabe o que já
+    foi gravado); a biblioteca de produção não muda."""
+    import _env_common as env
+    import biblioteca_fase4 as bf
+    import diagnostico_ao_vivo as dv
+    import gerar_relatorio_raciocinio as grr
+    import restaurar_banco as rb
+    import run
+    import shutil
+    import sonda_correcao
+
+    saida = caminhos.fase3(args.saida)["raiz"]
+    saida.mkdir(parents=True, exist_ok=True)
+    marco = _marcador(saida / "fase4.log")
+    inicio = cen.agora()
+    t0 = time.monotonic()
+    modelo = args.modelo
+    slug = executar_fase3._slug(modelo)
+    parcial = bool(args.casos)
+    versao = executar_fase3._versao_ollama()
+    if versao is None:
+        marco("!! o Ollama não respondeu em /api/version; suba o servidor antes da corrida")
+        return 2
+    limiares = dv.carregar_limiares(Path(args.limiares) if args.limiares else None)
+    if limiares is None:
+        if not parcial:
+            marco("!! sem limiares.json (regra R7): rode --modo calibracao antes")
+            return 2
+        marco("aviso: sem limiares.json; a corrida parcial segue sem selo")
+    pontes = carregar_pontes(gravar=not parcial)
+    if versao_precisa_de_ponte(versao, pontes):
+        if not parcial:
+            marco(f"!! a versão {versao} do Ollama não tem ponte completa registrada (regra R6): rode --modo calibracao antes")
+            return 2
+        marco(f"aviso: a versão {versao} do Ollama não tem ponte completa registrada; a corrida parcial segue")
+    k = ler_ks(args.k)[0] if args.k else int((limiares or {}).get("k") or 3)
+    versoes = _ambiente().get("versoes", {})
+    contrato = _contrato_do_produto()
+    if not evo.snapshot_fechado(dv.PASTA_CURADA):
+        marco(f"!! a cópia curada em {dv.PASTA_CURADA} não existe ou não está fechada (sem fechamento.json)")
+        return 2
+    particao = e3b._particao_oficial(e3b._oficial())
+    aprendizado = [c for c in e3b.TODOS_OS_CASOS if evo.particao_de(particao, c["id"]) == "aprendizado"]
+    ineditos = e3b._casos_ineditos()
+    por_id_ined = {c["id"]: c for c in ineditos}
+    verbetes_curada = bib.carregar(dv.PASTA_CURADA)
+    com_tela = {i["id"]: i for i in selecionar_casos(aprendizado)["reproduziveis"]}
+    ligados = casos_ligados_com_tela(verbetes_curada)
+    if args.casos:
+        aprendizado, ineditos, ligados = aprendizado[:args.casos], ineditos[:args.casos], ligados[:args.casos]
+    conjunto = conjunto_de_correcao([c["id"] for c in ligados])
+    casos_sonda = sorted(set(CASOS_DE_TEXTO_ALTERADO) | set(conjunto["desligados"]))
+    if args.casos:
+        casos_sonda = casos_sonda[:args.casos]
+    ids_ineditos = {c["id"] for c in ineditos}
+    # a biblioteca de leitura (epoca-100 = L1 curada) e as parcelas da calibração para a regra dos 40%
+    pasta_bib = saida / "bibliotecas" / slug
+    leitura = pasta_bib / f"epoca-{dv.VERSAO_CURADA}"
+    hash_curada = e3b._preparar_copia(dv.PASTA_CURADA, leitura)
+    verbetes = bib.carregar(leitura)
+    indice = rec.Indice(verbetes)
+    exemplo = fixture_sem_gabarito(aprendizado[0])
+    ctx0, prompt0 = dv.montar_prompt(verbetes, indice, exemplo, k)
+    hash_fixo = dv.hash_prompt_fixo(verbetes, ctx0, exemplo, prompt0)
+    arq_cal = caminhos.RESULTADOS / "fase4_calibracao" / f"k{k}" / slug / f"diagnosticos__L{dv.VERSAO_CURADA}.jsonl"
+    regs_cal = executar_bateria.ler_jsonl(arq_cal)
+    if not regs_cal:
+        if not parcial:
+            marco(f"!! sem os registros da calibração em {arq_cal} (regra dos 40% e ficha 32)")
+            return 2
+        marco(f"aviso: sem os registros da calibração em {arq_cal}; a corrida parcial segue sem a regra dos 40%")
+    parcelas = bf.parcela_nos_contextos(regs_cal)
+    aprendidos = [v["id"] for v in verbetes if v["pasta"] == evo.PASTA_APRENDIDOS]
+    recuperacao_cal = bf.recuperacao_dos_aprendidos(regs_cal, aprendidos)
+    # a base da regra R5 nos inéditos
+    base_regs: list[dict] | None = None
+    if args.base_ineditos == "corrida12":
+        arq_base = caminhos.RESULTADOS / CORRIDA12 / slug / f"diagnosticos__L{dv.VERSAO_CURADA}.jsonl"
+        base_regs = [r for r in executar_bateria.ler_jsonl(arq_base) if r.get("caso") in ids_ineditos and r.get("biblioteca_versao") == hash_curada]
+        versoes_base = sorted({r.get("versao_ollama") for r in base_regs}, key=str)
+        origem_da_base = f"{CORRIDA12} (corrida 12, cópia curada {hash_curada}, Ollama {', '.join(map(str, versoes_base)) or 'n/d'})"
+        if len(base_regs) < len(ineditos):
+            marco(f"!! a base da regra R5 em {arq_base} cobre {len(base_regs)} dos {len(ineditos)} inéditos; use --base-ineditos propria")
+            return 2
+    else:
+        origem_da_base = "os 36 inéditos diagnosticados com a cópia curada na mesma sessão (--base-ineditos propria)"
+    pasta_reg = saida / slug
+    pasta_reg.mkdir(parents=True, exist_ok=True)
+    arq_diag, lat_diag = pasta_reg / f"diagnosticos__L{dv.VERSAO_CURADA}.jsonl", pasta_reg / f"logprobs__L{dv.VERSAO_CURADA}.jsonl"
+    arq_prop = pasta_reg / f"propostas__E{EPOCA_DO_LOTE}.jsonl"
+    arq_reav, lat_reav = pasta_reg / f"reavaliacao__E{EPOCA_DO_LOTE}.jsonl", pasta_reg / "logprobs__reavaliacao.jsonl"
+    arq_base_propria, lat_base = pasta_reg / f"reavaliacao__L{dv.VERSAO_CURADA}.jsonl", pasta_reg / "logprobs__base.jsonl"
+    arq_resumo, arq_corr, arq_trilha = saida / "biblioteca.jsonl", saida / "correcoes.jsonl", saida / "trilha_biblioteca.jsonl"
+    arq_lote, arq_sonda = saida / "lote.json", saida / "sonda.json"
+    feitos = {r["caso"] for r in executar_bateria.ler_jsonl(arq_resumo)}
+    try:
+        _conferir_versao_das_linhas([arq_diag, arq_prop, arq_reav, arq_base_propria], versao)
+    except SystemExit as e:
+        marco(f"!! {e}")
+        return 2
+    n_sonda = 2 * len(casos_sonda) if not args.sem_sonda else 0
+    previstas = 2 * len(aprendizado) + len(ineditos) * (2 if base_regs is None else 1) + n_sonda
+    condicoes = {"modo": "biblioteca", "criado_em": inicio, "saida": args.saida, "modelo": modelo, "versao_ollama": versao, "k": k, "limiares": limiares,
+                 "parcial": parcial, "casos": len(aprendizado), "com_tela": sum(1 for c in aprendizado if c["id"] in com_tela), "ineditos": len(ineditos),
+                 "base_ineditos": args.base_ineditos, "origem_da_base": origem_da_base, "conjunto_de_correcao": conjunto, "casos_ligados_com_tela": [c["id"] for c in ligados],
+                 "casos_da_sonda": casos_sonda, "sem_sonda": args.sem_sonda, "sem_correcao": args.sem_correcao, "inferencias_previstas": previstas,
+                 "biblioteca": {"rotulo": dv.ROTULO_CURADA, "versao": dv.VERSAO_CURADA, "hash": hash_curada, "origem": "Programacao/AgenteCore/biblioteca_producao"},
+                 "epocas": {"lote": EPOCA_DO_LOTE, "correcoes": EPOCA_DAS_CORRECOES, "sonda": EPOCA_DAS_CORRECOES + 1},
+                 "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "teto_proposta": args.teto_proposta, "top_logprobs": args.top, "teto_tokens": args.teto,
+                 "filtros": list(bf.FILTROS), "pesos": bf.PESO_POR_TIPO, "orcamento_de_peso_por_verbete": bf.ORCAMENTO_DE_PESO_POR_VERBETE, "limiar_redundancia": bf.LIMIAR_REDUNDANCIA,
+                 "parcela_para_revisao": bf.PARCELA_PARA_REVISAO, "parcelas_para_revisao": {v: round(parcelas[v], 4) for v in bf.verbetes_para_revisao(parcelas)},
+                 "calibracao": str(arq_cal.relative_to(caminhos.RESULTADOS)) if regs_cal else None, "recuperacao_dos_aprendidos": recuperacao_cal,
+                 "aprendidos_sem_recuperacao": bf.aprendidos_sem_recuperacao(recuperacao_cal), "regra_r4": bf.REGRA_R4, "regra_r5": bf.REGRA_R5,
+                 "versoes": versoes, "canal": args.canal, "hosts_permitidos": list(ic.HOSTS_PERMITIDOS), "hosts_har": list(ic.CDN_PADRAO),
+                 "hosts_silenciosos": list(ic.HOSTS_SILENCIOSOS), "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "contrato": contrato}
+    (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
+    marco(f"INÍCIO biblioteca: Ollama {versao}, {modelo}, {dv.ROTULO_CURADA} ({hash_curada}), k = {k}; {len(aprendizado)} casos de aprendizado "
+          f"({condicoes['com_tela']} com tela), {len(ineditos)} inéditos (base {args.base_ineditos}), correção em {len(ligados)} casos "
+          f"({len(conjunto['desligados'])} desligados), sonda em {len(casos_sonda)}; {previstas} inferências previstas{'; corrida PARCIAL' if parcial else ''}; "
+          f"{len(feitos)} caso(s) já feito(s)")
+
+    front, api = run.start_services()
+    trilha: tr.Trilha | None = None
+    estado: dict = {"lote": None, "correcao": None, "sonda": None, "aceitas": 0}
+    try:
+        if not run.wait_until_ready(timeout_s=90):
+            marco("!! as cobaias não responderam nas portas 8080 e 8000")
+            return 2
+        cli = env.find_mysql_cli()
+        if rb.restaurar(cli) != rb.CONTAGENS_DO_SEED:
+            marco("!! o banco restaurado não tem as contagens do seed")
+            return 2
+        digest, versao_ollama = e3b._preparar_modelo(modelo)
+        if versao_ollama != versao:
+            marco(f"!! a versão do Ollama mudou antes de começar: {versao} para {versao_ollama}")
+            return 2
+        comum = {"digest": digest, "versao_ollama": versao_ollama, "maquina": platform.node(), "epoca": EPOCA_DO_LOTE, "biblioteca_epoca": dv.VERSAO_CURADA,
+                 "biblioteca_versao": hash_curada, "particao": particao, "k": k, "teto_tokens": args.teto}
+        with navegador.Navegador(canal=args.canal) as nav:
+            v = nav.versao()
+            if arq_trilha.exists() and feitos:
+                trilha = tr.Trilha.carregar(arq_trilha)
+                trilha.pasta_blobs = saida / "blobs"
+                marco(f"retomando a trilha de {arq_trilha.name}: {len(trilha.eventos)} eventos")
+            else:
+                trilha = tr.Trilha(versao=tr.V2, pasta_blobs=saida / "blobs")
+                trilha.corrida(tr.cabecalho_de_corrida(modelo=modelo, versao_ollama=versao, inicio=inicio, quantizacao=dv.quantizacao_do_modelo(modelo),
+                                                       top_logprobs=args.top, leitura_da_probabilidade=dv.LEITURA_DA_PROBABILIDADE,
+                                                       hash_biblioteca=hash_curada, hash_prompt_fixo=hash_fixo, hash_indice=dv.hash_indice(indice),
+                                                       playwright=v["playwright"], navegador=v["navegador"], canal=args.canal, corrida=args.saida,
+                                                       etapas_registradas=["roteiro", "interceptacao", "poda", "caso_ao_vivo", "recuperacao", "prompt",
+                                                                           "diagnostico", "edicao_biblioteca", "correcao"],
+                                                       etapas_nao_registradas=["cura", "intervencao"],
+                                                       extras={"modo": "biblioteca", "k": k, "limiares": limiares, "base_ineditos": args.base_ineditos}), ts=inicio)
+            tela = Tela(nav, trilha, args.saida, contrato, args.token, marco, prefixo=f"{args.saida}/{slug}")
+
+            def _loop() -> None:
+                # ---- fase A: diagnóstico e proposta nos casos de aprendizado
+                registros_prop = executar_bateria.ler_jsonl(arq_prop)
+                raiz_escrita = evo.abrir_epoca(pasta_bib, EPOCA_DO_LOTE, registros_prop)
+                ordem = sum(r.get("n_aceitas", 0) for r in registros_prop)
+                pesos_usados: dict = {}
+                for r in registros_prop:
+                    for d_ in r.get("decisoes") or []:
+                        if d_.get("aceita") and d_.get("verbete"):
+                            pesos_usados[d_["verbete"]] = pesos_usados.get(d_["verbete"], 0) + (d_.get("peso") or 0)
+                novos = sum(1 for r in registros_prop for d_ in r.get("decisoes") or [] if d_.get("aceita") and (d_.get("edicao") or {}).get("operacao") == "novo_verbete")
+                ctx_validacao = {"raiz": raiz_escrita, "verbetes": bib.carregar(raiz_escrita), "casos": e3b.TODOS_OS_CASOS, "ids_visiveis": set(), "epoca": EPOCA_DO_LOTE,
+                                 "caso_id": None, "modelo": modelo, "novos_nesta_epoca": novos, "aceitas_no_caso": 0, "k": k}
+                filtros_ctx = {"parcelas": parcelas, "corpo_http": None, "corrigidos": {}, "pesos_usados": pesos_usados, "casos_da_rodada": {c["id"] for c in aprendizado},
+                               "fontes": bf.fontes_das_cobaias(), "rotas": bf.rotas_do_openapi(), "data": inicio[:10]}
+                pendentes = [c for c in aprendizado if c["id"] not in feitos]
+                if pendentes:
+                    for cid in ("api-catalogo", "api-detalhe"):
+                        tela.referencia(cid, 1 if cid == "api-detalhe" else None)
+                for n, caso in enumerate(aprendizado, 1):
+                    if caso["id"] in feitos:
+                        continue
+                    item = com_tela.get(caso["id"])
+                    d = tela.rodar_caso(item) if item is not None else None
+                    origem = "tela" if d is not None and d["veredito"]["reproduz"] else "fixture"
+                    tid = f"{args.saida}/{slug}/{caso['id']}@{origem}"
+                    extras = bf.verbetes_do_caso(verbetes, caso["id"])
+                    evidencia: list[dict] = []
+                    if origem == "tela":
+                        seqs = tela.emitir(tid, d)
+                        for chave, papel in (("poda_corpo", "sinal_em_codigo"), ("poda_arvore", "arvore_podada"), ("chamada", "corpo_http")):
+                            if seqs.get(chave):
+                                evidencia.append({"seq": seqs[chave], "papel": papel})
+                        caso_diag = d["caso_vivo"]
+                        corpo_http = d.get("corpo")
+                    else:
+                        caso_diag = fixture_sem_gabarito(caso)
+                        trilha.evento("entrada", tid, {"caso": caso["id"], "classe": caso["classe"], "nivel": caso["nivel"], "origem": "fixture",
+                                                       "texto": trilha.blob(estrategias._dados_do_caso(caso_diag), "caso")}, "ao_vivo", ts=cen.agora())
+                        if d is not None:
+                            trilha.evento("incidente", tid, {"tipo": "tela_nao_reproduz", "detalhe": d["veredito"]["motivo"]}, "ao_vivo", ts=cen.agora())
+                        corpo_http = str(caso["entrada"].get("corpo") or "") or None
+                    sv = dv.diagnosticar(trilha, tid, caso_diag, verbetes, indice, k=k, modelo=modelo, comum=comum, limiares=limiares, intervencoes="desligadas",
+                                         top=args.top, teto=args.teto, evidencia=evidencia, ts=cen.agora(), extras=extras)
+                    executar_fase3._gravar(arq_diag, sv["registro"])
+                    executar_fase3._gravar(lat_diag, sv["lateral"])
+                    _conferir_versao(versao)
+                    ctx = sv["ctx"]
+                    prompt_diag = estrategias.linear_com_biblioteca(caso_diag, ctx["texto"])
+                    caso_prop = {**caso_diag, "id": caso["id"], "gabarito": caso["gabarito"]}
+                    ouro = rec.verbete_ouro(verbetes, caso)
+                    ctx_validacao.update({"caso_id": caso["id"], "aceitas_no_caso": 0, "ids_visiveis": set(ctx["verbetes_ids"]) | {ouro["id"]}})
+                    filtros_ctx["corpo_http"] = corpo_http
+                    rp = bf.propor_p5(modelo, caso_prop, sv["registro"], ctx, prompt_diag, verbetes, args.teto_proposta, comum, ctx_validacao, pasta_bib, ordem, filtros_ctx,
+                                      trilha=trilha, tid=tid, evidencia=evidencia + [{"seq": sv["seq_inferencia"], "papel": "resposta"}], ts=cen.agora())
+                    ordem += rp["n_aceitas"]
+                    executar_fase3._gravar(arq_prop, {kk: vv for kk, vv in rp.items() if kk not in ("no", "seq_inferencia", "seq_decisao")})
+                    _conferir_versao(versao)
+                    acertou = _acertou({**sv["registro"], "gabarito": caso["gabarito"]})
+                    resumo = registro_da_biblioteca({"caso": caso["id"], "classe": caso["classe"], "nivel": caso["nivel"], "origem": origem,
+                                                     "reproduz": d["veredito"]["reproduz"] if d else None, "modo": item["modo"] if item else None,
+                                                     "campo": item["campo"] if item else None, "cenario": item["cenario"] if item else None, "diagnostico": sv,
+                                                     "acertou": acertou, "proposta": rp, "segundos_cenario": d["r"]["segundos"] if d else None})
+                    trilha.gravar(arq_trilha)
+                    executar_fase3._gravar(arq_resumo, resumo)
+                    feitos.add(caso["id"])
+                    pr = "n/d" if resumo["p_rotulo"] is None else f"{resumo['p_rotulo']:.2f}"
+                    marco(f"[A {n}/{len(aprendizado)}] {caso['id']} ({origem}): {resumo['rotulo']} (p {pr}, {'acertou' if acertou else 'errou'}) | "
+                          f"proposta: {rp['n_aceitas']}/{rp['n_propostas']} no lote, {len(rp['para_revisao'])} para revisão, "
+                          f"{', '.join(rp['motivos_rejeicao']) or ('NENHUMA' if rp['abstencao'] else 'sem recusa')} | por id: {', '.join(rp['recuperacao_por_id']) or 'nenhum'} | "
+                          f"{sv['registro']['segundos']} + {rp['segundos']} s")
+                registros_prop = executar_bateria.ler_jsonl(arq_prop)
+                estado["aceitas"] = sum(r.get("n_aceitas", 0) for r in registros_prop)
+                if not evo.snapshot_fechado(raiz_escrita):
+                    fechamento = evo.fechar_epoca(pasta_bib, EPOCA_DO_LOTE, modelo, e3b.TODOS_OS_CASOS, estado["aceitas"], versao_ollama=versao_ollama)
+                    marco(f"epoca-{EPOCA_DO_LOTE} (o lote) fechada: hash {fechamento['hash']}, {fechamento['n_notas']} notas, {fechamento['n_retificacoes']} retificações, "
+                          f"{fechamento['n_verbetes_novos']} verbetes novos, {fechamento['aceitas_na_epoca']} edições aceitas")
+                fechamento = json.loads((raiz_escrita / "fechamento.json").read_text(encoding="utf-8"))
+                # ---- fase B: a regra R5 nos inéditos
+                verbetes_lote = bib.carregar(raiz_escrita)
+                indice_lote = rec.Indice(verbetes_lote)
+                comum_lote = {**comum, "epoca": EPOCA_DO_LOTE + 1, "biblioteca_epoca": EPOCA_DO_LOTE, "biblioteca_versao": fechamento["hash"]}
+
+                def _diagnosticar_ineditos(arq: Path, lat: Path, verbs: list[dict], ind: rec.Indice, com: dict, rotulo: str) -> list[dict]:
+                    prontos = {r["caso"] for r in executar_bateria.ler_jsonl(arq)}
+                    for n, caso in enumerate(ineditos, 1):
+                        if caso["id"] in prontos:
+                            continue
+                        caso_f = fixture_sem_gabarito(caso)
+                        tid = f"{args.saida}/{slug}/{caso['id']}@{rotulo}"
+                        trilha.evento("entrada", tid, {"caso": caso["id"], "classe": caso["classe"], "nivel": caso["nivel"], "origem": "fixture", "etapa": rotulo,
+                                                       "texto": trilha.blob(estrategias._dados_do_caso(caso_f), "caso")}, "ao_vivo", ts=cen.agora())
+                        s = dv.diagnosticar(trilha, tid, caso_f, verbs, ind, k=k, modelo=modelo, comum=com, limiares=limiares, intervencoes="desligadas",
+                                            top=args.top, teto=args.teto, ts=cen.agora())
+                        executar_fase3._gravar(arq, s["registro"])
+                        executar_fase3._gravar(lat, s["lateral"])
+                        trilha.gravar(arq_trilha)
+                        _conferir_versao(versao)
+                        marco(f"[B {rotulo} {n}/{len(ineditos)}] {caso['id']}: {s['no']['escolha']} ({s['registro']['segundos']} s)")
+                    return [{**r, "gabarito": por_id_ined[r["caso"]]["gabarito"]} for r in executar_bateria.ler_jsonl(arq) if r["caso"] in por_id_ined]
+
+                novos_regs = _diagnosticar_ineditos(arq_reav, lat_reav, verbetes_lote, indice_lote, comum_lote, "lote")
+                base = ([{**r, "gabarito": por_id_ined[r["caso"]]["gabarito"]} for r in base_regs] if base_regs is not None
+                        else _diagnosticar_ineditos(arq_base_propria, lat_base, verbetes, indice, comum, "base"))
+                r5 = bf.avaliar_lote(base, novos_regs)
+                edicoes = [{**d_["edicao"], "peso": d_.get("peso"), "granularidade": d_.get("granularidade"), "proveniencia": d_.get("proveniencia")}
+                           for r in registros_prop for d_ in r.get("decisoes") or [] if d_.get("aceita") and d_.get("edicao")]
+                para_revisao = [{**d_["edicao"], "peso": d_.get("peso"), "granularidade": d_.get("granularidade"), "proveniencia": d_.get("proveniencia"), "para_revisao": True}
+                                for r in registros_prop for d_ in r.get("decisoes") or [] if d_.get("motivo") == bf.CODIGO_DE_REVISAO and d_.get("edicao")]
+                conflitos = bf.resolver_conflito([{**e, "ordem": i + 1, "data": inicio[:10], "evidencia": e.get("operacao")} for i, e in enumerate(edicoes)])
+                lote = {"edicoes": edicoes, "para_revisao": para_revisao, "parcelas": {v: round(parcelas[v], 4) for v in bf.verbetes_para_revisao(parcelas)},
+                        "fechamento": fechamento, "r5": r5, "origem_da_base": origem_da_base, "versao_ollama": versao, "metricas": bf.metricas_da_rodada(registros_prop),
+                        "conflitos": [c for c in conflitos if not c.get("prevalece")], "auditoria": bf.auditoria(verbetes_lote, {}, [{"verbete": e["verbete"], "caso": e["caso"]} for e in edicoes]),
+                        "amostra_para_revisao": [{"verbete": e["verbete"], "operacao": e["operacao"], "caso": e["caso"]} for e in bf.amostra_para_revisao(edicoes + para_revisao, parcelas)]}
+                arq_lote.write_text(json.dumps(lote, ensure_ascii=False, indent=2), encoding="utf-8")
+                (saida / "revisao_do_lote.md").write_text(bf.planilha_de_revisao(edicoes + para_revisao, parcelas, args.saida), encoding="utf-8", newline="\n")
+                estado["lote"] = r5
+                marco(f"regra R5: {r5['motivo']} (p = {r5['p_mcnemar']}); lote com {len(edicoes)} edição(ões), {len(para_revisao)} para revisão humana")
+                # ---- fase C: o ciclo de correção, sem modelo
+                raiz_corr = pasta_bib / f"epoca-{EPOCA_DAS_CORRECOES}"
+                if not args.sem_correcao and ligados:
+                    if evo.snapshot_fechado(raiz_corr) and arq_corr.exists():
+                        marco(f"ciclo de correção já feito (epoca-{EPOCA_DAS_CORRECOES} fechada); pulando")
+                    else:
+                        if raiz_corr.exists():
+                            shutil.rmtree(raiz_corr)
+                        if arq_corr.exists():
+                            arq_corr.unlink()
+                        evo.copiar_biblioteca(raiz_escrita, raiz_corr)
+                        evo._limpar_gerados(raiz_corr)
+                        corrigidos: dict[str, list[str]] = {}
+                        desligados = set(conjunto["desligados"])
+                        for n, item in enumerate(ligados, 1):
+                            t_c = time.monotonic()
+                            desligado = item["id"] in desligados
+                            tid = f"{args.saida}/{slug}/{item['id']}@correcao"
+                            d_antes = tela.rodar_caso(item)
+                            seqs_a = tela.emitir(tid + "/antes", d_antes)
+                            d_depois = tela.rodar_caso({**item, "modo": "normal", "campo": None} if desligado else item)
+                            seqs_d = tela.emitir(tid + "/depois", d_depois)
+                            antes, depois = _lado_da_correcao(d_antes), _lado_da_correcao(d_depois)
+                            forma = d_antes["cenario"]["forma"] if d_antes.get("do_alvo") else "lista"
+                            ev = bf.evidencia_de_correcao(antes, depois, contrato, forma_esperada=forma, orcamento_ms=ORCAMENTO_DE_TEMPO_MS)
+                            det = bf.detectar_correcao(ev)
+                            estados: dict = {}
+                            if det["corrigido"]:
+                                for vid in item["verbetes"]:
+                                    v_atual = next(x for x in evo._carregar_verbetes(raiz_corr) if x["id"] == vid)
+                                    estado_antes = bf.estado_do_verbete(v_atual)
+                                    bf.corrigir(raiz_corr, vid, item["id"], bf.sugestao_do_modelo(v_atual, item["id"]),
+                                                bf.solucao_aplicada_por_molde(item["id"], item["cenario"], item["modo"], ev, inicio[:10]), inicio[:10])
+                                    estados[vid] = (estado_antes, "corrigido")
+                                    corrigidos.setdefault(vid, []).append(item["id"])
+                            seqs = [{"seq": s, "papel": papel} for s, papel in ((seqs_a.get("poda_corpo"), "sinal_em_codigo"), (seqs_a.get("poda_arvore"), "arvore_podada"),
+                                                                              (seqs_d.get("poda_corpo"), "sinal_em_codigo"), (seqs_d.get("poda_arvore"), "arvore_podada")) if s]
+                            for vid in item["verbetes"]:
+                                trilha.evento("edicao_biblioteca", tid, {"etapa": "correcao", "caso": item["id"], "verbete": vid, "origem": "harness", "modo_depois": "normal" if desligado else item["modo"],
+                                                                         "estado_antes": estados.get(vid, (bf.estado_do_verbete(next(x for x in evo._carregar_verbetes(raiz_corr) if x["id"] == vid)),))[0],
+                                                                         "estado_depois": "corrigido" if vid in estados else "sem mudança",
+                                                                         "evidencia": {kk: ev[kk] for kk in ("passou_depois", "ha_diff_http", "ha_diff_arvore", "sintoma_sumiu")},
+                                                                         "marcado": det["corrigido"], "motivo": det["motivo"]}, "ao_vivo", ts=cen.agora())
+                            trilha.decisao(tid, bf.no_de_correcao(item["id"], item["verbetes"], det, ev, seqs, {kk: list(vv) for kk, vv in estados.items()}), ts=cen.agora())
+                            c = {"caso": item["id"], "cenario": item["cenario"], "modo": item["modo"], "campo": item["campo"], "verbetes": item["verbetes"], "desligado": desligado,
+                                 "antes": antes, "depois": depois, "evidencia": ev, "deteccao": det, "estados": estados, "segundos": round(time.monotonic() - t_c, 2)}
+                            executar_fase3._gravar(arq_corr, registro_da_correcao(c))
+                            trilha.gravar(arq_trilha)
+                            marco(f"[C {n}/{len(ligados)}] {item['id']} ({item['modo']}, {'desligado' if desligado else 'mantido'}): antes {'falhou' if not antes['passou'] else 'passou'}"
+                                  f"{' e reproduz' if antes['reproduz'] else ''}, depois {'passou' if depois['passou'] else 'falhou'}; fio {'mudou' if ev['ha_diff_http'] else 'igual'}, "
+                                  f"árvore {'mudou' if ev['ha_diff_arvore'] else 'igual'}; {'CORRIGIDO ' + ', '.join(estados) if det['corrigido'] else 'não marcado'}")
+                        fech_corr = bf.fechar_correcoes(pasta_bib, EPOCA_DAS_CORRECOES, modelo, e3b.TODOS_OS_CASOS, corrigidos, versao_ollama=versao_ollama, anterior=EPOCA_DO_LOTE)
+                        marco(f"epoca-{EPOCA_DAS_CORRECOES} (correções) fechada: hash {fech_corr['hash']}, {fech_corr['correcoes']} correção(ões) em {len(corrigidos)} verbete(s)")
+                    estado["correcao"] = bf.regra_r4(executar_bateria.ler_jsonl(arq_corr))
+                    marco(f"regra R4: {estado['correcao']['marcados']} marcada(s), {estado['correcao']['acertos']} certa(s) de {estado['correcao']['desligados']} desligado(s); "
+                          f"precisão {estado['correcao']['precisao_pct']}%, revocação {estado['correcao']['revocacao_pct']}%")
+                # ---- fase D: a sonda de 28/09 repetida com a recuperação por id
+                if not args.sem_sonda and casos_sonda:
+                    if arq_sonda.exists():
+                        marco("sonda já feita (sonda.json existe); pulando")
+                        estado["sonda"] = json.loads(arq_sonda.read_text(encoding="utf-8"))
+                    else:
+                        origem_sonda = raiz_corr if evo.snapshot_fechado(raiz_corr) else raiz_escrita
+                        versao_sonda = EPOCA_DAS_CORRECOES if origem_sonda == raiz_corr else EPOCA_DO_LOTE
+                        casos_s = [c for c in e3b.TODOS_OS_CASOS if c["id"] in set(casos_sonda)]
+                        pasta_sonda = saida / "sonda"
+                        res = sonda_correcao.rodar_sonda(modelo, casos_s, origem_sonda, versao_sonda, pasta_sonda / slug, pasta_sonda / "bibliotecas" / slug, k,
+                                                         args.teto, args.teto_proposta, digest, versao_ollama, recuperacao_por_id=True)
+                        dado_sonda = {"casos": res["resumo"], "anterior": bf.sonda_anterior(), "origem": origem_sonda.name, "epoca": res["epoca"], "hash_lido": res["hash_lido"],
+                                      "recuperacao_por_id": True, "ids": casos_sonda, "k": k}
+                        arq_sonda.write_text(json.dumps(dado_sonda, ensure_ascii=False, indent=2), encoding="utf-8")
+                        estado["sonda"] = dado_sonda
+                        for x in res["resumo"]:
+                            marco(f"[D] {x['caso']}: {x['rotulo']} ({'acertou' if x['acertou'] else 'errou'}); {x['n_aceitas']}/{x['n_propostas']} propostas aceitas"
+                                  f"{', NENHUMA' if x['abstencao'] else ''}; por id: {', '.join(x['por_id']) or 'nenhum'}; menciona a correção: {'sim' if x['menciona_correcao'] else 'não'}")
+
+            e3b._com_modelo_descarregado(modelo, _loop)
+    except SystemExit as e:
+        marco(f"!! corrida parou: {e}")
+        return 1
+    finally:
+        derrubar_cobaias(front, api, args.token)
+    fim = cen.agora()
+    if trilha is not None:
+        trilha.fechar(fim)
+        trilha.gravar(arq_trilha)
+        if not args.sem_relatorios:
+            pasta_rel = saida / "relatorios"
+            pasta_rel.mkdir(exist_ok=True)
+            for tid in tr.por_trilha(trilha.eventos):
+                if tid is None or not tid.endswith(("@tela", "@fixture", "@lote", "@base", "@correcao")):
+                    continue
+                nome = tid.rsplit("/", 1)[-1]
+                comando = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo biblioteca --saida {args.saida}_reexec --casos 1 --sem-sonda --sem-correcao"
+                (pasta_rel / f"{nome}.md").write_text(grr.relatorio_do_caso_v2(trilha.eventos, tid, comando_reexecucao=comando, pasta_blobs=saida / "blobs"),
+                                                      encoding="utf-8", newline="\n")
+    tamanho = arq_trilha.stat().st_size if arq_trilha.exists() else 0
+    r5 = estado["lote"] or {}
+    r4 = estado["correcao"] or {}
+    n_sonda_feita = len((estado["sonda"] or {}).get("casos") or [])
+    marco(f"FIM biblioteca: {len(feitos)} de {len(aprendizado)} casos de aprendizado; {estado['aceitas']} edição(ões) no lote; R5 {r5.get('veredito', 'não medida')} "
+          f"(b = {r5.get('b', 'n/d')}, c = {r5.get('c', 'n/d')}); correção: {r4.get('marcados', 'n/d')} marcada(s) de {r4.get('desligados', 'n/d')} desligado(s); "
+          f"sonda em {n_sonda_feita} caso(s); duração {time.monotonic() - t0:.0f} s; trilha {tamanho} bytes")
+    return 0
+
+
 def montar_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--modo", choices=MODOS, required=True)
@@ -1447,6 +1927,14 @@ def montar_parser() -> argparse.ArgumentParser:
     ap.add_argument("--formas", default="harness,php", help="cura: formas da quebra separadas por vírgula (harness, php)")
     ap.add_argument("--roteiros", default=None, help="cura: só estes roteiros do front legado, separados por vírgula (padrão: os quatro)")
     ap.add_argument("--modos", default=None, help="cura: só estes modos de quebra, separados por vírgula (padrão: os quatro)")
+    # ! Alteração de IA - Revisar: (03/11/2026, P5) as opções do modo biblioteca.
+    # ! Motivo: a base da regra R5 pode ser a corrida 12 (o plano conta 156 inferências) ou a mesma sessão (36 a mais); a
+    # fumaça precisa pular a sonda e o ciclo de correção; o teto da proposta é o da Fase 3.
+    ap.add_argument("--base-ineditos", choices=BASES_DOS_INEDITOS, default="corrida12",
+                    help="biblioteca: a base da regra R5 nos 36 inéditos (corrida12 = cópia curada da corrida 12; propria = diagnosticar na mesma sessão)")
+    ap.add_argument("--sem-sonda", action="store_true", help="biblioteca: não repete a sonda de correção (fumaça)")
+    ap.add_argument("--sem-correcao", action="store_true", help="biblioteca: não roda o ciclo de correção (fumaça)")
+    ap.add_argument("--teto-proposta", type=int, default=TETO_PROPOSTA_PADRAO, help="biblioteca: teto de tokens de saída da proposta de edição")
     return ap
 
 
@@ -1461,6 +1949,8 @@ def main() -> int:
         return rodar_tela(args)
     if args.modo == "cura":
         return rodar_cura(args)
+    if args.modo == "biblioteca":
+        return rodar_biblioteca(args)
     return 1
 
 

@@ -621,6 +621,34 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("tb_f4_cura_resumo", secao)
         self.assertIn("outro elemento", secao)
 
+    def teste_biblioteca_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (03/11/2026, P5) a aba da corrida 20 lê biblioteca.json: edições no lote, o que cada filtro
+        # barrou, a regra R5 (b e c nos inéditos), a regra R4 (precisão e revocação da marca corrigido) e a sonda, nunca digitados à
+        # mão; sem o arquivo, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; o Eric decide pelo painel.
+        bibl = self.ctx.get("biblioteca")
+        secao = self.html[self.html.index('<section id="biblioteca"'):].split("</section>")[0]
+        self.assertIn("function bibFiltros(", tp.JS_TOPICOS)
+        self.assertIn("function bibReavaliacao(", tp.JS_TOPICOS)
+        d, h = tp.secao_biblioteca(None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="biblioteca"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertEqual(d["filtros"], [])
+        if not bibl or not bibl.get("resumo") or not bibl["resumo"].get("casos"):
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        r = bibl["resumo"]
+        t = self.dados_t["biblioteca"]
+        self.assertEqual(t["resumo"]["aceitas"], r["aceitas"])
+        self.assertEqual([x["recusas"] for x in t["filtros"]], [x["recusas"] for x in bibl["filtros"]])
+        if bibl.get("reavaliacao"):
+            self.assertEqual(t["reavaliacao"]["b"], bibl["reavaliacao"]["b"])
+            self.assertIn(f'b = {bibl["reavaliacao"]["b"]}', secao)
+        self.assertIn(f'{r["aceitas"]} de {r["propostas"]}', secao)
+        self.assertIn('id="g-bib-filtros"', secao)
+        self.assertIn("tb_f4_biblioteca_filtros", secao)
+        self.assertIn("regra R4", secao.lower().replace("r4", "R4").replace("regra r4", "regra R4"))
+
     def teste_funcoes_de_grafico_e_seletores_existem(self):
         for funcs in tp.DESENHAR_TOPICOS.values():
             for f in funcs:
