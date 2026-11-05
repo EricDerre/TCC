@@ -69,7 +69,7 @@ NAV = [
         ("tresb", "Fase 3-B", "Casos inéditos, ponte de versão, sonda de correção e as corridas complementares."),
         ("cruzada", "Troca cruzada", "A biblioteca escrita por um modelo, lida por outros dois: o ganho é dela ou de quem a lê?"),
         ("curadoria", "Curadoria da L1", "O que a cópia de produção herdou da biblioteca escrita pelo modelo."),
-        ("recuperador", "Recuperador", "BM25 com sinais contra embeddings e híbrido: vale trocar?"),
+        ("recuperador", "Recuperador", "A busca por palavras contra a busca por significado e a mistura das duas: vale trocar?"),
         ("ablacao", "Ablação", "Sem ajuste por instrução, o modelo faz a tarefa? O piso da família."),
     ]),
     # grupo da Pré-Fase 4 (01/10/2026): um id só entra neste mapa junto com a seção dele, porque
@@ -87,18 +87,18 @@ NAV = [
         ("fechamentof4", "Fechamento da fase", "A Fase 4 fez o que o plano pediu? As regras uma a uma, o que fica como limitação declarada, o que depende do Eric e o que o documento do TCC precisa carregar, lidos do relatório da fase."),
         ("reproducao", "Reprodução na tela", "Quantos casos de avaliação a tela consegue reproduzir, com que custo por cenário e o que fica fora: a corrida 17 nos 72 casos e a mesma corrida nos 36 inéditos da ficha 27."),
         # aba da corrida 16 (27/10/2026, P3): o id entra junto com a seção (secao_calibracao)
-        ("calibracao", "Calibração", "Qual k entra no agente, onde ficam os limiares do selo de confiança e quanto a probabilidade do rótulo separa acerto de erro: a corrida 16 nos 90 casos, com a sondagem dos logprobs e a ponte de versão."),
-        ("tela", "Tela e fixture", "O agente dá o mesmo diagnóstico ao caso lido da tela e ao mesmo caso escrito no fixture? A corrida 18 nos casos que reproduzem, com a regra R2, os selos, os rótulos de cada lado e o prompt contra a calibração."),
+        ("calibracao", "Calibração", "Quantos verbetes entregar ao modelo, onde ficam os cortes do selo de confiança e quanto a probabilidade da resposta separa acerto de erro: a corrida 16 nos 90 casos."),
+        ("tela", "Tela e caso escrito", "O agente dá o mesmo diagnóstico ao caso lido da tela e ao mesmo caso escrito? As corridas 18 e 18b nos casos que reproduzem, com a regra que compara os dois lados, os selos, as causas respondidas e o tamanho do prompt."),
         # aba da corrida 19 (01/11/2026, P4): o id entra junto com a seção (secao_cura)
-        ("cura", "Cura de seletor", "Quando o localizador de um passo quebra, o agente acha outro em código e o roteiro passa na reexecução? A corrida 19 nos quatro roteiros do front legado, com quatro modos de quebra nas duas formas, a taxa de cura, o MTTR e a regra R3."),
+        ("cura", "Cura de seletor", "Quando o localizador de um passo quebra, o agente acha outro em código e o roteiro passa na reexecução? A corrida 19 nos quatro roteiros do front legado, com quatro modos de quebra nas duas formas, a taxa de cura e o tempo até o resultado."),
         # aba da corrida 20 (03/11/2026, P5): o id entra junto com a seção (secao_biblioteca)
-        ("biblioteca", "Biblioteca em produção", "O que o agente propõe para a biblioteca passa pelos filtros em código, melhora os inéditos (regra R5) e o ciclo de correção marca o que foi corrigido (regra R4)? A corrida 20: lote, filtros, reavaliação, correção e a sonda com recuperação por id."),
+        ("biblioteca", "Biblioteca em produção", "O que o agente propõe para a biblioteca passa pelos filtros em código, melhora os casos inéditos, e a marca de corrigido acerta? A corrida 20: o lote, os filtros, a reavaliação, a correção e a sonda."),
         # ! Alteração de IA - Revisar: (04/11/2026, P6) aba da corrida 21; o id entra junto com a seção (secao_cenarios).
         # ! Motivo: o ensaio dos cenários da Fase 5 é a sexta análise da Fase 4 e, pela regra do painel, vira uma aba.
-        ("cenarios", "Cenários da Fase 5", "Quanto tempo o agente leva da detecção ao resultado nos dez cenários da ficha 36 e em quantos acerta? A corrida 21, o ensaio de uma repetição: MTTR, Task Success, a ficha da falha de cada cenário e o protocolo da linha de base manual."),
+        ("cenarios", "Cenários da Fase 5", "Quanto tempo o agente leva da detecção ao resultado nos dez cenários da ficha 36 e em quantos acerta? As corridas 21 e 21b, o ensaio de uma repetição: tempo até o resultado, quantos chegaram a ele, a ficha da falha de cada cenário e o protocolo da medida com pessoas."),
         # ! Alteração de IA - Revisar: (04/11/2026, P7) aba da corrida 22; o id entra junto com a seção (secao_trilha).
         # ! Motivo: a avaliação da própria trilha é a sétima análise da Fase 4 e, pela regra do painel, vira uma aba.
-        ("trilha", "Avaliação da trilha", "A trilha do agente aponta os erros reais e o nó certo quando a falha é injetada de propósito? A corrida 22 nos 36 casos de avaliação: TPR x TNR da divergência, as intervenções, a sonda de pós-racionalização, as mutações (verbete, contrato, seletor) e a amostra de relatórios da sessão de revisão."),
+        ("trilha", "Avaliação da trilha", "A trilha do agente aponta os erros reais e o passo certo quando a falha é injetada de propósito? A corrida 22 nos 36 casos de avaliação: os sinais de alerta, as mudanças de propósito na entrada e a amostra de relatórios da sessão de revisão."),
     ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
@@ -195,8 +195,10 @@ ROTULO_FASE = {"2A_linear_ryzen": "2-A (Ryzen)", "2B_A0": "2-B A0", "2B_A2": "2-
 
 
 def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, cartoes_corridas, analise3b: dict | None = None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e parágrafos à vista da aba reescritos em frases curtas, sem p, b/c, hit@3, L1 nem "casos discordantes".
+    # ! Motivo: o texto à vista trazia siglas e números soltos (p de McNemar, b/c, hit@3, L1, P(top-1)) que o Eric pediu para tirar; os números continuam nas tabelas recolhidas.
     meta = cq["metadados"]
-    LA, LB = meta["melhor_L_nos_36"][A], meta["melhor_L_nos_36"][B]
+    LA, LB =meta["melhor_L_nos_36"][A], meta["melhor_L_nos_36"][B]
     v36 = {x["contexto"]: x for x in cq["fase3_versoes"]}
     melhor_A = v36[f"F3 · L{LA} · 36 de avaliação"]["acerto_A"]
     melhor_B = v36[f"F3 · L{LB} · 36 de avaliação"]["acerto_B"]
@@ -272,27 +274,27 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
     r1 = {x["L"]: x for x in cq.get("confronto_ineditos_repeticao", [])}.get(1)
     rep_an = next((x for x in (analise3b or {}).get("repeticao", {}).get("entre_modelos", []) if x["modelo"] == B and x["biblioteca_epoca"] == 1), None)
     if rep_an:
-        veredito = (f'dentro da variação de até {rep_an["limiar_ruido"]} casos entre corridas iguais de L0: a decisão 52 fica (decisão 73)' if rep_an["dentro_da_variacao"]
-                    else f'um caso acima da variação de até {rep_an["limiar_ruido"]} casos entre corridas iguais de L0, mas sem separar os dois no teste pareado '
-                         f'(p = {fmt(rep_an["p_mcnemar"], 3)}) e com {rep_an["somados"]["b"]}/{rep_an["somados"]["c"]} nos 72 casos nunca vistos: a decisão 52 fica, '
+        veredito = (f'a diferença cabe na variação normal entre corridas iguais (até {rep_an["limiar_ruido"]} casos) e a decisão 52 fica (decisão 73)' if rep_an["dentro_da_variacao"]
+                    else f'a diferença passa em um caso a variação normal entre corridas iguais (até {rep_an["limiar_ruido"]} casos), mas não separa os dois; '
+                         f'nos 72 casos nunca vistos o Coder acerta sozinho {rep_an["somados"]["b"]} e o qwen {rep_an["somados"]["c"]}. A decisão 52 fica, '
                          'com o saldo registrado como limitação declarada (decisão 73)')
-        frase_rep = (f' Na <strong>repetição de 23/10</strong> (corrida 15, Ollama 0.40.2, a L1 de cada um), {r1["so_coder"]} casos só do Coder contra {r1["so_qwen"]} só do qwen '
-                     f'(p = {fmt(r1["p_mcnemar"], 3)}): saldo {rep_an["saldo"]:+d}, contra {rep_an["saldo_original"]:+d} na corrida 7, {veredito}.') if r1 else ""
+        frase_rep = (f' Na <strong>repetição de 23/10</strong> (corrida 15, Ollama 0.40.2, a biblioteca que cada um escreveu), {r1["so_coder"]} casos só o Coder acertou contra {r1["so_qwen"]} só o qwen: '
+                     f'saldo {rep_an["saldo"]:+d}, contra {rep_an["saldo_original"]:+d} na corrida 7. {veredito[0].upper() + veredito[1:]}.') if r1 else ""
     else:
         frase_rep = ""
     frase_ineditos = (f'Nos <strong>36 inéditos</strong> (corrida 7, 06/10) o Coder fica à frente com L0 e L1 (com a L1 de cada um, {i1["so_coder"]} casos só dele contra '
                       f'{i1["so_qwen"]} só do qwen, p = {fmt(i1["p_mcnemar"], 3)}) e atrás com L3; nos 72 casos com L1 o placar empata. É a condição 1 do que mudaria a decisão 52, '
                       'parcialmente cumprida e dentro do ruído: o que fazer com ela era a ficha 21.' + frase_rep if i1 else "")
     itens_kpi = [
-        ("Células em que o Coder lidera", str(n_vence), f"maior vantagem {pp(max_delta)}; {n_vence_36} delas nos 36 nunca vistos"),
-        ("Nos 36 inéditos com L1 (06/10)", f'{i1["so_qwen"]} × {i1["so_coder"]}' if i1 else "não rodou", f'casos que só um acertou; {fmt(i1["acerto_A"])}% × {fmt(i1["acerto_B"])}%, p = {fmt(i1["p_mcnemar"], 3)}' if i1 else "corrida 7"),
-        ("Repetição dos 36 inéditos com L1 (23/10)", f'{r1["so_qwen"]} × {r1["so_coder"]}' if r1 else "não rodou",
-         (f'casos que só um acertou; {fmt(r1["acerto_A"])}% × {fmt(r1["acerto_B"])}%, p = {fmt(r1["p_mcnemar"], 3)}' + (f'; saldo {rep_an["saldo"]:+d}, variação entre corridas iguais até {rep_an["limiar_ruido"]}' if rep_an else "")) if r1 else "corrida 15"),
-        ("Nos 36 nunca vistos, melhor versão", f"{fmt(melhor_A)}% × {fmt(melhor_B)}%", f"qwen L{LA} × Coder L{LB}, acerto simples"),
-        ("Confronto em L1 nos 36", f'{c1["so_qwen"]} × {c1["so_coder"]}', f'casos que só um acertou; ambos {c1["ambos"]}, p = {fmt(c1["p_mcnemar"], 3)}'),
-        ("Edições aceitas na época 1", f'{doc1["aceitas_A"]} × {doc1["aceitas_B"]}', f'de {doc1["propostas_A"]} × {doc1["propostas_B"]} propostas; corretas na revisão {fmt(corr["A"])}% × {fmt(corr["B"])}%'),
-        ("hit@3 com a biblioteca L1 (90)", f'{fmt(rec1["hit3_90_A"])}% × {fmt(rec1["hit3_90_B"])}%', f'{rec1["verbetes_A"]} × {rec1["verbetes_B"]} verbetes'),
-        ("P(top-1) do Coder nos 36", f"≤ {fmt(100 * p_max_B)}%", f'primeiro em {est.get(B, 0)} × {est.get(A, 0)} de {cq["decisao"]["total_rankings"]} ordenações; {fmt(l1["s_A"])} × {fmt(l1["s_B"])} s por diagnóstico em L1'),
+        ("Onde o Coder fica à frente", str(n_vence), f"cenários, todos por pouco (até {pp(max_delta)}); {n_vence_36} nos 36 nunca vistos"),
+        ("36 nunca vistos, 1ª corrida (06/10)", f'{i1["so_qwen"]} × {i1["so_coder"]}' if i1 else "não rodou", f'só o qwen × só o Coder; acerto {fmt(i1["acerto_A"])}% × {fmt(i1["acerto_B"])}%' if i1 else "corrida 7"),
+        ("36 nunca vistos, repetição (23/10)", f'{r1["so_qwen"]} × {r1["so_coder"]}' if r1 else "não rodou",
+         ('só o qwen × só o Coder' + (f'; saldo {rep_an["saldo"]:+d}' if rep_an else "")) if r1 else "corrida 15"),
+        ("Melhor versão nos 36 nunca vistos", f"{fmt(melhor_A)}% × {fmt(melhor_B)}%", "acerto de cada um com a sua melhor versão"),
+        ("Disputa nos 36 de avaliação", f'{c1["so_qwen"]} × {c1["so_coder"]}', f'só o qwen × só o Coder; {c1["ambos"]} acertados pelos dois'),
+        ("Edições aceitas na 1ª época", f'{doc1["aceitas_A"]} × {doc1["aceitas_B"]}', f'de {doc1["propostas_A"]} × {doc1["propostas_B"]} propostas; corretas na revisão {fmt(corr["A"])}% × {fmt(corr["B"])}%'),
+        ("Verbete certo entre os três (90)", f'{fmt(rec1["hit3_90_A"])}% × {fmt(rec1["hit3_90_B"])}%', f'com a 1ª versão de cada um ({rec1["verbetes_A"]} × {rec1["verbetes_B"]} verbetes)'),
+        ("Chance de o Coder ser o 1º", f"≤ {fmt(100 * p_max_B)}%", f'1º em {est.get(B, 0)} × {est.get(A, 0)} de {cq["decisao"]["total_rankings"]} ordenações; {fmt(l1["s_A"])} × {fmt(l1["s_B"])} s por diagnóstico'),
     ]
     corridas = cartoes_corridas(road, numeros=["1", "7", "14", "15"], sufixo="-cq")
     html_ = f'''<section id="comparativo" hidden>
@@ -300,12 +302,12 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 <p class="lead">Pergunta do Eric em 29/09: "pode ser que em alguns cenários o coder seja mais interessante". Resposta: o Coder fica à frente em <strong>{n_vence} células</strong>, todas pequenas (a maior por {pp(max_delta)}) e quase todas nos 54 casos de aprendizado e nas classes léxica, runtime e efeito. Nos <strong>36 casos nunca vistos</strong> o qwen2.5:7b vence em todas as versões da biblioteca ({fmt(melhor_A)}% × {fmt(melhor_B)}% na melhor versão de cada um), e em nenhuma ordenação o Coder tem chance real de ser o primeiro (P(top-1) ≤ {fmt(100 * p_max_B)}%). Como escritor, o Coder é mais contido e mais certo ({fmt(corr["B"])}% de edições corretas contra {fmt(corr["A"])}%). A decisão 52 fica. {frase_ineditos}</p>
 {kpis(itens_kpi)}
 <h2>A trajetória dos dois pelas três fases</h2>
-<p>Os mesmos casos, da Fase 2-A (sem documentação, máquina de desenvolvimento) à Fase 3 (biblioteca editada pelo próprio modelo). Nos 36 de avaliação, o qwen abre vantagem a partir da biblioteca L1; nos 90 as curvas se cruzam.</p>
+<p>Os mesmos casos, da Fase 2-A (sem documentação, máquina de desenvolvimento) à Fase 3 (biblioteca editada pelo próprio modelo). Nos 36 de avaliação, o qwen abre vantagem a partir da primeira versão da biblioteca escrita pelo modelo (L1); nos 90 as curvas se cruzam.</p>
 <div class="controles"><label>Conjunto <select id="sel-cq-conj"><option value="36">36 de avaliação</option><option value="90">90 (todos)</option></select></label>
 <label>Métrica <select id="sel-cq-met"><option value="acerto">acerto simples</option><option value="bal">acurácia balanceada</option></select></label></div>
 <div class="chart"><canvas id="g-cq-traj"></canvas></div>
 <h2>Quem acerta o que o outro erra</h2>
-<p>Em cada condição, os casos que só um dos dois acertou (os discordantes do teste de McNemar). Nos 36 nunca vistos com L1, são {c1["so_qwen"]} casos só do qwen contra {c1["so_coder"]} só do Coder; com {c1["ambos"]} acertados por ambos, o teste não separa os dois (p = {fmt(c1["p_mcnemar"], 3)}).</p>
+<p>Em cada condição, as barras mostram os casos em que só um dos dois acertou. Nos 36 de avaliação com a primeira versão (L1), {c1["so_qwen"]} casos são só do qwen e {c1["so_coder"]} só do Coder; {c1["ambos"]} foram acertados pelos dois. A diferença cabe na variação normal: não separa os dois.</p>
 <div class="controles"><label>Conjunto <select id="sel-cq-conf"><option value="36">36 de avaliação (Fase 3)</option><option value="90">90 (2-B e Fase 3)</option></select></label></div>
 <div class="chart"><canvas id="g-cq-conf"></canvas></div>
 <h2>Por classe de defeito e por nível</h2>
@@ -316,8 +318,8 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 <p>Na época 1, o Coder propôs menos e teve aceitação igual ({fmt(doc1["aceitas_pct_A"])}% × {fmt(doc1["aceitas_pct_B"])}%), escreveu menos da metade dos tokens e não criou verbetes novos. Na revisão humana das edições aceitas, a fração correta é maior no Coder.</p>
 <div class="chart baixo"><canvas id="g-cq-rev"></canvas></div>
 {tab_doc}
-<h2>Recuperação e trocas de rótulo</h2>
-<p>Com a biblioteca L1 do Coder, o recuperador acha o verbete de ouro um pouco mais vezes nos 90 ({fmt(rec1["hit3_90_B"])}% contra {fmt(rec1["hit3_90_A"])}%): a biblioteca menor e sem verbetes novos não atrapalha o BM25.</p>
+<h2>Se o verbete certo chega entre os três entregues, e as trocas de causa respondida</h2>
+<p>Com a primeira versão escrita pelo Coder (L1), o verbete certo chega entre os três entregues em {fmt(rec1["hit3_90_B"])}% dos 90 casos, contra {fmt(rec1["hit3_90_A"])}% com a do qwen. A biblioteca menor e sem verbetes novos não atrapalha a busca (BM25).</p>
 {tab_rec}
 {detalhes("Trocas de rótulo entre versões (autoenvenenamento, ✓→✗ e ✗→✓)", B_("cq_flips"))}
 {detalhes("Rejeições do validador por modelo", B_("cq_rejeicoes"))}
@@ -330,11 +332,11 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 {detalhes("Ponte de versão do Ollama (0.34.0 → 0.34.1)", B_("cq_ponte"))}
 {detalhes("Riscos entre fases", B_("cq_riscos"))}
 <h2>Nos 36 casos inéditos (corrida 7, 06/10/2026)</h2>
-<p>O Coder 7B diagnosticou os mesmos 36 inéditos que o qwen rodou em 28/09, com a biblioteca original e com as versões que ele mesmo escreveu. Caso a caso, por versão e por classe (6 casos por classe: um caso vale 16,7 pontos).</p>
+<p>O Coder 7B diagnosticou os mesmos 36 casos nunca vistos que o qwen rodou em 28/09, com a biblioteca original e com as versões que ele mesmo escreveu. A tabela mostra caso a caso, por versão e por classe.</p>
 {B_("cq_ineditos")}
 {detalhes("Por classe, com a L1 de cada um", B_("cq_ineditos_classe"))}
 <h2>Repetição nos 36 inéditos (corrida 15, 23/10/2026)</h2>
-<p>Os dois modelos repetiram os mesmos 36 inéditos com a L1 de cada um, numa corrida só e em Ollama 0.40.2, depois da ponte de versão (corrida 14). A primeira tabela é o confronto dentro da repetição; a segunda, quanto cada modelo mudou sozinho contra a própria corrida original (corrida 2 para o qwen, 7 para o Coder).{(" " + frase_rep.strip()) if frase_rep else ""}</p>
+<p>Os dois modelos repetiram os mesmos 36 casos nunca vistos, cada um com a primeira versão da biblioteca que ele mesmo escreveu, numa corrida só e no Ollama 0.40.2, depois da ponte de versão (corrida 14). A primeira tabela compara os dois; a segunda mostra quanto cada modelo mudou sozinho contra a própria corrida original (corrida 2 para o qwen, 7 para o Coder).{(" " + frase_rep.strip()) if frase_rep else ""}</p>
 {B_("cq_ineditos_repeticao")}
 {detalhes("Cada modelo contra a própria corrida original", B_("cq_repeticao_vs_original"))}
 {detalhes("Por classe, na repetição", B_("cq_ineditos_repeticao_classe"))}
@@ -348,6 +350,8 @@ def secao_comparativo(cq: dict, blocos_cq: dict, md_para_html, road: dict, carto
 # ------------------------------------------------------------------ 2. Fase 3-B
 
 def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_para_html, an: dict | None = None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e parágrafos à vista reescritos sem b/c, p, hit@3, L0/L1/L3 soltos nem setas.
+    # ! Motivo: o texto à vista trazia siglas e números soltos (b + c, p de McNemar, hit@3) que o Eric pediu para tirar; os números continuam nas tabelas recolhidas.
     # ! Alteração de IA - Revisar: em 01/10/2026 a aba ganhou a soma dos 36 oficiais com os 36 inéditos e a tabela dos
     # casos que mudam entre corridas iguais (lidas de `analise_fase3b.json`, parâmetro `an`), e três textos mudaram: o
     # rótulo do cartão do 3B, a frase de abertura e a remissão à troca cruzada.
@@ -378,7 +382,6 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
     n_feitas = sum(c.classe == "feita" for c in corr3b)
     n_pend = sum(c.classe in ("pendente", "aguarda") for c in corr3b)
     n_opc = sum(c.classe == "opcional" for c in corr3b)
-    ponte_txt = "; ".join(f'{x["modelo"]} b/c {x["b"]}/{x["c"]}' for x in ult["linhas"])
     n_par = sum(x["pareavel"] for x in ult["linhas"])
     acima = [x["modelo"] for x in ult["linhas"] if not x["pareavel"]]
     if not ult["linhas"]:
@@ -400,11 +403,11 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
     leitura_ponte = next(((t, c) for t, c in road["secoes"] if t.startswith("2.3")), None)
     sonda = next((c for t, c in road["secoes"] if t.startswith("3. ")), "")
     itens_kpi = [
-        (f"{A} nos 36 inéditos", " → ".join(f'{fmt(q[L]["acerto"])}%' for L in Ls), f'acerto com {" → ".join("L" + L for L in Ls)}; balanceada ' + " / ".join(fmt(q[L]["bal"]) for L in Ls)),
-        (f"{COD3B} nos 36 inéditos", " → ".join(f'{fmt(cur[COD3B][L]["acerto"])}%' for L in Ls) if COD3B in cur else "—", "a biblioteca que ele mesmo escreveu não muda nenhum acerto"),
-        (f"L{L_ult} contra L0 no qwen", pp(p_ult.get("delta_pp")), f'b/c {p_ult.get("b", "—")}/{p_ult.get("c", "—")}, p = {fmt(p_ult.get("p_mcnemar"), 3)}'),
-        ("hit@3 nos inéditos (qwen)", " → ".join(f'{fmt(rec[A][L])}%' for L in Ls), f'nos 36 oficiais: ' + " → ".join(f'{fmt(rec_of[A][L])}%' for L in Ls)),
-        ("Ponte de versão", f"{n_par} de {len(ult['linhas'])} pareáveis", f"Ollama {ult['versao']}: {ponte_txt}; pareável quando b + c ≤ 2"),
+        (f"{A} nos 36 nunca vistos", " / ".join(f'{fmt(q[L]["acerto"])}%' for L in Ls), "com a biblioteca original, a 1ª e a 3ª versão"),
+        (f"{COD3B} nos 36 nunca vistos", " / ".join(f'{fmt(cur[COD3B][L]["acerto"])}%' for L in Ls) if COD3B in cur else "—", "a biblioteca que ele escreveu não muda o acerto"),
+        (f"Versão {L_ult} contra a original, no qwen", pp(p_ult.get("delta_pp")), f'só a versão {L_ult} acertou {p_ult.get("b", "—")} casos; só a original, {p_ult.get("c", "—")}'),
+        ("Verbete certo entre os três (qwen)", " / ".join(f'{fmt(rec[A][L])}%' for L in Ls), f'nos 36 nunca vistos; nos 36 oficiais: ' + " / ".join(f'{fmt(rec_of[A][L])}%' for L in Ls)),
+        ("Ponte de versão", f"{n_par} de {len(ult['linhas'])} pareáveis", f"no Ollama {ult['versao']}; pareável = até 2 casos em que só um lado acertou"),
         ("Corridas da 3-B", f"{n_feitas} feitas · {n_pend} pendentes", f"{n_opc} opcionais"),
     ]
     # ! Alteração de IA - Revisar: (06/10/2026) as duas corridas opcionais, rodadas pelo Eric em 06/10, entram na aba lidas de
@@ -414,11 +417,11 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
     a5 = (an or {}).get("a5", {}).get("linhas", [])
     c7 = {x["biblioteca_epoca"]: x for x in entre if x["modelo"] == B}
     if B in cur:
-        itens_kpi.insert(2, (f"Coder 7B nos 36 inéditos (06/10)", " → ".join(f'{fmt(cur[B][L]["acerto"])}%' for L in Ls),
-                             f'contra o qwen com a L1 de cada um: b/c {c7[1]["b"]}/{c7[1]["c"]}, p = {fmt(c7[1]["p_mcnemar"], 3)}; nos 72, {c7[1]["somados"]["b"]}/{c7[1]["somados"]["c"]}' if 1 in c7 else "sem confronto"))
+        itens_kpi.insert(2, (f"Coder 7B nos 36 nunca vistos (06/10)", " / ".join(f'{fmt(cur[B][L]["acerto"])}%' for L in Ls),
+                             f'só o Coder acertou {c7[1]["b"]}, só o qwen {c7[1]["c"]}; nos 72, {c7[1]["somados"]["b"]} e {c7[1]["somados"]["c"]}' if 1 in c7 else "sem confronto"))
     if a5:
-        itens_kpi.insert(3, ("Adesão cega com a L3 própria (06/10)", " · ".join(f'{fmt(l["seguiu_pct"])}%' for l in a5),
-                             "; ".join(f'{NOME_CURTO.get(l["modelo"], l["modelo"])}: seguiu a causa plantada em {l["seguiu"]} de {l["n"]}' for l in a5)))
+        itens_kpi.insert(3, ("Seguiu a causa errada plantada (06/10)", " · ".join(f'{fmt(l["seguiu_pct"])}%' for l in a5),
+                             "; ".join(f'{NOME_CURTO.get(l["modelo"], l["modelo"])}: {l["seguiu"]} de {l["n"]}' for l in a5)))
     # a análise identifica a classe pelo id sem acento (lexica, traducao); o painel mostra o nome com acento
     classes_entre = [("".join(ch for ch in unicodedata.normalize("NFKD", nome) if not unicodedata.combining(ch)), nome) for _, nome in sorted(CLASSES.items(), key=lambda kv: int(kv[0]))]
     tab_entre = ('<div class="tabela"><table><thead><tr><th>Modelo</th><th>Biblioteca de cada um</th><th>Acerto nos 36 inéditos</th><th>Acerto do qwen2.5:7b</th>'
@@ -438,10 +441,10 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
     if entre or a5:
         bloco_opcionais = ('<h2>As duas corridas que eram opcionais (06/10/2026)</h2>'
                            + ('<h3>Modelo contra modelo nos mesmos 36 inéditos (corrida 7)</h3><p>O Coder 7B rodou os 36 inéditos em 06/10 com a biblioteca original e com as versões que '
-                              'ele mesmo escreveu; o qwen e o Coder 3B tinham rodado em 28/09. b conta os casos que só o modelo da linha acertou e c os que só o qwen acertou; as colunas '
+                              'ele mesmo escreveu; o qwen e o Coder 3B tinham rodado em 28/09. A tabela conta os casos que só o modelo da linha acertou e os que só o qwen acertou; as colunas '
                               'por classe trazem os acertos do modelo e do qwen nos 6 casos da classe.</p>' + tab_entre if entre else "")
-                           + ('<h3>Adesão cega à documentação errada, com a biblioteca própria (corrida 5)</h3><p>Na condição A5 o contexto afirma uma causa errada para o sintoma e '
-                              'nunca traz o verbete de ouro. Na Fase 2-B isso foi medido com a biblioteca original; aqui cada modelo leu a própria L3 nos 36 oficiais.</p>' + tab_a5 if a5 else ""))
+                           + ('<h3>Se o modelo segue a documentação errada, com a biblioteca que ele escreveu (corrida 5)</h3><p>Neste teste o contexto afirma uma causa errada para o sintoma e '
+                              'nunca traz o verbete certo. Na Fase 2-B isso foi medido com a biblioteca original; aqui cada modelo leu a 3ª versão que ele mesmo escreveu (L3), nos 36 oficiais.</p>' + tab_a5 if a5 else ""))
     agrupado = (an or {}).get("ineditos", {}).get("agrupado", [])
     tab_agrupado = tabela(["Modelo", "Biblioteca", "Casos", "Acerto com L0", "Acerto com a biblioteca", "Oficiais: b / c", "Inéditos: b / c", "Somados: b / c", "Diferença", "p (McNemar exato)"],
                           [[x["modelo"], f'L{x["biblioteca_epoca"]}', x["n_comuns"], f'{fmt(x["acerto_l0_pct"])}%', f'{fmt(x["acerto_pct"])}%', f'{x["oficiais"]["b"]} / {x["oficiais"]["c"]}',
@@ -470,14 +473,14 @@ def secao_tres_b(ined: dict, dados: dict, road: dict, cartoes_corridas, md_doc_p
 <p>Linha cheia: os 36 casos oficiais de avaliação (vistos em quatro passadas por modelo). Linha tracejada: os 36 inéditos. Se o ganho fosse da biblioteca, as duas linhas subiriam juntas.</p>
 <div class="controles"><label>Métrica <select id="sel-tb-met"><option value="acerto">acerto simples</option><option value="bal">acurácia balanceada</option></select></label></div>
 <div class="chart"><canvas id="g-tb-gen"></canvas></div>
-<h2>O recuperador nos inéditos</h2>
-<p>hit@3 = o verbete de ouro está entre os três recuperados. Nos inéditos o recuperador acerta menos e cai com as notas acrescentadas; nos oficiais, fica estável.</p>
+<h2>O verbete certo chega entre os três entregues? Nos casos nunca vistos</h2>
+<p>O gráfico mostra com que frequência o verbete certo está entre os três entregues ao modelo. Nos casos nunca vistos o recuperador acerta menos e piora com as notas acrescentadas; nos oficiais fica estável.</p>
 <div class="chart baixo"><canvas id="g-tb-rec"></canvas></div>
 {tab_par}
-{"<h2>Oficiais e inéditos somados (72 casos)</h2><p>Cada versão da biblioteca contra a original, nos dois conjuntos e na soma. b conta os casos que só a versão nova acertou; c, os que só a original acertou.</p>" + tab_agrupado if agrupado else ""}
+{"<h2>Oficiais e inéditos somados (72 casos)</h2><p>Cada versão da biblioteca contra a original, nos dois conjuntos e na soma. A tabela conta os casos em que só a versão nova acertou e os em que só a original acertou.</p>" + tab_agrupado if agrupado else ""}
 {bloco_opcionais}
 <h2>Ponte de versão do Ollama</h2>
-<p>A bateria oficial rodou no Ollama 0.34.0, e o Ollama se atualiza sozinho. A cada versão nova, a ponte repete L0 nos 36 e compara caso a caso com a Fase 3: b conta os casos que só a ponte acertou, c os que só a Fase 3 acertou. Com b + c até 2 as corridas dessa versão são pareáveis com a Fase 3; acima disso, o modelo é lido contra a própria ponte e a ressalva vai para o relatório (decisão 47).</p>
+<p>A bateria oficial rodou no Ollama 0.34.0, e o Ollama se atualiza sozinho. A cada versão nova, a ponte repete a biblioteca original nos 36 casos e compara caso a caso com a Fase 3. Se até 2 casos mudam de lado (só a ponte ou só a Fase 3 acertou), as corridas dessa versão são pareáveis com a Fase 3. Acima disso, o modelo é lido contra a própria ponte e a ressalva vai para o relatório (decisão 47).</p>
 {tab_ponte}
 {"<h3>Quanto o resultado varia sozinho</h3><p>" + esc(frase_ruido) + "</p>" + tab_ruido if ruido else ""}
 {detalhes(f"Leitura da ponte mais recente (roadmap §{leitura_ponte[0][:3]})", md_doc_para_html(leitura_ponte[1])) if leitura_ponte else ""}
@@ -535,7 +538,9 @@ def secao_curadoria(cur: dict, planilha_md: str) -> tuple[dict, str]:
 # ------------------------------------------------------------------ 4. recuperador
 
 def secao_recuperador(rec: dict, ineditos_rec_txt: str = "") -> tuple[dict, str]:
-    res = rec["resultados"]
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões e parágrafos à vista reescritos sem hit@3, hit@5, embedding solto nem "harness".
+    # ! Motivo: o texto à vista trazia siglas que o Eric pediu para tirar; os números continuam nas tabelas e nos gráficos.
+    res =rec["resultados"]
     metodos = list(dict.fromkeys(x["metodo"] for x in res))
     bibs = list(dict.fromkeys(x["biblioteca"] for x in res))
     conjs = list(dict.fromkeys(x["conjunto"] for x in res))
@@ -568,29 +573,29 @@ def secao_recuperador(rec: dict, ineditos_rec_txt: str = "") -> tuple[dict, str]
     conj_ined = next((c for c in conjs if "inédit" in c or "inedit" in c), conjs[-1])
     melhor_hib = max(hib, key=lambda m: v0[m]["hit@3"]) if hib else None
     itens_kpi = [
-        (f"BM25 com sinais ({conj0})", f'{fmt(v0[bm25]["hit@3"])}%', f'hit@3; hit@5 {fmt(v0[bm25]["hit@5"])}%, {bib0}'),
-        *([(f"{melhor_hib} ({conj0})", f'{fmt(v0[melhor_hib]["hit@3"])}%', "hit@3; o melhor híbrido")] if melhor_hib else []),
-        *[(f"{m} ({conj0})", f'{fmt(v0[m]["hit@3"])}%', "hit@3") for m in sorted(denso, key=lambda m: -v0[m]["hit@3"])][:2],
-        (f"BM25 nos {conj_ined}", f'{fmt(val[bib0][conj_ined][bm25]["hit@3"])}%', "hit@3; o corpus de teste que a Fase 3 nunca viu"),
-        ("Classe tradução (BM25)", f"{fmt(trad)}%", f'hit@3; a classe mais fraca; {rec["metadados"]["chamadas_embed"]} chamadas de embedding na mesma CPU'),
+        (f"Busca por palavras com sinais, BM25 ({conj0})", f'{fmt(v0[bm25]["hit@3"])}%', f'verbete certo entre os três; entre os cinco, {fmt(v0[bm25]["hit@5"])}%'),
+        *([(f"{melhor_hib} ({conj0})", f'{fmt(v0[melhor_hib]["hit@3"])}%', "o melhor híbrido, entre os três")] if melhor_hib else []),
+        *[(f"{m} ({conj0})", f'{fmt(v0[m]["hit@3"])}%', "verbete certo entre os três") for m in sorted(denso, key=lambda m: -v0[m]["hit@3"])][:2],
+        (f"Busca por palavras (BM25) nos {conj_ined}", f'{fmt(val[bib0][conj_ined][bm25]["hit@3"])}%', "entre os três, em casos que a Fase 3 nunca viu"),
+        ("Classe tradução (BM25)", f"{fmt(trad)}%", "a classe mais fraca, entre os três"),
     ]
     html_ = f'''<section id="recuperador" hidden>
-<h1>Recuperador: vale trocar o BM25 com sinais por embeddings ou por um híbrido?</h1>
+<h1>Recuperador: vale trocar a busca por palavras por uma busca por significado?</h1>
 <p class="lead">Não, nesta medição. A decisão 55 tinha adotado a recuperação híbrida pela literatura, sem medida própria. Medido offline com o <code>{esc(rec["metadados"]["embedding"])}</code> nos 90 casos oficiais e nos 36 inéditos, o BM25 com sinais em código chega a {fmt(v0[bm25]["hit@3"])}% de hit@3 ({fmt(v0[bm25]["hit@5"])}% em hit@5), o embedding denso a {", ".join(fmt(v0[m]["hit@3"]) + "%" for m in denso)} e o híbrido a {", ".join(fmt(v0[m]["hit@3"]) + "%" for m in hib)}: o híbrido fica <strong>abaixo do BM25 sozinho</strong>. A recuperação híbrida saiu do desenho da Fase 4 (decisão 61); o ganho barato a medir é k = 5.</p>
 {kpis(itens_kpi)}
 <h2>Os métodos, lado a lado</h2>
-<p>Consulta em termos = os sinais que o código extrai do caso (rota, campos, mensagens); consulta em texto = o caso escrito por extenso. O embedding só funciona razoavelmente com os termos, e mesmo assim fica longe do BM25.</p>
+<p>Consulta em termos usa os sinais que o código extrai do caso (rota, campos, mensagens); consulta em texto usa o caso escrito por extenso. A busca por significado (embedding) só funciona razoavelmente com os termos, e mesmo assim fica longe do BM25.</p>
 <div class="controles"><label>Biblioteca <select id="sel-rec-bib">{"".join(f'<option value="{esc(b)}">{esc(b)}</option>' for b in bibs)}</select></label>
 <label>Métrica <select id="sel-rec-met"><option value="hit@3">hit@3</option><option value="hit@1">hit@1</option><option value="hit@5">hit@5</option><option value="mrr">MRR</option></select></label></div>
 <div class="chart"><canvas id="g-rec-met"></canvas></div>
 <h2>Por classe de defeito</h2>
-<p>hit@3 por classe, na biblioteca original. A classe tradução (mapeamento entre camadas) é a mais fraca em todos os métodos; os sinais em código continuam sendo o caminho para ela.</p>
+<p>Quantas vezes o verbete certo vem entre os três entregues, por classe, na biblioteca original. A classe tradução (mapeamento entre camadas) é a mais fraca em todos os métodos; os sinais em código continuam sendo o caminho para ela.</p>
 {tab_classes(conj0)}
 {tab_classes(conj_ined)}
 {detalhes(f"Tabela completa ({len(res)} combinações)", completa)}
 {leitura([
     "O corpus é pequeno (dezenas de verbetes curtos) e a consulta é técnica e em português: a busca lexical com sinais extraídos por código vence a semântica.",
-    "Trocar o modelo de embedding só faria sentido se a Fase 4 mostrasse necessidade; por ora, nada muda no harness.",
+    "Trocar o modelo de busca por significado (embedding) só faria sentido se a Fase 4 mostrasse necessidade; por ora, nada muda no próprio teste.",
 ])}
 {fontes(["<code>resultados_alvo/recuperador/experimento_recuperador.json</code> e <code>.md</code> (<code>experimento_recuperador.py</code>, --check)", "achado 4.39; decisão 61; ficha 11(f)"])}
 </section>'''
@@ -600,6 +605,8 @@ def secao_recuperador(rec: dict, ineditos_rec_txt: str = "") -> tuple[dict, str]
 # ------------------------------------------------------------------ 5. ablação base × instruct
 
 def secao_ablacao(abl: dict, ref3b_90, ref3b_ined) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões e parágrafo à vista reescritos sem "(A0)/(A2)", "rótulo" nem "acurácia balanceada".
+    # ! Motivo: o texto à vista trazia siglas e termos de método que o Eric pediu para tirar; os números seguem na tabela recolhida.
     linhas = abl["por_modelo_condicao"]
     dados_js = {"linhas": [{"modelo": x["modelo"], "cond": x["condicao"], "acerto": x["causa_correta_pct"], "formato": x["formato_valido_pct"],
                             "fora": x["fora_do_conjunto_pct"], "ic": x["causa_correta_ic95"]} for x in linhas]}
@@ -610,18 +617,18 @@ def secao_ablacao(abl: dict, ref3b_90, ref3b_ined) -> tuple[dict, str]:
     g = {(x["modelo"], x["condicao"]): x for x in linhas}
     base, inst = "qwen2.5:0.5b-base", "qwen2.5:0.5b-instruct"
     itens_kpi = [
-        ("Base, sem biblioteca (A0)", f'{fmt(g[(base, "A0")]["causa_correta_pct"])}%', f'formato válido {fmt(g[(base, "A0")]["formato_valido_pct"])}%'),
-        ("Base, com biblioteca (A2)", f'{fmt(g[(base, "A2")]["causa_correta_pct"])}%', f'formato válido {fmt(g[(base, "A2")]["formato_valido_pct"])}%, rótulo inventado {fmt(g[(base, "A2")]["fora_do_conjunto_pct"])}%'),
-        ("Instruct 0,5B, sem biblioteca", f'{fmt(g[(inst, "A0")]["causa_correta_pct"])}%', f'formato válido {fmt(g[(inst, "A0")]["formato_valido_pct"])}%'),
-        ("Instruct 0,5B, com biblioteca", f'{fmt(g[(inst, "A2")]["causa_correta_pct"])}%', f'formato válido cai para {fmt(g[(inst, "A2")]["formato_valido_pct"])}%'),
-        ("Referência: qwen2.5-coder:3b", f"{fmt(ref3b_90)}%", f"nos 90 com a biblioteca original; {fmt(ref3b_ined)}% nos inéditos"),
+        ("Base, sem biblioteca", f'{fmt(g[(base, "A0")]["causa_correta_pct"])}%', f'formato certo em {fmt(g[(base, "A0")]["formato_valido_pct"])}%'),
+        ("Base, com biblioteca", f'{fmt(g[(base, "A2")]["causa_correta_pct"])}%', f'formato certo em {fmt(g[(base, "A2")]["formato_valido_pct"])}%; causa inventada em {fmt(g[(base, "A2")]["fora_do_conjunto_pct"])}%'),
+        ("Instruct 0,5B, sem biblioteca", f'{fmt(g[(inst, "A0")]["causa_correta_pct"])}%', f'formato certo em {fmt(g[(inst, "A0")]["formato_valido_pct"])}%'),
+        ("Instruct 0,5B, com biblioteca", f'{fmt(g[(inst, "A2")]["causa_correta_pct"])}%', f'o formato certo cai para {fmt(g[(inst, "A2")]["formato_valido_pct"])}%'),
+        ("Referência: qwen2.5-coder:3b", f"{fmt(ref3b_90)}%", f"nos 90 casos; {fmt(ref3b_ined)}% nos nunca vistos"),
     ]
     html_ = f'''<section id="ablacao" hidden>
 <h1>Sem ajuste por instrução, o modelo faz a tarefa?</h1>
 <p class="lead">Não. O piso metodológico pedido na ficha 11(d): o <code>qwen2.5:0.5b-base</code> (só pré-treinado) e o <code>qwen2.5:0.5b-instruct</code> (mesmo porte, com ajuste por instrução) nos 90 casos, sem biblioteca (A0) e com a biblioteca recuperada (A2). O base acerta <strong>0 de 90</strong> nas duas condições: com a biblioteca ele copia a forma dos verbetes ({fmt(g[(base, "A2")]["formato_valido_pct"])}% no formato) mas inventa o rótulo em {fmt(g[(base, "A2")]["fora_do_conjunto_pct"])}% dos casos. O instruct de 0,5B chega a {fmt(g[(inst, "A0")]["causa_correta_pct"])}% e piora com a biblioteca. O ajuste por instrução é condição necessária, não suficiente: o piso da família está no porte.</p>
 {kpis(itens_kpi)}
 <h2>Acertar, responder no formato e inventar o rótulo</h2>
-<p>A diferença entre "responder no formato" e "acertar" é o que a acurácia balanceada e a contagem de rótulos fora do conjunto medem. A biblioteca no prompt ensina a forma ao modelo base, não o conteúdo.</p>
+<p>Responder no formato e acertar são coisas diferentes, e o gráfico separa as duas. Ele também conta as causas inventadas, fora da lista permitida. A biblioteca no prompt ensina a forma ao modelo base, não o conteúdo.</p>
 <div class="chart"><canvas id="g-abl"></canvas></div>
 {tab}
 {fontes(["<code>resultados_alvo/ablacao_base_instruct/resumo_metricas.json</code> (<code>executar_bateria.py</code>, estratégia linear, 360 inferências, 29/09)", "achado 4.41; ficha 11(d)"])}
@@ -771,6 +778,8 @@ def secao_pesquisa() -> tuple[dict, str]:
 <h1>Pesquisa bibliográfica: o que a literatura diz e o que entrou no projeto</h1>
 <p class="lead">{_POR_EXTENSO.get(n_rodadas, str(n_rodadas))} rodadas de levantamento, cada tópico pesquisado por um agente, cada afirmação verificada por outro agente cético contra a fonte, e a síntese integrada ao Memorial (§6.9 a §6.14) com as referências no padrão ABNT. A rodada 4 (29/09) respondeu ao pedido do Eric sobre como melhorar a documentação autogerida e evitar alucinação: {len([t for t in topicos if t["rodada"].startswith("Rodada 4")])} tópicos, {sum(t["aprovadas"] for t in topicos if t["rodada"].startswith("Rodada 4"))} afirmações aprovadas e um mapa de {n_filtros} filtros, dos quais {cont["adotado"]} entram como candidatos ao plano da Fase 4 (ficha 16).{frase_r5}</p>
 {kpis(itens_kpi)}
+<h2>As afirmações, rodada a rodada</h2>
+<div class="chart baixo"><canvas id="g-pe-rodadas"></canvas></div>
 <h2>Filtros para a documentação autogerida (rodada 4)</h2>
 <p>Cada linha é uma prática que a literatura sustenta, com o veredito para este projeto: <em>adotado</em> entra no plano da Fase 4, <em>adiado</em> espera medição de custo, <em>descartado</em> não cabe no desenho (prompt fixo, CPU, um modelo residente).</p>
 {mapa}
@@ -786,13 +795,19 @@ def secao_pesquisa() -> tuple[dict, str]:
 ])}
 {fontes(["<code>2-pesquisa-e-literatura/levantamento-2026-09-11-fase-3.md</code>, <code>-22-llms-locais.md</code>, <code>-29-documentacao-autogerida.md</code>, <code>levantamento-2026-10-01-pre-fase-4.md</code>", "<code>mapa-de-decisoes-fase-3.md</code>, <code>fichamento-referencias-projeto.md</code>, <code>referencias.md</code>"])}
 </section>'''
-    return {}, html_
+    por_afirmacoes: dict[str, dict] = {}
+    for t_ in topicos:
+        r_ = por_afirmacoes.setdefault(t_["curto"], {"rodada": t_["curto"], "aprovadas": 0, "rejeitadas": 0, "nao_verificadas": 0})
+        for chave_ in ("aprovadas", "rejeitadas", "nao_verificadas"):
+            r_[chave_] += t_[chave_]
+    return {"rodadas": list(por_afirmacoes.values())}, html_
 
 
 # ------------------------------------------------------------------ 7. ferramental
 
 def secao_ferramental(med: dict | None, readme: str) -> tuple[dict, str]:
-    # tabela de ferramentas do README (seção "Ferramentas de apoio")
+    # ! Alteração de IA - Revisar: (05/11/2026) a tabela de ferramentas vem de DETALHES-TECNICOS.md (o parâmetro continua `readme`, o texto que traz a seção "Ferramentas de apoio").
+    # ! Motivo: a seção saiu do README para o documento técnico, a pedido do Eric.
     ini = readme.index("## Ferramentas de apoio")
     fim = readme.find("\n## ", ini + 5)
     cab, linhas, _ = pt.primeira_tabela(pt.sem_comentarios(readme[ini:fim if fim > 0 else None]))
@@ -837,7 +852,7 @@ def secao_ferramental(med: dict | None, readme: str) -> tuple[dict, str]:
     "Nenhum JSON de resultado colado em prompt: agentes leem arquivos; a medição de consumo é local (<code>medir_tokens.py</code>).",
 ])}
 {bloco_mcp}
-{fontes(["<code>README.md</code> (tabela das ferramentas)", "<code>5-metodo-e-ferramental/ferramental-do-claude-code.md</code> §7.2 e §7.9", "<code>5-metodo-e-ferramental/dados/medicao-permanencia-mcp.json</code>", "decisões 49 e 62"])}
+{fontes(["<code>DETALHES-TECNICOS.md</code> (tabela das ferramentas)", "<code>5-metodo-e-ferramental/ferramental-do-claude-code.md</code> §7.2 e §7.9", "<code>5-metodo-e-ferramental/dados/medicao-permanencia-mcp.json</code>", "decisões 49 e 62"])}
 </section>'''
     return dados_js, html_
 
@@ -861,6 +876,8 @@ def _saldo_txt(b: int, c: int) -> str:
 
 
 def secao_cruzada(an: dict, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos sem b/c, p, L0/L1 soltos, "rótulo", setas nem o "(4 casos)" digitado à mão.
+    # ! Motivo: o texto à vista trazia siglas e números soltos que o Eric pediu para tirar; o "4 casos" estava escrito no texto em vez de vir dos dados, e os números seguem nas tabelas recolhidas.
     cz, meta = an["cruzada"], an["metadados"]
     doador, leitores = meta["doador"], meta["leitores"]
     nome = lambda m: NOME_CURTO.get(m, m)  # noqa: E731
@@ -885,16 +902,16 @@ def secao_cruzada(an: dict, road: dict, cartoes_corridas) -> tuple[dict, str]:
     pior = min(leitores, key=lambda m: par[(m, 1, "l0_ponte")]["b"] - par[(m, 1, "l0_ponte")]["c"])
     r_pior = rot[(pior, "L1 do doador")]
     ruido = an["ruido_l0"]
-    itens_kpi = [(f"{nome(m)} com a L1 do {nome(doador)}", f'{fmt(cel[(m, "ponte", 0)]["acerto_pct"])}% → {fmt(cel[(m, "cruzada", 1)]["acerto_pct"])}%',
-                  f'b/c {par[(m, 1, "l0_ponte")]["b"]}/{par[(m, 1, "l0_ponte")]["c"]} contra o próprio L0, p = {fmt(par[(m, 1, "l0_ponte")]["p_mcnemar"], 3)}') for m in leitores]
+    itens_kpi = [(f"{nome(m)} lendo a biblioteca do {nome(doador)}", f'de {fmt(cel[(m, "ponte", 0)]["acerto_pct"])}% para {fmt(cel[(m, "cruzada", 1)]["acerto_pct"])}%',
+                  f'contra a biblioteca original: {_saldo_txt(par[(m, 1, "l0_ponte")]["b"], par[(m, 1, "l0_ponte")]["c"])}') for m in leitores]
     itens_kpi += [
-        ("A mesma L1 lida por quem a escreveu", f'{fmt(q1["acerto_pct"])}%', "; ".join(f'{nome(m)} b/c {par[(m, 1, "doador")]["b"]}/{par[(m, 1, "doador")]["c"]} contra ele' for m in leitores)),
-        (f"Rótulo que o {nome(pior)} passa a dar", f'{r_pior["respostas_no_rotulo_com_l0"]} → {r_pior["respostas_no_rotulo"]} respostas',
+        ("A mesma biblioteca, lida por quem a escreveu", f'{fmt(q1["acerto_pct"])}%', "contra ele: " + "; ".join(f'{nome(m)} {_saldo_txt(par[(m, 1, "doador")]["b"], par[(m, 1, "doador")]["c"])}' for m in leitores)),
+        (f"Causa que o {nome(pior)} passa a responder", f'de {r_pior["respostas_no_rotulo_com_l0"]} para {r_pior["respostas_no_rotulo"]} respostas',
          f'{r_pior["rotulo_mais_frequente"]}; ' + ("nenhum dos 36 casos tem essa causa" if r_pior["casos_com_esse_gabarito"] == 0 else f'{r_pior["casos_com_esse_gabarito"]} dos 36 casos têm essa causa')),
         ("Contextos com nota do doador", f'{fmt(cel[(pior, "cruzada", 1)]["contexto_com_nota_pct"])}%',
-         "com a própria L1: " + "; ".join(f'{nome(m)} {fmt(cel[(m, "fase3", 1)]["contexto_com_nota_pct"])}%' for m in leitores)),
+         "na própria: " + "; ".join(f'{nome(m)} {fmt(cel[(m, "fase3", 1)]["contexto_com_nota_pct"])}%' for m in leitores)),
         ("Variação entre corridas iguais", f'{min(x["discordantes_mesma_entrada"] for x in ruido)} a {max(x["discordantes_mesma_entrada"] for x in ruido)} casos',
-         f'em 36, com a mesma entrada e saldo de até {max(abs(x["b_mesma_entrada"] - x["c_mesma_entrada"]) for x in ruido)}; régua para ler os saldos acima'),
+         f'em 36, saldo de até {max(abs(x["b_mesma_entrada"] - x["c_mesma_entrada"]) for x in ruido)}; régua para os saldos acima'),
     ]
     linhas_par = "".join(
         f'<tr data-valor="{p["contra"]}"><td>{esc(nome(p["leitor"]))} lendo L{p["biblioteca_epoca"]}</td><td>{esc(NOME_CONTRA[p["contra"]])}</td>'
@@ -931,16 +948,16 @@ def secao_cruzada(an: dict, road: dict, cartoes_corridas) -> tuple[dict, str]:
     fonte_top = r_pior["fontes_mais_citadas"][0] if r_pior["fontes_mais_citadas"] else None
     melhor = max(leitores, key=lambda m: par[(m, 1, "l0_ponte")]["b"] - par[(m, 1, "l0_ponte")]["c"])
     itens_leitura = [
-        f'<strong>O ganho não é da biblioteca sozinha.</strong> Lida por quem a escreveu, a L1 rende {fmt(q1["acerto_pct"])}%; lida pelo {esc(nome(melhor))}, fica com {_saldo_txt(par[(melhor, 1, "l0_ponte")]["b"], par[(melhor, 1, "l0_ponte")]["c"])} '
-        f'sobre o próprio L0, dentro da variação entre corridas ({len(par[(melhor, 1, "l0_ponte")]["em_casos_que_oscilam"])} das {par[(melhor, 1, "l0_ponte")]["b"] + par[(melhor, 1, "l0_ponte")]["c"]} trocas caem em casos que já '
-        f'oscilam sozinhos); lida pelo {esc(nome(pior))}, fica com {_saldo_txt(par[(pior, 1, "l0_ponte")]["b"], par[(pior, 1, "l0_ponte")]["c"])}, o único saldo fora dessa variação, ainda sem significância.',
-        f'<strong>No {esc(nome(pior))} as notas do doador são lidas e seguidas, para pior.</strong> Ele passa a responder <code>{esc(r_pior["rotulo_mais_frequente"])}</code> ({r_pior["respostas_no_rotulo_com_l0"]} respostas com L0, {r_pior["respostas_no_rotulo"]} com a biblioteca do doador), '
-        + ("causa que nenhum dos 36 casos tem" if r_pior["casos_com_esse_gabarito"] == 0 else f'causa de {r_pior["casos_com_esse_gabarito"]} dos 36 casos') + (f', citando <code>{esc(fonte_top["verbete"])}</code> como fonte em {fonte_top["respostas"]} respostas' if fonte_top else "") +
-        f'. Em {no_rotulo} das {len(perdas_pior)} perdas a resposta nova é esse rótulo, e em {com_ouro} das {len(perdas_pior)} o verbete de ouro estava no contexto: nessas, a falha é de uso, não de busca. '
-        f'Em rótulos, {par[(pior, 1, "l0_ponte")]["rotulos_diferentes"]} das 36 respostas mudam; entre corridas iguais dele mudam de {min(x["rotulos_diferentes"] for x in ruido if x["modelo"] == pior)} a '
+        f'<strong>O ganho não é da biblioteca sozinha.</strong> Lida por quem a escreveu, a primeira versão (L1) rende {fmt(q1["acerto_pct"])}%. Lida pelo {esc(nome(melhor))}, fica com {_saldo_txt(par[(melhor, 1, "l0_ponte")]["b"], par[(melhor, 1, "l0_ponte")]["c"])} '
+        f'sobre a biblioteca original, dentro da variação entre corridas ({len(par[(melhor, 1, "l0_ponte")]["em_casos_que_oscilam"])} das {par[(melhor, 1, "l0_ponte")]["b"] + par[(melhor, 1, "l0_ponte")]["c"]} trocas caem em casos que já '
+        f'oscilam sozinhos). Lida pelo {esc(nome(pior))}, fica com {_saldo_txt(par[(pior, 1, "l0_ponte")]["b"], par[(pior, 1, "l0_ponte")]["c"])}: é o único saldo fora dessa variação, e ainda assim pequeno demais para valer como prova.',
+        f'<strong>No {esc(nome(pior))} as notas do doador são lidas e seguidas, para pior.</strong> Ele passa a responder <code>{esc(r_pior["rotulo_mais_frequente"])}</code> ({r_pior["respostas_no_rotulo_com_l0"]} respostas com a biblioteca original, {r_pior["respostas_no_rotulo"]} com a do doador), '
+        + ("causa que nenhum dos 36 casos tem" if r_pior["casos_com_esse_gabarito"] == 0 else f'causa de {r_pior["casos_com_esse_gabarito"]} dos 36 casos') + (f', e cita <code>{esc(fonte_top["verbete"])}</code> como fonte em {fonte_top["respostas"]} respostas' if fonte_top else "") +
+        f'. Em {no_rotulo} das {len(perdas_pior)} perdas a resposta nova é essa causa, e em {com_ouro} das {len(perdas_pior)} o verbete certo estava no contexto: nessas, a falha é de uso, não de busca. '
+        f'A causa respondida muda em {par[(pior, 1, "l0_ponte")]["rotulos_diferentes"]} das 36 respostas; entre corridas iguais dele muda de {min(x["rotulos_diferentes"] for x in ruido if x["modelo"] == pior)} a '
         f'{max(x["rotulos_diferentes"] for x in ruido if x["modelo"] == pior)}.',
         f'<strong>O que a cruzada não separa.</strong> O ganho medido na Fase 3 não acompanha a biblioteca quando muda quem a lê, mas o {esc(nome(doador))} não leu a biblioteca de outro modelo: não dá para dizer se o ganho é '
-        "do par (o modelo com a biblioteca que ele mesmo escreveu) ou do leitor. E o ganho dele com a própria L1 (4 casos) também não alcança significância.",
+        "do par (o modelo com a biblioteca que ele mesmo escreveu) ou do leitor. E o ganho dele com a biblioteca que ele mesmo escreveu também cabe na variação normal.",
         f'<strong>O que fica para a Fase 4.</strong> O padrão do agente é o {esc(nome(doador))} com a biblioteca que ele mesmo escreveu (decisão 69): trocar o modelo que lê exige medir de novo, e a ideia de escrever com o melhor '
         "modelo e ler com o mais barato sai. Uma nota em verbete que aparece em quase metade dos contextos alcança quase metade dos diagnósticos.",
     ]
@@ -950,14 +967,14 @@ def secao_cruzada(an: dict, road: dict, cartoes_corridas) -> tuple[dict, str]:
 <p class="lead">Não é da biblioteca sozinha. Os dois Coder diagnosticaram os mesmos 36 casos, com o mesmo prompt e a mesma busca, lendo a biblioteca escrita pelo {esc(nome(doador))}. {esc("; ".join(frases))}. Lida por quem a escreveu, a mesma L1 rende {fmt(q1["acerto_pct"])}%. O ganho medido na Fase 3 não acompanha a biblioteca quando muda quem a lê.</p>
 {kpis(itens_kpi)}
 <h2>Acerto por versão da biblioteca, por quem lê</h2>
-<p>Linha cheia: a biblioteca escrita pelo {esc(nome(doador))} (no ponto L0, a biblioteca original; para os dois Coder, medida na ponte em Ollama {esc(versao)}). Linha tracejada: cada Coder lendo a biblioteca que ele mesmo escreveu, na Fase 3. Se o ganho fosse da biblioteca, as linhas cheias subiriam juntas.</p>
+<p>Linha cheia: a biblioteca escrita pelo {esc(nome(doador))} (no primeiro ponto, a biblioteca original; para os dois Coder, medida na ponte em Ollama {esc(versao)}). Linha tracejada: cada Coder lendo a biblioteca que ele mesmo escreveu, na Fase 3. Se o ganho fosse da biblioteca, as linhas cheias subiriam juntas.</p>
 <div class="controles"><label>Métrica <select id="sel-cz-met"><option value="acerto">acerto simples</option><option value="bal">acurácia balanceada</option></select></label></div>
 <div class="chart"><canvas id="g-cz-leit"></canvas></div>
-<h2>Casos ganhos e perdidos contra o próprio L0</h2>
+<h2>Casos ganhos e perdidos contra a biblioteca original, no mesmo modelo</h2>
 <p>Cada barra compara um modelo com uma versão da biblioteca contra ele mesmo com a biblioteca original: à direita os casos que passou a acertar, à esquerda os que deixou de acertar. Os dois Coder são comparados na mesma versão do Ollama (ponte de 30/09); o {esc(nome(doador))}, dentro da Fase 3.</p>
 <div class="chart"><canvas id="g-cz-trocas"></canvas></div>
-<h2>Os pareamentos, um a um</h2>
-<p>b conta os casos que só o leitor com a biblioteca do doador acertou; c, os que só o outro lado acertou. Só a comparação contra a ponte é feita na mesma versão do Ollama e com o mesmo texto dos casos; as outras duas cruzam versões e, para o Coder 7B, não são pareáveis (decisão 47). Nelas, a coluna "sem o caso de texto corrigido" tira o efe-3, corrigido em 28/09.</p>
+<h2>Cada comparação, uma a uma</h2>
+<p>A tabela conta os casos que só o leitor com a biblioteca do doador acertou e os que só o outro lado acertou. Só a comparação contra a ponte é feita na mesma versão do Ollama e com o mesmo texto dos casos; as outras duas cruzam versões e, para o Coder 7B, não são pareáveis (decisão 47). Nelas, a coluna "sem o caso de texto corrigido" tira o efe-3, corrigido em 28/09.</p>
 {tab_par}
 {detalhes("Casos ganhos e perdidos em cada pareamento", tab_par_casos)}
 <h2>Leitura</h2>
@@ -1115,6 +1132,8 @@ def _literatura_do_colibri(lev: str | None) -> tuple[str, list[tuple[str, str, s
 
 
 def secao_colibri(v: dict | None, amostra: dict | None, road: dict, cartoes_corridas, levantamento: str | None = None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões de RAM, leitura do disco e resposta em máquina parecida encurtados, e "rótulo" trocado por "causa respondida" no texto à vista.
+    # ! Motivo: os cartões passavam de 90 caracteres com detalhes que já estão nas tabelas recolhidas (leituras, blocos, threads); o texto usava "rótulo", termo que o Eric pediu para tirar.
     titulo = "Dá para rodar nesta máquina um modelo gigante lendo os pesos do disco?"
     if not v:
         return {"barras": []}, (f'<section id="colibri" hidden>\n<h1>{titulo}</h1>\n<p class="lead">As sondas da Pré-Fase 4 ainda não foram rodadas '
@@ -1183,11 +1202,10 @@ def secao_colibri(v: dict | None, amostra: dict | None, road: dict, cartoes_corr
         ("Famílias do colibri que rodam aqui", f"{len(rodam)} de {len(fam)}",
          ("com folga, só " + ", ".join(f["nome"] for f in rodam) if rodam else "nenhuma com folga")
          + (f'; no limite de RAM: {", ".join(f["nome"] for f in no_limite)}' if no_limite else "")),
-        ("RAM instalada", f'{fmt(instalada)} GB', f'o sistema enxerga {fmt(maq["ram_gb"], 2)} GB, e cerca de {fmt(maq["ram_livre_no_inicio_de_corrida_gb"])} GB ficam livres no início de uma corrida; '
-                                                    f'o GLM-5.2 pede {glm["ram_min_gb"]} GB no mínimo'),
+        ("RAM instalada", f'{fmt(instalada)} GB', f'o sistema enxerga {fmt(maq["ram_gb"], 2)} GB; o GLM-5.2 pede {glm["ram_min_gb"]} GB no mínimo'),
         ("Disco livre", f'{fmt(maq["disco_livre_gb"])} GB', f'o GLM-5.2 pede {_milhar(glm["disco_gb"])} GB'),
-        ("Leitura do NVMe", f'{fmt(nvme["gb_por_s"], 2)} GB/s', f'por fora do cache do sistema; {dm["blocos"]} leituras de {dm["bloco_bytes"] // 2**20} MB em {dm["threads"]} threads'),
-        ("Uma resposta nossa em máquina parecida", f'{fmt(perto["minutos_por_resposta"])} min', f'só a geração, a {fmt(perto["tok_por_s"], 2)} token/s ({perto_partes[0]}, {perto_partes[1]}); hoje o diagnóstico inteiro leva {fmt(seg_hoje)} s'),
+        ("Velocidade de leitura do disco (NVMe)", f'{fmt(nvme["gb_por_s"], 2)} GB/s', f'medida sem usar o cache do sistema ({dm["blocos"]} leituras de {dm["bloco_bytes"] // 2**20} MB)'),
+        ("Uma resposta nossa em máquina parecida", f'{fmt(perto["minutos_por_resposta"])} min', f'só gerar, a {fmt(perto["tok_por_s"], 2)} token/s ({perto_partes[0]}); hoje o diagnóstico inteiro leva {fmt(seg_hoje)} s'),
     ]
 
     bloco_sonda = ""
@@ -1213,11 +1231,11 @@ def secao_colibri(v: dict | None, amostra: dict | None, road: dict, cartoes_corr
             ["A resposta sai igual com e sem o pedido de probabilidades", "sim" if conf["resposta_igual_sem_logprobs"] else "não: mesma causa e mesmos campos, frase de impacto com outras palavras (temperatura 0,1, sem semente)"],
         ])
         bloco_sonda = f'''<h2>O que a sonda do Ollama mostrou</h2>
-<p>Amostra de ferramenta, com o <code>{esc(ma["modelo"])}</code> no caso <code>{esc(ma["caso"])}</code> e a biblioteca L{ma["biblioteca_epoca"]} dele, no Ollama {esc(ma["versao_ollama"])}; não é resultado de corrida. O Ollama devolve, para cada token que o modelo escreve, a probabilidade que ele deu a esse token e às alternativas. Abaixo, a primeira linha da resposta, token a token; o símbolo <code>␣</code> marca um espaço.</p>
+<p>Amostra de ferramenta, com o <code>{esc(ma["modelo"])}</code> no caso <code>{esc(ma["caso"])}</code> e a versão {ma["biblioteca_epoca"]} da biblioteca que ele escreveu, no Ollama {esc(ma["versao_ollama"])}; não é resultado de corrida. O Ollama devolve, para cada token que o modelo escreve, a probabilidade que ele deu a esse token e às alternativas. Abaixo, a primeira linha da resposta, token a token; o símbolo <code>␣</code> marca um espaço.</p>
 <div class="toks">{"".join(tok(t) for t in am["linha"])}</div>
-<p>O modelo decide a causa no primeiro token depois de <code>CAUSA_RAIZ:</code>; daí em diante o resto do rótulo sai quase certo. Nesse ponto, as opções que ele pesou foram estas:</p>
+<p>O modelo decide a causa no primeiro token depois de <code>CAUSA_RAIZ:</code>; daí em diante o resto da causa respondida sai quase certo. Nesse ponto, as opções que ele pesou foram estas:</p>
 <div class="tabela estreita"><table><thead><tr><th>Token candidato</th><th>Probabilidade</th></tr></thead><tbody>{linhas_alt}</tbody></table></div>
-<p>É esse número que a corrida 12 grava para os 72 casos: se a probabilidade do rótulo for baixa justamente onde o modelo erra, ela serve de aviso para chamar um humano.</p>
+<p>É esse número que a corrida 12 grava para os 72 casos: se a probabilidade da causa respondida for baixa justamente onde o modelo erra, ela serve de aviso para chamar um humano.</p>
 {detalhes("O que a sonda conferiu", tab_conf)}'''
 
     leitura_itens = [
@@ -1227,7 +1245,7 @@ def secao_colibri(v: dict | None, amostra: dict | None, road: dict, cartoes_corr
          + " cabe na máquina, mas trocar de modelo exige medir de novo (decisão 69). Ele entra na corrida 13 só como material do atlas."),
         "<strong>Disco comum e HD.</strong> O repositório não publica medida em HD. Pela leitura por token que ele declara, só o disco custaria "
         + " e ".join(f'{fmt(c["segundos_por_token_frio"])} s por token em {c["disco"].split(" (")[0]}' for c in premissas) + " (velocidades postas como premissa, não medidas).",
-        "<strong>O que se aproveita sem trocar de motor</strong> é a ideia da escolha fechada por probabilidade: em vez de só ler o rótulo que o modelo escreveu, ler também a probabilidade que ele deu ao rótulo. O nosso diagnóstico é uma escolha entre 23 causas, e o Ollama instalado já devolve esse número."
+        "<strong>O que se aproveita sem trocar de motor</strong> é a ideia da escolha fechada por probabilidade: em vez de só ler a causa que o modelo escreveu, ler também a probabilidade que ele deu a ela. O nosso diagnóstico é uma escolha entre 23 causas, e o Ollama instalado já devolve esse número."
     ]
     if no_limite:
         # a medida publicada com menos memória: a do GLM-5.2 na máquina de menor RAM, sem a opção com perda
@@ -1489,6 +1507,8 @@ def secao_cerebro(levantamento: str | None) -> tuple[dict, str]:
 
 
 def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None = None, confianca: dict | None = None, levantamento: str | None = None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, título e parágrafos à vista reescritos sem AUROC solto, b/c, p, "rótulo" nem "L1" sem explicação.
+    # ! Motivo: o texto à vista trazia siglas que o Eric pediu para tirar; a probabilidade do "rótulo" passa a ser a da causa respondida, e os números seguem nas tabelas recolhidas.
     titulo = "Dá para ver por que o modelo respondeu o que respondeu?"
     if not ind:
         return {"trilhas": [], "explorador": {"trilhas": []}}, (f'<section id="raciocinio" hidden>\n<h1>{titulo}</h1>\n<p class="lead">As trilhas ainda não foram geradas nesta máquina: falta '
@@ -1554,14 +1574,14 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
         p_cur = pares.get(("L1 curada contra L1", "todos"))
         confiantes = sum(1 for l in conf.get("casos", []) if not l["acerto"] and (l["p_conjunta"] or 0) > 0.85)
         itens_conf = [
-            ("AUROC da probabilidade do rótulo", fmt(tot["sinais"]["p_conjunta"]["auroc"], 3),
-             f'[{fmt(tot["sinais"]["p_conjunta"]["ic95"][0], 3)} a {fmt(tot["sinais"]["p_conjunta"]["ic95"][1], 3)}] em {tot["casos"]} diagnósticos, {tot["erros"]} erros; verbete do contexto {fmt(tot["sinais"]["sustentado"]["auroc"], 3)}, classe da rota {fmt((tot["sinais"].get("coerente") or {}).get("auroc"), 3)}'),
-            ("Revisar os 10% menos prováveis", f'{rev[0.1]["erros_pegos"]} de {tot["erros"]} erros', f'{rev[0.1]["revisados"]} casos revisados, {rev[0.1]["acertos_revisados"]} à toa; com 30%: {rev[0.3]["erros_pegos"]} de {tot["erros"]}'),
+            ("O quanto a probabilidade da causa separa erros de acertos (AUROC)", fmt(tot["sinais"]["p_conjunta"]["auroc"], 3),
+             f'em {tot["casos"]} diagnósticos; verbete do contexto {fmt(tot["sinais"]["sustentado"]["auroc"], 3)}, classe da rota {fmt((tot["sinais"].get("coerente") or {}).get("auroc"), 3)}'),
+            ("Revisar os 10% menos prováveis", f'{rev[0.1]["erros_pegos"]} de {tot["erros"]} erros', f'{rev[0.1]["revisados"]} casos revisados, {rev[0.1]["acertos_revisados"]} deles acertos; com 30%: {rev[0.3]["erros_pegos"]} de {tot["erros"]}'),
             ("Erros confiantes", f"{confiantes} de {tot['erros']}", f'probabilidade acima de 0,85; mediana {fmt(tot["p_conjunta_mediana"]["certos"], 3)} nos certos e {fmt(tot["p_conjunta_mediana"]["errados"], 3)} nos errados'),
         ]
         if cur and l1 and p_cur:
-            itens_conf.append(("Cópia curada da L1 nos 72 casos", f'{fmt(cur["acerto_pct"])}% × {fmt(l1["acerto_pct"])}%',
-                               f'contra a L1 inteira na mesma corrida: b/c {p_cur["b"]}/{p_cur["c"]}, p = {fmt(p_cur["p_mcnemar"], 2)}; {fmt(cur["segundos_mediana"])} × {fmt(l1["segundos_mediana"])} s por diagnóstico'))
+            itens_conf.append(("Cópia curada contra a 1ª versão inteira (72 casos)", f'{fmt(cur["acerto_pct"])}% × {fmt(l1["acerto_pct"])}%',
+                               f'só a cópia acertou {p_cur["b"]}, só a inteira {p_cur["c"]}; {fmt(cur["segundos_mediana"])} × {fmt(l1["segundos_mediana"])} s por diagnóstico'))
         tab_res = tabela(["Recorte", "Casos", "Erros"] + [n for _, n in SINAIS] + ["Mediana nos certos", "Mediana nos errados", "Erros com a causa certa em 2º"],
                          [[r["nome"], r["casos"], r["erros"]] + [("n/d" if not r["sinais"].get(s) or r["sinais"][s].get("auroc") is None else f'{fmt(r["sinais"][s]["auroc"], 3)} [{fmt(r["sinais"][s]["ic95"][0], 2)} a {fmt(r["sinais"][s]["ic95"][1], 2)}]') for s, _ in SINAIS]
                           + [fmt(r["p_conjunta_mediana"]["certos"], 3), fmt(r["p_conjunta_mediana"]["errados"], 3), f'{r["erros_com_o_gabarito_na_segunda"]} de {r["erros"]}'] for r in resumos])
@@ -1574,14 +1594,14 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
         tab_par = tabela(["Comparação", "Conjunto", "Casos", "Acerto da primeira", "Acerto da segunda", "b", "c", "Diferença", "p (McNemar exato)", "Casos que mudaram"],
                          [[x["comparacao"], x["conjunto"], x["n"], f'{fmt(x["acerto_pct"])}%', f'{fmt(x["acerto_base_pct"])}%', x["b"], x["c"], pp(x["delta_pp"]), fmt(x["p_mcnemar"], 4), ", ".join(x["ganhos"] + x["perdas"]) or "nenhum"]
                           for x in conf.get("pares", []) + conf.get("contra_corridas_anteriores", [])])
-        bloco_conf = f"""<h2>A probabilidade do rótulo separa acerto de erro? (corrida 12, 06/10/2026)</h2>
-<p>O Ollama devolve a probabilidade de cada token que o modelo escreve. A corrida 12 gravou essa probabilidade para o rótulo da causa nos 72 casos que nenhuma biblioteca viu, com o qwen2.5:7b lendo a biblioteca original (L0), a L1 inteira e a cópia curada da L1 que a Fase 4 vai usar: {tot["casos"]} diagnósticos, {tot["erros"]} erros. A medida principal, fixada antes da corrida, é a probabilidade conjunta dos tokens do rótulo; a AUROC diz quanto cada sinal separa acerto de erro (0,5 é sortear, 1,0 separa tudo).</p>
+        bloco_conf = f"""<h2>A probabilidade da causa respondida separa acerto de erro? (corrida 12, 06/10/2026)</h2>
+<p>O Ollama devolve a probabilidade de cada token que o modelo escreve. A corrida 12 gravou essa probabilidade para a causa respondida nos 72 casos que nenhuma biblioteca viu, com o qwen2.5:7b lendo a biblioteca original (L0), a primeira versão escrita pelo modelo inteira (L1) e a cópia curada dela que a Fase 4 vai usar: {tot["casos"]} diagnósticos, {tot["erros"]} erros. A medida principal, fixada antes da corrida, é a probabilidade conjunta dos tokens da causa. O quanto cada sinal separa erros de acertos (AUROC) vai de 0,5, que é sortear, a 1,0, que separa tudo.</p>
 {kpis(itens_conf)}
 <div class="chart"><canvas id="g-ra-conf"></canvas></div>
 {tab_res}
-{leitura([f"<strong>Separa, e melhor que os dois sinais grátis, mas metade dos erros sai confiante.</strong> AUROC {fmt(tot['sinais']['p_conjunta']['auroc'], 3)} contra {fmt(tot['sinais']['sustentado']['auroc'], 3)} e {fmt((tot['sinais'].get('coerente') or {}).get('auroc'), 3)}; {confiantes} dos {tot['erros']} erros têm probabilidade acima de 0,85, e em {tot['erros_com_o_gabarito_na_segunda']} deles a causa certa era a segunda opção.",
+{leitura([f"<strong>Separa, e melhor que os dois sinais grátis, mas metade dos erros sai confiante.</strong> O sinal separa erros de acertos em {fmt(tot['sinais']['p_conjunta']['auroc'], 3)}, contra {fmt(tot['sinais']['sustentado']['auroc'], 3)} e {fmt((tot['sinais'].get('coerente') or {}).get('auroc'), 3)} dos outros dois. Além disso, {confiantes} dos {tot['erros']} erros têm probabilidade acima de 0,85, e em {tot['erros_com_o_gabarito_na_segunda']} deles a causa certa era a segunda opção.",
           f"<strong>Serve de triagem, não de barreira.</strong> Mandar para revisão os 10% de menor probabilidade ({rev[0.1]['revisados']} casos) pega {rev[0.1]['erros_pegos']} dos {tot['erros']} erros; 30% ({rev[0.3]['revisados']} casos) pega {rev[0.3]['erros_pegos']}, revisando {rev[0.3]['acertos_revisados']} acertos à toa. Para a Fase 4, vale como ordem de prioridade de revisão e como aviso na trilha."]
-         + ([f"<strong>A cópia curada rende como a L1 inteira e custa menos.</strong> {fmt(cur['acerto_pct'])}% contra {fmt(l1['acerto_pct'])}% nos 72 casos na mesma corrida (b/c {p_cur['b']}/{p_cur['c']}), dentro da variação entre corridas iguais; {fmt(cur['segundos_mediana'])} s contra {fmt(l1['segundos_mediana'])} s por diagnóstico, com menos texto no contexto. Segue como ponto de partida da Fase 4 (decisão 71)."] if cur and l1 and p_cur else []))}
+         + ([f"<strong>A cópia curada rende como a primeira versão inteira e custa menos.</strong> {fmt(cur['acerto_pct'])}% contra {fmt(l1['acerto_pct'])}% nos 72 casos na mesma corrida ({p_cur['b']} casos só da cópia, {p_cur['c']} só da inteira), dentro da variação entre corridas iguais; {fmt(cur['segundos_mediana'])} s contra {fmt(l1['segundos_mediana'])} s por diagnóstico, com menos texto no contexto. Segue como ponto de partida da Fase 4 (decisão 71)."] if cur and l1 and p_cur else []))}
 {detalhes("Revisão humana por parcela de menor probabilidade", tab_rev)}
 {detalhes("Acerto de cada biblioteca na corrida 12 (36 oficiais, 36 inéditos, 72)", tab_ac)}
 {detalhes("Pares caso a caso: entre as bibliotecas da corrida e contra as corridas anteriores", tab_par)}
@@ -1595,7 +1615,7 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
         ("Sem raciocínio escrito", f"{sem} de {total}", "o modelo vai direto às quatro linhas pedidas"),
         ("Prompt provado por inteiro", f"{inteiro} de {total}", f"nos outros {so_doc} só a documentação entregue tem prova gravada" + (f"; {nao_comp} não comprovados" if nao_comp else "")),
         ("Verbetes citados fora do contexto", f"{fora_ctx} de {citadas}", "o modelo só citou o que recebeu" if fora_ctx == 0 else "citações a verbete que não foi entregue"),
-        ("Causa fora das 23 permitidas", str(fora_conj), "respostas com rótulo inventado"),
+        ("Causa fora das 23 permitidas", str(fora_conj), "respostas com causa inventada"),
         ("Causa sem apoio no contexto", str(sem_apoio), "respostas cuja causa nenhum verbete entregue trata"),
     ]
     linhas_conf = "".join(
@@ -1627,7 +1647,7 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
           "<strong>O que o modelo declarou</strong> é alegação: a causa, o campo, a frase de impacto e os verbetes citados, sempre como trecho literal da resposta, com a posição.",
           "<strong>O que o código conferiu</strong> é o que se pôde checar da alegação sem saber a resposta certa. O que não dá para conferir por código (a frase de impacto, e qual nota de um verbete o modelo usou) é dito, não omitido."])}
 <h2>Um sinal que o agente pode calcular sozinho</h2>
-<p>Em cada resposta o código pergunta: algum verbete entregue ao modelo trata da causa que ele respondeu? Não precisa de gabarito.{texto_sinal} Os grupos "quando não" são pequenos; a sonda de confiança (corrida 12) mede o mesmo sinal junto com a probabilidade do rótulo.</p>
+<p>Em cada resposta o código pergunta: algum verbete entregue ao modelo trata da causa que ele respondeu? Não precisa de gabarito.{texto_sinal} Os grupos "quando não" são pequenos; a sonda de confiança (corrida 12) mede o mesmo sinal junto com a probabilidade da causa respondida.</p>
 <div class="chart"><canvas id="g-ra-sus"></canvas></div>
 {tab_sus}
 <h2>O que o código conferiu, por trilha</h2>
@@ -1643,8 +1663,8 @@ def secao_raciocinio(ind: dict | None, exemplo: str | None, trilhas: dict | None
     leitura_fontes,
     "<strong>O erro mais comum não é inventar, é responder uma causa que a documentação entregue não trata.</strong> Esse caso é detectável em código, na hora, e vira candidato a aviso para quem desenvolve.",
     "<strong>O relatório mostra de quem é cada nota.</strong> Quando o verbete citado tem notas escritas pelo modelo, o relatório lista quantas são e o veredito da revisão humana de cada uma; não dá para saber qual delas pesou na resposta, e isso fica escrito.",
-    ("<strong>A probabilidade do rótulo é o melhor dos três sinais, e nenhum deles é barreira.</strong> A seção da corrida 12, acima, traz os números; o que a literatura da parte B sustenta para a arquitetura da trilha está na seção acima, e a especificação da trilha para a Fase 4 sai dela." if tot
-     else "A análise da probabilidade do rótulo entra nesta aba quando a corrida 12 terminar; o que a literatura da parte B sustenta para a arquitetura da trilha está na seção acima, e a especificação da trilha para a Fase 4 sai dela.")])}
+    ("<strong>A probabilidade da causa respondida é o melhor dos três sinais, e nenhum deles é barreira.</strong> A seção da corrida 12, acima, traz os números; o que a literatura da parte B sustenta para a arquitetura da trilha está na seção acima, e a especificação da trilha para a Fase 4 sai dela." if tot
+     else "A análise da probabilidade da causa respondida entra nesta aba quando a corrida 12 terminar; o que a literatura da parte B sustenta para a arquitetura da trilha está na seção acima, e a especificação da trilha para a Fase 4 sai dela.")])}
 {fontes(["<code>resultados_alvo/pre_fase4/confianca.json</code> e <code>.md</code> (<code>analisar_confianca.py</code>, corrida 12 em <code>resultados_alvo/pre_fase4_confianca/</code>)", "<code>resultados_alvo/pre_fase4/indicadores_raciocinio.json</code> (<code>gerar_relatorio_raciocinio.py --vitrine</code>, com <code>--check</code>)", "trilhas em <code>resultados_alvo/pre_fase4/trilhas/</code> (<code>trilha.py</code>) e relatórios em <code>resultados_alvo/pre_fase4/relatorios/</code>"] + ([fonte_literatura] if fonte_literatura else []) + ["decisão 70; roadmap §3.1"])}
 </section>'''
     return dados_js, html_
@@ -1666,7 +1686,41 @@ ROTULO_CONFERENCIA = {
 
 JS_TOPICOS = r"""
 const T = D.topicos;
+// ! Alteração de IA - Revisar: (05/11/2026) nomes legíveis nos eixos e nas legendas dos gráficos das abas da Fase 4; os identificadores seguem nas tabelas recolhidas.
+// ! Motivo: os eixos mostravam nomes de código, como regra_b_por_gatilho e contrato-malformed_json, que só quem leu o script entende; o Eric pediu a leitura sem jargão.
+const NOMES = {divergencia:'divergência, como a corrida rodou', por_gatilho:'divergência, só por gatilho', regra_b:'regra alternativa, em todos os casos', regra_b_por_gatilho:'regra alternativa, só por gatilho',
+  remocao_ou_troca:'tirar ou trocar o verbete muda a resposta', sem_documentacao:'sem documentação, a resposta muda', repeticao_mudou:'repetir a pergunta muda a resposta', selo_baixo:'selo de confiança baixo', falha:'conferência em código não passa', qualquer:'qualquer um dos sinais',
+  verbete_trocado:'verbete trocado', contrato_alterado:'contrato alterado', seletor_quebrado:'seletor quebrado',
+  'front-busca':'busca', 'front-admin-login':'login do administrador', 'front-admin-produtos':'lista de produtos do administrador', 'front-cliente-reserva':'reserva do cliente',
+  'contrato-malformed_json':'resposta cortada no meio', 'contrato-field_missing':'campo sumiu da resposta', 'contrato-field_renamed':'campo mudou de nome', 'contrato-type_drift':'campo mudou de tipo', 'contrato-escala_ou_unidade_errada':'preço na escala errada', 'contrato-error_500':'API devolve erro 500',
+  'localizador-front-busca':'localizador: busca', 'localizador-front-admin-login':'localizador: login do administrador', 'localizador-front-admin-produtos':'localizador: lista de produtos', 'localizador-front-cliente-reserva':'localizador: reserva do cliente'};
+const nome = s => NOMES[s] || String(s).replace(/_/g, ' ');
 const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
+// ! Alteração de IA - Revisar: (05/11/2026) gráficos das abas Modelos, Entre fases e Pesquisa, que só tinham tabela.
+// ! Motivo: o Eric pediu o gráfico à vista e os dados em "mais informações"; essas abas ficariam sem nada para ver com as tabelas recolhidas.
+function modGraficos(){
+  const L = document.getElementById('sel-mod-l').value;
+  const barras = (id, fonte, nomes) => { const chaves = Object.keys(nomes);
+    grafico(id, {type:'bar', data:{labels: chaves.map(k => nomes[k]), datasets: D.modelos.map(m => ({label:m, data: chaves.map(k => ((fonte[m]||{})[k]||{})[L] ?? null), backgroundColor:cor(m)}))},
+      options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0, max:100, title:{display:true, text:'acerto nos 90 casos (%)'}}}, plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+'%'}}}}}); };
+  barras('g-mod-classe', D.classes, {1:'léxica', 2:'sintática', 3:'semântica', 4:'tradução', 5:'runtime', 6:'efeito'});
+  barras('g-mod-nivel', D.niveis, {1:'fácil', 2:'médio', 3:'difícil'});
+}
+function cmpEtapas(){
+  const conj = document.getElementById('sel-cmp-conj').value, met = document.getElementById('sel-cmp-met').value;
+  const cols = ['2A_linear_ryzen','2B_A0','2B_A2','F3_L0','F3_L1','F3_L2','F3_L3'];
+  const rot = ['Sem documentação (2-A)','Sem documentação (2-B)','Biblioteca à mão (2-B)','Original (Fase 3)','1ª versão do modelo','2ª versão','3ª versão'];
+  grafico('g-cmp-etapas', {type:'line', data:{labels: rot, datasets: D.modelos.map(m => ({label:m, data: cols.map(c => (((D.fases[m]||{})[conj]||{})[c]||{})[met] ?? null), borderColor:cor(m), backgroundColor:cor(m), tension:.15, pointRadius:4, spanGaps:true}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0, max:100, title:{display:true, text: met==='balanceada'?'acurácia balanceada (%)':'acerto (%)'}}}, plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+'%'}}}}});
+}
+function peRodadas(){
+  const R = (T.pesquisa||{}).rodadas||[]; if(!R.length) return;
+  grafico('g-pe-rodadas', {type:'bar', data:{labels: R.map(x => x.rodada), datasets:[
+      {label:'aprovadas', data: R.map(x => x.aprovadas), backgroundColor: css('--bom')},
+      {label:'rejeitadas', data: R.map(x => x.rejeitadas), backgroundColor: css('--ruim')},
+      {label:'não verificadas', data: R.map(x => x.nao_verificadas), backgroundColor: css('--s4')}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true, beginAtZero:true, title:{display:true, text:'afirmações'}}, y:{stacked:true}}}});
+}
 function cqTrajetoria(){
   const conj = document.getElementById('sel-cq-conj').value, met = document.getElementById('sel-cq-met').value; const pts = T.cq.trajetoria[conj];
   grafico('g-cq-traj', {type:'line', data:{labels: pts.map(p => p.rot), datasets:[T.cq.A, T.cq.B].map(m => ({label:m, data: pts.map(p => p[met+(m===T.cq.A?'_A':'_B')]), borderColor:cor(m), backgroundColor:cor(m), tension:.2, pointRadius:4}))},
@@ -1692,7 +1746,7 @@ function tbGeneraliza(){
 function tbRecuperacao(){
   const ds = [];
   T.tresb.modelos.forEach(m => { ds.push({label:m+' · inéditos', data: T.tresb.Ls.map(l => T.tresb.rec_ineditos[m][l]), backgroundColor:cor(m)}); ds.push({label:m+' · oficiais', data: T.tresb.Ls.map(l => T.tresb.rec_oficiais[m][l]), backgroundColor:rgba(cor(m), .4)}); });
-  grafico('g-tb-rec', {type:'bar', data:{labels: T.tresb.Ls.map(l => 'L'+l), datasets: ds}, options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'hit@3 (%)'}, min:0, max:100}}}});
+  grafico('g-tb-rec', {type:'bar', data:{labels: T.tresb.Ls.map(l => 'L'+l), datasets: ds}, options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'verbete certo entre os três entregues (%)'}, min:0, max:100}}}});
 }
 function curOperacoes(){
   const cats = ['Correta','Parcial','Errada'], cores = {Correta:css('--bom'),Parcial:css('--meio'),Errada:css('--ruim')};
@@ -1774,10 +1828,10 @@ function repClasses(){
 // aba Calibração (27/10/2026, P3): acerto, acurácia balanceada e AUROC por k; curva risco-cobertura do k escolhido
 function calK(){
   const C = T.calibracao||{}; const K = C.por_k||[]; if(!K.length) return;
-  grafico('g-cal-k', {type:'bar', data:{labels: K.map(x => 'k = '+x.k), datasets:[
+  grafico('g-cal-k', {type:'bar', data:{labels: K.map(x => x.k+' verbetes (k = '+x.k+')'), datasets:[
     {label:'acerto (%)', data: K.map(x => x.acerto_pct), backgroundColor: css('--s1')},
     {label:'acurácia balanceada (%)', data: K.map(x => x.acuracia_balanceada_pct), backgroundColor: css('--s2')},
-    {label:'AUROC da probabilidade do rótulo (x 100)', data: K.map(x => x.auroc_p == null ? null : Math.round(x.auroc_p * 1000) / 10), backgroundColor: css('--s3')}]},
+    {label:'quanto a probabilidade separa erros de acertos (AUROC x 100)', data: K.map(x => x.auroc_p == null ? null : Math.round(x.auroc_p * 1000) / 10), backgroundColor: css('--s3')}]},
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, max:100, title:{display:true,text:'%'}}}}});
 }
 function calCurva(){
@@ -1792,10 +1846,11 @@ function telaClasses(){
   const ds = [
     {label:'casos', data: C.map(c => c.casos), backgroundColor: css('--s4')},
     {label:'acerto na tela (18)', data: C.map(c => c.acerto_tela), backgroundColor: css('--s1')},
-    {label:'acerto no fixture', data: C.map(c => c.acerto_fixture), backgroundColor: css('--s2')},
-    {label:'mesmo rótulo nos dois (18)', data: C.map(c => c.concordam), backgroundColor: css('--s3')}];
-  if(C.some(c => c.acerto_tela_v2 != null)) ds.push({label:'acerto na tela (18b, caso revisado)', data: C.map(c => c.acerto_tela_v2), backgroundColor: css('--s5')},
-                                                     {label:'mesmo rótulo nos dois (18b)', data: C.map(c => c.concordam_v2), backgroundColor: css('--s6')});
+    {label:'acerto no caso escrito', data: C.map(c => c.acerto_fixture), backgroundColor: css('--s2')},
+    ];
+  // ! Alteração de IA - Revisar: (05/11/2026) o gráfico deixa de trazer as séries "mesmo rótulo", que seguem na tabela recolhida.
+  // ! Motivo: seis séries por grupo não se liam; nos casos desta corrida, "mesmo rótulo" fica perto do acerto na tela.
+  if(C.some(c => c.acerto_tela_v2 != null)) ds.push({label:'acerto na tela (18b, caso revisado)', data: C.map(c => c.acerto_tela_v2), backgroundColor: css('--s3')});
   grafico('g-tela-classe', {type:'bar', data:{labels: C.map(c => c.classe+' '+c.nome), datasets: ds},
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:1}}}}});
 }
@@ -1803,18 +1858,18 @@ function telaRotulos(){
   const D = T.tela||{}; const R = D.rotulos||[]; if(!R.length) return;
   const ds = [
     {label:'é o gabarito de', data: R.map(x => x.gabarito), backgroundColor: css('--s4')},
-    {label:'rótulo dado na tela (18)', data: R.map(x => x.tela), backgroundColor: css('--s1')},
-    {label:'rótulo dado no fixture', data: R.map(x => x.fixture), backgroundColor: css('--s2')}];
-  if(R.some(x => x.tela_v2 != null)) ds.push({label:'rótulo dado na tela (18b, caso revisado)', data: R.map(x => x.tela_v2), backgroundColor: css('--s5')});
-  grafico('g-tela-rotulos', {type:'bar', data:{labels: R.map(x => x.rotulo), datasets: ds},
+    {label:'respondida na tela (18)', data: R.map(x => x.tela), backgroundColor: css('--s1')},
+    {label:'respondida no caso escrito', data: R.map(x => x.fixture), backgroundColor: css('--s2')}];
+  if(R.some(x => x.tela_v2 != null)) ds.push({label:'respondida na tela (18b, caso revisado)', data: R.map(x => x.tela_v2), backgroundColor: css('--s5')});
+  grafico('g-tela-rotulos', {type:'bar', data:{labels: R.map(x => nome(x.rotulo)), datasets: ds},
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:2}}}}});
 }
 // aba Cura de seletor (01/11/2026, corrida 19): execuções por modo e por roteiro, empilhadas pela regra R3; MTTR por roteiro
 function curaEmpilhado(id, L, chave){
   if(!L.length) return;
-  grafico(id, {type:'bar', data:{labels: L.map(x => x[chave]), datasets:[
+  grafico(id, {type:'bar', data:{labels: L.map(x => nome(x[chave])), datasets:[
       {label:'curadas, mesmo elemento', data: L.map(x => x.mesmo_elemento), backgroundColor: css('--bom')},
-      {label:'curadas, outro elemento (R3)', data: L.map(x => x.outro_elemento), backgroundColor: css('--meio')},
+      {label:'curadas, outro elemento', data: L.map(x => x.outro_elemento), backgroundColor: css('--meio')},
       {label:'não curadas', data: L.map(x => x.nao_curadas), backgroundColor: css('--ruim')},
       {label:'não quebrou', data: L.map(x => x.nao_quebrou), backgroundColor: css('--s4')}]},
     options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{stepSize:2}, title:{display:true, text:'execuções'}}},
@@ -1826,15 +1881,17 @@ function curaRoteiros(){ const C = T.cura||{}; curaEmpilhado('g-cura-roteiro', C
 function bibFiltros(){
   const B = T.biblioteca||{}; const F = B.filtros||[];
   if(!F.length) return;
-  grafico('g-bib-filtros', {type:'bar', data:{labels: F.map(x => x.filtro), datasets:[{label:'propostas barradas ou seguradas', data: F.map(x => x.recusas), backgroundColor: css('--s3')}]},
+  grafico('g-bib-filtros', {type:'bar', data:{labels: F.map(x => nome(x.filtro)), datasets:[{label:'propostas barradas ou seguradas', data: F.map(x => x.recusas), backgroundColor: css('--s3')}]},
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'propostas'}}}}});
 }
 function bibReavaliacao(){
   const B = T.biblioteca||{}; const R = B.reavaliacao;
   if(!R) return;
-  grafico('g-bib-reavaliacao', {type:'bar', data:{labels:['acerto com a cópia curada (%)', 'acerto com o lote (%)', 'b: passaram a acertar', 'c: passaram a errar'],
-      datasets:[{label:'regra R5 nos inéditos', data:[R.acerto_base_pct, R.acerto_novo_pct, R.b, R.c], backgroundColor:[css('--s2'), css('--s1'), css('--bom'), css('--ruim')]}]},
-    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}});
+  // ! Alteração de IA - Revisar: (05/11/2026) o gráfico fica só com os dois acertos; b e c seguem no texto da aba e nos cartões.
+  // ! Motivo: porcentagem e contagem de casos dividiam o mesmo eixo, e as barras de b e c, com valor zero, não apareciam.
+  grafico('g-bib-reavaliacao', {type:'bar', data:{labels:['com a cópia curada', 'com o lote'],
+      datasets:[{label:'acerto nos 36 inéditos (%)', data:[R.acerto_base_pct, R.acerto_novo_pct], backgroundColor:[css('--s2'), css('--s1')]}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{min:0, max:100, title:{display:true, text:'acerto nos 36 inéditos (%)'}}}}});
 }
 // aba Cenários da Fase 5 (04/11/2026, corrida 21): MTTR médio e Task Success por cenário, contrato e localizador em cores diferentes
 function cenMttr(){
@@ -1843,16 +1900,16 @@ function cenMttr(){
   const ds = C.duas_corridas
     ? [{label:'corrida 21', data: L.map(x => x.mttr_anterior), backgroundColor: css('--s4')}, {label:'corrida 21b, com a correção da cura', data: L.map(x => x.mttr_media_s), backgroundColor: css('--s1')}]
     : [{label:'MTTR médio (s)', data: L.map(x => x.mttr_media_s), backgroundColor: L.map(x => x.tipo === 'contrato' ? css('--s1') : css('--s2'))}];
-  grafico('g-cen-mttr', {type:'bar', data:{labels: L.map(x => x.cenario), datasets: ds},
+  grafico('g-cen-mttr', {type:'bar', data:{labels: L.map(x => nome(x.cenario)), datasets: ds},
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display: !!C.duas_corridas}},
-      scales:{x:{beginAtZero:true, title:{display:true, text:'segundos, da detecção ao fim do cronômetro'}}, y:{afterFit: s => { s.width = Math.max(s.width, 240); }}}}});
+      scales:{x:{beginAtZero:true, title:{display:true, text:'segundos, da detecção até o resultado'}}, y:{afterFit: s => { s.width = Math.max(s.width, 240); }}}}});
 }
 function cenSucesso(){
   const C = T.cenarios||{}; const L = C.por_cenario||[];
   if(!L.length) return;
-  grafico('g-cen-ts', {type:'bar', data:{labels: L.map(x => x.cenario), datasets:[
-      {label:'Task Success', data: L.map(x => x.sucessos), backgroundColor: css('--bom')},
-      {label:'sem Task Success', data: L.map(x => x.n - x.sucessos), backgroundColor: css('--ruim')}]},
+  grafico('g-cen-ts', {type:'bar', data:{labels: L.map(x => nome(x.cenario)), datasets:[
+      {label:'chegou ao resultado (Task Success)', data: L.map(x => x.sucessos), backgroundColor: css('--bom')},
+      {label:'não chegou', data: L.map(x => x.n - x.sucessos), backgroundColor: css('--ruim')}]},
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'execuções'}},
       y:{stacked:true, afterFit: s => { s.width = Math.max(s.width, 240); }}}}});
 }
@@ -1860,16 +1917,16 @@ function cenSucesso(){
 function triSinais(){
   const A = T.trilha||{}; const S = A.sinais||[];
   if(!S.length) return;
-  grafico('g-tri-sinais', {type:'bar', data:{labels: S.map(x => x.sinal), datasets:[
-      {label:'TPR (erros reais pegos)', data: S.map(x => x.tpr), backgroundColor: css('--s1')},
-      {label:'TNR (acertos deixados em paz)', data: S.map(x => x.tnr), backgroundColor: css('--s2')},
-      {label:'TPR x TNR', data: S.map(x => x.produto), backgroundColor: css('--s3')}]},
-    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, max:1, title:{display:true, text:'de 0 a 1; o acaso dá 0,25 no produto'}}}}});
+  grafico('g-tri-sinais', {type:'bar', data:{labels: S.map(x => nome(x.sinal)), datasets:[
+      {label:'erros que pegou (TPR)', data: S.map(x => x.tpr), backgroundColor: css('--s1')},
+      {label:'acertos que deixou em paz (TNR)', data: S.map(x => x.tnr), backgroundColor: css('--s2')},
+      {label:'nota (TPR x TNR)', data: S.map(x => x.produto), backgroundColor: css('--s3')}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{beginAtZero:true, max:1, title:{display:true, text:'de 0 a 1; na nota, o acaso dá 0,25'}}, y:{ticks:{autoSkip:false}, afterFit: s => { s.width = Math.max(s.width, 250); }}}}});
 }
 function triMutacoes(){
   const A = T.trilha||{}; const M = A.mutacoes||[];
   if(!M.length) return;
-  grafico('g-tri-mutacoes', {type:'bar', data:{labels: M.map(x => x.tipo), datasets:[
+  grafico('g-tri-mutacoes', {type:'bar', data:{labels: M.map(x => nome(x.tipo)), datasets:[
       {label:'apontou o nó previsto', data: M.map(x => x.previsto), backgroundColor: css('--bom')},
       {label:'apontou outro nó', data: M.map(x => x.outro_no), backgroundColor: css('--ruim')},
       {label:'sem divergência', data: M.map(x => x.sem_divergencia), backgroundColor: css('--meio')},
@@ -1879,7 +1936,7 @@ function triMutacoes(){
 }
 """ + pa.JS_ATLAS + pe.JS_EXPLORADOR
 
-DESENHAR_TOPICOS = {"comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
+DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pesquisa": ["peRodadas"], "comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
                     "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"],
                     "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaClasses", "telaRotulos"], "cura": ["curaModos", "curaRoteiros"],
@@ -1961,6 +2018,8 @@ def validacao_do_gemini() -> str:
 # decide pelo painel quais casos a tela reproduz antes de gastar modelo (corridas 16 e 18) e de conferir os inéditos.
 # Sem os arquivos a aba mostra o estado vazio, como as da Pré-Fase 4.
 def secao_reproducao(rep: dict | None, ined: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões de tempo e de corte da árvore encurtados, e "harness" e "poda" soltos trocados por "o próprio teste" e "o corte em código do que o modelo lê (poda)".
+    # ! Motivo: os cartões traziam milissegundos da API e tamanhos do corpo que já estão nas tabelas recolhidas, e o texto usava termos de método que o Eric pediu para tirar.
     def por(d: dict | None, chave: str, campo: str) -> dict:
         return {x[campo]: x for x in d[chave]} if d else {}
 
@@ -1986,14 +2045,14 @@ def secao_reproducao(rep: dict | None, ined: dict | None, road: dict, cartoes_co
     r = rep["resumo"]
     ri = ined["resumo"] if ined else None
     t, tam = rep["tempo"], rep["tamanhos"]
-    fora_motivos = "; ".join(f'{x["casos"]} {x["motivo"]}' for x in rep["fora_por_motivo"])
+    fora_motivos = "; ".join(f'{x["casos"]} {x["motivo"]}' for x in rep["fora_por_motivo"]).replace("pelo harness", "pelo próprio teste")
     itens_kpi = [
         ("Reproduzem na tela (corrida 17)", f'{r["reproduzem"]} de {r["casos"]}',
          f'{fmt(r["reproduzem_pct"])}% do conjunto; {fmt(r["reproduzem_dos_na_tela_pct"])}% dos {r["na_tela"]} com tela e modo'),
         ("Ficam fora", str(r["fora"]), fora_motivos),
-        ("Tempo por cenário", f'{fmt(t["mediana_s"], 3)} s', f'mediana; máximo {fmt(t["max_s"])} s (latência); chamada à API {fmt(t["tempo_api_mediana_ms"])} ms'),
-        ("Poda da árvore", f'{tam["arvore_antes_mediana"]} para {tam["arvore_depois_mediana"]}',
-         f'nós antes e linhas depois (medianas); corpo {tam["corpo_chars_mediana"]} e caso ao vivo {tam["caso_chars_mediana"]} caracteres'),
+        ("Tempo por cenário", f'{fmt(t["mediana_s"], 3)} s', f'mediana; o maior, {fmt(t["max_s"])} s, vem de casos de latência'),
+        ("Corte da árvore da tela (poda)", f'{tam["arvore_antes_mediana"]} para {tam["arvore_depois_mediana"]}',
+         f'nós antes e linhas depois, em medianas; o caso ao vivo fica com {tam["caso_chars_mediana"]} caracteres'),
         (("Inéditos da ficha 27", f'{ri["reproduzem"]} de {ri["casos"]}', f'{fmt(ri["reproduzem_pct"])}% dos {ri["casos"]}; {ri["fora"]} fora; corrida de {"/".join(reversed(ined["metadados"]["gerado_em"][:10].split("-")))}')
          if ri else ("Inéditos da ficha 27", "ainda não rodada", "a mesma corrida sobre os 36 inéditos")),
     ]
@@ -2034,20 +2093,20 @@ def secao_reproducao(rep: dict | None, ined: dict | None, road: dict, cartoes_co
         f"<strong>Quem tem tela e modo reproduz.</strong> Na corrida 17, {r['na_tela']} casos tinham os dois e {r['reproduzem']} reproduziram (bloco <code>tb_f4_reproducao_resumo</code>); "
         f"{r['roteiro_falhou']} deles também derrubaram uma conferência do roteiro.",
         f"<strong>O que fica fora não é falha da tela.</strong> {esc(fora_motivos)}: as rotas de pedido não têm página, <code>dado_desatualizado</code> não tem modo de injeção "
-        "e as causas de efeito (localizador quebrado e estado da tela) são armadas pelo harness no navegador, pela ficha 29.",
+        "e as causas de efeito (localizador quebrado e estado da tela) são armadas pelo próprio teste no navegador, pela ficha 29.",
         (f"<strong>Os inéditos nasceram com os modos novos da ficha 28.</strong> {ri['na_tela']} dos {ri['casos']} têm tela e modo e "
          + ("todos reproduzem" if ri["reproduzem"] == ri["na_tela"] else f"{ri['reproduzem']} reproduzem")
          + f"; os {ri['fora']} fora são da mesma natureza. Eles esperam a conferência do Eric antes da corrida 16.") if ri
         else "<strong>Os 36 inéditos da ficha 27 ainda não passaram por esta corrida.</strong>",
         f"<strong>Custo.</strong> Mediana de {fmt(t['mediana_s'], 3)} s por cenário; os de latência chegam a {fmt(t['max_s'])} s porque o modo dorme por item da lista. "
-        f"A poda leva a árvore de {tam['arvore_antes_mediana']} nós a {tam['arvore_depois_mediana']} linhas.",
+        f"O corte em código do que o modelo lê (poda) leva a árvore de {tam['arvore_antes_mediana']} nós a {tam['arvore_depois_mediana']} linhas.",
     ])
     html_ = f'''<section id="reproducao" hidden>
 <h1>Reprodução na tela: quantos casos de avaliação a tela consegue reproduzir?</h1>
 <p class="lead">{lead}</p>
 {kpis(itens_kpi)}
 <h2>Por classe de defeito</h2>
-<p>Quantos casos de cada classe têm tela e modo e quantos reproduzem, nos {esc(rotulos["avaliacao"])} e nos {esc(rotulos["ineditos"])}. A classe de efeito fica fora por desenho: a quebra de localizador é armada pelo harness, não pela API.</p>
+<p>Quantos casos de cada classe têm tela e modo e quantos reproduzem, nos {esc(rotulos["avaliacao"])} e nos {esc(rotulos["ineditos"])}. A classe de efeito fica fora por desenho: a quebra de localizador é armada pelo próprio teste, não pela API.</p>
 <div class="chart"><canvas id="g-rep-classe"></canvas></div>
 {por_classe}
 <h2>Por nível e por modo de injeção</h2>
@@ -2073,13 +2132,15 @@ def secao_reproducao(rep: dict | None, ined: dict | None, road: dict, cartoes_co
 # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 16 fixa o k e os limiares que a corrida 18
 # usa, e o Eric decide pelo painel.
 def secao_calibracao(cal: dict | None, lim: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos sem AUROC, IC, b/c, "acurácia balanceada", "gatilho" nem "rótulo" soltos.
+    # ! Motivo: o texto à vista trazia siglas e números soltos que o Eric pediu para tirar; "k" passa a vir com o nome (número de verbetes entregues) e os valores seguem nas tabelas recolhidas.
     fontes_ = fontes(["<code>resultados_alvo/fase4/calibracao.json</code> e <code>.md</code> (<code>avaliar_fase4.py --calibracao</code>, com <code>--check</code>; blocos <code>tb_f4_calibracao_*</code>)",
                       "<code>resultados_alvo/fase4/limiares.json</code> (regra R7, ficha 31) e <code>pontes.json</code> (regra R6, decisão 47)",
                       "<code>executar_fase4.py --modo calibracao</code> (sondagem, ponte, L1 curada nos 90 com cada k, pelo executor congelado da Fase 3); roadmap §2.9; plano aprovado da Fase 4, seções 5, 6 e 8; fichas 30 e 31"])
     vazio = {"por_k": [], "curva": [], "k_escolhido": None, "limiares": None, "por_selo": []}
     if not cal:
         html_ = f'''<section id="calibracao" hidden>
-<h1>Calibração: qual k entra no agente e onde ficam os limiares do selo?</h1>
+<h1>Calibração: quantos verbetes entregar ao modelo e onde ficam os cortes do selo?</h1>
 <p class="lead">A corrida 16 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/calibracao.json</code>, gerado por <code>avaliar_fase4.py --calibracao</code> depois de <code>executar_fase4.py --modo calibracao --saida fase4_calibracao --k 3,5</code> (noite A do plano aprovado).</p>
 {cartoes_corridas(road, numeros=["16"], sufixo="-cal")}
 {fontes_}
@@ -2117,29 +2178,27 @@ def secao_calibracao(cal: dict | None, lim: dict | None, road: dict, cartoes_cor
     def erros_txt(x: dict) -> str:
         return f'{x["errados"]} {"erro" if x["errados"] == 1 else "erros"} em {x["casos"]} casos ({fmt(x["erro_pct"])}%)'
     parcela = limi.get("parcela_baixa")
-    itens_kpi = [("k escolhido (regra R8)", f'k = {cal["k_escolhido"]}', esc(r8["motivo"]))]
+    itens_kpi = [("Número de verbetes entregues (k) escolhido, regra R8", f'k = {cal["k_escolhido"]}', esc(r8["motivo"]))]
     for x in por_k:
-        itens_kpi.append((f"Acerto com k = {x['k']}", f'{x["acertos"]} de {x["n"]}',
-                          f'{fmt(x["acerto_pct"])}%; acurácia balanceada {fmt(x["acuracia_balanceada_pct"])}%; {fmt(x["segundos_mediana"])} s por diagnóstico'
+        itens_kpi.append((f"Acerto com {x['k']} verbetes entregues", f'{x["acertos"]} de {x["n"]}',
+                          f'{fmt(x["acerto_pct"])}%; {fmt(x["segundos_mediana"])} s por diagnóstico'
                           + ("" if x.get("completo", True) else "; corrida incompleta")))
     itens_kpi += [
         ("Selo baixo até", fmt(limi.get("baixo_ate"), 3),
-         (f'os {fmt(100 * parcela, 0)}% de menor probabilidade ({limi.get("revisados")} casos): pegam {limi.get("erros_pegos")} de {limi.get("erros")} erros e revisam {limi.get("acertos_revisados")} acertos à toa'
+         (f'os {fmt(100 * parcela, 0)}% menos prováveis: {limi.get("erros_pegos")} dos {limi.get("erros")} erros e {limi.get("acertos_revisados")} acertos revisados'
           if parcela is not None else "sem limiares")),
         ("Selo alto a partir de", fmt(limi.get("alto_a_partir_de"), 3), "mediana da probabilidade nos acertos (ficha 31, opção a); médio fica entre os dois"),
-        ("AUROC da probabilidade do rótulo", fmt(a_p.get("auroc"), 3) if a_p.get("auroc") is not None else "n/d",
-         f'IC 95% {auroc_txt(a_p).split(" ", 1)[1] if a_p.get("ic95") else "n/d"} nos {a_p.get("n", escolhido["n"])} casos com k = {escolhido["k"]}; conjunta {fmt(auroc(escolhido, "p_conjunta").get("auroc"), 3)}'),
+        ("O quanto a probabilidade separa erros de acertos", fmt(a_p.get("auroc"), 3) if a_p.get("auroc") is not None else "n/d",
+         f'{a_p.get("n", escolhido["n"])} casos; pela probabilidade conjunta, {fmt(auroc(escolhido, "p_conjunta").get("auroc"), 3)}'),
         ("Ponte de versão (regra R6)", f'Ollama {ponte.get("versao", "n/d")}',
-         (f'{"pareável" if ponte.get("pareavel") else "não pareável"} com a Fase 3: b = {ponte.get("b")}, c = {ponte.get("c")} em {ponte.get("n")} casos; '
-          + ("feita nesta corrida" if ponte.get("feita_nesta_corrida") else f'já registrada em {esc(str(ponte.get("corrida")))}')) if ponte else "sem ponte registrada"),
-        ("Sondagem dos logprobs", ("ok" if son.get("ok") else "problema") if son else "não rodou",
-         (f'probabilidade de {son.get("temperatura")} da temperatura; até {son.get("top_por_posicao_max")} alternativas por posição; '
-          + (esc("; ".join(son.get("mensagens") or [])) or "sem avisos")) if son else ""),
+         (f'{"pareável" if ponte.get("pareavel") else "não pareável"} com a Fase 3: só a ponte acertou {ponte.get("b")}, só a Fase 3 {ponte.get("c")}, em {ponte.get("n")} casos; '
+          + ("feita nesta corrida" if ponte.get("feita_nesta_corrida") else "já registrada")) if ponte else "sem ponte registrada"),
+        ("Sondagem das probabilidades por token (logprobs)", ("ok" if son.get("ok") else "problema") if son else "não rodou",
+         (f'até {son.get("top_por_posicao_max")} alternativas por posição; ' + ("com avisos (ver a tabela)" if son.get("mensagens") else "sem avisos")) if son else ""),
     ]
     if alto:
         itens_kpi.insert(4, ("Erros com selo alto", f'{alto["errados"]} de {alto["casos"]}',
-                             f'{fmt(alto["erro_pct"])}% dos casos com probabilidade a partir de {fmt(limi.get("alto_a_partir_de"), 3)} saem errados'
-                             + (": " + ", ".join(f"<code>{esc(c)}</code>" for c in alto["casos_errados"]) if alto["casos_errados"] else "")))
+                             f'{fmt(alto["erro_pct"])}% dos casos com selo alto saem errados (os nomes estão na tabela)'))
     tab_selos = tabela(["Selo", "Casos", "Certos", "Errados", "Erro (%)", "Casos errados"],
                        [[esc(x["selo"]), x["casos"], x["certos"], x["errados"], fmt(x["erro_pct"]), ", ".join(f"<code>{esc(c)}</code>" for c in x["casos_errados"]) or "nenhum"]
                         for x in por_selo], raw=True) if por_selo else ""
@@ -2177,31 +2236,31 @@ def secao_calibracao(cal: dict | None, lim: dict | None, road: dict, cartoes_cor
             + (f'A ponte de versão (Ollama {ponte.get("versao")}) {"é pareável" if ponte.get("pareavel") else "não é pareável"} com a Fase 3 (b = {ponte.get("b")}, c = {ponte.get("c")}). ' if ponte else "")
             + (f'Sondagem dos logprobs: {"ok" if son.get("ok") else "com problema"}.' if son else ""))
     leitura_ = leitura([
-        f"<strong>O k da Fase 4.</strong> {esc(r8['motivo'])} (bloco <code>tb_f4_calibracao_r8</code>); a corrida 18 lê o k de <code>limiares.json</code>.",
-        f"<strong>Os limiares do selo.</strong> Ficha 31 (a): baixo é a parcela de {fmt(100 * parcela, 0) if parcela is not None else '—'}% de menor probabilidade (gatilho de intervenção e de revisão humana), "
-        f"alto fica acima da mediana dos acertos; {limi.get('revisados')} casos revisados pegam {limi.get('erros_pegos')} de {limi.get('erros')} erros e deixam "
-        f"{fmt(100 * limi['risco_no_que_sobra']) if limi.get('risco_no_que_sobra') is not None else '—'}% de risco no que sobra (<code>tb_f4_calibracao_revisao</code>).",
-        f"<strong>A probabilidade é triagem, não barreira.</strong> AUROC de {fmt(a_p.get('auroc'), 3)} para o primeiro token do rótulo e {fmt(auroc(escolhido, 'p_conjunta').get('auroc'), 3)} para a conjunta com k = {escolhido['k']} "
+        f"<strong>O número de verbetes entregues (k) da Fase 4.</strong> {esc(r8['motivo'])} (bloco <code>tb_f4_calibracao_r8</code>); a corrida 18 lê o k de <code>limiares.json</code>.",
+        f"<strong>Os limiares do selo.</strong> Ficha 31 (a): baixo é a parcela de {fmt(100 * parcela, 0) if parcela is not None else '—'}% de menor probabilidade (o aviso que dispara a checagem extra e a revisão humana), "
+        f"alto fica acima da mediana dos acertos. Revisar {limi.get('revisados')} casos pega {limi.get('erros_pegos')} de {limi.get('erros')} erros e deixa "
+        f"{fmt(100 * limi['risco_no_que_sobra']) if limi.get('risco_no_que_sobra') is not None else '—'}% de erro no que sobra (<code>tb_f4_calibracao_revisao</code>).",
+        f"<strong>A probabilidade é triagem, não barreira.</strong> O quanto o sinal separa erros de acertos é {fmt(a_p.get('auroc'), 3)} pelo primeiro token da causa e {fmt(auroc(escolhido, 'p_conjunta').get('auroc'), 3)} pela probabilidade conjunta, com k = {escolhido['k']} "
         "(blocos <code>tb_f4_calibracao_resumo</code> e <code>tb_f4_calibracao_por_k</code>): parte dos erros sai confiante, então o selo alto não dispensa a conferência (especificação da trilha, seção 6.3).",
         *([f"<strong>Erros por selo.</strong> " + "; ".join(f"selo {esc(x['selo'])}: {erros_txt(x)}" for x in por_selo) + " (<code>tb_f4_calibracao_selos</code>)."] if por_selo else []),
-        (f"<strong>Ponte de versão.</strong> Ollama {ponte.get('versao')}: b = {ponte.get('b')}, c = {ponte.get('c')} contra a Fase 3, {'dentro' if ponte.get('pareavel') else 'fora'} do limite da decisão 47"
+        (f"<strong>Ponte de versão.</strong> Ollama {ponte.get('versao')}: só a ponte acertou {ponte.get('b')} casos e só a Fase 3 {ponte.get('c')}, {'dentro' if ponte.get('pareavel') else 'fora'} do limite da decisão 47"
          + (" (feita nesta corrida)." if ponte.get("feita_nesta_corrida") else f" ({esc(str(ponte.get('corrida')))}).")) if ponte else "<strong>Ponte de versão.</strong> Não registrada.",
         f"<strong>Custo.</strong> " + "; ".join(f"k = {x['k']}: {fmt(x['segundos_mediana'])} s por diagnóstico, {fmt(x['tokens_entrada_mediana'], 0)} tokens de entrada na mediana" for x in por_k) + ".",
     ])
     html_ = f'''<section id="calibracao" hidden>
-<h1>Calibração: qual k entra no agente e onde ficam os limiares do selo?</h1>
+<h1>Calibração: quantos verbetes entregar ao modelo e onde ficam os cortes do selo?</h1>
 <p class="lead">{lead}</p>
 {kpis(itens_kpi)}
-<h2>Acerto, acurácia balanceada e AUROC por k</h2>
-<p>A L1 curada nos 90 casos oficiais com cada k, pelo mesmo executor e o mesmo prompt da Fase 3; a probabilidade do rótulo é lida no primeiro token depois de CAUSA_RAIZ.</p>
+<h2>Acerto e separação de erros e acertos, por número de verbetes entregues (k)</h2>
+<p>A cópia curada da primeira versão escrita pelo modelo (L1 curada) nos 90 casos oficiais com cada k, pelo mesmo executor e o mesmo prompt da Fase 3. A probabilidade da causa respondida é lida no primeiro token depois de CAUSA_RAIZ.</p>
 <div class="chart baixo"><canvas id="g-cal-k"></canvas></div>
 {tab_k}
-<h2>Curva risco-cobertura com k = {escolhido["k"]}</h2>
+<h2>Quanto se erra ao responder só os mais prováveis, com {escolhido["k"]} verbetes entregues</h2>
 <p>Respondendo só os casos de maior probabilidade: a cobertura (quantos são respondidos) e o risco (erros entre eles). É dela que saem os limiares.</p>
 <div class="chart baixo"><canvas id="g-cal-curva"></canvas></div>
 {tab_rev}
 {bloco_selos}
-<h2>Regra R8, ponte e sondagem</h2>
+<h2>Qual número de verbetes ficou, a ponte de versão e a sondagem das probabilidades</h2>
 {tab_r8}
 {detalhes("Ponte de versão (regra R6)", tab_ponte)}
 {detalhes("Sondagem dos logprobs no Ollama instalado", tab_son)}
@@ -2224,13 +2283,15 @@ def secao_calibracao(cal: dict | None, lim: dict | None, road: dict, cartoes_cor
 # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 18 decide se o molde do sintoma e a poda
 # voltam para revisão antes da noite C (regra R2), e o Eric decide pelo painel.
 def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos sem b + c, p, "fixture", "rótulo", "gatilho", "poda" nem "harness" soltos.
+    # ! Motivo: o texto à vista trazia siglas e números soltos que o Eric pediu para tirar; o cartão do corte sem diferença perdeu o trecho sobre o CORPO, que já está no item "Onde a tela perde" e nas tabelas.
     fontes_ = fontes(["<code>resultados_alvo/fase4/tela.json</code> e <code>.md</code> (<code>avaliar_fase4.py --tela</code>, com <code>--check</code>; blocos <code>tb_f4_tela_*</code>); a repetição com o caso ao vivo revisado em <code>tela_v2.json</code> (<code>--nome tela_v2</code>)",
                       "<code>executar_fase4.py --modo tela</code> (os casos que reproduzem em <code>reproducibilidade.json</code>, k e limiares de <code>limiares.json</code>, ponte de <code>pontes.json</code>; relatórios v2 por caso em <code>fase4_tela/relatorios/</code>)",
                       "roadmap §2.10; plano aprovado da Fase 4, seções 3.3, 5 e 6 (regra R2); ficha 37"])
     vazio = {"resumo": None, "por_classe": [], "rotulos": [], "v2": None}
     if not tela:
         html_ = f'''<section id="tela" hidden>
-<h1>Tela e fixture: o agente dá o mesmo diagnóstico ao caso lido da tela e ao caso escrito?</h1>
+<h1>Tela e caso escrito: o agente dá o mesmo diagnóstico nos dois?</h1>
 <p class="lead">A corrida 18 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/tela.json</code>, gerado por <code>avaliar_fase4.py --tela</code> depois de <code>executar_fase4.py --modo tela --saida fase4_tela</code> (noite B do plano aprovado).</p>
 {cartoes_corridas(road, numeros=["18", "18b"], sufixo="-tela")}
 {fontes_}
@@ -2287,29 +2348,25 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
     dados_js = {"resumo": {k: r.get(k) for k in chaves_resumo}, "por_classe": por_classe, "rotulos": rotulos,
                 "v2": {"resumo": {k: r2.get(k) for k in chaves_resumo}, "ganhos": ganhos, "perdas": perdas, "mudaram": sum(1 for c in comparacao if c["mudou"])} if v2 else None}
     itens_kpi = [
-        ("Mesmo rótulo na tela e no fixture (regra R2)", f'{r["concordam"]} de {r["casos"]}',
-         f'{fmt(100 * r["concordam"] / n)}%; só a tela acerta em {r["b"]} e só o fixture em {r["c"]}: b + c = {r["discordantes"]} contra o limite {r["limite_r2"]}, '
-         f'{"dentro" if dentro else "fora"} do limite (p = {fmt(r["p_mcnemar"], 3)})'),
-        ("Acerto na tela", f'{r["acerto_tela"]} de {r["casos"]}', f'{fmt(100 * r["acerto_tela"] / n)}%; no fixture {r["acerto_fixture"]} de {r["casos"]} ({fmt(100 * r["acerto_fixture"] / n)}%)'),
-        ("Rótulo mais dado na tela", f'{esc(mais_tela["rotulo"])} em {mais_tela["tela"]}' if mais_tela else "n/d",
-         f'no fixture em {mais_tela["fixture"]}; é o gabarito de {mais_tela["gabarito"]} dos {r["casos"]} casos' if mais_tela else ""),
+        ("Mesma causa na tela e no caso escrito (regra R2)", f'{r["concordam"]} de {r["casos"]}',
+         f'{fmt(100 * r["concordam"] / n)}%; só um lado acerta em {r["discordantes"]}, limite {r["limite_r2"]}: {"dentro" if dentro else "fora"}'),
+        ("Acerto na tela", f'{r["acerto_tela"]} de {r["casos"]}', f'{fmt(100 * r["acerto_tela"] / n)}%; no caso escrito {r["acerto_fixture"]} de {r["casos"]} ({fmt(100 * r["acerto_fixture"] / n)}%)'),
+        ("Causa mais respondida na tela", f'{esc(mais_tela["rotulo"])} em {mais_tela["tela"]}' if mais_tela else "n/d",
+         f'no caso escrito, em {mais_tela["fixture"]}; é o gabarito de {mais_tela["gabarito"]} dos {r["casos"]} casos' if mais_tela else ""),
         ("Selos na tela (alto / médio / baixo)", f'{st.get("alto", 0)} / {st.get("medio", 0)} / {st.get("baixo", 0)}',
-         f'no fixture {sf.get("alto", 0)} / {sf.get("medio", 0)} / {sf.get("baixo", 0)}; mediana de p {fmt(r["p_tela_mediana"], 3)} na tela e {fmt(r["p_fixture_mediana"], 3)} no fixture'),
-        ("Gatilhos e divergências na tela", f'{r["gatilhos_tela"]} e {r["divergencias_tela"]}', f'intervenções desligadas nesta corrida ({r.get("intervencoes_tela", 0)} rodadas)'),
+         f'no caso escrito {sf.get("alto", 0)} / {sf.get("medio", 0)} / {sf.get("baixo", 0)}; probabilidade mediana {fmt(r["p_tela_mediana"], 2)} contra {fmt(r["p_fixture_mediana"], 2)}'),
+        ("Avisos de checagem extra e divergências na tela", f'{r["gatilhos_tela"]} e {r["divergencias_tela"]}', f'intervenções desligadas nesta corrida ({r.get("intervencoes_tela", 0)} rodadas)'),
         ("Prompt da tela acima do limite da calibração", f'{len(acima)} de {r["casos"]}',
-         f'limite {pcc.get("limite_mais_10_pct")} tokens (10% acima do maior da calibração, {pcc.get("maximo_da_calibracao")}); maior prompt da tela {pcc.get("maximo_da_tela")}'),
-        ("Tempo por caso", f'{fmt(r["segundos_tela_mediana"])} s', f'mediana na tela; {fmt(r["segundos_fixture_mediana"])} s no fixture; trilha da corrida com {r["trilha_bytes"]} bytes'),
+         f'limite de {pcc.get("limite_mais_10_pct")} tokens; o maior prompt da tela tem {pcc.get("maximo_da_tela")}'),
+        ("Tempo por caso", f'{fmt(r["segundos_tela_mediana"])} s', f'mediana na tela; {fmt(r["segundos_fixture_mediana"])} s no caso escrito'),
     ]
     if sem_dif is not None:
-        itens_kpi.insert(3, ("Casos em que a poda não achou diferença contra o contrato", f'{sem_dif} de {cp.get("casos_lidos")}',
-                             f'o CORPO levou o primeiro item normal da lista: mesmo rótulo em {cp.get("sem_diferenca_concordam")}, acerto na tela em {cp.get("sem_diferenca_acerto_tela")}, '
-                             f'colecao_no_lugar_de_objeto em {cp.get("sem_diferenca_colecao_na_tela")}; com diferença de campo: mesmo rótulo em {cp.get("com_diferenca_concordam")} de {cp.get("com_diferenca_contra_contrato")}'))
+        itens_kpi.insert(3, ("Casos em que o corte não achou diferença contra o contrato", f'{sem_dif} de {cp.get("casos_lidos")}',
+                             f'mesma causa em {cp.get("sem_diferenca_concordam")}; com diferença de campo, em {cp.get("com_diferenca_concordam")} de {cp.get("com_diferenca_contra_contrato")}'))
     if v2:
         n2 = r2["casos"] or 1
-        itens_kpi.insert(1, ("Repetição com o caso ao vivo revisado (corrida 18b)", f'{r2["concordam"]} de {r2["casos"]} com o mesmo rótulo',
-                             f'acerto na tela {r2["acerto_tela"]} ({fmt(100 * r2["acerto_tela"] / n2)}%) contra {r["acerto_tela"]} na corrida 18; no fixture {r2["acerto_fixture"]}; '
-                             f'b = {r2["b"]}, c = {r2["c"]}: b + c = {r2["discordantes"]} contra o limite {r2["limite_r2"]}, {"dentro" if r2.get("dentro_do_limite_r2") else "fora"} do limite '
-                             f'(p = {fmt(r2["p_mcnemar"], 3)}); caso a caso: {ganhos} passaram a acertar na tela, {perdas} deixaram de acertar'))
+        itens_kpi.insert(1, ("Repetição com o caso ao vivo revisado (corrida 18b)", f'{r2["concordam"]} de {r2["casos"]} com a mesma causa',
+                             f'acerto na tela {r2["acerto_tela"]} ({fmt(100 * r2["acerto_tela"] / n2)}%) contra {r["acerto_tela"]} na 18; {ganhos} ganhos, {perdas} perdas'))
     tab_comparacao = tabela(["Caso", "Gabarito", "Rótulo na tela (18)", "Rótulo na tela (18b)", "Rótulo no fixture (18b)", "Tela 18", "Tela 18b", "Mesmo rótulo 18", "Mesmo rótulo 18b", "Rótulo da tela mudou"],
                             [[f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(c['tela_18'] or 'sem rótulo')}</code>", f"<code>{esc(c['tela_18b'] or 'sem rótulo')}</code>",
                               f"<code>{esc(c['fixture_18b'] or 'sem rótulo')}</code>", "certo" if c["acerto_18"] else "errado", "certo" if c["acerto_18b"] else "errado",
@@ -2333,38 +2390,38 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
             + (f' Na repetição com o caso ao vivo revisado (corrida 18b), o mesmo rótulo sai em {r2["concordam"]} de {r2["casos"]} e a tela acerta {r2["acerto_tela"]} '
                f'(b + c = {r2["discordantes"]}, {"dentro" if r2.get("dentro_do_limite_r2") else "fora"} do limite da regra R2).' if v2 else ""))
     leitura_ = leitura([
-        *([f"<strong>Repetição com o caso ao vivo revisado (corrida 18b).</strong> O mesmo rótulo passou de {r['concordam']} para {r2['concordam']} dos {r2['casos']} casos e o acerto na tela de "
-           f"{r['acerto_tela']} para {r2['acerto_tela']} (fixture {r['acerto_fixture']} e {r2['acerto_fixture']}); b + c = {r2['discordantes']} contra o limite {r2['limite_r2']}: a regra R2 "
+        *([f"<strong>Repetição com o caso ao vivo revisado (corrida 18b).</strong> A mesma causa passou de {r['concordam']} para {r2['concordam']} dos {r2['casos']} casos e o acerto na tela de "
+           f"{r['acerto_tela']} para {r2['acerto_tela']} (caso escrito: {r['acerto_fixture']} e {r2['acerto_fixture']}). Os casos em que só um lado acertou são {r2['discordantes']}, contra o limite {r2['limite_r2']}: a regra que compara tela e caso escrito (R2) "
            f"{'passa a valer' if r2.get('dentro_do_limite_r2') else 'continua fora do limite'}. Caso a caso, {ganhos} passaram a acertar na tela e {perdas} deixaram de acertar; "
-           f"o rótulo da tela mudou em {sum(1 for c in comparacao if c['mudou'])} casos (tabela de comparação; blocos <code>tb_f4_tela_resumo</code> e <code>tb_f4_tela_casos</code> de <code>tela_v2.json</code>)."] if v2 else []),
-        (f"<strong>Regra R2 {'cumprida' if dentro else 'não cumprida'}.</strong> {rotulos_diferentes} casos recebem rótulos diferentes nos dois lados e em {r['discordantes']} só um lado acerta "
+           f"a causa respondida na tela mudou em {sum(1 for c in comparacao if c['mudou'])} casos (tabela de comparação; blocos <code>tb_f4_tela_resumo</code> e <code>tb_f4_tela_casos</code> de <code>tela_v2.json</code>)."] if v2 else []),
+        (f"<strong>Regra que compara tela e caso escrito (R2) {'cumprida' if dentro else 'não cumprida'}.</strong> {rotulos_diferentes} casos recebem causas diferentes nos dois lados e em {r['discordantes']} só um lado acerta "
          f"(bloco <code>tb_f4_tela_resumo</code>); o limite é {r['limite_r2']}. "
-         + ("" if dentro else "Pelo plano aprovado (regra R2), o molde do sintoma e a poda do caso ao vivo voltam para revisão antes da próxima noite com modelo.")),
-        (f"<strong>O rótulo que a tela puxa.</strong> <code>{esc(mais_tela['rotulo'])}</code> sai {mais_tela['tela']} vezes na tela, {mais_tela['fixture']} no fixture, e é o gabarito de "
-         f"{mais_tela['gabarito']} casos (tabela de rótulos): o caso ao vivo leva o modelo para uma causa que o caso escrito não sugere." if mais_tela else "<strong>Rótulos.</strong> Sem casos."),
-        *([f"<strong>Onde a tela perde.</strong> Em {sem_dif} dos {cp.get('casos_lidos')} casos a poda não achou diferença de campo contra o contrato e o CORPO levou ao modelo o primeiro item "
-           f"normal da lista (bloco <code>tb_f4_tela_corpo</code>): só {cp.get('sem_diferenca_concordam')} dão o mesmo rótulo e {cp.get('sem_diferenca_colecao_na_tela')} viram "
+         + ("" if dentro else "Pelo plano aprovado (regra R2), o molde do sintoma e o corte em código do que o modelo lê no caso ao vivo (poda) voltam para revisão antes da próxima noite com modelo.")),
+        (f"<strong>A causa que a tela puxa.</strong> <code>{esc(mais_tela['rotulo'])}</code> sai {mais_tela['tela']} vezes na tela, {mais_tela['fixture']} no caso escrito, e é o gabarito de "
+         f"{mais_tela['gabarito']} casos (tabela de causas): o caso ao vivo leva o modelo para uma causa que o caso escrito não sugere." if mais_tela else "<strong>Causas respondidas.</strong> Sem casos."),
+        *([f"<strong>Onde a tela perde.</strong> Em {sem_dif} dos {cp.get('casos_lidos')} casos o corte não achou diferença de campo contra o contrato e o CORPO levou ao modelo o primeiro item "
+           f"normal da lista (bloco <code>tb_f4_tela_corpo</code>): só {cp.get('sem_diferenca_concordam')} dão a mesma causa e {cp.get('sem_diferenca_colecao_na_tela')} viram "
            f"<code>colecao_no_lugar_de_objeto</code>; em {cp.get('sintoma_sem_medida')} o sintoma por molde diz \"Nenhuma diferença medida contra a referência\". "
-           f"Nos {cp.get('com_diferenca_contra_contrato')} casos com diferença de campo, {cp.get('com_diferenca_concordam')} dão o mesmo rótulo. As falhas de lista (contagem, duplicado, "
-           "codificação, escala, latência) não são diferenças de campo: o caso ao vivo precisa dizer o que mudou contra a referência em modo normal, que o harness já mede."] if sem_dif is not None else []),
-        (f"<strong>A pior classe na tela.</strong> {pior['classe']} {esc(pior['nome'])}: {pior['acerto_tela']} de {pior['casos']} na tela contra {pior['acerto_fixture']} no fixture "
+           f"Nos {cp.get('com_diferenca_contra_contrato')} casos com diferença de campo, {cp.get('com_diferenca_concordam')} dão a mesma causa. As falhas de lista (contagem, duplicado, "
+           "codificação, escala, latência) não são diferenças de campo: o caso ao vivo precisa dizer o que mudou contra a referência em modo normal, que o próprio teste já mede."] if sem_dif is not None else []),
+        (f"<strong>A pior classe na tela.</strong> {pior['classe']} {esc(pior['nome'])}: {pior['acerto_tela']} de {pior['casos']} na tela contra {pior['acerto_fixture']} no caso escrito "
          f"(bloco <code>tb_f4_tela_por_classe</code>)." if pior else "<strong>Por classe.</strong> Sem dados."),
         f"<strong>Prompt maior que o da calibração.</strong> {len(acima)} dos {r['casos']} prompts da tela passam de {pcc.get('limite_mais_10_pct')} tokens (o maior da tela tem {pcc.get('maximo_da_tela')}; "
         f"o maior da calibração, {pcc.get('maximo_da_calibracao')}): o caso ao vivo é mais longo que o caso escrito, e os limiares do selo foram calibrados no escrito (plano, seção 3.3).",
-        f"<strong>Selos e gatilhos.</strong> Na tela {st.get('baixo', 0)} casos ficam com selo baixo e {r['gatilhos_tela']} disparam gatilho; as intervenções ficaram desligadas nesta corrida, "
-        f"então a FONTE fica declarada, não verificada. No fixture {sf.get('alto', 0)} casos têm selo alto, na tela {st.get('alto', 0)}.",
-        f"<strong>Custo.</strong> {fmt(r['segundos_tela_mediana'])} s por caso na tela e {fmt(r['segundos_fixture_mediana'])} s no fixture (medianas); a trilha v2 da corrida tem {r['trilha_bytes']} bytes.",
+        f"<strong>Selos e avisos de checagem extra.</strong> Na tela {st.get('baixo', 0)} casos ficam com selo baixo e {r['gatilhos_tela']} disparam o aviso que dispara a checagem extra; as intervenções ficaram desligadas nesta corrida, "
+        f"então a FONTE fica declarada, não verificada. No caso escrito {sf.get('alto', 0)} casos têm selo alto, na tela {st.get('alto', 0)}.",
+        f"<strong>Custo.</strong> {fmt(r['segundos_tela_mediana'])} s por caso na tela e {fmt(r['segundos_fixture_mediana'])} s no caso escrito (medianas); a trilha v2 da corrida tem {r['trilha_bytes']} bytes.",
     ])
     html_ = f'''<section id="tela" hidden>
-<h1>Tela e fixture: o agente dá o mesmo diagnóstico ao caso lido da tela e ao caso escrito?</h1>
+<h1>Tela e caso escrito: o agente dá o mesmo diagnóstico nos dois?</h1>
 <p class="lead">{lead}</p>
 {kpis(itens_kpi)}
 <h2>Acerto e concordância por classe de defeito</h2>
-<p>Cada caso que reproduz foi diagnosticado duas vezes na mesma sessão do Ollama: lido da tela (roteiro, interceptação, poda e sintoma por molde) e lido do fixture (o caso escrito). O gabarito entra só nesta leitura.</p>
+<p>Cada caso que reproduz foi diagnosticado duas vezes na mesma sessão do Ollama: lido da tela (roteiro, interceptação, corte em código do que o modelo lê e sintoma por molde) e lido do caso escrito. O gabarito entra só nesta leitura.</p>
 <div class="chart"><canvas id="g-tela-classe"></canvas></div>
 {tab_classe}
-<h2>Que rótulos cada lado dá</h2>
-<p>Quantas vezes cada causa foi respondida na tela e no fixture, contra quantas vezes ela é o gabarito.</p>
+<h2>Que causas cada lado responde</h2>
+<p>Quantas vezes cada causa foi respondida na tela e no caso escrito, contra quantas vezes ela é o gabarito.</p>
 <div class="chart"><canvas id="g-tela-rotulos"></canvas></div>
 {tab_rotulos}
 {detalhes(f"Caso a caso ({len(casos)} casos)", tab_casos)}
@@ -2388,6 +2445,8 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
 # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 19 é a primeira medida de MTTR só do agente
 # e o Eric decide pelo painel se a cura em código basta para a Fase 5.
 def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos com "tempo até o resultado (MTTR)" e "o próprio teste" no lugar de MTTR e harness soltos.
+    # ! Motivo: o texto à vista trazia siglas que o Eric pediu para tirar; o cartão da quebra armada pelo teste contra a variante do PHP ficou com menos texto, e os valores seguem nas tabelas recolhidas.
     fontes_ = fontes(["<code>resultados_alvo/fase4/cura.json</code> e <code>.md</code> (<code>avaliar_fase4.py --cura</code>, com <code>--check</code>; blocos <code>tb_f4_cura_*</code>)",
                       "<code>executar_fase4.py --modo cura</code> (<code>cura_seletor.py</code>: candidatos em ordem fixa e verificação em código; <code>cenarios_fase4.QUEBRAS</code>: as 16 células; "
                       "<code>Programacao/CobaiaFront/quebra.php</code>: a variante do front ligada por <code>?quebra=</code> ou cookie; relatórios v2 por execução em <code>fase4_cura/relatorios/</code>)",
@@ -2422,20 +2481,20 @@ def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, s
     fh = next((x for x in por_forma if x["forma"] == "harness"), None)
     fp = next((x for x in por_forma if x["forma"] == "php"), None)
     itens_kpi = [
-        ("Curadas pela regra R3", f'{r["curadas"]} de {r["quebras_detectadas"]}',
-         f'{fmt(r["taxa_de_cura_pct"])}% das quebras detectadas em {r["execucoes"]} execuções ({r["repeticoes"]} repetições por célula); {r["nao_quebrou"]} execuções não quebraram'
+        ("Curadas, pela regra R3 (o roteiro precisa passar)", f'{r["curadas"]} de {r["quebras_detectadas"]}',
+         f'{fmt(r["taxa_de_cura_pct"])}% das quebras detectadas; {r["nao_quebrou"]} execuções não quebraram'
          if r["taxa_de_cura_pct"] is not None else f'{r["execucoes"]} execuções; nenhuma quebra detectada'),
         ("Mesmo elemento da referência", f'{r["mesmo_elemento"]} de {r["curadas"]}',
          f'{r["outro_elemento"]} cura(s) com outro elemento que fez o roteiro passar (regra R3, tabela abaixo)'),
-        ("MTTR do agente (mediana)", f'{fmt(r["mttr_mediana_s"])} s' if r["mttr_mediana_s"] is not None else "n/d",
-         f'da detecção à reexecução validada; mínimo {fmt(r["mttr_min_s"])} s e máximo {fmt(r["mttr_max_s"])} s' if r["mttr_mediana_s"] is not None else "nenhuma cura validada"),
-        ("Harness contra variante do PHP", f'{f.get("mesmo_resultado", 0)} de {f.get("celulas_comparadas", 0)} células com o mesmo resultado',
-         f'a árvore da página quebrada é a mesma nas duas formas em {f.get("arvore_igual", 0)} células'
+        ("Tempo até o resultado (MTTR), mediana", f'{fmt(r["mttr_mediana_s"])} s' if r["mttr_mediana_s"] is not None else "n/d",
+         f'da detecção à reexecução validada; entre {fmt(r["mttr_min_s"])} e {fmt(r["mttr_max_s"])} s' if r["mttr_mediana_s"] is not None else "nenhuma cura validada"),
+        ("Quebra armada pelo próprio teste contra a variante do PHP", f'{f.get("mesmo_resultado", 0)} de {f.get("celulas_comparadas", 0)} células com o mesmo resultado',
+         f'árvore da página igual em {f.get("arvore_igual", 0)} células'
          + (f'; difere em {", ".join(f.get("arvore_diferente") or [])}' if f.get("arvore_diferente") else "")
-         + (f'; taxa de cura {fmt(fh["taxa"])}% no harness e {fmt(fp["taxa"])}% no PHP' if fh and fp and fh["taxa"] is not None and fp["taxa"] is not None else "")),
+         + (f'; cura {fmt(fh["taxa"])}% no próprio teste e {fmt(fp["taxa"])}% no PHP' if fh and fp and fh["taxa"] is not None and fp["taxa"] is not None else "")),
         ("Estratégia que mais curou", f'{esc(mais_aplicada["estrategia"])} em {mais_aplicada["aplicada"]}' if mais_aplicada else "n/d",
          "; ".join(f'{esc(x["estrategia"])} {x["aplicada"]}' for x in estrategias if x["aplicada"] and x is not mais_aplicada) or "nenhuma outra estratégia curou"),
-        ("Limiar do nome parecido", fmt(r["limiar_nome"]), "similaridade do texto normalizado, fixada no P4 e gravada em condicoes_fase4.json"),
+        ("Limiar do nome parecido", fmt(r["limiar_nome"]), "o quanto o nome do candidato precisa se parecer; fixado no P4"),
     ]
     tab_modo = tabela(["Modo de quebra", "Execuções", "Quebraram", "Curadas", "Taxa de cura (%)", "Mesmo elemento", "Outro elemento", "Não curadas", "Não quebrou", "MTTR mediana (s)"],
                       [[f"<code>{esc(x['modo'])}</code>", x["execucoes"], x["quebrou"], x["curadas"], fmt(x["taxa"]) if x["taxa"] is not None else "n/d", x["mesmo_elemento"], x["outro_elemento"],
@@ -2476,10 +2535,10 @@ def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, s
          f"{pior_modo['curadas']} de {pior_modo['quebrou']} (bloco <code>tb_f4_cura_por_modo</code>): é onde a geração em código mais falha." if melhor_modo and pior_modo else "<strong>Por modo.</strong> Sem dados."),
         (f"<strong>Estratégias.</strong> <code>{esc(mais_aplicada['estrategia'])}</code> é a que mais levou o roteiro ao fim ({mais_aplicada['aplicada']} vezes); a tabela de estratégias diz em que "
          f"verificação cada uma foi recusada (bloco <code>tb_f4_cura_estrategias</code>)." if mais_aplicada else "<strong>Estratégias.</strong> Sem dados."),
-        (f"<strong>Harness contra PHP (decisão 80).</strong> A árvore da página quebrada é a mesma nas duas formas em {f.get('arvore_igual', 0)} das {f.get('celulas_comparadas', 0)} células e o "
-         f"resultado é o mesmo em {f.get('mesmo_resultado', 0)}" + (f"; taxa de cura {fmt(fh['taxa'])}% no harness e {fmt(fp['taxa'])}% no PHP" if fh and fp and fh["taxa"] is not None and fp["taxa"] is not None else "")
+        (f"<strong>Quebra armada pelo próprio teste contra a variante do PHP (decisão 80).</strong> A árvore da página quebrada é a mesma nas duas formas em {f.get('arvore_igual', 0)} das {f.get('celulas_comparadas', 0)} células e o "
+         f"resultado é o mesmo em {f.get('mesmo_resultado', 0)}" + (f"; taxa de cura {fmt(fh['taxa'])}% no próprio teste e {fmt(fp['taxa'])}% no PHP" if fh and fp and fh["taxa"] is not None and fp["taxa"] is not None else "")
          + " (blocos <code>tb_f4_cura_formas</code> e <code>tb_f4_cura_por_forma</code>)."),
-        f"<strong>MTTR.</strong> Mediana de {fmt(r['mttr_mediana_s']) if r['mttr_mediana_s'] is not None else 'n/d'} s, entre {fmt(r['mttr_min_s']) if r['mttr_min_s'] is not None else 'n/d'} e "
+        f"<strong>Tempo até o resultado (MTTR).</strong> Mediana de {fmt(r['mttr_mediana_s']) if r['mttr_mediana_s'] is not None else 'n/d'} s, entre {fmt(r['mttr_min_s']) if r['mttr_min_s'] is not None else 'n/d'} e "
         f"{fmt(r['mttr_max_s']) if r['mttr_max_s'] is not None else 'n/d'} s: é a primeira medida de MTTR só do agente, sem linha de base manual (a linha de base é a Fase 5).",
         "<strong>Limitação declarada.</strong> A quebra é armada, não ocorrida; cada célula usa, no passo do alvo, o estilo de localizador que o modo quebra (por id, por classe, por texto ou "
         "por caminho na estrutura), e a mudança de texto acrescenta uma palavra; um sinônimo ficaria abaixo do limiar do nome.",
@@ -2492,8 +2551,8 @@ def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, s
 <p>Cada barra empilha as execuções do modo: curadas com o mesmo elemento da referência, curadas com outro elemento (regra R3), não curadas e as que não quebraram (o localizador sobreviveu à mutação).</p>
 <div class="chart"><canvas id="g-cura-modo"></canvas></div>
 {tab_modo}
-<h2>Cura por roteiro e MTTR</h2>
-<p>As mesmas contagens por roteiro do front legado; a linha do MTTR é a mediana, em segundos, da detecção à reexecução validada.</p>
+<h2>Cura por roteiro e tempo até o resultado (MTTR)</h2>
+<p>As mesmas contagens por roteiro do front legado; o tempo é a mediana, em segundos, da detecção à reexecução validada.</p>
 <div class="chart"><canvas id="g-cura-roteiro"></canvas></div>
 {tab_roteiro}
 <h2>As duas formas da quebra</h2>
@@ -2517,6 +2576,8 @@ def secao_cura(cura: dict | None, road: dict, cartoes_corridas) -> tuple[dict, s
 # inéditos, a regra R4 no ciclo de correção, a sonda repetida com recuperação por id e a recuperação dos verbetes aprendidos.
 # ! Motivo: regra do painel (uma aba por análise, números só dos JSON); a corrida 20 é a quinta análise da Fase 4.
 def secao_biblioteca(bibl: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões e itens de leitura à vista reescritos sem b = / c = e sem p; a regra R5 passa a dizer "N passaram a acertar e M passaram a errar".
+    # ! Motivo: o texto à vista trazia b e c soltos, que o Eric pediu para tirar; os mesmos números aparecem agora na frase, e o teste de painel confere a frase nova.
     fontes_ = fontes(["<code>resultados_alvo/fase4/biblioteca.json</code> e <code>.md</code> (<code>avaliar_fase4.py --biblioteca</code>, com <code>--check</code>; blocos <code>tb_f4_biblioteca_*</code>)",
                       "<code>executar_fase4.py --modo biblioteca</code> (<code>biblioteca_fase4.py</code>: os 13 filtros em código da decisão 65, a operação de correção, a recuperação por id, a regra R5; "
                       "<code>sonda_correcao.py --recuperacao-por-id</code>; relatórios v2 por caso em <code>fase4_biblioteca/relatorios/</code>)",
@@ -2545,16 +2606,16 @@ def secao_biblioteca(bibl: dict | None, road: dict, cartoes_corridas) -> tuple[d
                 "correcao": ({k: corr.get(k) for k in ("universo", "desligados", "marcados", "acertos", "falsos_positivos", "perdidos", "precisao_pct", "revocacao_pct", "kappa")} if corr else None)}
     itens_kpi = [
         ("Edições no lote", f'{r["aceitas"]} de {r["propostas"]}',
-         f'propostas do modelo nos {r["casos"]} casos de aprendizado ({r["da_tela"]} da tela, {r["do_fixture"]} do fixture); {r["abstencoes"]} abstenções (NENHUMA); peso somado {lote.get("peso", 0)}'),
+         f'propostas nos {r["casos"]} casos de aprendizado; em {r["abstencoes"]} o modelo respondeu NENHUMA (sem proposta)'),
         ("Barradas e seguradas", f'{r["recusadas_p5"] + r["para_revisao"]} pelos filtros do P5',
-         f'{r["recusadas_p5"]} recusadas pelos 13 filtros em código e {r["para_revisao"]} seguradas para revisão humana pela regra dos 40%; {r["recusadas_fase3"]} recusadas antes, pelo validador da Fase 3'),
-        ("Regra R5 nos inéditos", f'{reav["veredito"]}: b = {reav["b"]}, c = {reav["c"]}' if reav else "não medida",
-         f'acerto {fmt(reav["acerto_base_pct"])}% com a cópia curada e {fmt(reav["acerto_novo_pct"])}% com o lote nos {reav["n"]} inéditos pareados (p = {fmt(reav["p_mcnemar"], 3)})' if reav else "sem reavaliação"),
+         f'{r["recusadas_p5"]} recusadas pelos 13 filtros em código; {r["para_revisao"]} seguradas para revisão humana'),
+        ("Regra R5: o lote melhora os inéditos?", f'{reav["veredito"]}: {reav["b"]} passaram a acertar, {reav["c"]} a errar' if reav else "não medida",
+         f'acerto {fmt(reav["acerto_base_pct"])}% com a cópia curada e {fmt(reav["acerto_novo_pct"])}% com o lote, nos {reav["n"]} inéditos pareados' if reav else "sem reavaliação"),
         ("Regra R4, ciclo de correção", f'precisão {fmt(corr["precisao_pct"])}%, revocação {fmt(corr["revocacao_pct"])}%' if corr and corr.get("precisao_pct") is not None else
          (f'{corr["marcados"]} marcada(s) de {corr["desligados"]} desligado(s)' if corr else "não medida"),
-         f'{corr["marcados"]} marcada(s) corrigido em {corr["universo"]} casos com sintoma antes ({corr["desligados"]} com o modo desligado): {corr["acertos"]} certa(s), {corr["falsos_positivos"]} falso(s) positivo(s), {corr["perdidos"]} perdida(s)' if corr else "sem ciclo de correção"),
+         f'{corr["marcados"]} marcada(s) como corrigido em {corr["universo"]} casos; {corr["acertos"]} certa(s), {corr["falsos_positivos"]} sem razão, {corr["perdidos"]} perdida(s)' if corr else "sem ciclo de correção"),
         ("Sonda com recuperação por id", f'{sonda["mudaram_proposta"]} de {sonda["casos"] - sonda["sem_sonda_anterior"]} mudaram a proposta' if sonda and sonda["casos"] > sonda["sem_sonda_anterior"] else (f'{sonda["casos"]} casos' if sonda else "não repetida"),
-         f'{sonda["mencionam_correcao"]} mencionam a correção registrada; {sonda["abstencoes"]} NENHUMA; {sonda["com_verbete_por_id"]} com verbete pelo id; {sonda["sem_sonda_anterior"]} sem sonda anterior' if sonda else "a sonda de 28/09 não foi repetida"),
+         f'{sonda["mencionam_correcao"]} mencionam a correção; {sonda["abstencoes"]} NENHUMA; {sonda["com_verbete_por_id"]} com verbete pelo id; {sonda["sem_sonda_anterior"]} sem sonda anterior' if sonda else "a sonda de 28/09 não foi repetida"),
         ("Verbetes aprendidos (ficha 32)", f'{len(sem_rec)} de {len(rec_.get("aprendidos_na_calibracao") or {})} nunca recuperados',
          f'na calibração com k = {r.get("k")}; nesta corrida {rec_.get("casos_com_verbete_por_id", 0)} caso(s) receberam verbete pelo id'),
     ]
@@ -2588,10 +2649,10 @@ def secao_biblioteca(bibl: dict | None, road: dict, cartoes_corridas) -> tuple[d
         f"<strong>Lote e filtros.</strong> {r['aceitas']} edições entraram (peso {lote.get('peso', 0)}); "
         + (f"o filtro que mais barrou foi <code>{esc(mais_barra['filtro'])}</code> ({mais_barra['recusas']})" if mais_barra else "nenhum filtro do P5 barrou proposta")
         + f" (blocos <code>tb_f4_biblioteca_filtros</code> e <code>tb_f4_biblioteca_rejeicoes</code>); {r['abstencoes']} abstenções contam como saída válida.",
-        (f"<strong>Regra R5.</strong> b = {reav['b']}, c = {reav['c']} nos {reav['n']} inéditos: {reav['veredito']} (bloco <code>tb_f4_biblioteca_reavaliacao</code>); a base é {esc(reav.get('origem_da_base') or 'n/d')}."
+        (f"<strong>Regra R5.</strong> Nos {reav['n']} inéditos, {reav['b']} passaram a acertar e {reav['c']} passaram a errar: {reav['veredito']} (bloco <code>tb_f4_biblioteca_reavaliacao</code>); a base é {esc(reav.get('origem_da_base') or 'n/d')}."
          if reav else "<strong>Regra R5.</strong> Não medida."),
-        (f"<strong>Regra R4.</strong> {corr['marcados']} marcadas, {corr['acertos']} certas, {corr['falsos_positivos']} falsos positivos e {corr['perdidos']} perdidas em {corr['universo']} casos com sintoma antes "
-         f"(bloco <code>tb_f4_biblioteca_correcao</code>); kappa {fmt(corr['kappa'], 3) if corr.get('kappa') is not None else 'n/d'}." if corr else "<strong>Regra R4.</strong> Não medida."),
+        (f"<strong>Regra R4.</strong> {corr['marcados']} marcadas, {corr['acertos']} certas, {corr['falsos_positivos']} marcadas sem razão e {corr['perdidos']} perdidas em {corr['universo']} casos com sintoma antes "
+         f"(bloco <code>tb_f4_biblioteca_correcao</code>); concordância além do acaso (kappa) {fmt(corr['kappa'], 3) if corr.get('kappa') is not None else 'n/d'}." if corr else "<strong>Regra R4.</strong> Não medida."),
         (f"<strong>Sonda.</strong> {sonda['casos']} casos reapresentados com os verbetes do próprio caso no contexto: {sonda['mudaram_proposta']} mudaram a proposta, {sonda['mencionam_correcao']} mencionam a correção, "
          f"{sonda['abstencoes']} abstiveram-se (bloco <code>tb_f4_biblioteca_sonda</code>)." if sonda else "<strong>Sonda.</strong> Não repetida."),
         f"<strong>Ficha 32.</strong> {len(sem_rec)} verbetes aprendidos nunca entraram num contexto da calibração ({', '.join(f'<code>{esc(v)}</code>' for v in sem_rec) or 'nenhum'}); "
@@ -2638,6 +2699,8 @@ def secao_biblioteca(bibl: dict | None, road: dict, cartoes_corridas) -> tuple[d
 # ! Motivo: a 21b roda com a correção da cura e é a leitura vigente do ensaio; a 21 é o registro de como o defeito apareceu, e o painel,
 # onde o Eric decide, tem de mostrar as duas, como a aba "Tela e fixture" faz com as corridas 18 e 18b.
 def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos com "chegou ao resultado (Task Success)" e "tempo até o resultado (MTTR)", sem Wilson nem reamostragem.
+    # ! Motivo: o texto à vista trazia siglas e nomes de método estatístico que o Eric pediu para tirar; o título "Execuções sem Task Success" passou a "Execuções que não chegaram ao resultado" e o teste do painel foi ajustado.
     protocolo = ("<p>A linha de base manual da Fase 5 segue o protocolo em <code>Documentacao/memorial/5-metodo-e-ferramental/protocolo-linha-de-base-manual.md</code>: "
                  "três integrantes, cada um nos dez cenários numa ordem sorteada com semente fixa, com a falha ligada pelo ajudante "
                  "<code>linha_de_base_manual.py</code> (as mesmas funções da corrida) e a planilha <code>planilha-linha-de-base-manual.csv</code>.</p>")
@@ -2679,14 +2742,14 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
                 "por_cenario": [{**{k: x.get(k) for k in ("cenario", "tipo", "n", "sucessos", "mttr_media_s")}, "mttr_anterior": (antes.get(x["cenario"]) or {}).get("mttr_media_s")}
                                 for x in cen_.get("por_cenario") or []],
                 "duas_corridas": bool(anterior)}
-    itens_kpi = [("Task Success", ts(g), f'{nd(g["task_success_pct"])}% (Wilson 95%: {faixa(g["wilson_lo_pct"], g["wilson_hi_pct"], "%")}) nas {g["n"]} execuções')]
-    itens_kpi.append(("MTTR médio", f'{nd(g["mttr_media_s"])} s', f'reamostragem 95%: {faixa(g["mttr_ic_lo_s"], g["mttr_ic_hi_s"], " s")}; mediana {nd(g["mttr_mediana_s"])} s em {g["mttr_n"]} execuções com o fim do cronômetro'))
+    itens_kpi = [("Chegou ao resultado (Task Success)", ts(g), f'{nd(g["task_success_pct"])}% das {g["n"]} execuções; margem de incerteza de {faixa(g["wilson_lo_pct"], g["wilson_hi_pct"], "%")}')]
+    itens_kpi.append(("Tempo até o resultado (MTTR), média", f'{nd(g["mttr_media_s"])} s', f'margem de incerteza de {faixa(g["mttr_ic_lo_s"], g["mttr_ic_hi_s"], " s")}; mediana {nd(g["mttr_mediana_s"])} s'))
     for tipo, nome in (("contrato", "Contrato (ficha 35)"), ("localizador", "Localizador")):
         if tipo in por_tipo:
             x = por_tipo[tipo]
-            itens_kpi.append((nome, ts(x), f'Task Success; MTTR médio {nd(x["mttr_media_s"])} s ({faixa(x["mttr_ic_lo_s"], x["mttr_ic_hi_s"], " s")})'))
-    itens_kpi.append(("Tempo por execução", f'{nd(t.get("segundos_media"))} s', f'{t.get("execucoes")} execuções, {nd(t.get("segundos_total"))} s no total; a Fase 5 (10 cenários x 5 repetições) levaria {nd(t.get("estimativa_fase5_h"), 2)} h'))
-    itens_kpi.append(("Detecção", f'{sum(det.values())} de {g["n"]}', f'{det.get("conferencia_do_roteiro", 0)} pela conferência do roteiro, {det.get("contrato_no_fio", 0)} pelo fio (regra R1), {det.get("passo_do_localizador", 0)} pelo passo do localizador'))
+            itens_kpi.append((nome, ts(x), f'chegaram ao resultado; tempo médio {nd(x["mttr_media_s"])} s ({faixa(x["mttr_ic_lo_s"], x["mttr_ic_hi_s"], " s")})'))
+    itens_kpi.append(("Tempo por execução", f'{nd(t.get("segundos_media"))} s', f'{t.get("execucoes")} execuções em {nd(t.get("segundos_total"))} s; a Fase 5 levaria {nd(t.get("estimativa_fase5_h"), 2)} h'))
+    itens_kpi.append(("Detecção", f'{sum(det.values())} de {g["n"]}', f'{det.get("conferencia_do_roteiro", 0)} pelo roteiro, {det.get("contrato_no_fio", 0)} pelo fio (regra R1), {det.get("passo_do_localizador", 0)} pelo localizador'))
     tab_tipo = tabela(["Tipo", "Execuções", "Task Success", "Task Success (%)", "Wilson 95% (%)", "MTTR médio (s)", "Reamostragem 95% (s)", "MTTR mediano (s)"],
                       [[esc(x["tipo"]), x["n"], x["sucessos"], nd(x["task_success_pct"]), faixa(x["wilson_lo_pct"], x["wilson_hi_pct"], ""), nd(x["mttr_media_s"]),
                         faixa(x["mttr_ic_lo_s"], x["mttr_ic_hi_s"], ""), nd(x["mttr_mediana_s"])] for x in cen_.get("por_tipo") or []], raw=True)
@@ -2706,7 +2769,7 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
         tab_sem = tabela(["Corrida", "Cenário", "Repetição", "Tipo", "Detectou", "Rótulo do diagnóstico", "Causa esperada", "Falha da cura", "Segundos"],
                          [[n_, f"<code>{esc(x['cenario'])}</code>", x.get("repeticao"), esc(x["tipo"]), "sim" if x.get("detectou") else "não", f"<code>{esc(x.get('rotulo') or 'n/d')}</code>",
                            f"<code>{esc(x.get('causa_esperada') or '')}</code>", f"<code>{esc(x.get('falha_da_cura') or 'n/d')}</code>", nd(x.get("segundos"))] for n_, x in sem_ts], raw=True)
-        bloco_sem = f'<h2>Execuções sem Task Success</h2>\n<p>Bloco <code>tb_f4_cenarios_sem_sucesso</code>; a explicação de cada uma fica no roadmap, no cartão da corrida abaixo.</p>\n{tab_sem}'
+        bloco_sem = f'<h2>Execuções que não chegaram ao resultado (sem Task Success)</h2>\n<p>Bloco <code>tb_f4_cenarios_sem_sucesso</code>; a explicação de cada uma fica no roadmap, no cartão da corrida abaixo.</p>\n{tab_sem}'
     bloco_duas = ""
     itens_duas: list[str] = []
     if anterior:
@@ -2717,8 +2780,8 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
                             nd(x["mttr_media_s"]), nd((antes.get(x["cenario"]) or {}).get("segundos_media")), nd(x.get("segundos_media")),
                             "sim" if (antes.get(x["cenario"]) or {}).get("rotulos") == x.get("rotulos") else "não"] for x in por], raw=True)
         bloco_duas = f'<h2>As duas corridas, cenário a cenário</h2>\n<p>A corrida 21, antes da correção da cura, e a 21b, depois dela: blocos <code>tb_f4_cenarios_por_cenario</code> de <code>cenarios.md</code> e <code>cenarios_v2.md</code>.</p>\n{tab_duas}'
-        itens_duas = [(f"<strong>As duas corridas.</strong> A corrida 21 teve Task Success em {ts(anterior['geral'])} e a 21b, com os candidatos da cura verificados numa página refeita até o passo que falhou, em {ts(g)}. "
-                       f"O mesmo rótulo em {mesmo} de {len(por)} cenários. O tempo por execução passou de {nd((anterior.get('tempo') or {}).get('segundos_media'))} s a {nd(t.get('segundos_media'))} s. A explicação está no roadmap, §2.13 e §2.14.")]
+        itens_duas = [(f"<strong>As duas corridas.</strong> Na corrida 21 chegaram ao resultado {ts(anterior['geral'])} execuções e, na 21b, com os candidatos da cura verificados numa página refeita até o passo que falhou, {ts(g)}. "
+                       f"A mesma causa respondida em {mesmo} de {len(por)} cenários. O tempo por execução passou de {nd((anterior.get('tempo') or {}).get('segundos_media'))} s a {nd(t.get('segundos_media'))} s. A explicação está no roadmap, §2.13 e §2.14.")]
     ct, lc = por_tipo.get("contrato"), por_tipo.get("localizador")
     abertura = (f'Na repetição do ensaio (corrida 21b: {cond.get("repeticoes")} repetição dos dez cenários da ficha 36, {esc(cond.get("modelo") or "")}, Ollama {esc(cond.get("versao_ollama") or "n/d")}), já com a correção da cura, '
                 f'o agente teve Task Success em {ts(g)} execuções, contra {ts(anterior["geral"])} na corrida 21, e MTTR médio de ' if anterior else
@@ -2730,19 +2793,19 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
     leitura_ = leitura([
         *itens_duas,
         ("<strong>O que o cronômetro mede.</strong> No contrato (ficha 35), da detecção ao diagnóstico conferido em código (quatro linhas, causa dentro das 23, campo existente no caso), "
-         "e o Task Success é a causa e o campo certos; no localizador, da detecção à reexecução validada, descontada a restauração do banco, e o Task Success é a cura aplicada com o roteiro concluído sem erro."),
+         "e chegar ao resultado (Task Success) é acertar a causa e o campo; no localizador, da detecção à reexecução validada, descontada a restauração do banco, e chegar ao resultado é aplicar a cura com o roteiro concluído sem erro."),
         (f"<strong>Condições.</strong> Navegador {', '.join(esc(v) for v in nav.get('versoes') or []) or 'n/d'} em todas as execuções ({'uma versão só' if nav.get('unica') else 'versões diferentes'}); "
          f"banco restaurado e conferido por hash no começo de cada repetição ({'o mesmo hash em todas' if banco.get('unico') else 'hashes diferentes'})."),
-        "<strong>Ensaio, não Fase 5.</strong> Uma repetição serve para dimensionar a noite da Fase 5 e conferir o protocolo; os intervalos com uma execução por cenário são largos e não sustentam comparação.",
+        "<strong>Ensaio, não Fase 5.</strong> Uma repetição serve para dimensionar a noite da Fase 5 e conferir o protocolo; as margens de incerteza com uma execução por cenário são largas e não sustentam comparação.",
         "<strong>Linha de base manual.</strong> A coluna \"O que a detecção acusou\" é a ficha da falha que o integrante recebe na sessão, a mesma frase que a detecção do agente acusou.",
     ])
     html_ = f'''<section id="cenarios" hidden>
 <h1>Cenários da Fase 5: quanto tempo o agente leva da detecção ao resultado e em quantos cenários acerta?</h1>
 <p class="lead">{lead}</p>
 {kpis(itens_kpi)}
-<h2>MTTR por cenário</h2>
+<h2>Tempo até o resultado (MTTR) por cenário</h2>
 <div class="chart"><canvas id="g-cen-mttr"></canvas></div>
-<h2>Task Success por cenário</h2>
+<h2>Chegou ao resultado (Task Success), por cenário</h2>
 <div class="chart"><canvas id="g-cen-ts"></canvas></div>
 {tab_tipo}
 {bloco_sem}
@@ -2804,6 +2867,8 @@ def _lista_em_frase(itens: list[str]) -> str:
 
 def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, tela: dict | None = None, cura: dict | None = None, cenarios: dict | None = None, revisao: dict | None = None,
                         road: dict | None = None, cartoes_corridas=None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) três cartões (tela, cura, cenários) reescritos sem "b + c", "rótulo", MTTR e Task Success soltos.
+    # ! Motivo: o texto à vista trazia siglas que o Eric pediu para tirar; os números são os mesmos, lidos dos mesmos JSON.
     titulo = "Fechamento da Fase 4: o agente na tela fez o que o plano pediu?"
     if not relatorio_md:
         return {"contagem": {}, "fichas_abertas": 0}, (f'<section id="fechamentof4" hidden>\n<h1>{titulo}</h1>\n<p class="lead">O relatório da fase ainda não existe: '
@@ -2831,13 +2896,13 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
                  ("Não cumpridas", str(cont["nao"]), " e ".join(nomes_nao) or "nenhuma")]
     if tela:
         r = tela["resumo"]
-        itens_kpi.append(("Mesmo rótulo na tela e no caso escrito", f'{r["concordam"]} de {r["casos"]}', f'corrida 18b; b + c = {r["discordantes"]} contra o limite de {r["limite_r2"]}, limitação declarada'))
+        itens_kpi.append(("Mesma causa na tela e no caso escrito", f'{r["concordam"]} de {r["casos"]}', f'corrida 18b; só um lado acerta em {r["discordantes"]}, limite {r["limite_r2"]}; limitação declarada'))
     if cura:
         r = cura["resumo"]
-        itens_kpi.append(("Quebras curadas em código", f'{r["curadas"]} de {r["execucoes"]}', f'corrida 19, sem modelo; MTTR mediano de {fmt(r["mttr_mediana_s"], 3)} s; os 100% vêm do desenho da corrida'))
+        itens_kpi.append(("Quebras curadas em código", f'{r["curadas"]} de {r["execucoes"]}', f'corrida 19, sem modelo; mediana {fmt(r["mttr_mediana_s"], 3)} s até o resultado; os 100% vêm do desenho'))
     if cenarios:
         g = cenarios["geral"]
-        itens_kpi.append(("Cenários com Task Success", f'{g["sucessos"]} de {g["n"]}', f'corrida 21b; MTTR médio de {fmt(g["mttr_media_s"], 1)} s; uma repetição, sem linha de base manual'))
+        itens_kpi.append(("Cenários que chegaram ao resultado (Task Success)", f'{g["sucessos"]} de {g["n"]}', f'corrida 21b; média de {fmt(g["mttr_media_s"], 1)} s até o resultado; uma repetição, sem linha de base'))
     if revisao:
         r = revisao["resumo"]
         itens_kpi.append(("Medida com revisor humano", "não feita", f'{r["respostas_do_revisor"]} resposta do Eric e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
@@ -2884,21 +2949,23 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
 # ! Motivo: a sessão de revisão é às cegas e este painel é publicado e é o que o Eric lê: a tabela diz quais relatórios estão certos. Com só 5 erros, um
 # número sem intervalo engana; e dizer "100% no nó previsto" sem dizer que o nó sai em código da entrada mutada faria parecer um resultado do modelo.
 def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preenchida: bool = False, rev: dict | None = None) -> tuple[dict, str]:
+    # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos, o parágrafo "O que a aba mede" e itens de leitura à vista reescritos sem TPR x TNR, Wilson, "gatilho", "poda" e "rótulo" soltos.
+    # ! Motivo: o texto à vista trazia siglas que o Eric pediu para tirar; o cartão das mutações perdeu o detalhe por tipo, que já está no gráfico e na tabela, e os números seguem lidos do JSON.
     fontes_ = fontes(["<code>resultados_alvo/fase4/trilha.json</code> e <code>.md</code> (<code>avaliar_fase4.py --trilha</code>, com <code>--check</code>; blocos <code>tb_f4_trilha_*</code>); "
                       "a planilha da sessão de revisão em <code>resultados_alvo/fase4/revisao_trilha.md</code>, os relatórios dela em <code>resultados_alvo/fase4/relatorios_revisao_trilha/</code>, a pré-análise do Claude em <code>resultados_alvo/fase4/pre_analise_revisao_trilha.md</code> e a leitura em <code>resultados_alvo/fase4/leitura_revisao_trilha.json</code> (<code>avaliar_fase4.py --revisao</code>, blocos <code>tb_f4_revisao_*</code>)",
                       "<code>executar_fase4.py --modo avaliacao_trilha</code> (<code>avaliacao_trilha.py</code>: os nós <code>poda</code> e <code>recuperacao</code> em código, as quatro "
                       "intervenções de <code>diagnostico_ao_vivo.py</code>, a sonda, as mutações e o diff de <code>trilha.diff_contra_referencia</code>)",
                       "especificação da trilha, seções 5, 6.1, 9 e 12; plano aprovado da Fase 4, seções 5 (P7) e 6 (corrida 22); roadmap §2.15; ficha 39"])
     o_que_mede = ("<p>Três perguntas da especificação da trilha (seção 12), respondidas sem gabarito no agente e com gabarito só na leitura: (a) a divergência que a trilha "
-                  "sinaliza coincide com os erros reais? Medida como TPR (erros pegos) vezes TNR (acertos deixados em paz); um sinal jogado ao acaso dá 0,25. (b) Quando a "
-                  "falha é injetada de propósito (um verbete trocado na busca, o contrato alterado na poda, o seletor quebrado na cura), o primeiro nó que diverge da trilha "
-                  "da base é o nó previsto? (c) A FONTE é pós-racionalizada? Um trecho que afirma a causa respondida é plantado num verbete entregue que a FONTE não citou, "
-                  "e a sonda mede se ela passa a citá-lo com o mesmo rótulo. Depois da corrida, uma sessão de revisão com o Eric, de até 12 relatórios (até 6 certos e até 6 errados, "
+                  "sinaliza coincide com os erros reais? A medida é a nota que sobe quando o sinal pega os erros e deixa os acertos em paz (TPR x TNR); um sinal jogado ao acaso dá 0,25. (b) Quando a "
+                  "falha é injetada de propósito (um verbete trocado na busca, o contrato alterado no corte em código do que o modelo lê, o seletor quebrado na cura), o primeiro nó que diverge da trilha "
+                  "da base é o nó previsto? (c) A FONTE só justifica a resposta depois de dada (pós-racionalização)? Um trecho que afirma a causa respondida é plantado num verbete entregue que a FONTE não citou, "
+                  "e a sonda mede se ela passa a citá-lo com a mesma causa respondida. Depois da corrida, uma sessão de revisão com o Eric, de até 12 relatórios (até 6 certos e até 6 errados, "
                   "sorteados com semente fixa), mede o tempo até a decisão, a localização do erro e a adesão apropriada.</p>")
     vazio = {"sinais": [], "mutacoes": [], "resumo": None}
     if not tri or not (tri.get("resumo") or {}).get("casos"):
         html_ = f'''<section id="trilha" hidden>
-<h1>Avaliação da trilha: a trilha do agente aponta os erros reais e o nó certo quando a falha é injetada?</h1>
+<h1>Avaliação da trilha: ela aponta os erros reais e o passo certo quando a falha é injetada?</h1>
 <p class="lead">A corrida 22 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/trilha.json</code>, gerado por <code>avaliar_fase4.py --trilha</code> depois de <code>rodar_fase4.ps1 -Modo avaliacao_trilha -Saida fase4_trilha</code> (noite D do plano aprovado, com modelo).</p>
 {o_que_mede}
 {cartoes_corridas(road, numeros=["22"], sufixo="-tri")}
@@ -2937,12 +3004,12 @@ def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preench
                 "mutacoes": [{k: m.get(k) for k in ("tipo", "previsto", "outro_no", "sem_divergencia", "sem_alvo")} for m in mutacoes],
                 "resumo": {k: r.get(k) for k in ("casos", "acertos", "erros", "tpr", "tnr", "produto")}}
     previstas = cond.get("inferencias_previstas")
-    itens_kpi = [("TPR x TNR da divergência", nd(r.get("produto")), f'com as quatro intervenções em todos os casos, {pegou(principal)}; o acaso dá {fmt(r.get("acaso"), 2)}'),
-                 ("Só por gatilho", nd((gat or {}).get("produto")), f'como o agente roda fora da avaliação, {pegou(gat, "pegaria")} (contado desta corrida, não rodado assim)'),
-                 ("Selo baixo", nd((selo or {}).get("produto")), f'sem nenhuma inferência a mais, {pegou(selo)}'),
-                 ("Acerto nos casos", de(r["acertos"], r["casos"]), f'{nd(r.get("acerto_pct"), 1)}% no fixture, sem gabarito no agente; {cond.get("modelo") or ""} no Ollama {cond.get("versao_ollama") or "n/d"}'),
-                 ("Mutações no nó previsto", de(prev_total, apl_total), "; ".join(f'{m["tipo"].replace("_", " ")}: {de(m["previsto"], m["aplicaveis"])}' for m in mutacoes) + "; esperado por construção, ver a leitura"),
-                 ("Pós-racionalização da FONTE", f'{nd(so.get("taxa_pct"), 1)}%', f'{de(so.get("pos_racionalizacao"), so.get("com_alvo"))} casos citaram o verbete plantado com o mesmo rótulo; sem plantar nada, {de(so.get("controle_cita", 0), so.get("controle_n", 0))} citaram o mesmo verbete'),
+    itens_kpi = [("Nota da divergência, com todas as intervenções", nd(r.get("produto")), f'{pegou(principal)}; o acaso dá {fmt(r.get("acaso"), 2)}'),
+                 ("Nota só pelo aviso de checagem extra, como o agente roda", nd((gat or {}).get("produto")), f'{pegou(gat, "pegaria")} (contado, não rodado assim)'),
+                 ("Nota do selo baixo, sem inferência a mais", nd((selo or {}).get("produto")), f'{pegou(selo)}'),
+                 ("Acerto nos casos", de(r["acertos"], r["casos"]), f'{nd(r.get("acerto_pct"), 1)}% no caso escrito; {cond.get("modelo") or ""}, Ollama {cond.get("versao_ollama") or "n/d"}'),
+                 ("Falhas injetadas que apontaram o nó previsto", de(prev_total, apl_total), "esperado por construção: o nó sai em código da entrada mutada (ver a leitura)"),
+                 ("FONTE que só justifica a resposta (pós-racionalização)", f'{nd(so.get("taxa_pct"), 1)}%', f'{de(so.get("pos_racionalizacao"), so.get("com_alvo"))} casos citaram o verbete plantado; sem plantar, {de(so.get("controle_cita", 0), so.get("controle_n", 0))}'),
                  ("Inferências", str(r.get("inferencias")), f'{previstas} previstas; a diferença são as mutações de contrato sem alvo' if previstas is not None else "")]
     tab_sinais = tabela(["Sinal", "O que é", "Pegou (VP)", "Deixou passar (FN)", "Acusou acerto (FP)", "Deixou em paz (VN)", "TPR", "TNR", "TPR x TNR", "TPR, Wilson 95% (%)", "TNR, Wilson 95% (%)"],
                         [[f"<code>{esc(s['sinal'])}</code>", esc(s.get("descricao") or ""), s["vp"], s["fn"], s["fp"], s["vn"], nd(s["tpr"]), nd(s["tnr"]), nd(s["produto"]), wilson_(s.get("ic_tpr")), wilson_(s.get("ic_tnr"))] for s in sinais], raw=True)
@@ -3012,38 +3079,38 @@ def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preench
         item_sessao = (f"<strong>Sessão de revisão.</strong> Os {len(amostra)} relatórios da amostra são lidos um por vez na <a href='{URL_SESSAO_REVISAO}' target='_blank' rel='noopener'>página da sessão</a>, na ordem sorteada, com um nome neutro no lugar do nome do caso e sem dizer qual está certo; "
                        "a página mede o tempo até a decisão, e o revisor aceita ou recusa, diz se achou o erro e dá a utilidade de 1 a 5.")
     leitura_ = leitura([
-        (f"<strong>O que o produto diz.</strong> TPR x TNR mede se o sinal separa erro de acerto: 1,0 seria pegar todo erro sem acusar acerto nenhum, e 0,25 é o que um sinal jogado ao acaso dá. "
-         f"O intervalo de Wilson do TPR da divergência vai de {wilson_((principal or {}).get('ic_tpr'))}%: com {r['erros']} erros, a tabela mostra a ordem de grandeza e não sustenta ordenar os sinais."),
-        (f"<strong>Por que a divergência acende tanto.</strong> Ela acende quando qualquer intervenção muda o rótulo, e as intervenções mudam o rótulo também quando o modelo está certo: a remoção em "
+        (f"<strong>O que a nota diz.</strong> Ela sobe quando o sinal pega os erros e deixa os acertos em paz (TPR x TNR): 1,0 seria pegar todo erro sem acusar acerto nenhum, e 0,25 é o que um sinal jogado ao acaso dá. "
+         f"A margem de incerteza dos erros pegos pela divergência vai de {wilson_((principal or {}).get('ic_tpr'))}%: com {r['erros']} erros, a tabela mostra a ordem de grandeza e não sustenta ordenar os sinais."),
+        (f"<strong>Por que a divergência acende tanto.</strong> Ela acende quando qualquer intervenção muda a causa respondida, e as intervenções mudam a causa também quando o modelo está certo: a remoção em "
          f"{de((inter.get('remocao') or {}).get('mudou_rotulo'), (inter.get('remocao') or {}).get('n'))} casos, a troca em {de((inter.get('troca') or {}).get('mudou_rotulo'), (inter.get('troca') or {}).get('n'))} e a inferência sem documentação em "
-         f"{de((inter.get('sem_documentacao') or {}).get('mudou_rotulo'), (inter.get('sem_documentacao') or {}).get('n'))}. A documentação pesar na resposta é o esperado, não um conflito; com o mesmo prompt, o rótulo ficou igual em {de(rep.get('manteve'), rep.get('n'))} na repetição da base e em {de((par_troca or {}).get('mesmo_rotulo'), (par_troca or {}).get('n'))} no outro par, então a variação natural não explica essas mudanças."),
-        ("<strong>Só por gatilho.</strong> As quatro intervenções rodaram em todos os casos só por causa da amostra fixa da avaliação. Fora dela, rodam quando a probabilidade está baixa ou a FONTE diverge; o sinal "
+         f"{de((inter.get('sem_documentacao') or {}).get('mudou_rotulo'), (inter.get('sem_documentacao') or {}).get('n'))}. A documentação pesar na resposta é o esperado, não um conflito; com o mesmo prompt, a causa respondida ficou igual em {de(rep.get('manteve'), rep.get('n'))} na repetição da base e em {de((par_troca or {}).get('mesmo_rotulo'), (par_troca or {}).get('n'))} no outro par, então a variação natural não explica essas mudanças."),
+        ("<strong>Só pelo aviso de checagem extra.</strong> As quatro intervenções rodaram em todos os casos só por causa da amostra fixa da avaliação. Fora dela, rodam quando a probabilidade está baixa ou a FONTE diverge; o sinal "
          "<code>por_gatilho</code> conta a divergência assim, a partir desta corrida, sem ter rodado desse jeito. Pela decisão 88, a regra do carimbo de conflito fica como está, e o TCC reporta as duas contas."),
-        (f"<strong>Mutações.</strong> Os 100% são esperados: os nós <code>poda</code> e <code>recuperacao</code> saem em código da entrada mutada e o diff é determinístico. Isso prova que a trilha registra a mudança no nó certo, e que nenhum nó anterior muda, "
+        (f"<strong>Falhas injetadas (mutações).</strong> Por tipo, apontaram o nó previsto " + "; ".join(f'{m["tipo"].replace("_", " ")} {de(m["previsto"], m["aplicaveis"])}' for m in mutacoes) + f". Os 100% são esperados: os nós <code>poda</code> e <code>recuperacao</code> saem em código da entrada mutada e o diff é determinístico. Isso prova que a trilha registra a mudança no nó certo, e que nenhum nó anterior muda, "
          f"mas não diz nada sobre o modelo; o que diz é a coluna \"Rótulo mudou\". \"Sem alvo\" é o caso em que a mutação não tinha o que mudar (sem contrato, corpo que não é JSON). No seletor, o nó <code>diagnostico</code> vem antes da cura e não mudou em nenhum roteiro: lá sim a divergência na cura diz algo."),
-        (f"<strong>A mutação do verbete repete a troca.</strong> As duas montam o mesmo prompt em {de((par_troca or {}).get('mesmo_prompt'), (par_troca or {}).get('n'))} casos, defeito do desenho do P7: a mutação não trouxe medida nova sobre o modelo e virou uma segunda medida da variação, com o mesmo rótulo em {de((par_troca or {}).get('mesmo_rotulo'), (par_troca or {}).get('n'))}."),
-        (f"<strong>Sonda.</strong> A taxa mede consistência da FONTE, não fidelidade ao mecanismo interno: {de(so.get('cita_plantado', 0), so.get('com_alvo', 0))} casos citaram o verbete plantado e {so.get('mudou_rotulo', 0)} mudaram o rótulo (esses não contam como pós-racionalização). O controle é a repetição da base: "
+        (f"<strong>A mutação do verbete repete a troca.</strong> As duas montam o mesmo prompt em {de((par_troca or {}).get('mesmo_prompt'), (par_troca or {}).get('n'))} casos, defeito do desenho do P7: a mutação não trouxe medida nova sobre o modelo e virou uma segunda medida da variação, com a mesma causa respondida em {de((par_troca or {}).get('mesmo_rotulo'), (par_troca or {}).get('n'))}."),
+        (f"<strong>Sonda.</strong> A taxa mede consistência da FONTE, não fidelidade ao mecanismo interno: {de(so.get('cita_plantado', 0), so.get('com_alvo', 0))} casos citaram o verbete plantado e {so.get('mudou_rotulo', 0)} mudaram a causa respondida (esses não contam como pós-racionalização). O controle é a repetição da base: "
          f"{de(so.get('controle_cita', 0), so.get('controle_n', 0))} citaram o mesmo verbete sem nada plantado."),
         item_sessao,
     ])
     html_ = f'''<section id="trilha" hidden>
-<h1>Avaliação da trilha: a trilha do agente aponta os erros reais e o nó certo quando a falha é injetada?</h1>
+<h1>Avaliação da trilha: ela aponta os erros reais e o passo certo quando a falha é injetada?</h1>
 <p class="lead">{lead}</p>
 {kpis(itens_kpi)}
-<h2>TPR e TNR por sinal</h2>
-<div class="chart"><canvas id="g-tri-sinais"></canvas></div>
-<h2>Mutações pelo nó apontado</h2>
+<h2>Quanto cada sinal pega os erros e deixa os acertos em paz</h2>
+<div class="chart alto"><canvas id="g-tri-sinais"></canvas></div>
+<h2>Falhas injetadas: o nó que a trilha apontou</h2>
 <div class="chart"><canvas id="g-tri-mutacoes"></canvas></div>
 <h2>Os sinais da trilha contra os erros reais</h2>
-<p>Bloco <code>tb_f4_trilha_sinais</code> de <code>trilha.md</code>; o sinal <code>por_gatilho</code> é a divergência contada por gatilho, sem a amostra fixa.</p>
+<p>Bloco <code>tb_f4_trilha_sinais</code> de <code>trilha.md</code>; o sinal <code>por_gatilho</code> é a divergência contada pelo aviso de checagem extra, sem a amostra fixa.</p>
 {tab_sinais}
 <h2>Intervenções</h2>
-<p>Blocos <code>tb_f4_trilha_intervencoes</code> e <code>tb_f4_trilha_sonda</code>: as quatro intervenções da especificação (6.1) rodaram em todos os casos pela amostra fixa; "só limite inferior" é a queda de probabilidade que o Ollama não pôde pontuar porque o rótulo saiu das alternativas devolvidas (risco 6).</p>
+<p>Blocos <code>tb_f4_trilha_intervencoes</code> e <code>tb_f4_trilha_sonda</code>: as quatro intervenções da especificação (6.1) rodaram em todos os casos pela amostra fixa; "só limite inferior" é a queda de probabilidade que o Ollama não pôde pontuar porque a causa respondida saiu das alternativas devolvidas (risco 6).</p>
 {tab_inter}
 <h2>O mesmo prompt, duas vezes</h2>
-<p>Bloco <code>tb_f4_trilha_mesmo_prompt</code>: com a temperatura de 0,1, o mesmo prompt nem sempre dá a mesma resposta; o rótulo é o que varia menos.</p>
+<p>Bloco <code>tb_f4_trilha_mesmo_prompt</code>: com a temperatura de 0,1, o mesmo prompt nem sempre dá a mesma resposta; a causa respondida é o que varia menos.</p>
 {tab_pares}
-<h2>Mutações programadas</h2>
+<h2>Falhas injetadas de propósito (mutações)</h2>
 <p>Blocos <code>tb_f4_trilha_mutacoes</code> e <code>tb_f4_trilha_seletor</code>.</p>
 {tab_mut}
 {tab_sel}

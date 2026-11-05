@@ -49,6 +49,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import painel_textos as pt
+import painel_leituras as pl
 import painel_topicos as tp
 
 RAIZ = Path(__file__).resolve().parent.parent
@@ -512,7 +513,7 @@ function pareto(){
 function bootstrap(){
   const conj = document.getElementById('sel-boot').value; const ent = Object.entries(D.bootstrap[conj]).filter(([k,v]) => v.p >= 0.005).sort((a,b) => b[1].p - a[1].p);
   grafico('g-boot', {type:'bar', data:{labels: ent.map(e => e[0]), datasets:[{label:'P(top-1)', data: ent.map(e => Math.round(e[1].p*1000)/10), backgroundColor: ent.map(e => cor(e[0].split('/')[0]))}]},
-    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{title:{display:true,text:'% das réplicas em que é o melhor'}, min:0, max:100}}, plugins:{legend:{display:false}, tooltip:{callbacks:{label: c => c.formattedValue+'% · IC 95% ['+D.bootstrap[conj][c.label].ic.join('–')+']'}}}}});
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{title:{display:true,text:'% dos sorteios em que é o melhor'}, min:0, max:100}}, plugins:{legend:{display:false}, tooltip:{callbacks:{label: c => c.formattedValue+'% · IC 95% ['+D.bootstrap[conj][c.label].ic.join('–')+']'}}}}});
 }
 function documentacao(){
   const eps = ['1','2','3'];
@@ -528,7 +529,7 @@ function rejeicoes(){
 }
 function recuperacao(){
   grafico('g-rec', {type:'line', data:{labels: Ls.map(l => 'L'+l), datasets: D.modelos.map(m => ({label:m, data: Ls.map(l => (D.recuperacao[m][l]||{}).hit3_90), borderColor:cor(m), backgroundColor:cor(m), tension:.2, pointRadius:4}))},
-    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'hit@3 nos 90 (%)'}, suggestedMin:70, suggestedMax:85}}, plugins:{tooltip:{callbacks:{afterLabel: c => { const r = D.recuperacao[c.dataset.label][String(c.dataIndex)]; return `${r.verbetes} verbetes (${r.novos} novos), ~${r.tokens} tokens`; }}}}}});
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'verbete certo entre os três, nos 90 casos (%)'}, suggestedMin:70, suggestedMax:85}}, plugins:{tooltip:{callbacks:{afterLabel: c => { const r = D.recuperacao[c.dataset.label][String(c.dataIndex)]; return `${r.verbetes} verbetes (${r.novos} novos), ~${r.tokens} tokens`; }}}}}});
 }
 function custo(){
   grafico('g-custo', {type:'bar', data:{labels: Ls.map(l => 'diagnóstico com L'+l), datasets: D.modelos.map(m => ({label:m, data: Ls.map(l => (D.custo[m][l]||{}).segundos), backgroundColor:cor(m)}))},
@@ -594,7 +595,7 @@ def kpis(dados: dict, vered: dict) -> str:
     itens = [
         ("Modelo escolhido", f'{v["modelo"]}', f'biblioteca L{v["biblioteca_epoca"]} · {vered[v["modelo"]]["licenca"]}'),
         ("Acurácia balanceada (36)", f'{fmt(v["acuracia_balanceada_36"])}%', f'acerto simples {fmt(v["acerto_36"])}%'),
-        ("P(top-1) no bootstrap", f'{fmt(p36 * 100)}%', f'{dados["bootstrap_meta"]["n"]} réplicas, nos 36'),
+        ("Venceu nos sorteios dos casos", f'{fmt(p36 * 100)}%', f'{dados["bootstrap_meta"]["n"]} sorteios dos 36 casos (P(top-1))'),
         ("Custo por diagnóstico", f'{fmt(v["segundos_mediana_36"])} s', "mediana nos 36, máquina-alvo i5"),
         ("Inferências da bateria", f'{meta["n_diagnosticos"] + meta["n_propostas"]:,}'.replace(",", "."), f'{meta["n_diagnosticos"]:,} diagnósticos + {meta["n_propostas"]} propostas'.replace(",", ".")),
         ("Erros de infraestrutura", f'{meta["erros_infra"]}', "em 4 modelos × 4 versões × 90 casos"),
@@ -841,7 +842,7 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
     dados_json = json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
     mapa_desenho = {"visao": ["linhaCurvas", "barrasFases"], "fase3": ["documentacao", "rejeicoes", "recuperacao", "custo", "revisao"],
                     "decisao": ["pareto", "bootstrap"], "fases2": ["f2b", "f2a"]} | tp.DESENHAR_TOPICOS
-    seletores = {"sel-conj": "linhaCurvas", "sel-met": "linhaCurvas", "sel-fases": "barrasFases", "sel-boot": "bootstrap"} | tp.SELETORES_TOPICOS
+    seletores = {"sel-conj": "linhaCurvas", "sel-met": "linhaCurvas", "sel-fases": "barrasFases", "sel-boot": "bootstrap", "sel-mod-l": "modGraficos", "sel-cmp-conj": "cmpEtapas", "sel-cmp-met": "cmpEtapas"} | tp.SELETORES_TOPICOS
     js = (JS.replace("__JS_TOPICOS__", tp.JS_TOPICOS).replace("__MAPA_DESENHO__", json.dumps(mapa_desenho))
           .replace("__SELETORES__", json.dumps(seletores)))
     nav = "".join(f'<span class="grupo">{html.escape(grupo)}</span>' + "".join(f'<button data-alvo="{sid}">{html.escape(nome)}</button>' for sid, nome, _ in abas)
@@ -886,8 +887,11 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <p>Na Fase 2-B, o <code>phi4-mini:3.8b</code> não aproveitou documentação nenhuma e o <code>qwen2.5-coder:1.5b</code> (e suas variantes de quantização) não fez a tarefa. Os números estão na seção "Fases 2-A e 2-B" e nas tabelas entre fases.</p>
 <h2>Acerto por classe de defeito (90 casos)</h2>
 <p>As seis classes seguem as fases de um compilador: léxica (o corpo é legível?), sintática (a forma bate?), semântica (tipos e domínios), tradução (mapeamento entre camadas), runtime (tempo e estado) e efeito (o que o usuário vê). A classe tradução é a mais difícil para todos.</p>
+<div class="controles"><label>Versão da biblioteca <select id="sel-mod-l"><option value="0">L0, a original</option><option value="1">L1, depois da época 1</option><option value="2">L2, depois da época 2</option><option value="3">L3, depois da época 3</option></select></label></div>
+<div class="chart"><canvas id="g-mod-classe"></canvas></div>
 {heatmap(dados, "classes", CLASSES, "Classe")}
 <h2>Acerto por nível de dificuldade (90 casos)</h2>
+<div class="chart baixo"><canvas id="g-mod-nivel"></canvas></div>
 {heatmap(dados, "niveis", NIVEIS, "Nível")}
 </section>
 
@@ -982,6 +986,10 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <section id="comparacao" hidden>
 <h1>Entre fases: o que cada etapa acrescentou</h1>
 {B("cf_leitura")}
+<h2>O que cada etapa acrescentou</h2>
+<div class="controles"><label>Conjunto <select id="sel-cmp-conj"><option value="36">36 de avaliação</option><option value="90">90 (todos)</option></select></label>
+<label>Medida <select id="sel-cmp-met"><option value="acerto">acerto</option><option value="balanceada">acurácia balanceada</option></select></label></div>
+<div class="chart"><canvas id="g-cmp-etapas"></canvas></div>
 <h2>Acerto (90 casos)</h2>{B("cf_acerto_90")}
 <h2>Acurácia balanceada (90 casos)</h2>{B("cf_balanceada_90")}
 <h2>Acerto (36 de avaliação)</h2>{B("cf_acerto_36")}
@@ -1019,7 +1027,7 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <li><strong>Sonda de detecção de correção</strong>: o modelo percebe, ao rever um caso corrigido, que a própria nota ficou desatualizada?</li>
 </ul>
 <p class="nota">Os resultados estão nas abas Fase 3-B (inéditos e pontes de versão), Troca cruzada e Fechamento. O estado de cada corrida e o comando pronto estão na aba Roadmap; as decisões que esperam resposta, na aba Pendências.</p>
-<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>comparativo_qwen_coder.json</code>, <code>fase3b_ineditos/resumo_fase3.json</code>, <code>curadoria.json</code>, <code>experimento_recuperador.json</code>, <code>ablacao_base_instruct/resumo_metricas.json</code>, <code>analise_fase3b.json</code>, o relatório <code>fase-3b-relatorio.md</code>, os levantamentos bibliográficos e o README (abas por tópico, <code>ferramentas/painel_topicos.py</code>); <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
+<div class="rodape">Fontes: <code>resumo_fase3.json</code> ({html.escape(dados["meta"]["resumo_gerado_em"])}), <code>comparacao_fases.json</code> ({html.escape(dados["meta"]["comparacao_gerado_em"])}), <code>decisao_modelo.json</code> ({html.escape(dados["meta"]["decisao_gerado_em"])}), resumos das Fases 2-A/2-B, <code>tabelas_relatorio.md</code> e as figuras 01–18 de <code>resultados_alvo/graficos/</code>; <code>comparativo_qwen_coder.json</code>, <code>fase3b_ineditos/resumo_fase3.json</code>, <code>curadoria.json</code>, <code>experimento_recuperador.json</code>, <code>ablacao_base_instruct/resumo_metricas.json</code>, <code>analise_fase3b.json</code>, o relatório <code>fase-3b-relatorio.md</code>, os levantamentos bibliográficos e o <code>DETALHES-TECNICOS.md</code> (abas por tópico, <code>ferramentas/painel_topicos.py</code>); <code>pendencias.md</code> e <code>roadmap.md</code> do Memorial (fichas e tabelas lidas por <code>ferramentas/painel_textos.py</code>). Gerado por <code>ferramentas/gerar_dashboard.py</code>; nenhum número foi digitado à mão.</div>
 </section>
 {topicos_html}
 </main>
@@ -1151,7 +1159,9 @@ def main() -> None:
         "recuperador": ler_json(EXP / "resultados_alvo" / "recuperador" / "experimento_recuperador.json"),
         "ablacao": ler_json(EXP / "resultados_alvo" / "ablacao_base_instruct" / "resumo_metricas.json"),
         "medicao_mcp": ler_json(medicao) if medicao.exists() else None,
-        "readme": (RAIZ / "README.md").read_text(encoding="utf-8"),
+        # ! Alteração de IA - Revisar: (05/11/2026) a tabela de ferramentas é lida de DETALHES-TECNICOS.md.
+        # ! Motivo: a seção "Ferramentas de apoio" saiu do README para o documento técnico, a pedido do Eric; lendo o README, a aba Ferramental quebraria ao gerar.
+        "readme": (RAIZ / "DETALHES-TECNICOS.md").read_text(encoding="utf-8"),
         "analise3b": ler_json(F3 / "analise_fase3b.json") if (F3 / "analise_fase3b.json").exists() else None,
         "relatorio3b": ((MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8")
                         if (MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").exists() else None),
@@ -1160,7 +1170,9 @@ def main() -> None:
         **contexto_fase4(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
-    html_final = pagina(dados, blocos, figs, pend, road, topicos_html)
+    # ! Alteração de IA - Revisar: (05/11/2026) a página montada passa por painel_leituras.aplicar: "Como ler" em cada gráfico e dados em "Mais informações".
+    # ! Motivo: pedido do Eric em 05/11/2026; aplicar aqui vale para todas as abas, e o teste acusa gráfico que chegue sem explicação.
+    html_final = pl.aplicar(pagina(dados, blocos, figs, pend, road, topicos_html))
     saida = Path(args.saida)
     if args.check:
         atual = saida.read_text(encoding="utf-8") if saida.exists() else ""

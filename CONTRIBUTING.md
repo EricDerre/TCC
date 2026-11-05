@@ -6,7 +6,7 @@ Este repositório é o Trabalho de Conclusão de Curso de um grupo de nove pesso
 
 ## Antes de começar
 
-1. Leia o [README](README.md): ele explica o que é o ambiente-alvo, o que já foi medido e como instalar e rodar tudo.
+1. Leia o [README](README.md): ele explica o que é o ambiente-alvo, o que já foi medido e como instalar e rodar tudo. O detalhe técnico, os scripts e os testes estão em [Detalhes técnicos](DETALHES-TECNICOS.md). <!-- ! Alteração de IA - Revisar: (05/11/2026) item aponta também para DETALHES-TECNICOS.md. ! Motivo: os testes e os scripts saíram do README nesta data, e quem vai contribuir procuraria lá. -->
 2. Instale o ambiente pelo caminho descrito lá (`Cobaia.exe` no Windows ou `install.*` nos três sistemas). Os experimentos com modelos locais só precisam do Ollama; o site e a API não.
 3. Veja o [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN) e o [roadmap](Documentacao/memorial/roadmap.md) para saber em que fase o trabalho está e o que ainda falta rodar.
 
@@ -21,7 +21,7 @@ Este repositório é o Trabalho de Conclusão de Curso de um grupo de nove pesso
 ## Convenções de código
 
 - **Python:** PEP 8, nomes em `snake_case` e em português (`carregar_biblioteca`, `avaliar_registro`), verificados com `ruff`. Só biblioteca padrão nos scripts de `experimentos/` e de `ferramentas/`; a CobaiaAPI usa o que está em `requirements.txt`.
-- **PHP do CobaiaFront:** é código legado cedido por um integrante e fica **intocado**, inclusive os defeitos listados no README em "Problemas conhecidos". Correções entram só na CobaiaAPI ou nos instaladores.
+- **PHP do CobaiaFront:** é código legado cedido por um integrante e fica **intocado**, inclusive os defeitos listados em [Detalhes técnicos](DETALHES-TECNICOS.md) em "Problemas conhecidos". Correções entram só na CobaiaAPI ou nos instaladores.
 - **PowerShell (`.ps1`):** sempre em UTF-8 com BOM e sem travessão nas strings; o Windows PowerShell 5.1 lê o arquivo sem BOM na página de código ANSI e o travessão quebra o parse.
 - **SQL:** conferir as colunas reais das tabelas antes de escrever uma consulta; não assumir nomes por convenção.
 - **Comentários:** linguagem técnica amarrada ao processo real (função, tabela, tela, mensagem de erro), sem jargão teórico.

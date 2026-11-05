@@ -17,7 +17,9 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 RAIZ = Path(__file__).resolve().parents[1]
 PASTAS_MD = ("Documentacao", "claude-memoria", ".claude")
-ARQUIVOS_MD_RAIZ = ("README.md",)
+# ! Alteração de IA - Revisar: (05/11/2026) a conferência passa a cobrir DETALHES-TECNICOS.md.
+# ! Motivo: a parte técnica saiu do README para esse arquivo; sem isso, os links e as frases obsoletas de lá ficariam sem conferência.
+ARQUIVOS_MD_RAIZ = ("README.md", "DETALHES-TECNICOS.md")
 OBSOLETAS_PADRAO = [
     "bateria não executada", "aguardando decisão do Eric", "31/08/2026 a 12/09/2026", "em implementação (Fase 3)",
     "26 códigos de rejeição", "172 verificações", "Fase 3 (plano aprovado)",

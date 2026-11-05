@@ -1,0 +1,140 @@
+{
+ "_tag": "! Alteração de IA - Revisar: registro da conferência do texto novo do README e do documento do TCC, versão 3, em 05/11/2026: o que o revisor (agente Sonnet, só leitura) achou e as correções aplicadas, com o trecho antigo, o novo e o motivo.",
+ "_motivo": "! Motivo: o README e a seção 6 do TCC foram reescritos com figuras e poucas frases, e frase curta tende a dizer mais do que o dado sustenta; o registro mostra ao grupo o que foi corrigido, como nas versões 1 e 2.",
+ "data": "2026-11-05",
+ "o_que": "O revisor conferiu cerca de 120 números e cerca de 30 afirmações contra as fontes e abriu as 18 figuras citadas. Nenhum número estava errado. Achou 10 afirmações que diziam mais do que a fonte sustenta ou que tinham perdido a ressalva, e 6 pontos menores de figura, de linguagem e de referência cruzada. Todas as correções abaixo foram conferidas nas fontes antes de aplicar. Os parágrafos da versão 2 que foram para a seção 6.9 não mudaram e não entram nesta conferência, porque já tinham sido conferidos.",
+ "correcoes": [
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "**O que a figura mostra:** o verbete certo leva o granite4.2:8b a 100,0%, e a documentação errada o derruba para bem abaixo do que ele acertava sem documentação nenhuma <!-- fonte: fase-2b-relatorio-por-modelo.md §4 e §6 -->.",
+   "para": "**O que a figura mostra:** com só o verbete certo, o granite4.2:8b chega a 100,0%; é o teto da recuperação, e não o que o agente alcança, que é 76,7% com a biblioteca recuperada. A documentação errada o derruba para bem abaixo do que ele acertava sem documentação nenhuma <!-- fonte: fase-2b-relatorio-por-modelo.md §3, §4 e §6 -->.",
+   "motivo": "Os 100,0% são com só o verbete certo, que descreve a causa: é o teto da recuperação, por desenho, e não o que o agente alcança em operação (76,7% com a biblioteca recuperada)."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "| Documentação errada entregue ao modelo | O modelo repete a causa plantada em 93,3% e 95,6% das respostas |",
+   "para": "| Verbete errado com um registro de incidente falso | O granite4.2:8b e o qwen2.5-coder:3b repetem a causa plantada em 93,3% e 95,6% das respostas |",
+   "motivo": "Os 93,3% e 95,6% são da condição A5, um verbete errado com um registro de incidente falso; com verbetes plausíveis errados (A4) o número é outro."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "nos 36 casos de avaliação, só o qwen2.5:7b saiu do lugar, de 77,8% a 88,9% de acerto com a primeira versão da biblioteca escrita por ele (L1) <!-- fonte: fase-3-relatorio-por-modelo.md §3, bloco curva_acerto -->.",
+   "para": "nos 36 casos de avaliação, só o qwen2.5:7b ganhou mais de um caso, de 77,8% a 88,9% de acerto com a primeira versão da biblioteca escrita por ele (L1). Mesmo esse ganho fica abaixo do efeito mínimo detectável com 36 casos, de 19,4 pontos, isto é, abaixo do que esse número de casos consegue comprovar <!-- fonte: fase-3-relatorio-por-modelo.md §3, bloco curva_acerto, e §4, bloco mde -->.",
+   "motivo": "Os dois Coder também sobem na figura, em 1 caso; e o ganho do qwen2.5:7b, de 4 casos, fica abaixo do efeito mínimo detectável com 36 casos."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "dos 36 inéditos, 25. A maior parte do que sobra não passa por nenhuma página <!-- fonte: fase-4-relatorio.md §3 -->.",
+   "para": "dos 36 inéditos, 25. Nos casos de avaliação, a maior parte do que sobra não passa por nenhuma página; nos inéditos, a maior parte depende de uma falha armada pelo próprio teste <!-- fonte: fase-4-relatorio.md §3; reproducibilidade_ineditos.json, fora_por_motivo -->.",
+   "motivo": "A frase valia só para os 72 casos (22 de 35); nos inéditos, 6 dos 11 que sobram são de falha armada pelo teste."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "mostrou que os verbetes escritos pelo modelo não são entregues pela busca",
+   "para": "mostrou que os verbetes novos escritos pelo modelo não são entregues pela busca",
+   "motivo": "O relatório da Pré-Fase 4 (§3.2) fala dos verbetes novos; as notas que o modelo anexa a verbetes já existentes chegam ao contexto."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "Lidas juntas, essas relações sugerem que o que mais moveu o acerto foi a informação que chega ao modelo, como a documentação certa e o caso que diz o que mudou, e não o que o modelo escreve para si; e que o que custa tempo é o tamanho do que ele lê.",
+   "para": "Lidas juntas, essas relações sugerem que a informação que chega ao modelo, como a documentação certa e o caso que diz o que mudou, moveu mais o acerto do que a biblioteca escrita por ele, cujo ganho no qwen2.5:7b não se repetiu nos casos inéditos; o caso revisado vem de uma só repetição. O que custa tempo é o tamanho do que o modelo lê.",
+   "motivo": "A frase omitia o ganho do qwen2.5:7b com a própria biblioteca e dava o caso revisado como efeito isolado, quando vem de uma corrida repetida (18 para 18b)."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "A linha vertical no ponto escolhido é a margem de incerteza.\n\n**O que a figura mostra:** pela regra fixada",
+   "para": "A linha vertical no ponto escolhido é a margem de incerteza. Entre versões da biblioteca de um mesmo modelo, o tempo não se compara, porque foi medido em momentos diferentes da corrida.\n\n**O que a figura mostra:** pela regra fixada",
+   "motivo": "O relatório da Fase 3 (§8) avisa que o tempo de versões diferentes da biblioteca não é comparável como custo, e a figura convida essa leitura."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "a biblioteca ajuda todos os modelos, e os menores ganham mais:",
+   "para": "a biblioteca ajuda os quatro modelos da figura, e quem acertava menos ganha mais:",
+   "motivo": "A figura tem quatro modelos; na Fase 2-B, o phi4-mini não aproveitou a documentação. E os dois modelos de 7 bilhões de parâmetros não ganham igual, então o que acompanha o ganho é o acerto de partida, não o tamanho."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "e a hipótese H1 segue não confirmada <!-- fonte: fase-3b-relatorio.md §4 -->.",
+   "para": "e a hipótese H1, de que a última versão da biblioteca escrita pelo modelo acerta mais que a original, segue não confirmada <!-- fonte: fase-3b-relatorio.md §4 -->.",
+   "motivo": "H1 aparecia sem dizer o que afirmava."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "O número na faixa é a quantidade de casos.",
+   "para": "O número na faixa é a quantidade de casos; as faixas estreitas demais ficam sem número, e o valor delas está na tabela da figura.",
+   "motivo": "As faixas de 2 e de 1 caso não têm número."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "De cima para baixo, o que cada corte faria, estimado sem rodar o modelo.",
+   "para": "De cima para baixo, o que cada corte faria, estimado sem rodar o modelo. A linha cinza não é um corte a mais: mostra, só para comparar, o prompt sem nenhuma árvore.",
+   "motivo": "A linha cinza não era explicada, e ela dá mais prompts acima do limite que o corte anterior."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "porque em boa parte dos casos a poda levava ao modelo o primeiro produto normal da lista.",
+   "para": "porque em boa parte dos casos a poda, o corte em código do que vai para o modelo, levava a ele o primeiro produto normal da lista.",
+   "motivo": "Termo sem explicação na primeira menção da seção."
+  },
+  {
+   "arquivo": "Documentacao/TCC - ABNT 14724 - V1.md",
+   "de": "| Serve para escolher o que vai para revisão, não para garantir | 6.7 |",
+   "para": "| Serve para escolher o que vai para revisão, não para garantir | 6.7 e 6.9.6 |",
+   "motivo": "Os números vêm da corrida 16, que está na seção 6.9.6."
+  },
+  {
+   "arquivo": "README.md",
+   "de": "seguiram um verbete errado em 93% e 96% dos casos.",
+   "para": "seguiram um verbete errado, acompanhado de um registro de incidente falso, em 93% e 96% dos casos.",
+   "motivo": "Os 93,3% e 95,6% são da condição A5, um verbete errado com um registro de incidente falso; com verbetes plausíveis errados (A4) o número é outro."
+  },
+  {
+   "arquivo": "README.md",
+   "de": "Só o `qwen2.5:7b` sobe de forma visível com a biblioteca que ele mesmo escreveu, de 78% para 89%.",
+   "para": "Só o `qwen2.5:7b` ganha mais de um caso com a biblioteca que ele mesmo escreveu, de 78% para 89%, e mesmo isso fica abaixo do que 36 casos conseguem comprovar.",
+   "motivo": "Os dois Coder também sobem na figura, em 1 caso; e o ganho do qwen2.5:7b, de 4 casos, fica abaixo do efeito mínimo detectável com 36 casos."
+  },
+  {
+   "arquivo": "README.md",
+   "de": "a documentação certa ajuda todos os modelos, e os menores ganham mais:",
+   "para": "a documentação certa ajuda os quatro modelos da figura, e quem acertava menos ganha mais:",
+   "motivo": "A figura tem quatro modelos; na Fase 2-B, o phi4-mini não aproveitou a documentação. E os dois modelos de 7 bilhões de parâmetros não ganham igual, então o que acompanha o ganho é o acerto de partida, não o tamanho."
+  },
+  {
+   "arquivo": "README.md",
+   "de": "com só 36 casos, o valor verdadeiro pode estar em qualquer lugar dela.",
+   "para": "com só 36 casos, o valor verdadeiro pode estar em qualquer lugar dela. Entre versões da biblioteca de um mesmo modelo, o tempo não se compara, porque foi medido em momentos diferentes da corrida.",
+   "motivo": "O relatório da Fase 3 (§8) avisa que o tempo de versões diferentes da biblioteca não é comparável como custo, e a figura convida essa leitura."
+  },
+  {
+   "arquivo": "README.md",
+   "de": "**O que isso mostra:** o selo separa bem. No alto,",
+   "para": "**O que isso mostra:** o selo separa os extremos. No alto,",
+   "motivo": "\"Separa bem\" dizia mais que os números: o selo médio ainda erra 4 em 26, e o alto, 3 em 37."
+  },
+  {
+   "arquivo": "README.md",
+   "de": "porque o prompt ficou maior que o limite do plano",
+   "para": "porque o prompt, o texto que o modelo recebe, ficou maior que o limite do plano",
+   "motivo": "Termo sem explicação na primeira menção."
+  },
+  {
+   "arquivo": "ferramentas/painel_leituras.py",
+   "de": "e os verbetes que ele mesmo escreveu nunca chegaram ao contexto de nenhum caso.",
+   "para": "e os verbetes novos que ele mesmo escreveu nunca chegaram ao contexto de nenhum caso.",
+   "motivo": "Mesma correção do atlas no documento do TCC."
+  },
+  {
+   "arquivo": "ferramentas/painel_leituras.py",
+   "de": "Os losangos são as combinações que nenhuma outra supera ao mesmo tempo em acerto, tempo e risco.\",",
+   "para": "Os losangos são as combinações que nenhuma outra supera ao mesmo tempo em acerto, tempo e risco. Entre versões da biblioteca de um mesmo modelo, o tempo não se compara, porque foi medido em momentos diferentes da corrida.\",",
+   "motivo": "O relatório da Fase 3 (§8) avisa que o tempo de versões diferentes da biblioteca não é comparável como custo, e a figura convida essa leitura."
+  },
+  {
+   "arquivo": "Programacao/AgenteCore/experimentos/gerar_figuras_documentos.py",
+   "de": "Abre a página no Chromium e segue os passos, olhando a tela e as chamadas à API.",
+   "para": "Abre a página no navegador e segue os passos, olhando a tela e as chamadas à API.",
+   "motivo": "Termo sem explicação na figura."
+  }
+ ]
+}

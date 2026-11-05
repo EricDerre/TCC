@@ -16,6 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gerar_dashboard as gd  # noqa: E402
 import painel_textos as pt  # noqa: E402
+import painel_leituras as pl  # noqa: E402
 import painel_topicos as tp  # noqa: E402
 
 
@@ -38,7 +39,7 @@ def _ctx() -> dict:
         "recuperador": gd.ler_json(gd.EXP / "resultados_alvo" / "recuperador" / "experimento_recuperador.json"),
         "ablacao": gd.ler_json(gd.EXP / "resultados_alvo" / "ablacao_base_instruct" / "resumo_metricas.json"),
         "medicao_mcp": gd.ler_json(medicao) if medicao.exists() else None,
-        "readme": (gd.RAIZ / "README.md").read_text(encoding="utf-8"),
+        "readme": (gd.RAIZ / "DETALHES-TECNICOS.md").read_text(encoding="utf-8"),
         "analise3b": gd.ler_json(gd.F3 / "analise_fase3b.json"),
         "relatorio3b": (gd.MEMORIAL / "3-resultados-e-analises" / "fase-3b-relatorio.md").read_text(encoding="utf-8"),
         "pend": pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"),
@@ -645,7 +646,9 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertEqual([x["recusas"] for x in t["filtros"]], [x["recusas"] for x in bibl["filtros"]])
         if bibl.get("reavaliacao"):
             self.assertEqual(t["reavaliacao"]["b"], bibl["reavaliacao"]["b"])
-            self.assertIn(f'b = {bibl["reavaliacao"]["b"]}', secao)
+            # ! Alteração de IA - Revisar: (05/11/2026) o teste confere a frase "N passaram a acertar e M passaram a errar" no lugar de "b = N".
+            # ! Motivo: a aba deixou de mostrar b e c soltos no texto à vista; os mesmos dois números continuam conferidos contra o JSON.
+            self.assertIn(f'{bibl["reavaliacao"]["b"]} passaram a acertar e {bibl["reavaliacao"]["c"]} passaram a errar', secao)
         self.assertIn(f'{r["aceitas"]} de {r["propostas"]}', secao)
         self.assertIn('id="g-bib-filtros"', secao)
         self.assertIn("tb_f4_biblioteca_filtros", secao)
@@ -684,11 +687,13 @@ class TestesAbasPorTopico(unittest.TestCase):
         d, h = tp.secao_cenarios(sint, None, self.ctx["road"], gd.cartoes_corridas)
         # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) as execuções sem Task Success aparecem na aba, com a falha da cura.
         # ! Motivo: o Eric decide pelo painel; na corrida 21 o zero do login precisa vir com o motivo, lido do JSON.
-        self.assertIn("Execuções sem Task Success", h)
+        # ! Alteração de IA - Revisar: (05/11/2026) o título do bloco passou de "Execuções sem Task Success" para "Execuções que não chegaram ao resultado (sem Task Success)".
+        # ! Motivo: o Eric pediu texto à vista sem a sigla solta; o teste continua conferindo que o bloco aparece só quando há execução sem sucesso.
+        self.assertIn("Execuções que não chegaram ao resultado", h)
         self.assertIn("candidato_invalido", h)
         self.assertIn("tb_f4_cenarios_sem_sucesso", h)
         _, h_sem = tp.secao_cenarios({**sint, "sem_task_success": []}, None, self.ctx["road"], gd.cartoes_corridas)
-        self.assertNotIn("Execuções sem Task Success", h_sem)
+        self.assertNotIn("Execuções que não chegaram ao resultado", h_sem)
         # ! Alteração de IA - Revisar: (04/11/2026, corrida 21b) com a repetição, os números principais são os dela, a comparação fica cenário a
         # cenário e a execução sem Task Success da corrida 21 continua visível, com o nome da corrida.
         # ! Motivo: a 21b roda com a correção da cura e é a leitura vigente; a 21 é o registro de como o defeito apareceu e não pode sumir do painel.
@@ -783,7 +788,9 @@ class TestesAbasPorTopico(unittest.TestCase):
         # inferências de mesmo prompt; a tabela caso a caso só entra depois de a planilha da sessão de revisão estar preenchida.
         # ! Motivo: a sessão é às cegas e o painel é o que o Eric lê; a tabela diz quais relatórios estão certos, e a aba publicada a
         # entregaria antes da sessão. O por_gatilho é o que o agente mostra fora da avaliação; sem o controle, a sonda superestima.
-        self.assertIn("por gatilho", h)
+        # ! Alteração de IA - Revisar: (05/11/2026) a frase conferida passou de "por gatilho" para "aviso de checagem extra".
+        # ! Motivo: a aba deixou de usar "gatilho" no texto à vista; o teste continua conferindo que o cartão do sinal por esse aviso existe.
+        self.assertIn("aviso de checagem extra", h)
         self.assertIn("0,54", h, "o produto do sinal por gatilho")
         self.assertIn("2 de 30", h, "o controle da sonda")
         self.assertIn("tb_f4_trilha_mesmo_prompt", h)
@@ -911,6 +918,80 @@ class TestesAbasPorTopico(unittest.TestCase):
 
     def teste_dados_dos_topicos_sao_serializaveis(self):
         json.dumps(self.dados_t, ensure_ascii=False)
+
+
+# ! Alteração de IA - Revisar: (05/11/2026) testes das duas regras de painel_leituras: todo gráfico com "Como ler" e nenhum dado cru à vista.
+# ! Motivo: o Eric pediu o gráfico e a leitura à vista e os dados em "mais informações"; sem o teste, a próxima aba nova sairia sem explicação e ninguém notaria.
+class TesteLeituras(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.pagina = (gd.RAIZ / "Documentacao" / "dashboard" / "painel-do-projeto.html").read_text(encoding="utf-8")
+
+    def teste_todo_grafico_tem_como_ler_e_nenhuma_leitura_sobra(self):
+        ids = set(re.findall(r'<canvas id="([^"]+)"', self.pagina))
+        self.assertTrue(ids)
+        self.assertEqual(ids - set(pl.COMO_LER_GRAFICO), set(), "gráfico sem explicação")
+        self.assertEqual(set(pl.COMO_LER_GRAFICO) - ids, set(), "explicação de gráfico que não existe")
+        self.assertEqual(self.pagina.count('class="como-ler"') >= len(ids), True)
+
+    def teste_nenhuma_tabela_de_dados_a_vista(self):
+        ini, fim = self.pagina.index("<main>"), self.pagina.index("</main>")
+        aba, prof, soltas = "", 0, []
+        for m in re.finditer(r'<section id="([^"]+)"|<details|</details>|<table><thead><tr><th[^>]*>(.*?)</th>', self.pagina[ini:fim], re.S):
+            t = m.group(0)
+            if t.startswith("<section"):
+                aba = m.group(1)
+            elif t.startswith("<details"):
+                prof += 1
+            elif t == "</details>":
+                prof -= 1
+            elif prof == 0 and (aba, re.sub(r"<[^>]+>", "", m.group(2)).strip()) not in pl.TABELAS_A_VISTA:
+                soltas.append((aba, m.group(2)[:40]))
+        self.assertEqual(soltas, [])
+
+    def teste_aplicar_recolhe_tabela_com_o_filtro_e_guarda_a_que_e_conteudo(self):
+        tab = '<div class="tabela"><table><thead><tr><th>Modelo</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table></div>'
+        filtro = '<div class="filtros filtro-tabela" data-alvo="x"><button>a</button></div>'
+        conteudo = '<div class="tabela"><table><thead><tr><th>Regra</th></tr></thead><tbody></tbody></table></div>'
+        grafico = '<div class="chart"><canvas id="g-doc"></canvas></div>'
+        html_ = f'<style>a{{}}</style><main><section id="fechamentof4"><h2>Título</h2>{filtro}{tab}{conteudo}{grafico}{tab}</section></main>'
+        saida = pl.aplicar(html_)
+        self.assertIn(f'<summary>Mais informações: Título</summary>{filtro}{tab}</details>', saida)
+        self.assertIn(f'</details>{conteudo}', saida)
+        self.assertIn('<summary>Mais informações: Título (2)</summary>', saida)
+        self.assertIn(f'{grafico}<p class="como-ler"><strong>Como ler:</strong>', saida)
+        self.assertIn(pl.CSS, saida)
+
+    def teste_figura_repetida_vai_para_mais_informacoes_com_a_leitura(self):
+        fig = '<figure><img src="x" alt="Fase 3 · acerto"><figcaption>Figura 12 — Fase 3</figcaption></figure>'
+        saida = pl.aplicar(f'<style></style><main><section id="fase3"><h2>T</h2>{fig}</section></main>')
+        self.assertIn('<details class="mais-info"><summary>Mais informações: figura 12, Fase 3 · acerto</summary>' + fig + '<p class="como-ler">', saida)
+
+    def teste_resposta_simples_entra_e_o_paragrafo_antigo_fica_recolhido(self):
+        for aba, texto in pl.RESPOSTA_SIMPLES.items():
+            self.assertIn(f'<p class="lead">{texto}</p><details class="mais-info"><summary>Mais informações: a resposta com todos os números</summary>', self.pagina, aba)
+            self.assertIn(f'<section id="{aba}"', self.pagina, aba)
+        saida = pl.aplicar('<style></style><main><section id="tela" hidden><h1>T</h1><p class="lead">b + c = 9</p></section></main>')
+        self.assertIn(pl.RESPOSTA_SIMPLES["tela"], saida)
+        self.assertIn("<p>b + c = 9</p></details>", saida)
+
+    def teste_nota_vai_com_a_tabela_e_titulo_sem_conteudo_sai(self):
+        tab = '<div class="tabela"><table><thead><tr><th>Modelo</th></tr></thead><tbody></tbody></table></div>'
+        saida = pl.aplicar(f'<style></style><main><section id="tela"><h2>Dados</h2><p class="nota">Bloco x.</p>{tab}<h2>Outro</h2><p>Texto.</p>{tab}</section></main>')
+        self.assertNotIn("<h2>Dados</h2>", saida)
+        self.assertIn(f'<summary>Mais informações: Dados</summary><p class="nota">Bloco x.</p>{tab}</details>', saida)
+        self.assertIn("<h2>Outro</h2><p>Texto.</p><details", saida)
+
+    def teste_cartoes_de_corrida_so_a_vista_no_roadmap_e_no_fechamento(self):
+        cartao = '<div class="corridas"><article><div class="fatos2"><div>x</div></div></article></div>'
+        saida = pl.aplicar(f'<style></style><main><section id="tela"><h2>As corridas</h2>{cartao}</section><section id="fechamentof4"><h2>Faltam</h2>{cartao}</section></main>')
+        self.assertIn(f'<summary>Mais informações: As corridas</summary>{cartao}</details>', saida)
+        self.assertIn(f'<h2>Faltam</h2>{cartao}', saida)
+
+    def teste_leituras_sem_travessao_nem_seta(self):
+        for texto in list(pl.COMO_LER_GRAFICO.values()) + list(pl.COMO_LER_FIGURA.values()) + list(pl.RESPOSTA_SIMPLES.values()):
+            self.assertNotRegex(texto, "[—→↔]")
+        self.assertEqual(set(pl.COMO_LER_FIGURA), set(gd.FIGURAS))
 
 
 if __name__ == "__main__":
