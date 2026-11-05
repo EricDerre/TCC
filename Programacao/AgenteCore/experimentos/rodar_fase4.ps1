@@ -67,7 +67,7 @@
 #   -TetoProposta N biblioteca: teto de tokens de saida da proposta de edicao (padrao 700)
 #   -SemSeletor     avaliacao_trilha: nao roda a mutacao do seletor na tela (fumaca sem as cobaias; a avaliacao grava na pasta da corrida)
 param(
-    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")][string]$Modo,
+    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")][string]$Modo,
     [Parameter(Mandatory = $true)][string]$Saida,
     [int]$Casos = 0,
     [ValidateSet("chromium", "msedge")][string]$Canal = "chromium",
@@ -98,7 +98,9 @@ $env:RESULTADOS_DIR = $Resultados
 $Aqui = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $Aqui
 $Inicio = Get-Date
-$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca") -or ($Modo -eq "cenarios") -or ($Modo -eq "avaliacao_trilha")
+# ! Alteracao de IA - Revisar: (05/11/2026, decisoes 91 e 92) os modos experimento_prompt (corrida 23) e ineditos (corrida 24) rodam com modelo, em texto.
+# ! Motivo: as duas corridas precisam das mesmas conferencias de Ollama, RAM e versao antes e depois das outras corridas com modelo.
+$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca") -or ($Modo -eq "cenarios") -or ($Modo -eq "avaliacao_trilha") -or ($Modo -eq "experimento_prompt") -or ($Modo -eq "ineditos")
 $Venv = Join-Path $Aqui "..\.venv\Scripts\python.exe"
 if (-not (Test-Path $Venv)) {
     Write-Host "!! venv do AgenteCore nao encontrada em $Venv (rode install.py primeiro)"

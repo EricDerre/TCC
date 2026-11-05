@@ -116,7 +116,9 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 # ! Motivo: plano aprovado, seção 5 (P6): `executar_fase4.py --modo cenarios --repeticoes N`.
 # ! Alteração de IA - Revisar: (04/11/2026, P7) o modo `avaliacao_trilha` (corrida 22: a avaliação da própria trilha).
 # ! Motivo: plano aprovado, seção 5 (P7): `executar_fase4.py --modo avaliacao_trilha`; a lógica fica em avaliacao_trilha.py.
-MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")
+# ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) os modos das corridas 23 e 24, em corridas_em_texto.py.
+# ! Motivo: as duas corridas rodam em texto, sem navegador, mas pelo mesmo comando e com as mesmas guardas de versão das outras.
+MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")
 REPETICOES_PADRAO = 5                     # corrida 19: cinco repetições por célula (plano, seção 6)
 BASES_DOS_INEDITOS = ("corrida12", "propria")
 CORRIDA12 = "pre_fase4_confianca"         # corrida 12 (06/10/2026): a cópia curada nos 72 casos, k = 3, Ollama 0.34.4 (ponte 0.40.2 pareável)
@@ -621,6 +623,25 @@ def com_guarda_de_versao(esperada: str | None):
 
 # ------------------------------------------------------------------ a tela: o que a corrida 17 faz por caso
 
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) o caso ao vivo da tela leva ao prompt a árvore encurtada e não leva
+# mais a OBSERVAÇÃO ADICIONAL; a observação fica no caso (`observacao_da_poda`), gravada na trilha, fora de `entrada`, que é o que o
+# prompt e a busca na biblioteca leem.
+# ! Motivo: o limite do plano (seção 3.3) passa a valer antes da Fase 5. A OBSERVAÇÃO só repetia contagens que o CORPO e o SINTOMA já
+# dizem, e pesava cerca de 250 caracteres em cada prompt; a leitura `--tela` ainda precisa dela para o bloco `tb_f4_tela_corpo`.
+def caso_vivo_da_tela(item: dict, status: int | None, contrato: str, corpo_caso: str, sintoma: str, podada: dict | None, ref: dict, observacao: str,
+                      corpo_completo: str | None = None) -> dict:
+    """O caso ao vivo de um caso da tela, sem gabarito, com os metadados que o registro oficial lê (classe e nível) e o corpo inteiro da
+    resposta, que só a busca lê (decisão 96)."""
+    arvore = cv.arvore_do_prompt(podada["texto"], ref.get("arvore"), ref.get("nomes")) if podada else None
+    caso = cv.montar_caso(f"{item['id']}@tela", item["requisicao"], status, contrato, corpo_caso, sintoma, arvore=arvore or None)
+    # classe e nível são metadados do caso (não o gabarito): vão no registro oficial do diagnóstico ao vivo
+    caso["classe"], caso["nivel"] = item["classe"], item["nivel"]
+    caso["observacao_da_poda"] = observacao
+    if corpo_completo is not None:
+        caso["corpo_completo"] = corpo_completo
+    return caso
+
+
 class Tela:
     """O que `reproducao` faz por caso, reunido para os modos `reproducao` e `tela` fazerem o mesmo: a corrida de
     referência de cada cenário em modo normal (trilha dourada), o roteiro com o modo do caso ligado, a poda da árvore e
@@ -648,7 +669,7 @@ class Tela:
                                    interativos=captura.get("interativos"))
         chamada, _ = chamada_do_caso(r["chamadas"], cid, pid)
         corpo = inter.corpo(chamada["corpo_sha"]) if chamada and chamada.get("corpo_sha") else None
-        ref = {"arvore": podada["texto"], "aria": captura.get("aria") or "", "corpo": corpo, "chamada": chamada,
+        ref = {"arvore": podada["texto"], "aria": captura.get("aria") or "", "nomes": poda.nomes_dos_nos(captura.get("nos")), "corpo": corpo, "chamada": chamada,
                "passou": r["passou"], "segundos": r["segundos"]}
         self.referencias[chave] = ref
         tid = f"{self.saida}/referencia/{cid}" + (f"/{pid}" if pid else "") + "@normal"
@@ -705,10 +726,7 @@ class Tela:
                            f"{len(diff_ref['valores']) + diff_ref['valores_a_mais']} valor(es) diferente(s)")
             if diff_ref.get("tempo_ms") is not None:
                 observacao += f", chamada em {diff_ref['tempo_ms']:.0f} ms" + (f" (referência {diff_ref['tempo_ref_ms']:.0f} ms)" if diff_ref.get("tempo_ref_ms") is not None else "")
-        caso_vivo = cv.montar_caso(f"{item['id']}@tela", item["requisicao"], status, self.contrato, corpo_caso,
-                                   sintoma, arvore=podada["texto"] if podada else None, observacao=observacao)
-        # classe e nível são metadados do caso (não o gabarito): vão no registro oficial do diagnóstico ao vivo
-        caso_vivo["classe"], caso_vivo["nivel"] = item["classe"], item["nivel"]
+        caso_vivo = caso_vivo_da_tela(item, status, self.contrato, corpo_caso, sintoma, podada, ref, observacao, corpo_completo=corpo)
         return {"item": item, "cenario": cenario_, "usado": usado, "ref": ref, "r": r, "inter": inter, "chamada": chamada, "do_alvo": do_alvo,
                 "corpo": corpo, "diff": diff, "diff_ref": diff_ref, "captura": captura, "podada": podada, "diff_arv": diff_arv, "diff_completa": diff_completa,
                 "comparacao": comparacao, "veredito": veredito, "status": status, "sintoma": sintoma, "observacao": observacao,
@@ -783,7 +801,7 @@ def registro_da_reproducao(d: dict) -> dict:
             "conferencia_falha": (r["conferencia_falha"] or {}).get("nome"), "erro": r["erro"],
             "arvore_antes": podada["antes"] if podada else None, "arvore_depois": podada["depois"] if podada else None,
             "arvore_a_menos": diff_arv["a_menos"] if diff_arv else None, "arvore_a_mais": diff_arv["a_mais"] if diff_arv else None,
-            "corpo_chars": len(corpo) if corpo is not None else None, "caso_chars": len(json.dumps(d["caso_vivo"], ensure_ascii=False)),
+            "corpo_chars": len(corpo) if corpo is not None else None, "caso_chars": cv.tamanho_do_caso(d["caso_vivo"]),
             "diff": {"corpo": diff["corpo"], "forma": diff["forma"], "itens": diff["itens"], "tipos": sorted({x["tipo"] for x in diff["diferencas"]})} if diff else None,
             "sintoma": d["sintoma"], "incidentes": len(inter.incidentes), "chamadas": len(r["chamadas"])}
 
@@ -1084,7 +1102,7 @@ def rodar_tela(args: argparse.Namespace) -> int:
                  "biblioteca": {"rotulo": dv.ROTULO_CURADA, "versao": dv.VERSAO_CURADA, "hash": hash_curada, "origem": "Programacao/AgenteCore/biblioteca_producao"},
                  "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes, "canal": args.canal,
                  "hosts_permitidos": list(ic.HOSTS_PERMITIDOS), "hosts_har": list(ic.CDN_PADRAO), "hosts_silenciosos": list(ic.HOSTS_SILENCIOSOS),
-                 "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "contrato": contrato,
+                 "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "contrato": contrato, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO,
                  "regra_r2": "nos casos que reproduzem, o rótulo da tela e o do fixture, na mesma sessão do Ollama, diferem em no máximo 3 casos"}
     (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
     marco(f"INÍCIO tela: Ollama {versao}, {modelo}, {dv.ROTULO_CURADA} ({hash_curada}), k = {k}, intervenções {args.intervencoes}; "
@@ -1169,7 +1187,7 @@ def rodar_tela(args: argparse.Namespace) -> int:
                               "segundos_tela": sv["registro"]["segundos"], "segundos_fixture": sf["registro"]["segundos"],
                               "segundos_cenario": d["r"]["segundos"], "tokens_entrada_tela": sv["registro"]["tokens_entrada"],
                               "tokens_entrada_fixture": sf["registro"]["tokens_entrada"], "chars_prompt_tela": sv["chars_prompt"],
-                              "chars_prompt_fixture": sf["chars_prompt"], "caso_chars": len(json.dumps(d["caso_vivo"], ensure_ascii=False))}
+                              "chars_prompt_fixture": sf["chars_prompt"], "caso_chars": cv.tamanho_do_caso(d["caso_vivo"])}
                     trilha.gravar(arq_trilha)
                     executar_fase3._gravar(arq_resumo, resumo)
                     resumos.append(resumo)
@@ -1212,6 +1230,18 @@ def rodar_tela(args: argparse.Namespace) -> int:
 
 # ------------------------------------------------------------------ a corrida 19: cura de seletor, sem modelo
 
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) a árvore podada e os nomes de todos os nós da corrida sem quebra,
+# capturados no passo do alvo, para o caso ao vivo da quebra de localizador comparar com a tela quebrada.
+# ! Motivo: a referência da cura só guardava o alvo, e o caso do localizador levava a árvore inteira ao prompt (na lista de produtos,
+# a mesma dupla de botões 14 vezes); com a árvore da referência, o prompt mostra o que a quebra mudou. Sem captura, {}: o caso cai no
+# corte sem referência, e a cura não muda.
+def arvore_da_referencia(captura: dict | None, alvo: dict | None) -> dict:
+    if not captura or not captura.get("nos"):
+        return {}
+    podada = poda.podar_arvore(captura["nos"], captura.get("titulo") or "", alvo=alvo, interativos=captura.get("interativos"))
+    return {"arvore": podada["texto"], "nomes": poda.nomes_dos_nos(captura["nos"])}
+
+
 class Cura:
     """O que o modo `cura` faz por célula: a corrida de referência da célula sem quebra (registra o alvo do passo), o
     roteiro com a quebra armada até o passo falhar (detecção), a poda da árvore da página quebrada, os candidatos
@@ -1251,11 +1281,15 @@ class Cura:
                     descr["alvo"] = cs.descrever_elemento(pg, q["localizador"])
                 except Exception as e:  # noqa: BLE001 - a descrição falhou: fica registrado e a célula não tem alvo
                     descr["erro"] = f"{type(e).__name__}: {str(e)[:200]}"
+                try:
+                    descr["captura"] = inter.capturar()
+                except Exception:  # noqa: BLE001 - sem a árvore da referência, o caso do localizador usa o corte sem referência
+                    descr["captura"] = None
 
         r = cen.rodar_cenario(cenario_, pagina, inter, base=self.base, capturar=False, antes_do_passo=antes)
         pagina.close()
         alvo = descr.get("alvo")
-        ref = {"alvo": alvo, "passou": r["passou"], "segundos": r["segundos"], "erro": r["erro"], "conferencia_falha": r["conferencia_falha"],
+        ref = {**arvore_da_referencia(descr.get("captura"), q.get("alvo")), "alvo": alvo, "passou": r["passou"], "segundos": r["segundos"], "erro": r["erro"], "conferencia_falha": r["conferencia_falha"],
                "erro_descricao": descr.get("erro") or (None if alvo else f"o localizador {q['localizador']!r} não resolveu na página sem quebra")}
         self.referencias[chave] = ref
         tid = f"{self.saida}/referencia/{q['cenario']}/{q['modo']}@normal"
@@ -2052,9 +2086,14 @@ def caso_do_localizador(cenario_: dict, d: dict) -> dict:
     observacao = f"roteiro {cenario_['cenario']}; o localizador {q['localizador']} do passo {q['passo_alvo'] + 1} não resolveu"
     if r.get("erro"):
         observacao += f"; {str(r['erro'])[:200]}"
-    return cv.montar_caso(f"{cenario_['id']}@cenario", f"GET {q['pagina']}", 200, "(página PHP do front legado: sem contrato de API)",
-                          "(HTML da página; nenhuma chamada à API falhou)", sintoma, arvore=podada.get("texto") or None,
-                          seletor_quebrado=q["localizador"], observacao=observacao)
+    # ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) a árvore encurtada contra a referência da célula e a observação fora da entrada, como no caso da tela.
+    # ! Motivo: 9 dos 10 cenários da corrida 21b passaram do limite do prompt; a observação repetia o seletor que a linha SELETOR QUE FALHOU e o SINTOMA já dizem.
+    ref = d.get("ref") or {}
+    caso = cv.montar_caso(f"{cenario_['id']}@cenario", f"GET {q['pagina']}", 200, "(página PHP do front legado: sem contrato de API)",
+                          "(HTML da página; nenhuma chamada à API falhou)", sintoma, arvore=cv.arvore_do_prompt(podada.get("texto") or "", ref.get("arvore"), ref.get("nomes")) or None,
+                          seletor_quebrado=q["localizador"])
+    caso["observacao_da_poda"] = observacao
+    return caso
 
 
 # ! Alteração de IA - Revisar: (04/11/2026, P6) o registro ganha motivo_deteccao, a ficha da falha (o que a detecção acusou:
@@ -2165,7 +2204,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                  "task_success": {"contrato": "diagnóstico conferido com a causa e o campo certos (ficha 35)",
                                   "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"},
                  "top_logprobs": args.top, "teto_tokens": args.teto, "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes,
-                 "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS}
+                 "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO}
     (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
     marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
           f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "
@@ -2633,6 +2672,7 @@ def montar_parser() -> argparse.ArgumentParser:
     ap.add_argument("--teto-proposta", type=int, default=TETO_PROPOSTA_PADRAO, help="biblioteca: teto de tokens de saída da proposta de edição")
     # ! Alteração de IA - Revisar: (04/11/2026, P7) a opção do modo avaliacao_trilha.
     # ! Motivo: a fumaça sem as cobaias precisa pular o bloco do seletor quebrado (que sobe o front, a API e o navegador).
+    ap.add_argument("--condicoes", default=None, help="experimento_prompt: condições separadas por vírgula (padrão: exemplar,rotulos_por_extenso)")
     ap.add_argument("--sem-seletor", action="store_true", help="avaliacao_trilha: não roda a mutação do seletor na tela (fumaça sem as cobaias); corrida parcial")
     return ap
 
@@ -2654,6 +2694,12 @@ def main() -> int:
         return rodar_cenarios(args)
     if args.modo == "avaliacao_trilha":
         return rodar_avaliacao_trilha(args)
+    if args.modo == "experimento_prompt":
+        import corridas_em_texto as ct
+        return ct.rodar_experimento(args)
+    if args.modo == "ineditos":
+        import corridas_em_texto as ct
+        return ct.rodar_ineditos(args)
     return 1
 
 

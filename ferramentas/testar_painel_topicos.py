@@ -654,6 +654,31 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("tb_f4_biblioteca_filtros", secao)
         self.assertIn("regra R4", secao.lower().replace("r4", "R4").replace("regra r4", "regra R4"))
 
+    def teste_conferencia_dos_ineditos_usa_o_json_e_mostra_cada_caso(self):
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a aba da conferência lê conferencia_ineditos.json: os casos para olhar primeiro, e cada caso com o gabarito, o que a corrida 17 viu e a pré-análise.
+        # ! Motivo: o Eric decide pelo painel, e a ficha 46 pede a conferência dele antes da corrida 24; a pré-análise é do Claude e a aba precisa dizer isso.
+        self.assertIn("conferencia", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        _, vazia = tp.secao_conferencia(None)
+        self.assertIn('<section id="conferencia"', vazia)
+        self.assertIn("gerar_conferencia_ineditos.py", vazia)
+        sint = {"resumo": {"casos": 2, "ok": 1, "ver": 1, "reproduzem": 1, "fora_da_tela": 1, "sem_preanalise": 0},
+                "por_classe": [{"classe": 1, "casos": 2, "ok": 1, "ver": 1, "reproduzem": 1}],
+                "casos": [{"caso": "x-2", "classe": 1, "nivel": 3, "veredito": "ver", "o_que_olhar": "Olhar o <id>.", "causa_vizinha": "campo_ausente", "evidencia": "b.py:2", "tela": "fora: sem tela",
+                           "entrada": {"requisicao": "POST /api/pedidos", "status": 201, "contrato": "id: inteiro", "corpo": '{"id": "a"}', "sintoma": "Sintoma dois"},
+                           "gabarito": {"causa_raiz": "tipo_divergente", "campo_afetado": "id", "termos_esperados": ["tipo"], "termos_proibidos": ["json"]}},
+                          {"caso": "x-1", "classe": 1, "nivel": 1, "veredito": "ok", "o_que_olhar": "", "causa_vizinha": None, "evidencia": "a.py:1", "tela": "reproduz: corpo diferente",
+                           "entrada": {"requisicao": "GET /api/produtos", "status": 200, "contrato": "id: inteiro", "corpo": "{}", "sintoma": "Sintoma um", "observacao": "Observação um", "arvore": "document"},
+                           "gabarito": {"causa_raiz": "corpo_vazio", "campo_afetado": None, "termos_esperados": [], "termos_proibidos": []}}]}
+        _, h = tp.secao_conferencia(sint)
+        for trecho in ("x-2", "x-1", "tipo_divergente", "corpo_vazio", "Sintoma um", "Observação um", "fora: sem tela", "reproduz: corpo diferente", "ficha 46", "pré-análise"):
+            self.assertIn(trecho, h)
+        self.assertIn("Olhar o &lt;id&gt;.", h, "o texto do caso entra escapado")
+        self.assertLess(h.index("<code>x-2</code>"), h.index("<code>x-1</code>"), "os casos para olhar vêm primeiro")
+        real = self.ctx.get("conferencia_ineditos")
+        if real:
+            secao = self.html[self.html.index('<section id="conferencia"'):].split("</section>")[0]
+            self.assertEqual(secao.count("<details>"), real["resumo"]["casos"] + 1, "um bloco por caso, mais o resumo por classe")
+
     def teste_cenarios_usa_os_numeros_do_json(self):
         # ! Alteração de IA - Revisar: (04/11/2026, P6) a aba da corrida 21 lê cenarios.json: Task Success com Wilson, MTTR com
         # reamostragem, por tipo e por cenário, a ficha da falha de cada cenário e o protocolo da linha de base manual; sem o
@@ -821,8 +846,10 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("pode ter lido", h_rev)
         self.assertIn("O que o parecer do Claude diz", h_rev)
         self.assertIn("3 de 5 decisões", h_rev)
-        self.assertIn("limitação declarada (decisão 87)", h_rev)
-        self.assertNotIn("ficha 40", h_rev, "a ficha 40 já foi decidida")
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 95) a medida com revisor humano passou a em aberto, para depois da Pós-Fase 4.
+        # ! Motivo: o Eric reabriu a ficha 40; o bloco da sessão continua sem mandar decidir aqui, porque quem revisa fica para quando o formato estiver fechado.
+        self.assertIn("em aberto (decisão 95)", h_rev)
+        self.assertNotIn("ficha 40", h_rev, "o bloco da sessão não pede decisão")
         self.assertNotIn("O que o parecer do Claude diz", h_depois)
         self.assertIn("307", h_rev)
         self.assertNotIn("não cumpre", h_depois, "sem a leitura da sessão, a aba não afirma nada sobre ela")
@@ -961,6 +988,14 @@ class TesteLeituras(unittest.TestCase):
         self.assertIn('<summary>Mais informações: Título (2)</summary>', saida)
         self.assertIn(f'{grafico}<p class="como-ler"><strong>Como ler:</strong>', saida)
         self.assertIn(pl.CSS, saida)
+
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a tabela dos casos para olhar fica à vista na aba da conferência.
+    # ! Motivo: no painel publicado ela saiu recolhida em "Mais informações", e é o conteúdo principal da aba: é por ela que o Eric começa a conferência.
+    def teste_casos_para_olhar_ficam_a_vista_na_conferencia(self):
+        tab = '<div class="tabela"><table><thead><tr><th>Caso</th></tr></thead><tbody><tr><td>x-1</td></tr></tbody></table></div>'
+        saida = pl.aplicar(f'<style>a{{}}</style><main><section id="conferencia"><h2>Os casos para olhar</h2>{tab}</section></main>')
+        self.assertNotIn("Mais informações: Os casos para olhar", saida)
+        self.assertIn(tab, saida)
 
     def teste_figura_repetida_vai_para_mais_informacoes_com_a_leitura(self):
         fig = '<figure><img src="x" alt="Fase 3 · acerto"><figcaption>Figura 12 — Fase 3</figcaption></figure>'

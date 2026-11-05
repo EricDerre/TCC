@@ -1125,6 +1125,9 @@ def contexto_fase4() -> dict:
             # ! Alteração de IA - Revisar: (04/11/2026) a leitura da corrida 21b (`cenarios_v2.json`), lida por painel_topicos.secao_cenarios.
             # ! Motivo: a repetição do ensaio com a correção da cura é a leitura vigente, e a aba mostra as duas corridas.
             "cenarios_v2": le("cenarios_v2.json"),
+            # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) o documento da conferência dos 36 inéditos, lido por painel_topicos.secao_conferencia.
+            # ! Motivo: a ficha 46 pede a conferência do Eric antes da corrida 24, e ele decide pelo painel.
+            "conferencia_ineditos": le("conferencia_ineditos.json"),
             # ! Alteração de IA - Revisar: (05/11/2026, P8) o relatório da fase, de onde a aba "Fechamento da fase" lê a tabela das regras e as limitações.
             # ! Motivo: a aba do fechamento mostra o que o relatório diz, sem repetir número nenhum no código do painel.
             "relatorio_f4": ((MEMORIAL / "3-resultados-e-analises" / "fase-4-relatorio.md").read_text(encoding="utf-8")

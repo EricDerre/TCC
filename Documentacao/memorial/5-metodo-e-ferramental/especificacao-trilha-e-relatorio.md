@@ -223,7 +223,7 @@ Nos 36 casos de avaliação, com gabarito (mapa linha 30): (a) se a divergência
 
 <!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 87) nota sobre a parte (c) da avaliação da trilha.
      ! Motivo: quem ler a especificação precisa saber que a medida com revisor humano não foi feita como está escrita, e onde está o que foi feito no lugar dela. -->
-**Nota (05/11/2026).** A parte (c) não foi feita com um revisor humano: na sessão da corrida 22, o Eric respondeu um relatório e aprovou o parecer do Claude nos outros dez (decisões 85 e 86). Isso fica como limitação declarada (decisão 87); a leitura está em `resultados_alvo/fase4/leitura_revisao_trilha.md`.
+**Nota (05/11/2026).** A parte (c) não foi feita com um revisor humano: na sessão da corrida 22, o Eric respondeu um relatório e aprovou o parecer do Claude nos outros dez (decisões 85 e 86). A medida fica em aberto e será feita depois da Pós-Fase 4 (decisão 95); a leitura da sessão está em `resultados_alvo/fase4/leitura_revisao_trilha.md`.
 
 ## 13. Exigências de registro, declaradas como boa prática
 

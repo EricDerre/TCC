@@ -1,0 +1,257 @@
+{
+ "origem": "pré-análise do Claude (Sonnet), só leitura do código; a conferência é do Eric",
+ "casos": [
+  {
+   "caso": "lex-22",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:231"
+  },
+  {
+   "caso": "lex-23",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:229"
+  },
+  {
+   "caso": "lex-24",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:190"
+  },
+  {
+   "caso": "lex-25",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:190"
+  },
+  {
+   "caso": "lex-26",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/routers/produtos.py:66"
+  },
+  {
+   "caso": "lex-27",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o contrato do caso diz que status e 'Em Analise' ou 'Cancelado', e o corpo traz 'Em AnÃ¡lise', que sai desse conjunto; um modelo pode responder valor_fora_do_dominio, justamente a causa que o gabarito proíbe. A observação ainda cita 'Em Análise' com acento, enquanto o contrato escreve sem acento. Caso sem tela (POST de pedidos), então a reação da tela não se aplica.",
+   "causa_vizinha": "valor_fora_do_dominio",
+   "evidencia": "CobaiaAPI/app/routers/pedidos.py:63"
+  },
+  {
+   "caso": "sin-22",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:171"
+  },
+  {
+   "caso": "sin-23",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:173"
+  },
+  {
+   "caso": "sin-24",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o contrato pede tipo como texto e chegou um objeto; pela definição 'tipo trocado' de tipo_divergente isso também cabe, e o diff de contrato da corrida 17 classificou este caso como tipo_diferente. O que decide a favor do gabarito é o objeto {valor, moeda} embrulhando o texto original.",
+   "causa_vizinha": "tipo_divergente",
+   "evidencia": "CobaiaAPI/app/fault_injection.py:193"
+  },
+  {
+   "caso": "sin-25",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/routers/produtos.py:72"
+  },
+  {
+   "caso": "sin-26",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:118"
+  },
+  {
+   "caso": "sin-27",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:173"
+  },
+  {
+   "caso": "semt-22",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:186"
+  },
+  {
+   "caso": "semt-23",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:133"
+  },
+  {
+   "caso": "semt-24",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:165"
+  },
+  {
+   "caso": "semt-25",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:184"
+  },
+  {
+   "caso": "semt-26",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o contrato do caso e a observação dizem que resumo aceita nulo, então o null em si não é 'inesperado'; o que há de errado é a lista ter trazido o texto e o detalhe do mesmo produto vir sem ele, e o cartão e o modal da tela divergirem. Um modelo pode responder estado_da_tela_divergente (ou campo_ausente) com boa razão.",
+   "causa_vizinha": "estado_da_tela_divergente",
+   "evidencia": "CobaiaAPI/app/schemas.py:19"
+  },
+  {
+   "caso": "semt-27",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o corpo mostrado (GET /api/produtos) tem ids negativos, mas o sintoma gira em torno do 404 do detalhe, então recurso_inexistente é uma leitura natural, e ela está nos termos proibidos. Confira se o gabarito deixa claro que o 404 é consequência do id negativo vindo da lista. Também cabe chave_de_juncao_errada, já que é o id usado para ligar cartão e detalhe.",
+   "causa_vizinha": "recurso_inexistente",
+   "evidencia": "CobaiaAPI/app/routers/produtos.py:63"
+  },
+  {
+   "caso": "tra-22",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:181"
+  },
+  {
+   "caso": "tra-23",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:181"
+  },
+  {
+   "caso": "tra-24",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:212"
+  },
+  {
+   "caso": "tra-25",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:210"
+  },
+  {
+   "caso": "tra-26",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:212"
+  },
+  {
+   "caso": "tra-27",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 3: o sintoma diz que a conferência de preço do roteiro falha comparando o detalhe com o cartão, mas o modal de produtos_api.php:121-122 só mostra nome e resumo, então a tela não faz essa comparação sozinha. Só a leitura do código não prova que o harness da Fase 4 tem essa conferência para o detalhe (a corrida 17 só registrou diferença de corpo neste caso).",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaFront/produtos_api.php:121"
+  },
+  {
+   "caso": "run-22",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:233"
+  },
+  {
+   "caso": "run-23",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:239"
+  },
+  {
+   "caso": "run-24",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:208"
+  },
+  {
+   "caso": "run-25",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/fault_injection.py:154"
+  },
+  {
+   "caso": "run-26",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 2: a CobaiaAPI não tem cache (o próprio comentário do caso admite) e cancelar_pedido grava e faz commit antes de responder, então o sistema nunca produz este corpo; é um cenário descrito, sem modo, e a corrida 17 o deixou fora. Decida se vale medir o modelo contra algo que a API não gera.",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaAPI/app/routers/pedidos.py:69"
+  },
+  {
+   "caso": "run-27",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o sintoma abre com um 500 seguido de nova tentativa, então erro_interno_do_servidor é uma leitura honesta (foi o 500 que levou à duplicata, e criar_pedido faz commit antes do apply_fault). Ela está nos termos proibidos, mas confira se o enunciado separa bem 'o que o modelo deve apontar' (duas reservas iguais na listagem) da origem do problema. Caso sem tela, e a sequência 500 e retry só se confirma rodando.",
+   "causa_vizinha": "erro_interno_do_servidor",
+   "evidencia": "CobaiaAPI/app/routers/pedidos.py:53"
+  },
+  {
+   "caso": "efe-22",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaFront/produtos_api.php:82"
+  },
+  {
+   "caso": "efe-23",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaFront/produtos_api.php:76"
+  },
+  {
+   "caso": "efe-24",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o clique funciona e o modal não abre, sem nenhuma requisição na rede; sem ler o nth=0 no seletor, estado_da_tela_divergente também caberia. O que sustenta o gabarito é que o primeiro button do cartão é o de preço (produtos_api.php:81), sem handler de clique.",
+   "causa_vizinha": "estado_da_tela_divergente",
+   "evidencia": "CobaiaFront/produtos_api.php:81"
+  },
+  {
+   "caso": "efe-25",
+   "veredito": "ok",
+   "o_que_olhar": "",
+   "causa_vizinha": null,
+   "evidencia": "CobaiaFront/produtos_api.php:45"
+  },
+  {
+   "caso": "efe-26",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o sintoma diz que a resposta do id 3 chega cerca de 2 segundos depois da do id 9, então tempo_de_resposta_excedido é uma leitura possível, embora esteja nos termos proibidos. A sobreposição do modal pela resposta tardia (produtos_api.php:120-123, sem conferir qual clique foi o último) é o que sustenta o gabarito. Depende de execução: se o harness consegue armar a ordem inversa.",
+   "causa_vizinha": "tempo_de_resposta_excedido",
+   "evidencia": "CobaiaFront/produtos_api.php:112"
+  },
+  {
+   "caso": "efe-27",
+   "veredito": "ver",
+   "o_que_olhar": "Ponto 1: o cartão mostra o preço antigo e a API devolve o novo, o que é muito parecido com dado_desatualizado (que o gabarito proíbe). A diferença é que a defasagem está na página, que busca a lista uma só vez (produtos_api.php:132), e não no dado servido pela API. O Eric deve decidir se essa distinção é clara o bastante para um modelo.",
+   "causa_vizinha": "dado_desatualizado",
+   "evidencia": "CobaiaFront/produtos_api.php:132"
+  }
+ ]
+}

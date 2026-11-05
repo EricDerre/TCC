@@ -125,3 +125,101 @@ Nenhum cartão recusado pelo GitHub. Em três issues (#56, #59 e #60) o painel d
 - Nada foi commitado; este registro é o único arquivo do repositório principal tocado por esta sessão.
 - A réplica dos três commits no clone do orientador (#62) e o commit e push lá são do Eric, com a ferramenta `ferramentas/replicar_commits_orientador.py` em preparação na sessão principal.
 - Os 36 casos inéditos da ficha 27 (#54) seguem à espera da conferência do Eric; o cartão diz isso na descrição.
+
+<!-- ! Alteração de IA - Revisar: seção nova (05/11/2026) com os 11 cartões criados no Kanban do orientador (issues #65 a #75), os cartões existentes movidos ou corrigidos no mesmo dia e o estado do quadro ao fim, com número, ID, título, tipo, feature e coluna.
+     ! Motivo: o quadro tinha parado em 03/11, com P5 a P8 ainda em A Fazer e Backlog embora feitos, e sem cartão para as decisões 90 a 95; sem esta seção a próxima sessão não saberia quais cartões já existem nem com que número, e duplicaria o trabalho. Títulos, tipos, features e sprints da tabela 8.1 foram lidos das próprias issues depois de criadas, não copiados do pedido. -->
+## 8. Fase 4 até o fechamento, pendências e Pós-Fase 4 (05/11/2026)
+
+Pedido do Eric em 05/11/2026, repassado pela sessão principal com a lista de cartões: "Vamos sincronizar o repositorio do orientador com o que fizemos aqui, juntamente com o kanban". Conferência, só leitura, em `Documentacao/memorial/roadmap.md`, `decisoes.md` (decisões 83 a 95), `pendencias.md`, `fase-4-relatorio.md` e `claude-memoria/contexto/2026-11-05-fase-4-fechada.md`. O pedido cobria mover e criar, sem novo sim; a réplica dos commits ficou com a sessão principal.
+
+### 8.1 Os 11 cartões criados
+
+| Issue | ID | Título | Tipo | Feature | Coluna |
+|---|---|---|---|---|---|
+| #65 | TSK-F4-012 | Fase 4: sessão de revisão da corrida 22 e decisões 85 a 89 (a medida com revisor humano fica em aberto, decisão 95) | Testes | FT004 | Producao, fechada |
+| #66 | TSK-DOC-009 | Documentação de 05/11/2026: README com figuras, DETALHES-TECNICOS.md, gerar_figuras_documentos.py, explicações Como ler no painel e documento do TCC, versões 2 e 3 | Documentacao | EP001 | Producao, fechada |
+| #67 | TSK-F4-013 | Fase 4: corte do caso ao vivo e corridas 18c e 21c (decisão 90) | Desenvolvimento | FT004 | Fazendo |
+| #68 | TSK-F4-014 | Fase 4: experimento dos itens da decisão 55 e corrida 23 (decisão 91) | Testes | FT002 | A Fazer |
+| #69 | TSK-F4-015 | Fase 4: conferência dos 36 inéditos da ficha 27 e corrida 24 (decisão 92) | Testes | FT004 | A Fazer |
+| #70 | TSK-DOC-010 | Réplica dos commits de 05/11/2026 na pasta projeto/ deste repositório (decisão 84) | Deploy | EP001 | Fazendo |
+| #71 | TSK-DOC-011 | Pós-Fase 4: ajustes e ideias focadas no visual do projeto (decisão 94, a especificar pelo Eric) | Documentacao | EP001 | Backlog |
+| #72 | TSK-DOC-012 | Rever o entregável da LLM ao analista (roadmap §7, a especificar pelo Eric) | Documentacao | FT004 | Backlog |
+| #73 | TSK-F4-016 | Interface para o analista: trace na falha, Cérebro ao vivo e explorador com a trilha v2 (decisão 93) | Desenvolvimento | FT004 | Backlog |
+| #74 | TSK-F4-017 | Sessão com revisor humano depois da Pós-Fase 4 (ficha 40, decisão 95) | Testes | FT004 | Backlog |
+| #75 | TSK-F5-001 | Fase 5: sessão da linha de base manual com o grupo e noite medida | Testes | FT006 | Backlog |
+
+Todos na Sprint 3 (Novembro). F4 continua de TSK-F4-011, DOC continua de TSK-DOC-008 e TSK-F5-001 abre o módulo da Fase 5. A numeração das issues pula o #64, um comunicado de atendimento presencial aberto por `rcotrin` em 04/11, que está fora do quadro. Os caminhos de evidência usam o prefixo `projeto/`.
+
+O que difere da lista pedida:
+
+- **O #74 não estava na primeira lista.** A lista tinha dez cartões. A decisão 95 saiu às 17:48 do mesmo dia, com o trabalho em curso, e reabriu a ficha 40: a medida com revisor humano fica em aberto e será feita depois da Pós-Fase 4. Sem o #74 ela ficaria sem cartão, e a sessão principal pediu o mesmo cartão depois (seção 8.7).
+- **O título do #65 mudou pelo mesmo motivo.** A lista dizia "limitação declarada", o que a decisão 95 reviu. O corpo do #65 e o do #71 apontam para o #74.
+- **O #72 entrou como Documentacao.** O formulário não tem o tipo Refinamento, e a lista já previa essa troca.
+
+### 8.2 Cartões existentes mudados no mesmo dia
+
+| Issue | ID | O que mudou |
+|---|---|---|
+| #58 | TSK-F4-008 (P5 e corrida 20) | De A Fazer para Producao; fechada como concluída; critérios marcados; nota de fechamento com os números do roadmap §2. |
+| #59 | TSK-F4-009 (P6 e corridas 21 e 21b) | Do Backlog para Producao; fechada como concluída; critérios marcados; nota de fechamento. |
+| #60 | TSK-F4-010 (P7 e corrida 22) | Do Backlog para Producao; fechada como concluída; nota de fechamento. O terceiro critério foi reescrito: a sessão de revisão teve 11 relatórios, porque a corrida teve 5 erros e não 6 (origem: `resultados_alvo/fase4/leitura_revisao_trilha.md`), e a medida com revisor humano fica em aberto (decisão 95, #74). |
+| #61 | TSK-F4-011 (P8) | Do Backlog para Producao; fechada como concluída; critérios marcados; a nota de fechamento diz que o `painel_fase4.py` previsto no cartão não foi criado. |
+| #62 | TSK-DOC-007 (réplica de 26/10 a 03/11) | De A Fazer para Producao; fechada como concluída; critérios marcados. O primeiro critério foi reescrito, porque a réplica foi além dos três commits citados: o `main` do clone está em 3dc21b2. |
+| #63 | TSK-DOC-008 (ficha 25) | De A Fazer para Producao; fechada como concluída; comentário de uma linha. Os critérios 1 e 2 foram reescritos: saiu como documento do TCC (decisão 83, versões 1 a 3), e a revisão final das referências na norma segue pendente. O critério 3, "Entregue antes da próxima reunião", ficou sem marcar, porque nada nos arquivos registra a data da reunião. |
+| #28 | TSK-DOC-002 (.docx do TCC) | Continua em Fazendo; comentário de uma linha com a versão atual, a 3. |
+| #20 | FT006 | Do Backlog para Fazendo, aberta: o P6 montou a medição e a Fase 5 ainda não mediu. |
+| #52 a #57 | TSK-F4-002 a TSK-F4-007 | Coluna igual. Caminhos de evidência corrigidos de `projeto/resultados_alvo` para `projeto/Programacao/AgenteCore/experimentos/resultados_alvo`: o erro foi desta sessão, em 03/11. Cada corpo salvo foi comparado com o antigo e só difere nessa troca. |
+
+Ficaram como estavam: #14 (EP001, Fazendo), #18 (FT004, Fazendo), #19 (FT005, Testes em DEV) e #27 (TSK-DOC-001, Fazendo).
+
+### 8.3 Estado do quadro ao fim (contagem por coluna no próprio quadro, por volta de 18:20 de 05/11/2026)
+
+- No Status: 8 (Status Reports #6 a #13).
+- Backlog: 5 (#71, #72, #73, #74, #75).
+- Refinamento: 0.
+- A Fazer: 2 (#68, #69).
+- Fazendo: 7 (#14, #18, #20, #27, #28, #67, #70).
+- Merge, Testes em HOM: 0.
+- Testes em DEV: 1 (#19).
+- Producao: 51 (os 42 de 03/11, mais #58 a #63, #65, #66 e o Status Report #5, que saiu de No Status sem ação desta sessão).
+
+São 74 itens no quadro. As issues abertas no repositório são 28: as 23 fora de Producao, mais #1, #15, #16 e #17 (abertas em Producao, não tocadas por esta sessão) e o comunicado #64.
+
+### 8.4 Falhas
+
+Nenhum cartão foi recusado pelo GitHub, e a sessão do navegador interno ficou válida até o fim. O que deu errado:
+
+- **O #74 sumiu do quadro.** A issue mostrava Status Backlog, mas o quadro não a listava nem por filtro, e trocar o status não resolveu. Retirar do projeto e incluir de novo pelo painel da issue resolveu. A linha do tempo da issue guarda essas idas e voltas.
+- **Painel de projeto ausente.** Em #66, #72 e #74 ele não apareceu logo após a criação; recarregar a página resolveu, como em 26/10 e 03/11.
+- **Área de transferência.** Um clique em critério de aceite, com a referência da página já velha, escreveu na área de transferência do Windows, e o aplicativo avisou. Os critérios passaram a ser marcados pela edição do corpo da issue.
+- **Clique errado no #60.** Ele caiu no botão de itálico da caixa de comentário e deixou "__" no rascunho. O rascunho foi limpo e nada foi publicado.
+- **Formulário do #74.** O aviso de possíveis duplicatas deslocou as referências, e o clique abriu a prévia do #65, sem mudar nada nele. O formulário continuou intacto.
+- **Um `git log` rodou.** Foi só de leitura, uma vez em cada repositório, antes de pesar a instrução de não rodar git. Nada mudou e não se repetiu.
+
+### 8.5 Forma mais rápida de preencher, achada nesta rodada
+
+- Abrir `issues/new?template=task.yml&projects=unicid-projeto-software-2026-2%2F24` sem os campos na URL e preencher com `form_input`, que funciona no formulário do GitHub. Tipo e Sprint continuam pelos menus.
+- Se o título lembrar uma issue existente, aparece o aviso de possíveis duplicatas e as referências mudam. Ler o resultado de `find` antes de clicar em Sprint e em Create.
+- Para marcar critérios, editar o corpo da issue e conferir por JavaScript que só a troca pretendida mudou, em vez de clicar nas caixas de marcar.
+- Issue fechada abre rolada até o fim. Subir a página antes de pegar a referência do menu do corpo.
+
+### 8.6 O que não foi feito e o que fica para o Eric
+
+- Nada foi commitado nem replicado; este registro é o único arquivo do repositório principal tocado por esta sessão.
+- O comando e o push da réplica dos commits de 05/11 são do Eric, e o #70 fecha quando o push sair.
+- Os comentários em #63 e #28 dizem que a versão 3 do documento entra no `main` do orientador com esse push. Hoje ela está só no clone, e o `main` no GitHub tem a versão 1.
+- O #63 está fechado com o critério "Entregue antes da próxima reunião" sem marcar; falta o Eric dizer a data.
+- #71, #72 e #74 dependem de especificação do Eric: o que muda no visual, o que muda no entregável e, pela ficha 40, quem revisa e quais relatórios.
+- O comunicado #64 segue aberto, e esta sessão só viu o título.
+
+<!-- ! Alteração de IA - Revisar: subseção nova (05/11/2026) com o acréscimo pedido depois da atualização do quadro; o título do #74 na tabela 8.1 e o item sobre ele foram acertados junto.
+     ! Motivo: a sessão principal pediu dois cartões que já existiam, porque o relato que ela recebe traz só os primeiros 400 caracteres; criar de novo duplicaria o #71 e o #74 no Backlog. A subseção registra por que não há issue nova e o que mudou nos dois cartões. -->
+### 8.7 Acréscimo pedido no mesmo dia
+
+Depois da atualização do quadro, a sessão principal repassou a decisão do Eric: a medida com revisor humano está em aberto pela decisão 95. O pedido tinha três itens, e nenhum gerou issue nova.
+
+- **Cartão da sessão de revisão.** O #65 já dizia que a medida está em aberto e citava as decisões 85 a 87 e 95, então não foi editado. Entre os 29 cartões lidos, só #56 e #57 falam em limitação declarada, e sobre outra coisa: a regra R2 e a quebra armada de seletor.
+- **Cartão da sessão com revisor.** O #74 já era esse cartão. O título passou a ser o pedido, "Sessão com revisor humano depois da Pós-Fase 4 (ficha 40, decisão 95)", e o corpo passou a citar a seção 12 c da especificação da trilha, que saiu do título.
+- **Cartão da Pós-Fase 4.** O #71 já era esse cartão e manteve o título. "Painel do analista" não está na decisão 94: a interface para o analista é a decisão 93, no #73. O corpo do #71 ganhou a frase que o liga a #72 e #73, como no roadmap §4.8.
+
+A contagem por coluna da seção 8.3 não mudou, e as duas edições foram conferidas nas próprias issues.

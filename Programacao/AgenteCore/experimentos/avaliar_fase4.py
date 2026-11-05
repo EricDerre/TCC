@@ -441,6 +441,16 @@ def ler_calibracao(saida: str) -> dict:
 
 # ------------------------------------------------------------------ corrida 18: a tela contra o fixture (regra R2)
 
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) a entrada do caso gravado na trilha, com a observação da poda de volta.
+# ! Motivo: desde a decisão 90 a OBSERVAÇÃO não vai ao prompt e fica no caso, fora de `entrada`; o bloco `tb_f4_tela_corpo` conta as
+# diferenças contra o contrato por ela. As corridas 18 e 18b, que a têm dentro de `entrada`, continuam legíveis.
+def entrada_do_caso_gravado(reg: dict) -> dict:
+    entrada = dict(reg.get("entrada") or {})
+    if reg.get("observacao_da_poda"):
+        entrada["observacao"] = reg["observacao_da_poda"]
+    return entrada
+
+
 def _leitura_do_caso_ao_vivo(entrada: dict | None) -> dict:
     """O que o caso ao vivo levou ao modelo, lido da entrada gravada na trilha: o começo do CORPO, quantas diferenças
     a poda achou contra o contrato (da OBSERVAÇÃO "corpo json, forma lista, N diferença(s) contra o contrato"), a forma
@@ -452,6 +462,28 @@ def _leitura_do_caso_ao_vivo(entrada: dict | None) -> dict:
     forma = re.search(r"forma (\w+)", obs)
     return {"corpo_tela": str(entrada.get("corpo") or "")[:80], "diferencas_contra_contrato": int(m.group(1)) if m else None,
             "forma_do_corpo": forma.group(1) if forma else None, "sintoma_tela": str(entrada.get("sintoma") or "")[:160]}
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 90) o limite do prompt sai de `resumir_tela` para esta função, e a leitura dos cenários passa a usá-la.
+# ! Motivo: a corrida 21c existe para os dez prompts caberem no limite da seção 3.3 do plano (o maior prompt da calibração mais 10%, 1409 tokens), e
+# só a leitura da tela dizia isso; com a conta num lugar só, as duas leituras não têm como divergir.
+def prompt_contra_o_limite(calibracao: dict | None, tokens_por_caso: dict) -> dict | None:
+    """O maior prompt da corrida contra o limite; None sem a calibração, porque é dela que o limite sai, e None sem nenhum token
+    medido, para a leitura nunca dizer "nenhum caso acima" de uma corrida que ela não mediu."""
+    medida = next((x for x in (calibracao or {}).get("por_k", []) if x["k"] == calibracao.get("k_escolhido")), None)
+    maximo = (medida or {}).get("tokens_entrada_max")
+    numeros = {c: t for c, t in tokens_por_caso.items() if isinstance(t, (int, float))}
+    if not maximo or not numeros:
+        return None
+    limite = round(1.1 * maximo)
+    return {"maximo_da_calibracao": maximo, "limite_mais_10_pct": limite, "acima": [c for c, t in numeros.items() if t > limite], "maximo_da_tela": max(numeros.values(), default=None)}
+
+
+def frase_do_prompt(pr: dict | None) -> str:
+    if not pr:
+        return ""
+    return (f" Prompt contra a calibração (seção 3.3 do plano): maior prompt da tela {pr['maximo_da_tela']} tokens, limite de {pr['limite_mais_10_pct']} (10% acima do maior "
+            f"da calibração, {pr['maximo_da_calibracao']}); casos acima: " + (", ".join(f"`{c}`" for c in pr["acima"]) or "nenhum") + ".")
 
 
 def resumir_tela(tela: list[dict], fixture: list[dict], casos: list[dict], por_caso: list[dict] | None = None, trilha_info: dict | None = None,
@@ -526,15 +558,7 @@ def resumir_tela(tela: list[dict], fixture: list[dict], casos: list[dict], por_c
         sub = [l for l in linhas if l["classe"] == c]
         por_classe.append({"classe": c, "casos": len(sub), "acerto_tela": sum(1 for l in sub if l["acerto_tela"]),
                            "acerto_fixture": sum(1 for l in sub if l["acerto_fixture"]), "concordam": sum(1 for l in sub if l["concordam"])})
-    prompt = None
-    if calibracao:
-        medida = next((x for x in calibracao.get("por_k", []) if x["k"] == calibracao.get("k_escolhido")), None)
-        maximo = (medida or {}).get("tokens_entrada_max")
-        if maximo:
-            limite = round(1.1 * maximo)
-            acima = [l["caso"] for l in linhas if isinstance(l["tokens_entrada_tela"], (int, float)) and l["tokens_entrada_tela"] > limite]
-            prompt = {"maximo_da_calibracao": maximo, "limite_mais_10_pct": limite, "acima": acima,
-                      "maximo_da_tela": max([l["tokens_entrada_tela"] for l in linhas if isinstance(l["tokens_entrada_tela"], (int, float))], default=None)}
+    prompt = prompt_contra_o_limite(calibracao, {l["caso"]: l["tokens_entrada_tela"] for l in linhas})
     resumo = {"casos": n, "reproduzem": sum(1 for l in linhas if l["reproduz"]), "acerto_tela": sum(1 for l in linhas if l["acerto_tela"]),
               "acerto_fixture": sum(1 for l in linhas if l["acerto_fixture"]), "concordam": sum(1 for l in linhas if l["concordam"]),
               "b": par["b"], "c": par["c"], "discordantes": par["b"] + par["c"], "limite_r2": LIMITE_R2, "dentro_do_limite_r2": par["b"] + par["c"] <= LIMITE_R2,
@@ -591,10 +615,7 @@ def render_tela(dado: dict) -> str:
                        dado["metadados"]["gerado_em"][:10])
     cab += ["", f"Regra R2 do plano aprovado: nos casos que reproduzem, o rótulo dado ao caso lido da tela e o rótulo dado ao caso lido do fixture, na "
                 f"mesma sessão do Ollama, diferem em no máximo {LIMITE_R2} casos (a variação entre corridas iguais); acima disso, o molde do sintoma e a "
-                "poda são revistos antes da próxima noite. O gabarito entra só nesta leitura, nunca no agente."
-                + (f" Prompt contra a calibração (seção 3.3 do plano): maior prompt da tela {pr['maximo_da_tela']} tokens, limite de "
-                   f"{pr['limite_mais_10_pct']} (10% acima do maior da calibração, {pr['maximo_da_calibracao']}); casos acima: "
-                   + (", ".join(f"`{c}`" for c in pr["acima"]) or "nenhum") + "." if pr else ""), ""]
+                "poda são revistos antes da próxima noite. O gabarito entra só nesta leitura, nunca no agente." + frase_do_prompt(pr), ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
 
 
@@ -623,7 +644,7 @@ def ler_tela(saida: str) -> dict:
                 except ValueError:
                     continue
                 if isinstance(reg, dict) and reg.get("id") and isinstance(reg.get("entrada"), dict):
-                    vivos[str(reg["id"])] = reg["entrada"]
+                    vivos[str(reg["id"])] = entrada_do_caso_gravado(reg)
     return {"tela": executar_bateria.ler_jsonl(raiz / slug / "diagnosticos__tela.jsonl"),
             "fixture": executar_bateria.ler_jsonl(raiz / slug / "diagnosticos__fixture.jsonl"),
             "casos": ex.casos_de_avaliacao("avaliacao"), "por_caso": executar_bateria.ler_jsonl(raiz / "tela.jsonl"), "trilha_info": info,
@@ -976,7 +997,22 @@ def ler_cenarios(saida: str) -> dict:
     ultimos: dict = {}
     for r in executar_bateria.ler_jsonl(raiz / "cenarios.jsonl"):
         ultimos[(r["cenario"], r["repeticao"])] = r
-    return {"condicoes": _json(raiz / "condicoes_fase4.json") or {}, "registros": list(ultimos.values())}
+    condicoes = _json(raiz / "condicoes_fase4.json") or {}
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) lê também o registro oficial dos diagnósticos e a calibração, de onde saem os tokens do prompt e o limite.
+    # ! Motivo: o `cenarios.jsonl` não guarda os tokens do prompt; sem o registro oficial a leitura diria que nenhum dos dez cenários passou do limite sem ter medido.
+    slug = executar_fase3._slug(condicoes.get("modelo") or ex.MODELO_PADRAO)
+    return {"condicoes": condicoes, "registros": list(ultimos.values()), "calibracao": _json(pasta_fase4() / f"{NOME_CALIBRACAO}.json"),
+            "diagnosticos": executar_bateria.ler_jsonl(raiz / slug / "diagnosticos__cenarios.jsonl")}
+
+
+def _maior_prompt_por_caso(diagnosticos: list[dict] | None) -> dict:
+    """Os tokens de entrada por caso; o localizador repete o id do caso a cada repetição, e fica o maior."""
+    maiores: dict = {}
+    for r in diagnosticos or []:
+        t = r.get("tokens_entrada")
+        if isinstance(t, (int, float)):
+            maiores[r["caso"]] = max(t, maiores.get(r["caso"], 0))
+    return maiores
 
 
 def _ts_e_mttr(regs: list[dict]) -> dict:
@@ -1029,7 +1065,8 @@ def resumir_cenarios(bruto: dict, gerado_em: str | None = None, corrida: str | N
                       "segundos_total": round(sum(segs), 1) if segs else None,
                       "estimativa_fase5_h": round(10 * 5 * media / 3600, 2) if media is not None else None},
             "deteccao": dict(sorted(Counter(r["origem_deteccao"] for r in regs if r.get("detectou") and r.get("origem_deteccao")).items())),
-            "sem_task_success": sem, "navegador": {"versoes": navs, "unica": len(navs) <= 1}, "banco": {"hashes_de_inicio": hashes, "unico": len(hashes) <= 1}}
+            "sem_task_success": sem, "navegador": {"versoes": navs, "unica": len(navs) <= 1}, "banco": {"hashes_de_inicio": hashes, "unico": len(hashes) <= 1},
+            "prompt": prompt_contra_o_limite(bruto.get("calibracao"), _maior_prompt_por_caso(bruto.get("diagnosticos")))}
 
 
 # ! Alteração de IA - Revisar: (04/11/2026, corrida 21b) render_cenarios aceita o título; o `--titulo` passa a valer também para `--cenarios`.
@@ -1070,7 +1107,8 @@ def render_cenarios(dado: dict, titulo: str = TITULO_CENARIOS) -> str:
     cab += ["", ("Os dez cenários da ficha 36 (seis de contrato em produtos_api.php, um por modo, e quatro de localizador no front legado), cada um com o "
                  "agente inteiro: diagnóstico ao vivo nos dez e cura de seletor nos quatro de localizador. No contrato (ficha 35), o MTTR vai da detecção ao "
                  "diagnóstico conferido em código e o Task Success é a causa e o campo certos; no localizador, o MTTR vai da detecção à reexecução validada e "
-                 "o Task Success é o roteiro concluído sem erro depois da cura. O banco é restaurado e conferido por hash no começo de cada repetição."), ""]
+                 "o Task Success é o roteiro concluído sem erro depois da cura. O banco é restaurado e conferido por hash no começo de cada repetição."
+                 + frase_do_prompt(dado.get("prompt"))), ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
 
 
@@ -1529,7 +1567,7 @@ def render_revisao(dado: dict) -> str:
     if r["pareceres_aprovados"]:
         verbo = "tem" if r["respostas_do_revisor"] == 1 else "têm"
         cab += [(f"Só {r['respostas_do_revisor']} dos {r['relatorios']} relatórios {verbo} resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros {r['pareceres_aprovados']} são o parecer do Claude, "
-                 "aprovado pelo Eric sem resposta própria (decisões 85 e 86), e ficam sem tempo medido. Por isso esta leitura não cumpre a medida com revisor humano da especificação: na maior parte, a adesão, a localização e a utilidade abaixo são do Claude. Isso fica como limitação declarada (decisão 87)."), ""]
+                 "aprovado pelo Eric sem resposta própria (decisões 85 e 86), e ficam sem tempo medido. Por isso esta leitura não cumpre a medida com revisor humano da especificação: na maior parte, a adesão, a localização e a utilidade abaixo são do Claude. A medida fica em aberto e será feita depois da Pós-Fase 4 (decisão 95)."), ""]
     if pa:
         cab += [(f"O parecer do Claude, nos {pa['n']} relatórios, foi escrito sem abrir o gabarito, mas por quem sabia quantos erros a amostra tem e já tinha visto os nomes dos casos; os limites estão em `{ARQ_PRE_ANALISE}`."), ""]
     if dado["duvidas_de_leitura"]:
@@ -1614,6 +1652,8 @@ def montar_parser() -> argparse.ArgumentParser:
     # ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) `--revisao` lê a planilha preenchida da sessão contra trilha.json.
     # ! Motivo: é a última medida da especificação da trilha (seção 12 c) e não sai de uma corrida, sai das respostas do revisor.
     ap.add_argument("--revisao", action="store_true", help="lê a sessão de revisão: a planilha revisao_trilha.md preenchida contra o acerto de cada caso em trilha.json")
+    ap.add_argument("--experimento_prompt", action="store_true", help="avalia a corrida 23 (os itens da decisão 55, em texto, contra a corrida 16)")
+    ap.add_argument("--ineditos", action="store_true", help="avalia a corrida 24 (os 36 inéditos da ficha 27 lidos pelo modelo)")
     ap.add_argument("--saida", default="fase4_reproducao")
     # ! Alteração de IA - Revisar: (01/11/2026, ficha 37) `--nome` sem padrão fixo: cada modo tem o seu (reproducibilidade,
     # tela) e `--tela --nome tela_v2` grava a leitura da repetição da corrida 18 sem regravar `tela.{json,md}`.
@@ -1631,9 +1671,9 @@ def main() -> int:
     ap = montar_parser()
     args = ap.parse_args()
     print(caminhos.descricao())
-    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca", "cenarios", "trilha", "revisao") if getattr(args, m)]
+    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca", "cenarios", "trilha", "revisao", "experimento_prompt", "ineditos") if getattr(args, m)]
     if len(modos) != 1:
-        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca, --cenarios, --trilha, --revisao ou --pontes")
+        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca, --cenarios, --trilha, --revisao, --experimento_prompt, --ineditos ou --pontes")
     pasta = Path(args.pasta) if args.pasta else pasta_fase4()
     oficial = pasta.resolve() == pasta_fase4().resolve()
 
@@ -1646,6 +1686,21 @@ def main() -> int:
 
     if args.pontes:
         return _conferir_ou_gravar_json(pasta / "pontes.json", pontes_conhecidas(), args.check)
+    # ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) as leituras das corridas 23 e 24, escritas em corridas_em_texto.py.
+    # ! Motivo: o .ps1 chama a leitura do modo pelo nome dele; os blocos entram no relatório da fase com `--colar`, como os das outras corridas.
+    if args.experimento_prompt or args.ineditos:
+        import corridas_em_texto as ct
+        bruto = ct.ler_experimento(args.saida) if args.experimento_prompt else ct.ler_ineditos(args.saida)
+        if not (any(bruto["por_condicao"].values()) if args.experimento_prompt else bruto["registros"]):
+            print(f"sem registros da corrida em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        if args.experimento_prompt:
+            dado = ct.resumir_experimento(bruto["base"], bruto["por_condicao"], bruto["condicoes"], corrida=args.saida)
+            return pf.fechar(args.nome or ct.NOME_EXPERIMENTO, dado, ct.render_experimento(dado), ct.PREFIXO_EXPERIMENTO, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
+        dado = ct.resumir_ineditos(bruto["registros"], bruto["linhas"], bruto["casos"], bruto["condicoes"], referencia=bruto["referencia"], corrida=args.saida)
+        return pf.fechar(args.nome or ct.NOME_INEDITOS, dado, ct.render_ineditos(dado), ct.PREFIXO_INEDITOS, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
     if args.revisao:
         return fechar_revisao(pasta, nome_dos_arquivos(args.nome, "revisao"), check=args.check, colar=args.colar)
     if args.trilha:

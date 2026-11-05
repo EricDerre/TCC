@@ -1,8 +1,8 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por avaliar_fase4.py a partir de cenarios.jsonl e condicoes_fase4.json da corrida (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão; o relatório da Pré-Fase 4 do Memorial cola estes blocos. -->
-# Repetição do ensaio dos cenários da Fase 5, com a correção da cura (corrida 21b), gerada em 2026-11-04
+# Repetição do ensaio dos cenários da Fase 5, com a correção da cura (corrida 21b), gerada em 2026-11-05
 
-Os dez cenários da ficha 36 (seis de contrato em produtos_api.php, um por modo, e quatro de localizador no front legado), cada um com o agente inteiro: diagnóstico ao vivo nos dez e cura de seletor nos quatro de localizador. No contrato (ficha 35), o MTTR vai da detecção ao diagnóstico conferido em código e o Task Success é a causa e o campo certos; no localizador, o MTTR vai da detecção à reexecução validada e o Task Success é o roteiro concluído sem erro depois da cura. O banco é restaurado e conferido por hash no começo de cada repetição.
+Os dez cenários da ficha 36 (seis de contrato em produtos_api.php, um por modo, e quatro de localizador no front legado), cada um com o agente inteiro: diagnóstico ao vivo nos dez e cura de seletor nos quatro de localizador. No contrato (ficha 35), o MTTR vai da detecção ao diagnóstico conferido em código e o Task Success é a causa e o campo certos; no localizador, o MTTR vai da detecção à reexecução validada e o Task Success é o roteiro concluído sem erro depois da cura. O banco é restaurado e conferido por hash no começo de cada repetição. Prompt contra a calibração (seção 3.3 do plano): maior prompt da tela 1950 tokens, limite de 1409 (10% acima do maior da calibração, 1281); casos acima: `contrato-malformed_json#1@tela`, `contrato-field_missing#1@tela`, `contrato-field_renamed#1@tela`, `contrato-type_drift#1@tela`, `contrato-escala_ou_unidade_errada#1@tela`, `contrato-error_500#1@tela`, `localizador-front-busca@cenario`, `localizador-front-admin-produtos@cenario`, `localizador-front-cliente-reserva@cenario`.
 
 
 <!-- tabela:tb_f4_cenarios_resumo -->

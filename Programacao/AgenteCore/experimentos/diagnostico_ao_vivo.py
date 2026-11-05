@@ -92,6 +92,19 @@ def caminho_dos_limiares() -> Path:
 
 # ------------------------------------------------------------------ contexto e prompt (sem gabarito)
 
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 96) a busca na biblioteca lê o caso ao vivo com o corpo inteiro da resposta (`corpo_completo`)
+# no lugar do trecho ou do resumo que vai ao prompt. O prompt não muda.
+# ! Motivo: os sinais em código da busca (recuperacao.sinais_deterministicos) comparam o corpo com o contrato, e no caso ao vivo só
+# recebiam o recorte da poda ou o resumo da lista: num `{"preco": null}` os outros seis campos pareciam ausentes, e `campo_ausente` ganhava
+# de `nulo_inesperado`; num resumo, ou num corpo cortado com o prefixo "...", não saía sinal nenhum. No caso escrito a busca lê o corpo
+# inteiro. A conferência sem modelo do corte (`conferir_corte_tela.py`) achou isso: o verbete certo estava no contexto em 15 dos 37 casos da
+# corrida 18b, e o corte, ao tirar a OBSERVAÇÃO e as listas do SINTOMA, derrubava para 10 os que só ficavam por palavras soltas.
+def caso_da_busca(caso: dict) -> dict:
+    """O caso como a busca o lê: com `corpo_completo` no lugar do CORPO, quando o caso ao vivo o traz; `entrada` não muda."""
+    corpo = caso.get("corpo_completo")
+    return caso if corpo is None else {**caso, "entrada": {**caso["entrada"], "corpo": corpo}}
+
+
 def contexto_ao_vivo(verbetes: list[dict], indice: rec.Indice, caso: dict, k: int = 3, extras=()) -> dict:
     """O ramo A2 de recuperacao.contexto sem pedir gabarito: os k verbetes que a busca entrega, no mesmo envelope; o
     verbete de ouro e a causa plantada ficam None, porque o agente não sabe a resposta.
@@ -100,7 +113,7 @@ def contexto_ao_vivo(verbetes: list[dict], indice: rec.Indice, caso: dict, k: in
     sem repetir os que a busca já entregou; os ids deles ficam em `por_id`.
     ! Motivo: a sonda de 28/09/2026 (roadmap §3) mostrou que a busca por palavras não trazia as notas ligadas ao caso
     reapresentado; os k da busca continuam na frente para o contexto de um caso sem notas ser byte a byte o de antes."""
-    sel = rec.recuperar(indice, caso, k)
+    sel = rec.recuperar(indice, caso_da_busca(caso), k)
     ids = [v["id"] for v in sel]
     por_id = [v for v in extras if v["id"] not in ids]
     todos = sel + por_id
@@ -378,7 +391,7 @@ def verbete_errado(indice: rec.Indice, caso: dict, causa_respondida: str | None,
     """O verbete de erro mais parecido com o caso cuja causa é OUTRA que não a respondida e que não estava no contexto:
     o distrator da intervenção de troca, escolhido sem gabarito (recuperacao._errados_plausiveis precisa dele)."""
     alvo = avaliar._normalizar(causa_respondida or "")
-    for _, v in rec.pontuar(indice, caso):
+    for _, v in rec.pontuar(indice, caso_da_busca(caso)):
         m = v["meta"]
         if m.get("tipo") != "erro" or v["id"] in excluir:
             continue
@@ -445,7 +458,7 @@ def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], 
     # ! Motivo: ficha 32 e o ciclo de correção (plano, seção 3.7, item 4): as notas do próprio caso chegam ao modelo sem
     # depender da busca por palavras, e a trilha diz quais verbetes vieram por esse caminho.
     ctx, prompt = montar_prompt(verbetes, indice, caso, k, extras)
-    sinais, itens = tr.candidatos(indice, caso, k)
+    sinais, itens = tr.candidatos(indice, caso_da_busca(caso), k)
     s_cand = trilha.evento("candidatos", tid, {"k": k, "sinais": sinais, "itens": itens, "hash_indice": hash_indice(indice), "por_id": ctx.get("por_id") or []},
                            "ao_vivo", ts=ts)
     if apos_candidatos is not None:

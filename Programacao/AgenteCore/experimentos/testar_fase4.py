@@ -872,7 +872,9 @@ def teste_caso_ao_vivo_contrato_sintoma_e_chaves():
     assert arvore["a_menos"] == 1 and arvore["a_mais"] == 1 and arvore["faltam"] == ['text "R$ 89,90"'] and arvore["sobram"] == ['text "undefined"'], arvore
     sintoma = cv.sintoma_por_molde(conferencia, diff, arvore, status=200)
     assert sintoma == cv.sintoma_por_molde(conferencia, diff, arvore, status=200), "determinístico"
-    assert "preco_v2" in sintoma and "14 cartões" in sintoma and "R$ 89,90" in sintoma, sintoma
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) o SINTOMA diz a contagem de linhas, sem a lista: "R$ 89,90" saiu dele.
+    # ! Motivo: a lista `faltam` saiu do molde para o prompt caber no limite do plano; a trilha continua com ela, no diff.
+    assert "preco_v2" in sintoma and "14 cartões" in sintoma and "1 linha(s) a menos" in sintoma and "R$ 89,90" not in sintoma, sintoma
     texto = sintoma.lower()
     for proibido in list(taxonomia.CAUSAS_RAIZ) + list(MODOS_DE_FALHA):
         assert proibido not in texto, (proibido, sintoma)
@@ -1500,7 +1502,8 @@ def teste_executar_fase4_calibracao_e_tela_partes_puras():
     # ! Motivo: a corrida 21 é `executar_fase4.py --modo cenarios` (plano aprovado, seção 5, P6).
     # ! Alteração de IA - Revisar: (04/11/2026, P7) o modo `avaliacao_trilha` entra na tupla.
     # ! Motivo: a corrida 22 é `executar_fase4.py --modo avaliacao_trilha` (plano aprovado, seção 5, P7).
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")   # (01/11, P4) cura, (03/11, P5) biblioteca, (04/11, P6) cenarios, (04/11, P7) avaliacao_trilha
+    # (05/11, decisões 91 e 92) experimento_prompt e ineditos, as corridas 23 e 24, em corridas_em_texto.py
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")   # (01/11, P4) cura, (03/11, P5) biblioteca, (04/11, P6) cenarios, (04/11, P7) avaliacao_trilha
 
     def reg(caso: str, causa: str, resposta: str) -> dict:
         return {"caso": caso, "gabarito": {"causa_raiz": causa, "campo_afetado": None},
@@ -1674,7 +1677,9 @@ def teste_rodar_fase4_ps1_com_bom_sem_travessao_e_modos_novos():
     # ! Alteração de IA - Revisar: (04/11/2026, P7) o modo `avaliacao_trilha` entra no ValidateSet, conta como modo com modelo e passa
     # `--sem-seletor` ao executor com `-SemSeletor` (fumaça sem as cobaias); a avaliação do modo é `avaliar_fase4.py --trilha`.
     # ! Motivo: a corrida 22 é `rodar_fase4.ps1 -Modo avaliacao_trilha -Saida fase4_trilha` (plano aprovado, seção 6).
-    assert 'ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")' in texto, "os modos novos entram no ValidateSet"
+    # ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) os modos `experimento_prompt` e `ineditos` entram no ValidateSet.
+    # ! Motivo: a corrida 23 é `rodar_fase4.ps1 -Modo experimento_prompt -Saida fase4_experimento` e a 24, `-Modo ineditos -Saida fase4_ineditos`.
+    assert 'ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")' in texto, "os modos novos entram no ValidateSet"
     assert '($Modo -eq "cenarios")' in texto, "o modo cenarios passa --repeticoes ao executor"
     assert '($Modo -eq "avaliacao_trilha")' in texto and "[switch]$SemSeletor" in texto and "--sem-seletor" in texto, "o modo avaliacao_trilha e -SemSeletor"
     assert "avaliacao_trilha" in texto.split("$ComModelo = ", 1)[1].split("\n", 1)[0], "o modo avaliacao_trilha é um modo com modelo (Ollama, RAM, ponte)"
@@ -2265,7 +2270,7 @@ def teste_executar_fase4_modo_cura_partes_puras():
     # ! Motivo: a corrida 21 é `executar_fase4.py --modo cenarios` (plano aprovado, seção 5, P6).
     # ! Alteração de IA - Revisar: (04/11/2026, P7) a tupla ganha `avaliacao_trilha` (a corrida 22).
     # ! Motivo: plano aprovado, seção 5 (P7); o teste fixa a tupla inteira para um modo novo nunca entrar sem o seu teste.
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")
     ap = ex.montar_parser()
     a = ap.parse_args(["--modo", "cura", "--saida", "x"])
     assert a.repeticoes == 5 and a.formas == "harness,php" and a.roteiros is None and a.modos is None
@@ -3172,7 +3177,7 @@ def teste_executar_fase4_modo_biblioteca_partes_puras():
     # ! Motivo: a corrida 21 é `executar_fase4.py --modo cenarios` (plano aprovado, seção 5, P6).
     # ! Alteração de IA - Revisar: (04/11/2026, P7) a tupla ganha `avaliacao_trilha` (a corrida 22).
     # ! Motivo: plano aprovado, seção 5 (P7); o teste fixa a tupla inteira para um modo novo nunca entrar sem o seu teste.
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")
     ap = ex.montar_parser()
     a = ap.parse_args(["--modo", "biblioteca", "--saida", "x"])
     assert a.base_ineditos == "corrida12" and a.sem_sonda is False and a.sem_correcao is False and a.teto_proposta == 700
@@ -3600,6 +3605,31 @@ def teste_linha_de_base_manual_ficha_endereco_e_passos_do_cenario():
         pass
     else:
         raise AssertionError("cenário fora do ensaio aceito")
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 90) a leitura dos cenários mede o prompt contra o limite, como a da tela.
+# ! Motivo: a corrida 21c existe para os dez prompts caberem em 1409 tokens (ficha 42), e só a leitura da tela dizia isso; sem este bloco, a
+# resposta sairia de abrir o cenarios.jsonl à mão.
+def teste_avaliar_fase4_cenarios_medem_o_prompt_contra_o_limite():
+    import avaliar_fase4 as av
+    import cenarios_fase4 as cen
+    c = cen.CENARIOS_DO_ENSAIO[0]
+
+    def reg(rep: int) -> dict:
+        return {"cenario": c["id"], "tipo": c["tipo"], "modo": c["modo"], "classe": c["classe"], "causa_esperada": c["causa"], "repeticao": rep, "detectou": True,
+                "task_success": True, "mttr_s": 60.0, "segundos": 70.0, "rotulo": c["causa"]}
+
+    cal = {"k_escolhido": 3, "por_k": [{"k": 1, "tokens_entrada_max": 900}, {"k": 3, "tokens_entrada_max": 1281}]}
+    # os tokens ficam no registro oficial do diagnóstico, e o localizador repete o mesmo id de caso a cada repetição
+    diag = [{"caso": "c#1@tela", "tokens_entrada": 1200}, {"caso": "c#2@tela", "tokens_entrada": 1500}, {"caso": "l@cenario", "tokens_entrada": 1450}, {"caso": "l@cenario", "tokens_entrada": 1300}]
+    dado = av.resumir_cenarios({"condicoes": {}, "registros": [reg(1), reg(2)], "calibracao": cal, "diagnosticos": diag}, gerado_em="2026-11-05T20:00:00", corrida="x")
+    assert dado["prompt"] == {"maximo_da_calibracao": 1281, "limite_mais_10_pct": 1409, "acima": ["c#2@tela", "l@cenario"], "maximo_da_tela": 1500}, dado["prompt"]
+    md = av.render_cenarios(dado)
+    assert "limite de 1409" in md and "`c#2@tela`" in md, "a leitura diz quem passou do limite"
+    sem_tokens = av.resumir_cenarios({"condicoes": {}, "registros": [reg(1)], "calibracao": cal}, gerado_em="2026-11-05T20:00:00", corrida="x")
+    assert sem_tokens["prompt"] is None and "limite de" not in av.render_cenarios(sem_tokens), "sem tokens medidos a leitura não pode dizer que nenhum passou"
+    sem_calibracao = av.resumir_cenarios({"condicoes": {}, "registros": [reg(1)], "diagnosticos": diag}, gerado_em="2026-11-05T20:00:00", corrida="x")
+    assert sem_calibracao["prompt"] is None, "sem a calibração não há limite a citar"
 
 
 def teste_avaliar_fase4_cenarios_mttr_com_reamostragem_e_task_success_com_wilson():
@@ -4148,7 +4178,7 @@ def teste_rodar_fase4_ps1_cada_modo_chama_uma_leitura_que_o_avaliador_aceita():
         return
     arq = EXP / "rodar_fase4.ps1"
     modos = re.findall(r'"([a-z_]+)"', re.search(r'ValidateSet\(([^)]*)\)\]\[string\]\$Modo', arq.read_text(encoding="utf-8-sig")).group(1))
-    assert "avaliacao_trilha" in modos and len(modos) == 7, modos
+    assert "avaliacao_trilha" in modos and "experimento_prompt" in modos and "ineditos" in modos and len(modos) == 9, modos
     caminho = "'" + str(arq).replace("'", "''") + "'"
     lista = ",".join(f"'{m}'" for m in modos)
     roteiro = "\n".join([
@@ -4464,7 +4494,7 @@ def teste_avaliar_fase4_revisao_com_parecer_aprovado_separa_quem_decidiu_e_nao_c
         assert f"<!-- tabela:tb_f4_revisao_{bloco} -->" in md, bloco
     assert "Só 1 dos 5 relatórios tem resposta própria do revisor" in md and "não cumpre" in md and "pode ter lido" in md and "`a-1`" in md, md
     assert "Somando a resposta do revisor e o parecer aprovado" in md and "O revisor avaliou" not in md, "a frase final não atribui ao revisor o que é do parecer"
-    assert "limitação declarada (decisão 87)" in md, md
+    assert "em aberto e será feita depois da Pós-Fase 4 (decisão 95)" in md, md
     assert "—" not in md and "→" not in md
     # sem parecer aprovado nem dúvida, a leitura não diz que a medida falhou
     trilha2, planilha2 = _trilha_e_planilha_da_revisao()
@@ -4764,6 +4794,525 @@ def teste_medir_prompt_tela_nos_dados_gravados_bate_com_a_ficha_42():
     assert c18["cenarios"]["hoje"]["acima_do_limite"] == 37 and c18["cenarios"]["hoje"]["max"] == 2034
     assert c21["cenarios"]["hoje"]["acima_do_limite"] == 9
     assert all(sum(b["mediana"] for b in c["blocos_chars"].values()) > 0 for c in (c18, c21))
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) testes do corte do caso ao vivo: a árvore do prompt fica com
+# o título e o que a referência em modo normal não tem; sem referência, sem cartões e sem linhas repetidas; o SINTOMA guarda as
+# contagens de linhas e perde as listas; os campos ausentes viram uma frase só; a OBSERVAÇÃO sai da entrada e fica no caso, fora
+# do prompt e da busca; e o prompt fixo não muda.
+# ! Motivo: o plano aprovado (seção 3.3) limita o prompt na tela ao maior da calibração mais 10%, e na corrida 18b os 37 prompts
+# passaram disso. Sem estes testes, uma mudança no molde voltaria a encher o prompt e ninguém veria antes de uma noite de máquina.
+def teste_corte_arvore_fica_com_o_titulo_e_o_que_a_referencia_nao_tem():
+    import caso_ao_vivo as cv
+    ref = ('document "Produtos"\n  navigation\n    link "CONTATO" href="index.php#contato"\n  main\n    heading "Produtos via API" level=2\n'
+           '    group\n      heading "Picanha" level=3\n      button "R$ 89,90" class="btn"\n    text "(mais 11 cartões omitidos pela poda)"\n    heading "Links" level=4\n')
+    assert cv.arvore_do_prompt(ref, ref, set()) == 'document "Produtos"', "tela igual à referência: só o título"
+    atual = ref.replace("(mais 11", "(mais 10").replace('    heading "Links" level=4\n', '    text "Erro ao carregar"\n    heading "Links" level=4\n')
+    assert cv.arvore_do_prompt(atual, ref, set()) == 'document "Produtos"\n    text "Erro ao carregar"', "o aviso da poda não é da página"
+    assert cv.arvore_do_prompt("", ref, set()) == "", "sem árvore, nada"
+
+
+def teste_corte_arvore_tira_o_rodape_que_so_a_referencia_completa_tem():
+    """A tela de erro sobe o rodapé para o nível que a poda guarda; ele não é novidade: está na árvore completa da referência."""
+    import caso_ao_vivo as cv
+    ref = 'document "P"\n  main\n    heading "H" level=2\n'
+    atual = ('document "P"\n  main\n    heading "H" level=2\n    text "Erro ao carregar: HTTP 500"\n    text "O melhor churrasco da Zona Leste"\n'
+             '    link "contato@x.com" href="mailto:contato@x.com"\n')
+    nomes = {"H", "O melhor churrasco da Zona Leste", "contato@x.com"}
+    assert cv.arvore_do_prompt(atual, ref, nomes) == 'document "P"\n    text "Erro ao carregar: HTTP 500"'
+
+
+def teste_corte_arvore_guarda_a_linha_que_mudou_so_no_atributo():
+    """Um id renomeado muda a linha e não muda o nome: é a diferença que a quebra de localizador precisa mostrar."""
+    import caso_ao_vivo as cv
+    ref = 'document "P"\n  navigation\n    searchbox "search" id="buscar" name="buscar"\n'
+    atual = 'document "P"\n  navigation\n    searchbox "search" id="buscar_novo" name="buscar"\n'
+    assert cv.arvore_do_prompt(atual, ref, {"search"}) == 'document "P"\n    searchbox "search" id="buscar_novo" name="buscar"'
+
+
+def teste_corte_arvore_tira_as_linhas_repetidas():
+    import caso_ao_vivo as cv
+    ref = 'document "Lista"\n  main\n    button " ALTERAR"\n    button " EXCLUIR"\n'
+    atual = 'document "Lista"\n  main\n' + '    button " ALTERAR"\n    button " EXCLUIR ITEM"\n' * 3
+    assert cv.arvore_do_prompt(atual, ref, {"ALTERAR", "EXCLUIR"}) == 'document "Lista"\n    button " EXCLUIR ITEM"'
+
+
+def teste_corte_arvore_sem_referencia_tira_os_cartoes_e_as_repetidas():
+    import caso_ao_vivo as cv
+    atual = ('document "Lista"\n  navigation\n    link "ADMIN" href="index.php"\n  main\n    heading "Lista de Produtos" level=2\n'
+             '    group\n      heading "Picanha" level=3\n      text "Carnes"\n'
+             '    button " ALTERAR"\n    button " EXCLUIR"\n    button " ALTERAR"\n    button " EXCLUIR"\n    text "(mais 2 cartões omitidos pela poda)"\n')
+    assert cv.arvore_do_prompt(atual) == ('document "Lista"\n  navigation\n    link "ADMIN" href="index.php"\n  main\n    heading "Lista de Produtos" level=2\n'
+                                          '    button " ALTERAR"\n    button " EXCLUIR"')
+
+
+def teste_corte_poda_nomes_dos_nos_limpos_como_a_poda():
+    import poda
+    nos = [{"papel": "text", "nome": "  Av.  Itaquera ", "profundidade": 1}, {"papel": "main", "profundidade": 0}, {"papel": "img", "nome": "", "profundidade": 2}]
+    assert poda.nomes_dos_nos(nos) == {"Av. Itaquera"}
+    assert poda.nomes_dos_nos(None) == set()
+
+
+def teste_corte_sintoma_guarda_as_contagens_e_perde_as_listas():
+    import caso_ao_vivo as cv
+    arvore = cv.diff_arvore('document "x"\n  text "R$ 89,90"\n  text "b"\n', 'document "x"\n  text "undefined"\n')
+    assert arvore["a_menos"] == 2 and arvore["a_mais"] == 1
+    sintoma = cv.sintoma_por_molde(None, None, arvore, status=200)
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) as duas contagens viram uma frase só quando existem as duas.
+    # ! Motivo: a conferência sem modelo mostrou prompts com "A tela mostra 6 linha(s) a menos que a referência. A tela mostra 6 linha(s) a
+    # mais que a referência." e o maior deles em 1408 tokens estimados, contra o limite de 1409.
+    assert sintoma == "A tela mostra 2 linha(s) a menos e 1 a mais que a referência.", sintoma
+    so_menos = cv.sintoma_por_molde(None, None, {"a_menos": 3, "a_mais": 0}, status=200)
+    so_mais = cv.sintoma_por_molde(None, None, {"a_menos": 0, "a_mais": 4}, status=200)
+    assert so_menos == "A tela mostra 3 linha(s) a menos que a referência." and so_mais == "A tela mostra 4 linha(s) a mais que a referência.", (so_menos, so_mais)
+    assert arvore["faltam"] and arvore["sobram"], "as listas continuam no diff, para a trilha"
+
+
+def teste_corte_campos_ausentes_viram_uma_frase_so():
+    import caso_ao_vivo as cv
+    sete = {"corpo": "json", "diferencas": [{"campo": c, "tipo": "ausente"} for c in ("id", "nome", "preco")] + [{"campo": "detail", "tipo": "inesperado"}]}
+    assert cv._frases_do_corpo(sete) == ["Os campos id, nome e preco não vieram na resposta.", "A resposta trouxe o campo detail, que o contrato não prevê."]
+    assert cv._frases_do_corpo({"corpo": "json", "diferencas": [{"campo": "id", "tipo": "ausente"}]}) == ["O campo id não veio na resposta."], "um campo: a frase de sempre"
+    por_item = {"corpo": "json", "diferencas": [{"campo": "resumo", "tipo": "ausente", "item": 3}, {"campo": "tipo", "tipo": "ausente", "item": 3}, {"campo": "nome", "tipo": "ausente"}]}
+    assert cv._frases_do_corpo(por_item) == ["Os campos resumo e tipo não vieram no item 3 da resposta.", "O campo nome não veio na resposta."], "o item é parte do que o sintoma afirma"
+
+
+def teste_corte_caso_da_tela_leva_a_arvore_cortada_e_guarda_a_observacao_fora_do_prompt():
+    import caso_ao_vivo as cv
+    import estrategias
+    import executar_fase4 as ex
+    import recuperacao as rec
+    ref = {"arvore": 'document "P"\n  main\n    heading "H" level=2\n', "nomes": {"H"}}
+    podada = {"texto": 'document "P"\n  main\n    heading "H" level=2\n    text "Erro ao carregar"\n'}
+    item = {"id": "run-1", "requisicao": "GET /api/produtos", "classe": 5, "nivel": 1}
+    caso = ex.caso_vivo_da_tela(item, 500, "id: inteiro", "{}", "A requisição respondeu HTTP 500.", podada, ref, "poda: árvore com 54 nós e 21 linhas depois; corpo json, forma objeto, 1 diferença(s) contra o contrato")
+    assert caso["entrada"]["arvore"] == 'document "P"\n    text "Erro ao carregar"'
+    assert "observacao" not in caso["entrada"], "a OBSERVAÇÃO ADICIONAL não vai ao prompt nem à busca"
+    assert caso["observacao_da_poda"].startswith("poda: árvore com 54 nós"), "fica no caso gravado na trilha"
+    assert caso["classe"] == 5 and caso["nivel"] == 1 and caso["id"] == "run-1@tela"
+    dados = estrategias._dados_do_caso(caso)
+    assert "OBSERVAÇÃO ADICIONAL" not in dados and "54 nós" not in dados
+    assert "54 nós" not in " ".join(rec.sinais_do_caso(caso)["consulta"])
+    assert ex.caso_vivo_da_tela(item, 500, "id: inteiro", "{}", "s", None, ref, "sem captura da árvore")["entrada"].get("arvore") is None
+
+
+def teste_corte_caso_do_localizador_usa_a_referencia_e_sem_observacao():
+    import cenarios_fase4 as cen
+    import executar_fase4 as ex
+    loc = next(x for x in cen.CENARIOS_DO_ENSAIO if x["tipo"] == "localizador")
+    q = cen.quebra(loc["cenario"], loc["modo"])
+    r = {"conferencia_falha": {"nome": "passo 3", "passou": False, "esperado": "clicar", "observado": None}, "erro": "TimeoutError: locator.click", "chamadas": []}
+    podada = {"texto": 'document "P"\n  main\n' + '    button " ALTERAR"\n    button " EXCLUIR ITEM"\n' * 4, "antes": 40, "depois": 10}
+    ref = {"arvore": 'document "P"\n  main\n    button " ALTERAR"\n    button " EXCLUIR"\n', "nomes": {"ALTERAR", "EXCLUIR"}}
+    caso = ex.caso_do_localizador(loc, {"quebra": q, "r": r, "podada": podada, "ref": ref})
+    assert caso["entrada"]["arvore"] == 'document "P"\n    button " EXCLUIR ITEM"'
+    assert "observacao" not in caso["entrada"] and "TimeoutError" in caso["observacao_da_poda"]
+    assert caso["entrada"]["seletor_quebrado"] == q["localizador"]
+    sem_ref = ex.caso_do_localizador(loc, {"quebra": q, "r": r, "podada": podada, "ref": {}})
+    assert sem_ref["entrada"]["arvore"].count("ALTERAR") == 1, "sem a árvore da referência, ao menos sem repetidas"
+
+
+def teste_corte_referencia_da_cura_guarda_a_arvore_e_os_nomes():
+    import executar_fase4 as ex
+    captura = {"titulo": "P", "nos": [{"papel": "main", "nome": "", "profundidade": 0}, {"papel": "button", "nome": "EXCLUIR", "profundidade": 1, "atributos": {}}],
+               "interativos": [], "aria": "- main"}
+    d = ex.arvore_da_referencia(captura, None)
+    assert d["arvore"].startswith('document "P"') and "EXCLUIR" in d["arvore"] and d["nomes"] == {"EXCLUIR"}
+    assert ex.arvore_da_referencia(None, None) == {}, "sem captura, a célula fica sem árvore de referência"
+    assert ex.arvore_da_referencia({"erro": "página fechada", "nos": []}, None) == {}
+
+
+def teste_corte_leitura_acha_a_observacao_fora_da_entrada():
+    import avaliar_fase4 as af
+    reg = {"id": "a@tela", "entrada": {"corpo": "{}", "sintoma": "s"}, "observacao_da_poda": "poda: corpo json, forma lista, 2 diferença(s) contra o contrato"}
+    lida = af._leitura_do_caso_ao_vivo(af.entrada_do_caso_gravado(reg))
+    assert lida["diferencas_contra_contrato"] == 2 and lida["forma_do_corpo"] == "lista"
+    antigo = {"id": "b@tela", "entrada": {"corpo": "{}", "observacao": "corpo json, forma objeto, 1 diferença(s) contra o contrato"}}
+    assert af._leitura_do_caso_ao_vivo(af.entrada_do_caso_gravado(antigo))["diferencas_contra_contrato"] == 1, "as corridas 18 e 18b continuam legíveis"
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 96) testes da busca do caso ao vivo: ela lê o corpo inteiro da resposta, o prompt
+# continua com o trecho; a trilha lista os candidatos da mesma busca; e o tamanho do caso não conta o que não vai ao modelo.
+# ! Motivo: a conferência sem modelo mostrou que os sinais em código da busca liam o recorte ou o resumo do CORPO: num corpo `{"preco":
+# null}` os outros seis campos pareciam ausentes, e o verbete certo saía do contexto. Sem estes testes, a tela volta a procurar com menos
+# informação que o caso escrito sem ninguém notar.
+_CORPO_NULO = json.dumps([{"id": i, "nome": f"Produto {i}", "resumo": "r", "tipo": "Carnes", "preco": None, "imagem": "a.png", "destaque": False} for i in range(1, 15)])
+
+
+def _caso_nulo(corpo_completo=None):
+    import caso_ao_vivo as cv
+    from banco_casos import CONTRATO_PRODUTO
+    caso = cv.montar_caso("semt-8@tela", "GET /api/produtos", 200, CONTRATO_PRODUTO, '{"preco": null}', "O campo preco veio nulo.")
+    if corpo_completo is not None:
+        caso["corpo_completo"] = corpo_completo
+    return caso
+
+
+def teste_corte_busca_le_o_corpo_inteiro_e_o_prompt_leva_o_trecho():
+    import diagnostico_ao_vivo as dv
+    verbetes, indice = _curada()
+    sem, _ = dv.montar_prompt(verbetes, indice, _caso_nulo(), 3)
+    assert "nulo_inesperado" not in sem["verbetes_ids"], ("o recorte faz os outros campos parecerem ausentes", sem["verbetes_ids"])
+    ctx, prompt = dv.montar_prompt(verbetes, indice, _caso_nulo(_CORPO_NULO), 3)
+    assert "nulo_inesperado" in ctx["verbetes_ids"], ctx["verbetes_ids"]
+    assert '{"preco": null}' in prompt and "Produto 14" not in prompt, "o corpo inteiro não vai ao prompt"
+    assert dv.caso_da_busca(_caso_nulo())["entrada"]["corpo"] == '{"preco": null}', "sem corpo inteiro, a busca lê o que há"
+    vazio = dv.caso_da_busca(_caso_nulo(""))
+    assert vazio["entrada"]["corpo"] == "", "corpo vazio é informação, não ausência"
+    assert _caso_nulo(_CORPO_NULO)["entrada"]["corpo"] == '{"preco": null}', "a entrada do caso não muda"
+
+
+def teste_corte_trilha_lista_os_candidatos_da_mesma_busca():
+    import diagnostico_ao_vivo as dv
+    import trilha as tr
+    verbetes, indice = _curada()
+    caso = _caso_nulo(_CORPO_NULO)
+    ctx, _ = dv.montar_prompt(verbetes, indice, caso, 3)
+    _, itens = tr.candidatos(indice, dv.caso_da_busca(caso), 3)
+    escolhidos = [x["id"] for x in sorted(itens, key=lambda x: x["posicao"]) if x.get("escolhido")]
+    assert escolhidos == ctx["verbetes_ids"], (escolhidos, ctx["verbetes_ids"])
+
+
+def teste_corte_tamanho_do_caso_nao_conta_o_que_nao_vai_ao_modelo():
+    import caso_ao_vivo as cv
+    com = _caso_nulo(_CORPO_NULO)
+    com["observacao_da_poda"] = "poda: árvore com 193 nós"
+    sem = _caso_nulo()
+    assert cv.tamanho_do_caso(com) == cv.tamanho_do_caso(sem) == len(json.dumps(sem, ensure_ascii=False))
+
+
+def teste_corte_corpo_do_caso_leva_um_exemplo_so():
+    import caso_ao_vivo as cv
+    import poda
+    from banco_casos import CONTRATO_PRODUTO
+    ref = [{"id": i, "nome": f"Produto {i}", "resumo": "r", "tipo": "Carnes", "preco": 10.0, "imagem": "a.png", "destaque": False} for i in range(1, 15)]
+    atual = [{**x, "nome": x["nome"] + "?"} if x["id"] in (8, 11, 12) else x for x in ref]
+    d = cv.diff_referencia(json.dumps(ref), json.dumps(atual), 20.0, 25.0)
+    corpo = cv.corpo_do_caso(poda.diff_contrato(CONTRATO_PRODUTO, json.dumps(atual), forma_esperada="lista"), d)
+    assert corpo.count('"id":') == 1 and '"id": 8' in corpo and "nome diferente em 3 itens" in corpo, corpo
+
+
+def teste_corte_conferencia_estima_tokens_e_separa_o_que_mudou_os_verbetes():
+    """A conferência sem modelo: os tokens saem da razão do prompt guardado, e os verbetes diferentes são separados entre o que
+    o corte mudou (mesma biblioteca da corrida antiga) e o que a biblioteca de produção mudou."""
+    import conferir_corte_tela as cc
+    a = cc.linha_do_caso("a@tela", "x" * 3000, ["v1", "v2"], ["v1", "v3"], "x" * 6000, 2000, ["v1", "v2"])
+    assert a["tokens_antes"] == 2000 and a["tokens_estimados"] == 1000 and a["chars_antes"] == 6000 and a["chars_depois"] == 3000
+    assert a["mudou_pelo_corte"] is False and a["mudou_pela_biblioteca"] is True and a["verbetes_producao"] == ["v1", "v3"]
+    b = cc.linha_do_caso("b@tela", "x" * 5000, ["v9", "v2"], ["v9", "v2"], "x" * 6000, 2000, ["v1", "v2"])
+    assert b["tokens_estimados"] == 1667 and b["mudou_pelo_corte"] is True and b["mudou_pela_biblioteca"] is False
+    r = cc.resumir([a, b], 1409)
+    assert r["casos"] == 2 and r["acima_do_limite"] == ["b@tela"] and r["tokens"] == {"min": 1000, "mediana": 1333.5, "max": 1667}
+    assert r["mudou_pelo_corte"] == ["b@tela"] and r["mudou_pela_biblioteca"] == ["a@tela"]
+    vazio = cc.resumir([], 1409)
+    assert vazio["casos"] == 0 and vazio["acima_do_limite"] == [] and vazio["tokens"] is None
+
+
+def teste_corte_conferencia_diz_se_o_verbete_da_causa_certa_ficou_no_contexto():
+    """A busca lê o SINTOMA, e o corte mudou o SINTOMA: a conferência compara, com o gabarito, se o verbete da causa certa continua
+    entre os recuperados. O gabarito entra só nesta conta, depois de o prompt estar montado."""
+    import conferir_corte_tela as cc
+    perdeu = cc.linha_do_caso("a@tela", "x", ["v1"], ["v1"], "xx", 2, ["campo_ausente"], causa="campo_ausente")
+    ganhou = cc.linha_do_caso("b@tela", "x", ["corpo_vazio"], ["corpo_vazio"], "xx", 2, ["v1"], causa="corpo_vazio")
+    manteve = cc.linha_do_caso("c@tela", "x", ["tipo_divergente"], ["v1"], "xx", 2, ["tipo_divergente"], causa="tipo_divergente")
+    assert perdeu["ouro_antes"] is True and perdeu["ouro_mesma_biblioteca"] is False and perdeu["ouro_producao"] is False
+    r = cc.resumir([perdeu, ganhou, manteve], 1409)
+    assert r["ouro"] == {"antes": 2, "mesma_biblioteca": 2, "producao": 1, "fixture": 0}
+    assert r["perdeu_o_ouro_pelo_corte"] == ["a@tela"] and r["ganhou_o_ouro_pelo_corte"] == ["b@tela"]
+    assert r["perdeu_o_ouro_pela_biblioteca"] == ["c@tela"] and r["ganhou_o_ouro_pela_biblioteca"] == []
+    assert cc.linha_do_caso("d", "x", [], [], "xx", 2, [])["ouro_antes"] is None, "sem gabarito, sem conta"
+
+
+def teste_corte_conferencia_compara_com_o_fixture_e_acha_o_prompt_de_cada_corrida():
+    import conferir_corte_tela as cc
+    a = cc.linha_do_caso("a@tela", "x", ["campo_ausente"], ["campo_ausente"], "xx", 2, ["v1"], causa="campo_ausente", ids_fixture=["campo_ausente", "v2"])
+    b = cc.linha_do_caso("b@tela", "x", ["v1"], ["v1"], "xx", 2, ["v1"], causa="corpo_vazio", ids_fixture=["corpo_vazio"])
+    assert a["ouro_fixture"] is True and b["ouro_fixture"] is True and a["verbetes_fixture"] == ["campo_ausente", "v2"]
+    assert cc.resumir([a, b], 1409)["ouro"]["fixture"] == 2
+    guardados = {"contrato-x#1": ["v1"], "lex-1@tela": ["v2"], "localizador-y@cenario": ["v3"]}
+    assert cc.verbetes_do_caso(guardados, "contrato-x#1@tela") == ["v1"] and cc.verbetes_do_caso(guardados, "lex-1@tela") == ["v2"]
+    assert cc.verbetes_do_caso(guardados, "localizador-y@cenario") == ["v3"] and cc.verbetes_do_caso(guardados, "outro@tela") == []
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) testes das corridas em texto: o experimento dos itens da decisão 55 (corrida
+# 23) muda só o que cada condição deve mudar e nunca o prompt do agente, e os 36 inéditos da ficha 27 (corrida 24) são lidos com a
+# biblioteca de produção.
+# ! Motivo: a corrida 23 custa cerca de 3 h, e a resposta dela só vale se a única diferença contra a corrida 16 for o item medido; a
+# leitura pelo gabarito fica fora do agente, e um rótulo por extenso precisa voltar ao nome oficial para a conta ser a mesma.
+def _caso_em_texto():
+    from banco_casos import CONTRATO_PRODUTO
+    return {"id": "x-1", "classe": 2, "nivel": 1, "origem": "fixture", "entrada": {"requisicao": "GET /api/produtos", "status": 200, "contrato": CONTRATO_PRODUTO, "corpo": "[]", "sintoma": "o cartão veio vazio"}}
+
+
+def teste_corrida23_cada_condicao_muda_so_o_que_deve():
+    import corridas_em_texto as ct
+    import estrategias
+    import taxonomia
+    caso = _caso_em_texto()
+    base = estrategias.linear_com_biblioteca(caso, "DOC")
+    assert ct.prompt_da_condicao("base", caso, "DOC") == base, "a base é o prompt congelado, byte a byte"
+    com = ct.prompt_da_condicao("exemplar", caso, "DOC")
+    assert com.replace(ct.EXEMPLAR, "") == base and com.index("Você analisa") < com.index(ct.EXEMPLAR) < com.index("REQUISIÇÃO: GET /api/produtos")
+    rot = ct.prompt_da_condicao("rotulos_por_extenso", caso, "DOC")
+    assert rot.split("Valores permitidos")[0] == base.split("Valores permitidos")[0], "antes da lista, nada muda"
+    assert "  - campo ausente\n" in rot + "\n" and "campo_ausente" not in rot
+    assert set(ct.ROTULOS_POR_EXTENSO) == set(taxonomia.CAUSAS_RAIZ) and len(set(ct.ROTULOS_POR_EXTENSO.values())) == 23
+    try:
+        ct.prompt_da_condicao("outra", caso, "DOC")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("condição desconhecida deveria ser recusada")
+
+
+def teste_corrida23_o_exemplar_nao_e_de_nenhum_caso_e_tem_a_forma_da_resposta():
+    import avaliar
+    import banco_casos
+    import corridas_em_texto as ct
+    lido = avaliar.extrair(ct.EXEMPLAR)
+    assert lido["causa_raiz"] == ct.CAUSA_DO_EXEMPLAR and ct.CAUSA_DO_EXEMPLAR in banco_casos.CAUSAS_RAIZ if hasattr(banco_casos, "CAUSAS_RAIZ") else lido["causa_raiz"] == ct.CAUSA_DO_EXEMPLAR
+    assert all(linha in ct.EXEMPLAR for linha in ("CAUSA_RAIZ:", "CAMPO:", "IMPACTO:", "FONTE:"))
+    assert "/api/clientes" in ct.EXEMPLAR, "a rota não existe na CobaiaAPI: o exemplar não é de nenhum caso"
+    assert not any("/api/clientes" in str(c["entrada"].get("requisicao")) for c in banco_casos.CASOS)
+    assert "—" not in ct.EXEMPLAR and "→" not in ct.EXEMPLAR
+
+
+def teste_corrida23_rotulo_por_extenso_volta_ao_nome_oficial():
+    import corridas_em_texto as ct
+    assert ct.rotulo_lido("Raciocínio.\nCAUSA_RAIZ: campo ausente\nCAMPO: preco") == "campo_ausente"
+    assert ct.rotulo_lido("CAUSA_RAIZ: coleção no lugar de objeto.") == "colecao_no_lugar_de_objeto"
+    assert ct.rotulo_lido("CAUSA_RAIZ: corpo não é JSON") == "corpo_nao_e_json"
+    assert ct.rotulo_lido("**CAUSA_RAIZ:** tipo_divergente") == "tipo_divergente"
+    assert ct.rotulo_lido("CAUSA_RAIZ: `chave de junção errada`") == "chave_de_juncao_errada"
+    assert ct.rotulo_lido("CAUSA_RAIZ: outra coisa") == "outra coisa", "fora do conjunto fica como veio"
+    assert ct.rotulo_lido("sem a linha") is None
+    assert ct.rotulo_lido("CAUSA_RAIZ: tipo_divergente (o campo preco veio como texto)") == "tipo_divergente"
+    assert ct.rotulo_lido("CAUSA_RAIZ: campo ausente, no campo preco") == "campo_ausente"
+    assert ct.rotulo_lido("CAUSA_RAIZ: campo_ausente_preco") == "campo_ausente_preco", "um rótulo inventado não vira o oficial por começar igual"
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 91) a leitura das condições lê os 90 registros da corrida 16 como o leitor oficial.
+# ! Motivo: `avaliar.extrair` guarda só a primeira palavra da linha CAUSA_RAIZ, então "campo ausente" viraria "campo"; a leitura nova lê a
+# linha inteira. O acerto da base entra na mesma tabela das condições e precisa ser o número publicado da corrida 16.
+def teste_corrida23_a_leitura_nova_nao_muda_a_corrida_16():
+    import avaliar
+    import corridas_em_texto as ct
+    import executar_bateria
+    arq = ct._pasta_da_base() / "qwen2.5_7b" / "diagnosticos__L100.jsonl"
+    if not arq.exists():
+        return
+    registros = executar_bateria.ler_jsonl(arq)
+    assert len(registros) == 90
+    for r in registros:
+        oficial = avaliar.avaliar_registro(r, set())
+        rotulo = ct.rotulo_lido(r["resposta"])
+        assert oficial["causa_correta"] == (rotulo == r["gabarito"]["causa_raiz"]), (r["caso"], r["resposta"][-200:])
+        assert (rotulo or "") == avaliar._normalizar(oficial["causa_respondida"] or ""), (r["caso"], oficial["causa_respondida"])
+
+
+def _registro_em_texto(caso, resposta, causa=None, particao="avaliacao", tokens=1000, segundos=60.0):
+    return {"caso": caso, "resposta": resposta, "gabarito": {"causa_raiz": causa} if causa else None, "particao": particao, "tokens_entrada": tokens, "segundos": segundos, "versao_ollama": "0.40.14"}
+
+
+def teste_corrida23_resumo_compara_com_a_corrida_16_caso_a_caso():
+    import corridas_em_texto as ct
+    base = [_registro_em_texto("a", "CAUSA_RAIZ: campo_ausente", "campo_ausente"), _registro_em_texto("b", "CAUSA_RAIZ: corpo_vazio", "tipo_divergente", particao="aprendizado"),
+            _registro_em_texto("c", "CAUSA_RAIZ: erro_interno_do_servidor", "erro_interno_do_servidor"), _registro_em_texto("d", "CAUSA_RAIZ: tipo_divergente", "tipo_divergente")]
+    por = {"exemplar": [_registro_em_texto("a", "CAUSA_RAIZ: campo_ausente", tokens=1100, segundos=70.0), _registro_em_texto("b", "CAUSA_RAIZ: tipo_divergente", tokens=1100),
+                        _registro_em_texto("c", "CAUSA_RAIZ: erro_interno_do_servidor"), _registro_em_texto("d", "CAUSA_RAIZ: erro_interno_do_servidor")],
+           "rotulos_por_extenso": [_registro_em_texto("a", "CAUSA_RAIZ: campo ausente"), _registro_em_texto("b", "CAUSA_RAIZ: outra coisa")]}
+    d = ct.resumir_experimento(base, por, {"versao_ollama": "0.40.14"}, corrida="fase4_experimento")
+    assert d["base"]["n"] == 4 and d["base"]["acertos"] == 3
+    e = next(x for x in d["por_condicao"] if x["condicao"] == "exemplar")
+    assert e["n"] == 4 and e["acertos"] == 3 and e["b"] == 1 and e["c"] == 1 and e["ganhos"] == ["b"] and e["perdas"] == ["d"], e
+    assert e["trocas_de_rotulo"] == 2 and e["causa_do_exemplar_respondida"] == 2 and e["causa_do_exemplar_na_base"] == 1
+    assert e["tokens_entrada_mediana"] == 1050.0 and e["avaliacao"]["n"] == 3 and e["avaliacao"]["acertos"] == 2, e
+    r = next(x for x in d["por_condicao"] if x["condicao"] == "rotulos_por_extenso")
+    assert r["n"] == 2 and r["completo"] is False and r["fora_do_conjunto"] == 1 and r["forma"] == {"oficial": 0, "por_extenso": 1, "outra": 1}, r
+    md = ct.render_experimento(d)
+    for bloco in ("tb_f4_exp_resumo", "tb_f4_exp_mudaram"):
+        assert f"<!-- tabela:{bloco} -->" in md, bloco
+    assert "—" not in md and "→" not in md
+
+
+def teste_corrida23_diagnostico_de_uma_condicao_grava_o_registro_oficial():
+    import corridas_em_texto as ct
+    import diagnostico_ao_vivo as dv
+    verbetes, indice = _curada()
+    caso = _caso_em_texto()
+    chamadas: list = []
+    comum = {"digest": "d", "versao_ollama": "0.40.14", "maquina": "m", "biblioteca_versao": "h", "particao": None, "k": 3, "teto_tokens": 600}
+    with _ollama_de_mentira_v2(lambda prompt, corpo: ("Curto.\nCAUSA_RAIZ: campo ausente\nCAMPO: preco\nIMPACTO: x.\nFONTE: nenhum", .9, []), chamadas):
+        reg = ct.diagnosticar_na_condicao("qwen2.5:7b", caso, "rotulos_por_extenso", verbetes, indice, comum, teto=600, top=5, k=3)
+    assert tuple(reg) == dv.CHAVES_OFICIAIS, "o registro mantém as 37 chaves"
+    assert reg["estrategia"] == "experimento_rotulos_por_extenso" and reg["caso"] == "x-1"
+    assert "  - campo ausente" in chamadas[0]["prompt"], "o Ollama recebeu o prompt da condição"
+    assert chamadas[0].get("logprobs") is True, "como na corrida 16"
+
+
+def teste_corrida24_resumo_le_o_gabarito_so_na_leitura():
+    import corridas_em_texto as ct
+    casos = [{"id": "lex-22", "classe": 1, "nivel": 1, "gabarito": {"causa_raiz": "corpo_vazio"}}, {"id": "sin-22", "classe": 2, "nivel": 1, "gabarito": {"causa_raiz": "campo_ausente"}},
+             {"id": "efe-22", "classe": 6, "nivel": 3, "gabarito": {"causa_raiz": "localizador_quebrado"}}]
+    regs = [_registro_em_texto("lex-22", "CAUSA_RAIZ: corpo_vazio"), _registro_em_texto("sin-22", "CAUSA_RAIZ: tipo_divergente"), _registro_em_texto("efe-22", "CAUSA_RAIZ: localizador_quebrado")]
+    linhas = [{"caso": "lex-22", "p_rotulo": .99, "selo": "alto", "verbetes_ids": ["corpo_vazio"]}, {"caso": "sin-22", "p_rotulo": .5, "selo": "baixo", "verbetes_ids": ["tipo_divergente"]},
+              {"caso": "efe-22", "p_rotulo": .9, "selo": "medio", "verbetes_ids": ["campo_ausente"]}]
+    d = ct.resumir_ineditos(regs, linhas, casos, {"versao_ollama": "0.40.14", "biblioteca": {"hash": "h"}}, referencia={"casos": 36, "acertos": 31, "acerto_pct": 86.1}, corrida="fase4_ineditos")
+    r = d["resumo"]
+    assert r["casos"] == 3 and r["acertos"] == 2 and r["acerto_pct"] == 66.7 and r["erros"] == ["sin-22"] and r["verbete_certo_no_contexto"] == 1, r
+    assert [x["classe"] for x in d["por_classe"]] == [1, 2, 6] and d["por_classe"][1]["acertos"] == 0
+    assert {x["selo"]: (x["casos"], x["erros"]) for x in d["por_selo"]} == {"alto": (1, 0), "medio": (1, 0), "baixo": (1, 1)}
+    assert d["referencia"]["acertos"] == 31
+    md = ct.render_ineditos(d)
+    for bloco in ("tb_f4_ineditos_resumo", "tb_f4_ineditos_classe", "tb_f4_ineditos_selo", "tb_f4_ineditos_casos"):
+        assert f"<!-- tabela:{bloco} -->" in md, bloco
+    assert "—" not in md and "→" not in md
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisões 90 e 91) a fila das corridas 18c, 21c e 23: BOM, sem travessão, os três comandos do roadmap e a parada na primeira falha.
+# ! Motivo: a fila roda sem ninguém olhando, numa janela do PowerShell 5.1, que quebra o arquivo inteiro sem BOM; a corrida 24 não entra porque espera a conferência da ficha 46.
+def teste_fila_das_corridas_pendentes():
+    arq = EXP / "rodar_pendencias_fase4.ps1"
+    dados = arq.read_bytes()
+    assert dados[:3] == b"\xef\xbb\xbf", "sem BOM"
+    texto = dados[3:].decode("utf-8")
+    assert "—" not in texto and "–" not in texto and "→" not in texto
+    assert "de IA - Revisar" in texto and "! Motivo:" in texto
+    for trecho in ('"tela", "-Saida", "fase4_tela_v3", "-Nome", "tela_v3"', '"cenarios", "-Saida", "fase4_ensaio_v3", "-Repeticoes", "1", "-Nome", "cenarios_v3"', '"experimento_prompt", "-Saida", "fase4_experimento"',
+                   "rodar_fase4.ps1", "$LASTEXITCODE", "exit $LASTEXITCODE"):
+        assert trecho in texto, trecho
+    assert '"ineditos"' not in texto, "a corrida 24 espera a conferência (decisão 92)"
+    roadmap = (EXP.parent.parent.parent / "Documentacao" / "memorial" / "roadmap.md").read_text(encoding="utf-8")
+    for comando in ("-Modo tela -Saida fase4_tela_v3 -Nome tela_v3", "-Modo cenarios -Saida fase4_ensaio_v3 -Repeticoes 1 -Nome cenarios_v3", "-Modo experimento_prompt -Saida fase4_experimento"):
+        assert comando in roadmap, comando
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 92) o documento da conferência dos 36 inéditos sai de script, com o caso, a corrida 17 e a pré-análise.
+# ! Motivo: o Eric confere os casos antes da corrida 24, e nenhum número ou trecho de caso pode ser digitado à mão; a pré-análise é do Claude e precisa aparecer como tal.
+def teste_conferencia_ineditos_junta_caso_corrida17_e_preanalise():
+    import gerar_conferencia_ineditos as gci
+    casos = [{"id": "x-1", "classe": 1, "nivel": 1, "entrada": {"requisicao": "GET /api/produtos", "status": 200, "contrato": "id: inteiro", "corpo": "{}", "sintoma": "S1", "observacao": "O1", "arvore": "document"},
+              "gabarito": {"causa_raiz": "corpo_vazio", "campo_afetado": None, "termos_esperados": ["vazio"], "termos_proibidos": ["json"]}},
+             {"id": "x-2", "classe": 1, "nivel": 2, "entrada": {"requisicao": "POST /api/pedidos", "status": 201, "contrato": "id: inteiro", "corpo": "{}", "sintoma": "S2"},
+              "gabarito": {"causa_raiz": "tipo_divergente", "campo_afetado": "id", "termos_esperados": [], "termos_proibidos": []}}]
+    reproducao = {"casos": [{"id": "x-1", "modo": "m", "reproduz": True, "motivo": "corpo diferente"}], "fora": [{"id": "x-2", "motivo": "sem tela"}]}
+    pre = {"origem": "pré-análise", "casos": [{"caso": "x-1", "veredito": "ok", "o_que_olhar": "", "causa_vizinha": None, "evidencia": "a.py:1"},
+                                              {"caso": "x-2", "veredito": "ver", "o_que_olhar": "Olhar o id.", "causa_vizinha": "campo_ausente", "evidencia": "b.py:2"}]}
+    d = gci.resumir(casos, reproducao, pre, gerado_em="2026-11-05T20:00:00")
+    assert d["resumo"] == {"casos": 2, "ok": 1, "ver": 1, "reproduzem": 1, "fora_da_tela": 1, "sem_preanalise": 0}, d["resumo"]
+    assert [x["caso"] for x in d["casos"]] == ["x-2", "x-1"], "os casos para olhar vêm primeiro"
+    x2 = d["casos"][0]
+    assert x2["tela"] == "fora: sem tela" and x2["causa_vizinha"] == "campo_ausente" and x2["gabarito"]["causa_raiz"] == "tipo_divergente"
+    assert d["casos"][1]["tela"] == "reproduz: corpo diferente"
+    assert d["por_classe"] == [{"classe": 1, "casos": 2, "ok": 1, "ver": 1, "reproduzem": 1}], d["por_classe"]
+    com_ponto = {"origem": "p", "casos": [{"caso": "x-1", "veredito": "ver", "o_que_olhar": "Ponto 2: a API nunca produz isso.", "causa_vizinha": None, "evidencia": "a.py:1"}]}
+    nota = gci.resumir(casos[:1], reproducao, com_ponto, gerado_em="x")["casos"][0]["o_que_olhar"]
+    assert nota == "A API nunca produz isso.", "'Ponto 2' é da lista do agente e não diz nada a quem lê"
+    md = gci.render(d)
+    for bloco in ("tb_f4_conferencia_classes", "tb_f4_conferencia_ver"):
+        assert f"<!-- tabela:{bloco} -->" in md, bloco
+    assert "x-2" in md and "Olhar o id." in md and "S1" in md and "corpo_vazio" in md and "pré-análise" in md
+    assert "—" not in md and "→" not in md
+    try:
+        gci.resumir(casos, reproducao, {"origem": "p", "casos": pre["casos"] + [{"caso": "z-9", "veredito": "ok"}]}, gerado_em="x")
+    except ValueError as e:
+        assert "z-9" in str(e)
+    else:
+        raise AssertionError("pré-análise de um caso que não existe no banco passou calada")
+
+
+def teste_conferencia_ineditos_os_36_do_banco_batem_com_a_corrida_17_e_a_preanalise():
+    import banco_casos_ineditos_fase4 as bi4
+    import gerar_conferencia_ineditos as gci
+    bruto = gci.ler()
+    if not bruto["preanalise"]:
+        return
+    d = gci.resumir(bi4.CASOS_INEDITOS_FASE4, bruto["reproducao"], bruto["preanalise"], gerado_em="2026-11-05T20:00:00")
+    r = d["resumo"]
+    assert r["casos"] == 36 and r["ok"] + r["ver"] == 36 and r["sem_preanalise"] == 0 and r["reproduzem"] + r["fora_da_tela"] == 36, r
+    assert all(x["tela"] for x in d["casos"]), "todo caso diz o que a corrida 17 viu"
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) roda as corridas 23 e 24 pelo parser do executor, com o Ollama de mentira e a
+# saída em pasta temporária; a pausa de descarga do modelo fica em zero só durante o teste.
+# ! Motivo: as funções `rodar_*` juntam a biblioteca, os registros e a trilha, e um nome errado nelas só apareceria com a máquina reservada,
+# no meio de uma corrida de horas. O teste não lê nem grava em pasta oficial: só as saídas `_fumaca*` vão para a pasta temporária.
+@contextlib.contextmanager
+def _saida_temporaria_das_corridas():
+    import caminhos
+    import executar_fase3
+    original, pausa = caminhos.fase3, executar_fase3.PAUSA_DESCARGA
+    with tempfile.TemporaryDirectory() as tmp:
+        caminhos.fase3 = lambda nome="fase3": {"raiz": Path(tmp) / nome} if nome.startswith("_fumaca") else original(nome)
+        executar_fase3.PAUSA_DESCARGA = 0
+        try:
+            yield Path(tmp)
+        finally:
+            caminhos.fase3, executar_fase3.PAUSA_DESCARGA = original, pausa
+
+
+_RESPOSTA_DA_FUMACA = "Curto.\nCAUSA_RAIZ: campo ausente\nCAMPO: preco\nIMPACTO: O usuário não vê o preço.\nFONTE: nenhum"
+
+
+def teste_corrida23_roda_de_ponta_a_ponta_e_retoma():
+    import corridas_em_texto as ct
+    import diagnostico_ao_vivo as dv
+    import executar_bateria
+    import executar_fase4 as ex
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "experimento_prompt", "--saida", "_fumaca_exp", "--casos", "2"])
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: (_RESPOSTA_DA_FUMACA, .9, []), chamadas, versao="0.40.14"):
+        assert ct.rodar_experimento(args) == 0
+        assert len(chamadas) == 4, "2 condições x 2 casos"
+        assert "EXEMPLO RESOLVIDO" in chamadas[0]["prompt"] and "  - campo ausente" in chamadas[2]["prompt"]
+        assert ct.rodar_experimento(args) == 0
+        assert len(chamadas) == 4, "relançar retoma de onde parou"
+        condicoes = json.loads((tmp / "_fumaca_exp" / "condicoes_fase4.json").read_text(encoding="utf-8"))
+        assert condicoes["parcial"] is True and condicoes["k"] == 3 and condicoes["biblioteca"]["hash"] == HASH_DA_CURADA_DOS_TESTES, condicoes["biblioteca"]
+        registros = executar_bateria.ler_jsonl(tmp / "_fumaca_exp" / "qwen2.5_7b" / "diagnosticos__exemplar.jsonl")
+        assert len(registros) == 2 and tuple(registros[0]) == dv.CHAVES_OFICIAIS, "o registro mantém as 37 chaves"
+        assert registros[0]["gabarito"] is None and registros[0]["estrategia"] == "experimento_exemplar" and registros[0]["versao_ollama"] == "0.40.14"
+        bruto = ct.ler_experimento("_fumaca_exp")
+        dado = ct.resumir_experimento(bruto["base"], bruto["por_condicao"], bruto["condicoes"], corrida="_fumaca_exp")
+        assert [x["n"] for x in dado["por_condicao"]] == [2, 2] and all(not x["completo"] for x in dado["por_condicao"]), dado["por_condicao"]
+        assert "tb_f4_exp_resumo" in ct.render_experimento(dado)
+
+
+def teste_corrida24_roda_de_ponta_a_ponta_e_retoma():
+    import corridas_em_texto as ct
+    import diagnostico_ao_vivo as dv
+    import executar_bateria
+    import executar_fase4 as ex
+    import trilha as tr
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "ineditos", "--saida", "_fumaca_ined", "--casos", "2"])
+    resposta = _RESPOSTA_DA_FUMACA.replace("campo ausente", "campo_ausente")
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.14"):
+        assert ct.rodar_ineditos(args) == 0
+        assert len(chamadas) == 2
+        assert ct.rodar_ineditos(args) == 0
+        assert len(chamadas) == 2, "relançar retoma de onde parou"
+        raiz = tmp / "_fumaca_ined"
+        registros = executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "diagnosticos__ineditos.jsonl")
+        assert len(registros) == 2 and tuple(registros[0]) == dv.CHAVES_OFICIAIS and registros[0]["gabarito"] is None
+        assert len(executar_bateria.ler_jsonl(raiz / "ineditos.jsonl")) == 2 and len(executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "logprobs__ineditos.jsonl")) == 2
+        lida = tr.Trilha.carregar(raiz / "trilha_ineditos.jsonl")
+        assert sum(1 for x in lida.linhas() if '"tipo": "entrada"' in x or '"tipo":"entrada"' in x) == 2, "uma entrada por caso, sem repetir na retomada"
+        bruto = ct.ler_ineditos("_fumaca_ined")
+        dado = ct.resumir_ineditos(bruto["registros"], bruto["linhas"], bruto["casos"], bruto["condicoes"], referencia=bruto["referencia"], corrida="_fumaca_ined")
+        assert dado["resumo"]["casos"] == 2 and dado["por_selo"], dado["resumo"]
+        assert "tb_f4_ineditos_resumo" in ct.render_ineditos(dado)
+
+
+def teste_corridas_em_texto_viram_modos_do_executor_e_do_avaliador():
+    import avaliar_fase4 as av
+    import executar_fase4 as ex
+    assert "experimento_prompt" in ex.MODOS and "ineditos" in ex.MODOS
+    args = ex.montar_parser().parse_args(["--modo", "experimento_prompt", "--saida", "fase4_experimento", "--condicoes", "exemplar"])
+    assert args.condicoes == "exemplar"
+    lido = av.montar_parser().parse_args(["--experimento_prompt", "--saida", "fase4_experimento"])
+    assert lido.experimento_prompt is True
+    assert av.montar_parser().parse_args(["--ineditos", "--saida", "fase4_ineditos"]).ineditos is True
 
 
 def main() -> None:

@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 import json
+import re
 
 CHAVES_DA_ENTRADA = ("requisicao", "status", "contrato", "corpo", "sintoma", "observacao", "arvore", "seletor_quebrado")
 OBRIGATORIAS = ("requisicao", "status", "contrato", "corpo", "sintoma")
@@ -80,6 +81,85 @@ def diff_arvore(referencia: str, atual: str) -> dict:
     return {"a_menos": len(faltam), "a_mais": len(sobram), "faltam": faltam, "sobram": sobram}
 
 
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) a árvore que vai ao prompt deixa de ser a árvore podada
+# inteira: fica o título e o que a tela tem de diferente da corrida de referência em modo normal da mesma página. Sai a linha
+# igual à da referência podada; sai a linha cujo nome só a árvore completa da referência tem (o rodapé, que a tela de erro sobe
+# para o nível que a poda guarda, e os cartões além dos três primeiros); fica a linha com o mesmo nome e outro atributo (o id
+# renomeado de uma quebra de localizador); saem o aviso "(mais N cartões omitidos pela poda)", que não é da página, e as linhas
+# repetidas. Sem referência, saem os cartões e as repetidas. A árvore podada inteira continua na trilha, no evento de poda.
+# ! Motivo: o plano aprovado (seção 3.3) limita o prompt na tela ao maior da calibração mais 10% (1409 tokens), e os 37 prompts
+# da corrida 18b passaram disso, o maior com 2034; a árvore era o maior bloco do caso, cerca de 1700 caracteres, quase todos
+# iguais à referência, e 83,1% do tempo do diagnóstico (mediana da corrida 21b) é o modelo lendo o prompt. O corte não acrescenta
+# frase nenhuma: o molde perde texto, que era a condição da decisão 90 ao rever a 82.
+VERSAO_DO_CASO = 3  # 1: pacote P2 (corrida 18); 2: ficha 37 (corrida 18b); 3: decisão 90 (corridas 18c e 21c)
+_AVISO_DA_PODA = re.compile(r'^\s*text "\(mais \d+ cartões omitidos pela poda\)"\s*$')
+_NOME_DA_LINHA = re.compile(r'^\s*\S+ "(.*?)"(?: |$)')
+
+
+def _nome_da_linha(linha: str) -> str | None:
+    """O nome entre aspas de uma linha da árvore podada, com o espaço limpo como a poda limpa; None em linha sem nome (`main`)."""
+    m = _NOME_DA_LINHA.match(linha)
+    return " ".join(m.group(1).split()) if m else None
+
+
+def _sem_cartoes(linhas: list[str]) -> list[str]:
+    """Tira cada `group` da árvore podada e o que está dentro dele (mais recuado)."""
+    fica, recuo = [], None
+    for linha in linhas:
+        atual = len(linha) - len(linha.lstrip())
+        if recuo is not None and atual > recuo:
+            continue
+        recuo = None
+        if linha.strip() == "group":
+            recuo = atual
+            continue
+        fica.append(linha)
+    return fica
+
+
+def arvore_do_prompt(arvore: str, referencia: str | None = None, nomes_da_referencia=()) -> str:
+    """A árvore podada encurtada para o prompt: o título e o que difere da `referencia` (a árvore podada da corrida em modo
+    normal); `nomes_da_referencia` são os nomes de todos os nós dela, antes da poda. Sem referência, sem os cartões. Nos dois
+    casos, sem o aviso da poda e sem linha repetida."""
+    linhas = (arvore or "").strip("\n").splitlines()
+    if not linhas:
+        return ""
+    titulo, corpo = linhas[0], linhas[1:]
+    if referencia:
+        linhas_ref = referencia.splitlines()
+        iguais = {linha.strip() for linha in linhas_ref}
+        nomes_podados = {_nome_da_linha(linha) for linha in linhas_ref}
+        nomes = set(nomes_da_referencia or ())
+
+        def difere(linha: str) -> bool:
+            if linha.strip() in iguais:
+                return False
+            nome = _nome_da_linha(linha)
+            return nome is None or nome in nomes_podados or nome not in nomes
+
+        corpo = [linha for linha in corpo if difere(linha)]
+    else:
+        corpo = _sem_cartoes(corpo)
+    fica, vistas = [titulo], set()
+    for linha in corpo:
+        chave = linha.strip()
+        if _AVISO_DA_PODA.match(linha) or chave in vistas:
+            continue
+        vistas.add(chave)
+        fica.append(linha)
+    return "\n".join(fica)
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) os campos ausentes do mesmo item viram uma frase só.
+# ! Motivo: no erro 500 o SINTOMA repetia "O campo X não veio na resposta." para cada um dos sete campos do contrato, quase 200
+# caracteres que o CORPO e a linha do contrato já mostram; é o mesmo fato, em menos texto.
+def _frase_dos_ausentes(campos: list, item) -> str:
+    onde = f"no item {item} da resposta" if item else "na resposta"
+    if len(campos) == 1:
+        return f"O campo {campos[0]} não veio {onde}."
+    return f"Os campos {', '.join(str(c) for c in campos[:-1])} e {campos[-1]} não vieram {onde}."
+
+
 def _frases_do_corpo(diff_corpo: dict) -> list[str]:
     frases = []
     corpo = diff_corpo.get("corpo")
@@ -92,11 +172,17 @@ def _frases_do_corpo(diff_corpo: dict) -> list[str]:
         return [f"A resposta veio cortada (termina em {trecho[-40:]!r})."]
     # ! Alteração de IA - Revisar: (05/11/2026, ficha 41, decisão 89) a frase diz em qual item está a diferença, quando ela só aparece a partir do segundo.
     # ! Motivo: a poda passou a olhar todos os itens da lista; sem o item, "o campo resumo não veio na resposta" afirmaria que ele falta em todos, e o sintoma mentiria sobre o caso.
+    ausentes: dict = {}
+    for d in diff_corpo.get("diferencas") or []:
+        if d.get("tipo") == "ausente":
+            ausentes.setdefault(d.get("item") or None, []).append(d.get("campo"))
     for d in diff_corpo.get("diferencas") or []:
         campo, tipo = d.get("campo"), d.get("tipo")
         no_item = f" no item {d['item']}" if d.get("item") else ""
         if tipo == "ausente":
-            frases.append(f"O campo {campo} não veio{no_item} da resposta." if no_item else f"O campo {campo} não veio na resposta.")
+            grupo = ausentes.pop(d.get("item") or None, None)
+            if grupo:
+                frases.append(_frase_dos_ausentes(grupo, d.get("item") or None))
         elif tipo == "renomeado":
             frases.append(f"O campo {d.get('esperado')} veio como {d.get('recebido')}{no_item}.")
         elif tipo == "tipo_diferente":
@@ -125,7 +211,9 @@ def _frases_do_corpo(diff_corpo: dict) -> list[str]:
 # porque a poda só olhava o contrato; 11 viraram colecao_no_lugar_de_objeto e, nas falhas de lista e de latência, o
 # sintoma dizia "Nenhuma diferença medida contra a referência". O harness já media tudo isso na regra R1.
 LIMITE_DE_VALORES = 60
-LIMITE_DE_EXEMPLOS = 2
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 90) um exemplo só no CORPO, em vez de dois.
+# ! Motivo: o segundo exemplo somava cerca de 200 caracteres e deixava `semt-20` e `semt-21` acima do limite do prompt na conferência sem modelo; a contagem de itens diferentes continua no CORPO.
+LIMITE_DE_EXEMPLOS = 1
 
 
 def _valor(v) -> str:
@@ -320,19 +408,33 @@ def sintoma_por_molde(conferencia: dict | None, diff_corpo: dict | None, diff_ar
     if diff_corpo:
         frases += _frases_do_corpo(diff_corpo)
     frases += frases_da_referencia(diff_ref, {x.get("campo") for x in (diff_corpo or {}).get("diferencas") or [] if x.get("campo")})
+    # ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) o SINTOMA guarda as contagens de linhas e perde as listas
+    # `faltam` e `sobram`, que continuam no diff e na trilha.
+    # ! Motivo: as três primeiras linhas da lista chegavam a repetir "- img; - img; - img", e o que a tela tem de novo agora está na
+    # árvore do prompt; a medida sem modelo (`prompt_tela_blocos.json`) mostra que sem este corte 5 dos 37 prompts ficariam acima do limite.
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) as duas contagens viram uma frase só quando existem as duas.
+    # ! Motivo: a conferência sem modelo mostrou "A tela mostra 6 linha(s) a menos que a referência. A tela mostra 6 linha(s) a mais que a
+    # referência." em casos em que só o texto de um item mudou, e o maior prompt ficou a 1 token do limite de 1409.
     if diff_arvore_:
-        if diff_arvore_.get("a_menos"):
-            frases.append(f"A tela mostra {diff_arvore_['a_menos']} linha(s) a menos que a referência; faltam: "
-                          + "; ".join(diff_arvore_["faltam"][:3]) + ".")
-        if diff_arvore_.get("a_mais"):
-            frases.append(f"A tela mostra {diff_arvore_['a_mais']} linha(s) a mais que a referência; sobram: "
-                          + "; ".join(diff_arvore_["sobram"][:3]) + ".")
+        a_menos, a_mais = diff_arvore_.get("a_menos"), diff_arvore_.get("a_mais")
+        if a_menos and a_mais:
+            frases.append(f"A tela mostra {a_menos} linha(s) a menos e {a_mais} a mais que a referência.")
+        elif a_menos:
+            frases.append(f"A tela mostra {a_menos} linha(s) a menos que a referência.")
+        elif a_mais:
+            frases.append(f"A tela mostra {a_mais} linha(s) a mais que a referência.")
     if not frases:
         frases.append("Nenhuma diferença medida contra a referência.")
     return " ".join(frases)
 
 
 # ------------------------------------------------------------------ o caso no formato gravado
+
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 96) o tamanho do caso conta só o que vai ao modelo.
+# ! Motivo: o caso ao vivo passou a guardar o corpo inteiro e a observação da poda fora de `entrada`; contados, o `caso_chars` da leitura diria que o caso cresceu quando ele encurtou.
+def tamanho_do_caso(caso: dict) -> int:
+    return len(json.dumps({k: v for k, v in caso.items() if k not in ("corpo_completo", "observacao_da_poda")}, ensure_ascii=False))
+
 
 def montar_caso(id_caso: str, requisicao: str, status: int | None, contrato: str, corpo: str, sintoma: str,
                 arvore: str | None = None, seletor_quebrado: str | None = None, observacao: str | None = None) -> dict:

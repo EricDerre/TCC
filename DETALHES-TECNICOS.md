@@ -54,7 +54,8 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 | 3 | Biblioteca gerida pelo próprio modelo, quatro modelos, três épocas | Concluída em 15/09/2026 |
 | 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
 | Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Concluída em 26/10/2026 (relatório fechado; parte B da pesquisa integrada; especificação da trilha aprovada; corrida 13 cancelada) |
-| 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Em andamento: pacotes P0 a P8 e corridas 16 a 22 feitos em 05/11/2026 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 e medida com revisor humano como limitações declaradas, decisões 82 e 87); faltam as corridas 18c, 21c, 23 e 24 (decisões 90 a 92) |
+| 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Em andamento: pacotes P0 a P8 e corridas 16 a 22 feitos em 05/11/2026 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 como limitação declarada, decisão 82; medida com revisor humano em aberto, decisão 95); faltam as corridas 18c, 21c, 23 e 24 (decisões 90 a 92) |
+| Pós-Fase 4 | Ajustes e ideias focadas no visual do projeto: tipo de resposta e formatação, com possibilidade de gráficos ou de um dashboard dinâmico (decisão 94) | Não iniciada |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
 
 ### Resultado principal
@@ -101,7 +102,9 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 - Diagnóstico na tela: mesmo rótulo do caso escrito em 26 de 37, com a regra R2 fora do limite e declarada como limitação (decisão 82).
 - Cura de localizador: 160 de 160 quebras armadas curadas em código.
 - Ensaio dos dez cenários, com uma repetição por cenário: 10 de 10 com Task Success (Wilson 95% de 72,2 a 100,0%; a rodada anterior deu 9 de 10, antes de um conserto na cura) e MTTR médio de 105,2 s, sem linha de base manual ainda.
-- Avaliação da trilha: a medida com revisor humano da especificação da trilha não foi feita e fica como limitação declarada (decisão 87).
+<!-- ! Alteração de IA - Revisar: (05/11/2026) a medida com revisor humano passou a em aberto (decisão 95), e a tabela das fases ganhou a Pós-Fase 4 (decisão 94).
+     ! Motivo: o Eric pediu "em aberto" nesta data; o texto dizia limitação declarada, sem nova sessão. -->
+- Avaliação da trilha: a medida com revisor humano da especificação da trilha está em aberto: será feita depois da Pós-Fase 4 (decisão 95).
 
 #### O que falta antes da Fase 5
 
@@ -1086,7 +1089,7 @@ O que não coube nas células da tabela:
   - a amostra de até 12 relatórios sorteada com semente fixa.
 - `--revisao`:
   - Não sai enquanto houver relatório em branco.
-  - Separa a resposta própria do revisor dos pareceres do Claude aprovados sem resposta própria e sem tempo medido (decisões 85 e 86), e por isso não cumpre a medida com revisor humano (decisão 87).
+  - Separa a resposta própria do revisor dos pareceres do Claude aprovados sem resposta própria e sem tempo medido (decisões 85 e 86), e por isso não cumpre a medida com revisor humano, que fica em aberto (decisão 95).
 - Os blocos de cada prefixo no relatório da fase vêm de uma leitura só (`LEITURA_NO_RELATORIO`: `reproducibilidade`, `tela_v2` e `cenarios_v2`, as vigentes):
   - o `--colar` recusa as outras e a corrida que não bate com o `.md` gravado;
   - o `--check` delas confere só os próprios arquivos.

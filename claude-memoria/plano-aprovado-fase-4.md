@@ -356,7 +356,7 @@ O texto acima fica como foi aprovado. Esta tabela diz onde a execução saiu del
 | Corrida 21 (uma) | Duas: a 21 mostrou o defeito do recarregamento do login, e a 21b, a leitura vigente, conferiu o conserto com o modelo | Roadmap §2.13 e §2.14 |
 | Ficha 36: seis cenários de contrato, um por modo | `latency` saiu e `escala_ou_unidade_errada` entrou, como a ficha permitia, para cobrir as classes 1 a 5 | `cenarios_fase4.TROCA_DA_FICHA_36` |
 | Corrida 22: 288 inferências | 277: a conta nova previa 296, e as mutações de contrato sem alvo não rodam | Roadmap §2.15 |
-| Sessão de revisão com o Eric sobre 12 relatórios (P7) | 11 relatórios, porque a corrida teve só 5 erros; 1 resposta do Eric e 10 pareceres do Claude aprovados. A medida com revisor humano não foi feita | Decisões 85 a 87 |
+| Sessão de revisão com o Eric sobre 12 relatórios (P7) | 11 relatórios, porque a corrida teve só 5 erros; 1 resposta do Eric e 10 pareceres do Claude aprovados. A medida com revisor humano está em aberto, para depois da Pós-Fase 4 | Decisões 85, 86 e 95 |
 | Poda (seção 3.3) | Dois defeitos consertados depois de todas as corridas, sem corrida nova | Decisão 89 |
 | Revisão humana do lote (P5) | A planilha foi pré-revisada pelo Claude, e o Eric aprovou sem mudar linha nenhuma | Roadmap §2.12 |
 | Ollama (0.40.2 no plano) | Ele se atualizou sozinho para 0.40.14 em 03/11; a ponte rodou, e os limiares do selo não foram recalibrados | Roadmap §2.12 |

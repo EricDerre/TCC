@@ -86,6 +86,9 @@ FIGURAS_RECOLHIDAS = {"07", "11", "12", "13", "14", "15", "16", "18"}
 TABELAS_A_VISTA = {
     ("hipoteses", "Hipótese"), ("fechamento", "#"), ("fechamentof4", "Regra"),
     ("roadmap", "Frente"), ("roadmap", "Ponto"), ("roadmap", "Caso corrigido"),
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a tabela dos casos para olhar fica à vista na aba da conferência.
+    # ! Motivo: no painel publicado ela saiu recolhida em "Mais informações", e é por ela que o Eric começa a conferência da ficha 46.
+    ("conferencia", "Caso"),
 }
 
 # ! Alteração de IA - Revisar: (05/11/2026) a resposta de cada aba em linguagem direta, sem número; os cartões e os gráficos trazem os números, e o parágrafo antigo, com todos eles, fica em "Mais informações".
@@ -107,7 +110,7 @@ RESPOSTA_SIMPLES = {
     "biblioteca": "Só em parte. Os filtros em código seguram a maior parte do que o modelo propõe, mas o que sobra não mudou nenhum acerto nos casos inéditos: não piorou, e também não ajudou. A marca de corrigido funciona porque é dada em código; o modelo, sozinho, não percebe a correção.",
     "cenarios": "Todos os cenários chegaram ao resultado, perto de dois minutos cada, na repetição feita com a cura já consertada. É um ensaio, com uma repetição por cenário e sem a comparação com pessoas: serve para estimar a Fase 5, não para dizer se esse tempo é bom.",
     "trilha": "Em parte. Com as intervenções em todos os casos, o sinal principal quase não separa erro de acerto; contado só onde um gatilho dispararia, separa melhor, mas essa conta sai de uma corrida que não rodou assim. A trilha registra a mudança no passo certo, como esperado. A corrida teve poucos erros, e a medida com revisor humano não foi feita.",
-    "fechamentof4": "Em parte. A maioria das regras foi cumprida, algumas com ressalva, e duas não: a leitura da tela igual à do caso escrito e o limite do prompt. A medida com revisor humano não foi feita. Antes da Fase 5 ainda faltam as corridas listadas abaixo, e elas podem mudar estes números.",
+    "fechamentof4": "Em parte. A maioria das regras foi cumprida, algumas com ressalva, e duas não: a leitura da tela igual à do caso escrito e o limite do prompt. A medida com revisor humano está em aberto e será feita depois da Pós-Fase 4. Antes da Fase 5 ainda faltam as corridas listadas abaixo, e elas podem mudar estes números.",
 }
 
 # ! Alteração de IA - Revisar: (05/11/2026) os cartões de corrida ficam à vista só no Roadmap e no fechamento da Fase 4; nas outras abas, em "Mais informações".

@@ -57,7 +57,8 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 - repetir as duas medidas na tela com o caso encurtado, porque o prompt, o texto que o modelo recebe, ficou maior que o limite do plano (corridas 18c e 21c, decisão 90);
 - testar em separado duas mudanças no prompt, sem mexer no prompt do agente (corrida 23, decisão 91);
 - conferir e ler outros 36 casos inéditos (corrida 24, decisão 92);
-- rever o que o agente entrega ao analista, porque hoje os verbetes são difíceis de entender.
+- rever o que o agente entrega ao analista, porque hoje os verbetes são difíceis de entender;
+- a Pós-Fase 4: ajustes e ideias para o visual do projeto, com o tipo de resposta e a formatação, e talvez gráficos ou um dashboard dinâmico sobre cada assunto (decisão 94).
 
 ## O que já descobrimos
 
@@ -121,6 +122,8 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 **O que isso mostra:** das 92 propostas do modelo, 19 chegaram ao lote, e 11 ficaram na biblioteca depois da revisão. Esse lote não mudou nenhum acerto nos 36 casos inéditos. O que encurtou a distância da tela foi revisar a montagem do caso, não a biblioteca.
 
+<!-- ! Alteração de IA - Revisar: (05/11/2026) a medida com revisor humano passou a em aberto (decisão 95), e a lista do que falta antes da Fase 5 ganhou a Pós-Fase 4 (decisão 94).
+     ! Motivo: o Eric pediu "em aberto" nesta data, porque a revisão será feita depois de as respostas serem normalizadas; o texto dizia só que ela não foi feita. -->
 ### O que ainda não dá para afirmar
 
 - **Que o agente é mais rápido que uma pessoa.** Ainda não há a medida com pessoas; ela é a Fase 5.
@@ -128,7 +131,7 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 - **Que o conserto de localizador funciona em qualquer quebra.** As 160 quebras foram armadas de propósito, com o elemento certo ainda na página.
 - **Que a leitura da tela chegou ao nível do caso escrito.** A regra não foi cumprida, e as corridas 18c e 21c ainda vão rodar.
 - **Que os sinais da trilha apontam os erros.** A corrida teve só 5 erros, poucos para pôr os sinais em ordem ([figura dos sinais](Documentacao/figuras/sinais-da-trilha.png)).
-- **Que o relatório ajuda quem revisa.** A medida com revisor humano não foi feita (decisões 85 a 87).
+- **Que o relatório ajuda quem revisa.** Em aberto: a medida com revisor humano será feita depois que a Pós-Fase 4 normalizar e melhorar as respostas; por agora vale a pré-análise do agente de apoio (decisões 85, 86 e 95).
 
 ## Os dois sistemas de teste
 

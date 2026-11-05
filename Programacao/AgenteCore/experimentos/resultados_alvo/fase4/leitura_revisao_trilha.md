@@ -6,7 +6,7 @@ Especificação da trilha, seção 12 c: com um revisor humano, o acerto da loca
 
 Um revisor só, o autor do trabalho, que conhece o banco de casos. A amostra traz 5 dos 5 erros da corrida e 6 dos 31 acertos, e o revisor sabia disso, então a proporção de errados nela não é a da corrida. Erro localizado é o que o revisor declarou: num diagnóstico errado, achar um erro é ter encontrado o erro do agente no relatório; num diagnóstico certo, é ter apontado um erro onde não há. O tempo conta só com o relatório à vista.
 
-Só 1 dos 11 relatórios tem resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros 10 são o parecer do Claude, aprovado pelo Eric sem resposta própria (decisões 85 e 86), e ficam sem tempo medido. Por isso esta leitura não cumpre a medida com revisor humano da especificação: na maior parte, a adesão, a localização e a utilidade abaixo são do Claude. Isso fica como limitação declarada (decisão 87).
+Só 1 dos 11 relatórios tem resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros 10 são o parecer do Claude, aprovado pelo Eric sem resposta própria (decisões 85 e 86), e ficam sem tempo medido. Por isso esta leitura não cumpre a medida com revisor humano da especificação: na maior parte, a adesão, a localização e a utilidade abaixo são do Claude. A medida fica em aberto e será feita depois da Pós-Fase 4 (decisão 95).
 
 O parecer do Claude, nos 11 relatórios, foi escrito sem abrir o gabarito, mas por quem sabia quantos erros a amostra tem e já tinha visto os nomes dos casos; os limites estão em `pre_analise_revisao_trilha.md`.
 

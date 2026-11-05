@@ -99,6 +99,9 @@ NAV = [
         # ! Alteração de IA - Revisar: (04/11/2026, P7) aba da corrida 22; o id entra junto com a seção (secao_trilha).
         # ! Motivo: a avaliação da própria trilha é a sétima análise da Fase 4 e, pela regra do painel, vira uma aba.
         ("trilha", "Avaliação da trilha", "A trilha do agente aponta os erros reais e o passo certo quando a falha é injetada de propósito? A corrida 22 nos 36 casos de avaliação: os sinais de alerta, as mudanças de propósito na entrada e a amostra de relatórios da sessão de revisão."),
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) aba da conferência dos 36 inéditos; o id entra junto com a seção (secao_conferencia).
+        # ! Motivo: o Eric decide pelo painel, e a ficha 46 pede a conferência dele antes da corrida 24.
+        ("conferencia", "Conferência dos inéditos", "Os 36 casos que a corrida 24 vai medir estão certos? Cada caso com o gabarito, o que a corrida 17 viu e a pré-análise do Claude, para a conferência do Eric."),
     ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
@@ -2828,6 +2831,63 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
 
 # ------------------------------------------------------------------ Fase 4: fechamento da fase (pacote P8)
 
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a aba da conferência dos 36 inéditos, lida de `resultados_alvo/fase4/conferencia_ineditos.json`.
+# ! Motivo: o Eric decide pelo painel, e a ficha 46 pede a conferência dele antes da corrida 24; a aba mostra cada caso com o gabarito, o que a corrida 17 viu
+# e a pré-análise, sem número nem trecho de caso digitado à mão. Sem gráfico: a leitura aqui é caso a caso.
+def secao_conferencia(conf: dict | None) -> tuple[dict, str]:
+    if not conf:
+        return {}, ('<section id="conferencia" hidden>\n<h1>Conferência dos inéditos: os casos da corrida 24 estão certos?</h1>\n'
+                    '<p class="lead">O documento ainda não foi gerado: falta <code>resultados_alvo/fase4/conferencia_ineditos.json</code>, que sai de <code>gerar_conferencia_ineditos.py</code>.</p>\n</section>')
+    r = conf["resumo"]
+
+    def termos(lista: list | None) -> str:
+        return ", ".join(lista or []) or "nenhum"
+
+    def bloco(x: dict) -> str:
+        e, g = x["entrada"], x["gabarito"]
+        linhas = [["Requisição", e.get("requisicao")], ["Status", e.get("status")], ["Contrato", e.get("contrato")], ["Corpo", e.get("corpo")], ["Sintoma", e.get("sintoma")]]
+        linhas += [[rotulo, e[chave]] for rotulo, chave in (("Observação", "observacao"), ("Seletor quebrado", "seletor_quebrado"), ("Árvore da tela", "arvore")) if e.get(chave)]
+        linhas += [["Causa do gabarito", g["causa_raiz"]], ["Campo afetado", g.get("campo_afetado") or "nenhum"], ["Termos esperados", termos(g.get("termos_esperados"))],
+                   ["Termos proibidos", termos(g.get("termos_proibidos"))], ["Na corrida 17", x["tela"] or "não aparece na leitura"]]
+        if x["veredito"] == "ver":
+            linhas.append(["Pré-análise", x["o_que_olhar"]])
+            if x.get("causa_vizinha"):
+                linhas.append(["Outra causa que caberia", x["causa_vizinha"]])
+        else:
+            linhas.append(["Pré-análise", "nada a apontar"])
+        linhas.append(["Onde a pré-análise leu", x.get("evidencia") or "n/d"])
+        marca = chip("nao_cumprida", "para olhar") if x["veredito"] == "ver" else chip("adotado", "sem apontamento")
+        return (f'<details><summary><code>{esc(x["caso"])}</code> classe {esc(str(x["classe"]))}, nível {esc(str(x["nivel"]))}: <code>{esc(g["causa_raiz"])}</code> {marca}</summary>'
+                # as aspas também são escapadas: a árvore da tela traz texto como id="modalDetalheTitulo", que seria lido como um id repetido da página
+                f'{tabela(["Campo", "O que está no caso"], [[esc(a), esc(str(b)).replace(chr(34), "&quot;")] for a, b in linhas], raw=True)}</details>')
+
+    para_olhar = [x for x in conf["casos"] if x["veredito"] == "ver"]
+    tabela_ver = tabela(["Caso", "Causa do gabarito", "Outra causa que caberia", "O que olhar"],
+                        [[f'<code>{esc(x["caso"])}</code>', f'<code>{esc(x["gabarito"]["causa_raiz"])}</code>', f'<code>{esc(x["causa_vizinha"])}</code>' if x.get("causa_vizinha") else "nenhuma", esc(x["o_que_olhar"])]
+                         for x in para_olhar], raw=True) if para_olhar else "<p>Nenhum caso apontado.</p>"
+    classes = tabela(["Classe", "Casos", "Reproduzem na tela", "Sem apontamento", "Para olhar"], [[x["classe"], x["casos"], x["reproduzem"], x["ok"], x["ver"]] for x in conf["por_classe"]])
+    itens_kpi = [("Casos", str(r["casos"]), f'{len(conf["por_classe"])} classes; nenhuma pessoa conferiu ainda'), ("Reproduzem na tela", f'{r["reproduzem"]} de {r["casos"]}', f'corrida 17; {r["fora_da_tela"]} ficam fora da tela'),
+                 ("Sem apontamento", str(r["ok"]), "pré-análise do Claude, só lendo o código"), ("Para olhar", str(r["ver"]), "a pré-análise aponta uma dúvida")]
+    html_ = f"""<section id="conferencia" hidden>
+<h1>Conferência dos inéditos: os {r["casos"]} casos da corrida 24 estão certos?</h1>
+<p class="lead">A corrida 24 vai medir a biblioteca final nestes {r["casos"]} casos, e nenhuma pessoa os conferiu ainda. A pré-análise, de um agente do Claude que só leu o código, não aponta nada em {r["ok"]} e aponta {r["ver"]}. Ela indica onde olhar; quem confere é você, e a resposta vai na ficha 46.</p>
+{kpis(itens_kpi)}
+<h2>Os casos para olhar</h2>
+<p>Nestes, a pré-análise acha que outra causa da lista também caberia, ou que o sistema não produz o que o caso descreve.</p>
+{tabela_ver}
+<h2>Todos os casos, com os para olhar primeiro</h2>
+{"".join(bloco(x) for x in conf["casos"])}
+{detalhes("Os casos por classe", classes)}
+{leitura([
+    "<strong>A pergunta de cada caso:</strong> a causa do gabarito é a leitura certa do que o corpo e o sintoma mostram? Um caso ruim mede o modelo contra algo que o sistema não produz, ou contra uma resposta com mais de uma leitura honesta.",
+    "<strong>Na corrida 17</strong> diz o que a falha injetada fez de verdade: <em>reproduz</em> quando a chamada à CobaiaAPI saiu do normal na tela; <em>fora</em> quando a rota não tem tela ou o caso é um cenário descrito, sem modo de falha.",
+    "<strong>Mudar o texto de um caso</strong> não mexe nas corridas 17, 18c, 21c e 23, porque nenhuma delas lê esse texto com o modelo. O que for trocado é refeito e conferido de novo por script antes da corrida 24.",
+])}
+{fontes(["<code>resultados_alvo/fase4/conferencia_ineditos.json</code> e <code>.md</code> (<code>gerar_conferencia_ineditos.py</code>, com <code>--check</code>)", "<code>banco_casos_ineditos_fase4.py</code>", "<code>reproducibilidade_ineditos.json</code> (corrida 17)", "<code>conferencia_ineditos_preanalise.json</code> (pré-análise do Claude)", "decisão 92 e ficha 46"])}
+</section>"""
+    return {}, html_
+
+
 # ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) a aba "Fechamento da fase": a tabela das regras (seção 10) e as seções 1, 11, 12 e 15 lidas do relatório da fase, os cartões lidos dos JSON das leituras vigentes (tela_v2, cura, cenarios_v2, leitura_revisao_trilha) e as fichas abertas.
 # ! Motivo: o plano previa uma aba da fase (seção 3.8), e as sete abas por análise não dizem o que fechou, o que ficou como limitação e o que depende do Eric. Ele decide pelo painel, não pelo Markdown. Nenhum número é digitado aqui.
 ESTADOS_REGRA = {"cumprida": ("Cumprida", "concluida"), "ressalva": ("Cumprida com ressalva", "andamento"), "medida": ("Medida", "outro"), "nao": ("Não cumprida", "nao_cumprida")}
@@ -2905,14 +2965,14 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
         itens_kpi.append(("Cenários que chegaram ao resultado (Task Success)", f'{g["sucessos"]} de {g["n"]}', f'corrida 21b; média de {fmt(g["mttr_media_s"], 1)} s até o resultado; uma repetição, sem linha de base'))
     if revisao:
         r = revisao["resumo"]
-        itens_kpi.append(("Medida com revisor humano", "não feita", f'{r["respostas_do_revisor"]} resposta do Eric e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
+        itens_kpi.append(("Medida com revisor humano", "em aberto", f'{r["respostas_do_revisor"]} resposta do Eric e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
     if faltam:
         itens_kpi.append(("Corridas que faltam antes da Fase 5", str(len(faltam)), f'{_lista_em_frase(faltam)}, pedidas pelas respostas às fichas 42 a 44'))
     itens_kpi.append(("Decisões do Eric em aberto", str(len(abertas)), "fichas na aba Pendências; não impedem a Fase 5" if abertas else "nenhuma ficha aberta"))
     resposta = (f'Em parte. Das {len(linhas)} regras, {cont["cumprida"]} {"foi cumprida" if cont["cumprida"] == 1 else "foram cumpridas"} sem ressalva, {cont["ressalva"]} com ressalva'
                 + (f', {cont["medida"]} só medida' if cont["medida"] else "")
-                + f' e {cont["nao"]} não: {" e ".join(nomes_nao) or "nenhuma"}. A medida com revisor humano da especificação da trilha não foi feita e fica como limitação declarada (decisão 87).'
-                + (f' Faltam {len(abertas)} decisões do Eric, que não impedem a Fase 5.' if abertas else "")
+                + f' e {cont["nao"]} não: {" e ".join(nomes_nao) or "nenhuma"}. A medida com revisor humano da especificação da trilha está em aberto: será feita depois da Pós-Fase 4 (decisão 95).'
+                + ((f' Falta {len(abertas)} decisão do Eric, que não impede a Fase 5.' if len(abertas) == 1 else f' Faltam {len(abertas)} decisões do Eric, que não impedem a Fase 5.') if abertas else "")
                 + (f' Antes da Fase 5 faltam as corridas {_lista_em_frase(faltam)}, e as leituras delas podem mudar estes números.' if faltam else ""))
     html_ = f'''<section id="fechamentof4" hidden>
 <h1>{titulo}</h1>
@@ -3051,7 +3111,7 @@ def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preench
         n_rev = rr.get("respostas_do_revisor")
         tempo_ = next((x for x in rev.get("tempo") or [] if x.get("grupo") == "todos"), {})
         aviso_rev = (f'Só {n_rev} dos {rr.get("relatorios")} relatórios {"tem" if n_rev == 1 else "têm"} resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros {rr.get("pareceres_aprovados")} são o parecer do Claude, '
-                     'aprovado pelo Eric sem resposta própria (decisões 85 e 86). Por isso esta sessão não cumpre a medida com revisor humano da especificação (seção 12 c), o que fica como limitação declarada (decisão 87); o que ela dá é o parecer do Claude conferido contra o gabarito. '
+                     'aprovado pelo Eric sem resposta própria (decisões 85 e 86). Por isso esta sessão não cumpre a medida com revisor humano da especificação (seção 12 c), que fica em aberto até a Pós-Fase 4 (decisão 95); o que ela dá é o parecer do Claude conferido contra o gabarito. '
                      f'O tempo até a decisão só existe onde o revisor respondeu: {tempo_.get("n", 0)} relatório, mediana de {nd(tempo_.get("mediana"), 0)} s com a página à vista.') if rr.get("pareceres_aprovados") else ""
         duvida_rev = (f'<p class="nota">Em {", ".join(f"<code>{esc(x)}</code>" for x in rev["duvidas_de_leitura"])}, o revisor marcou que achou o erro num diagnóstico que avaliou como certo. Ele pode ter lido "erro" como o defeito do sistema, e a conta trata isso como apontar um erro onde não há; a resposta fica como ele deu.</p>'
                       if rev.get("duvidas_de_leitura") else "")
@@ -3074,7 +3134,7 @@ def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preench
     if rev:
         rr_, pa__ = rev.get("resumo") or {}, rev.get("parecer") or {}
         item_sessao = (f"<strong>O que o parecer do Claude diz.</strong> Ele acertou {de(pa__.get('apropriadas'), pa__.get('n'))} decisões e {de(pa__.get('causa_certa'), pa__.get('n'))} causas, o que mostra que a evidência para julgar estava no relatório e na biblioteca, para um leitor forte. "
-                       f"Não mostra que o relatório funciona para quem lê: esse leitor sabia quantos erros a amostra tem e consultou a biblioteca, e só {de(rr_.get('erros_localizados'), rr_.get('erros_na_amostra'))} erros estavam à vista no próprio relatório. Por isso a medida com revisor humano fica como limitação declarada (decisão 87).")
+                       f"Não mostra que o relatório funciona para quem lê: esse leitor sabia quantos erros a amostra tem e consultou a biblioteca, e só {de(rr_.get('erros_localizados'), rr_.get('erros_na_amostra'))} erros estavam à vista no próprio relatório. Por isso a medida com revisor humano fica em aberto (decisão 95).")
     else:
         item_sessao = (f"<strong>Sessão de revisão.</strong> Os {len(amostra)} relatórios da amostra são lidos um por vez na <a href='{URL_SESSAO_REVISAO}' target='_blank' rel='noopener'>página da sessão</a>, na ordem sorteada, com um nome neutro no lugar do nome do caso e sem dizer qual está certo; "
                        "a página mede o tempo até a decisão, e o revisor aceita ou recusa, diz se achou o erro e dá a utilidade de 1 a 5.")
@@ -3179,6 +3239,8 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("cenarios", d, h))
     d, h = secao_trilha(ctx.get("trilha"), road, ctx["cartoes_corridas"], revisao_preenchida=bool(ctx.get("revisao_trilha_preenchida")), rev=ctx.get("revisao_trilha"))
     partes.append(("trilha", d, h))
+    d, h = secao_conferencia(ctx.get("conferencia_ineditos"))
+    partes.append(("conferencia", d, h))
     d, h = secao_fechamento_f4(ctx.get("relatorio_f4"), ctx.get("pend", []), ctx["md_doc_para_html"], tela=ctx.get("tela_v2"), cura=ctx.get("cura"), cenarios=ctx.get("cenarios_v2"), revisao=ctx.get("revisao_trilha"), road=road, cartoes_corridas=ctx["cartoes_corridas"])
     partes.append(("fechamentof4", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

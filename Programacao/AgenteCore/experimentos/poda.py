@@ -254,6 +254,13 @@ def podar_arvore(nos: list[dict], titulo: str = "", alvo: dict | None = None, to
             "regras": podador.regras, "marcados": sorted(podador.marcados)}
 
 
+# ! Alteração de IA - Revisar: (05/11/2026, ficha 42, decisão 90) os nomes de todos os nós de uma captura, limpos como a poda limpa.
+# ! Motivo: a árvore do prompt só leva o que a referência em modo normal não tem, e a árvore podada da referência não basta: o
+# rodapé e os cartões além dos três primeiros ficam fora dela e apareciam como novidade na tela de erro.
+def nomes_dos_nos(nos: list[dict] | None) -> set[str]:
+    return {nome for nome in (_limpo(n.get("nome")) for n in nos or []) if nome}
+
+
 def tokens_estimados(texto: str) -> int:
     return round(len(texto) / bib.CHARS_POR_TOKEN)
 

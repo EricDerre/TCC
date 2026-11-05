@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-11-04T21:57:12",
+    "gerado_em": "2026-11-05T18:19:52",
     "corrida": "fase4_ensaio_v2",
     "gerado_por": "avaliar_fase4.py --cenarios"
   },
@@ -349,5 +349,21 @@
       "9fe5e7cb64288c9d"
     ],
     "unico": true
+  },
+  "prompt": {
+    "maximo_da_calibracao": 1281,
+    "limite_mais_10_pct": 1409,
+    "acima": [
+      "contrato-malformed_json#1@tela",
+      "contrato-field_missing#1@tela",
+      "contrato-field_renamed#1@tela",
+      "contrato-type_drift#1@tela",
+      "contrato-escala_ou_unidade_errada#1@tela",
+      "contrato-error_500#1@tela",
+      "localizador-front-busca@cenario",
+      "localizador-front-admin-produtos@cenario",
+      "localizador-front-cliente-reserva@cenario"
+    ],
+    "maximo_da_tela": 1950
   }
 }

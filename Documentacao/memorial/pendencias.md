@@ -557,17 +557,19 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
      ! Motivo: a medida com revisor humano não ficou feita (decisões 85 e 86) e a pré-análise achou dois defeitos da poda; fazer a medida com um colega e mexer na poda antes da Fase 5 são decisões do Eric. -->
 ## Abertas pelo fechamento da sessão de revisão (05/11/2026)
 
-### 40. A medida com revisor humano: um colega faz às cegas ou fica como limitação
-- **Estado:** fechada em 05/11/2026
+<!-- ! Alteração de IA - Revisar: ficha 40 reaberta em 05/11/2026 (decisão 95): título, Estado, O que é, Por que importa, Opções, Recomendação e Decisão. O texto da decisão anterior é: "(a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 87): a medida com revisor humano fica como limitação declarada, sem nova sessão".
+     ! Motivo: o Eric pediu para deixar em aberto, porque usou a pré-análise por agora e a revisão será feita depois de as respostas serem normalizadas; a ficha fechada diria que não haveria nova sessão. -->
+### 40. A medida com revisor humano: em aberto até as respostas serem normalizadas na Pós-Fase 4
+- **Estado:** aberta
 - **Quem decide:** Eric
 - **Aberta em:** 05/11/2026
-- **O que é:** A especificação da trilha (seção 12 c) pede, com um revisor humano, a localização do erro, o tempo até a decisão e a adesão apropriada. Na sessão de 05/11, só 1 dos 11 relatórios teve resposta sua, dada antes de ler a pré-análise; os outros 10 são o parecer do Claude, que você aprovou (decisões 85 e 86). O parecer acertou 11 de 11 decisões e 11 de 11 causas. Isso mede um leitor que sabia quantos erros a amostra tem e consultou a biblioteca, não o que o relatório vale para quem lê.
-- **Por que importa:** É a única parte do P7 que responde se o relatório ajuda uma pessoa a decidir. Sem ela, o TCC pode dizer que a evidência está no relatório, mas não que alguém consegue usá-la. Você já não serve como revisor às cegas dos relatórios 2 a 11, porque leu o parecer.
+- **O que é:** A especificação da trilha (seção 12 c) pede, com um revisor humano, a localização do erro, o tempo até a decisão e a adesão apropriada. Na sessão de 05/11, só 1 dos 11 relatórios teve resposta sua, dada antes de ler a pré-análise; os outros 10 são o parecer do Claude, que você aprovou (decisões 85 e 86). O parecer acertou 11 de 11 decisões e 11 de 11 causas. Isso mede um leitor que sabia quantos erros a amostra tem e consultou a biblioteca, não o que o relatório vale para quem lê. A ficha fechou em 05/11 pela opção de declarar como limitação (decisão 87), e você a reabriu no mesmo dia (decisão 95): usou a pré-análise por agora, a revisão será feita, e primeiro as respostas são normalizadas e melhoradas na Pós-Fase 4.
+- **Por que importa:** É a única parte do P7 que responde se o relatório ajuda uma pessoa a decidir. Medir agora mediria um formato de resposta que vai mudar. Você já não serve como revisor às cegas dos relatórios 2 a 11 da sessão de 05/11, porque leu o parecer.
 - **Opções:**
-  - (a) Declarar como limitação no TCC e seguir para o P8: a medida fica com uma resposta humana só, e a leitura mostra o parecer do Claude separado. Custo zero, mas a banca pode perguntar por quê.
-  - (b) Um colega do grupo faz a sessão às cegas nos 11 relatórios, na mesma página, no encontro da linha de base manual: cerca de 1 hora dele. A página precisa de uma coleção de respostas por revisor e do compartilhamento. Ele recebe só o link da página: a planilha, os arquivos da trilha, a pré-análise e a aba do painel agora trazem o resultado.
-- **Recomendação:** (b). Custa cerca de 1 hora, aproveita um encontro que já vai acontecer e é a única forma de o P7 responder a própria pergunta. Se o grupo não puder, (a).
-- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 87): a medida com revisor humano fica como limitação declarada, sem nova sessão. Ela entra no relatório da fase, no P8, e na próxima versão do documento do TCC.
+  - (a) Um colega do grupo faz a sessão às cegas, com os relatórios já no formato da Pós-Fase 4, na mesma página, no encontro da linha de base manual: cerca de 1 hora dele. A página precisa de uma coleção de respostas por revisor e do compartilhamento. Ele recebe só o link da página: a planilha, os arquivos da trilha, a pré-análise e a aba do painel trazem o resultado.
+  - (b) Você faz a sessão, com relatórios de casos que ainda não leu e no formato novo, por exemplo uma amostra dos 36 inéditos da corrida 24. É mais simples de marcar, mas você conhece o agente e a biblioteca, e isso entra na leitura.
+- **Recomendação:** (a), quando a Pós-Fase 4 fechar o formato. Um leitor que não construiu o agente é o que a medida pede, e o encontro da linha de base manual já vai acontecer.
+- **Decisão:** em aberto
 
 ### 41. Dois defeitos da poda: corrigir antes da Fase 5 ou deixar como estão
 - **Estado:** fechada em 05/11/2026
@@ -640,6 +642,21 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (c) Descartar as três, com o motivo registrado.
 - **Recomendação:** (a). Nada disso muda a medida da Fase 5, e a interface para o analista é o lugar das três.
 - **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 93): o trace na falha, o "Cérebro ao vivo" e o explorador com a trilha v2 entram na interface para o analista, que o Eric especifica, para depois da Fase 5 (roadmap §7), e ficam registrados como não feitos na Fase 4. A Fase 5 roda sem trace, e o TCC não pode dizer que ele existe: as corridas guardam a árvore, o corpo e os eventos na trilha.
+
+<!-- ! Alteração de IA - Revisar: ficha nova em 05/11/2026: a conferência dos 36 inéditos pedida pela decisão 92, com o documento gerado por `gerar_conferencia_ineditos.py` e a pré-análise do Claude.
+     ! Motivo: a corrida 24 só roda depois da conferência, e a pergunta precisa estar no painel, onde o Eric decide; os números e os ids vêm de `resultados_alvo/fase4/conferencia_ineditos.json`. -->
+### 46. Os 36 inéditos da ficha 27: a sua conferência antes da corrida 24
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** A decisão 92 manda você conferir os 36 casos antes de a corrida 24 medi-los. O documento está em `resultados_alvo/fase4/conferencia_ineditos.md` (`gerar_conferencia_ineditos.py`) e na aba "Conferência dos inéditos" do painel: cada caso com a requisição, o corpo, o sintoma, o gabarito, o que a corrida 17 viu e a pré-análise. A pré-análise é de um agente do Claude que só leu o código: em 26 casos ela não tem nada a apontar, e aponta estes 10: `lex-27` (`codificacao_incorreta`); `sin-24` (`estrutura_aninhada_divergente`); `semt-26` (`nulo_inesperado`); `semt-27` (`valor_fora_do_dominio`); `tra-27` (`escala_ou_unidade_errada`); `run-26` (`dado_desatualizado`); `run-27` (`registro_duplicado`); `efe-24` (`localizador_quebrado`); `efe-26` (`estado_da_tela_divergente`); `efe-27` (`estado_da_tela_divergente`). Quase todos são casos em que outra causa da lista também caberia; o `run-26` é diferente: a CobaiaAPI não tem cache e grava antes de responder, então ela nunca produz esse corpo (é um cenário descrito, sem modo); e o `semt-26` tem o gabarito `nulo_inesperado` com um contrato que aceita nulo em `resumo`.
+- **Por que importa:** Um caso errado mede o modelo contra algo que o sistema não produz, ou contra uma resposta com mais de uma leitura honesta. A corrida 24 é a única medida da biblioteca final em casos inéditos, e o número vai para o TCC. Nenhuma pessoa conferiu esses casos até agora: a ficha 27 previa isso antes da corrida 16, e a conferência não foi registrada (ficha 44). Mudar o texto de um caso não mexe nas corridas 17, 18c, 21c e 23, porque nenhuma delas lê esse texto com o modelo.
+- **Opções:**
+  - (a) Você lê os 10 apontados com atenção e passa os olhos nos outros 26. Basta dizer "ok como está" ou o id dos que mudam, e o que muda; o que for trocado eu refaço e confiro de novo por script. Pela pré-análise, os pontos que mais pedem a sua palavra são o `run-26` e o `semt-26`.
+  - (b) Você lê os 36 com a mesma atenção, como fez com a planilha da curadoria (ficha 17).
+  - (c) A pré-análise vale como a conferência: a corrida 24 roda como está, e o TCC declara que os casos foram conferidos por IA, não por uma pessoa.
+- **Recomendação:** (a). A pré-análise concentra a sua leitura onde há dúvida, e continua sendo uma pessoa dizendo que os casos estão certos, que é o que a decisão 92 pede. A corrida 24 espera por esta ficha; as corridas 18c, 21c e 23 não dependem dela.
+- **Decisão:** em aberto
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
