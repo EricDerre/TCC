@@ -1,0 +1,24 @@
+﻿[2026-11-04 20:19:14] rodar_fase4.ps1: modo cenarios, saida fase4_ensaio, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-04 20:19:16] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 8,1 GB
+[2026-11-04 20:19:16] testar_fase4.py
+[2026-11-04 20:19:34] executar_fase4.py --modo cenarios --saida fase4_ensaio --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --repeticoes 1
+[2026-11-04 20:19:37] INÍCIO cenarios: Ollama 0.40.14, qwen2.5:7b, biblioteca de produção (95af35290860, lote fase4_biblioteca), k = 3; 10 execução(ões) (10 cenários x 1 repetição(ões)); 0 já feita(s)
+[2026-11-04 20:19:49] referência api-catalogo: passou em 0.284 s; árvore 193 nós, 39 linhas
+[2026-11-04 20:19:50] repetição 1: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-04 20:21:52] [1/10] contrato-malformed_json#1 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 120.433 s; 120.724 s
+[2026-11-04 20:23:39] [2/10] contrato-field_missing#1 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 104.334 s; 104.796 s
+[2026-11-04 20:25:29] [3/10] contrato-field_renamed#1 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 107.119 s; 107.471 s
+[2026-11-04 20:26:40] [4/10] contrato-type_drift#1 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 68.69 s; 69.09 s
+[2026-11-04 20:28:46] [5/10] contrato-escala_ou_unidade_errada#1 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 123.613 s; 124.029 s
+[2026-11-04 20:30:43] [6/10] contrato-error_500#1 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 114.67 s; 114.96 s
+[2026-11-04 20:30:44] referência front-busca (id_renomeado, localizador #buscar): passou em 0.452 s; alvo searchbox "search"
+[2026-11-04 20:32:37] [7/10] localizador-front-busca#1 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 106.51 s; 112.339 s
+[2026-11-04 20:32:38] referência front-admin-login (classe_trocada, localizador button.btn-primary): passou em 0.387 s; alvo button "Entrar"
+[2026-11-04 20:33:43] [8/10] localizador-front-admin-login#1 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success não; MTTR None s; 63.356 s
+[2026-11-04 20:33:44] referência front-admin-produtos (texto_alterado, localizador role=button[name=/EXCLUIR$/] >> nth=0): passou em 0.697 s; alvo button " EXCLUIR"
+[2026-11-04 20:35:16] [9/10] localizador-front-admin-produtos#1 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 84.985 s; 91.39 s
+[2026-11-04 20:35:17] referência front-cliente-reserva (estrutura_alterada, localizador #reserva_login > input[type=submit]): passou em 0.656 s; alvo button "Reservar"
+[2026-11-04 20:36:45] [10/10] localizador-front-cliente-reserva#1 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 79.858 s; 87.134 s
+[2026-11-04 20:36:52] FIM cenarios: 10 de 10 execuções; Task Success 9; duração 1037 s; trilha 416957 bytes
+[2026-11-04 20:36:54] avaliar_fase4.py --cenarios --saida fase4_ensaio
+[2026-11-04 20:36:54] FIM rodar_fase4.ps1 (modo cenarios) - duracao total 00h17

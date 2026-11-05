@@ -10,6 +10,7 @@
 Sobe o MariaDB se preciso, apaga e recria `ti93phpdb01` com schema e seed, imprime as contagens e, salvo
 --manter-servidor, desliga o servidor que este processo subiu. Código de saída 1 se as contagens não forem as do seed."""
 import argparse
+import hashlib
 import subprocess
 import sys
 from pathlib import Path
@@ -39,6 +40,17 @@ def contar(cli: str, banco: str = BANCO) -> dict[str, int]:
     sql = "SELECT " + ", ".join(f"(SELECT COUNT(*) FROM `{banco}`.`{t}`)" for t in TABELAS) + ";"
     valores = executar_sql(cli, sql).split()
     return dict(zip(TABELAS, (int(v) for v in valores)))
+
+
+# ! Alteração de IA - Revisar: (04/11/2026, Fase 4, P6) hash_das_tabelas: o CHECKSUM TABLE das quatro tabelas do seed, juntado
+# num sha256 curto.
+# ! Motivo: o plano (P6) pede o banco restaurado entre as repetições dos cenários da Fase 5, com o hash das tabelas igual ao do seed
+# no começo de cada uma; as contagens sozinhas não pegam um preço alterado por um cenário anterior. O schema não tem coluna com
+# a hora da carga, então o CHECKSUM TABLE dá o mesmo valor a cada restauração e muda quando uma linha muda.
+def hash_das_tabelas(cli: str, banco: str = BANCO) -> str:
+    """Um hash do conteúdo das quatro tabelas do seed (CHECKSUM TABLE de cada uma)."""
+    saida = executar_sql(cli, "CHECKSUM TABLE " + ", ".join(f"`{banco}`.`{t}`" for t in TABELAS) + ";")
+    return hashlib.sha256(saida.strip().replace("\r\n", "\n").encode("utf-8")).hexdigest()[:16]
 
 
 def restaurar(cli: str | None = None) -> dict[str, int]:

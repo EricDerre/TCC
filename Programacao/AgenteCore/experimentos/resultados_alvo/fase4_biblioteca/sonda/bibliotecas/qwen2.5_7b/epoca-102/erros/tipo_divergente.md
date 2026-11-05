@@ -1,0 +1,34 @@
+---
+# ! Alteração de IA - Revisar: verbete de causa raiz da biblioteca base (Fase 2-B).
+# ! Motivo: type_drift converte com str(); texto numérico ainda formata na tela, então o
+# sintoma aparece em ordenação/soma. Conferido em fault_injection.py e produtos_api.php.
+id: tipo_divergente
+titulo: Tipo divergente
+sistema: CobaiaAPI
+entidade_principal: Produto
+tipo: erro
+status: ativo
+causa_raiz: tipo_divergente
+arquivos: [Programacao/CobaiaAPI/app/fault_injection.py, Programacao/CobaiaFront/produtos_api.php, Programacao/CobaiaAPI/app/routers/produtos.py]
+endpoints: [GET /api/produtos, GET /api/pedidos]
+sintomas: [numero como texto, booleano como Sim, destaque 1, ordenacao errada, soma errada]
+palavras_chave: [tipo, texto, string, numero, booleano, Sim, aspas, type_drift, str, virgula decimal, convercao, json]
+causas_relacionadas: [valor_fora_do_dominio, formato_de_data_divergente, escala_ou_unidade_errada]
+# ! Alteração por modelo qwen2.5:7b (E101, caso semt-6) - Revisar: nota acrescentada.
+# ! Alteração por modelo qwen2.5:7b (E101, caso semt-7) - Revisar: retificação acrescentada.
+# ! Alteração por modelo qwen2.5:7b (E101, caso semt-10) - Revisar: nota acrescentada.
+---
+## Resumo
+Chave certa com o tipo JSON errado: número entre aspas ("89.90"), booleano como texto ("Sim") ou número (1), inteiro como texto ("4").
+
+## Sinais
+- texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar
+- "89,90" com vírgula não converte; destaque fora de true/false sai literal
+
+## Causa
+O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).
+
+## Notas do modelo
+- [E101 · semt-6 · nota] Adicionar nota sobre a necessidade de conversão correta do tipo id em inteiro no front-end, considerando que o backend retorna como string. — Motivo: Este caso mostrou que a conversão incorreta do tipo id pode causar confusões na interface, e a documentação não explicitava essa necessidade.
+- [E101 · semt-7 · retificação de "Chave certa com o tipo JSON errado: número entre aspas ('89.90'), booleano como texto ('Sim') ou número (1), inteiro como texto ('4'). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; '89,90' com vírgula não converte; destaque fora de true/false sai literal."] Adicionar exemplo de campo "pessoas" como número em vez de string, causando inconsistência na contagem total de lugares reservados. — Motivo: O caso mostrou que a contagem total de lugares reservados está incorreta, indicando que o tipo do campo "pessoas" está divergindo do esperado, necessitando de um exemplo explícito na documentação.
+- [E101 · semt-10 · nota] Adicionar nota sobre a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano. — Motivo: Este caso mostra que a converção de tipos entre a API e a interface web precisa ser claramente documentada, pois o usuário pode interpretar incorretamente os dados.

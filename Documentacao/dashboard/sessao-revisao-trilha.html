@@ -1,0 +1,1031 @@
+<title>Revisão dos relatórios da trilha</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<!-- ! Alteração de IA - Revisar: página gerada por ferramentas/sessao_revisao.py para a sessão de revisão dos relatórios da corrida 22 (Fase 4).
+     ! Motivo: a medida com revisor humano da especificação da trilha (seção 12 c) precisa de um relatório por vez, do tempo até a decisão e de nada sobre o resultado de cada caso; a página leva só a ordem da planilha e o texto dos relatórios, e as respostas ficam no banco da própria página até irem para revisao_trilha.md. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: coluna larga para ler e ficha estreita que acompanha a rolagem; no celular a ficha vira barra presa embaixo e, depois da decisão, sobe para antes do relatório. */
+:root{--bg:#f6f4ee;--bg2:#fdfcf9;--ink:#1f2328;--ink2:#4c545c;--linha:#d8d3c7;--acento:#2f5d8a;--acento2:#dbe7f3;--bom:#2e7d4f;--ruim:#b3392b;--sombra:0 -4px 18px rgba(20,25,30,.12);
+--fd:"Source Serif 4",Georgia,"Times New Roman",serif;--fb:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif;--fm:"IBM Plex Mono",Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){color-scheme:dark;--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--ruim:#e46b5c;--sombra:0 -4px 18px rgba(0,0,0,.45)}}
+:root[data-theme=dark]{color-scheme:dark;--bg:#15181c;--bg2:#1d2126;--ink:#e8e6df;--ink2:#a8adb4;--linha:#333a42;--acento:#7fb0e0;--acento2:#243342;--bom:#5cc48a;--ruim:#e46b5c;--sombra:0 -4px 18px rgba(0,0,0,.45)}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--fb);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 28px}
+.topo,.aviso,.palco{max-width:80rem;margin-inline:auto}
+.olho{margin:0;font:500 .72rem/1.3 var(--fm);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+h1{margin:.2rem 0 0;font:600 1.55rem/1.2 var(--fd);text-wrap:balance}
+h2{margin:0 0 .4rem;font:600 1.3rem/1.25 var(--fd);text-wrap:balance}
+code{font:.87em var(--fm);background:var(--acento2);padding:1px 4px;border-radius:4px;overflow-wrap:anywhere}
+:focus-visible{outline:2px solid var(--acento);outline-offset:2px}
+button{font:inherit;color:inherit}
+.trilho{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:.7rem 0 1.1rem}
+.trilho ol{display:flex;flex-wrap:wrap;gap:5px;list-style:none;margin:0;padding:0}
+.pip{width:30px;height:30px;padding:0;border-radius:50%;border:1px solid var(--linha);background:transparent;color:var(--ink2);font:500 .8rem var(--fm);font-variant-numeric:tabular-nums}
+.pip:disabled{color:var(--ink2);opacity:1}
+.pip.salvo{background:var(--acento2);border-color:var(--acento);color:var(--ink)}
+.pip.salvo:not(:disabled){cursor:pointer}
+.pip.atual{border:2px solid var(--acento);color:var(--acento);font-weight:600}
+.contagem{font-size:.85rem;color:var(--ink2);font-variant-numeric:tabular-nums}
+.aviso{margin-bottom:1rem;padding:9px 13px;border:1px solid var(--ruim);border-radius:8px;background:var(--bg2);font-size:.92rem}
+.palco{display:flex;flex-direction:column;gap:14px}
+.bloco{max-width:46rem}
+.abertura{margin:0 0 .8rem;font-size:1.05rem}
+.passos{margin:0 0 1rem;padding-left:1.3rem}
+.passos li{margin:.45rem 0;max-width:68ch}
+.cegas{margin:0 0 1.1rem;padding:10px 14px;border:1px solid var(--linha);border-radius:8px;background:var(--bg2);max-width:68ch}
+.nota{margin:.5rem 0 0;font-size:.85rem;color:var(--ink2)}
+.primario{padding:10px 18px;border:0;border-radius:8px;background:var(--acento);color:var(--bg2);font-weight:600;cursor:pointer}
+.secundario{padding:7px 13px;border:1px solid var(--acento);border-radius:8px;background:transparent;color:var(--acento);font-weight:500;cursor:pointer}
+.discreto{padding:2px 0;border:0;background:none;color:var(--acento);text-decoration:underline;cursor:pointer}
+.relatorio{min-width:0;width:100%}
+.relatorio h3{margin:0 0 .6rem;font:600 1.3rem/1.25 var(--fd);text-wrap:balance}
+.relatorio h4{margin:1.5rem 0 .5rem;padding-top:.8rem;border-top:1px solid var(--linha);font-size:1.02rem;font-weight:600}
+.relatorio h5{margin:1.1rem 0 .3rem;font-size:.92rem;font-weight:600;color:var(--ink2)}
+.relatorio p,.relatorio ul{max-width:74ch}
+.relatorio li{margin:.3rem 0}
+.tabela{overflow-x:auto;margin:10px 0;border:1px solid var(--linha);border-radius:8px;background:var(--bg2)}
+table{border-collapse:collapse;width:100%;font-size:13px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 10px;border-bottom:1px solid var(--linha);text-align:left;vertical-align:top}
+th{background:var(--acento2);font-weight:600;white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+pre.bruto{margin:.6rem 0;padding:10px 12px;border:1px solid var(--linha);border-radius:8px;background:var(--bg2);overflow-x:auto}
+pre.bruto code{padding:0;background:none;font-size:12.5px;white-space:pre-wrap;overflow-wrap:anywhere}
+details{margin:10px 0;padding:8px 12px;border:1px solid var(--linha);border-radius:8px;background:var(--bg2)}
+summary{cursor:pointer;font-weight:600}
+.painel{min-width:0;padding:12px 14px;border:1px solid var(--linha);border-radius:10px;background:var(--bg2)}
+.painel-topo{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;margin-bottom:.6rem}
+.relogio{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 .5rem;font-size:.88rem;color:var(--ink2)}
+.luz{width:8px;height:8px;border-radius:50%;background:var(--bom);display:inline-block}
+.pergunta{margin:.2rem 0 .5rem}
+.decisoes{display:flex;gap:8px}
+.decisao{flex:1;padding:11px 8px;border:1.5px solid var(--acento);border-radius:8px;background:transparent;color:var(--acento);font-weight:600;cursor:pointer}
+.decisao:hover{background:var(--acento2)}
+.tempo{margin:0 0 .5rem;font-variant-numeric:tabular-nums}
+fieldset{margin:0 0 .75rem;padding:0;border:0;min-width:0}
+legend{padding:0;margin-bottom:.3rem;font-size:.92rem;font-weight:600}
+.opcoes{display:flex;flex-wrap:wrap;gap:5px}
+.opcao{position:relative}
+.opcao input{position:absolute;width:1px;height:1px;opacity:0}
+.opcao label{display:inline-block;min-width:2.3rem;padding:6px 11px;border:1px solid var(--linha);border-radius:8px;background:var(--bg);text-align:center;cursor:pointer}
+.opcao input:checked+label{border-color:var(--acento);background:var(--acento);color:var(--bg2)}
+.opcao input:focus-visible+label{outline:2px solid var(--acento);outline-offset:2px}
+.dica{margin:.25rem 0 0;font-size:.8rem;color:var(--ink2)}
+textarea{display:block;width:100%;padding:7px 9px;border:1px solid var(--linha);border-radius:8px;background:var(--bg);color:var(--ink);font:.92rem/1.45 var(--fb);resize:vertical}
+label.campo{display:block;margin-bottom:.3rem;font-size:.92rem;font-weight:600}
+.acoes{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:.8rem}
+.mensagem{margin:.5rem 0 0;font-size:.88rem;color:var(--ruim)}
+.mensagem:empty{display:none}
+.so-leitor{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media (min-width:980px){
+  .palco[data-fase=lendo],.palco[data-fase=decidido]{display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:32px;align-items:start}
+  .painel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto}
+}
+@media (max-width:979.98px){
+  .so-largo{display:none!important}
+  .painel{position:sticky;bottom:env(safe-area-inset-bottom,0px);z-index:5;box-shadow:var(--sombra)}
+  .palco[data-fase=decidido] .painel{position:static;order:-1;box-shadow:none}
+}
+</style>
+
+<header class="topo">
+  <p class="olho">Fase 4, corrida 22, sessão de revisão</p>
+  <h1>Revisão dos relatórios da trilha</h1>
+  <nav class="trilho" aria-label="Relatórios da sessão">
+    <ol id="trilho-lista"><li><button type="button" class="pip" id="pip-0" data-i="0" disabled>1</button></li><li><button type="button" class="pip" id="pip-1" data-i="1" disabled>2</button></li><li><button type="button" class="pip" id="pip-2" data-i="2" disabled>3</button></li><li><button type="button" class="pip" id="pip-3" data-i="3" disabled>4</button></li><li><button type="button" class="pip" id="pip-4" data-i="4" disabled>5</button></li><li><button type="button" class="pip" id="pip-5" data-i="5" disabled>6</button></li><li><button type="button" class="pip" id="pip-6" data-i="6" disabled>7</button></li><li><button type="button" class="pip" id="pip-7" data-i="7" disabled>8</button></li><li><button type="button" class="pip" id="pip-8" data-i="8" disabled>9</button></li><li><button type="button" class="pip" id="pip-9" data-i="9" disabled>10</button></li><li><button type="button" class="pip" id="pip-10" data-i="10" disabled>11</button></li></ol>
+    <span id="contagem" class="contagem">0 de 11 respondidos</span>
+  </nav>
+</header>
+<div id="aviso" class="aviso" role="status" hidden><span id="aviso-texto"></span> <button type="button" id="tentar" class="discreto" hidden>Tentar de novo</button></div>
+<main id="palco" class="palco" data-fase="inicio">
+  <section id="inicio" class="bloco">
+    <p class="abertura">São 11 relatórios de diagnóstico, um por vez, na ordem sorteada. Em cada um você decide se aceita ou recusa o diagnóstico do agente. Reserve cerca de 1 hora; dá para parar entre um relatório e outro.</p>
+    <ol class="passos">
+      <li><strong>Abra o relatório.</strong> O cronômetro liga nesse clique e só conta com a página à vista. A tela não mostra a contagem, para não apressar a leitura. Se precisar interromper, use Pausar: o relatório some e o tempo para.</li>
+      <li><strong>Decida.</strong> O diagnóstico é a causa na seção 1, Veredito. Aceitar ou Recusar para o cronômetro.</li>
+      <li><strong>Complete a ficha.</strong> Diga se achou no relatório onde está o erro do agente, a utilidade do relatório de 1 a 5, a sua avaliação do diagnóstico e, se quiser, um comentário.</li>
+      <li><strong>Salve.</strong> A resposta fica guardada nesta página, e o Claude lê daqui quando você terminar.</li>
+    </ol>
+    <p class="cegas"><strong>Sem ver o resultado.</strong> Até terminar, não abra a planilha <code>revisao_trilha.md</code> nem os arquivos <code>trilha.md</code> e <code>trilha.json</code>: eles trazem o nome, a família ou o resultado de cada caso. Por isso os relatórios aparecem aqui com um nome neutro.</p>
+    <button type="button" id="comecar" class="primario">Começar pelo relatório 1</button>
+  </section>
+  <section id="antes" class="bloco" hidden>
+    <h2 id="antes-titulo"></h2>
+    <p>O cronômetro liga quando você abrir o relatório.</p>
+    <button type="button" id="abrir" class="primario">Abrir o relatório</button>
+    <p class="nota">Pode parar aqui. O que está respondido continua guardado.</p>
+  </section>
+  <section id="pausado" class="bloco" hidden>
+    <h2>Leitura pausada</h2>
+    <p><span id="pausado-titulo"></span>. O relatório fica escondido e o cronômetro parado até você continuar.</p>
+    <button type="button" id="continuar" class="primario">Continuar a leitura</button>
+  </section>
+  <article id="relatorio" class="relatorio" hidden></article>
+  <aside id="painel" class="painel" aria-label="Ficha do relatório" hidden>
+    <div class="painel-topo so-largo"><strong id="painel-titulo"></strong></div>
+    <div id="decidir">
+      <p class="relogio"><span class="luz" aria-hidden="true"></span> Cronômetro ligado <button type="button" id="pausar" class="discreto">Pausar</button></p>
+      <p class="pergunta so-largo">Você aceita o diagnóstico da seção 1, Veredito?</p>
+      <div class="decisoes"><button type="button" id="aceitar" class="decisao">Aceitar</button><button type="button" id="recusar" class="decisao">Recusar</button></div>
+      <p class="nota so-largo">O clique para o cronômetro.</p>
+    </div>
+    <div id="ficha" hidden>
+      <p id="tempo" class="tempo"></p>
+      <fieldset><legend>Decisão</legend><div class="opcoes">
+        <span class="opcao"><input type="radio" name="decisao" id="dec-aceitar" value="aceitar"><label for="dec-aceitar">Aceitar</label></span>
+        <span class="opcao"><input type="radio" name="decisao" id="dec-recusar" value="recusar"><label for="dec-recusar">Recusar</label></span>
+      </div></fieldset>
+      <fieldset><legend>Achou no relatório onde está o erro do agente?</legend><div class="opcoes">
+        <span class="opcao"><input type="radio" name="erro" id="erro-sim" value="sim"><label for="erro-sim">Sim</label></span>
+        <span class="opcao"><input type="radio" name="erro" id="erro-nao" value="não"><label for="erro-nao">Não</label></span>
+        <span class="opcao"><input type="radio" name="erro" id="erro-na" value="n.a."><label for="erro-na">Não vi erro</label></span>
+      </div><p class="dica">Erro do agente é o que fez o diagnóstico sair errado. Se o diagnóstico parece certo, marque Não vi erro.</p></fieldset>
+      <fieldset><legend>Utilidade do relatório</legend><div class="opcoes">
+        <span class="opcao"><input type="radio" name="utilidade" id="util-1" value="1"><label for="util-1">1</label></span>
+        <span class="opcao"><input type="radio" name="utilidade" id="util-2" value="2"><label for="util-2">2</label></span>
+        <span class="opcao"><input type="radio" name="utilidade" id="util-3" value="3"><label for="util-3">3</label></span>
+        <span class="opcao"><input type="radio" name="utilidade" id="util-4" value="4"><label for="util-4">4</label></span>
+        <span class="opcao"><input type="radio" name="utilidade" id="util-5" value="5"><label for="util-5">5</label></span>
+      </div><p class="dica">1 é nenhuma; 5 é que decidiu sozinho.</p></fieldset>
+      <fieldset><legend>Sua avaliação do diagnóstico</legend><div class="opcoes">
+        <span class="opcao"><input type="radio" name="avaliacao" id="aval-certo" value="certo"><label for="aval-certo">Certo</label></span>
+        <span class="opcao"><input type="radio" name="avaliacao" id="aval-errado" value="errado"><label for="aval-errado">Errado</label></span>
+      </div></fieldset>
+      <label class="campo" for="comentario">Comentário, se quiser</label>
+      <textarea id="comentario" rows="3" placeholder="Se achou o erro, diga em que parte do relatório ele está."></textarea>
+      <p id="mensagem" class="mensagem" role="alert"></p>
+      <div class="acoes">
+        <button type="button" id="salvar" class="primario">Salvar e ir ao próximo</button>
+        <button type="button" id="voltar-a-ler" class="discreto">Voltar a ler</button>
+        <button type="button" id="voltar-sem-mudar" class="discreto" hidden>Voltar sem mudar</button>
+      </div>
+    </div>
+  </aside>
+  <section id="fim" hidden>
+    <h2 id="fim-titulo"></h2>
+    <p id="fim-texto"></p>
+    <div class="tabela"><table>
+      <thead><tr><th>#</th><th>Tempo (s)</th><th>Achou o erro</th><th>Decisão</th><th>Utilidade</th><th>Avaliação</th><th>Comentário</th><th><span class="so-leitor">Corrigir</span></th></tr></thead>
+      <tbody id="fim-linhas"></tbody>
+    </table></div>
+    <details id="copia"><summary>Copiar as respostas</summary>
+      <p class="nota">Serve para quando as respostas não chegam ao banco da página: cole o texto na conversa com o Claude.</p>
+      <textarea id="respostas-texto" rows="8" readonly></textarea>
+      <div class="acoes"><button type="button" id="copiar" class="secundario">Copiar</button> <span id="copia-status" role="status"></span></div>
+    </details>
+  </section>
+</main>
+
+<template id="rel-0"><h3>Caso <code>relatorio-1</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-1@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>dado_desatualizado</code> · <strong>CAMPO:</strong> <code>nenhum</code> · selo de probabilidade: <strong>alto</strong> (p = 1,00) · <strong>CONFLITO</strong>: a inferência sem documentação mudou a resposta de dado_desatualizado para colecao_no_lugar_de_objeto</p>
+<p><strong>IMPACTO (declarado):</strong> <code>O usuário vê uma lista de pedidos antigos, sem a reserva recentemente criada.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu dado_desatualizado porque o sinal esperado JSON completo e válido, recebido corpo nao_json está presente na resposta HTTP e os verbetes contrato-pedido, dado_desatualizado, pedido-reserva estavam entre os entregues ao modelo. A segunda causa, tempo_de_resposta_excedido, ficou com probabilidade 0,00 e nenhum verbete entregue a sustenta. A FONTE cita 2 verbete(s), todos presentes no contexto. A remoção do verbete contrato-pedido não mudou a resposta: sem efeito medido do contexto. A troca do verbete contrato-pedido por um verbete errado não mudou a resposta: sem efeito medido do contexto. A inferência sem documentação mudou a resposta (de dado_desatualizado para colecao_no_lugar_de_objeto). (a probabilidade registrada é só um limite inferior: o rótulo saiu das alternativas devolvidas) A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): a inferência sem documentação mudou a resposta de dado_desatualizado para colecao_no_lugar_de_objeto.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: POST /api/pedidos -&gt; 201 | GET /api/pedidos?login=11122233344 -&gt; 200
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id_pedido: inteiro | pessoas: inteiro | data_pedido: data ISO (AAAA-MM-DD) | status: texto ('Em Analise' ou 'Cancelado') | nome: texto | cpf: texto
+
+CORPO DA RESPOSTA:
+POST devolveu {"id_pedido": 8, "status": "Em Analise", "pessoas": 6}. GET seguinte devolveu [{"id_pedido": 7, "pessoas": 4, "data_pedido": "2026-09-10", "status": "Em Analise", "nome": "Cliente Teste", "cpf": "11122233344"}]
+
+SINTOMA OBSERVADO: A reserva recem-criada nao aparece na lista; aparece so depois de alguns minutos.
+
+OBSERVAÇÃO ADICIONAL: O cabecalho da resposta do GET traz Age: 240 e Cache-Control: max-age=300.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 1209): regras diff_contra_contrato; antes {"chars": 224}, depois {"chars": 224}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>(corpo inteiro)</td><td>JSON completo e válido</td><td>corpo nao_json</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>3eccd041da49c857</code>):</p>
+<pre class="bruto"><code>POST devolveu {"id_pedido": 8, "status": "Em Analise", "pessoas": 6}. GET seguinte devolveu [{"id_pedido": 7, "pessoas": 4, "data_pedido": "2026-09-10", "status": "Em Analise", "nome": "Cliente Teste", "cpf": "11122233344"}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>dado_desatualizado e não tempo_de_resposta_excedido: a escolha tem probabilidade 1,00 contra 0,00; verbete(s) na evidência: contrato-pedido, dado_desatualizado, pedido-reserva</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>dado_desatualizado</td><td>1,00</td><td>sim</td></tr><tr><td>tempo_de_resposta_excedido</td><td>0,00</td><td></td></tr><tr><td>registro_duplicado</td><td>0,00</td><td></td></tr><tr><td>campo_ausente</td><td>0,00</td><td></td></tr><tr><td>campo_renomeado</td><td>0,00</td><td></td></tr><tr><td>valor_fora_do_dominio</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr><tr><td>resposta_truncada</td><td>0,00</td><td></td></tr><tr><td>tipo_divergente</td><td>0,00</td><td></td></tr><tr><td>chave_de_juncao_errada</td><td>0,00</td><td></td></tr><tr><td>estado_da_tela_divergente</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[contrato-pedido], [dado_desatualizado]</code>; verbetes citados: <code>contrato-pedido</code>, <code>dado_desatualizado</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>contrato-pedido</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado existe na biblioteca</td><td><code>dado_desatualizado</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>contrato-pedido</code></td><td>confere</td><td>contexto: <code>contrato-pedido</code>, <code>dado_desatualizado</code>, <code>pedido-reserva</code></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>dado_desatualizado</code></td><td>confere</td><td>contexto: <code>contrato-pedido</code>, <code>dado_desatualizado</code>, <code>pedido-reserva</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>dado_desatualizado</code></td><td>confere</td><td>verbetes: <code>dado_desatualizado</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[contrato-pedido], [dado_desatualizado]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["contrato-pedido", "dado_desatualizado"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>contrato-pedido</code></td><td><strong>não confere</strong></td><td>{"termo": "dado_desatualizado"}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>dado_desatualizado</code></td><td>confere</td><td>{"termo": "dado_desatualizado"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>contrato-pedido</code></td><td>dado_desatualizado</td><td>dado_desatualizado</td><td>1,00</td><td>0,99</td><td>sem efeito medido do contexto</td></tr><tr><td>troca</td><td><code>contrato-pedido</code></td><td>dado_desatualizado</td><td>dado_desatualizado</td><td>1,00</td><td>1,00</td><td>sem efeito medido do contexto</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>dado_desatualizado</td><td>colecao_no_lugar_de_objeto</td><td>1,00</td><td>0,00</td><td>sem documentação a resposta muda: a documentação pesou na decisão (só um limite inferior da queda: o rótulo saiu das alternativas devolvidas)</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>dado_desatualizado</td><td>dado_desatualizado</td><td>1,00</td><td>1,00</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira a resposta no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>35 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>1207</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>caso relatorio-1</td></tr><tr><td>1209</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>corpo_http: 1 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>1210</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>poda: escolha nao_json; divergência não</td></tr><tr><td>1211</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>3 de 39 verbetes entregues</td></tr><tr><td>1212</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>recuperacao: escolha contrato-pedido,dado_desatualizado,pedido-reserva; divergência não</td></tr><tr><td>1214</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>{"chars": 3603, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "06ec125be14a", "sha": "06ec125be14a2e3d"}</td></tr><tr><td>1216</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>diagnostico: 70,2 s</td></tr><tr><td>1217</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>causa_raiz: <code>dado_desatualizado</code></td></tr><tr><td>1218</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>campo: <code>nenhum</code></td></tr><tr><td>1219</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>impacto: <code>O usuário vê uma lista de pedidos antigos, sem a reserva recentemente criada.</code></td></tr><tr><td>1220</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte: <code>[contrato-pedido], [dado_desatualizado]</code></td></tr><tr><td>1221</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_citada: <code>contrato-pedido</code></td></tr><tr><td>1222</td><td>13</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_citada: <code>dado_desatualizado</code></td></tr><tr><td>1223</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>1224</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>1225</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1226</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1227</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1228</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1229</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>campo_existe_no_caso: nao_se_aplica</td></tr><tr><td>1230</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>1231</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>1232</td><td>23</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>impacto: nao_verificavel</td></tr><tr><td>1233</td><td>24</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_formato_valido: confere</td></tr><tr><td>1234</td><td>25</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_contem_termo_da_causa: nao_confere</td></tr><tr><td>1235</td><td>26</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>1238</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>intervencao:remocao: 62,0 s</td></tr><tr><td>1239</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>remocao de contrato-pedido: rótulo dado_desatualizado para dado_desatualizado</td></tr><tr><td>1241</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>intervencao:troca: 68,9 s</td></tr><tr><td>1242</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>troca de contrato-pedido: rótulo dado_desatualizado para dado_desatualizado</td></tr><tr><td>1245</td><td>31</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>intervencao:sem_documentacao: 59,9 s</td></tr><tr><td>1246</td><td>32</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>sem_documentacao de None: rótulo dado_desatualizado para colecao_no_lugar_de_objeto</td></tr><tr><td>1248</td><td>33</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>intervencao:repeticao_da_base: 16,3 s</td></tr><tr><td>1249</td><td>34</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>repeticao_da_base de None: rótulo dado_desatualizado para dado_desatualizado</td></tr><tr><td>1250</td><td>35</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:10:39</td><td>diagnostico: escolha dado_desatualizado; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 1210, <code>poda</code>: escolha <code>nao_json</code>; resultado sinais_em_codigo; evidência: evento 1209 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nenhum (gen_ai: plan)</li><li>evento 1212, <code>recuperacao</code>: escolha <code>contrato-pedido,dado_desatualizado,pedido-reserva</code>; resultado verbetes_entregues; evidência: evento 1211 (verbete_entregue, contrato-pedido), evento 1211 (verbete_entregue, dado_desatualizado), evento 1211 (verbete_entregue, pedido-reserva); divergência: não; falha: nenhuma; prov.used: contrato-pedido, dado_desatualizado, pedido-reserva (gen_ai: retrieval)</li><li>evento 1250, <code>diagnostico</code>: escolha <code>dado_desatualizado</code>; resultado rotulo_emitido; evidência: evento 1209 (sinal_em_codigo), evento 1211 (verbete_entregue, contrato-pedido), evento 1211 (verbete_entregue, dado_desatualizado), evento 1211 (verbete_entregue, pedido-reserva), evento 1216 (resposta), evento 1221 (verbete_citado, contrato-pedido), evento 1222 (verbete_citado, dado_desatualizado); divergência: sim; falha: nenhuma; prov.used: contrato-pedido, dado_desatualizado, pedido-reserva (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 1207 a 1250 da trilha; hash dos eventos deste caso: <code>57cace524c554089</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-1"><h3>Caso <code>relatorio-2</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-2@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>erro_interno_do_servidor</code> · <strong>CAMPO:</strong> <code>nenhum</code> · selo de probabilidade: <strong>medio</strong> (p = 0,98)</p>
+<p><strong>IMPACTO (declarado):</strong> <code>A aba de produtos via API exibe a mensagem "Erro ao carregar produtos da CobaiaAPI: erro interno (fault injection)".</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu erro_interno_do_servidor no campo id porque o sinal id: esperado inteiro, recebido None está presente na resposta HTTP e os verbetes erro_interno_do_servidor, mensagens-de-erro-do-codigo, contagem_inconsistente estavam entre os entregues ao modelo. A segunda causa, corpo_nao_e_json, ficou com probabilidade 0,00. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete erro_interno_do_servidor não mudou a resposta: sem efeito medido do contexto. A troca do verbete erro_interno_do_servidor por um verbete errado não mudou a resposta: sem efeito medido do contexto. A inferência sem documentação não mudou a resposta. A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 500
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano
+
+CORPO DA RESPOSTA:
+{"detail": "erro interno (fault injection)"}
+
+SINTOMA OBSERVADO: A aba de produtos via API mostra a mensagem de erro ao carregar.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 1026): regras diff_contra_contrato; antes {"chars": 44}, depois {"chars": 44}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>id</td><td>inteiro</td><td></td></tr><tr><td>nome</td><td>texto</td><td></td></tr><tr><td>resumo</td><td>texto\</td><td>nulo</td><td></td></tr><tr><td>tipo</td><td>texto</td><td></td></tr><tr><td>preco</td><td>numero</td><td></td></tr><tr><td>imagem</td><td>texto\</td><td>nulo</td><td></td></tr><tr><td>destaque</td><td>booleano</td><td></td></tr><tr><td>detail</td><td></td><td>texto</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>6b438745dff984ef</code>):</p>
+<pre class="bruto"><code>{"detail": "erro interno (fault injection)"}</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>erro_interno_do_servidor e não corpo_nao_e_json: a escolha tem probabilidade 0,98 contra 0,00; verbete(s) na evidência: erro_interno_do_servidor, mensagens-de-erro-do-codigo, contagem_inconsistente</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>erro_interno_do_servidor</td><td>0,98</td><td>sim</td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr><tr><td>tipo_divergente</td><td>0,00</td><td></td></tr><tr><td>campo_ausente</td><td>0,00</td><td></td></tr><tr><td>campo_renomeado</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[erro_interno_do_servidor]</code>; verbetes citados: <code>erro_interno_do_servidor</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>erro_interno_do_servidor</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>erro_interno_do_servidor</code></td><td>confere</td><td>contexto: <code>erro_interno_do_servidor</code>, <code>mensagens-de-erro-do-codigo</code>, <code>contagem_inconsistente</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>erro_interno_do_servidor</code></td><td>confere</td><td>verbetes: <code>erro_interno_do_servidor</code>, <code>mensagens-de-erro-do-codigo</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[erro_interno_do_servidor]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["erro_interno_do_servidor"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>erro_interno_do_servidor</code></td><td>confere</td><td>{"termo": "erro_interno_do_servidor"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>erro_interno_do_servidor</code></td><td>erro_interno_do_servidor</td><td>erro_interno_do_servidor</td><td>0,98</td><td>1,00</td><td>sem efeito medido do contexto</td></tr><tr><td>troca</td><td><code>erro_interno_do_servidor</code></td><td>erro_interno_do_servidor</td><td>erro_interno_do_servidor</td><td>0,98</td><td>1,00</td><td>sem efeito medido do contexto</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>erro_interno_do_servidor</td><td>erro_interno_do_servidor</td><td>0,98</td><td>1,00</td><td>sem documentação a resposta fica a mesma</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>erro_interno_do_servidor</td><td>erro_interno_do_servidor</td><td>0,98</td><td>0,98</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira a resposta no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>1024</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>caso relatorio-2</td></tr><tr><td>1026</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>corpo_http: 8 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>1027</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>poda: escolha json/objeto; id:ausente, nome:ausente, resumo:ausente, tipo:ausente, preco:ausente, imagem:ausente, destaque:ausente, detail:inesperado; divergência não</td></tr><tr><td>1028</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>3 de 39 verbetes entregues</td></tr><tr><td>1029</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>recuperacao: escolha erro_interno_do_servidor,mensagens-de-erro-do-codigo,contagem_inconsistente; divergência não</td></tr><tr><td>1031</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>{"chars": 3503, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "4933583fbab8", "sha": "4933583fbab8816a"}</td></tr><tr><td>1033</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>diagnostico: 71,2 s</td></tr><tr><td>1034</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>causa_raiz: <code>erro_interno_do_servidor</code></td></tr><tr><td>1035</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>campo: <code>nenhum</code></td></tr><tr><td>1036</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>impacto: <code>A aba de produtos via API exibe a mensagem "Erro ao carregar produtos da CobaiaAPI: erro interno (fault injection)".</code></td></tr><tr><td>1037</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>fonte: <code>[erro_interno_do_servidor]</code></td></tr><tr><td>1038</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>fonte_citada: <code>erro_interno_do_servidor</code></td></tr><tr><td>1039</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>1040</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>1041</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1042</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1043</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>campo_existe_no_caso: nao_se_aplica</td></tr><tr><td>1044</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>1045</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>1046</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>impacto: nao_verificavel</td></tr><tr><td>1047</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>fonte_formato_valido: confere</td></tr><tr><td>1048</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>1051</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>intervencao:remocao: 61,1 s</td></tr><tr><td>1052</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>remocao de erro_interno_do_servidor: rótulo erro_interno_do_servidor para erro_interno_do_servidor</td></tr><tr><td>1055</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>intervencao:troca: 70,3 s</td></tr><tr><td>1056</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>troca de erro_interno_do_servidor: rótulo erro_interno_do_servidor para erro_interno_do_servidor</td></tr><tr><td>1059</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>intervencao:sem_documentacao: 36,9 s</td></tr><tr><td>1060</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>sem_documentacao de None: rótulo erro_interno_do_servidor para erro_interno_do_servidor</td></tr><tr><td>1061</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>intervencao:repeticao_da_base: 17,2 s</td></tr><tr><td>1062</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>repeticao_da_base de None: rótulo erro_interno_do_servidor para erro_interno_do_servidor</td></tr><tr><td>1063</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:59:06</td><td>diagnostico: escolha erro_interno_do_servidor; divergência não</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 1027, <code>poda</code>: escolha <code>json/objeto; id:ausente, nome:ausente, resumo:ausente, tipo:ausente, preco:ausente, imagem:ausente, destaque:ausente, detail:inesperado</code>; resultado sinais_em_codigo; evidência: evento 1026 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: id, nome, resumo, tipo, preco, imagem, destaque, detail (gen_ai: plan)</li><li>evento 1029, <code>recuperacao</code>: escolha <code>erro_interno_do_servidor,mensagens-de-erro-do-codigo,contagem_inconsistente</code>; resultado verbetes_entregues; evidência: evento 1028 (verbete_entregue, erro_interno_do_servidor), evento 1028 (verbete_entregue, mensagens-de-erro-do-codigo), evento 1028 (verbete_entregue, contagem_inconsistente); divergência: não; falha: nenhuma; prov.used: erro_interno_do_servidor, mensagens-de-erro-do-codigo, contagem_inconsistente (gen_ai: retrieval)</li><li>evento 1063, <code>diagnostico</code>: escolha <code>erro_interno_do_servidor</code>; resultado rotulo_emitido; evidência: evento 1026 (sinal_em_codigo), evento 1028 (verbete_entregue, erro_interno_do_servidor), evento 1028 (verbete_entregue, mensagens-de-erro-do-codigo), evento 1028 (verbete_entregue, contagem_inconsistente), evento 1033 (resposta), evento 1038 (verbete_citado, erro_interno_do_servidor); divergência: não; falha: nenhuma; prov.used: erro_interno_do_servidor, mensagens-de-erro-do-codigo, contagem_inconsistente (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 1024 a 1063 da trilha; hash dos eventos deste caso: <code>624c4e888d8c01b3</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-2"><h3>Caso <code>relatorio-3</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-3@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>resposta_truncada</code> · <strong>CAMPO:</strong> <code>nenhum</code> · selo de probabilidade: <strong>alto</strong> (p = 1,00)</p>
+<p><strong>IMPACTO (declarado):</strong> <code>O usuário vê uma lista incompleta de produtos, com apenas os dois primeiros itens exibidos.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu resposta_truncada porque o sinal esperado JSON completo e válido, recebido corpo truncado está presente na resposta HTTP e os verbetes entidade-produto, resposta_truncada, contrato-produto estavam entre os entregues ao modelo. A segunda causa, corpo_nao_e_json, ficou com probabilidade 0,00. A FONTE cita 2 verbete(s), todos presentes no contexto. A remoção do verbete resposta_truncada não mudou a resposta: sem efeito medido do contexto. A troca do verbete resposta_truncada por um verbete errado não mudou a resposta: sem efeito medido do contexto. A inferência sem documentação não mudou a resposta. A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano
+
+CORPO DA RESPOSTA:
+[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}, {"id": 2, "nome": "Picanha Simples", "resumo": "Corte nobre
+
+SINTOMA OBSERVADO: A lista carrega parcialmente. So acontece quando ha mais de 10 produtos.
+
+OBSERVAÇÃO ADICIONAL: Content-Length declara 4096; o corpo recebido tem 4096 bytes exatos.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 1899): regras diff_contra_contrato; antes {"chars": 209}, depois {"chars": 209}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>(corpo inteiro)</td><td>JSON completo e válido</td><td>corpo truncado</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>65cfd6ce781c21db</code>):</p>
+<pre class="bruto"><code>[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}, {"id": 2, "nome": "Picanha Simples", "resumo": "Corte nobre</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>resposta_truncada e não corpo_nao_e_json: a escolha tem probabilidade 1,00 contra 0,00; verbete(s) na evidência: entidade-produto, resposta_truncada, contrato-produto</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>resposta_truncada</td><td>1,00</td><td>sim</td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr><tr><td>colecao_no_lugar_de_objeto</td><td>0,00</td><td></td></tr><tr><td>limite_de_requisicoes</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[resposta_truncada] [contrato-produto]</code>; verbetes citados: <code>resposta_truncada</code>, <code>contrato-produto</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>resposta_truncada</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado existe na biblioteca</td><td><code>contrato-produto</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>resposta_truncada</code></td><td>confere</td><td>contexto: <code>entidade-produto</code>, <code>resposta_truncada</code>, <code>contrato-produto</code></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>contrato-produto</code></td><td>confere</td><td>contexto: <code>entidade-produto</code>, <code>resposta_truncada</code>, <code>contrato-produto</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>resposta_truncada</code></td><td>confere</td><td>verbetes: <code>resposta_truncada</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[resposta_truncada] [contrato-produto]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["resposta_truncada", "contrato-produto"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>resposta_truncada</code></td><td>confere</td><td>{"termo": "resposta_truncada"}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>contrato-produto</code></td><td><strong>não confere</strong></td><td>{"termo": "resposta_truncada"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>resposta_truncada</code></td><td>resposta_truncada</td><td>resposta_truncada</td><td>1,00</td><td>0,86</td><td>sem efeito medido do contexto</td></tr><tr><td>troca</td><td><code>resposta_truncada</code></td><td>resposta_truncada</td><td>resposta_truncada</td><td>1,00</td><td>0,98</td><td>sem efeito medido do contexto</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>resposta_truncada</td><td>resposta_truncada</td><td>1,00</td><td>0,99</td><td>sem documentação a resposta fica a mesma</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>resposta_truncada</td><td>resposta_truncada</td><td>1,00</td><td>1,00</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira a resposta no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>35 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>1897</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>caso relatorio-3</td></tr><tr><td>1899</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>corpo_http: 1 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>1900</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>poda: escolha truncado; divergência não</td></tr><tr><td>1901</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>3 de 39 verbetes entregues</td></tr><tr><td>1902</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>recuperacao: escolha entidade-produto,resposta_truncada,contrato-produto; divergência não</td></tr><tr><td>1904</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>{"chars": 3823, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "eb7cf66afb2f", "sha": "eb7cf66afb2f0013"}</td></tr><tr><td>1906</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>diagnostico: 72,5 s</td></tr><tr><td>1907</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>causa_raiz: <code>resposta_truncada</code></td></tr><tr><td>1908</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>campo: <code>nenhum</code></td></tr><tr><td>1909</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>impacto: <code>O usuário vê uma lista incompleta de produtos, com apenas os dois primeiros itens exibidos.</code></td></tr><tr><td>1910</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte: <code>[resposta_truncada] [contrato-produto]</code></td></tr><tr><td>1911</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_citada: <code>resposta_truncada</code></td></tr><tr><td>1912</td><td>13</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_citada: <code>contrato-produto</code></td></tr><tr><td>1913</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>1914</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>1915</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1916</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1917</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1918</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1919</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>campo_existe_no_caso: nao_se_aplica</td></tr><tr><td>1920</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>1921</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>1922</td><td>23</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>impacto: nao_verificavel</td></tr><tr><td>1923</td><td>24</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_formato_valido: confere</td></tr><tr><td>1924</td><td>25</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>1925</td><td>26</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>fonte_contem_termo_da_causa: nao_confere</td></tr><tr><td>1928</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>intervencao:remocao: 38,4 s</td></tr><tr><td>1929</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>remocao de resposta_truncada: rótulo resposta_truncada para resposta_truncada</td></tr><tr><td>1932</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>intervencao:troca: 41,8 s</td></tr><tr><td>1933</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>troca de resposta_truncada: rótulo resposta_truncada para resposta_truncada</td></tr><tr><td>1936</td><td>31</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>intervencao:sem_documentacao: 35,6 s</td></tr><tr><td>1937</td><td>32</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>sem_documentacao de None: rótulo resposta_truncada para resposta_truncada</td></tr><tr><td>1938</td><td>33</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>intervencao:repeticao_da_base: 16,2 s</td></tr><tr><td>1939</td><td>34</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>repeticao_da_base de None: rótulo resposta_truncada para resposta_truncada</td></tr><tr><td>1940</td><td>35</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:51:35</td><td>diagnostico: escolha resposta_truncada; divergência não</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 1900, <code>poda</code>: escolha <code>truncado</code>; resultado sinais_em_codigo; evidência: evento 1899 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nenhum (gen_ai: plan)</li><li>evento 1902, <code>recuperacao</code>: escolha <code>entidade-produto,resposta_truncada,contrato-produto</code>; resultado verbetes_entregues; evidência: evento 1901 (verbete_entregue, entidade-produto), evento 1901 (verbete_entregue, resposta_truncada), evento 1901 (verbete_entregue, contrato-produto); divergência: não; falha: nenhuma; prov.used: entidade-produto, resposta_truncada, contrato-produto (gen_ai: retrieval)</li><li>evento 1940, <code>diagnostico</code>: escolha <code>resposta_truncada</code>; resultado rotulo_emitido; evidência: evento 1899 (sinal_em_codigo), evento 1901 (verbete_entregue, entidade-produto), evento 1901 (verbete_entregue, resposta_truncada), evento 1901 (verbete_entregue, contrato-produto), evento 1906 (resposta), evento 1911 (verbete_citado, resposta_truncada), evento 1912 (verbete_citado, contrato-produto); divergência: não; falha: nenhuma; prov.used: entidade-produto, resposta_truncada, contrato-produto (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 1897 a 1940 da trilha; hash dos eventos deste caso: <code>94ecf20acd0c2fe8</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-3"><h3>Caso <code>relatorio-4</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-4@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>tipo_divergente</code> · <strong>CAMPO:</strong> <code>destaque</code> · selo de probabilidade: <strong>alto</strong> (p = 1,00)</p>
+<p><strong>IMPACTO (declarado):</strong> <code>O produto Picanha ao Alho aparece na seção de destaque, mesmo não estando marcado como destaque no cadastro.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu tipo_divergente no campo destaque porque o sinal destaque: esperado booleano, recebido inteiro está presente na resposta HTTP e os verbetes entidade-produto, contrato-produto, tipo_divergente estavam entre os entregues ao modelo. A segunda causa, valor_fora_do_dominio, ficou com probabilidade 0,00. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete tipo_divergente não mudou a resposta: sem efeito medido do contexto. A troca do verbete tipo_divergente por um verbete errado não mudou a resposta: sem efeito medido do contexto. A inferência sem documentação não mudou a resposta. A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano
+
+CORPO DA RESPOSTA:
+[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": 2}]
+
+SINTOMA OBSERVADO: O produto aparece na secao de destaques mesmo nao estando marcado no cadastro.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 2688): regras diff_contra_contrato; antes {"chars": 146}, depois {"chars": 146}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>destaque</td><td>booleano</td><td>inteiro</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>2203e279e833f5c4</code>):</p>
+<pre class="bruto"><code>[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": 2}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>tipo_divergente e não valor_fora_do_dominio: a escolha tem probabilidade 1,00 contra 0,00; verbete(s) na evidência: entidade-produto, contrato-produto, tipo_divergente</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>tipo_divergente</td><td>1,00</td><td>sim</td></tr><tr><td>valor_fora_do_dominio</td><td>0,00</td><td></td></tr><tr><td>campo_ausente</td><td>0,00</td><td></td></tr><tr><td>campo_renomeado</td><td>0,00</td><td></td></tr><tr><td>colecao_no_lugar_de_objeto</td><td>0,00</td><td></td></tr><tr><td>chave_de_juncao_errada</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr><tr><td>resposta_truncada</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[tipo_divergente]</code>; verbetes citados: <code>tipo_divergente</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>tipo_divergente</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>tipo_divergente</code></td><td>confere</td><td>contexto: <code>entidade-produto</code>, <code>contrato-produto</code>, <code>tipo_divergente</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>tipo_divergente</code></td><td>confere</td><td>verbetes: <code>entidade-produto</code>, <code>contrato-produto</code>, <code>tipo_divergente</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[tipo_divergente]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["tipo_divergente"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>tipo_divergente</code></td><td>confere</td><td>{"termo": "tipo_divergente"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>tipo_divergente</code></td><td>tipo_divergente</td><td>tipo_divergente</td><td>1,00</td><td>0,88</td><td>sem efeito medido do contexto</td></tr><tr><td>troca</td><td><code>tipo_divergente</code></td><td>tipo_divergente</td><td>tipo_divergente</td><td>1,00</td><td>0,43</td><td>sem efeito medido do contexto</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>tipo_divergente</td><td>tipo_divergente</td><td>1,00</td><td>0,58</td><td>sem documentação a resposta fica a mesma</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>tipo_divergente</td><td>tipo_divergente</td><td>1,00</td><td>1,00</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira o campo <code>destaque</code> no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>2686</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>caso relatorio-4</td></tr><tr><td>2688</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>corpo_http: 1 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>2689</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>poda: escolha json/lista; destaque:tipo_diferente; divergência não</td></tr><tr><td>2690</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>3 de 39 verbetes entregues</td></tr><tr><td>2691</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>recuperacao: escolha entidade-produto,contrato-produto,tipo_divergente; divergência não</td></tr><tr><td>2693</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>{"chars": 3558, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "94bb644b83ad", "sha": "94bb644b83ad84aa"}</td></tr><tr><td>2695</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>diagnostico: 37,9 s</td></tr><tr><td>2696</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>causa_raiz: <code>tipo_divergente</code></td></tr><tr><td>2697</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>campo: <code>destaque</code></td></tr><tr><td>2698</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>impacto: <code>O produto Picanha ao Alho aparece na seção de destaque, mesmo não estando marcado como destaque no cadastro.</code></td></tr><tr><td>2699</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>fonte: <code>[tipo_divergente]</code></td></tr><tr><td>2700</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>fonte_citada: <code>tipo_divergente</code></td></tr><tr><td>2701</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>2702</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>2703</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>2704</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>2705</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>campo_existe_no_caso: confere</td></tr><tr><td>2706</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>2707</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>2708</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>impacto: nao_verificavel</td></tr><tr><td>2709</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>fonte_formato_valido: confere</td></tr><tr><td>2710</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>2713</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>intervencao:remocao: 43,0 s</td></tr><tr><td>2714</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>remocao de tipo_divergente: rótulo tipo_divergente para tipo_divergente</td></tr><tr><td>2717</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>intervencao:troca: 55,6 s</td></tr><tr><td>2718</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>troca de tipo_divergente: rótulo tipo_divergente para tipo_divergente</td></tr><tr><td>2721</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>intervencao:sem_documentacao: 31,4 s</td></tr><tr><td>2722</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>sem_documentacao de None: rótulo tipo_divergente para tipo_divergente</td></tr><tr><td>2723</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>intervencao:repeticao_da_base: 16,2 s</td></tr><tr><td>2724</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>repeticao_da_base de None: rótulo tipo_divergente para tipo_divergente</td></tr><tr><td>2725</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:32:13</td><td>diagnostico: escolha tipo_divergente; divergência não</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 2689, <code>poda</code>: escolha <code>json/lista; destaque:tipo_diferente</code>; resultado sinais_em_codigo; evidência: evento 2688 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: destaque (gen_ai: plan)</li><li>evento 2691, <code>recuperacao</code>: escolha <code>entidade-produto,contrato-produto,tipo_divergente</code>; resultado verbetes_entregues; evidência: evento 2690 (verbete_entregue, entidade-produto), evento 2690 (verbete_entregue, contrato-produto), evento 2690 (verbete_entregue, tipo_divergente); divergência: não; falha: nenhuma; prov.used: entidade-produto, contrato-produto, tipo_divergente (gen_ai: retrieval)</li><li>evento 2725, <code>diagnostico</code>: escolha <code>tipo_divergente</code>; resultado rotulo_emitido; evidência: evento 2688 (sinal_em_codigo), evento 2690 (verbete_entregue, entidade-produto), evento 2690 (verbete_entregue, contrato-produto), evento 2690 (verbete_entregue, tipo_divergente), evento 2695 (resposta), evento 2700 (verbete_citado, tipo_divergente); divergência: não; falha: nenhuma; prov.used: entidade-produto, contrato-produto, tipo_divergente (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 2686 a 2725 da trilha; hash dos eventos deste caso: <code>898f3a955555d0a1</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-4"><h3>Caso <code>relatorio-5</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-5@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>registro_duplicado</code> · <strong>CAMPO:</strong> <code>pessoas</code> · selo de probabilidade: <strong>baixo</strong> (p = 0,64) · <strong>CONFLITO</strong>: nenhum verbete entregue trata da causa respondida registro_duplicado; a remoção do verbete contrato-pedido mudou a resposta de registro_duplicado para tipo_divergente; a troca do verbete contrato-pedido por um errado mudou a resposta de registro_duplicado para valor_fora_do_dominio; a inferência sem documentação mudou a resposta de registro_duplicado para tipo_divergente</p>
+<p><strong>IMPACTO (declarado):</strong> <code>O usuário vê que a reserva confirmada tem o dobro de pessoas do que foi solicitado.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu registro_duplicado no campo pessoas porque o sinal esperado JSON completo e válido, recebido corpo nao_json está presente na resposta HTTP e os verbetes contrato-pedido, pedido-reserva, fluxo-reserva-e-cancelamento estavam entre os entregues ao modelo. A segunda causa, colecao_no_lugar_de_objeto, ficou com probabilidade 0,14 e nenhum verbete entregue a sustenta. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete contrato-pedido mudou a resposta (de registro_duplicado para tipo_divergente), então ele pesou na decisão. (a probabilidade registrada é só um limite inferior: o rótulo saiu das alternativas devolvidas) A troca do verbete contrato-pedido por um verbete errado mudou a resposta (de registro_duplicado para valor_fora_do_dominio). A inferência sem documentação mudou a resposta (de registro_duplicado para tipo_divergente). (a probabilidade registrada é só um limite inferior: o rótulo saiu das alternativas devolvidas) A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): nenhum verbete entregue trata da causa respondida registro_duplicado; a remoção do verbete contrato-pedido mudou a resposta de registro_duplicado para tipo_divergente; a troca do verbete contrato-pedido por um errado mudou a resposta de registro_duplicado para valor_fora_do_dominio; a inferência sem documentação mudou a resposta de registro_duplicado para tipo_divergente. Este nó está marcado com a falha causa_sem_verbete_que_a_trate (origem: modelo). O agente não está seguro desta causa (probabilidade 0,64); trate como hipótese e confira o campo pessoas antes de agir.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: POST /api/pedidos (pessoas=4) -&gt; GET /api/pedidos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id_pedido: inteiro | pessoas: inteiro | data_pedido: data ISO (AAAA-MM-DD) | status: texto ('Em Analise' ou 'Cancelado') | nome: texto | cpf: texto
+
+CORPO DA RESPOSTA:
+POST enviou {"pessoas": 4}; GET devolveu [{"id_pedido": 8, "pessoas": 8, "data_pedido": "2026-09-12", "status": "Em Analise", "nome": "Cliente Teste", "cpf": "11122233344"}]
+
+SINTOMA OBSERVADO: A reserva confirmada mostra o dobro de pessoas do que foi solicitado.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 3238): regras diff_contra_contrato; antes {"chars": 173}, depois {"chars": 173}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>(corpo inteiro)</td><td>JSON completo e válido</td><td>corpo nao_json</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>76db07a3faf27269</code>):</p>
+<pre class="bruto"><code>POST enviou {"pessoas": 4}; GET devolveu [{"id_pedido": 8, "pessoas": 8, "data_pedido": "2026-09-12", "status": "Em Analise", "nome": "Cliente Teste", "cpf": "11122233344"}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>registro_duplicado e não colecao_no_lugar_de_objeto: a escolha tem probabilidade 0,64 contra 0,14; verbete(s) na evidência: contrato-pedido, pedido-reserva, fluxo-reserva-e-cancelamento</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>registro_duplicado</td><td>0,64</td><td>sim</td></tr><tr><td>colecao_no_lugar_de_objeto</td><td>0,14</td><td></td></tr><tr><td>tipo_divergente</td><td>0,13</td><td></td></tr><tr><td>contagem_inconsistente</td><td>0,06</td><td></td></tr><tr><td>valor_fora_do_dominio</td><td>0,01</td><td></td></tr><tr><td>estrutura_aninhada_divergente</td><td>0,01</td><td></td></tr><tr><td>campo_ausente</td><td>0,01</td><td></td></tr><tr><td>campo_renomeado</td><td>0,01</td><td></td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr><tr><td>resposta_truncada</td><td>0,00</td><td></td></tr><tr><td>estado_da_tela_divergente</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[contrato-pedido]</code>; verbetes citados: <code>contrato-pedido</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>contrato-pedido</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>contrato-pedido</code></td><td>confere</td><td>contexto: <code>contrato-pedido</code>, <code>pedido-reserva</code>, <code>fluxo-reserva-e-cancelamento</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>registro_duplicado</code></td><td><strong>não confere</strong></td><td>nenhum verbete do contexto trata dessa causa</td></tr><tr><td>fonte_formato_valido</td><td><code>[contrato-pedido]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["contrato-pedido"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>contrato-pedido</code></td><td><strong>não confere</strong></td><td>{"termo": "registro_duplicado"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>contrato-pedido</code></td><td>registro_duplicado</td><td>tipo_divergente</td><td>0,64</td><td>0,00</td><td>mudou a resposta: o verbete pesou na decisão (só um limite inferior da queda: o rótulo saiu das alternativas devolvidas)</td></tr><tr><td>troca</td><td><code>contrato-pedido</code></td><td>registro_duplicado</td><td>valor_fora_do_dominio</td><td>0,64</td><td>0,00</td><td>mudou a resposta: o verbete errado pesou na decisão</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>registro_duplicado</td><td>tipo_divergente</td><td>0,64</td><td>0,00</td><td>sem documentação a resposta muda: a documentação pesou na decisão (só um limite inferior da queda: o rótulo saiu das alternativas devolvidas)</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>registro_duplicado</td><td>registro_duplicado</td><td>0,64</td><td>0,71</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira o campo <code>pessoas</code> no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>3236</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>caso relatorio-5</td></tr><tr><td>3238</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>corpo_http: 1 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>3239</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>poda: escolha nao_json; divergência não</td></tr><tr><td>3240</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>3 de 39 verbetes entregues</td></tr><tr><td>3241</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>recuperacao: escolha contrato-pedido,pedido-reserva,fluxo-reserva-e-cancelamento; divergência não</td></tr><tr><td>3243</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>{"chars": 3396, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "1a9a0cee4b55", "sha": "1a9a0cee4b55776b"}</td></tr><tr><td>3245</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>diagnostico: 47,7 s</td></tr><tr><td>3246</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>causa_raiz: <code>registro_duplicado</code></td></tr><tr><td>3247</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>campo: <code>pessoas</code></td></tr><tr><td>3248</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>impacto: <code>O usuário vê que a reserva confirmada tem o dobro de pessoas do que foi solicitado.</code></td></tr><tr><td>3249</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>fonte: <code>[contrato-pedido]</code></td></tr><tr><td>3250</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>fonte_citada: <code>contrato-pedido</code></td></tr><tr><td>3251</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>3252</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>3253</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>3254</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>3255</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>campo_existe_no_caso: confere</td></tr><tr><td>3256</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>rotulo_sustentado_por_verbete_do_contexto: nao_confere</td></tr><tr><td>3257</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>3258</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>impacto: nao_verificavel</td></tr><tr><td>3259</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>fonte_formato_valido: confere</td></tr><tr><td>3260</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>fonte_contem_termo_da_causa: nao_confere</td></tr><tr><td>3263</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>intervencao:remocao: 59,1 s</td></tr><tr><td>3264</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>remocao de contrato-pedido: rótulo registro_duplicado para tipo_divergente</td></tr><tr><td>3267</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>intervencao:troca: 49,8 s</td></tr><tr><td>3268</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>troca de contrato-pedido: rótulo registro_duplicado para valor_fora_do_dominio</td></tr><tr><td>3271</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>intervencao:sem_documentacao: 62,3 s</td></tr><tr><td>3272</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>sem_documentacao de None: rótulo registro_duplicado para tipo_divergente</td></tr><tr><td>3274</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>intervencao:repeticao_da_base: 14,1 s</td></tr><tr><td>3275</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>repeticao_da_base de None: rótulo registro_duplicado para registro_duplicado</td></tr><tr><td>3276</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:58:54</td><td>diagnostico: escolha registro_duplicado; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 3239, <code>poda</code>: escolha <code>nao_json</code>; resultado sinais_em_codigo; evidência: evento 3238 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nenhum (gen_ai: plan)</li><li>evento 3241, <code>recuperacao</code>: escolha <code>contrato-pedido,pedido-reserva,fluxo-reserva-e-cancelamento</code>; resultado verbetes_entregues; evidência: evento 3240 (verbete_entregue, contrato-pedido), evento 3240 (verbete_entregue, pedido-reserva), evento 3240 (verbete_entregue, fluxo-reserva-e-cancelamento); divergência: não; falha: nenhuma; prov.used: contrato-pedido, pedido-reserva, fluxo-reserva-e-cancelamento (gen_ai: retrieval)</li><li>evento 3276, <code>diagnostico</code>: escolha <code>registro_duplicado</code>; resultado rotulo_emitido; evidência: evento 3238 (sinal_em_codigo), evento 3240 (verbete_entregue, contrato-pedido), evento 3240 (verbete_entregue, pedido-reserva), evento 3240 (verbete_entregue, fluxo-reserva-e-cancelamento), evento 3245 (resposta), evento 3250 (verbete_citado, contrato-pedido); divergência: sim; falha: causa_sem_verbete_que_a_trate; prov.used: contrato-pedido, pedido-reserva, fluxo-reserva-e-cancelamento (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 3236 a 3276 da trilha; hash dos eventos deste caso: <code>ea6ee6783a2f3b49</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-5"><h3>Caso <code>relatorio-6</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-6@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>estrutura_aninhada_divergente</code> · <strong>CAMPO:</strong> <code>itens</code> · selo de probabilidade: <strong>alto</strong> (p = 1,00) · <strong>CONFLITO</strong>: a remoção do verbete estrutura_aninhada_divergente mudou a resposta de estrutura_aninhada_divergente para colecao_no_lugar_de_objeto; a troca do verbete estrutura_aninhada_divergente por um errado mudou a resposta de estrutura_aninhada_divergente para colecao_no_lugar_de_objeto</p>
+<p><strong>IMPACTO (declarado):</strong> <code>A interface web espera uma lista direta de produtos, mas recebe um objeto aninhado com uma chave "itens" contendo a lista, resultando em uma listagem vazia.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu estrutura_aninhada_divergente no campo itens porque o sinal id: esperado inteiro, recebido None está presente na resposta HTTP e os verbetes entidade-produto, estrutura_aninhada_divergente, contagem_inconsistente estavam entre os entregues ao modelo. A segunda causa, campo_ausente, ficou com probabilidade 0,00 e nenhum verbete entregue a sustenta. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete estrutura_aninhada_divergente mudou a resposta (de estrutura_aninhada_divergente para colecao_no_lugar_de_objeto), então ele pesou na decisão. A troca do verbete estrutura_aninhada_divergente por um verbete errado mudou a resposta (de estrutura_aninhada_divergente para colecao_no_lugar_de_objeto). A inferência sem documentação não mudou a resposta. A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): a remoção do verbete estrutura_aninhada_divergente mudou a resposta de estrutura_aninhada_divergente para colecao_no_lugar_de_objeto; a troca do verbete estrutura_aninhada_divergente por um errado mudou a resposta de estrutura_aninhada_divergente para colecao_no_lugar_de_objeto.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano (lista na raiz)
+
+CORPO DA RESPOSTA:
+{"data": {"itens": [{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}]}}
+
+SINTOMA OBSERVADO: A listagem fica vazia mesmo com a API respondendo com sucesso.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 2354): regras diff_contra_contrato; antes {"chars": 170}, depois {"chars": 170}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>id</td><td>inteiro</td><td></td></tr><tr><td>nome</td><td>texto</td><td></td></tr><tr><td>resumo</td><td>texto\</td><td>nulo</td><td></td></tr><tr><td>tipo</td><td>texto</td><td></td></tr><tr><td>preco</td><td>numero</td><td></td></tr><tr><td>imagem</td><td>texto\</td><td>nulo</td><td></td></tr><tr><td>destaque</td><td>booleano (lista na raiz)</td><td></td></tr><tr><td>data</td><td></td><td>objeto</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>ee7c1bf27169245d</code>):</p>
+<pre class="bruto"><code>{"data": {"itens": [{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}]}}</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>estrutura_aninhada_divergente e não campo_ausente: a escolha tem probabilidade 1,00 contra 0,00; verbete(s) na evidência: entidade-produto, estrutura_aninhada_divergente, contagem_inconsistente</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>estrutura_aninhada_divergente</td><td>1,00</td><td>sim</td></tr><tr><td>campo_ausente</td><td>0,00</td><td></td></tr><tr><td>campo_renomeado</td><td>0,00</td><td></td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr><tr><td>colecao_no_lugar_de_objeto</td><td>0,00</td><td></td></tr><tr><td>resposta_truncada</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr><tr><td>tipo_divergente</td><td>0,00</td><td></td></tr><tr><td>escala_ou_unidade_errada</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[estrutura_aninhada_divergente]</code>; verbetes citados: <code>estrutura_aninhada_divergente</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>estrutura_aninhada_divergente</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>estrutura_aninhada_divergente</code></td><td>confere</td><td>contexto: <code>entidade-produto</code>, <code>estrutura_aninhada_divergente</code>, <code>contagem_inconsistente</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>estrutura_aninhada_divergente</code></td><td>confere</td><td>verbetes: <code>estrutura_aninhada_divergente</code>, <code>contagem_inconsistente</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[estrutura_aninhada_divergente]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["estrutura_aninhada_divergente"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>estrutura_aninhada_divergente</code></td><td>confere</td><td>{"termo": "estrutura_aninhada_divergente"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>estrutura_aninhada_divergente</code></td><td>estrutura_aninhada_divergente</td><td>colecao_no_lugar_de_objeto</td><td>1,00</td><td>0,06</td><td>mudou a resposta: o verbete pesou na decisão</td></tr><tr><td>troca</td><td><code>estrutura_aninhada_divergente</code></td><td>estrutura_aninhada_divergente</td><td>colecao_no_lugar_de_objeto</td><td>1,00</td><td>0,04</td><td>mudou a resposta: o verbete errado pesou na decisão</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>estrutura_aninhada_divergente</td><td>estrutura_aninhada_divergente</td><td>1,00</td><td>0,80</td><td>sem documentação a resposta fica a mesma</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>estrutura_aninhada_divergente</td><td>estrutura_aninhada_divergente</td><td>1,00</td><td>1,00</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira o campo <code>itens</code> no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>2352</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>caso relatorio-6</td></tr><tr><td>2354</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>corpo_http: 8 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>2355</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>poda: escolha json/objeto; id:ausente, nome:ausente, resumo:ausente, tipo:ausente, preco:ausente, imagem:ausente, destaque:ausente, data:inesperado; divergência não</td></tr><tr><td>2356</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>3 de 39 verbetes entregues</td></tr><tr><td>2357</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>recuperacao: escolha entidade-produto,estrutura_aninhada_divergente,contagem_inconsistente; divergência não</td></tr><tr><td>2359</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>{"chars": 3676, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "a3343d4851b0", "sha": "a3343d4851b070f3"}</td></tr><tr><td>2361</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>diagnostico: 55,0 s</td></tr><tr><td>2362</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>causa_raiz: <code>estrutura_aninhada_divergente</code></td></tr><tr><td>2363</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>campo: <code>itens</code></td></tr><tr><td>2364</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>impacto: <code>A interface web espera uma lista direta de produtos, mas recebe um objeto aninhado com uma chave "itens" contendo a lista, resultando em uma listagem vazia.</code></td></tr><tr><td>2365</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>fonte: <code>[estrutura_aninhada_divergente]</code></td></tr><tr><td>2366</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>fonte_citada: <code>estrutura_aninhada_divergente</code></td></tr><tr><td>2367</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>2368</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>2369</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>2370</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>2371</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>campo_existe_no_caso: confere</td></tr><tr><td>2372</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>2373</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>2374</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>impacto: nao_verificavel</td></tr><tr><td>2375</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>fonte_formato_valido: confere</td></tr><tr><td>2376</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>2379</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>intervencao:remocao: 50,5 s</td></tr><tr><td>2380</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>remocao de estrutura_aninhada_divergente: rótulo estrutura_aninhada_divergente para colecao_no_lugar_de_objeto</td></tr><tr><td>2383</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>intervencao:troca: 52,7 s</td></tr><tr><td>2384</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>troca de estrutura_aninhada_divergente: rótulo estrutura_aninhada_divergente para colecao_no_lugar_de_objeto</td></tr><tr><td>2387</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>intervencao:sem_documentacao: 41,4 s</td></tr><tr><td>2388</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>sem_documentacao de None: rótulo estrutura_aninhada_divergente para estrutura_aninhada_divergente</td></tr><tr><td>2390</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>intervencao:repeticao_da_base: 19,5 s</td></tr><tr><td>2391</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>repeticao_da_base de None: rótulo estrutura_aninhada_divergente para estrutura_aninhada_divergente</td></tr><tr><td>2392</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:15:42</td><td>diagnostico: escolha estrutura_aninhada_divergente; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 2355, <code>poda</code>: escolha <code>json/objeto; id:ausente, nome:ausente, resumo:ausente, tipo:ausente, preco:ausente, imagem:ausente, destaque:ausente, data:inesperado</code>; resultado sinais_em_codigo; evidência: evento 2354 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: id, nome, resumo, tipo, preco, imagem, destaque, data (gen_ai: plan)</li><li>evento 2357, <code>recuperacao</code>: escolha <code>entidade-produto,estrutura_aninhada_divergente,contagem_inconsistente</code>; resultado verbetes_entregues; evidência: evento 2356 (verbete_entregue, entidade-produto), evento 2356 (verbete_entregue, estrutura_aninhada_divergente), evento 2356 (verbete_entregue, contagem_inconsistente); divergência: não; falha: nenhuma; prov.used: entidade-produto, estrutura_aninhada_divergente, contagem_inconsistente (gen_ai: retrieval)</li><li>evento 2392, <code>diagnostico</code>: escolha <code>estrutura_aninhada_divergente</code>; resultado rotulo_emitido; evidência: evento 2354 (sinal_em_codigo), evento 2356 (verbete_entregue, entidade-produto), evento 2356 (verbete_entregue, estrutura_aninhada_divergente), evento 2356 (verbete_entregue, contagem_inconsistente), evento 2361 (resposta), evento 2366 (verbete_citado, estrutura_aninhada_divergente); divergência: sim; falha: nenhuma; prov.used: entidade-produto, estrutura_aninhada_divergente, contagem_inconsistente (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 2352 a 2392 da trilha; hash dos eventos deste caso: <code>9106c6e4c58c4404</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-6"><h3>Caso <code>relatorio-7</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-7@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>codificacao_incorreta</code> · <strong>CAMPO:</strong> <code>nenhum</code> · selo de probabilidade: <strong>baixo</strong> (p = 0,75)</p>
+<p><strong>IMPACTO (declarado):</strong> <code>A descrição da resposta aparece com símbolos no lugar dos acentos, devido à codificação incorreta dos caracteres.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu codificacao_incorreta porque os verbetes codificacao_incorreta, contrato-produto, entidade-produto estavam entre os entregues ao modelo. A segunda causa, corpo_nao_e_json, ficou com probabilidade 0,00. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete codificacao_incorreta não mudou a resposta: sem efeito medido do contexto. A troca do verbete codificacao_incorreta por um verbete errado não mudou a resposta: sem efeito medido do contexto. A inferência sem documentação não mudou a resposta. A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O agente não está seguro desta causa (probabilidade 0,75); trate como hipótese e confira o caso antes de agir.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano
+
+CORPO DA RESPOSTA:
+[{"id": 4, "nome": "Costelona", "resumo": "Costela assada lentamente por horas", "tipo": "Carnes", "preco": 79.9, "imagem": "costelona.jpg", "destaque": true}]
+
+SINTOMA OBSERVADO: A descricao aparece com simbolos no lugar dos acentos.
+
+OBSERVAÇÃO ADICIONAL: O cabecalho declara charset=utf-8 mas os bytes estao em latin-1.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 1780): regras diff_contra_contrato; antes {"chars": 159}, depois {"chars": 159}.</p>
+<p>Trecho podado (hash <code>cd0b56c99381d9a7</code>):</p>
+<pre class="bruto"><code>[{"id": 4, "nome": "Costelona", "resumo": "Costela assada lentamente por horas", "tipo": "Carnes", "preco": 79.9, "imagem": "costelona.jpg", "destaque": true}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>codificacao_incorreta e não corpo_nao_e_json: a escolha tem probabilidade 0,75 contra 0,00; verbete(s) na evidência: codificacao_incorreta, contrato-produto, entidade-produto</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>codificacao_incorreta</td><td>0,75</td><td>sim</td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[codificacao_incorreta]</code>; verbetes citados: <code>codificacao_incorreta</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>codificacao_incorreta</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>codificacao_incorreta</code></td><td>confere</td><td>contexto: <code>codificacao_incorreta</code>, <code>contrato-produto</code>, <code>entidade-produto</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>codificacao_incorreta</code></td><td>confere</td><td>verbetes: <code>codificacao_incorreta</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[codificacao_incorreta]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["codificacao_incorreta"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>codificacao_incorreta</code></td><td>confere</td><td>{"termo": "codificacao_incorreta"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>codificacao_incorreta</code></td><td>codificacao_incorreta</td><td>codificacao_incorreta</td><td>0,75</td><td>1,00</td><td>sem efeito medido do contexto</td></tr><tr><td>troca</td><td><code>codificacao_incorreta</code></td><td>codificacao_incorreta</td><td>codificacao_incorreta</td><td>0,75</td><td>1,00</td><td>sem efeito medido do contexto</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>codificacao_incorreta</td><td>codificacao_incorreta</td><td>0,75</td><td>1,00</td><td>sem documentação a resposta fica a mesma</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>codificacao_incorreta</td><td>codificacao_incorreta</td><td>0,75</td><td>0,66</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira a resposta no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>1778</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>caso relatorio-7</td></tr><tr><td>1780</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>corpo_http: 0 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>1781</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>poda: escolha json/lista; sem diferença; divergência não</td></tr><tr><td>1782</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>3 de 39 verbetes entregues</td></tr><tr><td>1783</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>recuperacao: escolha codificacao_incorreta,contrato-produto,entidade-produto; divergência não</td></tr><tr><td>1785</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>{"chars": 3479, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "3880ee6beee3", "sha": "3880ee6beee34def"}</td></tr><tr><td>1787</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>diagnostico: 68,6 s</td></tr><tr><td>1788</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>causa_raiz: <code>codificacao_incorreta</code></td></tr><tr><td>1789</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>campo: <code>nenhum</code></td></tr><tr><td>1790</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>impacto: <code>A descrição da resposta aparece com símbolos no lugar dos acentos, devido à codificação incorreta dos caracteres.</code></td></tr><tr><td>1791</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>fonte: <code>[codificacao_incorreta]</code></td></tr><tr><td>1792</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>fonte_citada: <code>codificacao_incorreta</code></td></tr><tr><td>1793</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>1794</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>1795</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1796</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1797</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>campo_existe_no_caso: nao_se_aplica</td></tr><tr><td>1798</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>1799</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>1800</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>impacto: nao_verificavel</td></tr><tr><td>1801</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>fonte_formato_valido: confere</td></tr><tr><td>1802</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>1805</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>intervencao:remocao: 61,6 s</td></tr><tr><td>1806</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>remocao de codificacao_incorreta: rótulo codificacao_incorreta para codificacao_incorreta</td></tr><tr><td>1809</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>intervencao:troca: 69,6 s</td></tr><tr><td>1810</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>troca de codificacao_incorreta: rótulo codificacao_incorreta para codificacao_incorreta</td></tr><tr><td>1813</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>intervencao:sem_documentacao: 35,0 s</td></tr><tr><td>1814</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>sem_documentacao de None: rótulo codificacao_incorreta para codificacao_incorreta</td></tr><tr><td>1815</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>intervencao:repeticao_da_base: 16,8 s</td></tr><tr><td>1816</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>repeticao_da_base de None: rótulo codificacao_incorreta para codificacao_incorreta</td></tr><tr><td>1817</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:44:42</td><td>diagnostico: escolha codificacao_incorreta; divergência não</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 1781, <code>poda</code>: escolha <code>json/lista; sem diferença</code>; resultado sinais_em_codigo; evidência: evento 1780 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nenhum (gen_ai: plan)</li><li>evento 1783, <code>recuperacao</code>: escolha <code>codificacao_incorreta,contrato-produto,entidade-produto</code>; resultado verbetes_entregues; evidência: evento 1782 (verbete_entregue, codificacao_incorreta), evento 1782 (verbete_entregue, contrato-produto), evento 1782 (verbete_entregue, entidade-produto); divergência: não; falha: nenhuma; prov.used: codificacao_incorreta, contrato-produto, entidade-produto (gen_ai: retrieval)</li><li>evento 1817, <code>diagnostico</code>: escolha <code>codificacao_incorreta</code>; resultado rotulo_emitido; evidência: evento 1782 (verbete_entregue, codificacao_incorreta), evento 1782 (verbete_entregue, contrato-produto), evento 1782 (verbete_entregue, entidade-produto), evento 1787 (resposta), evento 1792 (verbete_citado, codificacao_incorreta); divergência: não; falha: nenhuma; prov.used: codificacao_incorreta, contrato-produto, entidade-produto (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 1778 a 1817 da trilha; hash dos eventos deste caso: <code>f54add810c42bd8f</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-7"><h3>Caso <code>relatorio-8</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-8@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>tempo_de_resposta_excedido</code> · <strong>CAMPO:</strong> <code>nenhum</code> · selo de probabilidade: <strong>medio</strong> (p = 0,90) · <strong>CONFLITO</strong>: a remoção do verbete tempo_de_resposta_excedido mudou a resposta de tempo_de_resposta_excedido para localizador_quebrado; a troca do verbete tempo_de_resposta_excedido por um errado mudou a resposta de tempo_de_resposta_excedido para localizador_quebrado</p>
+<p><strong>IMPACTO (declarado):</strong> <code>O usuário não consegue acessar os detalhes do produto "Picanha ao Alho" devido ao tempo de resposta excedido.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu tempo_de_resposta_excedido porque os verbetes localizador_quebrado, tempo_de_resposta_excedido, ancora-saiba-mais estavam entre os entregues ao modelo. A segunda causa, localizador_quebrado, ficou com probabilidade 0,08. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete tempo_de_resposta_excedido mudou a resposta (de tempo_de_resposta_excedido para localizador_quebrado), então ele pesou na decisão. A troca do verbete tempo_de_resposta_excedido por um verbete errado mudou a resposta (de tempo_de_resposta_excedido para localizador_quebrado). A inferência sem documentação não mudou a resposta. A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): a remoção do verbete tempo_de_resposta_excedido mudou a resposta de tempo_de_resposta_excedido para localizador_quebrado; a troca do verbete tempo_de_resposta_excedido por um errado mudou a resposta de tempo_de_resposta_excedido para localizador_quebrado.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: (sem falha de rede) passo do roteiro: abrir detalhes da Picanha ao Alho
+
+STATUS HTTP: 200
+
+CORPO DA RESPOSTA:
+(nenhuma requisicao falhou)
+
+ÁRVORE DE ACESSIBILIDADE DA PÁGINA:
+document "Churrascaria Fornalha - Produtos (API)"
+  navigation
+    link "PRODUTOS"
+    link "PRODUTOS (API)"
+  main
+    heading "Produtos via API" level=2
+    group
+      heading "Picanha ao Alho" level=3
+      text "Carnes"
+      button "R$ 89,90" disabled
+      button "Saiba Mais..." class="btn btn-info btn-xs saiba-mais" data-id="1"
+    group
+      heading "Fraldinha" level=3
+      text "Carnes"
+      button "R$ 69,90" disabled
+      button "Saiba Mais..." class="btn btn-info btn-xs saiba-mais" data-id="3"
+
+
+SELETOR QUE FALHOU: button.btn-detalhes
+
+SINTOMA OBSERVADO: O roteiro falha por tempo esgotado ao procurar o botao de detalhes.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 1302): regras diff_contra_contrato; antes {"chars": 27}, depois {"chars": 27}.</p>
+<p>Trecho podado (hash <code>48ffb95010655367</code>):</p>
+<pre class="bruto"><code>(nenhuma requisicao falhou)</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>tempo_de_resposta_excedido e não localizador_quebrado: a escolha tem probabilidade 0,90 contra 0,08; verbete(s) na evidência: localizador_quebrado, tempo_de_resposta_excedido, ancora-saiba-mais</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>tempo_de_resposta_excedido</td><td>0,90</td><td>sim</td></tr><tr><td>localizador_quebrado</td><td>0,08</td><td></td></tr><tr><td>limite_de_requisicoes</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[tempo_de_resposta_excedido]</code>; verbetes citados: <code>tempo_de_resposta_excedido</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>tempo_de_resposta_excedido</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>tempo_de_resposta_excedido</code></td><td>confere</td><td>contexto: <code>localizador_quebrado</code>, <code>tempo_de_resposta_excedido</code>, <code>ancora-saiba-mais</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>tempo_de_resposta_excedido</code></td><td>confere</td><td>verbetes: <code>tempo_de_resposta_excedido</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[tempo_de_resposta_excedido]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["tempo_de_resposta_excedido"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>tempo_de_resposta_excedido</code></td><td>confere</td><td>{"termo": "tempo_de_resposta_excedido"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>tempo_de_resposta_excedido</code></td><td>tempo_de_resposta_excedido</td><td>localizador_quebrado</td><td>0,90</td><td>0,00</td><td>mudou a resposta: o verbete pesou na decisão</td></tr><tr><td>troca</td><td><code>tempo_de_resposta_excedido</code></td><td>tempo_de_resposta_excedido</td><td>localizador_quebrado</td><td>0,90</td><td>0,00</td><td>mudou a resposta: o verbete errado pesou na decisão</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>tempo_de_resposta_excedido</td><td>tempo_de_resposta_excedido</td><td>0,90</td><td>1,00</td><td>sem documentação a resposta fica a mesma</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>tempo_de_resposta_excedido</td><td>tempo_de_resposta_excedido</td><td>0,90</td><td>0,88</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira a resposta no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>1300</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>caso relatorio-8</td></tr><tr><td>1302</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>corpo_http: 0 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>1303</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>poda: escolha sem_contrato; divergência não</td></tr><tr><td>1304</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>3 de 39 verbetes entregues</td></tr><tr><td>1305</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>recuperacao: escolha localizador_quebrado,tempo_de_resposta_excedido,ancora-saiba-mais; divergência não</td></tr><tr><td>1307</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>{"chars": 3796, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "be9c0e6665c3", "sha": "be9c0e6665c336d1"}</td></tr><tr><td>1309</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>diagnostico: 74,8 s</td></tr><tr><td>1310</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>causa_raiz: <code>tempo_de_resposta_excedido</code></td></tr><tr><td>1311</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>campo: <code>nenhum</code></td></tr><tr><td>1312</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>impacto: <code>O usuário não consegue acessar os detalhes do produto "Picanha ao Alho" devido ao tempo de resposta excedido.</code></td></tr><tr><td>1313</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>fonte: <code>[tempo_de_resposta_excedido]</code></td></tr><tr><td>1314</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>fonte_citada: <code>tempo_de_resposta_excedido</code></td></tr><tr><td>1315</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>1316</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>1317</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>1318</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>1319</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>campo_existe_no_caso: nao_se_aplica</td></tr><tr><td>1320</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>1321</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>1322</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>impacto: nao_verificavel</td></tr><tr><td>1323</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>fonte_formato_valido: confere</td></tr><tr><td>1324</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>1327</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>intervencao:remocao: 59,3 s</td></tr><tr><td>1328</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>remocao de tempo_de_resposta_excedido: rótulo tempo_de_resposta_excedido para localizador_quebrado</td></tr><tr><td>1330</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>intervencao:troca: 66,3 s</td></tr><tr><td>1331</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>troca de tempo_de_resposta_excedido: rótulo tempo_de_resposta_excedido para localizador_quebrado</td></tr><tr><td>1334</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>intervencao:sem_documentacao: 48,0 s</td></tr><tr><td>1335</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>sem_documentacao de None: rótulo tempo_de_resposta_excedido para tempo_de_resposta_excedido</td></tr><tr><td>1336</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>intervencao:repeticao_da_base: 18,8 s</td></tr><tr><td>1337</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>repeticao_da_base de None: rótulo tempo_de_resposta_excedido para tempo_de_resposta_excedido</td></tr><tr><td>1338</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T00:16:40</td><td>diagnostico: escolha tempo_de_resposta_excedido; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 1303, <code>poda</code>: escolha <code>sem_contrato</code>; resultado sem_contrato; evidência: evento 1302 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nenhum (gen_ai: plan)</li><li>evento 1305, <code>recuperacao</code>: escolha <code>localizador_quebrado,tempo_de_resposta_excedido,ancora-saiba-mais</code>; resultado verbetes_entregues; evidência: evento 1304 (verbete_entregue, localizador_quebrado), evento 1304 (verbete_entregue, tempo_de_resposta_excedido), evento 1304 (verbete_entregue, ancora-saiba-mais); divergência: não; falha: nenhuma; prov.used: localizador_quebrado, tempo_de_resposta_excedido, ancora-saiba-mais (gen_ai: retrieval)</li><li>evento 1338, <code>diagnostico</code>: escolha <code>tempo_de_resposta_excedido</code>; resultado rotulo_emitido; evidência: evento 1304 (verbete_entregue, localizador_quebrado), evento 1304 (verbete_entregue, tempo_de_resposta_excedido), evento 1304 (verbete_entregue, ancora-saiba-mais), evento 1309 (resposta), evento 1314 (verbete_citado, tempo_de_resposta_excedido); divergência: sim; falha: nenhuma; prov.used: localizador_quebrado, tempo_de_resposta_excedido, ancora-saiba-mais (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 1300 a 1338 da trilha; hash dos eventos deste caso: <code>ed2db2f96b2ff0a4</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-8"><h3>Caso <code>relatorio-9</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-9@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>nulo_inesperado</code> · <strong>CAMPO:</strong> <code>nome</code> · selo de probabilidade: <strong>alto</strong> (p = 1,00) · <strong>CONFLITO</strong>: a inferência sem documentação mudou a resposta de nulo_inesperado para campo_ausente</p>
+<p><strong>IMPACTO (declarado):</strong> <code>A saudação na área do cliente mostra 'Olá, !', indicando que o nome do cliente é nulo na resposta da API.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu nulo_inesperado no campo nome porque o sinal nome: esperado texto, recebido nulo está presente na resposta HTTP e os verbetes nulo_inesperado, contrato-pedido, usuario-e-login estavam entre os entregues ao modelo. A segunda causa, campo_ausente, ficou com probabilidade 0,00. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete nulo_inesperado não mudou a resposta: sem efeito medido do contexto. A troca do verbete nulo_inesperado por um verbete errado não mudou a resposta: sem efeito medido do contexto. A inferência sem documentação mudou a resposta (de nulo_inesperado para campo_ausente). A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): a inferência sem documentação mudou a resposta de nulo_inesperado para campo_ausente.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/pedidos?login=11122233344
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id_pedido: inteiro | pessoas: inteiro | data_pedido: data ISO (AAAA-MM-DD) | status: texto ('Em Analise' ou 'Cancelado') | nome: texto | cpf: texto
+
+CORPO DA RESPOSTA:
+[{"id_pedido": 7, "pessoas": 4, "data_pedido": "2026-09-10", "status": "Em Analise", "nome": null, "cpf": "11122233344"}]
+
+SINTOMA OBSERVADO: A saudacao da area do cliente mostra 'Ola, !' — o restante da pagina carrega.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 696): regras diff_contra_contrato; antes {"chars": 121}, depois {"chars": 121}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>nome</td><td>texto</td><td>nulo</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>83e91442cbd302d4</code>):</p>
+<pre class="bruto"><code>[{"id_pedido": 7, "pessoas": 4, "data_pedido": "2026-09-10", "status": "Em Analise", "nome": null, "cpf": "11122233344"}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>nulo_inesperado e não campo_ausente: a escolha tem probabilidade 1,00 contra 0,00; verbete(s) na evidência: nulo_inesperado, contrato-pedido, usuario-e-login</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>nulo_inesperado</td><td>1,00</td><td>sim</td></tr><tr><td>campo_ausente</td><td>0,00</td><td></td></tr><tr><td>campo_renomeado</td><td>0,00</td><td></td></tr><tr><td>tipo_divergente</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr><tr><td>valor_fora_do_dominio</td><td>0,00</td><td></td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[nulo_inesperado]</code>; verbetes citados: <code>nulo_inesperado</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>nulo_inesperado</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>nulo_inesperado</code></td><td>confere</td><td>contexto: <code>nulo_inesperado</code>, <code>contrato-pedido</code>, <code>usuario-e-login</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>nulo_inesperado</code></td><td>confere</td><td>verbetes: <code>nulo_inesperado</code>, <code>usuario-e-login</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[nulo_inesperado]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["nulo_inesperado"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>nulo_inesperado</code></td><td>confere</td><td>{"termo": "nulo_inesperado"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>nulo_inesperado</code></td><td>nulo_inesperado</td><td>nulo_inesperado</td><td>1,00</td><td>0,80</td><td>sem efeito medido do contexto</td></tr><tr><td>troca</td><td><code>nulo_inesperado</code></td><td>nulo_inesperado</td><td>nulo_inesperado</td><td>1,00</td><td>0,83</td><td>sem efeito medido do contexto</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>nulo_inesperado</td><td>campo_ausente</td><td>1,00</td><td>0,45</td><td>sem documentação a resposta muda: a documentação pesou na decisão</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>nulo_inesperado</td><td>nulo_inesperado</td><td>1,00</td><td>1,00</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira o campo <code>nome</code> no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>694</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>caso relatorio-9</td></tr><tr><td>696</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>corpo_http: 1 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>697</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>poda: escolha json/lista; nome:nulo_inesperado; divergência não</td></tr><tr><td>698</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>3 de 39 verbetes entregues</td></tr><tr><td>699</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>recuperacao: escolha nulo_inesperado,contrato-pedido,usuario-e-login; divergência não</td></tr><tr><td>701</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>{"chars": 3318, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "be432bd462d6", "sha": "be432bd462d60a1a"}</td></tr><tr><td>703</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>diagnostico: 66,5 s</td></tr><tr><td>704</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>causa_raiz: <code>nulo_inesperado</code></td></tr><tr><td>705</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>campo: <code>nome</code></td></tr><tr><td>706</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>impacto: <code>A saudação na área do cliente mostra 'Olá, !', indicando que o nome do cliente é nulo na resposta da API.</code></td></tr><tr><td>707</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>fonte: <code>[nulo_inesperado]</code></td></tr><tr><td>708</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>fonte_citada: <code>nulo_inesperado</code></td></tr><tr><td>709</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>710</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>711</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>712</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>713</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>campo_existe_no_caso: confere</td></tr><tr><td>714</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>715</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>716</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>impacto: nao_verificavel</td></tr><tr><td>717</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>fonte_formato_valido: confere</td></tr><tr><td>718</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>fonte_contem_termo_da_causa: confere</td></tr><tr><td>721</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>intervencao:remocao: 61,4 s</td></tr><tr><td>722</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>remocao de nulo_inesperado: rótulo nulo_inesperado para nulo_inesperado</td></tr><tr><td>725</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>intervencao:troca: 68,4 s</td></tr><tr><td>726</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>troca de nulo_inesperado: rótulo nulo_inesperado para nulo_inesperado</td></tr><tr><td>729</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>intervencao:sem_documentacao: 34,9 s</td></tr><tr><td>730</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>sem_documentacao de None: rótulo nulo_inesperado para campo_ausente</td></tr><tr><td>732</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>intervencao:repeticao_da_base: 17,7 s</td></tr><tr><td>733</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>repeticao_da_base de None: rótulo nulo_inesperado para nulo_inesperado</td></tr><tr><td>734</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:39:30</td><td>diagnostico: escolha nulo_inesperado; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 697, <code>poda</code>: escolha <code>json/lista; nome:nulo_inesperado</code>; resultado sinais_em_codigo; evidência: evento 696 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nome (gen_ai: plan)</li><li>evento 699, <code>recuperacao</code>: escolha <code>nulo_inesperado,contrato-pedido,usuario-e-login</code>; resultado verbetes_entregues; evidência: evento 698 (verbete_entregue, nulo_inesperado), evento 698 (verbete_entregue, contrato-pedido), evento 698 (verbete_entregue, usuario-e-login); divergência: não; falha: nenhuma; prov.used: nulo_inesperado, contrato-pedido, usuario-e-login (gen_ai: retrieval)</li><li>evento 734, <code>diagnostico</code>: escolha <code>nulo_inesperado</code>; resultado rotulo_emitido; evidência: evento 696 (sinal_em_codigo), evento 698 (verbete_entregue, nulo_inesperado), evento 698 (verbete_entregue, contrato-pedido), evento 698 (verbete_entregue, usuario-e-login), evento 703 (resposta), evento 708 (verbete_citado, nulo_inesperado); divergência: sim; falha: nenhuma; prov.used: nulo_inesperado, contrato-pedido, usuario-e-login (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 694 a 734 da trilha; hash dos eventos deste caso: <code>0602b2b9e8693e53</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-9"><h3>Caso <code>relatorio-10</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-10@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>colecao_no_lugar_de_objeto</code> · <strong>CAMPO:</strong> <code>nenhum</code> · selo de probabilidade: <strong>baixo</strong> (p = 0,62) · <strong>CONFLITO</strong>: a remoção do verbete contrato-produto mudou a resposta de colecao_no_lugar_de_objeto para tipo_divergente; a troca do verbete contrato-produto por um errado mudou a resposta de colecao_no_lugar_de_objeto para campo_ausente; a inferência sem documentação mudou a resposta de colecao_no_lugar_de_objeto para tipo_divergente</p>
+<p><strong>IMPACTO (declarado):</strong> <code>A resposta da API retorna uma lista de objetos em vez de um único objeto, o que causa inconsistência na exibição da descrição dos produtos na interface web.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu colecao_no_lugar_de_objeto porque os verbetes entidade-produto, contrato-produto, tipo_divergente estavam entre os entregues ao modelo. A segunda causa, tipo_divergente, ficou com probabilidade 0,34. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete contrato-produto mudou a resposta (de colecao_no_lugar_de_objeto para tipo_divergente), então ele pesou na decisão. A troca do verbete contrato-produto por um verbete errado mudou a resposta (de colecao_no_lugar_de_objeto para campo_ausente). A inferência sem documentação mudou a resposta (de colecao_no_lugar_de_objeto para tipo_divergente). A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): a remoção do verbete contrato-produto mudou a resposta de colecao_no_lugar_de_objeto para tipo_divergente; a troca do verbete contrato-produto por um errado mudou a resposta de colecao_no_lugar_de_objeto para campo_ausente; a inferência sem documentação mudou a resposta de colecao_no_lugar_de_objeto para tipo_divergente. O agente não está seguro desta causa (probabilidade 0,62); trate como hipótese e confira o caso antes de agir.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano
+
+CORPO DA RESPOSTA:
+[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}, {"id": 2, "nome": "Fraldinha", "tipo": "Carnes", "preco": 69.9, "imagem": "fraldinha.jpg", "destaque": false}]
+
+SINTOMA OBSERVADO: Alguns cartoes mostram a descricao e outros nao, sem padrao aparente.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 335): regras diff_contra_contrato; antes {"chars": 260}, depois {"chars": 260}.</p>
+<p>Trecho podado (hash <code>ab8ef2dc7ba007c9</code>):</p>
+<pre class="bruto"><code>[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem": "picanha_alho.jpg", "destaque": true}, {"id": 2, "nome": "Fraldinha", "tipo": "Carnes", "preco": 69.9, "imagem": "fraldinha.jpg", "destaque": false}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>colecao_no_lugar_de_objeto e não tipo_divergente: a escolha tem probabilidade 0,62 contra 0,34; verbete(s) na evidência: entidade-produto, contrato-produto, tipo_divergente</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>colecao_no_lugar_de_objeto</td><td>0,62</td><td>sim</td></tr><tr><td>tipo_divergente</td><td>0,34</td><td></td></tr><tr><td>campo_ausente</td><td>0,02</td><td></td></tr><tr><td>campo_renomeado</td><td>0,02</td><td></td></tr><tr><td>estrutura_aninhada_divergente</td><td>0,01</td><td></td></tr><tr><td>resposta_truncada</td><td>0,00</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,00</td><td></td></tr><tr><td>corpo_nao_e_json</td><td>0,00</td><td></td></tr><tr><td>corpo_vazio</td><td>0,00</td><td></td></tr><tr><td>valor_fora_do_dominio</td><td>0,00</td><td></td></tr><tr><td>estado_da_tela_divergente</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[contrato-produto]</code>; verbetes citados: <code>contrato-produto</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>contrato-produto</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>contrato-produto</code></td><td>confere</td><td>contexto: <code>entidade-produto</code>, <code>contrato-produto</code>, <code>tipo_divergente</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>colecao_no_lugar_de_objeto</code></td><td>confere</td><td>verbetes: <code>contrato-produto</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[contrato-produto]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["contrato-produto"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>contrato-produto</code></td><td><strong>não confere</strong></td><td>{"termo": "colecao_no_lugar_de_objeto"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>contrato-produto</code></td><td>colecao_no_lugar_de_objeto</td><td>tipo_divergente</td><td>0,62</td><td>0,00</td><td>mudou a resposta: o verbete pesou na decisão</td></tr><tr><td>troca</td><td><code>contrato-produto</code></td><td>colecao_no_lugar_de_objeto</td><td>campo_ausente</td><td>0,62</td><td>0,00</td><td>mudou a resposta: o verbete errado pesou na decisão</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>colecao_no_lugar_de_objeto</td><td>tipo_divergente</td><td>0,62</td><td>0,17</td><td>sem documentação a resposta muda: a documentação pesou na decisão</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>colecao_no_lugar_de_objeto</td><td>colecao_no_lugar_de_objeto</td><td>0,62</td><td>0,66</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira a resposta no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>333</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>caso relatorio-10</td></tr><tr><td>335</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>corpo_http: 0 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>336</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>poda: escolha json/lista; sem diferença; divergência não</td></tr><tr><td>337</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>3 de 39 verbetes entregues</td></tr><tr><td>338</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>recuperacao: escolha entidade-produto,contrato-produto,tipo_divergente; divergência não</td></tr><tr><td>340</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>{"chars": 3663, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "1de106465d28", "sha": "1de106465d28a1b3"}</td></tr><tr><td>342</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>diagnostico: 57,8 s</td></tr><tr><td>343</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>causa_raiz: <code>colecao_no_lugar_de_objeto</code></td></tr><tr><td>344</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>campo: <code>nenhum</code></td></tr><tr><td>345</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>impacto: <code>A resposta da API retorna uma lista de objetos em vez de um único objeto, o que causa inconsistência na exibição da descrição dos produtos na interface web.</code></td></tr><tr><td>346</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>fonte: <code>[contrato-produto]</code></td></tr><tr><td>347</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>fonte_citada: <code>contrato-produto</code></td></tr><tr><td>348</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>349</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>350</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>351</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>352</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>campo_existe_no_caso: nao_se_aplica</td></tr><tr><td>353</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>354</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>355</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>impacto: nao_verificavel</td></tr><tr><td>356</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>fonte_formato_valido: confere</td></tr><tr><td>357</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>fonte_contem_termo_da_causa: nao_confere</td></tr><tr><td>360</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>intervencao:remocao: 61,7 s</td></tr><tr><td>361</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>remocao de contrato-produto: rótulo colecao_no_lugar_de_objeto para tipo_divergente</td></tr><tr><td>364</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>intervencao:troca: 64,6 s</td></tr><tr><td>365</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>troca de contrato-produto: rótulo colecao_no_lugar_de_objeto para campo_ausente</td></tr><tr><td>368</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>intervencao:sem_documentacao: 49,3 s</td></tr><tr><td>369</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>sem_documentacao de None: rótulo colecao_no_lugar_de_objeto para tipo_divergente</td></tr><tr><td>371</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>intervencao:repeticao_da_base: 16,6 s</td></tr><tr><td>372</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>repeticao_da_base de None: rótulo colecao_no_lugar_de_objeto para colecao_no_lugar_de_objeto</td></tr><tr><td>373</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-04T23:19:05</td><td>diagnostico: escolha colecao_no_lugar_de_objeto; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 336, <code>poda</code>: escolha <code>json/lista; sem diferença</code>; resultado sinais_em_codigo; evidência: evento 335 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: nenhum (gen_ai: plan)</li><li>evento 338, <code>recuperacao</code>: escolha <code>entidade-produto,contrato-produto,tipo_divergente</code>; resultado verbetes_entregues; evidência: evento 337 (verbete_entregue, entidade-produto), evento 337 (verbete_entregue, contrato-produto), evento 337 (verbete_entregue, tipo_divergente); divergência: não; falha: nenhuma; prov.used: entidade-produto, contrato-produto, tipo_divergente (gen_ai: retrieval)</li><li>evento 373, <code>diagnostico</code>: escolha <code>colecao_no_lugar_de_objeto</code>; resultado rotulo_emitido; evidência: evento 337 (verbete_entregue, entidade-produto), evento 337 (verbete_entregue, contrato-produto), evento 337 (verbete_entregue, tipo_divergente), evento 342 (resposta), evento 347 (verbete_citado, contrato-produto); divergência: sim; falha: nenhuma; prov.used: entidade-produto, contrato-produto, tipo_divergente (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 333 a 373 da trilha; hash dos eventos deste caso: <code>0d1cd80fa743b2a3</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<template id="rel-10"><h3>Caso <code>relatorio-11</code>: o que o agente fez, declarou e conferiu</h3>
+<p>Trilha <code>fase4_trilha/qwen2.5_7b/relatorio-11@base</code>; modelo <code>qwen2.5:7b</code>, Ollama 0.40.14, Playwright 1.64.1 com navegador 156.0.8078.4; esquema v2. Origem dos eventos: ao_vivo.</p>
+<h4>1. Veredito</h4>
+<p><strong>CAUSA_RAIZ:</strong> <code>colecao_no_lugar_de_objeto</code> · <strong>CAMPO:</strong> <code>imagem_url</code> · selo de probabilidade: <strong>baixo</strong> (p = 0,30) · <strong>CONFLITO</strong>: a remoção do verbete contrato-produto mudou a resposta de colecao_no_lugar_de_objeto para formato_de_data_divergente; a troca do verbete contrato-produto por um errado mudou a resposta de colecao_no_lugar_de_objeto para formato_de_data_divergente; a inferência sem documentação mudou a resposta de colecao_no_lugar_de_objeto para campo_ausente</p>
+<p><strong>IMPACTO (declarado):</strong> <code>O ícone de imagem quebrado indica que o campo 'imagem_url' está presente, mas a interface não reconhece o formato correto.</code></p>
+<p>Justificativa (gerada por molde): O agente respondeu colecao_no_lugar_de_objeto no campo imagem_url porque o sinal imagem: esperado imagem, recebido imagem_url está presente na resposta HTTP e os verbetes entidade-produto, contrato-produto, campo_renomeado estavam entre os entregues ao modelo. A segunda causa, tipo_divergente, ficou com probabilidade 0,17. A FONTE cita 1 verbete(s), todos presentes no contexto. A remoção do verbete contrato-produto mudou a resposta (de colecao_no_lugar_de_objeto para formato_de_data_divergente), então ele pesou na decisão. A troca do verbete contrato-produto por um verbete errado mudou a resposta (de colecao_no_lugar_de_objeto para formato_de_data_divergente). (a probabilidade registrada é só um limite inferior: o rótulo saiu das alternativas devolvidas) A inferência sem documentação mudou a resposta (de colecao_no_lugar_de_objeto para campo_ausente). A repetição da inferência de base não mudou a resposta. O que não dá para conferir por código: a frase de impacto. O que o modelo declarou diverge do que o código mediu (entre modelo e verificacao): a remoção do verbete contrato-produto mudou a resposta de colecao_no_lugar_de_objeto para formato_de_data_divergente; a troca do verbete contrato-produto por um errado mudou a resposta de colecao_no_lugar_de_objeto para formato_de_data_divergente; a inferência sem documentação mudou a resposta de colecao_no_lugar_de_objeto para campo_ausente. O agente não está seguro desta causa (probabilidade 0,30); trate como hipótese e confira o campo imagem_url antes de agir.</p>
+<h4>2. Evidência</h4>
+<p>O caso, como foi posto no prompt:</p>
+<pre class="bruto"><code>REQUISIÇÃO: GET /api/produtos
+
+STATUS HTTP: 200
+
+CONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano
+
+CORPO DA RESPOSTA:
+[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem_url": "picanha_alho.jpg", "destaque": true}]
+
+SINTOMA OBSERVADO: Todos os cartoes mostram icone de imagem quebrada; o resto do dado esta certo.</code></pre>
+<p>Poda de <code>corpo_http</code> (evento 2449): regras diff_contra_contrato; antes {"chars": 153}, depois {"chars": 153}.</p>
+<div class="tabela"><table><thead><tr><th>Campo do contrato</th><th>Esperado</th><th>Recebido</th></tr></thead><tbody><tr><td>imagem</td><td>imagem</td><td>imagem_url</td></tr></tbody></table></div>
+<p>Trecho podado (hash <code>e968e16fdb341a27</code>):</p>
+<pre class="bruto"><code>[{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grelhada", "tipo": "Carnes", "preco": 89.9, "imagem_url": "picanha_alho.jpg", "destaque": true}]</code></pre>
+<h4>3. Contraste com a segunda causa</h4>
+<p>colecao_no_lugar_de_objeto e não tipo_divergente: a escolha tem probabilidade 0,30 contra 0,17; verbete(s) na evidência: entidade-produto, contrato-produto, campo_renomeado</p>
+<div class="tabela"><table><thead><tr><th>Alternativa</th><th>Probabilidade ou escore</th><th>Escolhida</th></tr></thead><tbody><tr><td>colecao_no_lugar_de_objeto</td><td>0,30</td><td>sim</td></tr><tr><td>tipo_divergente</td><td>0,17</td><td></td></tr><tr><td>resposta_truncada</td><td>0,14</td><td></td></tr><tr><td>formato_de_data_divergente</td><td>0,13</td><td></td></tr><tr><td>campo_ausente</td><td>0,10</td><td></td></tr><tr><td>campo_renomeado</td><td>0,10</td><td></td></tr><tr><td>corpo_nao_e_json</td><td>0,02</td><td></td></tr><tr><td>corpo_vazio</td><td>0,02</td><td></td></tr><tr><td>estrutura_aninhada_divergente</td><td>0,00</td><td></td></tr><tr><td>chave_de_juncao_errada</td><td>0,00</td><td></td></tr><tr><td>valor_fora_do_dominio</td><td>0,00</td><td></td></tr></tbody></table></div>
+<h4>4. FONTE declarada e conferida</h4>
+<p>Linha FONTE como veio: <code>[contrato-produto]</code>; verbetes citados: <code>contrato-produto</code>.</p>
+<div class="tabela"><table><thead><tr><th>Conferência</th><th>Sobre</th><th>Resultado</th><th>Evidência</th></tr></thead><tbody><tr><td>O verbete citado existe na biblioteca</td><td><code>contrato-produto</code></td><td>confere</td><td></td></tr><tr><td>O verbete citado estava no contexto entregue ao modelo</td><td><code>contrato-produto</code></td><td>confere</td><td>contexto: <code>entidade-produto</code>, <code>contrato-produto</code>, <code>campo_renomeado</code></td></tr><tr><td>Algum verbete do contexto trata da causa respondida</td><td><code>colecao_no_lugar_de_objeto</code></td><td>confere</td><td>verbetes: <code>contrato-produto</code></td></tr><tr><td>fonte_formato_valido</td><td><code>[contrato-produto]</code></td><td>confere</td><td>{"formato": "[id] separados por vírgula, ponto e vírgula ou 'e', sem texto livre", "ids": ["contrato-produto"]}</td></tr><tr><td>fonte_contem_termo_da_causa</td><td><code>contrato-produto</code></td><td><strong>não confere</strong></td><td>{"termo": "colecao_no_lugar_de_objeto"}</td></tr></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Intervenção</th><th>Verbete</th><th>Rótulo antes</th><th>Rótulo depois</th><th>p antes</th><th>p depois</th><th>Efeito</th></tr></thead><tbody><tr><td>remocao</td><td><code>contrato-produto</code></td><td>colecao_no_lugar_de_objeto</td><td>formato_de_data_divergente</td><td>0,30</td><td>0,00</td><td>mudou a resposta: o verbete pesou na decisão</td></tr><tr><td>troca</td><td><code>contrato-produto</code></td><td>colecao_no_lugar_de_objeto</td><td>formato_de_data_divergente</td><td>0,30</td><td>0,00</td><td>mudou a resposta: o verbete errado pesou na decisão (só um limite inferior da queda: o rótulo saiu das alternativas devolvidas)</td></tr><tr><td>sem_documentacao</td><td>não se aplica</td><td>colecao_no_lugar_de_objeto</td><td>campo_ausente</td><td>0,30</td><td>0,02</td><td>sem documentação a resposta muda: a documentação pesou na decisão</td></tr><tr><td>repeticao_da_base</td><td>não se aplica</td><td>colecao_no_lugar_de_objeto</td><td>colecao_no_lugar_de_objeto</td><td>0,30</td><td>0,32</td><td>o mesmo prompt manteve o rótulo</td></tr></tbody></table></div>
+<h4>5. Linha de ação</h4>
+<p>Confira o campo <code>imagem_url</code> no caso de entrada e compare com o contrato esperado pela interface.</p>
+<h4>6. Árvore completa</h4>
+<details><summary>31 eventos da trilha, na ordem em que aconteceram (camadas programa, modelo e verificação separadas)</summary>
+<div class="tabela"><table><thead><tr><th>seq</th><th>passo</th><th>Tipo</th><th>Camada</th><th>Origem</th><th>Quando</th><th>Resumo</th></tr></thead><tbody><tr><td>2447</td><td>1</td><td>entrada</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>caso relatorio-11</td></tr><tr><td>2449</td><td>2</td><td>poda</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>corpo_http: 1 diferença(s) contra o contrato; regras diff_contra_contrato</td></tr><tr><td>2450</td><td>3</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>poda: escolha json/lista; imagem:renomeado; divergência não</td></tr><tr><td>2451</td><td>4</td><td>candidatos</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>3 de 39 verbetes entregues</td></tr><tr><td>2452</td><td>5</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>recuperacao: escolha entidade-produto,contrato-produto,campo_renomeado; divergência não</td></tr><tr><td>2454</td><td>6</td><td>prompt</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>{"chars": 3588, "etapa": "diagnostico", "hash_prompt_fixo": "2e42cf9c31826941", "prompt_sha256": "f827f5e0b766", "sha": "f827f5e0b766d79a"}</td></tr><tr><td>2456</td><td>7</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>diagnostico: 52,2 s</td></tr><tr><td>2457</td><td>8</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>causa_raiz: <code>colecao_no_lugar_de_objeto</code></td></tr><tr><td>2458</td><td>9</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>campo: <code>imagem_url</code></td></tr><tr><td>2459</td><td>10</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>impacto: <code>O ícone de imagem quebrado indica que o campo 'imagem_url' está presente, mas a interface não reconhece o formato correto.</code></td></tr><tr><td>2460</td><td>11</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>fonte: <code>[contrato-produto]</code></td></tr><tr><td>2461</td><td>12</td><td>declaracao</td><td>modelo</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>fonte_citada: <code>contrato-produto</code></td></tr><tr><td>2462</td><td>13</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>quatro_linhas_presentes: confere</td></tr><tr><td>2463</td><td>14</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>rotulo_no_conjunto: confere</td></tr><tr><td>2464</td><td>15</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>fonte_existe_na_biblioteca: confere</td></tr><tr><td>2465</td><td>16</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>fonte_estava_no_contexto: confere</td></tr><tr><td>2466</td><td>17</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>campo_existe_no_caso: confere</td></tr><tr><td>2467</td><td>18</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>rotulo_sustentado_por_verbete_do_contexto: confere</td></tr><tr><td>2468</td><td>19</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>notas_nos_verbetes_citados: informativo</td></tr><tr><td>2469</td><td>20</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>impacto: nao_verificavel</td></tr><tr><td>2470</td><td>21</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>fonte_formato_valido: confere</td></tr><tr><td>2471</td><td>22</td><td>verificacao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>fonte_contem_termo_da_causa: nao_confere</td></tr><tr><td>2474</td><td>23</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>intervencao:remocao: 76,1 s</td></tr><tr><td>2475</td><td>24</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>remocao de contrato-produto: rótulo colecao_no_lugar_de_objeto para formato_de_data_divergente</td></tr><tr><td>2478</td><td>25</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>intervencao:troca: 50,2 s</td></tr><tr><td>2479</td><td>26</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>troca de contrato-produto: rótulo colecao_no_lugar_de_objeto para formato_de_data_divergente</td></tr><tr><td>2482</td><td>27</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>intervencao:sem_documentacao: 33,7 s</td></tr><tr><td>2483</td><td>28</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>sem_documentacao de None: rótulo colecao_no_lugar_de_objeto para campo_ausente</td></tr><tr><td>2485</td><td>29</td><td>inferencia</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>intervencao:repeticao_da_base: 18,6 s</td></tr><tr><td>2486</td><td>30</td><td>intervencao</td><td>verificacao</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>repeticao_da_base de None: rótulo colecao_no_lugar_de_objeto para colecao_no_lugar_de_objeto</td></tr><tr><td>2487</td><td>31</td><td>decisao</td><td>programa</td><td>ao_vivo</td><td>2026-11-05T01:21:07</td><td>diagnostico: escolha colecao_no_lugar_de_objeto; divergência sim</td></tr></tbody></table></div>
+</details>
+<p>Nós de decisão:</p>
+<ul><li>evento 2450, <code>poda</code>: escolha <code>json/lista; imagem:renomeado</code>; resultado sinais_em_codigo; evidência: evento 2449 (sinal_em_codigo); divergência: não; falha: nenhuma; prov.used: imagem (gen_ai: plan)</li><li>evento 2452, <code>recuperacao</code>: escolha <code>entidade-produto,contrato-produto,campo_renomeado</code>; resultado verbetes_entregues; evidência: evento 2451 (verbete_entregue, entidade-produto), evento 2451 (verbete_entregue, contrato-produto), evento 2451 (verbete_entregue, campo_renomeado); divergência: não; falha: nenhuma; prov.used: entidade-produto, contrato-produto, campo_renomeado (gen_ai: retrieval)</li><li>evento 2487, <code>diagnostico</code>: escolha <code>colecao_no_lugar_de_objeto</code>; resultado rotulo_emitido; evidência: evento 2449 (sinal_em_codigo), evento 2451 (verbete_entregue, entidade-produto), evento 2451 (verbete_entregue, contrato-produto), evento 2451 (verbete_entregue, campo_renomeado), evento 2456 (resposta), evento 2461 (verbete_citado, contrato-produto); divergência: sim; falha: nenhuma; prov.used: entidade-produto, contrato-produto, campo_renomeado (gen_ai: chat)</li></ul>
+<p>Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.</p>
+<h4>Rastro</h4>
+<p>Gerado dos eventos 2447 a 2487 da trilha; hash dos eventos deste caso: <code>bf397d9823f5dfcd</code>. Origem de cada evento: <code>ao_vivo</code> (emitido pelo agente na hora), <code>registro</code>, <code>recalculado</code> ou <code>humano</code>.</p></template>
+<script type="application/json" id="casos">[{"posicao": 1, "caso": "relatorio-1"}, {"posicao": 2, "caso": "relatorio-2"}, {"posicao": 3, "caso": "relatorio-3"}, {"posicao": 4, "caso": "relatorio-4"}, {"posicao": 5, "caso": "relatorio-5"}, {"posicao": 6, "caso": "relatorio-6"}, {"posicao": 7, "caso": "relatorio-7"}, {"posicao": 8, "caso": "relatorio-8"}, {"posicao": 9, "caso": "relatorio-9"}, {"posicao": 10, "caso": "relatorio-10"}, {"posicao": 11, "caso": "relatorio-11"}]</script>
+<script>
+(() => {
+  "use strict";
+  document.documentElement.lang = "pt-BR";
+  const CASOS = JSON.parse(document.getElementById("casos").textContent);
+  const IDS = new Set(CASOS.map((c) => c.caso));
+  const CHAVE = "sessao_revisao_trilha_v1";
+  const $ = (id) => document.getElementById(id);
+  const vazio = () => ({erro: null, utilidade: null, avaliacao: null, comentario: ""});
+  const estado = {fase: "inicio", atual: 0, revisitando: false, documento: null, decisao: null, respostas: vazio(), aberto_em: null, decidido_em: null, segundos: null, segundos_relogio: null, pausas: 0, retomadas: 0};
+  const relogio = {acumulado: 0, desde: null};
+  const enviando = new Set();
+  let salvas = {};
+  let pendentes = {};
+  let banco = null;
+  let semBanco = false;
+  let falha = "";
+  let cargaAtrasada = false;
+  let relatorioMostrado = -1;
+
+  const decorrido = () => relogio.acumulado + (relogio.desde === null ? 0 : performance.now() - relogio.desde);
+  function ligar() { if (relogio.desde === null && document.visibilityState === "visible") relogio.desde = performance.now(); }
+  function desligar() { if (relogio.desde !== null) { relogio.acumulado += performance.now() - relogio.desde; relogio.desde = null; } }
+
+  function guardar() {
+    try {
+      localStorage.setItem(CHAVE, JSON.stringify({caso: CASOS[estado.atual].caso, fase: estado.revisitando ? "antes" : estado.fase, decorrido: decorrido(), decisao: estado.decisao,
+        respostas: estado.respostas, aberto_em: estado.aberto_em, decidido_em: estado.decidido_em, segundos: estado.segundos, segundos_relogio: estado.segundos_relogio,
+        pausas: estado.pausas, retomadas: estado.retomadas, pendentes}));
+    } catch (e) { /* sem armazenamento local a sessão continua; só a retomada depois de recarregar se perde */ }
+  }
+
+  function restaurar() {
+    let r = null;
+    try { r = JSON.parse(localStorage.getItem(CHAVE) || "null"); } catch (e) { r = null; }
+    if (!r) return;
+    pendentes = r.pendentes || {};
+    const i = CASOS.findIndex((c) => c.caso === r.caso);
+    if (i < 0 || pendentes[r.caso] || !["lendo", "pausado", "decidido"].includes(r.fase)) return;
+    estado.atual = i;
+    relogio.acumulado = r.decorrido || 0;
+    estado.aberto_em = r.aberto_em;
+    estado.pausas = r.pausas || 0;
+    estado.retomadas = (r.retomadas || 0) + (r.fase === "lendo" ? 1 : 0);
+    if (r.fase === "decidido") {
+      estado.fase = "decidido";
+      estado.decisao = r.decisao;
+      estado.decidido_em = r.decidido_em;
+      estado.segundos = r.segundos;
+      estado.segundos_relogio = r.segundos_relogio;
+      estado.respostas = Object.assign(vazio(), r.respostas);
+      mostrarRelatorio(i);
+    } else {
+      estado.fase = "pausado";
+    }
+  }
+
+  function mostrarRelatorio(i) {
+    if (relatorioMostrado === i) return;
+    $("relatorio").replaceChildren($("rel-" + i).content.cloneNode(true));
+    relatorioMostrado = i;
+  }
+
+  function limparCaso() {
+    estado.revisitando = false;
+    estado.documento = null;
+    estado.decisao = null;
+    estado.respostas = vazio();
+    estado.aberto_em = null;
+    estado.decidido_em = null;
+    estado.segundos = null;
+    estado.segundos_relogio = null;
+    estado.pausas = 0;
+    estado.retomadas = 0;
+    relogio.acumulado = 0;
+    relogio.desde = null;
+    $("relatorio").replaceChildren();
+    relatorioMostrado = -1;
+  }
+
+  const respondido = (c) => Boolean(salvas[c.caso] || pendentes[c.caso]);
+  const documentoDe = (c) => pendentes[c.caso] || salvas[c.caso];
+  const lendo = () => ["lendo", "pausado", "decidido"].includes(estado.fase);
+
+  function reposicionar() {
+    if (lendo()) return;
+    const i = CASOS.findIndex((c) => !respondido(c));
+    if (i < 0) { estado.fase = "fim"; return; }
+    estado.atual = i;
+    if (estado.fase === "fim" || CASOS.some(respondido)) estado.fase = "antes";
+  }
+
+  const rolarAoTopo = () => window.scrollTo(0, 0);
+
+  function comecar() { estado.fase = "antes"; reposicionar(); guardar(); render(); }
+
+  function abrir() {
+    limparCaso();
+    estado.fase = "lendo";
+    estado.aberto_em = Date.now();
+    mostrarRelatorio(estado.atual);
+    ligar();
+    guardar();
+    render();
+    rolarAoTopo();
+  }
+
+  function pausar() { desligar(); estado.pausas += 1; estado.fase = "pausado"; guardar(); render(); rolarAoTopo(); }
+
+  function continuar() { estado.fase = "lendo"; mostrarRelatorio(estado.atual); ligar(); guardar(); render(); }
+
+  function decidir(valor) {
+    desligar();
+    estado.decisao = valor;
+    estado.decidido_em = Date.now();
+    estado.segundos = Math.round(relogio.acumulado / 1000);
+    estado.segundos_relogio = Math.round((estado.decidido_em - estado.aberto_em) / 1000);
+    estado.fase = "decidido";
+    guardar();
+    render();
+    if (window.matchMedia("(max-width:979.98px)").matches) window.scrollTo(0, $("palco").offsetTop);
+  }
+
+  function voltarALer() {
+    estado.fase = "lendo";
+    estado.decisao = null;
+    estado.decidido_em = null;
+    estado.segundos = null;
+    estado.segundos_relogio = null;
+    $("mensagem").textContent = "";
+    ligar();
+    guardar();
+    render();
+  }
+
+  function corrigir(i) {
+    const c = CASOS[i];
+    const d = documentoDe(c);
+    if (!d || lendo()) return;
+    limparCaso();
+    estado.atual = i;
+    estado.fase = "decidido";
+    estado.revisitando = true;
+    estado.documento = d;
+    estado.decisao = d.decisao;
+    estado.segundos = d.segundos;
+    estado.respostas = {erro: d.erro_localizado, utilidade: d.utilidade, avaliacao: d.avaliacao, comentario: d.comentario || ""};
+    mostrarRelatorio(i);
+    render();
+    rolarAoTopo();
+  }
+
+  function voltarSemMudar() { limparCaso(); estado.fase = "antes"; reposicionar(); guardar(); render(); rolarAoTopo(); }
+
+  function salvar() {
+    const r = estado.respostas;
+    const faltam = [];
+    if (!estado.decisao) faltam.push("a decisão");
+    if (!r.erro) faltam.push("se achou o erro");
+    if (!r.utilidade) faltam.push("a utilidade");
+    if (!r.avaliacao) faltam.push("a sua avaliação");
+    if (faltam.length) { $("mensagem").textContent = "Falta responder: " + faltam.join(", ") + "."; return; }
+    const c = CASOS[estado.atual];
+    const agora = new Date().toISOString();
+    const comum = {decisao: estado.decisao, erro_localizado: r.erro, utilidade: r.utilidade, avaliacao: r.avaliacao, comentario: r.comentario.trim()};
+    const doc = estado.revisitando
+      ? Object.assign({}, estado.documento, comum, {editado_em: agora})
+      : Object.assign({posicao: c.posicao, caso: c.caso, segundos: estado.segundos, segundos_relogio: estado.segundos_relogio, pausas: estado.pausas, retomadas: estado.retomadas,
+          aberto_em: new Date(estado.aberto_em).toISOString(), decidido_em: new Date(estado.decidido_em).toISOString(), salvo_em: agora}, comum);
+    pendentes[c.caso] = doc;
+    limparCaso();
+    estado.fase = "antes";
+    reposicionar();
+    guardar();
+    Object.keys(pendentes).forEach(enviar);
+    render();
+    rolarAoTopo();
+  }
+
+  async function gravarComUmaRepeticao(id, doc) {
+    const ref = banco.collection("respostas").doc(id);
+    try {
+      await ref.set(doc);
+    } catch (e) {
+      if (!e || e.code !== "unavailable") throw e;
+      await new Promise((pronto) => setTimeout(pronto, 400 + Math.random() * 800));
+      await ref.set(doc);
+    }
+  }
+
+  async function enviar(id) {
+    const doc = pendentes[id];
+    if (!doc || !banco || enviando.has(id)) return;
+    enviando.add(id);
+    try {
+      await gravarComUmaRepeticao(id, doc);
+      salvas[id] = doc;
+      if (pendentes[id] === doc) delete pendentes[id];
+      falha = "";
+    } catch (e) {
+      falha = (e && (e.message || e.code)) || "erro desconhecido";
+    } finally {
+      enviando.delete(id);
+      guardar();
+      render();
+    }
+  }
+
+  const naoChegaram = () => Object.keys(pendentes).filter((id) => !enviando.has(id)).length;
+
+  function renderAviso() {
+    const n = naoChegaram();
+    let texto = "";
+    if (semBanco) {
+      texto = "Esta janela não alcança o banco da página, então as respostas ficam só neste navegador. No fim, copie as respostas e cole na conversa com o Claude.";
+    } else if (n && banco) {
+      texto = (falha ? "Não consegui salvar: " + falha + ". " : "") + n + (n === 1 ? " resposta ainda não chegou" : " respostas ainda não chegaram") + " ao banco da página. Elas estão guardadas neste navegador.";
+    } else if (cargaAtrasada) {
+      texto = "As respostas salvas ainda não chegaram. Se você já respondeu algum relatório, espere um pouco antes de abrir o próximo.";
+    }
+    $("aviso-texto").textContent = texto;
+    $("aviso").hidden = !texto;
+    $("tentar").hidden = !(n && banco && !semBanco);
+  }
+
+  function renderTrilho() {
+    CASOS.forEach((c, i) => {
+      const b = $("pip-" + i);
+      const feito = respondido(c);
+      const atual = i === estado.atual && estado.fase !== "inicio" && estado.fase !== "fim";
+      b.className = "pip" + (feito ? " salvo" : "") + (atual ? " atual" : "");
+      b.disabled = !feito || lendo();
+      b.setAttribute("aria-label", "Relatório " + c.posicao + (feito ? ", respondido" : atual ? ", o próximo" : ", ainda não aberto"));
+      if (atual) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    });
+    $("contagem").textContent = CASOS.filter(respondido).length + " de " + CASOS.length + " respondidos";
+  }
+
+  function marcar(nome, valor) {
+    document.querySelectorAll('input[name="' + nome + '"]').forEach((x) => { x.checked = x.value === String(valor); });
+  }
+
+  function renderPainel() {
+    const c = CASOS[estado.atual];
+    $("painel-titulo").textContent = "Relatório " + c.posicao + " de " + CASOS.length;
+    const decidido = estado.fase === "decidido";
+    $("decidir").hidden = decidido;
+    $("ficha").hidden = !decidido;
+    if (!decidido) return;
+    const r = estado.respostas;
+    $("tempo").textContent = "Decidiu em " + estado.segundos + " s." + (estado.revisitando ? " Corrigir não muda esse tempo." : "");
+    marcar("decisao", estado.decisao);
+    marcar("erro", r.erro);
+    marcar("utilidade", r.utilidade);
+    marcar("avaliacao", r.avaliacao);
+    if ($("comentario").value !== r.comentario) $("comentario").value = r.comentario;
+    $("voltar-a-ler").hidden = estado.revisitando;
+    $("voltar-sem-mudar").hidden = !estado.revisitando;
+    const faltaSoEste = CASOS.filter((x) => !respondido(x)).length <= 1;
+    $("salvar").textContent = estado.revisitando ? "Salvar a correção" : faltaSoEste ? "Salvar e terminar" : "Salvar e ir ao próximo";
+  }
+
+  function renderFim() {
+    const docs = CASOS.map(documentoDe).filter(Boolean);
+    const soAqui = semBanco || naoChegaram() > 0;
+    $("fim-titulo").textContent = "As " + docs.length + " respostas " + (soAqui ? "estão neste navegador" : "estão salvas");
+    $("fim-texto").textContent = soAqui
+      ? "Elas ainda não estão no banco da página. Copie as respostas abaixo e cole na conversa com o Claude."
+      : "Volte à conversa com o Claude e escreva terminei. Ele lê as respostas daqui, preenche a planilha e só então abre o resultado de cada caso.";
+    const corpo = $("fim-linhas");
+    corpo.replaceChildren();
+    CASOS.forEach((c, i) => {
+      const d = documentoDe(c);
+      if (!d) return;
+      const tr = document.createElement("tr");
+      [String(d.posicao), String(d.segundos), d.erro_localizado, d.decisao, String(d.utilidade), d.avaliacao, d.comentario || ""].forEach((v) => {
+        const td = document.createElement("td");
+        td.textContent = v;
+        tr.appendChild(td);
+      });
+      const td = document.createElement("td");
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "discreto";
+      b.textContent = "Corrigir";
+      b.dataset.corrigir = String(i);
+      td.appendChild(b);
+      tr.appendChild(td);
+      corpo.appendChild(tr);
+    });
+    $("respostas-texto").value = JSON.stringify(docs, null, 2);
+    if (soAqui) $("copia").open = true;
+  }
+
+  function render() {
+    const f = estado.fase;
+    const c = CASOS[estado.atual];
+    $("palco").dataset.fase = f;
+    $("inicio").hidden = f !== "inicio";
+    $("antes").hidden = f !== "antes";
+    $("pausado").hidden = f !== "pausado";
+    $("relatorio").hidden = !(f === "lendo" || f === "decidido");
+    $("painel").hidden = !(f === "lendo" || f === "decidido");
+    $("fim").hidden = f !== "fim";
+    renderTrilho();
+    renderAviso();
+    if (f === "antes") {
+      $("antes-titulo").textContent = "Relatório " + c.posicao + " de " + CASOS.length;
+    }
+    if (f === "pausado") $("pausado-titulo").textContent = "Relatório " + c.posicao + " de " + CASOS.length;
+    if (f === "lendo" || f === "decidido") renderPainel();
+    if (f === "fim") renderFim();
+  }
+
+  const pronta = () => { $("palco").dataset.pronta = "sim"; };
+
+  $("comecar").addEventListener("click", comecar);
+  $("abrir").addEventListener("click", abrir);
+  $("pausar").addEventListener("click", pausar);
+  $("continuar").addEventListener("click", continuar);
+  $("aceitar").addEventListener("click", () => decidir("aceitar"));
+  $("recusar").addEventListener("click", () => decidir("recusar"));
+  $("voltar-a-ler").addEventListener("click", voltarALer);
+  $("voltar-sem-mudar").addEventListener("click", voltarSemMudar);
+  $("salvar").addEventListener("click", salvar);
+  $("tentar").addEventListener("click", () => { falha = ""; Object.keys(pendentes).forEach(enviar); render(); });
+  $("ficha").addEventListener("change", (ev) => {
+    const a = ev.target;
+    if (a.name === "decisao") estado.decisao = a.value;
+    if (a.name === "erro") estado.respostas.erro = a.value;
+    if (a.name === "utilidade") estado.respostas.utilidade = Number(a.value);
+    if (a.name === "avaliacao") estado.respostas.avaliacao = a.value;
+    $("mensagem").textContent = "";
+    guardar();
+  });
+  $("comentario").addEventListener("input", (ev) => { estado.respostas.comentario = ev.target.value; guardar(); });
+  $("trilho-lista").addEventListener("click", (ev) => {
+    const b = ev.target.closest("button[data-i]");
+    if (b && !b.disabled) corrigir(Number(b.dataset.i));
+  });
+  $("fim").addEventListener("click", (ev) => {
+    const b = ev.target.closest("button[data-corrigir]");
+    if (b) corrigir(Number(b.dataset.corrigir));
+  });
+  $("copiar").addEventListener("click", () => {
+    const texto = $("respostas-texto");
+    const escolher = () => { texto.focus(); texto.select(); $("copia-status").textContent = "Selecionei o texto: use Ctrl+C."; };
+    if (!navigator.clipboard) { escolher(); return; }
+    navigator.clipboard.writeText(texto.value).then(() => { $("copia-status").textContent = "Copiado."; }, escolher);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (estado.fase !== "lendo") return;
+    if (document.visibilityState === "visible") ligar(); else { desligar(); guardar(); }
+  });
+  window.addEventListener("pagehide", guardar);
+  setInterval(() => { if (estado.fase === "lendo") guardar(); }, 5000);
+
+  function semOBanco(motivo) {
+    banco = null;
+    semBanco = true;
+    falha = motivo || "";
+    cargaAtrasada = false;
+    reposicionar();
+    render();
+    pronta();
+  }
+
+  async function iniciar() {
+    restaurar();
+    reposicionar();
+    render();
+    let db = null;
+    try { db = window.claude ? await window.claude.use("db") : null; } catch (e) { db = null; }
+    if (!db) { semOBanco(); return; }
+    banco = db;
+    const limite = setTimeout(() => { cargaAtrasada = true; render(); pronta(); }, 10000);
+    banco.collection("respostas").onSnapshot((foto) => {
+      if (!foto.metadata.fromCache) { clearTimeout(limite); cargaAtrasada = false; }
+      const novas = {};
+      foto.docs.forEach((d) => { if (IDS.has(d.id)) novas[d.id] = d.data(); });
+      salvas = Object.assign({}, salvas, novas);
+      reposicionar();
+      render();
+      pronta();
+    }, (e) => { clearTimeout(limite); semOBanco((e && (e.message || e.code)) || ""); });
+  }
+
+  iniciar();
+})();
+</script>

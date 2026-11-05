@@ -932,10 +932,14 @@ def _dados_de_mentira_analise() -> dict:
     # "n2" em relação à corrida original e o leitor-y ganha "n2".
     # ! Motivo: a ficha 21 pergunta se o saldo do Coder 7B nos inéditos se mantém numa corrida nova; a análise precisa
     # parear cada modelo com a própria corrida original e os dois modelos entre si dentro da repetição.
+    # ! Alteração de IA - Revisar: (04/11/2026) os registros da repetição de mentira dizem a versão do Ollama em que rodaram
+    # (0.0.5, a da ponte_y), como os registros reais da corrida 15 dizem 0.40.2.
+    # ! Motivo: a análise passa a julgar a repetição pela ponte da versão em que ela rodou (ver
+    # teste_analise3b_repeticao_julgada_pela_ponte_da_versao_em_que_rodou).
     rep = []
     for m, padrao in (("doador", "TF"), ("leitor-y", "TT")):
         for c, v in zip(("n1", "n2"), padrao):
-            rep.append(_reg_analise(m, 1, c, v == "T"))
+            rep.append(_reg_analise(m, 1, c, v == "T", versao_ollama="0.0.5"))
     return {"f3": f3, "pontes": [("fase3b_ponte", "0.0.1", p1), ("fase3b_ponte_x", "0.0.4", p4), ("fase3b_ponte_y", "0.0.5", p5)],
             "cruzada": cru, "ineditos": ined, "repeticao": rep, "ponte_da_cruzada": "fase3b_ponte_x",
             "brutos": brutos, "corridas": [], "doador": "doador", "leitores": ["leitor-x", "leitor-y"],
@@ -960,7 +964,7 @@ def teste_analise3b_montar_render_e_check() -> None:
     assert (lin[("doador", 1)]["contra_original"]["b"], lin[("doador", 1)]["contra_original"]["c"]) == (0, 1), lin[("doador", 1)]
     assert (lin[("leitor-y", 1)]["contra_original"]["b"], lin[("leitor-y", 1)]["contra_original"]["c"]) == (1, 0)
     assert (lin[("doador", 1)]["acerto_pct"], lin[("doador", 1)]["acerto_original_pct"]) == (50.0, 100.0)
-    assert lin[("doador", 1)]["versao_da_ultima_ponte"] == "0.0.5" and lin[("doador", 1)]["pareavel_pela_ultima_ponte"] is True
+    assert lin[("doador", 1)]["versao_da_ponte"] == "0.0.5" and lin[("doador", 1)]["pareavel_pela_ponte"] is True
     em_rep = {(x["modelo"], x["biblioteca_epoca"]): x for x in rep["entre_modelos"]}
     assert set(em_rep) == {("leitor-y", 1)}, set(em_rep)
     x = em_rep[("leitor-y", 1)]
@@ -1014,6 +1018,27 @@ def teste_analise3b_montar_render_e_check() -> None:
     assert (n, mudou) == (1, True) and an.conferir_doc(doc, md) == []
     doc.write_text(doc.read_text(encoding="utf-8").replace("| 0 | 0 |", "| 9 | 0 |", 1), encoding="utf-8", newline="\n")
     assert an.conferir_doc(doc, md) == ["tb_pontes"], an.conferir_doc(doc, md)
+
+
+# ! Alteração de IA - Revisar: (04/11/2026) teste da repetição julgada pela ponte da versão do Ollama em que ela rodou: uma ponte
+# nova no fim da lista (como a 0.40.14 da corrida 20, que só tem o qwen2.5:7b) não muda a coluna da repetição.
+# ! Motivo: a repetição dos inéditos (corrida 15) rodou na 0.40.2 em 23/10/2026; julgada pela "última ponte da lista", a linha
+# do Coder 7B ficaria sem resposta quando a ponte 0.40.14 entrou em 04/11/2026, mudando um número já relatado por uma versão
+# em que a repetição nunca rodou. É o mesmo cuidado que PONTE_DA_CRUZADA tomou para a troca cruzada em 23/10.
+def teste_analise3b_repeticao_julgada_pela_ponte_da_versao_em_que_rodou() -> None:
+    import analisar_fase3b as an
+    dados = _dados_de_mentira_analise()
+    so_doador = [_reg_analise("doador", 0, c, v == "T") for c, v in zip(("a", "b", "c", "d"), "TTFF")]
+    dados["pontes"] = dados["pontes"] + [("fase3b_ponte_z", "0.0.6", so_doador)]
+    dado = an.montar(**dados)
+    assert dado["pontes"][-1]["versao"] == "0.0.6" and {l["modelo"] for l in dado["pontes"][-1]["linhas"]} == {"doador"}
+    lin = {(l["modelo"], l["biblioteca_epoca"]): l for l in dado["repeticao"]["linhas"]}
+    assert lin[("doador", 1)]["versao_da_ponte"] == "0.0.5" and lin[("leitor-y", 1)]["versao_da_ponte"] == "0.0.5", lin
+    assert lin[("leitor-y", 1)]["pareavel_pela_ponte"] is True, "o leitor-y está na ponte 0.0.5; a 0.0.6 só tem o doador"
+    # sem a versão nos registros não há ponte que valha: a coluna fica vazia em vez de usar uma versão em que a repetição não rodou
+    dados["repeticao"] = [{k: v for k, v in r.items() if k != "versao_ollama"} for r in dados["repeticao"]]
+    lin = {(l["modelo"], l["biblioteca_epoca"]): l for l in an.montar(**dados)["repeticao"]["linhas"]}
+    assert lin[("doador", 1)]["versao_da_ponte"] is None and lin[("leitor-y", 1)]["pareavel_pela_ponte"] is None, lin
 
 
 def teste_comparativo_confronto_nos_ineditos() -> None:
@@ -1075,6 +1100,14 @@ def teste_analise3b_numeros_reais_batem_com_a_decisao() -> None:
     medido = {(c["leitor"], c["biblioteca_epoca"]): c["acerto_pct"] for c in dado["cruzada"]["celulas"] if c["origem"] == "cruzada"}
     assert medido == oficial, (medido, oficial)
     assert all(c["versoes_ollama"] == ["0.34.4"] for c in dado["corridas"] if c["saida"] in ("fase3b_cruzada_qwen", "fase3b_ponte_0344")), dado["corridas"]
+    # ! Alteração de IA - Revisar: (04/11/2026) a repetição dos inéditos (corrida 15, Ollama 0.40.2) é julgada pela ponte 0.40.2,
+    # e os dois modelos dela estão nessa ponte, mesmo com a ponte 0.40.14 (só o qwen2.5:7b) no fim da lista.
+    # ! Motivo: as linhas de avaliação da repetição não trazem a versão do Ollama; sem a versão vinda das condições da corrida,
+    # a coluna ficava "n/a" para os dois modelos, e com a última ponte da lista ficava errada para o Coder 7B.
+    rep = dado["repeticao"]["linhas"]
+    if rep and caminhos.fase3("fase3b_ponte_0402")["raiz"].exists():
+        assert {l["versao_da_ponte"] for l in rep} == {"0.40.2"}, [(l["modelo"], l["versao_da_ponte"]) for l in rep]
+        assert all(l["pareavel_pela_ponte"] is True for l in rep), [(l["modelo"], l["pareavel_pela_ponte"]) for l in rep]
 
 
 def teste_area_oficial_hash_depois() -> None:

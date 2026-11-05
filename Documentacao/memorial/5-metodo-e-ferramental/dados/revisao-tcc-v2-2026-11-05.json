@@ -1,0 +1,52 @@
+{
+ "_tag": "! Alteração de IA - Revisar: registro da conferência do texto fonte do TCC v2 (Documentacao/TCC - ABNT 14724 - V1.md) em 05/11/2026: o que a conferência por script e o revisor (agente Sonnet, só leitura) acharam, as correções aplicadas, com o trecho antigo, o novo e o motivo, e o estado de cada item da seção 15 do relatório da Fase 4.",
+ "_motivo": "! Motivo: a versão 2 acrescenta as corridas 20 a 22, as limitações das decisões 82 e 85 a 89 e as corridas pendentes das decisões 90 a 93; a conferência independente dos números e das citações é o que deixa o texto rastreável, como na versão 1 (revisao-tcc-v1-2026-11-03.json), e o registro diz ao grupo o que ficou feito e o que ainda depende de corrida.",
+ "data": "2026-11-05",
+ "o_que": "Conferência das linhas novas ou alteradas contra as fontes indicadas nos comentários de origem, em duas passadas. Na primeira, o revisor relatou cerca de 230 números e 25 decisões e fichas conferidos e nenhuma falha de valor, unidade, corrida, data ou denominador; só uma dúvida, sobre desde quando o prompt está congelado, resolvida por comparação do corpo das funções em cada commit de estrategias.py. A segunda passada, depois de as fichas 42 a 45 serem fechadas às 13:01 do mesmo dia (decisões 90 a 93) e de a seção 15 do relatório mudar os itens 6, 10 e 11, reviu o texto trocado; o resultado dela está em segunda_passada.",
+ "correcoes": [
+  {
+   "onde": "3 JUSTIFICATIVA",
+   "achado_por": "conferência por script (frases velhas)",
+   "de": "Os resultados parciais sustentam a aposta:",
+   "para": "Os resultados até a Fase 4 sustentam a aposta:",
+   "motivo": "Os números da frase já são de corridas feitas e lidas, e 'parciais' não dizia em relação a quê. O que falta está nas seções 6.7 e 7."
+  },
+  {
+   "onde": "5.5",
+   "achado_por": "revisor, marcado como dúvida",
+   "de": "e o modelo responde com o prompt congelado byte a byte desde a Fase 3, para que os resultados continuem comparáveis.",
+   "para": "e o modelo responde com o prompt congelado byte a byte, o prompt linear da Fase 2-A com o bloco da biblioteca da Fase 2-B, para que os resultados continuem comparáveis.",
+   "motivo": "A ficha 34 diz 'desde a Fase 2-A', e o texto dizia 'desde a Fase 3'. O corpo de estrategias.linear não muda desde o primeiro commit do arquivo (0f4b010e) e o de estrategias.linear_com_biblioteca, desde que foi criada (603c423e), antes da corrida da Fase 2-B. A proposta do revisor ('desde a Fase 2-A') também não seria exata para o prompt com a biblioteca, que não existia na 2-A."
+  },
+  {
+   "onde": "6.8, primeira parte",
+   "achado_por": "a mesma comparação, ao resolver a dúvida da seção 5.5",
+   "de": "razão pela qual o prompt ficou congelado desde a Fase 3;",
+   "para": "razão pela qual o prompt ficou congelado desde as Fases 2-A e 2-B;",
+   "motivo": "A mesma frase, com o mesmo erro, na discussão."
+  }
+ ],
+ "mudanca_durante_o_trabalho": "O texto foi escrito primeiro com as fichas 42 a 45 abertas, e a conferência por script pegou o fechamento delas antes da entrega. Saíram 'fase fechada em 05/11/2026' e 'em aberto'; entraram o estado 'em andamento' do roadmap §1, a decisão 90 com a medida de prompt_tela_blocos.json, e as corridas 18c, 21c, 23 e 24 como pendentes, como a seção 15 agora manda.",
+ "itens_da_secao_15": [
+  {"item": 1, "o_que": "6.7, título e fecho; corridas 20, 21, 21b e 22; 18b e 21b como vigentes", "estado": "feito"},
+  {"item": 2, "o_que": "6.7 e 6.8, a medida com revisor humano que não foi feita", "estado": "feito"},
+  {"item": 3, "o_que": "6.8, as duas contas do carimbo de conflito", "estado": "feito"},
+  {"item": 4, "o_que": "6.7, a poda consertada depois das corridas", "estado": "feito (também na 5.5 e no glossário)"},
+  {"item": 5, "o_que": "5.7 e 6.7, a regra R1 mais larga que o plano", "estado": "feito"},
+  {"item": 6, "o_que": "6.7 e 6.8, a regra R2 e o limite do prompt da seção 3.3 do plano, com a decisão 90", "estado": "feito: o texto diz que as corridas 18 e 21 vão ser repetidas; quando a 18c e a 21c rodarem, os números da regra R2 e do MTTR passam a ser os delas"},
+  {"item": 7, "o_que": "6.8, terceira parte, sem a frase do P5 como próxima tentativa", "estado": "feito"},
+  {"item": 8, "o_que": "6.8, limitações finais, com os dois MTTR", "estado": "feito"},
+  {"item": 9, "o_que": "7, objetivos 3 e 4 e o parágrafo do que falta", "estado": "feito"},
+  {"item": 10, "o_que": "5.5 a 5.7 conferidas contra o que rodou; 5.8 com 93 decisões", "estado": "feito"},
+  {"item": 11, "o_que": "6.7 e 7, as decisões 91 a 93", "estado": "feito: corridas 23 e 24 como pendentes, com os números quando rodarem; trace, painel ao vivo e explorador como não feitos na Fase 4, com a interface para o analista depois da Fase 5"},
+  {"item": 12, "o_que": "Apêndice B, o relatório, resultados_alvo/fase4 e a sessão de revisão", "estado": "feito"}
+ ],
+ "fora_da_secao_15": [
+  "Resumo e abstract, seção 5, 5.1 (texto e tabela) e 3: diziam que os resultados eram parciais, com pacotes e corridas já feitos.",
+  "5.3: dava os 108 casos como conjunto de avaliação; os 36 inéditos da ficha 27 só passaram pela reprodução até aqui (decisão 92).",
+  "5.6: a verificação numa página refeita quando há diagnóstico no meio (corrida 21).",
+  "5.7: as cinco repetições são do agente, e a linha de base são três integrantes nos dez cenários (protocolo, seções 1 e 2).",
+  "Lista de siglas (TNR, TPR), referência de Guan et al. (2025), glossário (carimbo de conflito, ciclo de correção, recuperação por id, MTTR, poda, Task Success)."
+ ],
+ "segunda_passada": "O revisor relatou cerca de 45 números e afirmações dos trechos novos conferidos, as decisões 90 a 93, as fichas 42 a 45 e os 12 itens da seção 15 na redação atual, sem falhas. Fora dele, a conferência por script e a leitura de prompt_tela_blocos.json confirmaram 12 de 37 e 5 de 10 (árvore reduzida), 4 e 1 (sem árvore) e 1 e 3 (também sem a linha OBSERVAÇÃO ADICIONAL e as listas do sintoma). O resumo foi encurtado para caber nas 500 palavras da NBR 6028, sem mudar número."
+}

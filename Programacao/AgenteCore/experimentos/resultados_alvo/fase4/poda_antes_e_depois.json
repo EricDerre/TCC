@@ -1,0 +1,57 @@
+{
+ "o_que_e": "a poda de antes (poda.py no commit 2777f2af) contra a de agora (decisão 89), sem modelo, nos casos de texto e em todo corpo guardado nas trilhas das corridas na tela",
+ "texto": {
+  "casos_com_contrato": 65,
+  "mudam": [
+   "sin-5",
+   "semt-9",
+   "semt-14",
+   "sin-20",
+   "semt-17"
+  ]
+ },
+ "tela": {
+  "fase4_biblioteca": {
+   "casos": 44,
+   "corpos": 45,
+   "listas_com_varios": 33,
+   "mudam": []
+  },
+  "fase4_ensaio": {
+   "casos": 10,
+   "corpos": 6,
+   "listas_com_varios": 4,
+   "mudam": []
+  },
+  "fase4_ensaio_v2": {
+   "casos": 10,
+   "corpos": 6,
+   "listas_com_varios": 4,
+   "mudam": []
+  },
+  "fase4_reproducao": {
+   "casos": 37,
+   "corpos": 40,
+   "listas_com_varios": 32,
+   "mudam": []
+  },
+  "fase4_reproducao_ineditos": {
+   "casos": 25,
+   "corpos": 32,
+   "listas_com_varios": 21,
+   "mudam": []
+  },
+  "fase4_tela": {
+   "casos": 37,
+   "corpos": 40,
+   "listas_com_varios": 32,
+   "mudam": []
+  },
+  "fase4_tela_v2": {
+   "casos": 37,
+   "corpos": 40,
+   "listas_com_varios": 32,
+   "mudam": []
+  }
+ }
+}

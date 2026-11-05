@@ -80,7 +80,9 @@ class TestesAbasPorTopico(unittest.TestCase):
         # ! Motivo: a Fase 4 abriu em 26/10 e a corrida 17 é a primeira análise dela; o grupo fica na ordem cronológica, logo
         # depois da pesquisa que a preparou, sem mexer na ordem por importância que o Eric pediu para os grupos anteriores.
         self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Fase 4", "Pesquisa e método", "Fases anteriores"])
-        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "reproducao", "pesquisa", "fases2"])
+        # ! Alteração de IA - Revisar: (05/11/2026, P8) o grupo "Fase 4" passa a abrir pela aba "Fechamento da fase".
+        # ! Motivo: a regra do mapa é a aba mais importante de cada grupo em primeiro, e com a fase fechada essa é a do fechamento.
+        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "fechamentof4", "pesquisa", "fases2"])
         # em tela estreita a lateral vira gaveta aberta por um botão
         self.assertIn('<button class="menu" aria-controls="lateral" aria-expanded="false">', html)
         self.assertRegex(html, r"@media \(max-width:\s*900px\)\{[^}]*\.lateral\{")
@@ -649,6 +651,196 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("tb_f4_biblioteca_filtros", secao)
         self.assertIn("regra R4", secao.lower().replace("r4", "R4").replace("regra r4", "regra R4"))
 
+    def teste_cenarios_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (04/11/2026, P6) a aba da corrida 21 lê cenarios.json: Task Success com Wilson, MTTR com
+        # reamostragem, por tipo e por cenário, a ficha da falha de cada cenário e o protocolo da linha de base manual; sem o
+        # arquivo, o estado vazio. Os dados sintéticos cobrem a aba com números enquanto a corrida 21 não roda.
+        # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; o Eric decide pelo painel, e a ficha da falha de cada
+        # cenário é o que o protocolo entrega ao integrante.
+        self.assertIn("cenarios", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        self.assertIn("function cenMttr(", tp.JS_TOPICOS)
+        self.assertIn("function cenSucesso(", tp.JS_TOPICOS)
+        d, h = tp.secao_cenarios(None, None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="cenarios"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertIn("protocolo-linha-de-base-manual.md", h)
+        self.assertEqual(d["por_cenario"], [])
+
+        def linha(n: int, suc: int, mttr: float) -> dict:
+            return {"n": n, "sucessos": suc, "task_success_pct": round(100 * suc / n, 1), "wilson_lo_pct": 10.0, "wilson_hi_pct": 90.0, "detectados": n,
+                    "mttr_n": n, "mttr_media_s": mttr, "mttr_mediana_s": mttr, "mttr_ic_lo_s": mttr - 1, "mttr_ic_hi_s": mttr + 1}
+
+        sint = {"metadados": {"gerado_em": "2026-11-04T20:00:00", "corrida": "fase4_ensaio"},
+                "condicoes": {"repeticoes": 1, "modelo": "qwen2.5:7b", "versao_ollama": "0.40.14", "k": 3},
+                "geral": linha(10, 7, 61.5), "por_tipo": [{"tipo": "contrato", **linha(6, 4, 70.25)}, {"tipo": "localizador", **linha(4, 3, 48.0)}],
+                "por_cenario": [{"cenario": "contrato-type_drift", "tipo": "contrato", "modo": "type_drift", "classe": 3, "causa_esperada": "tipo_divergente",
+                                 **linha(1, 1, 64.0), "rotulos": {"tipo_divergente": 1}, "segundos_media": 80.0,
+                                 "fichas_da_falha": ["o roteiro passou na tela, mas o fio acusou: diff do contrato: tipo_diferente"]}],
+                "tempo": {"execucoes": 10, "segundos_media": 90.5, "segundos_total": 905.0, "estimativa_fase5_h": 1.26},
+                "deteccao": {"conferencia_do_roteiro": 4, "contrato_no_fio": 2, "passo_do_localizador": 4},
+                "sem_task_success": [{"cenario": "localizador-front-admin-login", "repeticao": 1, "tipo": "localizador", "detectou": True, "rotulo": "localizador_quebrado",
+                                      "causa_esperada": "localizador_quebrado", "falha_da_cura": "candidato_invalido", "segundos": 63.4}],
+                "navegador": {"versoes": ["156.0.8078.4"], "unica": True}, "banco": {"hashes_de_inicio": ["h-seed"], "unico": True}}
+        d, h = tp.secao_cenarios(sint, None, self.ctx["road"], gd.cartoes_corridas)
+        # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) as execuções sem Task Success aparecem na aba, com a falha da cura.
+        # ! Motivo: o Eric decide pelo painel; na corrida 21 o zero do login precisa vir com o motivo, lido do JSON.
+        self.assertIn("Execuções sem Task Success", h)
+        self.assertIn("candidato_invalido", h)
+        self.assertIn("tb_f4_cenarios_sem_sucesso", h)
+        _, h_sem = tp.secao_cenarios({**sint, "sem_task_success": []}, None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertNotIn("Execuções sem Task Success", h_sem)
+        # ! Alteração de IA - Revisar: (04/11/2026, corrida 21b) com a repetição, os números principais são os dela, a comparação fica cenário a
+        # cenário e a execução sem Task Success da corrida 21 continua visível, com o nome da corrida.
+        # ! Motivo: a 21b roda com a correção da cura e é a leitura vigente; a 21 é o registro de como o defeito apareceu e não pode sumir do painel.
+        cena_v2 = {**sint["por_cenario"][0], **linha(1, 1, 70.5), "segundos_media": 86.0}
+        v2 = {**sint, "geral": linha(10, 10, 66.25), "por_cenario": [cena_v2], "sem_task_success": [], "tempo": {**sint["tempo"], "estimativa_fase5_h": 1.5}}
+        d2, h2 = tp.secao_cenarios(sint, v2, self.ctx["road"], gd.cartoes_corridas)
+        self.assertEqual(d2["geral"]["sucessos"], 10)
+        self.assertEqual([x["mttr_media_s"] for x in d2["por_cenario"]], [70.5])
+        self.assertEqual([x["mttr_anterior"] for x in d2["por_cenario"]], [64.0])
+        self.assertIn("corrida 21b", h2.split('<p class="lead">')[1].split("</p>")[0])
+        self.assertIn("10 de 10", h2)
+        self.assertIn("As duas corridas, cenário a cenário", h2)
+        self.assertIn("candidato_invalido", h2)
+        self.assertIn("cenarios_v2.json", h2)
+        self.assertIn("66,2", h2)
+        self.assertIn("1,50", h2)
+        self.assertEqual(d["geral"]["sucessos"], 7)
+        self.assertEqual([x["mttr_media_s"] for x in d["por_cenario"]], [64.0])
+        self.assertIn("7 de 10", h)
+        self.assertIn("o fio acusou: diff do contrato: tipo_diferente", h)
+        self.assertIn('id="g-cen-mttr"', h)
+        self.assertIn('id="g-cen-ts"', h)
+        self.assertIn("tb_f4_cenarios_por_cenario", h)
+        self.assertIn("1,26", h)
+        self.assertNotIn("—", h.split('<p class="lead">')[1].split("</p>")[0], "a frase de abertura não leva travessão")
+        cen_ = self.ctx.get("cenarios_v2") or self.ctx.get("cenarios")
+        secao = self.html[self.html.index('<section id="cenarios"'):].split("</section>")[0]
+        if not cen_ or not cen_.get("geral", {}).get("n"):
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        t = self.dados_t["cenarios"]
+        self.assertEqual(t["geral"]["sucessos"], cen_["geral"]["sucessos"])
+        self.assertEqual([x["sucessos"] for x in t["por_cenario"]], [x["sucessos"] for x in cen_["por_cenario"]])
+        self.assertIn(f'{cen_["geral"]["sucessos"]} de {cen_["geral"]["n"]}', secao)
+
+    def teste_trilha_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (04/11/2026, P7) a aba da corrida 22 lê trilha.json: TPR x TNR por sinal (contra o acaso 0,25), as
+        # intervenções com o limite inferior, a sonda de pós-racionalização, as mutações (verbete trocado, contrato alterado, seletor
+        # quebrado) com o nó previsto e a amostra dos 12 relatórios da sessão de revisão; sem o arquivo, o estado vazio. Os dados
+        # sintéticos cobrem a aba enquanto a corrida 22 não roda.
+        # ! Motivo: regra do painel (uma aba por análise, lida dos JSON); a avaliação da própria trilha é a sétima análise da Fase 4.
+        self.assertIn("trilha", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        self.assertIn("function triSinais(", tp.JS_TOPICOS)
+        self.assertIn("function triMutacoes(", tp.JS_TOPICOS)
+        d, h = tp.secao_trilha(None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="trilha"', h)
+        self.assertIn("ainda não foi rodada", h)
+        self.assertEqual(d["sinais"], [])
+
+        def sinal(nome: str, tpr, tnr) -> dict:
+            return {"sinal": nome, "descricao": f"o sinal {nome}", "erros": 12, "acertos": 24, "vp": 8, "fn": 4, "fp": 6, "vn": 18, "tpr": tpr, "tnr": tnr,
+                    "produto": None if tpr is None else round(tpr * tnr, 4), "acaso": 0.25}
+
+        def mut(tipo: str, previsto: str, apl: int, prev: int, outro: int, sem: int, mudou: int, sem_alvo: int = 0) -> dict:
+            return {"tipo": tipo, "no_previsto": previsto, "casos": apl + sem_alvo, "aplicaveis": apl, "sem_alvo": sem_alvo, "previsto": prev, "outro_no": outro,
+                    "sem_divergencia": sem, "rotulo_mudou": mudou, "previsto_pct": round(100 * prev / apl, 1) if apl else None}
+
+        sint = {"metadados": {"gerado_em": "2026-11-05T06:00:00", "corrida": "fase4_trilha"},
+                "condicoes": {"modelo": "qwen2.5:7b", "versao_ollama": "0.40.14", "k": 3, "casos": 36, "inferencias_previstas": 296, "biblioteca": {"hash": "95af35290860"}},
+                "resumo": {"casos": 36, "acertos": 24, "erros": 12, "acerto_pct": 66.7, "tpr": 0.6667, "tnr": 0.75, "produto": 0.5, "acaso": 0.25},
+                "sinais": [sinal("divergencia", 0.6667, 0.75), sinal("por_gatilho", 0.6, 0.9), sinal("remocao_ou_troca", 0.5, 0.8), sinal("sem_documentacao", 0.9, 0.2), sinal("repeticao_mudou", 0.1, 0.95),
+                           sinal("selo_baixo", 0.5, 0.9), sinal("falha", 0.25, 1.0), sinal("qualquer", 0.75, 0.7)],
+                "intervencoes": [{"tipo": t, "descricao": t, "n": 36, "mudou_rotulo": m, "limite_inferior": li, "queda_media_p": 0.2}
+                                 for t, m, li in (("remocao", 10, 4), ("troca", 6, 2), ("sem_documentacao", 20, 9), ("repeticao_da_base", 2, 0))],
+                "repeticao": {"n": 36, "manteve": 34, "mudou": 2}, "fonte": {"casos": 36, "verificada_pela_remocao": 10, "sem_efeito_medido": 26},
+                "sonda": {"casos": 36, "com_alvo": 30, "sem_alvo": 4, "sem_rotulo": 2, "cita_plantado": 12, "mudou_rotulo": 3, "pos_racionalizacao": 9, "taxa_pct": 30.0,
+                          "controle_n": 30, "controle_cita": 2, "controle_pct": 6.7},
+                "mesmo_prompt": [{"par": "repeticao_da_base", "descricao": "a repetição", "n": 36, "mesmo_prompt": 36, "mesma_resposta": 16, "mesma_fonte": 33, "mesmo_rotulo": 36},
+                                 {"par": "verbete_trocado_e_troca", "descricao": "a mutação e a troca", "n": 36, "mesmo_prompt": 36, "mesma_resposta": 12, "mesma_fonte": 30, "mesmo_rotulo": 34}],
+                "mutacoes": [mut("verbete_trocado", "recuperacao", 36, 33, 2, 1, 14), mut("contrato_alterado", "poda", 20, 19, 1, 0, 7, sem_alvo=16),
+                             mut("seletor_quebrado", "cura", 4, 3, 1, 0, 0)],
+                "mutacoes_casos": [{"tipo": "verbete_trocado", "caso": "lex-1", "aplicavel": True, "primeiro_no": "recuperacao", "aponta_o_previsto": True, "rotulo_base": "x", "rotulo_depois": "x"}],
+                "seletor": {"roteiros": [{"roteiro": r, "modo_dourado": "id_renomeado", "modo_mutado": "id_renomeado+nome_do_alvo", "estrategia_dourada": "papel_e_nome",
+                                          "estrategia_mutada": "caminho_do_ancestral_com_id", "curada_dourada": True, "curada_mutada": True, "rotulo_dourado": "localizador_quebrado",
+                                          "rotulo_mutado": "localizador_quebrado", "primeiro_no": "cura", "aponta_o_previsto": True, "mttr_dourada_s": 60.0, "mttr_mutada_s": 70.0}
+                                         for r in ("front-busca", "front-admin-login", "front-admin-produtos", "front-cliente-reserva")],
+                            "curadas_dourada": 4, "curadas_mutada": 4},
+                "amostra_revisao": [{"posicao": i + 1, "caso": f"c{i}", "classe": 1, "relatorio": f"relatorios/c{i}@base.md"} for i in range(12)],
+                "casos": [{"caso": "lex-1", "classe": 1, "gabarito": "x", "rotulo": "x", "acerto": True, "p_rotulo": 0.9, "selo": "alto", "falha": None,
+                           "sinais": {"divergencia": False, "remocao_ou_troca": False, "sem_documentacao": True, "repeticao_mudou": False, "selo_baixo": False, "falha": False, "qualquer": False},
+                           "intervencoes": 4, "limite_inferior": 1, "sonda": "sem efeito", "verbete_trocado": "recuperacao", "contrato_alterado": "poda", "segundos_total": 400.0}]}
+        d, h = tp.secao_trilha(sint, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('id="g-tri-sinais"', h)
+        self.assertIn('id="g-tri-mutacoes"', h)
+        self.assertIn("tb_f4_trilha_sinais", h)
+        self.assertIn("0,50", h, "o produto TPR x TNR do sinal principal")
+        self.assertIn("0,25", h, "o acaso")
+        self.assertIn("30,0", h, "a taxa de pós-racionalização")
+        self.assertIn("33 de 36", h, "as mutações que apontaram o nó previsto")
+        self.assertIn("12 relatórios", h)
+        # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) a aba mostra a divergência só por gatilho, o controle da sonda e as
+        # inferências de mesmo prompt; a tabela caso a caso só entra depois de a planilha da sessão de revisão estar preenchida.
+        # ! Motivo: a sessão é às cegas e o painel é o que o Eric lê; a tabela diz quais relatórios estão certos, e a aba publicada a
+        # entregaria antes da sessão. O por_gatilho é o que o agente mostra fora da avaliação; sem o controle, a sonda superestima.
+        self.assertIn("por gatilho", h)
+        self.assertIn("0,54", h, "o produto do sinal por gatilho")
+        self.assertIn("2 de 30", h, "o controle da sonda")
+        self.assertIn("tb_f4_trilha_mesmo_prompt", h)
+        self.assertNotIn("<code>lex-1</code>", h, "antes da sessão a aba não diz o resultado de nenhum caso")
+        self.assertNotIn("Caso a caso", h)
+        self.assertIn("depois da sessão de revisão", h)
+        _, h_depois = tp.secao_trilha(sint, self.ctx["road"], gd.cartoes_corridas, revisao_preenchida=True)
+        self.assertIn("<code>lex-1</code>", h_depois)
+        self.assertIn("Caso a caso", h_depois)
+        # ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) a lista dos casos da amostra também só entra depois da sessão, e antes a aba aponta para a página da sessão.
+        # ! Motivo: o nome e a classe dizem a família do defeito, e a posição na lista é a mesma da página, que mostra só um nome neutro.
+        self.assertNotIn("<code>c0</code>", h)
+        self.assertIn("<code>c0</code>", h_depois)
+        self.assertIn(tp.URL_SESSAO_REVISAO, h)
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 86) com a leitura da sessão, a aba mostra quem decidiu cada relatório e o parecer do Claude contra o gabarito, sem chamar isso de medida com revisor humano.
+        # ! Motivo: o Eric lê pela aba; se ela somasse tudo como revisão humana, a limitação das decisões 85 e 86 sumiria justamente onde ele decide.
+        rev = {"resumo": {"relatorios": 5, "respostas_do_revisor": 1, "pareceres_aprovados": 4, "acertos_na_amostra": 3, "erros_na_amostra": 2, "erros_localizados": 1},
+               "por_origem": [{"origem": "revisor", "n": 1, "apropriadas": 1, "pct": 100.0, "ic": [20.7, 100.0], "avaliacao_bate": 1}, {"origem": "parecer_aprovado", "n": 4, "apropriadas": 2, "pct": 50.0, "ic": [15.0, 85.0], "avaliacao_bate": 2}],
+               "parecer": {"n": 5, "apropriadas": 3, "pct": 60.0, "ic": [23.1, 88.2], "causa_certa": 3, "pct_causa": 60.0, "avaliacao_bate": 3, "errou_a_decisao": ["a-3", "b-2"], "errou_a_causa": ["a-3", "b-2"]},
+               "tempo": [{"grupo": "todos", "n": 1, "mediana": 307, "minimo": 307, "maximo": 307}], "duvidas_de_leitura": ["a-1"],
+               "casos": [{"posicao": 1, "caso": "a-1", "gabarito": "causa_x", "rotulo": "causa_x", "acerto": True, "origem": "revisor", "segundos": 307, "erro_localizado": "sim", "decisao": "aceitar", "apropriada": True, "utilidade": 4, "avaliacao": "certo",
+                          "parecer": {"decisao": "aceitar", "causa": None, "causa_dada": "causa_x", "causa_certa": True, "confianca": "alta"}}]}
+        _, h_rev = tp.secao_trilha(sint, self.ctx["road"], gd.cartoes_corridas, revisao_preenchida=True, rev=rev)
+        self.assertIn("A sessão de revisão", h_rev)
+        self.assertIn("Só 1 dos 5 relatórios", h_rev)
+        self.assertIn("não cumpre", h_rev)
+        self.assertIn("tb_f4_revisao_parecer", h_rev)
+        self.assertIn("pode ter lido", h_rev)
+        self.assertIn("O que o parecer do Claude diz", h_rev)
+        self.assertIn("3 de 5 decisões", h_rev)
+        self.assertIn("limitação declarada (decisão 87)", h_rev)
+        self.assertNotIn("ficha 40", h_rev, "a ficha 40 já foi decidida")
+        self.assertNotIn("O que o parecer do Claude diz", h_depois)
+        self.assertIn("307", h_rev)
+        self.assertNotIn("não cumpre", h_depois, "sem a leitura da sessão, a aba não afirma nada sobre ela")
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 88) a aba diz que a regra do carimbo de conflito ficou como está e que o TCC reporta as duas contas.
+        # ! Motivo: a frase antiga dizia que a ficha 39 ainda ia decidir; o Eric lê pela aba e veria uma decisão já tomada como pendente.
+        self.assertIn("decisão 88", h)
+        self.assertNotIn("A ficha 39 decide", h)
+        self.assertIn("revisao_trilha", self.ctx)
+        self.assertIn("revisao_trilha_preenchida", self.ctx)
+        self.assertEqual([s["sinal"] for s in d["sinais"]], [s["sinal"] for s in sint["sinais"]])
+        self.assertEqual(d["mutacoes"][0]["previsto"], 33)
+        self.assertNotIn("—", h.split('<p class="lead">')[1].split("</p>")[0], "a frase de abertura não leva travessão")
+        tri = self.ctx.get("trilha")
+        secao = self.html[self.html.index('<section id="trilha"'):].split("</section>")[0]
+        if not tri or not (tri.get("resumo") or {}).get("casos"):
+            self.assertIn("ainda não foi rodada", secao)
+            return
+        t = self.dados_t["trilha"]
+        self.assertEqual(t["resumo"]["produto"], tri["resumo"]["produto"])
+        self.assertIn(f'{tri["resumo"]["acertos"]} de {tri["resumo"]["casos"]}', secao)
+        if not self.ctx["revisao_trilha_preenchida"]:
+            self.assertNotIn("Caso a caso", secao, "a sessão de revisão é às cegas: a aba publicada não traz o resultado por caso")
+            self.assertNotIn("<th>Resultado</th>", secao, "a coluna que diria quais relatórios estão certos fica fora até a sessão")
+            self.assertNotIn("<th>Gabarito</th>", secao)
+
     def teste_funcoes_de_grafico_e_seletores_existem(self):
         for funcs in tp.DESENHAR_TOPICOS.values():
             for f in funcs:
@@ -656,6 +848,60 @@ class TestesAbasPorTopico(unittest.TestCase):
         for sel, f in tp.SELETORES_TOPICOS.items():
             self.assertIn(f'id="{sel}"', self.html, sel)
             self.assertIn(f"function {f}(", tp.JS_TOPICOS, f)
+
+    # ! Alteração de IA - Revisar: (05/11/2026, pacote P8) teste da aba "Fechamento da fase": as regras lidas da seção 10 do relatório da Fase 4, com o estado de cada uma, as fichas abertas e os cartões lidos dos JSON das leituras vigentes.
+    # ! Motivo: é a aba que o plano chama de aba da fase (seção 3.8), e o Eric decide pelo painel; sem o teste, uma regra não cumprida poderia aparecer como cumprida, ou o cartão poderia ler a corrida que não vale.
+    def teste_fechamento_da_fase_4_le_o_relatorio_e_as_leituras_vigentes(self):
+        grupo = next(abas for nome, abas in tp.NAV if nome == "Fase 4")
+        self.assertEqual(grupo[0][0], "fechamentof4", "a aba do fechamento abre o grupo da fase")
+        self.assertEqual(tp._classe_regra("Cumprida"), "cumprida")
+        self.assertEqual(tp._classe_regra("Cumprida, com ressalva: os 100% vêm do desenho"), "ressalva")
+        self.assertEqual(tp._classe_regra("Não cumprida: limitação declarada, decisão 82"), "nao")
+        self.assertEqual(tp._classe_regra("Medida: o plano não fixou limite"), "medida")
+        md = ("# Relatório\n\n## 1. Perguntas\n\ntexto da seção um\n\n## 10. As regras\n\n| Regra | O que ela pede | Corrida | Resultado | Estado |\n|---|---|---|---|---|\n"
+              "| R1 | pede a | 17 | 37 de 37 | Cumprida |\n| R2 | pede b | 18b | b + c = 9 | Não cumprida: limitação declarada |\n| R3 | pede c | 19 | 160 de 160 | Cumprida, com ressalva: desenho |\n"
+              "| R4 | pede d | 20 | 100,0% | Medida: sem limite |\n\n## 11. Entrega\n\ntexto da seção onze\n\n## 12. Limitações\n\ntexto da seção doze\n\n## 13. O que não saiu\n\ntexto da seção treze\n\n## 15. O que o TCC carrega\n\ntexto da seção quinze\n")
+        tela = {"resumo": {"concordam": 26, "casos": 37, "discordantes": 9, "limite_r2": 3}}
+        cura = {"resumo": {"curadas": 160, "execucoes": 160, "mttr_mediana_s": 0.639}}
+        cen = {"geral": {"sucessos": 10, "n": 10, "mttr_media_s": 105.18}}
+        rev = {"resumo": {"respostas_do_revisor": 1, "pareceres_aprovados": 10}}
+        # ! Alteração de IA - Revisar: (05/11/2026, decisões 90 a 92) a aba recebe o roadmap, mostra as corridas que faltam antes da Fase 5, lidas pelo estado, e a seção 13 do relatório à vista.
+        # ! Motivo: com as fichas 42 a 45 fechadas, a aba diria só "nenhuma ficha aberta", como se não restasse nada, e as corridas 18c, 21c, 23 e 24 ainda vão rodar.
+        Corrida = type("Corrida", (), {})
+
+        def corrida(numero, classe):
+            c = Corrida()
+            c.numero, c.classe = numero, classe
+            return c
+        road_teste = {"corridas": [corrida("13", "aguarda"), corrida("16", "feita"), corrida("18c", "aguarda"), corrida("21c", "pendente"), corrida("22", "feita"), corrida("x", "aguarda")]}
+        self.assertEqual(tp._corridas_que_faltam_f4(road_teste), ["18c", "21c"], "só da corrida 16 em diante, e só as que não estão feitas")
+        self.assertEqual(tp._corridas_que_faltam_f4(None), [])
+        d, h = tp.secao_fechamento_f4(md, self.ctx["pend"], self.ctx["md_doc_para_html"], tela=tela, cura=cura, cenarios=cen, revisao=rev, road=self.ctx["road"], cartoes_corridas=self.ctx["cartoes_corridas"])
+        self.assertIn("texto da seção treze", h)
+        self.assertEqual(d["contagem"], {"cumprida": 1, "nao": 1, "ressalva": 1, "medida": 1})
+        self.assertIn('<section id="fechamentof4" hidden>', h)
+        self.assertIn('<span class="chip nao_cumprida">Não cumprida</span><br><span class="nota">limitação declarada</span>', h)
+        self.assertIn('<span class="chip concluida">Cumprida</span>', h)
+        for texto in ("26 de 37", "160 de 160", "0,639", "10 de 10", "105,2", "1 resposta do Eric", "10 pareceres", "texto da seção um", "texto da seção onze", "texto da seção doze", "texto da seção quinze", "R2"):
+            self.assertIn(texto, h, texto)
+        abertas = [f for b in self.ctx["pend"] for f in b.fichas if f.aberta]
+        self.assertEqual(d["fichas_abertas"], len(abertas))
+        for f in abertas:
+            self.assertIn(f.id_html, h, f.numero)
+        # sem o relatório, o estado vazio
+        d0, h0 = tp.secao_fechamento_f4(None, [], self.ctx["md_doc_para_html"])
+        self.assertIn('<section id="fechamentof4" hidden>', h0)
+        self.assertEqual(d0["contagem"], {})
+        # com os arquivos reais, a aba lê as leituras vigentes, não as corridas 18 e 21
+        d_real = self.dados_t["fechamentof4"]
+        self.assertTrue(d_real["contagem"], "o relatório da fase existe e a tabela da seção 10 foi lida")
+        r2 = self.ctx["tela_v2"]["resumo"]
+        self.assertIn(f'{r2["concordam"]} de {r2["casos"]}', self.html)
+        self.assertNotEqual(self.ctx["tela"]["resumo"]["concordam"], r2["concordam"])
+        faltam = tp._corridas_que_faltam_f4(self.ctx["road"])
+        if faltam:
+            self.assertIn("Corridas que faltam antes da Fase 5", self.html)
+            self.assertIn(f'id="corrida-{faltam[0]}-f4"', self.html)
 
     def teste_slots_cobrem_os_modelos_das_fases(self):
         for m in self.ctx["dados"]["modelos"]:

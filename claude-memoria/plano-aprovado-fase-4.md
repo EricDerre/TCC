@@ -325,3 +325,42 @@ Patch no código da aplicação-alvo (ABNT §2.1); troca de modelo, de motor ou 
 | Números citados | `RA\pre_fase4\confianca.md` (blocos `tb_conf_acerto`, `tb_conf_revisao`, `tb_conf_resumo`); `RA\recuperador\experimento_recuperador.md` (hit@3 e hit@5, decisão 61); relatório da 3-B §3 (variação entre corridas) e §7; achado 4.42 (`contrato-produto` em 15 dos 36 contextos); contagem de casos por script sobre os bancos e `RA\fase3\particao.json` (26/10/2026) |
 | Harness e cobaias | leitura de 26/10/2026: `EXP\cliente_ollama.py`, `recuperacao.py`, `biblioteca.py`, `evolucao_biblioteca.py`, `executar_fase3.py`, `executar_fase3b.py`, `trilha.py`, `gerar_relatorio_raciocinio.py`, `sondar_logprobs.py`, `sonda_confianca.py`, `analisar_confianca.py`, `sonda_correcao.py`, `banco_casos*.py`, `rodar_*.ps1`; `API\app\fault_injection.py`, `routers\produtos.py`, `schemas.py`, `config.py`; `FRONT\produtos_api.php`, `menu_publico.php`, `rodape.php`, `admin\*.php`, `cliente\*.php`; `RAIZ\run.py`, `install.py`, `_env_common.py` |
 | Fichas | `DOC\pendencias.md`, fichas 26 a 36 |
+
+<!-- ! Alteração de IA - Revisar: anexo novo (05/11/2026, pacote P8) com os desvios do plano, levantados no fechamento da fase contra o livro-razão, as fichas e o código; o texto do plano acima não foi reescrito.
+     ! Motivo: o cabeçalho deste arquivo manda os desvios para um anexo no fechamento; sem ele, quem lê o plano acharia que `painel_fase4.py`, o trace na falha e o experimento da ficha 34 existem. Números de `resultados_alvo/fase4/*.json`, lidos por script. -->
+<!-- ! Alteração de IA - Revisar: (05/11/2026, pacote P8) 1 trecho(s) corrigido(s) por script no fechamento da Fase 4, depois da revisão deste documento por um revisor; a lista com o trecho antigo, o novo e o motivo de cada um está em `Documentacao/memorial/5-metodo-e-ferramental/dados/revisao-fase-4-2026-11-05.json`.
+     ! Motivo: o plano aprovado (P8) prevê um revisor por documento de texto; as correções entram declaradas, para o texto continuar rastreável. -->
+<!-- ! Alteração de IA - Revisar: (05/11/2026, depois do P8) as seis linhas que apontavam para as fichas 42 a 45 passaram a dizer a resposta do Eric (decisões 90 a 93).
+     ! Motivo: as fichas foram respondidas no mesmo dia; o anexo diria que ainda dependem de decisão. -->
+## Anexo: desvios do plano (fechamento em 05/11/2026)
+
+O texto acima fica como foi aprovado. Esta tabela diz onde a execução saiu dele e por quê. O relatório da fase está em `Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md`.
+
+| Item do plano | O que aconteceu | Onde está |
+|---|---|---|
+| `painel_fase4.py` e a aba única da fase (seções 3.2, 3.8 e P8) | Não existe. Pela regra do painel, cada análise virou uma aba em `ferramentas/painel_topicos.py` (sete abas), e o fechamento ganhou a aba "Fechamento da fase", lida do relatório | `painel_topicos.NAV`, grupo Fase 4 |
+| Aba "Cérebro ao vivo" (seções 3.2 e 3.8) | Não foi feita | Ficha 45, decisão 93: entra na interface para o analista, depois da Fase 5 |
+| Explorador de casos lendo trilhas v2 (seção 3.8) | Não foi feito: ele lê só as trilhas da Pré-Fase 4 | Ficha 45, decisão 93: entra na interface para o analista, depois da Fase 5 |
+| Trace do Playwright só na falha (seção 3.2, ficha 33) | Não foi feito: as corridas guardam árvore, corpo e eventos na trilha, sem trace | Ficha 45, decisão 93: entra na interface para o analista, e a Fase 5 roda sem trace |
+| Prompt ao vivo até 10% acima do maior da calibração, senão a poda aperta (seção 3.3) | Não cumprido: na corrida 18b os 37 prompts passaram de 1409 tokens, o maior com 2034, e a poda não apertou | Ficha 42, decisão 90: o caso ao vivo encurta e as corridas 18c e 21c repetem as duas; relatório, seção 5 |
+| Experimento em texto com os itens da decisão 55 (ficha 34 a) | Não rodou: não entrou na tabela de corridas (seção 6), e o código não foi escrito | Ficha 43, decisão 91: é a corrida 23, com o prompt do agente congelado |
+| 36 inéditos conferidos pelo Eric antes da corrida 16 e o conjunto de 108 casos (ficha 27 a) | Os casos existem e passaram pela reprodução (25 de 36); a conferência do Eric não está registrada, e nenhuma corrida com modelo os leu | Ficha 44, decisão 92: o Eric confere, e a corrida 24 os lê |
+| `fase4.py`, irmão de `pre_fase4.py` (seção 3.2) | Não foi criado: `avaliar_fase4.py` usa `pre_fase4.fechar`, que ganhou o parâmetro `blocos_de`, e `LEITURA_NO_RELATORIO` escolhe a leitura de cada prefixo | `avaliar_fase4.py` |
+| `avaliar_fase4.py --custo` (seção 8) | Não foi criado: o custo saiu medido por corrida | Relatório, seção 2 |
+| `analisar_confianca.py` estendido aos 90 (P3) | A curva e os limiares saíram em `avaliar_fase4.py --calibracao`, com as funções de `analisar_confianca` | `calibracao.json`, `limiares.json` |
+| Varredura de `num_thread` (P0, item 4, opcional) | Não rodou | Livro-razão, 26/10 |
+| Corrida 18 (uma) | Duas: a 18 reprovou o caso de entrada, e a 18b vale como a corrida 18 | Decisões 81 e 82 |
+| Regra R2 | Não cumprida: b + c = 9 contra o limite de 3, limitação declarada | Decisão 82 |
+| Corrida 19: 80 execuções | 160 execuções, porque a ficha 29 (c) pede as duas formas de quebra | Decisão 80 |
+| Corrida 20: 156 inferências, uma noite | 158 inferências, em duas partes: a primeira parou na sonda, e o conserto veio antes do relançamento | Roadmap §2.12 |
+| Corrida 21 (uma) | Duas: a 21 mostrou o defeito do recarregamento do login, e a 21b, a leitura vigente, conferiu o conserto com o modelo | Roadmap §2.13 e §2.14 |
+| Ficha 36: seis cenários de contrato, um por modo | `latency` saiu e `escala_ou_unidade_errada` entrou, como a ficha permitia, para cobrir as classes 1 a 5 | `cenarios_fase4.TROCA_DA_FICHA_36` |
+| Corrida 22: 288 inferências | 277: a conta nova previa 296, e as mutações de contrato sem alvo não rodam | Roadmap §2.15 |
+| Sessão de revisão com o Eric sobre 12 relatórios (P7) | 11 relatórios, porque a corrida teve só 5 erros; 1 resposta do Eric e 10 pareceres do Claude aprovados. A medida com revisor humano não foi feita | Decisões 85 a 87 |
+| Poda (seção 3.3) | Dois defeitos consertados depois de todas as corridas, sem corrida nova | Decisão 89 |
+| Revisão humana do lote (P5) | A planilha foi pré-revisada pelo Claude, e o Eric aprovou sem mudar linha nenhuma | Roadmap §2.12 |
+| Ollama (0.40.2 no plano) | Ele se atualizou sozinho para 0.40.14 em 03/11; a ponte rodou, e os limiares do selo não foram recalibrados | Roadmap §2.12 |
+| Cobaias descritas pelo código (seção 1.3) | PHP e MariaDB não existiam nesta máquina; instalados sem administrador, e `install.py` passou a cobrir esse caminho | Roadmap §1 |
+| Corrida 22: mutações (P7 e seção 8: 108, três por caso) | Duas por caso (verbete trocado e contrato alterado) e a do seletor por roteiro, nos 4 do front legado, com 8 inferências; as de contrato sem alvo não rodam | Roadmap §2.15; livro-razão, P7 desenhado |
+| Regra R1: o roteiro falha no passo esperado e o caso ao vivo traz o campo do gabarito (seção 5) | Rodou mais larga: a chamada sai do normal (status, contrato, tempo, corpo ou árvore diferentes da referência) ou uma conferência falha, e `executar_fase4.reproduz` não confere o campo do gabarito. Só 12 dos 37 casos derrubam uma conferência | Relatório, seção 3; roadmap §2.8 |
+| Seleção dos casos da corrida 17 | `run-10` e `semt-18`, de catálogo, ficaram de fora como "sem tela": a requisição deles traz uma anotação entre parênteses, e `_ROTA_CATALOGO` não a aceita. Achado no fechamento; a corrida não foi repetida e o código não mudou | Relatório, seção 3 |

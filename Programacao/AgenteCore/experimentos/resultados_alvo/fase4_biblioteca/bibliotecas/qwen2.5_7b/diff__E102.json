@@ -1,0 +1,42 @@
+{
+  "arquivos_novos": [],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "erros/campo_renomeado.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/estrutura_aninhada_divergente.md",
+    "erros/recurso_inexistente.md"
+  ],
+  "linhas_acrescentadas": 32,
+  "linhas_removidas": 4,
+  "chars_antes": 70597,
+  "chars_depois": 72871,
+  "chars_acrescentados": 2274,
+  "tokens_estimados_acrescentados": 875,
+  "por_verbete": {
+    "recurso_inexistente": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    },
+    "campo_renomeado": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    },
+    "corpo_nao_e_json": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    },
+    "estrutura_aninhada_divergente": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    }
+  }
+}

@@ -55,7 +55,7 @@ Um caso reproduz na tela quando a chamada à CobaiaAPI sai do normal (status, co
 <!-- tabela:tb_f4_reproducao_custo -->
 | Tempo por cenário (mediana, s) | Tempo por cenário (máximo, s) | Tempo total dos cenários (s) | Tempo da chamada à API (mediana, ms) | Árvore antes da poda (mediana, nós) | Árvore depois (mediana, linhas) | Corpo HTTP (mediana, caracteres) | Caso ao vivo (mediana, caracteres) |
 |---|---|---|---|---|---|---|---|
-| 0,3 | 30,7 | 38,4 | 15,9 | 193 | 39 | 1888 | 2618 |
+| 0,268 | 30,689 | 38,4 | 15,9 | 193 | 39 | 1888 | 2618 |
 <!-- /tabela:tb_f4_reproducao_custo -->
 
 <!-- tabela:tb_f4_reproducao_casos -->

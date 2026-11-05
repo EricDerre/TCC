@@ -1,0 +1,318 @@
+{
+  "o_que_e": "de onde vêm os tokens do prompt na tela nas corridas 18b e 21b e quanto cada corte tiraria, sem modelo; os tokens depois de cada corte são estimados pela razão de tokens por caractere do próprio prompt",
+  "limite": {
+    "tokens": 1409,
+    "maior_da_calibracao": 1281,
+    "origem": "maior tokens_entrada de fase4_calibracao/k3/qwen2.5_7b/diagnosticos__L100.jsonl mais 10% (plano, seção 3.3)"
+  },
+  "corridas": {
+    "18b": {
+      "pasta": "fase4_tela_v2",
+      "prompts": 37,
+      "referencias": [
+        "1@normal",
+        "api-catalogo@normal"
+      ],
+      "chars_por_token": {
+        "min": 3.02,
+        "mediana": 3.12,
+        "max": 3.24
+      },
+      "blocos_chars": {
+        "arvore": {
+          "min": 1153,
+          "mediana": 1710,
+          "max": 1954
+        },
+        "contrato": {
+          "min": 154,
+          "mediana": 154,
+          "max": 154
+        },
+        "corpo": {
+          "min": 21,
+          "mediana": 195,
+          "max": 472
+        },
+        "formato": {
+          "min": 920,
+          "mediana": 920,
+          "max": 920
+        },
+        "instrucao": {
+          "min": 223,
+          "mediana": 223,
+          "max": 223
+        },
+        "observacao": {
+          "min": 125,
+          "mediana": 256,
+          "max": 259
+        },
+        "requisicao": {
+          "min": 31,
+          "mediana": 31,
+          "max": 70
+        },
+        "sintoma": {
+          "min": 42,
+          "mediana": 345,
+          "max": 694
+        },
+        "status": {
+          "min": 18,
+          "mediana": 18,
+          "max": 18
+        },
+        "verbetes": {
+          "min": 1624,
+          "mediana": 1784,
+          "max": 2057
+        }
+      },
+      "cenarios": {
+        "hoje": {
+          "descricao": "o prompt como rodou",
+          "min": 1595,
+          "mediana": 1803,
+          "max": 2034,
+          "acima_do_limite": 37,
+          "casos_acima": [
+            "efe-3@tela",
+            "lex-10@tela",
+            "lex-11@tela",
+            "lex-16@tela",
+            "lex-18@tela",
+            "lex-1@tela",
+            "lex-4@tela",
+            "lex-7@tela",
+            "lex-8@tela",
+            "run-19@tela",
+            "run-1@tela",
+            "run-21@tela",
+            "run-2@tela",
+            "run-9@tela",
+            "semt-14@tela",
+            "semt-16@tela",
+            "semt-17@tela",
+            "semt-1@tela",
+            "semt-20@tela",
+            "semt-21@tela",
+            "semt-8@tela",
+            "semt-9@tela",
+            "sin-11@tela",
+            "sin-14@tela",
+            "sin-16@tela",
+            "sin-20@tela",
+            "sin-21@tela",
+            "sin-4@tela",
+            "sin-5@tela",
+            "tra-11@tela",
+            "tra-17@tela",
+            "tra-19@tela",
+            "tra-1@tela",
+            "tra-20@tela",
+            "tra-21@tela",
+            "tra-4@tela",
+            "tra-8@tela"
+          ]
+        },
+        "arvore": {
+          "descricao": "a árvore só com o título e o que difere da referência em modo normal",
+          "min": 1148,
+          "mediana": 1331,
+          "max": 1565,
+          "acima_do_limite": 12,
+          "casos_acima": [
+            "lex-10@tela",
+            "lex-11@tela",
+            "lex-16@tela",
+            "lex-18@tela",
+            "lex-1@tela",
+            "lex-4@tela",
+            "lex-8@tela",
+            "run-1@tela",
+            "semt-20@tela",
+            "semt-21@tela",
+            "tra-19@tela",
+            "tra-1@tela"
+          ]
+        },
+        "arvore_observacao": {
+          "descricao": "o corte da árvore e sem a linha OBSERVAÇÃO ADICIONAL",
+          "min": 1068,
+          "mediana": 1249,
+          "max": 1484,
+          "acima_do_limite": 5,
+          "casos_acima": [
+            "lex-11@tela",
+            "lex-16@tela",
+            "lex-4@tela",
+            "run-1@tela",
+            "semt-21@tela"
+          ]
+        },
+        "arvore_observacao_sintoma": {
+          "descricao": "os dois cortes e o SINTOMA só com as contagens de linhas, sem as listas faltam e sobram",
+          "min": 1053,
+          "mediana": 1231,
+          "max": 1454,
+          "acima_do_limite": 1,
+          "casos_acima": [
+            "run-1@tela"
+          ]
+        },
+        "sem_arvore": {
+          "descricao": "para comparar: sem nenhuma árvore e com o resto como rodou",
+          "min": 1055,
+          "mediana": 1280,
+          "max": 1461,
+          "acima_do_limite": 4,
+          "casos_acima": [
+            "lex-18@tela",
+            "lex-8@tela",
+            "run-1@tela",
+            "semt-21@tela"
+          ]
+        }
+      }
+    },
+    "21b": {
+      "pasta": "fase4_ensaio_v2",
+      "prompts": 10,
+      "referencias": [
+        "api-catalogo@normal"
+      ],
+      "chars_por_token": {
+        "min": 3.04,
+        "mediana": 3.2,
+        "max": 3.34
+      },
+      "blocos_chars": {
+        "arvore": {
+          "min": 259,
+          "mediana": 1402.5,
+          "max": 1716
+        },
+        "contrato": {
+          "min": 85,
+          "mediana": 154.0,
+          "max": 154
+        },
+        "corpo": {
+          "min": 38,
+          "mediana": 67.0,
+          "max": 455
+        },
+        "formato": {
+          "min": 920,
+          "mediana": 920.0,
+          "max": 920
+        },
+        "instrucao": {
+          "min": 223,
+          "mediana": 223.0,
+          "max": 223
+        },
+        "observacao": {
+          "min": 128,
+          "mediana": 255.0,
+          "max": 256
+        },
+        "requisicao": {
+          "min": 27,
+          "mediana": 31.0,
+          "max": 42
+        },
+        "seletor": {
+          "min": 0,
+          "mediana": 0.0,
+          "max": 59
+        },
+        "sintoma": {
+          "min": 68,
+          "mediana": 338.0,
+          "max": 694
+        },
+        "status": {
+          "min": 18,
+          "mediana": 18.0,
+          "max": 18
+        },
+        "verbetes": {
+          "min": 1442,
+          "mediana": 1877.5,
+          "max": 2335
+        }
+      },
+      "cenarios": {
+        "hoje": {
+          "descricao": "o prompt como rodou",
+          "min": 1219,
+          "mediana": 1689.5,
+          "max": 1950,
+          "acima_do_limite": 9,
+          "casos_acima": [
+            "contrato-error_500#1@tela",
+            "contrato-escala_ou_unidade_errada#1@tela",
+            "contrato-field_missing#1@tela",
+            "contrato-field_renamed#1@tela",
+            "contrato-malformed_json#1@tela",
+            "contrato-type_drift#1@tela",
+            "localizador-front-admin-produtos@cenario",
+            "localizador-front-busca@cenario",
+            "localizador-front-cliente-reserva@cenario"
+          ]
+        },
+        "arvore": {
+          "descricao": "a árvore só com o título e o que difere da referência em modo normal",
+          "min": 1014,
+          "mediana": 1400.0,
+          "max": 1669,
+          "acima_do_limite": 5,
+          "casos_acima": [
+            "contrato-error_500#1@tela",
+            "contrato-escala_ou_unidade_errada#1@tela",
+            "contrato-malformed_json#1@tela",
+            "localizador-front-admin-produtos@cenario",
+            "localizador-front-cliente-reserva@cenario"
+          ]
+        },
+        "arvore_observacao": {
+          "descricao": "o corte da árvore e sem a linha OBSERVAÇÃO ADICIONAL",
+          "min": 934,
+          "mediana": 1325.5,
+          "max": 1585,
+          "acima_do_limite": 3,
+          "casos_acima": [
+            "contrato-error_500#1@tela",
+            "contrato-malformed_json#1@tela",
+            "localizador-front-admin-produtos@cenario"
+          ]
+        },
+        "arvore_observacao_sintoma": {
+          "descricao": "os dois cortes e o SINTOMA só com as contagens de linhas, sem as listas faltam e sobram",
+          "min": 934,
+          "mediana": 1301.0,
+          "max": 1585,
+          "acima_do_limite": 3,
+          "casos_acima": [
+            "contrato-error_500#1@tela",
+            "contrato-malformed_json#1@tela",
+            "localizador-front-admin-produtos@cenario"
+          ]
+        },
+        "sem_arvore": {
+          "descricao": "para comparar: sem nenhuma árvore e com o resto como rodou",
+          "min": 987,
+          "mediana": 1267.5,
+          "max": 1419,
+          "acima_do_limite": 1,
+          "casos_acima": [
+            "contrato-error_500#1@tela"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -46,7 +46,13 @@ LEITORES = ["qwen2.5-coder:7b", "qwen2.5-coder:3b"]
 # fim da lista, "a última" apontaria para a versão errada. A repetição não entra na lista dos inéditos porque repete
 # modelo, biblioteca e casos da corrida original e sobrescreveria as células dela; é lida à parte, cada modelo contra a
 # própria corrida original e modelo contra modelo dentro da repetição (ficha 21).
-PONTES = ["fase3b_ponte", "fase3b_ponte_0344", "fase3b_ponte_0402"]
+# ! Alteração de IA - Revisar: (03/11/2026) a ponte em Ollama 0.40.14 (`fase3b_ponte_04014`, só o qwen2.5:7b) entra no
+# fim da lista; `PONTE_DA_CRUZADA` continua na 0.34.4.
+# ! Motivo: o aplicativo Ollama se atualizou sozinho de 0.40.2 para 0.40.14 em 03/11/2026 às 15:34 e a corrida 20
+# (modo biblioteca da Fase 4) foi recusada pela regra R6, "a versão 0.40.14 do Ollama não tem ponte completa
+# registrada". A ponte roda pelo mesmo caminho das três anteriores (rodar_fase3b.ps1 -Modo ponte) e
+# avaliar_fase4.pontes_conhecidas só lê as pastas desta lista; enquanto a pasta não existe, ela é pulada.
+PONTES = ["fase3b_ponte", "fase3b_ponte_0344", "fase3b_ponte_0402", "fase3b_ponte_04014"]
 PONTE_DA_CRUZADA = "fase3b_ponte_0344"
 REPETICAO = "fase3b_ineditos_repeticao"
 INEDITOS = "fase3b_ineditos"
@@ -244,6 +250,13 @@ def carregar() -> dict:
     a5 = ler(c3_a5["avaliacao"]) if c3_a5["avaliacao"].exists() else []
     c3_rep = caminhos.fase3(REPETICAO)
     repeticao = ler(c3_rep["avaliacao"]) if c3_rep["avaliacao"].exists() else []
+    # ! Alteração de IA - Revisar: (04/11/2026) cada linha da repetição recebe a versão do Ollama das condições da própria
+    # corrida (condicoes_3b.json), quando a linha não a traz.
+    # ! Motivo: as linhas de avaliação (avaliacao_fase3.json) não têm versao_ollama, e montar() passou a julgar a repetição
+    # pela ponte da versão em que ela rodou; é de condicoes_3b.json que as pontes também tiram a versão delas.
+    cond_rep = c3_rep["raiz"] / "condicoes_3b.json"
+    versao_rep = ler(cond_rep).get("versao_ollama") if cond_rep.exists() else None
+    repeticao = [{**r, "versao_ollama": r.get("versao_ollama") or versao_rep} for r in repeticao]
     comp = F3["raiz"] / "comparacao_fases.json"
     adesao_2b = {m: d.get("adesao_cega_2B_A5_pct") for m, d in ler(comp).get("por_modelo", {}).items()} if comp.exists() else {}
     return {"f3": ler(F3["avaliacao"]), "pontes": pontes, "cruzada": ler(caminhos.fase3(CRUZADA)["avaliacao"]),
@@ -435,9 +448,16 @@ def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: l
     # ! Motivo: a ficha 21 pergunta se o saldo de 5 casos do Coder 7B com a L1 (b/c 6/1 na corrida 7) se mantém fora da
     # variação de 0 a 3 casos entre corridas iguais; sem este bloco a resposta seria digitada à mão.
     limiar_ruido = max((l["discordantes_mesma_entrada"] for l in ruido), default=None)
-    ultima = bloco_pontes[-1] if bloco_pontes else {"versao": None, "linhas": []}
-    pareavel_ultima = {l["modelo"]: l["pareavel"] for l in ultima["linhas"]}
     repeticao = repeticao or []
+    # ! Alteração de IA - Revisar: (04/11/2026) a repetição dos inéditos passa a ser julgada pela ponte da versão do Ollama em
+    # que ela rodou (a dos próprios registros), e não pela última ponte da lista; sem a versão nos registros, a coluna fica
+    # vazia. Os campos viram `versao_da_ponte` e `pareavel_pela_ponte`.
+    # ! Motivo: com a ponte 0.40.14 (corrida 20, só o qwen2.5:7b) no fim da lista, "a última" trocaria a coluna da repetição,
+    # que rodou na 0.40.2 em 23/10/2026, por uma versão em que ela nunca rodou, e a linha do Coder 7B (a da ficha 21) ficaria
+    # sem resposta. É o mesmo cuidado que PONTE_DA_CRUZADA tomou para a troca cruzada em 23/10.
+    versoes_rep = {str(r["versao_ollama"]) for r in repeticao if r.get("versao_ollama")}
+    ponte_rep = next((p for p in reversed(bloco_pontes) if p["versao"] in versoes_rep), {"versao": None, "linhas": []})
+    pareavel_rep = {l["modelo"]: l["pareavel"] for l in ponte_rep["linhas"]}
     rep_linhas, rep_entre = [], []
     for m in sorted({r["modelo"] for r in repeticao}):
         for epoca in sorted({r["biblioteca_epoca"] for r in repeticao if r["modelo"] == m}):
@@ -446,7 +466,7 @@ def montar(f3: list[dict], pontes: list[tuple[str, str, list[dict]]], cruzada: l
             rep_linhas.append({"modelo": m, "biblioteca_epoca": epoca, **medir(cel),
                                "acerto_original_pct": medir(orig)["acerto_pct"] if orig else None,
                                "contra_original": {k: par[k] for k in ("n_comuns", "b", "c", "p_mcnemar", "delta_pp", "ganhos", "perdas", "rotulos_diferentes")},
-                               "versao_da_ultima_ponte": ultima["versao"], "pareavel_pela_ultima_ponte": pareavel_ultima.get(m)})
+                               "versao_da_ponte": ponte_rep["versao"], "pareavel_pela_ponte": pareavel_rep.get(m)})
     saldo_original = {(x["modelo"], x["biblioteca_epoca"]): x["b"] - x["c"] for x in entre_modelos}
     for m in sorted({r["modelo"] for r in repeticao} - {doador}):
         for epoca in sorted({r["biblioteca_epoca"] for r in repeticao if r["modelo"] == m}):
@@ -547,11 +567,11 @@ def render(dado: dict) -> str:
     # ! Alteração de IA - Revisar: (23/10/2026) duas tabelas da repetição dos inéditos (corrida 15), coladas no relatório da 3-B.
     # ! Motivo: a ficha 21 fecha pelo saldo do Coder 7B na repetição contra a variação entre corridas iguais; os números saem daqui.
     rp = dado.get("repeticao", {"linhas": [], "entre_modelos": []})
-    blocos.append(tab("tb_repeticao", ["Modelo", "Biblioteca (a de cada um)", "Acerto na repetição (IC 95%)", "Acerto na corrida original", "Contra a original: b (só a repetição) / c (só a original)", "p (McNemar)", "Rótulos que mudaram", "Passaram a certos", "Passaram a errados", "Pareável pela ponte mais recente", "s por diagnóstico (mediana)"],
+    blocos.append(tab("tb_repeticao", ["Modelo", "Biblioteca (a de cada um)", "Acerto na repetição (IC 95%)", "Acerto na corrida original", "Contra a original: b (só a repetição) / c (só a original)", "p (McNemar)", "Rótulos que mudaram", "Passaram a certos", "Passaram a errados", "Pareável pela ponte da versão em que rodou", "s por diagnóstico (mediana)"],
                       [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]}', f'{f(l["acerto_pct"])}% ({fic(l["ic95"])})', "n/a" if l["acerto_original_pct"] is None else f(l["acerto_original_pct"]) + "%",
                         f'{l["contra_original"]["b"]} / {l["contra_original"]["c"]}', f(l["contra_original"]["p_mcnemar"], 4), f(l["contra_original"]["rotulos_diferentes"]),
                         fcasos(l["contra_original"]["ganhos"]), fcasos(l["contra_original"]["perdas"]),
-                        f'{f(l["pareavel_pela_ultima_ponte"])} ({l["versao_da_ultima_ponte"]})', f(l["segundos_mediana"])] for l in rp["linhas"]]))
+                        f'{f(l["pareavel_pela_ponte"])} ({l["versao_da_ponte"]})' if l["versao_da_ponte"] else "n/a", f(l["segundos_mediana"])] for l in rp["linhas"]]))
     blocos.append(tab("tb_repeticao_modelos", ["Modelo", "Biblioteca (a de cada um)", "Acerto na repetição", f"Acerto do `{dado['metadados']['doador']}`", "b (só o modelo)", "c (só o doador)", "Saldo (b menos c)", "Saldo na corrida original", "Maior variação entre corridas iguais de L0", "Dentro da variação", "Diferença", "p (McNemar)", "Rótulos diferentes", "Nos 72 (oficiais + inéditos): b / c", "p nos 72"]
                       + [f"{n}: modelo / doador (acertos de n)" for n in nomes_classe],
                       [[f'`{l["modelo"]}`', f'L{l["biblioteca_epoca"]}', f(l["acerto_pct"]) + "%", f(l["acerto_doador_pct"]) + "%", f(l["b"]), f(l["c"]), f"{l['saldo']:+d}", "n/a" if l["saldo_original"] is None else f"{l['saldo_original']:+d}",

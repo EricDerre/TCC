@@ -1,0 +1,56 @@
+{
+  "arquivos_novos": [
+    "aprendidos/corpo_xml_nao_e_json.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "contratos/contrato-produto.md",
+    "erros/campo_ausente.md",
+    "erros/corpo_nao_e_json.md"
+  ],
+  "linhas_acrescentadas": 26,
+  "linhas_removidas": 2,
+  "chars_antes": 72871,
+  "chars_depois": 74788,
+  "chars_acrescentados": 1917,
+  "tokens_estimados_acrescentados": 737,
+  "por_verbete": {
+    "campo_ausente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "campo ausente",
+        "json",
+        "front-end"
+      ],
+      "sintomas_novos": []
+    },
+    "contrato-produto": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "api",
+        "front-end"
+      ],
+      "sintomas_novos": []
+    },
+    "corpo_xml_nao_e_json": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "xml",
+        "parse",
+        "erro"
+      ],
+      "sintomas_novos": [
+        "pagina de erro xml em vez de json"
+      ]
+    },
+    "corpo_nao_e_json": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    }
+  }
+}

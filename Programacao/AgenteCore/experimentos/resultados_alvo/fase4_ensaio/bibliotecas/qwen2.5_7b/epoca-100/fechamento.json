@@ -1,0 +1,130 @@
+{
+  "modelo": "qwen2.5:7b",
+  "epoca": 101,
+  "hash": "95af35290860",
+  "n_verbetes": 39,
+  "n_verbetes_novos": 3,
+  "n_notas": 18,
+  "n_retificacoes": 8,
+  "chars": 22298,
+  "tokens_estimados": 8576,
+  "aceitas_na_epoca": 11,
+  "versao_ollama": "0.40.14",
+  "fechado_em": "2026-11-04T20:03:07",
+  "origem_do_lote": "fase4_biblioteca",
+  "hash_anterior": "1fca10f1a6f6",
+  "hash_do_lote": "9f3154eee72d",
+  "planilha": "revisao_do_lote.md",
+  "politica": {
+    "remover": [
+      "Errada"
+    ]
+  },
+  "mantidas": 11,
+  "removidas": [
+    {
+      "caso": "tra-5",
+      "verbete": "pessoas_incorretas",
+      "operacao": "novo_verbete",
+      "texto": "Adicionar validação no número de pessoas no pedido para evitar valores incorretos.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "Em tra-5 o POST enviou 4 e o banco gravou 4: o número chega errado na leitura, não na gravação, e validar a entrada não toca no defeito; o verbete ainda lista valor_fora_do_dominio, e 1 pessoa está dentro do domínio.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "efe-4",
+      "verbete": "estado_da_tela_divergente",
+      "operacao": "retificacao",
+      "texto": "Corrigir a lógica para atualizar o estado corretamente, independentemente de ser uma coleção ou um objeto.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "Retifica uma frase verdadeira: cliente_cancelar.php:7 redireciona com header('location: reserva_cli.php') depois do UPDATE; põe no lugar uma recomendação vaga sobre coleção ou objeto, sem relação com efe-4, que é o filtro de categoria preso em 'Bebidas'.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "semt-6",
+      "verbete": "tipo_divergente",
+      "operacao": "nota",
+      "texto": "Adicionar nota sobre a necessidade de conversão correta do tipo id em inteiro no front-end, considerando que o backend retorna como string.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "_to_dict devolve id inteiro (produtos.py:28); só o modo type_drift no campo id o vira texto, e a página monta o link do detalhe com o data-id em texto de qualquer jeito (produtos_api.php:114-115), então converter no front não muda o caso; a nota trata o defeito injetado como comportamento do backend.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "semt-7",
+      "verbete": "tipo_divergente",
+      "operacao": "retificacao",
+      "texto": "Adicionar exemplo de campo \"pessoas\" como número em vez de string, causando inconsistência na contagem total de lugares reservados.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "Inverte o caso: em semt-7 pessoas chega como texto ('4') no lugar de número, e a retificação diz o contrário; o verbete já tem 'inteiro como texto (\"4\")'.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "semt-15",
+      "verbete": "validacao-na-api",
+      "operacao": "novo_verbete",
+      "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio permitido pelo formulário.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "Mesmo erro apontado na curadoria de 29/09 para semt-15: o status do pedido é o normal ('Em Analise'); o valor fora do domínio é pessoas = 0, já coberto em valor_fora_do_dominio.md. Validar o status não tem relação com o caso.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "tra-6",
+      "verbete": "formato_preco",
+      "operacao": "novo_verbete",
+      "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "A página já formata o preço no padrão brasileiro (formatarPreco, produtos_api.php:64-66, toFixed(2) com vírgula); em tra-6 o valor já chega cem vezes menor da API (0.899), e no modo escala_ou_unidade_errada é a API que muda a escala do preço (fault_injection.py:181-183). O verbete põe a causa na formatação do front.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "run-12",
+      "verbete": "erro_interno_do_servidor",
+      "operacao": "nota",
+      "texto": "Adicionar que a conversão de ErrorFault em 500 pode ser causada por problemas na rota.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "ErrorFault só nasce no modo error_500 do injetor (fault_injection.py:158-159) e a rota só a converte em 500 (produtos.py:53-54): não há 'problema na rota' que cause a conversão. O 500 intermitente de run-12 é o injetor com probability menor que 1, que os Sinais do verbete já descrevem.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "efe-13",
+      "verbete": "estado_da_tela_divergente",
+      "operacao": "nota",
+      "texto": "O cancelamento depende de um redirect, o que pode causar divergência na interface.",
+      "segurada": false,
+      "avaliacao": "Errada",
+      "comentario": "efe-13 é a resposta mais antiga da lista chegando por último e sobrescrevendo a grade (innerHTML a cada resposta, produtos_api.php:104), sem cancelamento nenhum; a nota fala do redirect do cancelamento (cliente_cancelar.php:7), outro fluxo, já citado no verbete.",
+      "motivo_da_saida": "Errada"
+    },
+    {
+      "caso": "efe-4",
+      "verbete": "contrato-produto",
+      "operacao": "nota",
+      "texto": "Adicionar nota sobre a necessidade de verificar se a resposta é um objeto ou uma coleção, pois a interface espera um objeto.",
+      "segurada": true,
+      "avaliacao": "Errada",
+      "comentario": "Em efe-4 a resposta já é a lista que a página espera (produtos.map em produtos_api.php:104) e o defeito é o filtro de categoria preso em 'Bebidas'; a nota diz que a interface espera um objeto, o que só vale para GET /api/produtos/{id}, e põe a causa na forma da resposta.",
+      "motivo_da_saida": "Errada"
+    }
+  ],
+  "promovido_em": "2026-11-04T20:03:06",
+  "aprendidos_em_espera": [
+    "atualizacao_imediata",
+    "interface-estados",
+    "interface-frontend",
+    "rotas-inexistentes"
+  ],
+  "hash_antes_da_espera": "5fc1e7354553",
+  "reparo": {
+    "em": "2026-11-04T20:17:04",
+    "por": "reparar_fechamento_producao.py (scratchpad da sessão 5c8d345d)",
+    "motivo": "o --espera de 04/11/2026 regravou este arquivo só com as estatísticas e apagou os campos da promoção; eles foram recompostos refazendo a promoção e a espera numa cópia da L1 de antes (1fca10f1a6f6), com o mesmo resultado (hash 95af35290860)",
+    "promovido_em": "hora da linha do fechar_p5.log que disparou o --promover; o valor que a promoção gravou se perdeu"
+  }
+}

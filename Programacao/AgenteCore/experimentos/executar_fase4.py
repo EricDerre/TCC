@@ -51,7 +51,18 @@
 # a trilha v2 (`trilha_biblioteca.jsonl`) e os relatórios v2 por caso; a leitura é avaliar_fase4.py --biblioteca.
 # ! Motivo: plano aprovado, P5 e seção 6 (corrida 20) e regras R4 e R5; a biblioteca de produção não muda na corrida: o lote
 # aceito só é promovido por biblioteca_fase4.py --promover, depois da planilha de revisão humana preenchida pelo Eric.
+# ! Alteração de IA - Revisar: (04/11/2026, pacote P7) o modo `avaliacao_trilha` (corrida 22, noite D, com modelo): os 36 casos
+# oficiais de avaliação lidos do fixture, sem gabarito, cada um com a inferência de base (nós poda, recuperacao e diagnostico em
+# código, as quatro intervenções da especificação pela amostra fixa), a sonda de pós-racionalização e as mutações verbete trocado
+# e contrato alterado (avaliacao_trilha.py); no fim, com as cobaias e o navegador, a mutação do seletor nos quatro roteiros de
+# localizador do ensaio (a execução dourada com a quebra do catálogo e a mutada com o nome do alvo trocado, as duas com o
+# diagnóstico entre a detecção e a cura, como na corrida 21). Grava `avaliacao.jsonl` (um por caso), `seletor.jsonl` (um por
+# roteiro), os registros oficiais de 37 chaves por etapa, `condicoes_fase4.json`, a trilha v2 (`trilha_avaliacao.jsonl`) e os
+# relatórios v2; relançar retoma dos casos e roteiros que faltam; a leitura é avaliar_fase4.py --trilha.
+# ! Motivo: plano aprovado, seção 5 (P7) e seção 6 (corrida 22); especificação da trilha, seção 12. A biblioteca de produção é
+# lida como está e não muda; o gabarito nunca chega ao executor: a leitura junta pelo id do caso.
 """Uso (em Programacao/AgenteCore/experimentos):
+  RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo avaliacao_trilha --saida fase4_trilha [--casos N] [--ids lex-1,...] [--sem-seletor]
   RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo biblioteca --saida fase4_biblioteca [--base-ineditos corrida12|propria] [--casos N] [--sem-sonda] [--sem-correcao]
   RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo reproducao --saida fase4_reproducao [--casos N] [--canal chromium] [--banco avaliacao|ineditos_fase4|todos]
   RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo cura --saida fase4_cura [--repeticoes 5] [--formas harness,php] [--roteiros front-busca,...] [--modos id_renomeado,...]
@@ -101,7 +112,11 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     except Exception:  # noqa: BLE001
         pass
 
-MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca")
+# ! Alteração de IA - Revisar: (04/11/2026, P6) o modo `cenarios` (corrida 21: o ensaio dos dez cenários da Fase 5).
+# ! Motivo: plano aprovado, seção 5 (P6): `executar_fase4.py --modo cenarios --repeticoes N`.
+# ! Alteração de IA - Revisar: (04/11/2026, P7) o modo `avaliacao_trilha` (corrida 22: a avaliação da própria trilha).
+# ! Motivo: plano aprovado, seção 5 (P7): `executar_fase4.py --modo avaliacao_trilha`; a lógica fica em avaliacao_trilha.py.
+MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")
 REPETICOES_PADRAO = 5                     # corrida 19: cinco repetições por célula (plano, seção 6)
 BASES_DOS_INEDITOS = ("corrida12", "propria")
 CORRIDA12 = "pre_fase4_confianca"         # corrida 12 (06/10/2026): a cópia curada nos 72 casos, k = 3, Ollama 0.34.4 (ponte 0.40.2 pareável)
@@ -734,7 +749,9 @@ class Tela:
             # justificativa recorrendo ao diff da árvore); a linha diz o que se esperava e o que veio.
             linhas_diff = ([{"campo": None, "esperado": "JSON completo e válido", "recebido": f"corpo {diff['corpo']}", "tipo": diff["corpo"]}]
                            if diff.get("corpo") != "json" else [])
-            linhas_diff += [{"campo": x["campo"], "esperado": x.get("esperado"), "recebido": x.get("recebido"), "tipo": x["tipo"]} for x in diff["diferencas"]]
+            # ! Alteração de IA - Revisar: (05/11/2026, ficha 41) a linha leva o item quando a diferença só aparece a partir do segundo.
+            # ! Motivo: o relatório do caso na tela precisa dizer onde está a diferença, como o do caso de texto.
+            linhas_diff += [{"campo": x["campo"], "esperado": x.get("esperado"), "recebido": x.get("recebido"), "tipo": x["tipo"], **({"item": x["item"]} if x.get("item") else {})} for x in diff["diferencas"]]
             # ! Alteração de IA - Revisar: (01/11/2026, ficha 37 opção a) o evento de poda do corpo passa a gravar o CORPO que
             # foi ao modelo (não só o trecho do contrato), a regra `diff_contra_referencia` quando houve referência e uma
             # linha de sinal em código por diferença contra a referência (itens, valores, tempo).
@@ -1198,8 +1215,9 @@ def rodar_tela(args: argparse.Namespace) -> int:
 class Cura:
     """O que o modo `cura` faz por célula: a corrida de referência da célula sem quebra (registra o alvo do passo), o
     roteiro com a quebra armada até o passo falhar (detecção), a poda da árvore da página quebrada, os candidatos
-    gerados e verificados em código na página aberta, a reexecução do roteiro com o primeiro candidato que passa (com a
-    quebra armada de novo), a regra R3 pela impressão do DOM e os eventos da trilha v2."""
+    gerados e verificados em código na página aberta (com um diagnóstico no meio, numa página refeita até o passo que falhou),
+    a reexecução do roteiro com o primeiro candidato que passa (com a quebra armada de novo), a regra R3 pela impressão do DOM
+    e os eventos da trilha v2."""
 
     def __init__(self, nav, trilha: tr.Trilha, saida: str, token: str, marco, cli: str | None, base: str = cen.BASE_PADRAO) -> None:
         self.nav, self.trilha, self.saida, self.token, self.marco, self.cli, self.base = nav, trilha, saida, token, marco, cli, base
@@ -1249,17 +1267,36 @@ class Cura:
                    f"em {r['segundos']} s; alvo {alvo['papel'] + ' \"' + alvo['nome'] + '\"' if alvo else 'NÃO descrito (' + str(ref['erro_descricao']) + ')'}")
         return ref
 
+    # ! Alteração de IA - Revisar: (04/11/2026, P6) a troca do seletor passa para cenarios_fase4.roteiro_com_seletor.
+    # ! Motivo: a conferência da linha de base manual (conferir_localizador_manual.py) usa a mesma troca que a reexecução da cura.
     def _roteiro_curado(self, cenario_: dict, q: dict, candidato: dict) -> dict:
-        novo = copy.deepcopy(cenario_)
-        for p in novo["passos"]:
-            if p.get("seletor") == q["localizador"]:
-                p["seletor"] = candidato["seletor"]
-                p["curado"] = True
-        return novo
+        return cen.roteiro_com_seletor(cenario_, q, candidato["seletor"])
 
-    def executar(self, celula: dict) -> dict:
+    # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) _refazer_ate_o_passo: uma página nova, com a quebra armada, e o
+    # roteiro até antes do passo que falhou; devolve a página, o interceptador e o que aconteceu (para a trilha).
+    # ! Motivo: é o estado em que os candidatos da cura têm de ser verificados. A página da detecção fica parada enquanto o modelo
+    # diagnostica, e nada garante que ela continue igual: na corrida 21 a tela de login voltou sozinha para a página inicial (meta
+    # refresh de 30 s em admin/login.php) durante os 55 s do diagnóstico. Os passos refeitos vêm antes do passo que falhou, então não
+    # gravam no banco (a reserva só grava no clique em Reservar, que é o passo quebrado).
+    def _refazer_ate_o_passo(self, cenario_: dict, q: dict, forma: str, passo_falho: int) -> tuple:
+        pagina = self.nav.nova_pagina()
+        cen.armar_quebra(pagina, q, forma, self.base)
+        inter = ic.Interceptador(pagina)
+        r = cen.rodar_cenario({**cenario_, "passos": cenario_["passos"][:passo_falho]}, pagina, inter, base=self.base, capturar=False,
+                              tempo_limite_ms=cen.TEMPO_LIMITE_QUEBRA_MS)
+        return pagina, inter, {"passou": r["passou"], "passos": passo_falho, "segundos": r["segundos"], "erro": r["erro"]}
+
+    # ! Alteração de IA - Revisar: (04/11/2026, P6) executar ganha `apos_deteccao`, chamado com a execução já detectada e podada,
+    # antes dos candidatos da cura; o resultado guarda também t_deteccao e t_validacao (relógio monotônico).
+    # ! Motivo: no cenário de localizador da Fase 5 o agente diagnostica entre a detecção e a cura (plano, seção 3.1), e o MTTR
+    # (da detecção à reexecução validada) tem de incluir esse diagnóstico para ser comparável à linha de base manual; o modo
+    # `cura` chama sem o gancho e mede como antes.
+    # ! Alteração de IA - Revisar: (04/11/2026, P7) executar aceita `quebra`, uma quebra já montada, no lugar da do catálogo.
+    # ! Motivo: a mutação do seletor da avaliação da trilha (avaliacao_trilha.quebra_do_seletor) é a quebra do catálogo mais uma
+    # mutação que troca o nome acessível do alvo, num modo que não está em cenarios_fase4.QUEBRAS; sem `quebra`, nada muda.
+    def executar(self, celula: dict, apos_deteccao=None, quebra: dict | None = None) -> dict:
         """Uma execução: a quebra armada, o roteiro até falhar, a cura e a reexecução; devolve tudo para o registro e a trilha."""
-        q = cen.quebra(celula["cenario"], celula["modo"])
+        q = quebra if quebra is not None else cen.quebra(celula["cenario"], celula["modo"])
         ref = self.referencia(q)
         base_cen = cen.cenario(q["cenario"])
         cenario_ = cen.cenario_com_localizador(base_cen, q)
@@ -1287,7 +1324,16 @@ class Cura:
                    "incidentes": len(inter.incidentes), "inter": inter, "reexecucoes": [], "mttr_s": None, "segundos_quebra": r["segundos"],
                    "segundos_referencia": ref.get("segundos"), "segundos_restauracao": 0.0, "erro_da_referencia": ref.get("erro_descricao")}
         d["fora_do_alvo"] = quebrou and not falha_no_passo_do_alvo(r, cenario_, q)
+        d["t_deteccao"], d["t_validacao"], d["diagnostico"], d["pagina_refeita"] = r.get("t_deteccao"), None, None, None
         if quebrou and ref.get("alvo") and not d["fora_do_alvo"]:
+            if apos_deteccao is not None:
+                d["diagnostico"] = apos_deteccao(d)
+                # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) depois do diagnóstico, a verificação dos candidatos vai
+                # para uma página refeita até o passo que falhou; o tempo de refazer entra no MTTR. Sem diagnóstico (modo `cura`), nada muda.
+                # ! Motivo: ver _refazer_ate_o_passo: na corrida 21 os candidatos do login deram "nenhum elemento" porque a página da
+                # detecção já tinha navegado sozinha, e o cenário ficou sem cura; a mesma célula curou 10 de 10 na corrida 19, sem modelo.
+                pagina.close()
+                pagina, _inter_refeita, d["pagina_refeita"] = self._refazer_ate_o_passo(cenario_, q, celula["forma"], r["passo_falho"])
             alvo = ref["alvo"]
             cands = cs.gerar_candidatos(alvo, podada["texto"])
             d["candidatos"] = cands
@@ -1330,21 +1376,32 @@ class Cura:
             d["segundos_restauracao"] = round(estado["restauracoes"], 3)
             if d["escolha"]["curado"]:
                 d["validacao"] = cen.agora()
+                d["t_validacao"] = estado["t_validacao"]
                 d["mttr_s"] = mttr_da_cura(r.get("t_deteccao"), estado["t_validacao"], estado["restauracoes"])
         pagina.close()
         d["segundos_cura"] = round(time.monotonic() - t_inicio, 3)
         return d
 
+    # ! Alteração de IA - Revisar: (04/11/2026, P6) emitir passa a ser emitir_quebra (entrada, ações e conferências do roteiro
+    # quebrado, poda) seguido de emitir_cura (incidentes, evento e nó da cura, reexecuções e nó da reexecução), na mesma ordem
+    # de antes; o modo `cura` continua chamando emitir.
+    # ! Motivo: no cenário de localizador da Fase 5 o agente diagnostica entre a detecção e a cura (plano, seção 3.1), dentro do
+    # Cura.executar; a trilha precisa do roteiro quebrado antes dos eventos do diagnóstico, e da cura depois deles.
     def emitir(self, tid: str, d: dict) -> None:
         """Os eventos da execução na trilha v2: entrada, as ações e conferências do roteiro quebrado, a poda, o evento `cura`,
         o nó `cura`, as ações e conferências das reexecuções e o nó `reexecucao`; incidentes por último."""
-        import gerar_relatorio_raciocinio as grr
+        self.emitir_cura(tid, d, self.emitir_quebra(tid, d))
+
+    def emitir_quebra(self, tid: str, d: dict, extras: dict | None = None) -> dict:
+        """A primeira metade de emitir: entrada (com `extras`, como o caso ao vivo do cenário de localizador), ações e
+        conferências do roteiro quebrado e a poda; devolve os seq."""
         trilha, celula, q, r = self.trilha, d["celula"], d["quebra"], d["r"]
         alvo = d.get("alvo")
         s_ent = trilha.evento("entrada", tid, {"roteiro": celula["cenario"], "modo": celula["modo"], "forma": celula["forma"], "repeticao": celula["repeticao"],
                                                "passo": q["passo_alvo"], "localizador": q["localizador"], "seletor_original": q["seletor_original"],
                                                "descricao": q.get("descricao"), "armado": d.get("armado"), "quebra_aplicada": d.get("quebra_aplicada"),
-                                               "mutacoes": q["mutacoes"], "alvo": alvo, "erro_da_referencia": d.get("erro_da_referencia")}, "ao_vivo", ts=r["inicio"])
+                                               "mutacoes": q["mutacoes"], "alvo": alvo, "erro_da_referencia": d.get("erro_da_referencia"), **(extras or {})},
+                              "ao_vivo", ts=r["inicio"])
         cenario_ = cen.cenario_com_localizador(cen.cenario(q["cenario"]), q)
         for i, (passo, tempo) in enumerate(zip(cenario_["passos"], r["tempos_ms"])):
             trilha.evento("acao", tid, {"passo": i + 1, "acao": passo["acao"], "seletor": passo.get("seletor"), "url": passo.get("url"), "tempo_ms": tempo,
@@ -1356,6 +1413,16 @@ class Cura:
         s_poda = trilha.evento("poda", tid, {"alvo": "arvore", "antes": {"nos": podada["antes"]}, "depois": {"linhas": podada["depois"]}, "regras": podada["regras"],
                                              "sha": trilha.blob(podada["texto"], "arvore_podada"), "diff": [], "arvore_completa_sha": d.get("arvore_sha")},
                                "ao_vivo", pai=s_ent, ts=cen.agora())
+        return {"s_ent": s_ent, "s_poda": s_poda}
+
+    def emitir_cura(self, tid: str, d: dict, seqs: dict) -> None:
+        """A segunda metade de emitir: os incidentes do roteiro, o evento e o nó da cura, as reexecuções, o nó da reexecução e
+        os incidentes do interceptador."""
+        import gerar_relatorio_raciocinio as grr
+        trilha, q, r = self.trilha, d["quebra"], d["r"]
+        alvo = d.get("alvo")
+        s_ent, s_poda = seqs["s_ent"], seqs["s_poda"]
+        cenario_ = cen.cenario_com_localizador(cen.cenario(q["cenario"]), q)
         if not d["quebrou"]:
             trilha.evento("incidente", tid, {"tipo": "quebra_nao_detectada", "detalhe": "o roteiro passou com a quebra armada: o localizador da célula sobreviveu à mutação"},
                           "ao_vivo", pai=s_ent, ts=cen.agora())
@@ -1369,6 +1436,8 @@ class Cura:
             e = d["escolha"]
             dados_cura = cs.evento_de_cura(e, alvo, localizador=q["localizador"], passo=q["passo_alvo"] + 1, erro=r["erro"] or ((r.get("conferencia_falha") or {}).get("nome")),
                                            deteccao=r["deteccao"], validacao=d.get("validacao"), mttr_s=d.get("mttr_s"))
+            if d.get("pagina_refeita"):
+                dados_cura["pagina_refeita"] = d["pagina_refeita"]     # a verificação rodou numa página refeita, depois do diagnóstico
             s_cura = trilha.evento("cura", tid, dados_cura, "ao_vivo", pai=s_poda, ts=cen.agora())
             trilha.decisao(tid, cs.no_de_cura(e, seq_cura=s_cura, seq_poda=s_poda, justificativa=grr.justificativa_da_cura(dados_cura)), pai=s_cura, ts=cen.agora())
             seqs = []
@@ -1506,6 +1575,22 @@ def rodar_cura(args: argparse.Namespace) -> int:
 # ! Alteração de IA - Revisar: (27/10/2026) o parser saiu de `main` para `montar_parser` e ganhou `--banco`.
 # ! Motivo: o teste confere o padrão e as escolhas da opção sem rodar a corrida, e `main` continua igual por fora.
 # ------------------------------------------------------------------ a corrida 20: biblioteca em produção e ciclo de correção
+
+# ! Alteração de IA - Revisar: (04/11/2026) ao refazer a fase C, a trilha perde tudo desde o primeiro evento de um caso
+# '@correcao' (as telas de antes e depois, os blobs, a edição e o nó de cada caso da tentativa anterior).
+# ! Motivo: a fase C é refeita do zero quando a época 102 ou o correcoes.jsonl faltam, mas a trilha é recarregada do
+# arquivo e cada caso seria gravado de novo atrás do anterior: os 10 casos apareceriam duas vezes na trilha e nos
+# relatórios '@correcao'. A fase C é o fim da trilha (a sonda não escreve nela), então o corte não leva nada das fases A e
+# B. É o caminho da retomada da corrida 20 em 04/11/2026, depois do conserto da ordem das seções da correção.
+MARCA_DA_CORRECAO = "@correcao"
+
+
+def descartar_eventos_da_correcao(trilha: tr.Trilha) -> int:
+    """Tira da trilha os eventos da fase C (do primeiro evento cuja trilha contém '@correcao' em diante) e devolve quantos
+    saíram (0 quando a trilha não tem evento da fase C)."""
+    i = next((k for k, e in enumerate(trilha.eventos) if MARCA_DA_CORRECAO in (e.get("trilha") or "")), None)
+    return 0 if i is None else trilha.descartar_desde(i)
+
 
 def _lado_da_correcao(d: dict) -> dict:
     """O que biblioteca_fase4.evidencia_de_correcao precisa de uma corrida do cenário: passou, corpo, tempo, árvore podada,
@@ -1788,7 +1873,11 @@ def rodar_biblioteca(args: argparse.Namespace) -> int:
                         "conflitos": [c for c in conflitos if not c.get("prevalece")], "auditoria": bf.auditoria(verbetes_lote, {}, [{"verbete": e["verbete"], "caso": e["caso"]} for e in edicoes]),
                         "amostra_para_revisao": [{"verbete": e["verbete"], "operacao": e["operacao"], "caso": e["caso"]} for e in bf.amostra_para_revisao(edicoes + para_revisao, parcelas)]}
                 arq_lote.write_text(json.dumps(lote, ensure_ascii=False, indent=2), encoding="utf-8")
-                (saida / "revisao_do_lote.md").write_text(bf.planilha_de_revisao(edicoes + para_revisao, parcelas, args.saida), encoding="utf-8", newline="\n")
+                # ! Alteração de IA - Revisar: (04/11/2026) a planilha passa por bf.gravar_planilha_de_revisao, que não apaga
+                # uma revisão já feita à mão.
+                # ! Motivo: esta linha roda a cada partida, inclusive na retomada; ver gravar_planilha_de_revisao.
+                if bf.gravar_planilha_de_revisao(saida / "revisao_do_lote.md", bf.planilha_de_revisao(edicoes + para_revisao, parcelas, args.saida)) == "mantida":
+                    marco("!! revisao_do_lote.md tem mudança feita à mão e foi mantida; a versão gerada agora está em revisao_do_lote.nova.md")
                 estado["lote"] = r5
                 marco(f"regra R5: {r5['motivo']} (p = {r5['p_mcnemar']}); lote com {len(edicoes)} edição(ões), {len(para_revisao)} para revisão humana")
                 # ---- fase C: o ciclo de correção, sem modelo
@@ -1797,6 +1886,22 @@ def rodar_biblioteca(args: argparse.Namespace) -> int:
                     if evo.snapshot_fechado(raiz_corr) and arq_corr.exists():
                         marco(f"ciclo de correção já feito (epoca-{EPOCA_DAS_CORRECOES} fechada); pulando")
                     else:
+                        # ! Alteração de IA - Revisar: (04/11/2026) refazer a fase C também tira da trilha os eventos da
+                        # tentativa anterior (descartar_eventos_da_correcao) e descarta a sonda já começada (pasta sonda/ e
+                        # sonda.json), que leu a época 102 que vai ser refeita.
+                        # ! Motivo: sem o corte, os casos da fase C apareceriam duas vezes na trilha; a sonda é a fase D,
+                        # feita sobre a época 102, e reaproveitar os registros dela misturaria leituras da época antiga com
+                        # a nova (a retomada da época congelada da Fase 3 pula os casos que já estão no JSONL).
+                        n_desc = descartar_eventos_da_correcao(trilha)
+                        if n_desc:
+                            trilha.gravar(arq_trilha)
+                            marco(f"fase C refeita: {n_desc} evento(s) da tentativa anterior saíram da trilha")
+                        if (saida / "sonda").exists() or arq_sonda.exists():
+                            if (saida / "sonda").exists():
+                                shutil.rmtree(saida / "sonda")
+                            if arq_sonda.exists():
+                                arq_sonda.unlink()
+                            marco("sonda descartada: ela lê a época 102, que vai ser refeita")
                         if raiz_corr.exists():
                             shutil.rmtree(raiz_corr)
                         if arq_corr.exists():
@@ -1897,6 +2002,596 @@ def rodar_biblioteca(args: argparse.Namespace) -> int:
     return 0
 
 
+# ------------------------------------------------------------------ a corrida 21: ensaio dos cenários da Fase 5 (pacote P6)
+
+# ! Alteração de IA - Revisar: (04/11/2026, P6) as partes puras do modo `cenarios`: as execuções do ensaio na ordem
+# (celulas_do_ensaio), o banco restaurado e conferido contra o seed no começo de cada repetição (preparar_repeticao), a versão
+# do navegador igual em todas (conferir_navegador), o caso ao vivo de uma quebra de localizador (caso_do_localizador) e o
+# registro de uma execução com o MTTR e o Task Success das fichas 35 e 36 (registro_do_cenario).
+# ! Motivo: plano aprovado, seção 5 (P6): os testes escritos antes pedem o cronômetro da detecção à validação, o Task Success
+# só com roteiro concluído sem erro (ou causa e campo certos no contrato), o banco conferido por hash e o navegador fixo; com
+# as contas fora do laço da corrida, o teste confere cada uma sem navegador nem modelo.
+def celulas_do_ensaio(repeticoes: int, casos: int = 0) -> list[dict]:
+    """As execuções do ensaio: repetição por repetição, os dez cenários na ordem do catálogo (ou os N primeiros com --casos)."""
+    base = list(cen.CENARIOS_DO_ENSAIO)[:casos] if casos else list(cen.CENARIOS_DO_ENSAIO)
+    return [{"id": f"{c['id']}#{r}", "cenario": c, "repeticao": r} for r in range(1, max(1, repeticoes) + 1) for c in base]
+
+
+def preparar_repeticao(n: int, restaurar, hash_atual, hash_do_seed: str) -> str:
+    """Restaura o banco antes da repetição n e confere as contagens e o hash das tabelas contra o seed; recusa se não baterem."""
+    import restaurar_banco as rb
+    contagens = restaurar()
+    if contagens != rb.CONTAGENS_DO_SEED:
+        raise SystemExit(f"repetição {n}: as contagens do banco restaurado ({contagens}) não são as do seed ({rb.CONTAGENS_DO_SEED})")
+    h = hash_atual()
+    if h != hash_do_seed:
+        raise SystemExit(f"repetição {n}: o banco restaurado tem hash {h} e o do seed é {hash_do_seed}")
+    return h
+
+
+def conferir_navegador(versoes: list) -> str | None:
+    """A versão do navegador é a mesma em todas as repetições (plano, P6); devolve a versão, ou None sem nenhuma."""
+    unicas = sorted({v for v in versoes if v})
+    if len(unicas) > 1:
+        raise SystemExit(f"a versão do navegador mudou entre as repetições: {', '.join(unicas)}")
+    return unicas[0] if unicas else None
+
+
+def caso_do_localizador(cenario_: dict, d: dict) -> dict:
+    """O caso ao vivo de uma quebra de localizador, nas chaves dos casos gravados: a página, o passo que falhou, o seletor que
+    não resolveu e a árvore podada; a página PHP do front legado não tem contrato de API."""
+    q, r = d["quebra"], d["r"]
+    cf = r.get("conferencia_falha")
+    try:
+        sintoma = cv.sintoma_por_molde(cf, None, None, status=200)
+    except Exception:  # noqa: BLE001 - o molde foi feito para o contrato; sem frase, vale a descrição do passo
+        sintoma = ""
+    if not str(sintoma or "").strip():
+        sintoma = f"o roteiro parou no passo {(r.get('passo_falho') or 0) + 1}: {(cf or {}).get('nome') or r.get('erro') or 'o elemento não foi achado'}"
+    podada = d.get("podada") or {}
+    observacao = f"roteiro {cenario_['cenario']}; o localizador {q['localizador']} do passo {q['passo_alvo'] + 1} não resolveu"
+    if r.get("erro"):
+        observacao += f"; {str(r['erro'])[:200]}"
+    return cv.montar_caso(f"{cenario_['id']}@cenario", f"GET {q['pagina']}", 200, "(página PHP do front legado: sem contrato de API)",
+                          "(HTML da página; nenhuma chamada à API falhou)", sintoma, arvore=podada.get("texto") or None,
+                          seletor_quebrado=q["localizador"], observacao=observacao)
+
+
+# ! Alteração de IA - Revisar: (04/11/2026, P6) o registro ganha motivo_deteccao, a ficha da falha (o que a detecção acusou:
+# a conferência ou o passo do roteiro que falhou, ou o que o fio mostrou), vazia quando não houve detecção.
+# ! Motivo: o protocolo da linha de base manual entrega ao integrante a ficha que a corrida 21 gravou para cada cenário, para ele
+# começar da mesma falha que o agente; antes o registro guardava só o instante da detecção, e a ficha teria de ser reescrita à mão.
+def registro_do_cenario(cenario_: dict, repeticao: int, navegador_: str | None, hash_inicio: str | None, deteccao: str | None,
+                        t_deteccao: float | None, t_diagnostico: float | None, conferencia: dict | None, rotulo: str | None, p_rotulo,
+                        cura: dict | None = None, t_validacao: float | None = None, restauracoes: float = 0.0, selo: str | None = None,
+                        segundos: float | None = None, segundos_diagnostico: float | None = None, origem_deteccao: str | None = None,
+                        motivo_deteccao: str | None = None) -> dict:
+    """Uma execução do ensaio. Contrato (ficha 35): o cronômetro para no diagnóstico conferido e o Task Success é causa e campo
+    certos. Localizador: o cronômetro para na reexecução validada (descontada a restauração do banco) e o Task Success é a cura
+    aplicada com o roteiro concluído sem erro. Sem detecção, nem MTTR nem Task Success nem ficha da falha."""
+    detectou = t_deteccao is not None
+    if cenario_["tipo"] == "contrato":
+        ts = detectou and cen.task_success_contrato(conferencia, cenario_["causa"], cenario_.get("campo"))
+        t_fim = t_diagnostico if (conferencia or {}).get("conferido") else None
+    else:
+        ts = detectou and bool((cura or {}).get("curado"))
+        t_fim = t_validacao if (cura or {}).get("curado") else None
+    mttr = cen.mttr_monotonico(t_deteccao, t_fim, descontar=restauracoes) if detectou else None
+    return {"cenario": cenario_["id"], "tipo": cenario_["tipo"], "roteiro": cenario_["cenario"], "modo": cenario_["modo"], "campo": cenario_.get("campo"),
+            "causa_esperada": cenario_["causa"], "classe": cenario_["classe"], "repeticao": repeticao, "navegador": navegador_, "hash_inicio": hash_inicio,
+            "detectou": detectou, "origem_deteccao": origem_deteccao if detectou else None, "deteccao": deteccao,
+            "motivo_deteccao": motivo_deteccao if detectou else None, "mttr_s": mttr, "task_success": bool(ts),
+            "rotulo": rotulo, "p_rotulo": p_rotulo, "selo": selo, "conferido": (conferencia or {}).get("conferido") if conferencia is not None else None,
+            "conferencia": conferencia, "cura": cura, "restauracoes_s": round(restauracoes or 0.0, 3), "segundos_diagnostico": segundos_diagnostico,
+            "segundos": segundos}
+
+
+# ! Alteração de IA - Revisar: (04/11/2026, P6) rodar_cenarios: a corrida 21, o ensaio dos dez cenários da ficha 36 com
+# `--repeticoes` repetições (o ensaio usa 1); contrato pelo caminho do modo `tela` (Tela.rodar_caso e o diagnóstico ao vivo),
+# localizador pelo do modo `cura` (Cura.executar), com o diagnóstico entre a detecção e a cura pelo gancho apos_deteccao.
+# ! Motivo: plano aprovado, seção 5 (P6), e fichas 35 e 36 (decisão 79). A detecção do contrato segue a regra R1 do plano (a
+# conferência do roteiro que falhou, ou, quando a tela não mostra, o fio diferente do contrato e da referência): o type_drift e
+# a escala no preço passam nas conferências da tela e só aparecem no fio. O banco é restaurado e conferido por hash no começo de
+# cada repetição e a versão do navegador é conferida em todas. Relançar retoma das execuções que faltam em cenarios.jsonl.
+def rodar_cenarios(args: argparse.Namespace) -> int:
+    """Corrida 21 (plano, P6; ensaio, dia): os dez cenários da ficha 36 com o agente inteiro (diagnóstico ao vivo nos dez, cura de
+    seletor nos quatro de localizador), o MTTR e o Task Success de cada execução em cenarios.jsonl e a trilha v2."""
+    import diagnostico_ao_vivo as dv
+    import gerar_relatorio_raciocinio as grr
+
+    import _env_common as env
+    import restaurar_banco as rb
+    import run
+
+    saida = caminhos.fase3(args.saida)["raiz"]
+    saida.mkdir(parents=True, exist_ok=True)
+    marco = _marcador(saida / "fase4.log")
+    inicio = cen.agora()
+    t0 = time.monotonic()
+    modelo = args.modelo
+    slug = executar_fase3._slug(modelo)
+    parcial = bool(args.casos)
+    versao = executar_fase3._versao_ollama()
+    if versao is None:
+        marco("!! o Ollama não respondeu em /api/version; suba o servidor antes da corrida")
+        return 2
+    limiares = dv.carregar_limiares(Path(args.limiares) if args.limiares else None)
+    if limiares is None:
+        if not parcial:
+            marco("!! sem limiares.json (regra R7): rode --modo calibracao antes")
+            return 2
+        marco("aviso: sem limiares.json; a corrida parcial segue sem selo")
+    pontes = carregar_pontes(gravar=not parcial)
+    if versao_precisa_de_ponte(versao, pontes):
+        if not parcial:
+            marco(f"!! a versão {versao} do Ollama não tem ponte completa registrada (regra R6): rode --modo calibracao antes")
+            return 2
+        marco(f"aviso: a versão {versao} do Ollama não tem ponte completa registrada; a corrida parcial segue")
+    k = ler_ks(args.k)[0] if args.k else int((limiares or {}).get("k") or 3)
+    versoes = _ambiente().get("versoes", {})
+    contrato = _contrato_do_produto()
+    celulas = celulas_do_ensaio(args.repeticoes, args.casos)
+    if not evo.snapshot_fechado(dv.PASTA_CURADA):
+        marco(f"!! a biblioteca de produção em {dv.PASTA_CURADA} não existe ou não está fechada (sem fechamento.json)")
+        return 2
+    fech_prod = json.loads((dv.PASTA_CURADA / "fechamento.json").read_text(encoding="utf-8"))
+    pasta_bib = saida / "bibliotecas" / slug / f"epoca-{dv.VERSAO_CURADA}"
+    hash_bib = e3b._preparar_copia(dv.PASTA_CURADA, pasta_bib)
+    verbetes = bib.carregar(pasta_bib)
+    indice = rec.Indice(verbetes)
+    exemplo = fixture_sem_gabarito(casos_de_avaliacao("avaliacao")[0])
+    ctx0, prompt0 = dv.montar_prompt(verbetes, indice, exemplo, k)
+    hash_fixo = dv.hash_prompt_fixo(verbetes, ctx0, exemplo, prompt0)
+    pasta_reg = saida / slug
+    pasta_reg.mkdir(parents=True, exist_ok=True)
+    arq_diag, arq_lat = pasta_reg / "diagnosticos__cenarios.jsonl", pasta_reg / "logprobs__cenarios.jsonl"
+    arq_resumo, arq_trilha = saida / "cenarios.jsonl", saida / "trilha_cenarios.jsonl"
+    registros = executar_bateria.ler_jsonl(arq_resumo)
+    feitos = {f"{r['cenario']}#{r['repeticao']}" for r in registros}
+    try:
+        _conferir_versao_das_linhas([arq_diag], versao)
+    except SystemExit as e:
+        marco(f"!! {e}")
+        return 2
+    condicoes = {"modo": "cenarios", "criado_em": inicio, "saida": args.saida, "modelo": modelo, "versao_ollama": versao, "k": k, "limiares": limiares,
+                 "repeticoes": args.repeticoes, "parcial": parcial, "execucoes": len(celulas), "cenarios": [c["id"] for c in cen.CENARIOS_DO_ENSAIO],
+                 "catalogo": [dict(c) for c in cen.CENARIOS_DO_ENSAIO], "troca_da_ficha_36": cen.TROCA_DA_FICHA_36,
+                 "biblioteca": {"hash": hash_bib, "origem": "Programacao/AgenteCore/biblioteca_producao", "origem_do_lote": fech_prod.get("origem_do_lote"),
+                                "epoca": fech_prod.get("epoca")},
+                 "mttr": {"contrato": "da detecção (conferência do roteiro que falhou, ou o fio diferente do contrato e da referência, pela regra R1) "
+                                      "ao diagnóstico conferido em código (ficha 35)",
+                          "localizador": "da detecção (o passo do localizador falhou) à reexecução validada, com o diagnóstico entre as duas e a "
+                                         "restauração do banco descontada"},
+                 "task_success": {"contrato": "diagnóstico conferido com a causa e o campo certos (ficha 35)",
+                                  "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"},
+                 "top_logprobs": args.top, "teto_tokens": args.teto, "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes,
+                 "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS}
+    (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
+    marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
+          f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "
+          f"({len({c['cenario']['id'] for c in celulas})} cenários x {args.repeticoes} repetição(ões)){'; corrida PARCIAL' if parcial else ''}; {len(feitos)} já feita(s)")
+    front, api = run.start_services()
+    trilha: tr.Trilha | None = None
+    try:
+        if not run.wait_until_ready(timeout_s=90):
+            marco("!! as cobaias não responderam nas portas 8080 e 8000")
+            return 2
+        cli = env.find_mysql_cli()
+        if rb.restaurar(cli) != rb.CONTAGENS_DO_SEED:
+            marco("!! o banco restaurado não tem as contagens do seed")
+            return 2
+        hash_do_seed = rb.hash_das_tabelas(cli)
+        digest, versao_ollama = e3b._preparar_modelo(modelo)
+        if versao_ollama != versao:
+            marco(f"!! a versão do Ollama mudou antes de começar: {versao} para {versao_ollama}")
+            return 2
+        comum = {"digest": digest, "versao_ollama": versao_ollama, "maquina": platform.node(), "epoca": dv.VERSAO_CURADA + 1,
+                 "biblioteca_epoca": dv.VERSAO_CURADA, "biblioteca_versao": hash_bib, "particao": None, "k": k, "teto_tokens": args.teto}
+        with navegador.Navegador(canal=args.canal) as nav:
+            v = nav.versao()
+            versoes_nav = [r.get("navegador") for r in registros] + [v["navegador"]]
+            conferir_navegador(versoes_nav)
+            if arq_trilha.exists() and feitos:
+                trilha = tr.Trilha.carregar(arq_trilha)
+                trilha.pasta_blobs = saida / "blobs"
+                marco(f"retomando a trilha de {arq_trilha.name}: {len(trilha.eventos)} eventos")
+            else:
+                trilha = tr.Trilha(versao=tr.V2, pasta_blobs=saida / "blobs")
+                trilha.corrida(tr.cabecalho_de_corrida(modelo=modelo, versao_ollama=versao, inicio=inicio, quantizacao=dv.quantizacao_do_modelo(modelo),
+                                                       top_logprobs=args.top, leitura_da_probabilidade=dv.LEITURA_DA_PROBABILIDADE,
+                                                       hash_biblioteca=hash_bib, hash_prompt_fixo=hash_fixo, hash_indice=dv.hash_indice(indice),
+                                                       playwright=v["playwright"], navegador=v["navegador"], canal=args.canal, corrida=args.saida,
+                                                       etapas_registradas=["roteiro", "interceptacao", "poda", "caso_ao_vivo", "recuperacao", "prompt",
+                                                                           "diagnostico", "cura"],
+                                                       etapas_nao_registradas=["intervencao", "edicao_biblioteca"],
+                                                       extras={"modo": "cenarios", "k": k, "limiares": limiares, "repeticoes": args.repeticoes,
+                                                               "cenarios": [c["id"] for c in cen.CENARIOS_DO_ENSAIO]}), ts=inicio)
+            tela = Tela(nav, trilha, args.saida, contrato, args.token, marco, prefixo=f"{args.saida}/{slug}")
+            cura = Cura(nav, trilha, args.saida, args.token, marco, cli)
+
+            def _diagnosticar(tid: str, caso: dict, evidencia: list) -> dict:
+                sv = dv.diagnosticar(trilha, tid, caso, verbetes, indice, k=k, modelo=modelo, comum=comum, limiares=limiares,
+                                     intervencoes="desligadas", top=args.top, teto=args.teto, evidencia=evidencia, ts=cen.agora())
+                executar_fase3._gravar(arq_diag, sv["registro"])
+                executar_fase3._gravar(arq_lat, sv["lateral"])
+                return sv
+
+            def _loop() -> None:
+                if any(c["cenario"]["tipo"] == "contrato" for c in celulas):
+                    tela.referencia("api-catalogo", None)
+                rep_atual, h_rep = None, None
+                for n, cel in enumerate(celulas, 1):
+                    if cel["id"] in feitos:
+                        marco(f"[{n}/{len(celulas)}] {cel['id']}: já feita, pulando")
+                        continue
+                    if cel["repeticao"] != rep_atual:
+                        rep_atual = cel["repeticao"]
+                        h_rep = preparar_repeticao(rep_atual, lambda: rb.restaurar(cli), lambda: rb.hash_das_tabelas(cli), hash_do_seed)
+                        conferir_navegador(versoes_nav + [nav.versao()["navegador"]])
+                        marco(f"repetição {rep_atual}: banco restaurado e conferido (hash {h_rep}); navegador {v['navegador']}")
+                    c = cel["cenario"]
+                    tid = f"{args.saida}/{slug}/{cel['id']}"
+                    t_cel = time.monotonic()
+                    if c["tipo"] == "contrato":
+                        item = {**c, "id": cel["id"], "produto_id": None, "requisicao": "GET /api/produtos"}
+                        d = tela.rodar_caso(item)
+                        t_fio = time.monotonic()
+                        seqs = tela.emitir(tid, d)
+                        # ! Alteração de IA - Revisar: (04/11/2026, P6) a ficha da falha de cada detecção vai para o registro.
+                        # ! Motivo: é o que o integrante da linha de base manual recebe; no fio, o motivo da regra R1.
+                        if d["r"].get("t_deteccao") is not None:
+                            t_det, origem, deteccao = d["r"]["t_deteccao"], "conferencia_do_roteiro", d["r"]["deteccao"]
+                            motivo = cen.motivo_do_roteiro(d["r"])
+                        elif d["veredito"]["reproduz"]:
+                            t_det, origem, deteccao = t_fio, "contrato_no_fio", cen.agora()
+                            motivo = f"o roteiro passou na tela, mas o fio acusou: {d['veredito']['motivo']}"
+                        else:
+                            t_det, origem, deteccao, motivo = None, None, None, None
+                        sv = conf = t_diag = None
+                        if t_det is not None:
+                            evidencia = [{"seq": s, "papel": p} for s, p in ((seqs.get("poda_corpo"), "sinal_em_codigo"), (seqs.get("poda_arvore"), "arvore_podada"),
+                                                                            (seqs.get("chamada"), "corpo_http")) if s]
+                            sv = _diagnosticar(tid, d["caso_vivo"], evidencia)
+                            t_diag = time.monotonic()
+                            conf = cen.diagnostico_conferido(sv["registro"].get("resposta"), d["caso_vivo"])
+                        reg = registro_do_cenario(c, cel["repeticao"], v["navegador"], h_rep, deteccao=deteccao, t_deteccao=t_det, t_diagnostico=t_diag,
+                                                  conferencia=conf, rotulo=sv["no"]["escolha"] if sv else None,
+                                                  p_rotulo=sv["no"]["confianca"]["p_rotulo"] if sv else None, selo=sv["no"]["confianca"]["selo"] if sv else None,
+                                                  segundos=round(time.monotonic() - t_cel, 3), segundos_diagnostico=sv["registro"]["segundos"] if sv else None,
+                                                  origem_deteccao=origem, motivo_deteccao=motivo)
+                    else:
+                        guardado: dict = {}
+
+                        # c, tid e guardado entram como valores padrão: a função é da execução desta volta do laço
+                        def apos_deteccao(d_: dict, c: dict = c, tid: str = tid, guardado: dict = guardado) -> dict:
+                            caso = caso_do_localizador(c, d_)
+                            blob = trilha.blob(json.dumps(caso, ensure_ascii=False, sort_keys=True), "caso_ao_vivo")
+                            guardado["seqs"] = cura.emitir_quebra(tid, d_, extras={"caso_ao_vivo": blob, "cenario_da_fase_5": c["id"]})
+                            sv_ = _diagnosticar(tid, caso, [{"seq": guardado["seqs"]["s_poda"], "papel": "arvore_podada"}])
+                            guardado["sv"], guardado["t_diag"] = sv_, time.monotonic()
+                            return {"rotulo": sv_["no"]["escolha"], "p_rotulo": sv_["no"]["confianca"]["p_rotulo"]}
+
+                        celula = {"id": cel["id"], "cenario": c["cenario"], "modo": c["modo"], "forma": c["forma"], "repeticao": cel["repeticao"]}
+                        d = cura.executar(celula, apos_deteccao=apos_deteccao)
+                        cura.emitir_cura(tid, d, guardado["seqs"]) if "seqs" in guardado else cura.emitir(tid, d)
+                        sv = guardado.get("sv")
+                        e = d.get("escolha") or {}
+                        aplicado = (e.get("aplicado") or {}) if isinstance(e.get("aplicado"), dict) else {}
+                        reg = registro_do_cenario(c, cel["repeticao"], v["navegador"], h_rep, deteccao=d["r"].get("deteccao"), t_deteccao=d.get("t_deteccao"),
+                                                  t_diagnostico=guardado.get("t_diag"), conferencia=None, rotulo=sv["no"]["escolha"] if sv else None,
+                                                  p_rotulo=sv["no"]["confianca"]["p_rotulo"] if sv else None, selo=sv["no"]["confianca"]["selo"] if sv else None,
+                                                  cura={"curado": bool(e.get("curado")), "estrategia": aplicado.get("estrategia"), "reexecucoes": e.get("reexecucoes"),
+                                                        "mesmo_elemento": e.get("mesmo_elemento"), "falha": e.get("falha"),
+                                                        "pagina_refeita_s": (d.get("pagina_refeita") or {}).get("segundos")} if d.get("escolha") is not None else {"curado": False},
+                                                  t_validacao=d.get("t_validacao"), restauracoes=d.get("segundos_restauracao") or 0.0,
+                                                  segundos=round(time.monotonic() - t_cel, 3), segundos_diagnostico=sv["registro"]["segundos"] if sv else None,
+                                                  origem_deteccao="passo_do_localizador" if d.get("t_deteccao") is not None else None,
+                                                  motivo_deteccao=cen.motivo_do_roteiro(d["r"]) if d.get("t_deteccao") is not None else None)
+                    trilha.gravar(arq_trilha)
+                    executar_fase3._gravar(arq_resumo, reg)
+                    registros.append(reg)
+                    _conferir_versao(versao)
+                    marco(f"[{n}/{len(celulas)}] {cel['id']} ({c['tipo']}, {c['modo']}): "
+                          + (f"detectou ({reg['origem_deteccao']}); {reg['rotulo']}" if reg["detectou"] else "NÃO detectou")
+                          + f"; Task Success {'sim' if reg['task_success'] else 'não'}; MTTR {reg['mttr_s']} s; {reg['segundos']} s")
+
+            e3b._com_modelo_descarregado(modelo, _loop)
+    except SystemExit as e:
+        marco(f"!! corrida parou: {e}")
+        return 1
+    finally:
+        derrubar_cobaias(front, api, args.token)
+    fim = cen.agora()
+    if trilha is not None:
+        trilha.fechar(fim)
+        trilha.gravar(arq_trilha)
+        if not args.sem_relatorios:
+            pasta_rel = saida / "relatorios"
+            pasta_rel.mkdir(exist_ok=True)
+            for tid in tr.por_trilha(trilha.eventos):
+                if tid is None or "#" not in tid.rsplit("/", 1)[-1]:
+                    continue
+                nome = tid.rsplit("/", 1)[-1].replace("#", "__r")
+                comando = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo cenarios --saida {args.saida}_reexec --repeticoes 1"
+                (pasta_rel / f"{nome}.md").write_text(grr.relatorio_do_caso_v2(trilha.eventos, tid, comando_reexecucao=comando, pasta_blobs=saida / "blobs"),
+                                                      encoding="utf-8", newline="\n")
+    sucessos = sum(1 for r in registros if r.get("task_success"))
+    tamanho = arq_trilha.stat().st_size if arq_trilha.exists() else 0
+    marco(f"FIM cenarios: {len(registros)} de {len(celulas)} execuções; Task Success {sucessos}; duração {time.monotonic() - t0:.0f} s; trilha {tamanho} bytes")
+    return 0
+
+
+# ------------------------------------------------------------------ a corrida 22: avaliação da própria trilha
+
+# ! Alteração de IA - Revisar: (04/11/2026, P7) _roteiro_do_seletor e rodar_avaliacao_trilha: o modo `avaliacao_trilha` (ver o
+# cabeçalho do arquivo). Os casos de texto rodam primeiro, sem cobaias; o bloco do seletor sobe o front, a API, o MariaDB e o
+# navegador só no fim, e cada roteiro roda duas vezes pelo mesmo caminho da corrida 21 (Cura.executar com o diagnóstico no
+# gancho apos_deteccao): a dourada com a quebra do catálogo e a mutada com a quebra composta de avaliacao_trilha.quebra_do_seletor.
+# ! Motivo: plano aprovado, seção 5 (P7) e seção 6 (corrida 22); especificação da trilha, seção 12. As cobaias ficam fora dos
+# casos de texto para não segurar RAM enquanto o modelo diagnostica 36 casos com nove inferências cada.
+def _roteiro_do_seletor(cura: "Cura", trilha: tr.Trilha, c: dict, q: dict, etapa: str, tid: str, diagnosticar) -> tuple[dict, dict | None]:
+    """Uma execução de roteiro de localizador do bloco do seletor (a dourada ou a mutada), como na corrida 21: a quebra armada,
+    a detecção, o diagnóstico ao vivo entre a detecção e a cura, a cura numa página refeita até o passo que falhou e a reexecução."""
+    guardado: dict = {}
+    mutacao = None if etapa == "dourada" else {"tipo": "seletor_quebrado", "modo": q["modo"], "extra": q["mutacoes"][-1]}
+
+    def apos_deteccao(d_: dict) -> dict:
+        caso = caso_do_localizador(c, d_)
+        caso["id"] = f"{c['id']}@{etapa}"
+        blob = trilha.blob(json.dumps(caso, ensure_ascii=False, sort_keys=True), "caso_ao_vivo")
+        guardado["seqs"] = cura.emitir_quebra(tid, d_, extras={"caso_ao_vivo": blob, "cenario_da_fase_5": c["id"], "etapa": etapa, "mutacao": mutacao})
+        sv_ = diagnosticar(tid, caso, [{"seq": guardado["seqs"]["s_poda"], "papel": "arvore_podada"}])
+        guardado["sv"] = sv_
+        return {"rotulo": sv_["no"]["escolha"], "p_rotulo": sv_["no"]["confianca"]["p_rotulo"]}
+
+    celula = {"id": f"{c['cenario']}@{etapa}", "cenario": c["cenario"], "modo": q["modo"], "forma": "harness", "repeticao": 1}
+    d = cura.executar(celula, apos_deteccao=apos_deteccao, quebra=q)
+    if "seqs" in guardado:
+        cura.emitir_cura(tid, d, guardado["seqs"])
+    else:
+        cura.emitir(tid, d)
+    return d, guardado.get("sv")
+
+
+def rodar_avaliacao_trilha(args: argparse.Namespace) -> int:
+    """Corrida 22 (plano, P7, noite D): os 36 casos de avaliação lidos do fixture (base com as quatro intervenções, sonda de
+    pós-racionalização, verbete trocado e contrato alterado) e, no fim, a mutação do seletor nos quatro roteiros de localizador
+    com as cobaias e o navegador; relançar retoma dos casos e roteiros que faltam; a trilha é gravada a cada caso."""
+    import _env_common as env
+    import avaliacao_trilha as at
+    import diagnostico_ao_vivo as dv
+    import gerar_relatorio_raciocinio as grr
+    import restaurar_banco as rb
+    import run
+
+    saida = caminhos.fase3(args.saida)["raiz"]
+    saida.mkdir(parents=True, exist_ok=True)
+    marco = _marcador(saida / "fase4.log")
+    inicio = cen.agora()
+    t0 = time.monotonic()
+    modelo = args.modelo
+    slug = executar_fase3._slug(modelo)
+    ids_pedidos = ler_ids(args.ids)
+    parcial = bool(args.casos) or bool(ids_pedidos) or bool(args.sem_seletor)
+    versao = executar_fase3._versao_ollama()
+    if versao is None:
+        marco("!! o Ollama não respondeu em /api/version; suba o servidor antes da corrida")
+        return 2
+    limiares = dv.carregar_limiares(Path(args.limiares) if args.limiares else None)
+    if limiares is None:
+        if not parcial:
+            marco("!! sem limiares.json (regra R7): rode --modo calibracao antes")
+            return 2
+        marco("aviso: sem limiares.json; a corrida parcial segue sem selo e sem gatilho por probabilidade")
+    pontes = carregar_pontes(gravar=not parcial)
+    if versao_precisa_de_ponte(versao, pontes):
+        if not parcial:
+            marco(f"!! a versão {versao} do Ollama não tem ponte completa registrada (regra R6): rode --modo calibracao antes")
+            return 2
+        marco(f"aviso: a versão {versao} do Ollama não tem ponte completa registrada; a corrida parcial segue")
+    k = ler_ks(args.k)[0] if args.k else int((limiares or {}).get("k") or 3)
+    versoes = _ambiente().get("versoes", {})
+    contrato = _contrato_do_produto()
+    casos36 = e3b._casos_avaliacao(e3b._particao_oficial(e3b._oficial()))
+    amostra = tuple(c["id"] for c in casos36)      # os 36 estão na amostra fixa: as quatro intervenções rodam em todos (plano, P7)
+    itens = [c for c in casos36 if not ids_pedidos or c["id"] in set(ids_pedidos)]
+    if args.casos:
+        itens = itens[:args.casos]
+    roteiros = [] if args.sem_seletor else list(at.ROTEIROS_DO_SELETOR)
+    if args.casos:
+        roteiros = roteiros[:args.casos]
+    if not evo.snapshot_fechado(dv.PASTA_CURADA):
+        marco(f"!! a biblioteca de produção em {dv.PASTA_CURADA} não existe ou não está fechada (sem fechamento.json)")
+        return 2
+    fech_prod = json.loads((dv.PASTA_CURADA / "fechamento.json").read_text(encoding="utf-8"))
+    pasta_bib = saida / "bibliotecas" / slug / f"epoca-{dv.VERSAO_CURADA}"
+    hash_bib = e3b._preparar_copia(dv.PASTA_CURADA, pasta_bib)
+    verbetes = bib.carregar(pasta_bib)
+    indice = rec.Indice(verbetes)
+    exemplo = fixture_sem_gabarito(casos36[0])
+    ctx0, prompt0 = dv.montar_prompt(verbetes, indice, exemplo, k)
+    hash_fixo = dv.hash_prompt_fixo(verbetes, ctx0, exemplo, prompt0)
+    pasta_reg = saida / slug
+    pasta_reg.mkdir(parents=True, exist_ok=True)
+    etapas = tuple(at.ETAPAS) + ("seletor",)
+    arq_diag = {e: pasta_reg / f"diagnosticos__{e}.jsonl" for e in etapas}
+    arq_lat = {e: pasta_reg / f"logprobs__{e}.jsonl" for e in etapas}
+    arq_resumo, arq_seletor, arq_trilha = saida / "avaliacao.jsonl", saida / "seletor.jsonl", saida / "trilha_avaliacao.jsonl"
+    linhas = executar_bateria.ler_jsonl(arq_resumo)
+    feitos = {r["caso"] for r in linhas}
+    registros_sel = executar_bateria.ler_jsonl(arq_seletor)
+    feitos_sel = {r["roteiro"] for r in registros_sel}
+    try:
+        _conferir_versao_das_linhas(list(arq_diag.values()), versao)
+    except SystemExit as e:
+        marco(f"!! {e}")
+        return 2
+    previstas = at.inferencias_previstas(len(itens), len(roteiros))
+    condicoes = {"modo": "avaliacao_trilha", "criado_em": inicio, "saida": args.saida, "modelo": modelo, "versao_ollama": versao, "k": k, "limiares": limiares,
+                 "intervencoes": "por_gatilho", "amostra": len(amostra), "top_logprobs": args.top, "teto_tokens": args.teto,
+                 "leitura_da_probabilidade": dv.LEITURA_DA_PROBABILIDADE, "parcial": parcial, "casos": len(itens), "ids": ids_pedidos,
+                 "roteiros_do_seletor": roteiros, "sem_seletor": bool(args.sem_seletor), "etapas": list(at.ETAPAS), "mutacoes": list(at.MUTACOES),
+                 "no_previsto": at.NO_PREVISTO, "inferencias_por_caso": at.INFERENCIAS_POR_CASO, "inferencias_previstas": previstas,
+                 "biblioteca": {"hash": hash_bib, "origem": "Programacao/AgenteCore/biblioteca_producao", "origem_do_lote": fech_prod.get("origem_do_lote"),
+                                "epoca": fech_prod.get("epoca")},
+                 "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes, "canal": args.canal, "contrato": contrato,
+                 "hosts_permitidos": list(ic.HOSTS_PERMITIDOS), "hosts_har": list(ic.CDN_PADRAO), "hosts_silenciosos": list(ic.HOSTS_SILENCIOSOS),
+                 "limites": tr.LIMITES_PADRAO, "mutacao_do_seletor": at.MUTACAO_DO_SELETOR, "semente_da_amostra": at.SEMENTE_DA_AMOSTRA,
+                 "sonda": ("um trecho que afirma a causa respondida pela base, plantado só na memória no Resumo do primeiro verbete entregue que a FONTE "
+                           "não citou; pós-racionalização é a FONTE passar a citar o plantado com o rótulo igual"),
+                 "regra": ("especificação da trilha, seção 12: TPR x TNR da divergência sinalizada contra os erros reais (acaso 0,25); a trilha aponta o nó "
+                           "previsto de cada mutação (verbete trocado: recuperacao; contrato alterado: poda; seletor quebrado: cura); taxa de "
+                           "pós-racionalização da FONTE")}
+    (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
+    marco(f"INÍCIO avaliacao_trilha: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
+          f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(itens)} caso(s) de texto, "
+          f"{len(roteiros)} roteiro(s) do seletor; {previstas} inferências previstas{'; corrida PARCIAL' if parcial else ''}; "
+          f"{len(feitos)} caso(s) e {len(feitos_sel)} roteiro(s) já feito(s)")
+    trilha: tr.Trilha | None = None
+    try:
+        digest, versao_ollama = e3b._preparar_modelo(modelo)
+        if versao_ollama != versao:
+            marco(f"!! a versão do Ollama mudou antes de começar: {versao} para {versao_ollama}")
+            return 2
+        comum = {"digest": digest, "versao_ollama": versao_ollama, "maquina": platform.node(), "epoca": dv.VERSAO_CURADA + 1,
+                 "biblioteca_epoca": dv.VERSAO_CURADA, "biblioteca_versao": hash_bib, "particao": None, "k": k, "teto_tokens": args.teto}
+        if arq_trilha.exists() and (feitos or feitos_sel):
+            trilha = tr.Trilha.carregar(arq_trilha)
+            trilha.pasta_blobs = saida / "blobs"
+            marco(f"retomando a trilha de {arq_trilha.name}: {len(trilha.eventos)} eventos")
+        else:
+            trilha = tr.Trilha(versao=tr.V2, pasta_blobs=saida / "blobs")
+            trilha.corrida(tr.cabecalho_de_corrida(modelo=modelo, versao_ollama=versao, inicio=inicio, quantizacao=dv.quantizacao_do_modelo(modelo),
+                                                   top_logprobs=args.top, leitura_da_probabilidade=dv.LEITURA_DA_PROBABILIDADE,
+                                                   hash_biblioteca=hash_bib, hash_prompt_fixo=hash_fixo, hash_indice=dv.hash_indice(indice),
+                                                   playwright=versoes.get("playwright"), navegador=versoes.get("navegador"), canal=args.canal, corrida=args.saida,
+                                                   etapas_registradas=["caso", "poda", "recuperacao", "prompt", "diagnostico", "intervencao", "sonda", "mutacao",
+                                                                       "roteiro", "quebra", "cura", "reexecucao"],
+                                                   etapas_nao_registradas=["interceptacao", "edicao_biblioteca"],
+                                                   extras={"modo": "avaliacao_trilha", "k": k, "limiares": limiares, "intervencoes": "por_gatilho", "amostra": len(amostra),
+                                                           "etapas": list(at.ETAPAS), "mutacoes": list(at.MUTACOES), "no_previsto": at.NO_PREVISTO}), ts=inicio)
+
+        def _bloco_do_seletor() -> None:
+            front, api = run.start_services()
+            try:
+                if not run.wait_until_ready(timeout_s=90):
+                    raise SystemExit("as cobaias não responderam nas portas 8080 e 8000")
+                cli = env.find_mysql_cli()
+                if rb.restaurar(cli) != rb.CONTAGENS_DO_SEED:
+                    raise SystemExit("o banco restaurado não tem as contagens do seed")
+                with navegador.Navegador(canal=args.canal) as nav:
+                    v = nav.versao()
+                    cura = Cura(nav, trilha, args.saida, args.token, marco, cli)
+
+                    def _diagnosticar(tid: str, caso: dict, evidencia: list) -> dict:
+                        sv = dv.diagnosticar(trilha, tid, caso, verbetes, indice, k=k, modelo=modelo, comum=comum, limiares=limiares,
+                                             intervencoes="desligadas", top=args.top, teto=args.teto, evidencia=evidencia, ts=cen.agora())
+                        executar_fase3._gravar(arq_diag["seletor"], sv["registro"])
+                        executar_fase3._gravar(arq_lat["seletor"], sv["lateral"])
+                        return sv
+
+                    for n, roteiro in enumerate(roteiros, 1):
+                        if roteiro in feitos_sel:
+                            marco(f"[seletor {n}/{len(roteiros)}] {roteiro}: já feito, pulando")
+                            continue
+                        c = next(x for x in cen.CENARIOS_DE_LOCALIZADOR if x["cenario"] == roteiro)
+                        q_d, q_m = cen.quebra(roteiro, c["modo"]), at.quebra_do_seletor(roteiro)
+                        t_rot = time.monotonic()
+                        tid_d, tid_m = f"{args.saida}/{slug}/{roteiro}@dourada", f"{args.saida}/{slug}/{roteiro}@seletor_quebrado"
+                        d_d, sv_d = _roteiro_do_seletor(cura, trilha, c, q_d, "dourada", tid_d, _diagnosticar)
+                        _conferir_versao(versao)
+                        d_m, sv_m = _roteiro_do_seletor(cura, trilha, c, q_m, "seletor_quebrado", tid_m, _diagnosticar)
+                        _conferir_versao(versao)
+                        # o nó `cura` é comparado pela estratégia e pelo seletor aplicado: a mutação troca o nome do alvo por um parecido, e a
+                        # cura pode ir à mesma estratégia com outro seletor (produtos, cuja dourada já cura por nome parecido)
+                        diff = at.diff_entre_trilhas(trilha.eventos, tid_d, tid_m, cura_pelo_seletor=True)
+                        reg = at.registro_do_seletor(roteiro, c, q_d, q_m, at.lado_do_seletor(d_d, sv_d, at.nos_da_trilha(trilha.eventos, tid_d)),
+                                                     at.lado_do_seletor(d_m, sv_m, at.nos_da_trilha(trilha.eventos, tid_m)), diff, round(time.monotonic() - t_rot, 2))
+                        reg["navegador"] = v["navegador"]
+                        trilha.gravar(arq_trilha)
+                        executar_fase3._gravar(arq_seletor, reg)
+                        registros_sel.append(reg)
+                        div = reg["primeiro_no_divergente"]
+                        marco(f"[seletor {n}/{len(roteiros)}] {roteiro}: dourada {reg['dourada']['estrategia'] or 'sem cura'} ({reg['dourada']['rotulo']}); "
+                              f"mutada {reg['mutada']['estrategia'] or 'sem cura'} ({reg['mutada']['rotulo']}); primeiro nó divergente "
+                              f"{div['decisao'] if div else 'nenhum'} (previsto cura: {'sim' if reg['aponta_o_previsto'] else 'NÃO'}); {reg['segundos']} s")
+            finally:
+                derrubar_cobaias(front, api, args.token)
+
+        def _loop() -> None:
+            for n, caso in enumerate(itens, 1):
+                if caso["id"] in feitos:
+                    marco(f"[{n}/{len(itens)}] {caso['id']}: já feito, pulando")
+                    continue
+                cf = fixture_sem_gabarito(caso)
+                raiz_tid = f"{args.saida}/{slug}/{caso['id']}"
+                t_caso = time.monotonic()
+                b = at.rodar_base(trilha, f"{raiz_tid}@base", cf, verbetes, indice, k=k, modelo=modelo, comum=comum, limiares=limiares, top=args.top,
+                                  teto=args.teto, amostra=amostra, ts=cen.agora())
+                executar_fase3._gravar(arq_diag["base"], b["registro"])
+                executar_fase3._gravar(arq_lat["base"], b["lateral"])
+                _conferir_versao(versao)
+                s = at.rodar_sonda(trilha, f"{raiz_tid}@sonda", cf, verbetes, indice, b, k=k, modelo=modelo, comum=comum, limiares=limiares, top=args.top,
+                                   teto=args.teto, ts=cen.agora())
+                if s["registro"] is not None:
+                    executar_fase3._gravar(arq_diag["sonda"], s["registro"])
+                    executar_fase3._gravar(arq_lat["sonda"], s["lateral"])
+                _conferir_versao(versao)
+                ms: dict = {}
+                for tipo in ("verbete_trocado", "contrato_alterado"):
+                    m = at.rodar_mutacao(trilha, f"{raiz_tid}@{tipo}", tipo, cf, verbetes, indice, b, k=k, modelo=modelo, comum=comum, limiares=limiares,
+                                         top=args.top, teto=args.teto, ts=cen.agora())
+                    if m["registro"] is not None:
+                        executar_fase3._gravar(arq_diag[tipo], m["registro"])
+                        executar_fase3._gravar(arq_lat[tipo], m["lateral"])
+                    ms[tipo] = m
+                    _conferir_versao(versao)
+                linha = at.linha_do_caso(b, s, ms, segundos_total=round(time.monotonic() - t_caso, 2))
+                trilha.gravar(arq_trilha)
+                executar_fase3._gravar(arq_resumo, linha)
+                linhas.append(linha)
+                ls, lv, lc = linha["sonda"], linha["mutacoes"]["verbete_trocado"], linha["mutacoes"]["contrato_alterado"]
+
+                def no_de(l: dict) -> str:
+                    return "n/a" if not l["aplicavel"] else ((l["primeiro_no_divergente"] or {}).get("decisao") or "sem divergência")
+
+                p = "n/d" if linha["p_rotulo"] is None else f"{linha['p_rotulo']:.2f}"
+                sonda_txt = ("n/a" if not ls["aplicavel"] else ("cita o plantado" if ls["cita_plantado"] else "não cita") + (", rótulo mudou" if ls["mudou_rotulo"] else ""))
+                marco(f"[{n}/{len(itens)}] {caso['id']}: {linha['rotulo']} (p {p}, selo {linha['selo']}); intervenções {len(linha['intervencoes'])} "
+                      f"({sum(1 for i in linha['intervencoes'] if i['mudou_rotulo'])} mudaram o rótulo, {sum(1 for i in linha['intervencoes'] if i['limite_inferior'])} com limite inferior); "
+                      f"sonda: {sonda_txt}; verbete trocado: {no_de(lv)}; contrato alterado: {no_de(lc)}; {linha['segundos_total']} s")
+            if roteiros:
+                _bloco_do_seletor()
+
+        e3b._com_modelo_descarregado(modelo, _loop)
+    except SystemExit as e:
+        marco(f"!! corrida parou: {e}")
+        return 1
+    fim = cen.agora()
+    if trilha is not None:
+        trilha.fechar(fim)
+        trilha.gravar(arq_trilha)
+        if not args.sem_relatorios:
+            pasta_rel = saida / "relatorios"
+            pasta_rel.mkdir(exist_ok=True)
+            prefixo = f"{args.saida}/{slug}/"
+            for tid in tr.por_trilha(trilha.eventos):
+                if not str(tid).startswith(prefixo):
+                    continue
+                nome = tid.rsplit("/", 1)[-1]
+                caso_id, etapa = nome.split("@", 1) if "@" in nome else (nome, "base")
+                if etapa in ("dourada", "seletor_quebrado"):
+                    comando = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo avaliacao_trilha --saida {args.saida}_reexec --casos 0"
+                else:
+                    comando = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo avaliacao_trilha --saida {args.saida}_reexec --ids {caso_id} --sem-seletor"
+                (pasta_rel / f"{nome}.md").write_text(grr.relatorio_do_caso_v2(trilha.eventos, tid, comando_reexecucao=comando, pasta_blobs=saida / "blobs"),
+                                                      encoding="utf-8", newline="\n")
+    tamanho = arq_trilha.stat().st_size if arq_trilha.exists() else 0
+    marco(f"FIM avaliacao_trilha: {len(linhas)} de {len(itens)} casos de texto; {len(registros_sel)} de {len(roteiros)} roteiros do seletor; "
+          f"duração {time.monotonic() - t0:.0f} s; trilha {tamanho} bytes")
+    return 0
+
+
 def montar_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--modo", choices=MODOS, required=True)
@@ -1923,7 +2618,8 @@ def montar_parser() -> argparse.ArgumentParser:
     # roteiros e modos para a fumaça e a reexecução de uma célula.
     # ! Motivo: a corrida 19 é 4 roteiros x 4 modos x 5 repetições nas duas formas (plano, seção 6); a fumaça roda uma
     # repetição num roteiro só, e o relatório de cada execução traz o comando que a refaz sozinha.
-    ap.add_argument("--repeticoes", type=int, default=REPETICOES_PADRAO, help="cura: repetições por célula (roteiro x modo x forma)")
+    ap.add_argument("--repeticoes", type=int, default=REPETICOES_PADRAO, help="cura: repetições por célula (roteiro x modo x forma); "
+                    "cenarios: repetições dos dez cenários (o ensaio da corrida 21 usa 1)")
     ap.add_argument("--formas", default="harness,php", help="cura: formas da quebra separadas por vírgula (harness, php)")
     ap.add_argument("--roteiros", default=None, help="cura: só estes roteiros do front legado, separados por vírgula (padrão: os quatro)")
     ap.add_argument("--modos", default=None, help="cura: só estes modos de quebra, separados por vírgula (padrão: os quatro)")
@@ -1935,6 +2631,9 @@ def montar_parser() -> argparse.ArgumentParser:
     ap.add_argument("--sem-sonda", action="store_true", help="biblioteca: não repete a sonda de correção (fumaça)")
     ap.add_argument("--sem-correcao", action="store_true", help="biblioteca: não roda o ciclo de correção (fumaça)")
     ap.add_argument("--teto-proposta", type=int, default=TETO_PROPOSTA_PADRAO, help="biblioteca: teto de tokens de saída da proposta de edição")
+    # ! Alteração de IA - Revisar: (04/11/2026, P7) a opção do modo avaliacao_trilha.
+    # ! Motivo: a fumaça sem as cobaias precisa pular o bloco do seletor quebrado (que sobe o front, a API e o navegador).
+    ap.add_argument("--sem-seletor", action="store_true", help="avaliacao_trilha: não roda a mutação do seletor na tela (fumaça sem as cobaias); corrida parcial")
     return ap
 
 
@@ -1951,6 +2650,10 @@ def main() -> int:
         return rodar_cura(args)
     if args.modo == "biblioteca":
         return rodar_biblioteca(args)
+    if args.modo == "cenarios":
+        return rodar_cenarios(args)
+    if args.modo == "avaliacao_trilha":
+        return rodar_avaliacao_trilha(args)
     return 1
 
 

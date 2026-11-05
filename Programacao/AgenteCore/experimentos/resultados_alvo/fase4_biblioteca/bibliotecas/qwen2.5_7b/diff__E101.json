@@ -1,0 +1,194 @@
+{
+  "arquivos_novos": [
+    "aprendidos/atualizacao-da-tela.md",
+    "aprendidos/campo_preco_ausente.md",
+    "aprendidos/formato_preco.md",
+    "aprendidos/novo_verbete.md",
+    "aprendidos/pessoas_incorretas.md",
+    "aprendidos/validacao-na-api.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [
+    "aprendidos/interface-frontend.md",
+    "contratos/contrato-pedido.md",
+    "erros/colecao_no_lugar_de_objeto.md",
+    "erros/contagem_inconsistente.md",
+    "erros/erro_interno_do_servidor.md",
+    "erros/estado_da_tela_divergente.md",
+    "erros/limite_de_requisicoes.md",
+    "erros/localizador_quebrado.md",
+    "erros/tipo_divergente.md"
+  ],
+  "linhas_acrescentadas": 156,
+  "linhas_removidas": 11,
+  "chars_antes": 59838,
+  "chars_depois": 70597,
+  "chars_acrescentados": 10759,
+  "tokens_estimados_acrescentados": 4138,
+  "por_verbete": {
+    "estado_da_tela_divergente": {
+      "notas": 2,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "fetch",
+        "redirect",
+        "cancelar",
+        "cliente_cancelar.php"
+      ],
+      "sintomas_novos": [
+        "lista vazia",
+        "botao que nao muda",
+        "carregando...",
+        "botao inativo"
+      ]
+    },
+    "formato_preco": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "formatacao",
+        "monetario",
+        "localidade"
+      ],
+      "sintomas_novos": []
+    },
+    "contrato-pedido": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "post duplo",
+        "registros duplicados"
+      ],
+      "sintomas_novos": [
+        "duas reservas iguais apos um unico post",
+        "registros com id consecutivo"
+      ]
+    },
+    "interface-frontend": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [],
+      "sintomas_novos": []
+    },
+    "colecao_no_lugar_de_objeto": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "formato_de_resposta",
+        "estrutura_json"
+      ],
+      "sintomas_novos": []
+    },
+    "tipo_divergente": {
+      "notas": 2,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "convercao",
+        "json"
+      ],
+      "sintomas_novos": []
+    },
+    "novo_verbete": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "juncao",
+        "juncao incorreta",
+        "juncao de tabelas"
+      ],
+      "sintomas_novos": [
+        "tipo_divergente",
+        "chave_de_juncao_errada"
+      ]
+    },
+    "contagem_inconsistente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "lista"
+      ],
+      "sintomas_novos": [
+        "menos itens na interface",
+        "lista crua sem total"
+      ]
+    },
+    "localizador_quebrado": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "order by",
+        "consulta"
+      ],
+      "sintomas_novos": []
+    },
+    "campo_preco_ausente": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "campo ausente",
+        "preco",
+        "interface web"
+      ],
+      "sintomas_novos": [
+        "botao com valor undefined",
+        "precos ausentes na interface"
+      ]
+    },
+    "atualizacao-da-tela": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "fetch",
+        "innerhtml",
+        "redirect",
+        "promise"
+      ],
+      "sintomas_novos": [
+        "carregando...",
+        "lista vazia",
+        "botao inativo"
+      ]
+    },
+    "pessoas_incorretas": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "conversao",
+        "arredondamento",
+        "quantidade"
+      ],
+      "sintomas_novos": [
+        "pessoas menor que 1",
+        "reserva nem ativa nem cancelada na tela"
+      ]
+    },
+    "validacao-na-api": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "validacao",
+        "restricoes",
+        "formulario"
+      ],
+      "sintomas_novos": []
+    },
+    "limite_de_requisicoes": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "status de erro",
+        "limitador de requisicoes"
+      ],
+      "sintomas_novos": []
+    },
+    "erro_interno_do_servidor": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "converte",
+        "errorfault"
+      ],
+      "sintomas_novos": []
+    }
+  }
+}

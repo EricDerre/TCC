@@ -11,9 +11,10 @@ status: ativo
 causa_raiz: localizador_quebrado
 arquivos: [Programacao/CobaiaFront/produtos_api.php, Programacao/CobaiaAPI/app/routers/produtos.py, Programacao/CobaiaFront/produtos_geral.php]
 sintomas: [elemento nao encontrado, tempo esgotado procurando elemento, seletor casou dois elementos, texto do botao diferente]
-palavras_chave: [seletor, localizador, css, xpath, id, classe, data-id, texto, ambiguo, unico, nth-child, ordem, roteiro, timeout, elemento, ambiguidade]
+palavras_chave: [seletor, localizador, css, xpath, id, classe, data-id, texto, ambiguo, unico, nth-child, ordem, roteiro, timeout, elemento, ambiguidade, order by, consulta]
 causas_relacionadas: [estado_da_tela_divergente, recurso_inexistente]
 # ! Alteração por modelo qwen2.5:7b (E1, caso efe-12) - Revisar: nota acrescentada.
+# ! Alteração por modelo qwen2.5:7b (E101, caso efe-11) - Revisar: nota acrescentada.
 ---
 ## Resumo
 Nenhuma requisição falhou: o roteiro não acha o elemento (seletor não casa) ou acha mais de um (ambíguo). O problema é o localizador, não o dado.
@@ -27,3 +28,4 @@ Elementos reais de produtos_api.php: #produtos-api-grid, .thumbnail, button.saib
 
 ## Notas do modelo
 - [E1 · efe-12 · nota] Adicionado que o localizador pode ser ambíguo, encontrando mais de um elemento com o mesmo seletor. — Motivo: Este caso mostrou que o diagnóstico precisa considerar a ambiguidade no seletor, o que não estava claro na documentação original.
+- [E101 · efe-11 · nota] Adicionar que a falta de ORDER BY na consulta pode causar ordem aleatória indeterminada dos produtos. — Motivo: Este caso mostrou que a ordem dos produtos pode variar, indicando a necessidade de uma consulta ordenada.

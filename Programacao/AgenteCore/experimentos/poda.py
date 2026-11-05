@@ -324,6 +324,10 @@ def _compativel(valor, campo: dict) -> str | None:
             return None if _DATA_ISO.match(valor) else "formato"
         if t in ("lista", "objeto") and observado == t:
             return None
+    # ! Alteração de IA - Revisar: (05/11/2026, ficha 41, decisão 89) número em campo booleano: 0 e 1 continuam como tipo diferente, e qualquer outro número passa a ser valor fora do domínio.
+    # ! Motivo: a biblioteca lista "destaque 1" em tipo_divergente e "destaque 2" em valor_fora_do_dominio; a poda chamava os dois de tipo diferente e, no caso `semt-9`, apontava para o rótulo errado.
+    if "booleano" in tipos and observado in ("inteiro", "numero") and valor not in (0, 1):
+        return "dominio"
     return "tipo"
 
 
@@ -349,10 +353,58 @@ def _compacto(valor, limite: int) -> str:
     return texto if len(texto) <= limite else texto[:limite - 3] + "..."
 
 
+def _diferencas_do_item(item: dict, campos: list[dict]) -> list[dict]:
+    """As diferenças de um objeto contra o contrato, na ordem do contrato e depois os campos a mais."""
+    esperados = {c["campo"] for c in campos}
+    extras = [k for k in item if k not in esperados]
+    usados: set[str] = set()
+    diferencas: list[dict] = []
+    for c in campos:
+        nome = c["campo"]
+        if nome not in item:
+            parecido = next((k for k in extras if k not in usados and _parecido(nome, k)), None)
+            if parecido:
+                usados.add(parecido)
+                diferencas.append({"campo": nome, "tipo": "renomeado", "esperado": nome, "recebido": parecido})
+            else:
+                diferencas.append({"campo": nome, "tipo": "ausente", "esperado": c["texto"], "recebido": None})
+            continue
+        valor = item[nome]
+        if valor is None:
+            if "nulo" not in c["tipos"]:
+                diferencas.append({"campo": nome, "tipo": "nulo_inesperado", "esperado": c["texto"], "recebido": "nulo"})
+            continue
+        motivo = _compativel(valor, c)
+        if motivo == "tipo":
+            diferencas.append({"campo": nome, "tipo": "tipo_diferente", "esperado": "/".join(t for t in c["tipos"] if t != "nulo"), "recebido": _tipo_observado(valor)})
+        elif motivo == "dominio":
+            diferencas.append({"campo": nome, "tipo": "fora_do_dominio", "esperado": c["texto"], "recebido": _compacto(valor, 80)})
+        elif motivo == "formato":
+            diferencas.append({"campo": nome, "tipo": "formato_divergente", "esperado": c["texto"], "recebido": _compacto(valor, 80)})
+    for k in extras:
+        if k not in usados:
+            diferencas.append({"campo": k, "tipo": "inesperado", "esperado": None, "recebido": _tipo_observado(item[k])})
+    return diferencas
+
+
+def _recorte(item: dict, diferencas: list[dict]) -> dict:
+    """O que está em disputa num objeto: o valor de cada campo com diferença, e "(ausente)" no que não veio."""
+    recorte = {}
+    for d in diferencas:
+        nome = d["recebido"] if d["tipo"] == "renomeado" else d["campo"]
+        if nome in item:
+            recorte[nome] = item[nome]
+    for d in diferencas:
+        if d["tipo"] == "ausente":
+            recorte[d["campo"]] = "(ausente)"
+    return recorte
+
+
 def diff_contrato(contrato: str, corpo, forma_esperada: str | None = None, max_trecho: int = 400) -> dict:
     """Compara o corpo HTTP (texto ou já decodificado) com o contrato textual. Devolve `corpo` (json, vazio, nao_json,
     truncado), `forma` (lista, objeto, outro ou None), `itens`, `diferencas` (campo, tipo, esperado, recebido) e o
-    `trecho` em disputa, curto, para o prompt; o corpo inteiro fica fora daqui (vai para o blob da trilha)."""
+    `trecho` em disputa, curto, para o prompt; o corpo inteiro fica fora daqui (vai para o blob da trilha). Numa lista, todos
+    os itens são comparados, e uma diferença que só aparece a partir do segundo leva `item` (a posição, a partir de 1)."""
     saida: dict = {"corpo": None, "forma": None, "itens": None, "diferencas": [], "trecho": ""}
     texto = corpo if isinstance(corpo, str) else json.dumps(corpo, ensure_ascii=False)
     if not texto.strip():
@@ -380,46 +432,20 @@ def diff_contrato(contrato: str, corpo, forma_esperada: str | None = None, max_t
     if amostra is None:
         saida["trecho"] = _compacto(dado, max_trecho)
         return saida
+    # ! Alteração de IA - Revisar: (05/11/2026, ficha 41, decisão 89) todos os itens de uma lista são comparados com o contrato; uma diferença nova em outro item leva `item`, a posição a partir de 1, e entra no trecho.
+    # ! Motivo: só o primeiro item era comparado, então um defeito em outro item saía como "sem diferença" (no caso `sin-5`, o segundo item sem `resumo`). Com diferença só no primeiro item, ou num objeto, o resultado fica o mesmo de antes.
     campos = campos_do_contrato(contrato)
-    esperados = {c["campo"] for c in campos}
-    extras = [k for k in amostra if k not in esperados]
-    usados: set[str] = set()
-    em_disputa: list[str] = []
-    for c in campos:
-        nome = c["campo"]
-        if nome not in amostra:
-            parecido = next((k for k in extras if k not in usados and _parecido(nome, k)), None)
-            if parecido:
-                usados.add(parecido)
-                saida["diferencas"].append({"campo": nome, "tipo": "renomeado", "esperado": nome, "recebido": parecido})
-                em_disputa.append(parecido)
-            else:
-                saida["diferencas"].append({"campo": nome, "tipo": "ausente", "esperado": c["texto"], "recebido": None})
+    diferencas = _diferencas_do_item(amostra, campos)
+    saida["diferencas"].extend(diferencas)
+    recorte = _recorte(amostra, diferencas)
+    vistas = {(d["campo"], d["tipo"]) for d in diferencas}
+    for posicao, item in enumerate(dado[1:] if isinstance(dado, list) else [], start=2):
+        if not isinstance(item, dict):
             continue
-        valor = amostra[nome]
-        if valor is None:
-            if "nulo" not in c["tipos"]:
-                saida["diferencas"].append({"campo": nome, "tipo": "nulo_inesperado", "esperado": c["texto"], "recebido": "nulo"})
-                em_disputa.append(nome)
-            continue
-        motivo = _compativel(valor, c)
-        if motivo == "tipo":
-            saida["diferencas"].append({"campo": nome, "tipo": "tipo_diferente", "esperado": "/".join(t for t in c["tipos"] if t != "nulo"),
-                                        "recebido": _tipo_observado(valor)})
-            em_disputa.append(nome)
-        elif motivo == "dominio":
-            saida["diferencas"].append({"campo": nome, "tipo": "fora_do_dominio", "esperado": c["texto"], "recebido": _compacto(valor, 80)})
-            em_disputa.append(nome)
-        elif motivo == "formato":
-            saida["diferencas"].append({"campo": nome, "tipo": "formato_divergente", "esperado": c["texto"], "recebido": _compacto(valor, 80)})
-            em_disputa.append(nome)
-    for k in extras:
-        if k not in usados:
-            saida["diferencas"].append({"campo": k, "tipo": "inesperado", "esperado": None, "recebido": _tipo_observado(amostra[k])})
-            em_disputa.append(k)
-    recorte = {k: amostra[k] for k in em_disputa if k in amostra}
-    for d in saida["diferencas"]:
-        if d["tipo"] == "ausente":
-            recorte[d["campo"]] = "(ausente)"
+        novas = [d for d in _diferencas_do_item(item, campos) if (d["campo"], d["tipo"]) not in vistas]
+        if novas:
+            vistas |= {(d["campo"], d["tipo"]) for d in novas}
+            saida["diferencas"].extend({**d, "item": posicao} for d in novas)
+            recorte[f"(item {posicao})"] = _recorte(item, novas)
     saida["trecho"] = _compacto(recorte if recorte else amostra, max_trecho)
     return saida

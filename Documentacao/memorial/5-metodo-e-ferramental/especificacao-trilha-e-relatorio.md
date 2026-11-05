@@ -221,6 +221,10 @@ Explicação só reduz a dependência excessiva quando conferir custa menos que 
 
 Nos 36 casos de avaliação, com gabarito (mapa linha 30): (a) se a divergência sinalizada coincide com os erros reais, medida como TPR vezes TNR (acaso em 0,25); (b) validação por injeção programada de falhas, mutando verbetes, contratos e seletores, uma corrida por mutação, para saber se a trilha aponta o nó certo; (c) no relatório, acerto da localização do erro, tempo até a decisão e adesão apropriada (aceitar o diagnóstico quando está certo e recusar quando está errado), com um revisor humano, declarando a utilidade percebida como medida secundária. A sonda de pós-racionalização (seção 5) e a repetição da inferência de base (seção 6.1) fazem parte desta avaliação.
 
+<!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 87) nota sobre a parte (c) da avaliação da trilha.
+     ! Motivo: quem ler a especificação precisa saber que a medida com revisor humano não foi feita como está escrita, e onde está o que foi feito no lugar dela. -->
+**Nota (05/11/2026).** A parte (c) não foi feita com um revisor humano: na sessão da corrida 22, o Eric respondeu um relatório e aprovou o parecer do Claude nos outros dez (decisões 85 e 86). Isso fica como limitação declarada (decisão 87); a leitura está em `resultados_alvo/fase4/leitura_revisao_trilha.md`.
+
 ## 13. Exigências de registro, declaradas como boa prática
 
 Os casos são sintéticos, sem dados pessoais nem decisão sobre titular, e, na leitura desta especificação, um agente de QA não consta das categorias de alto risco do regulamento europeu de IA: a LGPD (art. 20) e o regulamento não são tratados como obrigações deste agente (mapa linha 28), e o art. 20 entra só como motivação para a explicação ao desenvolvedor. O que se adota, sem pretensão de conformidade, porque custa só campos de cabeçalho (mapa linha 27): declarar as etapas que registram e as que não registram; início e fim de cada corrida; retenção mínima de seis meses das trilhas das corridas medidas; gravação completa de prompt e resposta, decisão explícita por serem dados locais e sintéticos; e nós de incidente para falhas do harness.

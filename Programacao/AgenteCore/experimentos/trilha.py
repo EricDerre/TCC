@@ -208,22 +208,44 @@ class Trilha:
             cab["tamanho"] = tamanho
         raise ValueError("o tamanho do cabeçalho não estabilizou")
 
+    # ! Alteração de IA - Revisar: (04/11/2026) a recontagem dos blobs gravados, do passo por trilha, dos nós por trilha e
+    # do último ts sai de carregar() para _recontar(), e entra descartar_desde(indice), que corta a trilha a partir de um
+    # evento e reconta tudo pelo mesmo caminho.
+    # ! Motivo: a fase C da corrida 20 vai ser refeita em 04/11/2026 (a ordem das seções da correção mudou para a sonda
+    # poder fechar), e os eventos da primeira tentativa têm de sair da trilha junto com a época 102 e o correcoes.jsonl.
+    # Como a numeração é pela posição (seq = quantidade de eventos + 1) e a fase C é o fim do arquivo, cortar o fim mantém
+    # a numeração sem buraco; recontar pelo mesmo código de carregar() evita duas contas que poderiam divergir.
+    def _recontar(self) -> None:
+        """Refaz, a partir de self.eventos, os blobs já gravados, o passo de cada trilha, os nós de cada trilha e o ts padrão."""
+        self._blobs, self._passos, self._nos, self.ts_padrao = set(), {}, {}, None
+        for e in self.eventos:
+            if e["tipo"] == "blob":
+                self._blobs.add(e["dados"]["sha"])
+            if e["trilha"] is not None and e.get("passo") is not None:
+                self._passos[e["trilha"]] = max(self._passos.get(e["trilha"], 0), e["passo"])
+            if e["tipo"] == "decisao":
+                chave = "nos_por_cura" if e["dados"].get("decisao") in DECISOES_DE_CURA else "nos_por_diagnostico"
+                self._nos.setdefault(e["trilha"], {"nos_por_diagnostico": 0, "nos_por_cura": 0})[chave] += 1
+            if e.get("ts"):
+                self.ts_padrao = e["ts"]
+
+    def descartar_desde(self, indice: int) -> int:
+        """Tira da trilha os eventos a partir da posição `indice` (contada do zero; o cabeçalho, na posição 0, não sai),
+        reconta os blobs, os passos e os nós e devolve quantos eventos saíram. A numeração continua de onde ficou."""
+        if indice < 1:
+            raise ValueError("descartar_desde: o cabeçalho da corrida (posição 0) não pode sair da trilha")
+        n = max(0, len(self.eventos) - indice)
+        del self.eventos[indice:]
+        self._recontar()
+        return n
+
     @classmethod
     def carregar(cls, caminho: Path) -> "Trilha":
         """Lê um arquivo da versão 1 ou 2 e devolve o escritor pronto para continuar numerando de onde ele parou."""
         eventos = ler(caminho)
         t = cls(versao=versao_do_arquivo(eventos))
         t.eventos = eventos
-        for e in eventos:
-            if e["tipo"] == "blob":
-                t._blobs.add(e["dados"]["sha"])
-            if e["trilha"] is not None and e.get("passo") is not None:
-                t._passos[e["trilha"]] = max(t._passos.get(e["trilha"], 0), e["passo"])
-            if e["tipo"] == "decisao":
-                chave = "nos_por_cura" if e["dados"].get("decisao") in DECISOES_DE_CURA else "nos_por_diagnostico"
-                t._nos.setdefault(e["trilha"], {"nos_por_diagnostico": 0, "nos_por_cura": 0})[chave] += 1
-            if e.get("ts"):
-                t.ts_padrao = e["ts"]
+        t._recontar()
         cab = eventos[0]["dados"] if eventos and eventos[0]["tipo"] == "corrida" else {}
         if isinstance(cab.get("limites"), dict):
             t.limites = dict(LIMITES_PADRAO, **cab["limites"])

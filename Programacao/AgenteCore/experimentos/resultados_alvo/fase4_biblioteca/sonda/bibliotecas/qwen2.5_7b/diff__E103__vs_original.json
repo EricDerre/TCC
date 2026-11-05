@@ -1,0 +1,1037 @@
+{
+  "arquivos_novos": [
+    "aprendidos/atualizacao-da-tela.md",
+    "aprendidos/atualizacao_imediata.md",
+    "aprendidos/campo_preco_ausente.md",
+    "aprendidos/corpo_xml_nao_e_json.md",
+    "aprendidos/formato_preco.md",
+    "aprendidos/interface-estados.md",
+    "aprendidos/interface-frontend.md",
+    "aprendidos/novo_verbete.md",
+    "aprendidos/pessoas_incorretas.md",
+    "aprendidos/rotas-inexistentes.md",
+    "aprendidos/validacao-na-api.md",
+    "contratos/contrato-pedido.md",
+    "contratos/contrato-produto.md",
+    "defeitos_conhecidos/ancora-saiba-mais.md",
+    "defeitos_conhecidos/consultas-sem-checagem.md",
+    "defeitos_conhecidos/senha-sem-hash.md",
+    "erros/campo_ausente.md",
+    "erros/campo_renomeado.md",
+    "erros/chave_de_juncao_errada.md",
+    "erros/codificacao_incorreta.md",
+    "erros/colecao_no_lugar_de_objeto.md",
+    "erros/contagem_inconsistente.md",
+    "erros/corpo_nao_e_json.md",
+    "erros/corpo_vazio.md",
+    "erros/dado_desatualizado.md",
+    "erros/erro_interno_do_servidor.md",
+    "erros/escala_ou_unidade_errada.md",
+    "erros/estado_da_tela_divergente.md",
+    "erros/estrutura_aninhada_divergente.md",
+    "erros/formato_de_data_divergente.md",
+    "erros/limite_de_requisicoes.md",
+    "erros/localizador_quebrado.md",
+    "erros/mensagens-de-erro-do-codigo.md",
+    "erros/nulo_inesperado.md",
+    "erros/recurso_inexistente.md",
+    "erros/registro_duplicado.md",
+    "erros/resposta_truncada.md",
+    "erros/tempo_de_resposta_excedido.md",
+    "erros/tipo_divergente.md",
+    "erros/valor_fora_do_dominio.md",
+    "falhas_injetadas/modos-de-injecao.md",
+    "negocio/entidade-produto.md",
+    "negocio/fluxo-reserva-e-cancelamento.md",
+    "negocio/limites-do-sistema.md",
+    "negocio/pagina-produtos-api.md",
+    "negocio/pedido-reserva.md",
+    "negocio/usuario-e-login.md"
+  ],
+  "arquivos_removidos": [],
+  "arquivos_tocados": [],
+  "linhas_acrescentadas": 1250,
+  "linhas_removidas": 0,
+  "chars_antes": 0,
+  "chars_depois": 74788,
+  "chars_acrescentados": 74788,
+  "tokens_estimados_acrescentados": 28765,
+  "por_verbete": {
+    "estado_da_tela_divergente": {
+      "notas": 2,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "tela",
+        "estado",
+        "divergente",
+        "render",
+        "renderiza",
+        "atualiza",
+        "recarregar",
+        "filtro",
+        "ordem aleatoria",
+        "carregando",
+        "innerHTML",
+        "fetch",
+        "redirect",
+        "cancelar",
+        "cliente_cancelar.php"
+      ],
+      "sintomas_novos": [
+        "api respondeu certo mas a tela nao",
+        "carregando parado",
+        "lista vazia com resposta cheia",
+        "botao continua habilitado apos cancelar",
+        "lista vazia",
+        "botao que nao muda",
+        "carregando...",
+        "botao inativo"
+      ]
+    },
+    "pagina-produtos-api": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "produtos_api",
+        "fetch",
+        "cartao",
+        "card",
+        "modal",
+        "saiba mais",
+        "formatarPreco",
+        "Number",
+        "NaN",
+        "data-id",
+        "status",
+        "grid"
+      ],
+      "sintomas_novos": [
+        "carregando produtos parado",
+        "nenhum produto retornado",
+        "erro ao carregar produtos",
+        "R$ NaN",
+        "object Object"
+      ]
+    },
+    "corpo_xml_nao_e_json": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "xml",
+        "parse",
+        "erro"
+      ],
+      "sintomas_novos": [
+        "pagina de erro xml em vez de json"
+      ]
+    },
+    "campo_preco_ausente": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "campo ausente",
+        "preco",
+        "interface web"
+      ],
+      "sintomas_novos": [
+        "botao com valor undefined",
+        "precos ausentes na interface"
+      ]
+    },
+    "limite_de_requisicoes": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "429",
+        "limite",
+        "rate limit",
+        "too many requests",
+        "retry_after",
+        "cota",
+        "excesso",
+        "recarregar",
+        "status de erro",
+        "limitador de requisicoes"
+      ],
+      "sintomas_novos": [
+        "HTTP 429",
+        "too many requests",
+        "rate limit",
+        "para de funcionar apos varias tentativas"
+      ]
+    },
+    "modos-de-injecao": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "fault",
+        "injecao",
+        "falha",
+        "modo",
+        "error_500",
+        "latency",
+        "type_drift",
+        "field_missing",
+        "field_renamed",
+        "malformed_json",
+        "target_field",
+        "probability",
+        "X-Admin-Token"
+      ],
+      "sintomas_novos": [
+        "um campo alterado e o resto integro",
+        "500 com fault injection",
+        "atraso fixo de 2 s",
+        "corpo cortado"
+      ]
+    },
+    "atualizacao-da-tela": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "fetch",
+        "innerhtml",
+        "redirect",
+        "promise"
+      ],
+      "sintomas_novos": [
+        "carregando...",
+        "lista vazia",
+        "botao inativo"
+      ]
+    },
+    "recurso_inexistente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "404",
+        "not found",
+        "nao encontrado",
+        "inexistente",
+        "rota",
+        "endpoint",
+        "singular",
+        "plural",
+        "403",
+        "422",
+        "detail",
+        "campo de busca errado"
+      ],
+      "sintomas_novos": [
+        "HTTP 404",
+        "Not Found",
+        "produto nao encontrado",
+        "cliente nao encontrado",
+        "pedido nao encontrado",
+        "rota errada"
+      ]
+    },
+    "localizador_quebrado": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "seletor",
+        "localizador",
+        "css",
+        "xpath",
+        "id",
+        "classe",
+        "data-id",
+        "texto",
+        "ambiguo",
+        "unico",
+        "nth-child",
+        "ordem",
+        "roteiro",
+        "timeout",
+        "elemento",
+        "ambiguidade",
+        "order by",
+        "consulta"
+      ],
+      "sintomas_novos": [
+        "elemento nao encontrado",
+        "tempo esgotado procurando elemento",
+        "seletor casou dois elementos",
+        "texto do botao diferente"
+      ]
+    },
+    "limites-do-sistema": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "validacao",
+        "servidor",
+        "silencioso",
+        "checagem",
+        "hash",
+        "response_model",
+        "docs",
+        "declarado",
+        "real"
+      ],
+      "sintomas_novos": [
+        "dado invalido gravado",
+        "falha silenciosa",
+        "contrato do docs diferente da resposta"
+      ]
+    },
+    "resposta_truncada": {
+      "notas": 1,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "truncad",
+        "cortad",
+        "incomplet",
+        "unexpected end",
+        "content-length",
+        "tamanho",
+        "parcial",
+        "malformed_json",
+        "truncamento",
+        "conexao",
+        "proxy"
+      ],
+      "sintomas_novos": [
+        "fim inesperado da entrada",
+        "json cortado",
+        "content-length menor que o corpo",
+        "lista incompleta",
+        "ultimo item cortado",
+        "corpo cortado"
+      ]
+    },
+    "interface-frontend": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "atualizacao",
+        "dom",
+        "innerhtml",
+        "redirect"
+      ],
+      "sintomas_novos": []
+    },
+    "colecao_no_lugar_de_objeto": {
+      "notas": 1,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "lista",
+        "array",
+        "colecao",
+        "objeto",
+        "unico",
+        "recurso",
+        "colchetes",
+        "detalhe",
+        "modal",
+        "formato_de_resposta",
+        "estrutura_json"
+      ],
+      "sintomas_novos": [
+        "detalhe sem preencher campos",
+        "colchetes ao redor do valor",
+        "nenhum produto retornado"
+      ]
+    },
+    "nulo_inesperado": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "nulo",
+        "null",
+        "None",
+        "vazio",
+        "nullable",
+        "saudacao",
+        "Ola",
+        "left join",
+        "view"
+      ],
+      "sintomas_novos": [
+        "null onde havia valor",
+        "saudacao vazia",
+        "R$ 0",
+        "00 para produto com preco",
+        "produto some do filtro"
+      ]
+    },
+    "registro_duplicado": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "duplicad",
+        "duplicat",
+        "repetid",
+        "reenvio",
+        "clique duplo",
+        "F5",
+        "idempot",
+        "dois registros",
+        "ids consecutivos"
+      ],
+      "sintomas_novos": [
+        "duas reservas identicas",
+        "dois 201 seguidos",
+        "cobranca em duplicidade"
+      ]
+    },
+    "fluxo-reserva-e-cancelamento": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "reservar",
+        "cancelar",
+        "data",
+        "janela",
+        "dois dias",
+        "noventa dias",
+        "pessoas",
+        "minimo",
+        "validacao",
+        "formulario"
+      ],
+      "sintomas_novos": [
+        "data aceita fora da janela",
+        "reserva alheia cancelada",
+        "pessoas zero"
+      ]
+    },
+    "novo_verbete": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "juncao",
+        "juncao incorreta",
+        "juncao de tabelas"
+      ],
+      "sintomas_novos": [
+        "tipo_divergente",
+        "chave_de_juncao_errada"
+      ]
+    },
+    "contrato-pedido": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "contrato",
+        "pedidos",
+        "reservas",
+        "login",
+        "cpf",
+        "id_pedido",
+        "pessoas",
+        "data_pedido",
+        "status",
+        "nome",
+        "201",
+        "404",
+        "422",
+        "cancelar",
+        "post duplo",
+        "registros duplicados"
+      ],
+      "sintomas_novos": [
+        "data em outro formato",
+        "status desconhecido",
+        "422 sem login",
+        "cliente nao encontrado",
+        "duas reservas iguais apos um unico post",
+        "registros com id consecutivo"
+      ]
+    },
+    "corpo_nao_e_json": {
+      "notas": 3,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "json",
+        "html",
+        "xml",
+        "parse",
+        "token inesperado",
+        "warning",
+        "fatal",
+        "gateway",
+        "proxy",
+        "atencao erro",
+        "content-type",
+        "erro de sintaxe",
+        "parse_falho"
+      ],
+      "sintomas_novos": [
+        "token inesperado no inicio da resposta",
+        "html no lugar de json",
+        "warning do php antes do json",
+        "parse_falho",
+        "listagem_nao_carrega"
+      ]
+    },
+    "contrato-produto": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "contrato",
+        "produtos",
+        "id",
+        "nome",
+        "resumo",
+        "tipo",
+        "preco",
+        "imagem",
+        "destaque",
+        "lista",
+        "objeto",
+        "404",
+        "produto nao encontrado",
+        "schema",
+        "json",
+        "api",
+        "front-end"
+      ],
+      "sintomas_novos": [
+        "chave a mais ou a menos",
+        "lista no lugar de objeto",
+        "preco como texto",
+        "lista incompleta",
+        "ultimo item cortado"
+      ]
+    },
+    "campo_renomeado": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "renomead",
+        "outro nome",
+        "_v2",
+        "descricao",
+        "situacao",
+        "imagem_url",
+        "field_renamed",
+        "chave inesperada",
+        "campo-renomeado",
+        "contrato",
+        "cliente"
+      ],
+      "sintomas_novos": [
+        "chave desconhecida no lugar da esperada",
+        "_v2",
+        "campo com outro nome",
+        "titulo vazio",
+        "nome correto",
+        "categoria e preco corretos"
+      ]
+    },
+    "escala_ou_unidade_errada": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "escala",
+        "unidade",
+        "centavos",
+        "reais",
+        "fator",
+        "cem",
+        "arredond",
+        "fuso",
+        "dia",
+        "dobro",
+        "multiplic",
+        "divid"
+      ],
+      "sintomas_novos": [
+        "precos cem vezes maiores",
+        "precos cem vezes menores",
+        "preco arredondado",
+        "data um dia antes",
+        "dobro de pessoas"
+      ]
+    },
+    "estrutura_aninhada_divergente": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "aninhad",
+        "envelope",
+        "data",
+        "itens",
+        "objeto",
+        "nivel",
+        "profundidade",
+        "object Object",
+        "stringify",
+        "estrutura",
+        "aninhamento",
+        "divergencia"
+      ],
+      "sintomas_novos": [
+        "object Object",
+        "envelope data",
+        "lista dentro de objeto",
+        "campo virou objeto",
+        "envelope na raiz",
+        "campo como objeto"
+      ]
+    },
+    "corpo_vazio": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "vazio",
+        "sem corpo",
+        "branco",
+        "204",
+        "espacos",
+        "nenhum byte",
+        "carregando"
+      ],
+      "sintomas_novos": [
+        "carregando indefinidamente",
+        "tela em branco sem erro",
+        "fim inesperado da entrada em corpo vazio"
+      ]
+    },
+    "formato_de_data_divergente": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "data",
+        "formato",
+        "iso",
+        "AAAA-MM-DD",
+        "dd/mm/aaaa",
+        "timestamp",
+        "epoch",
+        "Invalid Date",
+        "data_pedido"
+      ],
+      "sintomas_novos": [
+        "Invalid Date",
+        "data como numero",
+        "data em formato brasileiro"
+      ]
+    },
+    "ancora-saiba-mais": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "saiba mais",
+        "ancora",
+        "href",
+        "aspas",
+        "id_produto",
+        "produtos_geral",
+        "detalhe",
+        "link"
+      ],
+      "sintomas_novos": [
+        "saiba mais abre produto vazio",
+        "id_produto vazio na url",
+        "link nao encontrado pelo roteiro"
+      ]
+    },
+    "campo_ausente": {
+      "notas": 2,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "ausente",
+        "falta",
+        "faltando",
+        "sem o campo",
+        "undefined",
+        "field_missing",
+        "chave",
+        "campo ausente",
+        "json",
+        "front-end"
+      ],
+      "sintomas_novos": [
+        "cartao sem titulo",
+        "sem nome",
+        "undefined na tela",
+        "botao que nao faz nada",
+        "nulo_inesperado"
+      ]
+    },
+    "validacao-na-api": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "validacao",
+        "restricoes",
+        "formulario"
+      ],
+      "sintomas_novos": []
+    },
+    "codificacao_incorreta": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "codificacao",
+        "encoding",
+        "utf-8",
+        "utf8",
+        "latin-1",
+        "acento",
+        "mojibake",
+        "charset",
+        "duplo",
+        "ã",
+        "Ã"
+      ],
+      "sintomas_novos": [
+        "acentos trocados por simbolos",
+        "caracteres estranhos nos nomes",
+        "texto legivel mas com acentos errados"
+      ]
+    },
+    "tipo_divergente": {
+      "notas": 2,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "tipo",
+        "texto",
+        "string",
+        "numero",
+        "booleano",
+        "Sim",
+        "aspas",
+        "type_drift",
+        "str",
+        "virgula decimal",
+        "convercao",
+        "json"
+      ],
+      "sintomas_novos": [
+        "numero como texto",
+        "booleano como Sim",
+        "destaque 1",
+        "ordenacao errada",
+        "soma errada"
+      ]
+    },
+    "senha-sem-hash": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "senha",
+        "md5",
+        "hash",
+        "texto puro",
+        "login",
+        "invasor",
+        "usuario_insere",
+        "usuario_atualiza"
+      ],
+      "sintomas_novos": [
+        "usuario nao consegue entrar apos edicao",
+        "redirecionado para invasor"
+      ]
+    },
+    "pedido-reserva": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "reserva",
+        "pedido",
+        "status",
+        "em analise",
+        "cancelado",
+        "pessoas",
+        "data_pedido",
+        "id_clientes",
+        "view"
+      ],
+      "sintomas_novos": [
+        "status com texto desconhecido",
+        "reserva de outro cliente",
+        "linha de reserva vazia"
+      ]
+    },
+    "erro_interno_do_servidor": {
+      "notas": 3,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "500",
+        "erro interno",
+        "internal server error",
+        "exception",
+        "excecao",
+        "fault injection",
+        "intermitente",
+        "banco fora",
+        "falha_interna",
+        "injetor",
+        "excecao_nao_tratada",
+        "converte",
+        "errorfault"
+      ],
+      "sintomas_novos": [
+        "HTTP 500",
+        "Internal Server Error",
+        "fault injection error_500",
+        "falha intermitente"
+      ]
+    },
+    "mensagens-de-erro-do-codigo": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "mensagem",
+        "literal",
+        "detail",
+        "erro ao carregar",
+        "nenhum produto retornado",
+        "atencao erro",
+        "token invalido",
+        "modo invalido",
+        "falha no email",
+        "indice"
+      ],
+      "sintomas_novos": [
+        "mensagem de erro na tela",
+        "detail no json de erro"
+      ]
+    },
+    "formato_preco": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "formatacao",
+        "monetario",
+        "localidade"
+      ],
+      "sintomas_novos": []
+    },
+    "valor_fora_do_dominio": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "dominio",
+        "enum",
+        "permitido",
+        "conjunto",
+        "status",
+        "Pendente",
+        "Concluido",
+        "pessoas",
+        "zero",
+        "negativo",
+        "destaque",
+        "validacao"
+      ],
+      "sintomas_novos": [
+        "status desconhecido",
+        "pessoas zero",
+        "destaque 2",
+        "reserva sem botao de cancelar",
+        "botao de cancelar some",
+        "status inesperado"
+      ]
+    },
+    "dado_desatualizado": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "cache",
+        "desatualizado",
+        "velho",
+        "antigo",
+        "Age",
+        "Cache-Control",
+        "max-age",
+        "defasagem",
+        "minutos",
+        "stale"
+      ],
+      "sintomas_novos": [
+        "reserva nova nao aparece",
+        "cancelamento volta a ativo ao recarregar",
+        "produto novo demora a aparecer"
+      ]
+    },
+    "pessoas_incorretas": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "conversao",
+        "arredondamento",
+        "quantidade"
+      ],
+      "sintomas_novos": [
+        "pessoas menor que 1",
+        "reserva nem ativa nem cancelada na tela"
+      ]
+    },
+    "atualizacao_imediata": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "innerhtml",
+        "sobrescrita",
+        "grid"
+      ],
+      "sintomas_novos": []
+    },
+    "chave_de_juncao_errada": {
+      "notas": 0,
+      "retificacoes": 1,
+      "palavras_chave_novas": [
+        "juncao",
+        "join",
+        "chave",
+        "id",
+        "fk",
+        "cliente errado",
+        "categoria errada",
+        "troca",
+        "admin",
+        "like",
+        "substring",
+        "registro errado",
+        "campo derivado"
+      ],
+      "sintomas_novos": [
+        "nome de outra pessoa na reserva",
+        "categoria errada",
+        "imagem de outro produto",
+        "nome da categoria no titulo"
+      ]
+    },
+    "contagem_inconsistente": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "contagem",
+        "total",
+        "itens",
+        "pagina",
+        "paginacao",
+        "quantidade",
+        "destaques",
+        "inconsistente",
+        "zero",
+        "lista"
+      ],
+      "sintomas_novos": [
+        "total diferente dos itens",
+        "pagina vazia com total positivo",
+        "quatro destaques mas cinco cartoes",
+        "menos itens na interface",
+        "lista crua sem total"
+      ]
+    },
+    "rotas-inexistentes": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "404",
+        "rotas",
+        "id",
+        "rota"
+      ],
+      "sintomas_novos": [
+        "404 com id valido",
+        "rota inexistente"
+      ]
+    },
+    "entidade-produto": {
+      "notas": 1,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "produto",
+        "categoria",
+        "tipo",
+        "preco",
+        "destaque",
+        "imagem",
+        "resumo",
+        "cardapio",
+        "picanha",
+        "formatacao",
+        "decimal",
+        "separador"
+      ],
+      "sintomas_novos": [
+        "nome da categoria no titulo do cartao",
+        "preco com grandeza estranha",
+        "preco cru",
+        "separador decimal como virgula"
+      ]
+    },
+    "interface-estados": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "estado",
+        "interface",
+        "atualizacao"
+      ],
+      "sintomas_novos": [
+        "lista vazia",
+        "botao que nao muda"
+      ]
+    },
+    "consultas-sem-checagem": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "query",
+        "mysqli",
+        "retorno",
+        "checagem",
+        "silencioso",
+        "cancelar",
+        "id_pedido",
+        "url",
+        "dono",
+        "redirect"
+      ],
+      "sintomas_novos": [
+        "reserva confirmada que nao aparece",
+        "reserva de outro cliente cancelada",
+        "redireciona sem gravar"
+      ]
+    },
+    "tempo_de_resposta_excedido": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "timeout",
+        "lento",
+        "lentidao",
+        "demora",
+        "latencia",
+        "segundos",
+        "tempo esgotado",
+        "volume",
+        "2 s"
+      ],
+      "sintomas_novos": [
+        "demora de segundos",
+        "timeout",
+        "conexao encerrada por tempo",
+        "carregando por muito tempo"
+      ]
+    },
+    "usuario-e-login": {
+      "notas": 0,
+      "retificacoes": 0,
+      "palavras_chave_novas": [
+        "usuario",
+        "login",
+        "cpf",
+        "senha",
+        "nivel",
+        "sup",
+        "cli",
+        "administrador",
+        "cliente",
+        "sessao"
+      ],
+      "sintomas_novos": [
+        "reserva com nome de outro usuario",
+        "saudacao vazia"
+      ]
+    }
+  }
+}

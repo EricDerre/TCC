@@ -66,11 +66,14 @@ def blocos_divergentes(doc: Path, md: str, prefixo: str) -> list[str]:
     return [n for n in a3b.BLOCO_ALVO_RE.findall(texto) if n.startswith(prefixo) and cheios.get(n) != gerados.get(n)]
 
 
+# ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) `blocos_de`: quando os blocos deste prefixo no relatório são de outra leitura, o check não os compara e diz de qual leitura eles são.
+# ! Motivo: a Fase 4 tem leituras diferentes com os mesmos nomes de bloco (a corrida 18 e a repetição 18b, por exemplo); sem isso, o check da leitura que não está no relatório acusava divergência, mesmo com os arquivos dela certos.
 def fechar(nome: str, dado: dict, md: str, prefixo: str, check: bool = False, colar: bool = False,
-           pasta: Path | None = None, doc: Path | None = None) -> int:
+           pasta: Path | None = None, doc: Path | None = None, blocos_de: str | None = None) -> int:
     """Grava `<nome>.json` e `<nome>.md` na pasta dos derivados. Com check=True não grava: regera e compara com o que
     está em disco (o JSON sem a data de geração, o Markdown sem as três linhas do cabeçalho) e com os blocos já colados
-    no relatório; devolve 1 se algo difere. Com colar=True cola os blocos do prefixo no relatório."""
+    no relatório (a menos que `blocos_de` diga que eles são de outra leitura); devolve 1 se algo difere. Com colar=True
+    cola os blocos do prefixo no relatório."""
     pasta = pasta or PASTA
     doc = doc or DOC_ALVO
     arq_json, arq_md = pasta / f"{nome}.json", pasta / f"{nome}.md"
@@ -79,8 +82,11 @@ def fechar(nome: str, dado: dict, md: str, prefixo: str, check: bool = False, co
         atual = arq_md.read_text(encoding="utf-8") if arq_md.exists() else ""
         ok_json = sem_data(antigo) == sem_data(json.loads(json.dumps(dado, ensure_ascii=False)))
         ok_md = bool(atual) and atual.split("\n", 3)[-1] == md.split("\n", 3)[-1]
-        divergentes = blocos_divergentes(doc, md, prefixo) if doc.exists() else []
+        divergentes = blocos_divergentes(doc, md, prefixo) if doc.exists() and not blocos_de else []
         if ok_json and ok_md and not divergentes:
+            if blocos_de:
+                print(f"--check: {arq_json.name} e {arq_md.name} batem com os dados atuais (os blocos {prefixo}* de {doc.name} são da leitura {blocos_de})")
+                return 0
             print(f"--check: {arq_json.name} e {arq_md.name} batem com os dados atuais"
                   + (f", e os blocos {prefixo}* de {doc.name} também" if doc.exists() else f" ({doc.name} ainda não existe)"))
             return 0

@@ -37,6 +37,8 @@
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --reproducao --saida fase4_reproducao [--check] [--colar]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --cura --saida fase4_cura [--check] [--colar] [--pasta ...]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --reproducao --saida fase4_reproducao_ineditos --nome reproducibilidade_ineditos --titulo "..." [--check]
+  RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --tela --saida fase4_tela_v2 --nome tela_v2 [--check] [--colar]  (a leitura vigente; --tela --saida fase4_tela grava tela.*, e o --colar recusa)
+  RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --cenarios --saida fase4_ensaio_v2 --nome cenarios_v2 [--check] [--colar]  (a leitura vigente; --cenarios --saida fase4_ensaio grava cenarios.*, e o --colar recusa)
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --calibracao --saida fase4_calibracao [--check] [--colar] [--pasta ...]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --tela --saida fase4_tela [--check] [--colar] [--pasta ...]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --pontes [--check]"""
@@ -53,6 +55,7 @@ from pathlib import Path
 
 import analisar_confianca as conf
 import analisar_fase3b as a3b
+import avaliacao_trilha as at
 import avaliar
 import avaliar_fase3
 import caminhos
@@ -90,6 +93,29 @@ TITULO_CURA = "Cura de seletor (corrida 19)"
 NOME_BIBLIOTECA = "biblioteca"
 PREFIXO_BIBLIOTECA = "tb_f4_biblioteca_"
 TITULO_BIBLIOTECA = "Biblioteca em produção e ciclo de correção (corrida 20)"
+# ! Alteração de IA - Revisar: (04/11/2026, P6) a leitura da corrida 21 (`--cenarios`): cenarios.{json,md} com os blocos
+# tb_f4_cenarios_*, o Task Success com intervalo de Wilson e o MTTR médio com intervalo por reamostragem de semente fixa.
+# ! Motivo: plano aprovado, seção 5 (P6): `avaliar_fase4.py --cenarios` (MTTR médio com intervalo por reamostragem, Task Success
+# com intervalo de Wilson); a semente fixa faz o `--check` dar o mesmo intervalo a cada leitura.
+NOME_CENARIOS = "cenarios"
+PREFIXO_CENARIOS = "tb_f4_cenarios_"
+TITULO_CENARIOS = "Ensaio dos cenários da Fase 5: MTTR e Task Success (corrida 21)"
+# ! Alteração de IA - Revisar: (04/11/2026, P7) a leitura da corrida 22 (`--trilha`): o acerto de cada caso contra o gabarito (só
+# aqui ele entra), TPR x TNR de cada sinal da trilha contra os erros reais, as intervenções com o limite inferior, a repetição da
+# base, a sonda de pós-racionalização, as mutações contra o nó previsto (as de texto por caso e a do seletor por roteiro), a
+# amostra dos 12 relatórios e a planilha da sessão de revisão; blocos `tb_f4_trilha_*` em `trilha.{json,md}`.
+# ! Motivo: plano aprovado, P7 ("Mede": se a divergência coincide com os erros reais, se a trilha aponta o nó mutado, a taxa de
+# pós-racionalização e o que o relatório vale para quem lê); especificação da trilha, seção 12.
+NOME_TRILHA, PREFIXO_TRILHA = "trilha", "tb_f4_trilha_"
+TITULO_TRILHA = "Avaliação da própria trilha (corrida 22)"
+# ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) a pasta dos relatórios da sessão de revisão, ao lado da planilha.
+# ! Motivo: os relatórios que a corrida gravou em fase4_trilha/relatorios/ saíram sem o caso (defeito corrigido depois da corrida) e a pasta da
+# corrida fica como ela deixou; a sessão lê os relatórios regerados da mesma trilha, com o gerador corrigido.
+PASTA_RELATORIOS_REVISAO = "relatorios_revisao_trilha"
+DESCRICAO_DA_INTERVENCAO = {"remocao": "o verbete citado sai do contexto (marcador neutro no lugar)", "troca": "o verbete citado vira um verbete errado",
+                            "sem_documentacao": "a inferência sem documentação nenhuma", "repeticao_da_base": "a inferência de base repetida"}
+SEMENTE_DA_REAMOSTRAGEM = 20261104
+REAMOSTRAS = 2000
 RELATORIO = caminhos.AQUI.parent.parent.parent / "Documentacao" / "memorial" / "3-resultados-e-analises" / "fase-4-relatorio.md"
 
 
@@ -180,7 +206,7 @@ def render(dado: dict, titulo: str = TITULO) -> str:
         a3b.tab("tb_f4_reproducao_custo", ["Tempo por cenário (mediana, s)", "Tempo por cenário (máximo, s)", "Tempo total dos cenários (s)",
                                            "Tempo da chamada à API (mediana, ms)", "Árvore antes da poda (mediana, nós)", "Árvore depois (mediana, linhas)",
                                            "Corpo HTTP (mediana, caracteres)", "Caso ao vivo (mediana, caracteres)"],
-                [[n(dado["tempo"]["mediana_s"]), n(dado["tempo"]["max_s"]), n(dado["tempo"]["soma_s"]), n(dado["tempo"]["tempo_api_mediana_ms"]),
+                [[_tres(dado["tempo"]["mediana_s"]), _tres(dado["tempo"]["max_s"]), n(dado["tempo"]["soma_s"]), n(dado["tempo"]["tempo_api_mediana_ms"]),
                   n(dado["tamanhos"]["arvore_antes_mediana"]), n(dado["tamanhos"]["arvore_depois_mediana"]), n(dado["tamanhos"]["corpo_chars_mediana"]),
                   n(dado["tamanhos"]["caso_chars_mediana"])]]),
         a3b.tab("tb_f4_reproducao_casos", ["Caso", "Classe", "Nível", "Causa", "Modo", "Campo", "Cenário", "Reproduz", "Motivo", "Status", "Segundos"],
@@ -201,6 +227,12 @@ def render(dado: dict, titulo: str = TITULO) -> str:
 
 def _n(v) -> str:
     return "não medido" if v is None else (a3b.f(v) if isinstance(v, float) else str(v))
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) `_tres`: probabilidade, p do teste de McNemar, kappa e MTTR da cura em três casas nas tabelas.
+# ! Motivo: o formato padrão, de uma casa, pôs p = 0,0003 como 0,0, o limiar 0,990 do selo como 1,0 e o MTTR de 0,639 s como 0,6 nas tabelas que o relatório da fase cola, e o texto cita as três casas.
+def _tres(v) -> str:
+    return "não medido" if v is None else a3b.f(float(v), 3)
 
 
 def _sim(v) -> str:
@@ -331,7 +363,7 @@ def render_calibracao(dado: dict) -> str:
         a3b.tab("tb_f4_calibracao_resumo", ["Ollama", "Modelo", "Casos", "k medidos", "k escolhido (R8)", "Selo baixo até (p)", "Selo alto a partir de (p)",
                                             "Ponte pareável (R6)", "Sondagem dos logprobs"],
                 [[_n(dado["metadados"].get("versao_ollama")), f"`{dado['metadados'].get('modelo')}`", _n(max([x["n"] for x in dado["por_k"]], default=0)),
-                  ", ".join(str(x["k"]) for x in dado["por_k"]) or "nenhum", str(dado["k_escolhido"]), _n(lim.get("baixo_ate")), _n(lim.get("alto_a_partir_de")),
+                  ", ".join(str(x["k"]) for x in dado["por_k"]) or "nenhum", str(dado["k_escolhido"]), _tres(lim.get("baixo_ate")), _tres(lim.get("alto_a_partir_de")),
                   _sim(p.get("pareavel")) if p else "n/d", ("ok" if s.get("ok") else "problema") if s else "não rodou"]]),
         a3b.tab("tb_f4_calibracao_por_k", ["k", "Casos", "Completo", "Acertos", "Acerto (%)", "Acurácia balanceada (%)", "Nos 36 de avaliação (%)", "Nos 54 de aprendizado (%)",
                                            "s por diagnóstico (mediana)", "Tokens de entrada (mediana)", "Tokens de entrada (máximo)",
@@ -352,7 +384,7 @@ def render_calibracao(dado: dict) -> str:
                                         "p (McNemar exato)", "k escolhido", "Motivo"],
                 [[_n(next((x["acuracia_balanceada_pct"] for x in dado["por_k"] if x["k"] == 3), None)),
                   _n(next((x["acuracia_balanceada_pct"] for x in dado["por_k"] if x["k"] == 5), None)),
-                  _n(par.get("b")), _n(par.get("c")), _n(par.get("p_mcnemar")), str(r8["k"]), r8["motivo"]]]),
+                  _n(par.get("b")), _n(par.get("c")), _tres(par.get("p_mcnemar")), str(r8["k"]), r8["motivo"]]]),
         a3b.tab("tb_f4_calibracao_ponte", ["Ollama", "Corrida da ponte", "Feita nesta corrida", "Casos pareados", "b (só a ponte acerta)", "c (só a Fase 3 acerta)",
                                            "Pareável (b + c até o limite)", "Casos de texto corrigido fora da conta"],
                 [[_n(p.get("versao")), _n(p.get("corrida")), _sim(p.get("feita_nesta_corrida")), _n(p.get("n")), _n(p.get("b")), _n(p.get("c")),
@@ -360,7 +392,7 @@ def render_calibracao(dado: dict) -> str:
         a3b.tab("tb_f4_calibracao_sondagem", ["Ollama", "Tokens com probabilidade", "Alternativas por posição (máx.)", "Bytes por token", "Texto remontado bate",
                                               "Probabilidade antes ou depois da temperatura", "Resposta igual sem logprobs", "Rótulo lido", "p do rótulo", "Avisos"],
                 [[_n(s.get("versao_ollama")), _n(s.get("tokens_com_logprob")), _n(s.get("top_por_posicao_max")), _sim(s.get("tem_bytes")), _sim(s.get("texto_bate")),
-                  _n(s.get("temperatura")), _sim(s.get("resposta_igual_sem_logprobs")), _n(s.get("rotulo_lido")), _n(s.get("p_rotulo")),
+                  _n(s.get("temperatura")), _sim(s.get("resposta_igual_sem_logprobs")), _n(s.get("rotulo_lido")), _tres(s.get("p_rotulo")),
                   "; ".join(s.get("mensagens") or []) or "nenhum"]] if s else [["não rodou"] + [""] * 9]),
     ]
     escolhido = next((x for x in dado["por_k"] if x["k"] == dado["k_escolhido"]), dado["por_k"][0] if dado["por_k"] else None)
@@ -368,7 +400,7 @@ def render_calibracao(dado: dict) -> str:
     if escolhido:
         for l in sorted(escolhido["casos"], key=lambda l: (l["p"] is None, l["p"] or 0, l["caso"])):
             linhas.append([f"`{l['caso']}`", _n(l.get("particao")), f"`{l['gabarito']}`", f"`{l['rotulo']}`", "certo" if l["acerto"] else "errado",
-                           _n(l["p"]), _n(l["p_conjunta"]), _n(l.get("segunda")), _n(dv.selo(l["p"], lim) if lim else None)])
+                           _tres(l["p"]), _tres(l["p_conjunta"]), _n(l.get("segunda")), _n(dv.selo(l["p"], lim) if lim else None)])
     blocos.append(a3b.tab("tb_f4_calibracao_casos", ["Caso", "Partição", "Gabarito", "Rótulo", "Resultado", "p do rótulo", "p conjunta", "Segunda causa", "Selo"], linhas))
     cab = pf.cabecalho(TITULO_CALIBRACAO, "avaliar_fase4.py", "os registros, as linhas laterais, a sondagem e a ponte da corrida 16",
                        dado["metadados"]["gerado_em"][:10])
@@ -532,7 +564,7 @@ def render_tela(dado: dict) -> str:
                                       "s por caso no fixture (mediana)", "Trilha (bytes)"],
                 [[str(r["casos"]), str(r["reproduzem"]), f"{r['acerto_tela']} ({_n(r['acerto_tela_pct'])}%)", f"{r['acerto_fixture']} ({_n(r['acerto_fixture_pct'])}%)",
                   str(r["concordam"]), _n(r["concordancia_pct"]), str(r["b"]), str(r["c"]), str(r["discordantes"]), str(r["limite_r2"]), _sim(r["dentro_do_limite_r2"]),
-                  _n(r["p_mcnemar"]), f"{r['selos_tela']['alto']} / {r['selos_tela']['medio']} / {r['selos_tela']['baixo']}", str(r["gatilhos_tela"]),
+                  _tres(r["p_mcnemar"]), f"{r['selos_tela']['alto']} / {r['selos_tela']['medio']} / {r['selos_tela']['baixo']}", str(r["gatilhos_tela"]),
                   str(r["divergencias_tela"]), _n(r["segundos_tela_mediana"]), _n(r["segundos_fixture_mediana"]), _n(r["trilha_bytes"])]]),
         a3b.tab("tb_f4_tela_por_classe", ["Classe", "Casos", "Acerto na tela", "Acerto no fixture", "Concordam"],
                 [[str(x["classe"]), str(x["casos"]), str(x["acerto_tela"]), str(x["acerto_fixture"]), str(x["concordam"])] for x in dado["por_classe"]]),
@@ -550,8 +582,8 @@ def render_tela(dado: dict) -> str:
         a3b.tab("tb_f4_tela_casos", ["Caso", "Classe", "Gabarito", "Rótulo na tela", "Rótulo no fixture", "Tela", "Fixture", "Concordam", "p tela", "Selo tela",
                                      "p fixture", "Selo fixture", "Gatilho", "Divergência", "s tela", "s fixture", "Diferenças contra o contrato", "CORPO do caso ao vivo (começo)"],
                 [[f"`{l['caso']}`", str(l["classe"]), f"`{l['gabarito']}`", f"`{l['rotulo_tela']}`", f"`{l['rotulo_fixture']}`",
-                  "certo" if l["acerto_tela"] else "errado", "certo" if l["acerto_fixture"] else "errado", _sim(l["concordam"]), _n(l["p_tela"]), _n(l["selo_tela"]),
-                  _n(l["p_fixture"]), _n(l["selo_fixture"]), _sim(l["gatilho_tela"]), _sim(l["divergencia_tela"]), _n(l["segundos_tela"]), _n(l["segundos_fixture"]),
+                  "certo" if l["acerto_tela"] else "errado", "certo" if l["acerto_fixture"] else "errado", _sim(l["concordam"]), _tres(l["p_tela"]), _n(l["selo_tela"]),
+                  _tres(l["p_fixture"]), _n(l["selo_fixture"]), _sim(l["gatilho_tela"]), _sim(l["divergencia_tela"]), _n(l["segundos_tela"]), _n(l["segundos_fixture"]),
                   _n(l.get("diferencas_contra_contrato")), ("`" + str(l.get("corpo_tela") or "")[:60].replace("|", "¦").replace("`", "'") + "`") if l.get("corpo_tela") else "n/d"]
                  for l in dado["casos"]]),
     ]
@@ -702,14 +734,14 @@ def render_cura(dado: dict) -> str:
         return a3b.tab(bloco, [rotulo, "Execuções", "Quebraram", "Curadas", "Taxa de cura (%)", "Mesmo elemento", "Outro elemento", "Não curadas", "Não quebrou",
                                "MTTR mediana (s)", "MTTR máximo (s)", "Estratégias aplicadas"],
                        [[f"`{x[chave]}`", str(x["execucoes"]), str(x["quebrou"]), str(x["curadas"]), _n(x["taxa_de_cura_pct"]), str(x["mesmo_elemento"]), str(x["outro_elemento"]),
-                         str(x["nao_curadas"]), str(x["nao_quebrou"]), _n(x["mttr_mediana_s"]), _n(x["mttr_max_s"]),
+                         str(x["nao_curadas"]), str(x["nao_quebrou"]), _tres(x["mttr_mediana_s"]), _tres(x["mttr_max_s"]),
                          ", ".join(f"`{k}` {v}" for k, v in x["estrategias_aplicadas"].items()) or "nenhuma"] for x in linhas] or [["sem execuções"] + [""] * 11])
 
     blocos = [
         a3b.tab("tb_f4_cura_resumo", ["Execuções", "Quebras detectadas", "Não quebrou", "Curadas", "Não curadas", "Taxa de cura (%)", "Mesmo elemento", "Outro elemento",
                                       "MTTR mediana (s)", "MTTR mínimo (s)", "MTTR máximo (s)", "Reexecuções (mediana)", "Repetições", "Limiar do nome", "Formas", "Tempo limite (ms)"],
                 [[str(r["execucoes"]), str(r["quebras_detectadas"]), str(r["nao_quebrou"]), str(r["curadas"]), str(r["nao_curadas"]), _n(r["taxa_de_cura_pct"]),
-                  str(r["mesmo_elemento"]), str(r["outro_elemento"]), _n(r["mttr_mediana_s"]), _n(r["mttr_min_s"]), _n(r["mttr_max_s"]), _n(r["reexecucoes_mediana"]),
+                  str(r["mesmo_elemento"]), str(r["outro_elemento"]), _tres(r["mttr_mediana_s"]), _tres(r["mttr_min_s"]), _tres(r["mttr_max_s"]), _n(r["reexecucoes_mediana"]),
                   _n(r.get("repeticoes")), _n(r.get("limiar_nome")), ", ".join(r.get("formas") or []), _n(r.get("tempo_limite_ms"))]]),
         grupo("tb_f4_cura_por_modo", "modo", "Modo de quebra", dado["por_modo"]),
         grupo("tb_f4_cura_por_roteiro", "roteiro", "Roteiro", dado["por_roteiro"]),
@@ -720,7 +752,7 @@ def render_cura(dado: dict) -> str:
                 [[f"`{x['estrategia']}`", str(x["gerada"]), str(x["passou_estaticas"]), str(x["reexecutada"]), str(x["aplicada"])] + [str(x["recusada_em"][v]) for v in cs.VERIFICACOES]
                  for x in dado["por_estrategia"]]),
         a3b.tab("tb_f4_cura_outro_elemento", ["Execução", "Roteiro", "Modo", "Forma", "Estratégia aplicada", "Seletor curado", "MTTR (s)"],
-                [[f"`{x['id']}`", x["roteiro"], f"`{x['modo']}`", x["forma"], f"`{x['aplicado']}`", f"`{x['seletor_curado']}`", _n(x["mttr_s"])] for x in dado["outro_elemento"]]
+                [[f"`{x['id']}`", x["roteiro"], f"`{x['modo']}`", x["forma"], f"`{x['aplicado']}`", f"`{x['seletor_curado']}`", _tres(x["mttr_s"])] for x in dado["outro_elemento"]]
                 or [["nenhuma"] + [""] * 6]),
         a3b.tab("tb_f4_cura_nao_curadas", ["Execução", "Roteiro", "Modo", "Forma", "Falha", "Reexecuções", "Fora do passo do alvo", "Erro"],
                 [[f"`{x['id']}`", x["roteiro"], f"`{x['modo']}`", x["forma"], f"`{x['falha']}`" if x.get("falha") else "", str(x["reexecucoes"]),
@@ -728,7 +760,7 @@ def render_cura(dado: dict) -> str:
                  for x in dado["nao_curadas"]] or [["nenhuma"] + [""] * 7]),
         a3b.tab("tb_f4_cura_execucoes", ["Execução", "Localizador", "Quebrou", "Passo", "Curada", "Estratégia", "Seletor curado", "Mesmo elemento", "Falha", "MTTR (s)", "Reexecuções", "Segundos"],
                 [[f"`{x['id']}`", f"`{x['localizador']}`", _sim(x["quebrou"]), _n(x["passo_falho"]), _sim(x["curado"]), f"`{x['aplicado']}`" if x.get("aplicado") else "",
-                  f"`{x['seletor_curado']}`" if x.get("seletor_curado") else "", _sim(x["mesmo_elemento"]), f"`{x['falha']}`" if x.get("falha") else "", _n(x["mttr_s"]),
+                  f"`{x['seletor_curado']}`" if x.get("seletor_curado") else "", _sim(x["mesmo_elemento"]), f"`{x['falha']}`" if x.get("falha") else "", _tres(x["mttr_s"]),
                   str(x["reexecucoes"]), _n(x["segundos_cura"])] for x in dado["execucoes"]] or [["nenhuma"] + [""] * 11]),
     ]
     cab = pf.cabecalho(TITULO_CURA, "avaliar_fase4.py", "cura.jsonl e condicoes_fase4.json da corrida", dado["metadados"]["gerado_em"][:10])
@@ -889,12 +921,12 @@ def render_biblioteca(dado: dict) -> str:
                   _n(lote["hash"]), _n(lote["n_notas"]), _n(lote["n_verbetes"]), _n(lote["n_verbetes_novos"])]]),
         a3b.tab("tb_f4_biblioteca_reavaliacao", ["Inéditos pareados", "Acerto com a cópia curada (%)", "Acerto com o lote (%)", "b (passaram a acertar)", "c (passaram a errar)",
                                                   "p (McNemar exato)", "Veredito R5", "Casos que mudaram", "Base"],
-                [[str(reav["n"]), _n(reav["acerto_base_pct"]), _n(reav["acerto_novo_pct"]), str(reav["b"]), str(reav["c"]), _n(reav["p_mcnemar"]), reav["veredito"],
+                [[str(reav["n"]), _n(reav["acerto_base_pct"]), _n(reav["acerto_novo_pct"]), str(reav["b"]), str(reav["c"]), _tres(reav["p_mcnemar"]), reav["veredito"],
                   ", ".join(f"`{c}`" for c in reav["ganhos"] + reav["perdas"]) or "nenhum", _n(reav.get("origem_da_base"))]] if reav else [["não medida"] + [""] * 8]),
         a3b.tab("tb_f4_biblioteca_correcao", ["Casos com sintoma antes", "Modo desligado", "Modo mantido", "Marcados corrigido", "Certos", "Falsos positivos", "Perdidos",
                                               "Precisão (%)", "Revocação (%)", "Kappa", "Sem sintoma antes"],
                 [[str(corr["universo"]), str(corr["desligados"]), str(corr["mantidos"]), str(corr["marcados"]), str(corr["acertos"]), str(corr["falsos_positivos"]), str(corr["perdidos"]),
-                  _n(corr["precisao_pct"]), _n(corr["revocacao_pct"]), _n(corr["kappa"]), ", ".join(f"`{c}`" for c in corr["sem_sintoma_antes"]) or "nenhum"]] if corr else [["não medida"] + [""] * 10]),
+                  _n(corr["precisao_pct"]), _n(corr["revocacao_pct"]), _tres(corr["kappa"]), ", ".join(f"`{c}`" for c in corr["sem_sintoma_antes"]) or "nenhum"]] if corr else [["não medida"] + [""] * 10]),
         a3b.tab("tb_f4_biblioteca_correcao_casos", ["Caso", "Modo", "Verbetes", "Modo desligado", "Reproduziu antes", "Passou depois", "Fio mudou", "Árvore mudou", "Marcado", "Motivo"],
                 [[f"`{c['caso']}`", f"`{c['modo']}`", ", ".join(f"`{v}`" for v in c.get("verbetes") or []), _sim(c["desligado"]), _sim(c["reproduziu_antes"]), _sim(c["passou_depois"]),
                   _sim(c["ha_diff_http"]), _sim(c["ha_diff_arvore"]), _sim(c["marcado"]), _n(c.get("motivo"))] for c in (corr or {}).get("por_caso") or []] or [["nenhum"] + [""] * 9]),
@@ -920,6 +952,384 @@ def render_biblioteca(dado: dict) -> str:
                 "verbete presente em 40% ou mais dos contextos da calibração. A regra R5 compara o lote com a cópia curada nos 36 inéditos (b e c); a regra R4 compara "
                 "a marca corrigido do ciclo de correção com o conjunto de casos cujo modo o harness desligou. A sonda repete a de 28/09/2026 com a recuperação por id ligada.", ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
+
+
+# ------------------------------------------------------------------ a corrida 21: ensaio dos cenários da Fase 5 (pacote P6)
+
+def bootstrap_media(valores: list, n: int = REAMOSTRAS, semente: int = SEMENTE_DA_REAMOSTRAGEM) -> tuple:
+    """Intervalo de 95% da média por reamostragem (percentis 2,5 e 97,5 das médias reamostradas), com semente fixa; (None, None)
+    sem valores e (v, v) com um só."""
+    import random
+    vals = [float(v) for v in valores if v is not None]
+    if not vals:
+        return (None, None)
+    if len(vals) == 1:
+        return (round(vals[0], 2), round(vals[0], 2))
+    rng = random.Random(semente)
+    medias = sorted(sum(rng.choice(vals) for _ in vals) / len(vals) for _ in range(n))
+    return (round(medias[int(0.025 * (n - 1))], 2), round(medias[int(0.975 * (n - 1))], 2))
+
+
+def ler_cenarios(saida: str) -> dict:
+    """condicoes_fase4.json e cenarios.jsonl da corrida (o último registro de cada cenário e repetição)."""
+    raiz = caminhos.fase3(saida)["raiz"]
+    ultimos: dict = {}
+    for r in executar_bateria.ler_jsonl(raiz / "cenarios.jsonl"):
+        ultimos[(r["cenario"], r["repeticao"])] = r
+    return {"condicoes": _json(raiz / "condicoes_fase4.json") or {}, "registros": list(ultimos.values())}
+
+
+def _ts_e_mttr(regs: list[dict]) -> dict:
+    n = len(regs)
+    suc = sum(1 for r in regs if r.get("task_success"))
+    lo, hi = avaliar.wilson(suc, n) if n else (None, None)
+    mttrs = [r["mttr_s"] for r in regs if r.get("mttr_s") is not None]
+    ic = bootstrap_media(mttrs)
+    return {"n": n, "sucessos": suc, "task_success_pct": round(100 * suc / n, 1) if n else None, "wilson_lo_pct": lo, "wilson_hi_pct": hi,
+            "detectados": sum(1 for r in regs if r.get("detectou")), "mttr_n": len(mttrs),
+            "mttr_media_s": round(sum(mttrs) / len(mttrs), 2) if mttrs else None,
+            "mttr_mediana_s": round(statistics.median(mttrs), 2) if mttrs else None, "mttr_ic_lo_s": ic[0], "mttr_ic_hi_s": ic[1]}
+
+
+def resumir_cenarios(bruto: dict, gerado_em: str | None = None, corrida: str | None = None) -> dict:
+    """Task Success e MTTR no geral, por tipo (contrato e localizador) e por cenário; o tempo por execução e a estimativa da
+    Fase 5 (dez cenários com cinco repetições); a versão do navegador e o hash do banco no começo de cada repetição."""
+    regs, cond = bruto["registros"], bruto.get("condicoes") or {}
+    ordem = [c["id"] for c in cen.CENARIOS_DO_ENSAIO]
+    por_cenario = []
+    for cid in ordem + sorted({r["cenario"] for r in regs} - set(ordem)):
+        rr = [r for r in regs if r["cenario"] == cid]
+        if not rr:
+            continue
+        segs = [r["segundos"] for r in rr if r.get("segundos") is not None]
+        # ! Alteração de IA - Revisar: (04/11/2026, P6) fichas_da_falha: o que a detecção acusou no cenário, cada texto uma vez,
+        # na ordem das execuções.
+        # ! Motivo: é a ficha que o protocolo da linha de base manual entrega ao integrante; sai daqui, não de texto digitado.
+        por_cenario.append({"cenario": cid, "tipo": rr[0]["tipo"], "modo": rr[0]["modo"], "classe": rr[0].get("classe"), "causa_esperada": rr[0].get("causa_esperada"),
+                            **_ts_e_mttr(rr), "rotulos": dict(sorted(Counter(r.get("rotulo") or "sem diagnóstico" for r in rr).items())),
+                            "segundos_media": round(sum(segs) / len(segs), 1) if segs else None,
+                            "fichas_da_falha": list(dict.fromkeys(r["motivo_deteccao"] for r in rr if r.get("motivo_deteccao")))})
+    por_tipo = [{"tipo": t, **_ts_e_mttr([r for r in regs if r["tipo"] == t])} for t in ("contrato", "localizador") if any(r["tipo"] == t for r in regs)]
+    segs = [r["segundos"] for r in regs if r.get("segundos") is not None]
+    media = sum(segs) / len(segs) if segs else None
+    navs = sorted({r.get("navegador") for r in regs if r.get("navegador")})
+    hashes = sorted({r.get("hash_inicio") for r in regs if r.get("hash_inicio")})
+    # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) sem_task_success: cada execução sem Task Success, com o rótulo do
+    # diagnóstico e a falha da cura, para a leitura dizer por que ela falhou.
+    # ! Motivo: na corrida 21 a tabela por cenário só mostrava o zero do login; o diagnóstico tinha acertado e a cura tinha falhado em
+    # candidato_invalido, e isso só aparecia abrindo o cenarios.jsonl.
+    sem = [{"cenario": r["cenario"], "repeticao": r.get("repeticao"), "tipo": r["tipo"], "detectou": bool(r.get("detectou")), "rotulo": r.get("rotulo"),
+            "causa_esperada": r.get("causa_esperada"), "falha_da_cura": (r.get("cura") or {}).get("falha"), "segundos": r.get("segundos")}
+           for r in regs if not r.get("task_success")]
+    return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida, "gerado_por": "avaliar_fase4.py --cenarios"},
+            "condicoes": {k: cond.get(k) for k in ("repeticoes", "parcial", "modelo", "versao_ollama", "k", "execucoes", "troca_da_ficha_36", "biblioteca", "mttr",
+                                                    "task_success")},
+            "geral": _ts_e_mttr(regs), "por_tipo": por_tipo, "por_cenario": por_cenario,
+            "tempo": {"execucoes": len(regs), "segundos_media": round(media, 1) if media is not None else None,
+                      "segundos_total": round(sum(segs), 1) if segs else None,
+                      "estimativa_fase5_h": round(10 * 5 * media / 3600, 2) if media is not None else None},
+            "deteccao": dict(sorted(Counter(r["origem_deteccao"] for r in regs if r.get("detectou") and r.get("origem_deteccao")).items())),
+            "sem_task_success": sem, "navegador": {"versoes": navs, "unica": len(navs) <= 1}, "banco": {"hashes_de_inicio": hashes, "unico": len(hashes) <= 1}}
+
+
+# ! Alteração de IA - Revisar: (04/11/2026, corrida 21b) render_cenarios aceita o título; o `--titulo` passa a valer também para `--cenarios`.
+# ! Motivo: a repetição do ensaio grava em cenarios_v2.md, e o título fixo diria "corrida 21" na leitura da corrida 21b.
+def render_cenarios(dado: dict, titulo: str = TITULO_CENARIOS) -> str:
+    g = dado["geral"]
+
+    def ic(lo, hi) -> str:
+        return "n/d" if lo is None else f"{_n(lo)} a {_n(hi)}"
+
+    def linha(x: dict) -> list[str]:
+        return [str(x["n"]), str(x["sucessos"]), _n(x["task_success_pct"]), ic(x["wilson_lo_pct"], x["wilson_hi_pct"]), str(x["detectados"]), str(x["mttr_n"]),
+                _n(x["mttr_media_s"]), ic(x["mttr_ic_lo_s"], x["mttr_ic_hi_s"]), _n(x["mttr_mediana_s"])]
+
+    cab_ts = ["Execuções", "Task Success", "Task Success (%)", "Wilson 95% (%)", "Detectadas", "Com MTTR", "MTTR médio (s)", "Reamostragem 95% (s)", "MTTR mediano (s)"]
+    t, nav, banco = dado["tempo"], dado["navegador"], dado["banco"]
+    det = dado.get("deteccao") or {}
+    blocos = [
+        a3b.tab("tb_f4_cenarios_resumo", cab_ts + ["Navegador", "Banco no começo das repetições"],
+                [linha(g) + [", ".join(nav["versoes"]) or "n/d", ("o mesmo hash em todas: " + ", ".join(banco["hashes_de_inicio"])) if banco["hashes_de_inicio"] else "n/d"]]),
+        a3b.tab("tb_f4_cenarios_por_tipo", ["Tipo"] + cab_ts, [[x["tipo"]] + linha(x) for x in dado["por_tipo"]] or [["nenhum"] + [""] * len(cab_ts)]),
+        a3b.tab("tb_f4_cenarios_por_cenario", ["Cenário", "Tipo", "Modo", "Classe", "Causa esperada", "Execuções", "Task Success", "MTTR médio (s)", "MTTR mediano (s)",
+                                               "Rótulos do diagnóstico", "Segundos por execução", "O que a detecção acusou"],
+                [[f"`{x['cenario']}`", x["tipo"], f"`{x['modo']}`", _n(x["classe"]), f"`{x['causa_esperada']}`", str(x["n"]), str(x["sucessos"]), _n(x["mttr_media_s"]),
+                  _n(x["mttr_mediana_s"]), ", ".join(f"`{k}` {v}" for k, v in x["rotulos"].items()), _n(x["segundos_media"]),
+                  " / ".join(f.replace("|", "\\|") for f in x.get("fichas_da_falha") or []) or "n/d"] for x in dado["por_cenario"]]
+                or [["nenhum"] + [""] * 11]),
+        a3b.tab("tb_f4_cenarios_tempo", ["Execuções", "Segundos por execução (média)", "Segundos no total", "Estimativa da Fase 5 (10 cenários x 5 repetições, h)",
+                                         "Detecção pela conferência do roteiro", "Detecção pelo fio (regra R1)", "Detecção pelo passo do localizador"],
+                [[str(t["execucoes"]), _n(t["segundos_media"]), _n(t["segundos_total"]), _n(t["estimativa_fase5_h"]), str(det.get("conferencia_do_roteiro", 0)),
+                  str(det.get("contrato_no_fio", 0)), str(det.get("passo_do_localizador", 0))]]),
+        a3b.tab("tb_f4_cenarios_sem_sucesso", ["Cenário", "Repetição", "Tipo", "Detectou", "Rótulo do diagnóstico", "Causa esperada", "Falha da cura", "Segundos"],
+                [[f"`{x['cenario']}`", str(x["repeticao"]), x["tipo"], "sim" if x["detectou"] else "não", f"`{x['rotulo']}`" if x["rotulo"] else "n/d", f"`{x['causa_esperada']}`",
+                  f"`{x['falha_da_cura']}`" if x["falha_da_cura"] else "n/d", _n(x["segundos"])] for x in dado["sem_task_success"]]
+                or [["nenhuma"] + [""] * 7]),
+    ]
+    cab = pf.cabecalho(titulo, "avaliar_fase4.py", "cenarios.jsonl e condicoes_fase4.json da corrida", dado["metadados"]["gerado_em"][:10])
+    cab += ["", ("Os dez cenários da ficha 36 (seis de contrato em produtos_api.php, um por modo, e quatro de localizador no front legado), cada um com o "
+                 "agente inteiro: diagnóstico ao vivo nos dez e cura de seletor nos quatro de localizador. No contrato (ficha 35), o MTTR vai da detecção ao "
+                 "diagnóstico conferido em código e o Task Success é a causa e o campo certos; no localizador, o MTTR vai da detecção à reexecução validada e "
+                 "o Task Success é o roteiro concluído sem erro depois da cura. O banco é restaurado e conferido por hash no começo de cada repetição."), ""]
+    return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
+
+
+# ------------------------------------------------------------------ corrida 22: avaliação da própria trilha (especificação, seção 12)
+
+def ler_trilha(saida: str) -> dict:
+    """condicoes_fase4.json, avaliacao.jsonl (o último registro de cada caso) e seletor.jsonl (o último de cada roteiro) da
+    corrida, mais os casos com gabarito (dos bancos) e a pasta dos relatórios."""
+    raiz = caminhos.fase3(saida)["raiz"]
+    ultimos: dict = {}
+    for r in executar_bateria.ler_jsonl(raiz / "avaliacao.jsonl"):
+        ultimos[r["caso"]] = r
+    sel: dict = {}
+    for r in executar_bateria.ler_jsonl(raiz / "seletor.jsonl"):
+        sel[r["roteiro"]] = r
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) a leitura passa a ler também a trilha: os eventos para os relatórios da
+    # sessão e o que só ela guarda (avaliacao_trilha.leituras_da_trilha).
+    # ! Motivo: o controle da sonda e a comparação da mutação do verbete com a intervenção de troca não estão em avaliacao.jsonl.
+    arq = raiz / "trilha_avaliacao.jsonl"
+    eventos = tr.ler(arq) if arq.exists() else []
+    return {"condicoes": _json(raiz / "condicoes_fase4.json") or {}, "avaliacao": list(ultimos.values()), "seletor": list(sel.values()),
+            "casos": ex.casos_de_avaliacao("avaliacao"), "pasta_relatorios": PASTA_RELATORIOS_REVISAO, "eventos": eventos,
+            "da_trilha": at.leituras_da_trilha(eventos, tr.blobs_de(eventos, raiz / "blobs"))}
+
+
+def _texto_da_sonda(s: dict | None) -> str:
+    if not s or not s.get("aplicavel"):
+        return "sem alvo"
+    texto = "cita o plantado" if s.get("cita_plantado") else "não cita o plantado"
+    return texto + (", rótulo mudou" if s.get("mudou_rotulo") else ", mesmo rótulo")
+
+
+def _texto_da_mutacao(m: dict | None) -> str:
+    if not m or not m.get("aplicavel"):
+        return "sem alvo"
+    div = m.get("primeiro_no_divergente")
+    return div["decisao"] if div else "sem divergência"
+
+
+def _conta_mutacao(tipo: str, itens: list[dict]) -> dict:
+    """A conta de uma mutação: casos aplicáveis, quantos apontaram o nó previsto, outro nó ou não divergiram, e o rótulo que mudou."""
+    apl = [m for m in itens if m.get("aplicavel")]
+    previsto = sum(1 for m in apl if m.get("aponta_o_previsto") is True)
+    outro = sum(1 for m in apl if m.get("primeiro_no_divergente") and m.get("aponta_o_previsto") is False)
+    sem = sum(1 for m in apl if not m.get("primeiro_no_divergente"))
+    return {"tipo": tipo, "no_previsto": at.NO_PREVISTO[tipo], "casos": len(itens), "aplicaveis": len(apl), "sem_alvo": len(itens) - len(apl), "previsto": previsto,
+            "outro_no": outro, "sem_divergencia": sem, "rotulo_mudou": sum(1 for m in apl if m.get("mudou_rotulo")), "previsto_pct": _pct(previsto, len(apl))}
+
+
+def resumir_trilha(bruto: dict, gerado_em: str | None = None, corrida: str | None = None) -> dict:
+    """A leitura da corrida 22: o acerto de cada caso (só aqui o gabarito entra, pelo id do caso), TPR x TNR de cada sinal da
+    trilha contra os erros reais (o principal é a divergência do nó; acaso 0,25), as intervenções por tipo com o limite inferior,
+    a repetição da base, a FONTE verificada pela remoção, a sonda de pós-racionalização, as três mutações contra o nó previsto
+    e a amostra dos relatórios da sessão de revisão (6 certos e 6 errados, semente fixa, embaralhados)."""
+    regs, sel, cond = bruto["avaliacao"], bruto.get("seletor") or [], bruto.get("condicoes") or {}
+    gab = {c["id"]: c for c in bruto["casos"]}
+    pasta_rel = bruto.get("pasta_relatorios") or PASTA_RELATORIOS_REVISAO
+    da = bruto.get("da_trilha") or {}
+    casos, mut_casos = [], []
+    for l in regs:
+        g = gab.get(l["caso"])
+        if g is None:
+            continue
+        esperado = g["gabarito"]["causa_raiz"]
+        rotulo = l.get("rotulo")
+        acerto = rotulo is not None and avaliar._normalizar(rotulo) == avaliar._normalizar(esperado)
+        inter = l.get("intervencoes") or []
+        mu = l.get("mutacoes") or {}
+        casos.append({"caso": l["caso"], "classe": g.get("classe"), "nivel": g.get("nivel"), "gabarito": esperado, "rotulo": rotulo, "acerto": acerto,
+                      "p_rotulo": l.get("p_rotulo"), "selo": l.get("selo"), "falha": l.get("falha"), "sinais": at.sinais_do_caso(l), "intervencoes": len(inter),
+                      "intervencoes_mudaram": sum(1 for i in inter if i.get("mudou_rotulo")), "limite_inferior": sum(1 for i in inter if i.get("limite_inferior")),
+                      "repeticao_manteve": l.get("repeticao_manteve"), "sonda": _texto_da_sonda(l.get("sonda")),
+                      "verbete_trocado": _texto_da_mutacao(mu.get("verbete_trocado")), "contrato_alterado": _texto_da_mutacao(mu.get("contrato_alterado")),
+                      "segundos_base": l.get("segundos_base"), "segundos_total": l.get("segundos_total")})
+        for tipo in ("verbete_trocado", "contrato_alterado"):
+            m = mu.get(tipo) or {}
+            mut_casos.append({"tipo": tipo, "caso": l["caso"], "aplicavel": bool(m.get("aplicavel")), "primeiro_no": ((m.get("primeiro_no_divergente") or {}).get("decisao")),
+                              "aponta_o_previsto": m.get("aponta_o_previsto"), "rotulo_base": rotulo, "rotulo_depois": m.get("rotulo_depois"), "motivo": m.get("motivo")})
+    sinais = [{"sinal": nome, "descricao": desc, **at.tpr_tnr([{"acerto": c["acerto"], "sinal": c["sinais"][nome]} for c in casos])} for nome, desc in at.SINAIS]
+    principal = sinais[0]
+    por_tipo = []
+    validos = [l for l in regs if l["caso"] in gab]
+    for tipo in dv.INTERVENCOES:
+        regs_t = [i for l in validos for i in (l.get("intervencoes") or []) if i.get("tipo") == tipo]
+        quedas = [i["p_antes"] - i["p_depois"] for i in regs_t if isinstance(i.get("p_antes"), (int, float)) and isinstance(i.get("p_depois"), (int, float))]
+        por_tipo.append({"tipo": tipo, "descricao": DESCRICAO_DA_INTERVENCAO[tipo], "n": len(regs_t), "mudou_rotulo": sum(1 for i in regs_t if i.get("mudou_rotulo")),
+                         "limite_inferior": sum(1 for i in regs_t if i.get("limite_inferior")), "queda_media_p": round(sum(quedas) / len(quedas), 4) if quedas else None})
+    com_rep = [l for l in validos if l.get("repeticao_manteve") is not None]
+    remocoes = [i for l in validos for i in (l.get("intervencoes") or []) if i.get("tipo") == "remocao"]
+    sondas = [l.get("sonda") or {} for l in validos]
+    com_alvo = [s for s in sondas if s.get("aplicavel")]
+    pos = sum(1 for s in com_alvo if s.get("pos_racionalizacao"))
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) o controle da sonda (a repetição da base cita o verbete que a sonda plantou?)
+    # e mesmo_prompt: os dois pares de inferências com o mesmo prompt (a repetição da base; a mutação do verbete e a intervenção de troca).
+    # ! Motivo: sem o controle, a sonda conta como pós-racionalização o que a FONTE faria sem nada plantado (2 de 36 na corrida 22); e a mutação do
+    # verbete monta o mesmo prompt da troca, o que tira dela o valor de medida nova e a transforma numa segunda medida da variação.
+    controle = [(l.get("sonda") or {}).get("verbete") in (da[l["caso"]]["fonte_na_repeticao"] or []) for l in validos
+                if (l.get("sonda") or {}).get("aplicavel") and (da.get(l["caso"]) or {}).get("fonte_na_repeticao") is not None]
+    pares_rep = [(l, da[l["caso"]]) for l in validos if (da.get(l["caso"]) or {}).get("repeticao_mesma_resposta") is not None]
+    pares_troca = [(l, da[l["caso"]]) for l in validos if (da.get(l["caso"]) or {}).get("troca_mesmo_prompt") is not None]
+
+    def rotulo_da(l: dict, tipo: str):
+        return next((i.get("rotulo_depois") for i in l.get("intervencoes") or [] if i.get("tipo") == tipo), None)
+
+    mesmo_prompt = [{"par": "repeticao_da_base", "descricao": "a inferência de base e a repetição dela", "n": len(pares_rep), "mesmo_prompt": len(pares_rep),
+                     "mesma_resposta": sum(1 for _, d in pares_rep if d["repeticao_mesma_resposta"]), "mesma_fonte": sum(1 for _, d in pares_rep if d["repeticao_mesma_fonte"]),
+                     "mesmo_rotulo": sum(1 for l, _ in pares_rep if not any(i.get("tipo") == "repeticao_da_base" and i.get("mudou_rotulo") for i in l.get("intervencoes") or []))},
+                    {"par": "verbete_trocado_e_troca", "descricao": "a mutação do verbete e a intervenção de troca", "n": len(pares_troca),
+                     "mesmo_prompt": sum(1 for _, d in pares_troca if d["troca_mesmo_prompt"]), "mesma_resposta": sum(1 for _, d in pares_troca if d["troca_mesma_resposta"]),
+                     "mesma_fonte": sum(1 for _, d in pares_troca if d["troca_mesma_fonte"]),
+                     "mesmo_rotulo": sum(1 for l, _ in pares_troca if rotulo_da(l, "troca") == ((l.get("mutacoes") or {}).get("verbete_trocado") or {}).get("rotulo_depois"))}]
+    mutacoes = [_conta_mutacao(tipo, [(l.get("mutacoes") or {}).get(tipo) or {} for l in validos]) for tipo in ("verbete_trocado", "contrato_alterado")]
+    itens_sel = [{"aplicavel": bool((r.get("dourada") or {}).get("quebrou")) and bool((r.get("mutada") or {}).get("quebrou")), "primeiro_no_divergente": r.get("primeiro_no_divergente"),
+                  "aponta_o_previsto": r.get("aponta_o_previsto"), "mudou_rotulo": (r.get("dourada") or {}).get("rotulo") != (r.get("mutada") or {}).get("rotulo")} for r in sel]
+    mutacoes.append(_conta_mutacao("seletor_quebrado", itens_sel))
+    roteiros = [{"roteiro": r["roteiro"], "modo_dourado": r.get("modo_dourado"), "modo_mutado": r.get("modo_mutado"),
+                 "estrategia_dourada": (r.get("dourada") or {}).get("estrategia"), "estrategia_mutada": (r.get("mutada") or {}).get("estrategia"),
+                 "curada_dourada": bool((r.get("dourada") or {}).get("curado")), "curada_mutada": bool((r.get("mutada") or {}).get("curado")),
+                 "rotulo_dourado": (r.get("dourada") or {}).get("rotulo"), "rotulo_mutado": (r.get("mutada") or {}).get("rotulo"),
+                 "primeiro_no": ((r.get("primeiro_no_divergente") or {}).get("decisao")), "aponta_o_previsto": r.get("aponta_o_previsto"),
+                 "mttr_dourada_s": (r.get("dourada") or {}).get("mttr_s"), "mttr_mutada_s": (r.get("mutada") or {}).get("mttr_s"), "segundos": r.get("segundos")} for r in sel]
+    amostra = [{"posicao": i + 1, "caso": c["caso"], "classe": c["classe"], "relatorio": f"{pasta_rel}/{c['caso']}@base.md"}
+               for i, c in enumerate(at.amostra_de_revisao([{"caso": c["caso"], "acerto": c["acerto"], "classe": c["classe"]} for c in casos]))]
+    n = len(casos)
+    acertos = sum(1 for c in casos if c["acerto"])
+    seg_base = [c["segundos_base"] for c in casos if c.get("segundos_base") is not None]
+    seg_total = [c["segundos_total"] for c in casos if c.get("segundos_total") is not None]
+    resumo = {"casos": n, "acertos": acertos, "erros": n - acertos, "acerto_pct": _pct(acertos, n), "tpr": principal["tpr"], "tnr": principal["tnr"],
+              "produto": principal["produto"], "acaso": at.ACASO, "intervencoes_total": sum(x["n"] for x in por_tipo), "limite_inferior_total": sum(x["limite_inferior"] for x in por_tipo),
+              "inferencias": sum(1 + len(l.get("intervencoes") or []) + (1 if (l.get("sonda") or {}).get("aplicavel") else 0)
+                                 + sum(1 for m in (l.get("mutacoes") or {}).values() if m.get("aplicavel")) for l in validos) + 2 * len(sel),
+              "segundos_base_mediana": _mediana(seg_base), "segundos_por_caso_media": round(sum(seg_total) / len(seg_total), 1) if seg_total else None,
+              "segundos_total": round(sum(seg_total) + sum(r.get("segundos") or 0 for r in sel), 1) if seg_total else None}
+    return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida, "gerado_por": "avaliar_fase4.py --trilha",
+                          "fonte": "avaliacao.jsonl, seletor.jsonl e condicoes_fase4.json da corrida; gabarito dos bancos de casos"},
+            "condicoes": {k: cond.get(k) for k in ("modelo", "versao_ollama", "k", "casos", "parcial", "inferencias_previstas", "biblioteca", "roteiros_do_seletor", "no_previsto")},
+            "resumo": resumo, "sinais": sinais, "intervencoes": por_tipo,
+            "repeticao": {"n": len(com_rep), "manteve": sum(1 for l in com_rep if l["repeticao_manteve"]), "mudou": sum(1 for l in com_rep if not l["repeticao_manteve"])},
+            "fonte": {"casos": len(remocoes), "verificada_pela_remocao": sum(1 for i in remocoes if i.get("mudou_rotulo")), "sem_efeito_medido": sum(1 for i in remocoes if not i.get("mudou_rotulo"))},
+            "sonda": {"casos": len(sondas), "com_alvo": len(com_alvo), "sem_alvo": len(sondas) - len(com_alvo), "cita_plantado": sum(1 for s in com_alvo if s.get("cita_plantado")),
+                      "mudou_rotulo": sum(1 for s in com_alvo if s.get("mudou_rotulo")), "pos_racionalizacao": pos, "taxa_pct": _pct(pos, len(com_alvo)),
+                      "controle_n": len(controle), "controle_cita": sum(1 for c in controle if c), "controle_pct": _pct(sum(1 for c in controle if c), len(controle))},
+            "mesmo_prompt": mesmo_prompt, "mutacoes": mutacoes, "mutacoes_casos": mut_casos,
+            "seletor": {"roteiros": roteiros, "curadas_dourada": sum(1 for r in roteiros if r["curada_dourada"]), "curadas_mutada": sum(1 for r in roteiros if r["curada_mutada"])},
+            "amostra_revisao": amostra, "casos": casos}
+
+
+def render_trilha(dado: dict) -> str:
+    r, so, fo, rep = dado["resumo"], dado["sonda"], dado["fonte"], dado["repeticao"]
+
+    def nome_do_no(x) -> str:
+        return f"`{x}`" if x else "sem divergência"
+
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) TPR, TNR, o produto e o acaso em três casas, com o intervalo de Wilson, o sinal
+    # por gatilho no resumo, o controle da sonda e o bloco novo tb_f4_trilha_mesmo_prompt.
+    # ! Motivo: o formato padrão, de uma casa, pôs o acaso como 0,2 e o produto como 0,3; o intervalo mostra o que 5 erros sustentam; o resto é
+    # o que a leitura da corrida 22 precisa citar com origem em script.
+    def tres(v) -> str:
+        return "n/d" if v is None else a3b.f(float(v), 3)
+
+    def wilson_(ic) -> str:
+        return "n/d" if not ic else f"{_n(float(ic[0]))} a {_n(float(ic[1]))}"
+
+    gat = next((s for s in dado["sinais"] if s["sinal"] == "por_gatilho"), None)
+    blocos = [
+        a3b.tab("tb_f4_trilha_resumo", ["Casos", "Acertos", "Erros", "Acerto (%)", "TPR da divergência", "TNR da divergência", "TPR x TNR", "Acaso", "TPR x TNR só por gatilho", "Inferências", "Intervenções",
+                                        "Com limite inferior", "Repetição manteve o rótulo", "FONTE verificada pela remoção", "Pós-racionalização (%)", "s por caso (média)"],
+                [[str(r["casos"]), str(r["acertos"]), str(r["erros"]), _n(r["acerto_pct"]), tres(r["tpr"]), tres(r["tnr"]), tres(r["produto"]), tres(r["acaso"]), tres((gat or {}).get("produto")),
+                  str(r["inferencias"]), str(r["intervencoes_total"]), str(r["limite_inferior_total"]), f"{rep['manteve']} de {rep['n']}", f"{fo['verificada_pela_remocao']} de {fo['casos']}",
+                  _n(so["taxa_pct"]), _n(r["segundos_por_caso_media"])]]),
+        a3b.tab("tb_f4_trilha_sinais", ["Sinal", "O que é", "Erros", "Acertos", "Pegou (VP)", "Deixou passar (FN)", "Acusou acerto (FP)", "Deixou em paz (VN)", "TPR", "TNR", "TPR x TNR", "Acaso",
+                                        "TPR, Wilson 95% (%)", "TNR, Wilson 95% (%)"],
+                [[f"`{s['sinal']}`", s["descricao"], str(s["erros"]), str(s["acertos"]), str(s["vp"]), str(s["fn"]), str(s["fp"]), str(s["vn"]), tres(s["tpr"]), tres(s["tnr"]), tres(s["produto"]),
+                  tres(s["acaso"]), wilson_(s.get("ic_tpr")), wilson_(s.get("ic_tnr"))] for s in dado["sinais"]]),
+        a3b.tab("tb_f4_trilha_intervencoes", ["Intervenção", "O que é", "Rodou em", "Mudou o rótulo", "Limite inferior", "Queda média de p"],
+                [[f"`{x['tipo']}`", x["descricao"], str(x["n"]), str(x["mudou_rotulo"]), str(x["limite_inferior"]), _tres(x["queda_media_p"])] for x in dado["intervencoes"]]),
+        a3b.tab("tb_f4_trilha_sonda", ["Casos", "Com verbete não citado (alvo)", "Sem alvo", "FONTE passou a citar o plantado", "Rótulo mudou", "Pós-racionalização (cita e mantém o rótulo)",
+                                       "Taxa (%)", "Controle: casos com a repetição da base", "Controle: a repetição cita o mesmo verbete, sem nada plantado", "Controle (%)"],
+                [[str(so["casos"]), str(so["com_alvo"]), str(so["sem_alvo"]), str(so["cita_plantado"]), str(so["mudou_rotulo"]), str(so["pos_racionalizacao"]), _n(so["taxa_pct"]),
+                  str(so.get("controle_n", 0)), str(so.get("controle_cita", 0)), _n(so.get("controle_pct"))]]),
+        a3b.tab("tb_f4_trilha_mesmo_prompt", ["Par de inferências", "O que é", "Pares", "Mesmo prompt", "Mesma resposta", "Mesma FONTE", "Mesmo rótulo"],
+                [[f"`{x['par']}`", x["descricao"], str(x["n"]), str(x["mesmo_prompt"]), str(x["mesma_resposta"]), str(x["mesma_fonte"]), str(x["mesmo_rotulo"])] for x in dado.get("mesmo_prompt") or []]
+                or [["nenhum"] + [""] * 6]),
+        a3b.tab("tb_f4_trilha_mutacoes", ["Mutação", "Nó previsto", "Casos", "Aplicáveis", "Sem alvo", "Apontou o nó previsto", "Apontou outro nó", "Sem divergência", "Rótulo mudou",
+                                          "Previsto (%)"],
+                [[f"`{m['tipo']}`", f"`{m['no_previsto']}`", str(m["casos"]), str(m["aplicaveis"]), str(m["sem_alvo"]), str(m["previsto"]), str(m["outro_no"]), str(m["sem_divergencia"]),
+                  str(m["rotulo_mudou"]), _n(m["previsto_pct"])] for m in dado["mutacoes"]]),
+        a3b.tab("tb_f4_trilha_seletor", ["Roteiro", "Modo dourado", "Modo mutado", "Cura dourada", "Cura mutada", "Rótulo dourado", "Rótulo mutado", "Primeiro nó divergente",
+                                         "Previsto (cura)", "MTTR dourada (s)", "MTTR mutada (s)"],
+                [[f"`{x['roteiro']}`", f"`{x['modo_dourado']}`", f"`{x['modo_mutado']}`", f"`{x['estrategia_dourada']}`" if x["curada_dourada"] else "sem cura",
+                  f"`{x['estrategia_mutada']}`" if x["curada_mutada"] else "sem cura", f"`{x['rotulo_dourado']}`", f"`{x['rotulo_mutado']}`", nome_do_no(x["primeiro_no"]),
+                  _sim(x["aponta_o_previsto"]) if x["aponta_o_previsto"] is not None else "n/d", _n(x["mttr_dourada_s"]), _n(x["mttr_mutada_s"])] for x in dado["seletor"]["roteiros"]]
+                or [["nenhum"] + [""] * 10]),
+        a3b.tab("tb_f4_trilha_amostra", ["Posição", "Caso", "Classe", "Relatório"],
+                [[str(x["posicao"]), f"`{x['caso']}`", _n(x["classe"]), f"`{x['relatorio']}`"] for x in dado["amostra_revisao"]] or [["nenhum", "", "", ""]]),
+        a3b.tab("tb_f4_trilha_casos", ["Caso", "Classe", "Gabarito", "Rótulo", "Resultado", "p", "Selo", "Falha", "Divergência", "Por gatilho", "Remoção ou troca", "Sem documentação", "Intervenções",
+                                       "Limite inferior", "Repetição manteve", "Sonda", "Verbete trocado", "Contrato alterado", "s no caso"],
+                [[f"`{c['caso']}`", _n(c["classe"]), f"`{c['gabarito']}`", f"`{c['rotulo']}`", "certo" if c["acerto"] else "errado", tres(c["p_rotulo"]), _n(c["selo"]), _n(c["falha"]),
+                  _sim(c["sinais"]["divergencia"]), _sim(c["sinais"]["por_gatilho"]), _sim(c["sinais"]["remocao_ou_troca"]), _sim(c["sinais"]["sem_documentacao"]), str(c["intervencoes"]), str(c["limite_inferior"]),
+                  _sim(c["repeticao_manteve"]) if c["repeticao_manteve"] is not None else "n/d", c["sonda"], c["verbete_trocado"], c["contrato_alterado"], _n(c["segundos_total"])]
+                 for c in dado["casos"]] or [["nenhum"] + [""] * 18]),
+    ]
+    cab = pf.cabecalho(TITULO_TRILHA, "avaliar_fase4.py", "avaliacao.jsonl, seletor.jsonl e condicoes_fase4.json da corrida 22", dado["metadados"]["gerado_em"][:10])
+    cab += ["", ("Especificação da trilha, seção 12: (a) a divergência que a trilha sinaliza coincide com os erros reais? Medida como TPR vezes TNR (o acaso dá 0,25); "
+                 "o sinal principal é a divergência registrada no nó de diagnóstico, e os outros sinais dizem de onde ela vem. (b) Quando a falha é injetada de propósito "
+                 "(verbete trocado na busca, contrato alterado na poda, seletor quebrado na cura), o primeiro nó que diverge da trilha da base é o nó previsto? "
+                 "(c) A sonda de pós-racionalização planta um trecho num verbete entregue que a FONTE não citou e mede se a FONTE passa a citá-lo com o mesmo rótulo; o controle "
+                 "é a repetição da inferência de base, sem nada plantado. O sinal por gatilho é a divergência contada como o agente roda fora da avaliação, sem a amostra fixa. "
+                 "O gabarito entra só nesta leitura, nunca no agente; a amostra de revisão não diz qual relatório está certo."), ""]
+    return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
+
+
+def planilha_de_revisao_da_trilha(dado: dict) -> str:
+    """A planilha da sessão de revisão com o Eric (plano, P7): uma linha por relatório da amostra, na ordem sorteada, com as
+    células do revisor em branco (tempo até a decisão, erro localizado, decisão, utilidade percebida e a avaliação); a ordem e o
+    conteúdo não dizem qual relatório está certo."""
+    import biblioteca_fase4 as bf
+    cab = ["<!-- ! Alteração de IA - Revisar: planilha DERIVADA da sessão de revisão dos relatórios da trilha (Fase 4, P7), gerada por avaliar_fase4.py --trilha a partir de trilha.json; "
+           "só as células do revisor são preenchidas à mão, e o harness não a regrava depois de preenchida.",
+           "     ! Motivo: a especificação da trilha (seção 12 c) mede, com um revisor humano, o acerto da localização do erro, o tempo até a decisão e a adesão apropriada (aceitar o "
+           "diagnóstico certo e recusar o errado), com a utilidade percebida como medida secundária; sem a planilha a sessão não teria registro conferível. -->",
+           f"# Sessão de revisão dos relatórios da trilha (corrida {dado['metadados'].get('corrida') or 'fase4_trilha'})", "",
+           "Como preencher, um relatório por vez, na ordem da tabela: abra só o relatório indicado (o caminho é relativo a esta pasta; os de `fase4_trilha/relatorios/` não servem, "
+           "porque saíram sem o caso), cronometre do início da leitura até "
+           "decidir se aceita ou recusa o diagnóstico e anote os segundos em \"Tempo até a decisão\"; diga se achou no relatório onde está o erro (sim, não ou n.a. quando "
+           "não vê erro); a decisão (aceitar ou recusar); a utilidade do relatório de 1 (nenhuma) a 5 (decidiu sozinho); e a sua avaliação do diagnóstico (certo ou errado). "
+           "Não consulte `trilha.md` nem `trilha.json` antes de preencher: eles dizem o resultado de cada caso, e a adesão apropriada só vale às cegas.", "",
+           "| # | Caso | Classe | Relatório | Tempo até a decisão (s) | Erro localizado (sim, não, n.a.) | Decisão (aceitar, recusar) | Utilidade (1 a 5) | Avaliação (certo, errado) | Comentário |",
+           "|---|---|---|---|---|---|---|---|---|---|"]
+    linhas = [f"| {x['posicao']} | `{x['caso']}` | {x['classe']} | `{x['relatorio']}` | {bf.CELULA_EM_BRANCO} | {bf.CELULA_EM_BRANCO} | {bf.CELULA_EM_BRANCO} | "
+              f"{bf.CELULA_EM_BRANCO} | {bf.CELULA_EM_BRANCO} |  |" for x in dado["amostra_revisao"]]
+    return "\n".join(cab + linhas) + "\n"
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) relatorios_da_amostra: os relatórios v2 da amostra, regerados da trilha da corrida com
+# o gerador corrigido, gravados ao lado da planilha e conferidos pelo --check.
+# ! Motivo: os relatórios que a corrida gravou saíram sem o caso (sintoma, requisição, contrato); a pasta da corrida fica como ela deixou, e a sessão
+# de revisão precisa de relatórios que permitam julgar o diagnóstico.
+def relatorios_da_amostra(dado: dict, eventos: list[dict], saida: str, pasta: Path, check: bool = False) -> int:
+    """Grava (ou, com check, confere) o relatório de cada caso da amostra de revisão; devolve 1 quando o check acha um que difere."""
+    import gerar_relatorio_raciocinio as grr
+    raiz = caminhos.fase3(saida)["raiz"]
+    slug = executar_fase3._slug((dado.get("condicoes") or {}).get("modelo") or ex.MODELO_PADRAO)
+    diferentes = []
+    for x in dado["amostra_revisao"]:
+        comando = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo avaliacao_trilha --saida {saida}_reexec --ids {x['caso']} --sem-seletor"
+        texto = grr.relatorio_do_caso_v2(eventos, f"{saida}/{slug}/{x['caso']}@base", comando_reexecucao=comando, pasta_blobs=raiz / "blobs")
+        destino = pasta / x["relatorio"]
+        if check:
+            if not destino.exists() or destino.read_text(encoding="utf-8") != texto:
+                diferentes.append(x["caso"])
+            continue
+        destino.parent.mkdir(parents=True, exist_ok=True)
+        destino.write_text(texto, encoding="utf-8", newline="\n")
+    if check:
+        print(f"--check: relatórios da sessão de revisão " + (f"DIFEREM: {diferentes}" if diferentes else "batem com a trilha"))
+        return 1 if diferentes else 0
+    print(f"relatórios da sessão de revisão: {len(dado['amostra_revisao'])} gravados em {pasta / PASTA_RELATORIOS_REVISAO}")
+    return 0
 
 
 # ------------------------------------------------------------------ pontes de versão (regra R6)
@@ -953,10 +1363,224 @@ def pontes_conhecidas(modelo: str = ex.MODELO_PADRAO) -> dict:
             "pontes": entradas}
 
 
+# ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) a leitura `--revisao`: a planilha revisao_trilha.md preenchida contra o acerto de cada caso em trilha.json, com os
+# blocos `tb_f4_revisao_*` em `leitura_revisao_trilha.{json,md}`.
+# ! Motivo: especificação da trilha, seção 12 c: acerto da localização do erro, tempo até a decisão e adesão apropriada (aceitar o diagnóstico quando está certo e recusar quando
+# está errado), com um revisor humano, e a utilidade percebida como medida secundária. A conta foi escrita e testada antes da sessão; com a planilha incompleta a leitura não sai,
+# porque ela mostra o resultado de cada caso.
+NOME_REVISAO, PREFIXO_REVISAO = "leitura_revisao_trilha", "tb_f4_revisao_"
+TITULO_REVISAO = "Sessão de revisão dos relatórios da trilha (corrida 22)"
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 86) a marca do parecer aprovado na planilha e o arquivo da pré-análise do Claude.
+# ! Motivo: o Eric respondeu um relatório antes de ler a pré-análise e aprovou o parecer nos outros; a leitura precisa saber quem decidiu cada um, para não apresentar o julgamento do Claude como a medida com revisor humano da especificação (seção 12 c).
+TEMPO_NAO_MEDIDO = "não medido"
+ARQ_PRE_ANALISE = "pre_analise_revisao_trilha.md"
+ROTULO_ORIGEM = {"revisor": "resposta do revisor", "parecer_aprovado": "parecer do Claude aprovado"}
+
+
+def ler_planilha_de_revisao(texto: str) -> dict:
+    """As linhas preenchidas da planilha, com os números já convertidos, e os casos ainda em branco; uma célula fora do que a planilha aceita levanta ValueError."""
+    import biblioteca_fase4 as bf
+    linhas, em_branco = [], []
+    for linha in texto.splitlines():
+        if not re.match(r"^\| \d+ \|", linha):
+            continue
+        c = [x.strip() for x in linha.strip().strip("|").split("|")]
+        caso, tempo, erro, decisao, utilidade, avaliacao = c[1].strip("`"), c[4], c[5], c[6], c[7], c[8]
+        if bf.CELULA_EM_BRANCO in (tempo, erro, decisao, utilidade, avaliacao):
+            em_branco.append(caso)
+            continue
+        if ((not tempo.isdigit() and tempo != TEMPO_NAO_MEDIDO) or not utilidade.isdigit() or not 1 <= int(utilidade) <= 5 or erro not in ("sim", "não", "n.a.")
+                or decisao not in ("aceitar", "recusar") or avaliacao not in ("certo", "errado")):
+            raise ValueError(f"linha de {caso} com valor que a planilha não aceita: {c[4:9]}")
+        linhas.append({"posicao": int(c[0]), "caso": caso, "origem": "revisor" if tempo.isdigit() else "parecer_aprovado", "segundos": int(tempo) if tempo.isdigit() else None, "erro_localizado": erro, "decisao": decisao, "utilidade": int(utilidade), "avaliacao": avaliacao,
+                       "comentario": c[9] if len(c) > 9 else ""})
+    return {"linhas": linhas, "em_branco": em_branco}
+
+
+def ler_pre_analise(texto: str) -> dict[int, dict]:
+    """O parecer do Claude por posição na planilha: erro localizado, decisão, utilidade, avaliação, a causa que ele daria (None quando é a mesma do agente) e a confiança."""
+    parecer = {}
+    for linha in texto.splitlines():
+        if re.match(r"^\| \d+ \|", linha):
+            c = [x.strip() for x in linha.strip().strip("|").split("|")]
+            causa = c[8].strip("`")
+            parecer[int(c[0])] = {"erro_localizado": c[4], "decisao": c[5], "utilidade": int(c[6]), "avaliacao": c[7], "causa": None if causa == "a mesma" else causa, "confianca": c[9]}
+    return parecer
+
+
+def resumir_revisao(trilha_: dict, linhas: list[dict], gerado_em: str | None = None, corrida: str | None = None, parecer: dict[int, dict] | None = None) -> dict:
+    """Junta as respostas da planilha ao acerto de cada caso em trilha.json. Apropriada é aceitar o diagnóstico certo ou recusar o errado; num diagnóstico errado, erro localizado
+    "sim" é ter achado o erro do agente no relatório, e num diagnóstico certo é ter apontado um erro onde não há. `origem` separa a resposta do revisor do parecer do Claude aprovado,
+    e `parecer`, quando há, é conferido sozinho contra o gabarito nos relatórios todos."""
+    por_caso = {c["caso"]: c for c in trilha_["casos"]}
+    casos = []
+    for l in linhas:
+        c = por_caso.get(l["caso"])
+        if c is None:
+            raise ValueError(f"caso da planilha fora de trilha.json: {l['caso']}")
+        casos.append({**l, "classe": c.get("classe"), "gabarito": c["gabarito"], "rotulo": c["rotulo"], "acerto": c["acerto"], "selo": c.get("selo"), "p_rotulo": c.get("p_rotulo"),
+                      "apropriada": (l["decisao"] == "aceitar") == c["acerto"], "avaliacao_bate": (l["avaliacao"] == "certo") == c["acerto"]})
+        p = (parecer or {}).get(l["posicao"])
+        if p:
+            dada = p["causa"] or c["rotulo"]
+            casos[-1]["parecer"] = {**p, "causa_dada": dada, "causa_certa": avaliar._normalizar(dada) == avaliar._normalizar(c["gabarito"]),
+                                    "apropriada": (p["decisao"] == "aceitar") == c["acerto"], "avaliacao_bate": (p["avaliacao"] == "certo") == c["acerto"]}
+    certos = [c for c in casos if c["acerto"]]
+    errados = [c for c in casos if not c["acerto"]]
+    aceitos = [c for c in casos if c["decisao"] == "aceitar"]
+    recusados = [c for c in casos if c["decisao"] == "recusar"]
+
+    def proporcao(k: int, n: int) -> dict:
+        return {"pct": round(100 * k / n, 1) if n else None, "ic": list(at._wilson_sem_zero_negativo(k, n)) if n else None}
+
+    def adesao(grupo: str, sub: list[dict]) -> dict:
+        k = sum(1 for c in sub if c["apropriada"])
+        return {"grupo": grupo, "n": len(sub), "aceitou": sum(1 for c in sub if c["decisao"] == "aceitar"), "recusou": sum(1 for c in sub if c["decisao"] == "recusar"),
+                "apropriadas": k, **proporcao(k, len(sub))}
+
+    def localizacao(grupo: str, sub: list[dict]) -> dict:
+        sim = sum(1 for c in sub if c["erro_localizado"] == "sim")
+        p = proporcao(sim, len(sub))
+        return {"grupo": grupo, "n": len(sub), "sim": sim, "nao": sum(1 for c in sub if c["erro_localizado"] == "não"), "na": sum(1 for c in sub if c["erro_localizado"] == "n.a."),
+                "pct_sim": p["pct"], "ic": p["ic"]}
+
+    def tempo(grupo: str, sub: list[dict]) -> dict:
+        t = [c["segundos"] for c in sub if c["segundos"] is not None]
+        return {"grupo": grupo, "n": len(t), "mediana": statistics.median(t) if t else None, "minimo": min(t) if t else None, "maximo": max(t) if t else None}
+
+    def utilidade(grupo: str, sub: list[dict]) -> dict:
+        u = [c["utilidade"] for c in sub]
+        return {"grupo": grupo, "n": len(u), "mediana": statistics.median(u) if u else None, "contagem": {str(v): u.count(v) for v in range(1, 6)}}
+
+    def disse(sub: list[dict], valor: str) -> int:
+        return sum(1 for c in sub if c["avaliacao"] == valor)
+
+    def por_origem(origem: str) -> dict:
+        sub = [c for c in casos if c["origem"] == origem]
+        k = sum(1 for c in sub if c["apropriada"])
+        return {"origem": origem, "n": len(sub), "apropriadas": k, **proporcao(k, len(sub)), "avaliacao_bate": sum(1 for c in sub if c["avaliacao_bate"])}
+
+    com_parecer = [c for c in casos if c.get("parecer")]
+    bloco_parecer = None
+    if com_parecer:
+        ap_, causa_ = sum(1 for c in com_parecer if c["parecer"]["apropriada"]), sum(1 for c in com_parecer if c["parecer"]["causa_certa"])
+        bloco_parecer = {"n": len(com_parecer), "apropriadas": ap_, **proporcao(ap_, len(com_parecer)), "causa_certa": causa_, "pct_causa": proporcao(causa_, len(com_parecer))["pct"],
+                         "avaliacao_bate": sum(1 for c in com_parecer if c["parecer"]["avaliacao_bate"]), "errou_a_decisao": [c["caso"] for c in com_parecer if not c["parecer"]["apropriada"]],
+                         "errou_a_causa": [c["caso"] for c in com_parecer if not c["parecer"]["causa_certa"]]}
+    bate = sum(1 for c in casos if c["avaliacao_bate"])
+    todos_adesao = adesao("todos", casos)
+    erros_corrida = sum(1 for c in trilha_["casos"] if not c["acerto"])
+    return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida, "gerado_por": "avaliar_fase4.py --revisao", "planilha": "revisao_trilha.md"},
+            "resumo": {"relatorios": len(casos), "respostas_do_revisor": sum(1 for c in casos if c["origem"] == "revisor"), "pareceres_aprovados": sum(1 for c in casos if c["origem"] == "parecer_aprovado"), "acertos_na_amostra": len(certos), "erros_na_amostra": len(errados), "acertos_na_corrida": len(trilha_["casos"]) - erros_corrida, "erros_na_corrida": erros_corrida,
+                       "adesao_apropriada": todos_adesao["apropriadas"], "adesao_pct": todos_adesao["pct"], "adesao_ic": todos_adesao["ic"], "tempo_mediana_s": tempo("todos", casos)["mediana"],
+                       "erros_localizados": sum(1 for c in errados if c["erro_localizado"] == "sim"), "utilidade_mediana": utilidade("todos", casos)["mediana"]},
+            "por_origem": [por_origem(o) for o in ROTULO_ORIGEM if any(c["origem"] == o for c in casos)], "parecer": bloco_parecer,
+            "duvidas_de_leitura": [c["caso"] for c in casos if c["erro_localizado"] == "sim" and c["avaliacao"] == "certo"],
+            "adesao": [adesao("diagnóstico certo", certos), adesao("diagnóstico errado", errados), todos_adesao],
+            "localizacao": [localizacao("diagnóstico errado", errados), localizacao("diagnóstico certo", certos)],
+            "tempo": [tempo("todos", casos), tempo("diagnóstico certo", certos), tempo("diagnóstico errado", errados), tempo("aceitos", aceitos), tempo("recusados", recusados)],
+            "utilidade": [utilidade("todos", casos), utilidade("diagnóstico certo", certos), utilidade("diagnóstico errado", errados)],
+            "avaliacao": {"n": len(casos), "acertos": bate, **proporcao(bate, len(casos)), "certo_disse_certo": disse(certos, "certo"), "certo_disse_errado": disse(certos, "errado"),
+                          "errado_disse_certo": disse(errados, "certo"), "errado_disse_errado": disse(errados, "errado"),
+                          "decisao_e_avaliacao_discordam": [c["caso"] for c in casos if (c["decisao"] == "aceitar") != (c["avaliacao"] == "certo")]},
+            "casos": casos}
+
+
+def render_revisao(dado: dict) -> str:
+    r, a = dado["resumo"], dado["avaliacao"]
+
+    def wilson_(ic) -> str:
+        return "n/d" if not ic else f"{_n(float(ic[0]))} a {_n(float(ic[1]))}"
+
+    def pct(v) -> str:
+        return "n/d" if v is None else _n(float(v))
+
+    blocos = [
+        a3b.tab("tb_f4_revisao_resumo", ["Relatórios", "Com resposta do revisor", "Com parecer aprovado", "Diagnósticos certos", "Diagnósticos errados", "Adesão apropriada", "Adesão (%)", "Wilson 95%", "Tempo mediano (s)", "Erros achados", "Utilidade mediana"],
+                [[str(r["relatorios"]), str(r["respostas_do_revisor"]), str(r["pareceres_aprovados"]), str(r["acertos_na_amostra"]), str(r["erros_na_amostra"]), str(r["adesao_apropriada"]), pct(r["adesao_pct"]), wilson_(r["adesao_ic"]), _n(r["tempo_mediana_s"]),
+                  f"{r['erros_localizados']} de {r['erros_na_amostra']}", _n(r["utilidade_mediana"])]]),
+        a3b.tab("tb_f4_revisao_origem", ["Quem decidiu", "Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Avaliação igual ao gabarito"],
+                [[ROTULO_ORIGEM[x["origem"]], str(x["n"]), str(x["apropriadas"]), pct(x["pct"]), wilson_(x["ic"]), str(x["avaliacao_bate"])] for x in dado["por_origem"]]),
+        a3b.tab("tb_f4_revisao_adesao", ["Grupo", "Relatórios", "Aceitou", "Recusou", "Apropriadas", "Apropriadas (%)", "Wilson 95%"],
+                [[x["grupo"], str(x["n"]), str(x["aceitou"]), str(x["recusou"]), str(x["apropriadas"]), pct(x["pct"]), wilson_(x["ic"])] for x in dado["adesao"]]),
+        a3b.tab("tb_f4_revisao_localizacao", ["Grupo", "Relatórios", "Achou um erro", "Não achou", "Não viu erro", "Achou (%)", "Wilson 95%"],
+                [[x["grupo"], str(x["n"]), str(x["sim"]), str(x["nao"]), str(x["na"]), pct(x["pct_sim"]), wilson_(x["ic"])] for x in dado["localizacao"]]),
+        a3b.tab("tb_f4_revisao_tempo", ["Grupo", "Relatórios", "Mediana (s)", "Mínimo (s)", "Máximo (s)"],
+                [[x["grupo"], str(x["n"]), _n(x["mediana"]), _n(x["minimo"]), _n(x["maximo"])] for x in dado["tempo"]]),
+        a3b.tab("tb_f4_revisao_utilidade", ["Grupo", "Relatórios", "Mediana", "1", "2", "3", "4", "5"],
+                [[x["grupo"], str(x["n"]), _n(x["mediana"])] + [str(x["contagem"][str(v)]) for v in range(1, 6)] for x in dado["utilidade"]]),
+        a3b.tab("tb_f4_revisao_avaliacao", ["Diagnóstico", "Revisor disse certo", "Revisor disse errado"],
+                [["certo", str(a["certo_disse_certo"]), str(a["certo_disse_errado"])], ["errado", str(a["errado_disse_certo"]), str(a["errado_disse_errado"])]]),
+        a3b.tab("tb_f4_revisao_casos", ["#", "Caso", "Gabarito", "Rótulo", "Resultado", "Selo", "Quem decidiu", "Tempo (s)", "Erro localizado", "Decisão", "Apropriada", "Utilidade", "Avaliação", "Causa no parecer do Claude", "Comentário"],
+                [[str(c["posicao"]), f"`{c['caso']}`", f"`{c['gabarito']}`", f"`{c['rotulo']}`", "certo" if c["acerto"] else "errado", _n(c["selo"]), ROTULO_ORIGEM[c["origem"]], _n(c["segundos"]), c["erro_localizado"], c["decisao"],
+                  _sim(c["apropriada"]), str(c["utilidade"]), c["avaliacao"], f"`{c['parecer']['causa_dada']}`" if c.get("parecer") else "n/d", c["comentario"]] for c in dado["casos"]] or [["nenhum"] + [""] * 14]),
+    ]
+    pa = dado.get("parecer")
+    if pa:
+        blocos.insert(2, a3b.tab("tb_f4_revisao_parecer", ["Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Causa certa", "Causa certa (%)", "Avaliação igual ao gabarito", "Errou a decisão", "Errou a causa"],
+                                 [[str(pa["n"]), str(pa["apropriadas"]), pct(pa["pct"]), wilson_(pa["ic"]), str(pa["causa_certa"]), pct(pa["pct_causa"]), str(pa["avaliacao_bate"]),
+                                   ", ".join(f"`{x}`" for x in pa["errou_a_decisao"]) or "nenhum", ", ".join(f"`{x}`" for x in pa["errou_a_causa"]) or "nenhum"]]))
+    cab = pf.cabecalho(TITULO_REVISAO, "avaliar_fase4.py", "revisao_trilha.md preenchida e trilha.json", dado["metadados"]["gerado_em"][:10])
+    cab += ["", ("Especificação da trilha, seção 12 c: com um revisor humano, o acerto da localização do erro, o tempo até a decisão e a adesão apropriada (aceitar o diagnóstico quando está certo e "
+                 "recusar quando está errado), com a utilidade percebida como medida secundária. A conta foi escrita e testada antes de abrir o gabarito, e a planilha foi preenchida sem ver o resultado de cada caso."), "",
+            (f"Um revisor só, o autor do trabalho, que conhece o banco de casos. A amostra traz {r['erros_na_amostra']} dos {r['erros_na_corrida']} erros da corrida e {r['acertos_na_amostra']} dos "
+             f"{r['acertos_na_corrida']} acertos, e o revisor sabia disso, então a proporção de errados nela não é a da corrida. Erro localizado é o que o revisor declarou: num diagnóstico errado, achar um "
+             "erro é ter encontrado o erro do agente no relatório; num diagnóstico certo, é ter apontado um erro onde não há. O tempo conta só com o relatório à vista."), ""]
+    if r["pareceres_aprovados"]:
+        verbo = "tem" if r["respostas_do_revisor"] == 1 else "têm"
+        cab += [(f"Só {r['respostas_do_revisor']} dos {r['relatorios']} relatórios {verbo} resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros {r['pareceres_aprovados']} são o parecer do Claude, "
+                 "aprovado pelo Eric sem resposta própria (decisões 85 e 86), e ficam sem tempo medido. Por isso esta leitura não cumpre a medida com revisor humano da especificação: na maior parte, a adesão, a localização e a utilidade abaixo são do Claude. Isso fica como limitação declarada (decisão 87)."), ""]
+    if pa:
+        cab += [(f"O parecer do Claude, nos {pa['n']} relatórios, foi escrito sem abrir o gabarito, mas por quem sabia quantos erros a amostra tem e já tinha visto os nomes dos casos; os limites estão em `{ARQ_PRE_ANALISE}`."), ""]
+    if dado["duvidas_de_leitura"]:
+        cab += [("Em " + ", ".join(f"`{x}`" for x in dado["duvidas_de_leitura"]) + ", o revisor marcou que achou o erro num diagnóstico que avaliou como certo. Ele pode ter lido \"erro\" como o defeito do sistema, e não como o erro do agente; "
+                 "a conta de localização trata isso como apontar um erro onde não há, e a resposta fica como ele deu."), ""]
+    cab += [
+            (("Somando a resposta do revisor e o parecer aprovado, a planilha avalia " if r["pareceres_aprovados"] else "O revisor avaliou ") + f"{a['acertos']} de {a['n']} diagnósticos como o gabarito ({pct(a['pct'])}%, Wilson 95% {wilson_(a['ic'])}). Decisão e avaliação discordam em "
+             f"{len(a['decisao_e_avaliacao_discordam'])} relatório(s)" + (": " + ", ".join(f"`{x}`" for x in a["decisao_e_avaliacao_discordam"]) + "." if a["decisao_e_avaliacao_discordam"] else ".")), ""]
+    return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
+
+
+def fechar_revisao(pasta: Path, nome: str = NOME_REVISAO, check: bool = False, colar: bool = False, doc: Path = RELATORIO) -> int:
+    """Lê a planilha e trilha.json da pasta e grava (ou confere) a leitura; devolve 2, sem gravar e sem mostrar resultado nenhum, enquanto houver relatório em branco."""
+    planilha, arq_trilha = pasta / f"revisao_{NOME_TRILHA}.md", pasta / f"{NOME_TRILHA}.json"
+    if not planilha.exists() or not arq_trilha.exists():
+        print(f"falta {planilha.name} ou {arq_trilha.name} em {pasta}")
+        return 2
+    lida = ler_planilha_de_revisao(planilha.read_text(encoding="utf-8"))
+    if lida["em_branco"]:
+        print(f"{planilha.name} tem {len(lida['em_branco'])} de {len(lida['em_branco']) + len(lida['linhas'])} relatórios em branco; a leitura só sai com ela inteira, porque mostra o resultado de cada caso")
+        return 2
+    trilha_ = json.loads(arq_trilha.read_text(encoding="utf-8"))
+    arq_parecer = pasta / ARQ_PRE_ANALISE
+    parecer = ler_pre_analise(arq_parecer.read_text(encoding="utf-8")) if arq_parecer.exists() else None
+    dado = resumir_revisao(trilha_, lida["linhas"], corrida=(trilha_.get("metadados") or {}).get("corrida"), parecer=parecer)
+    return pf.fechar(nome, dado, render_revisao(dado), PREFIXO_REVISAO, check=check, colar=colar, pasta=pasta, doc=doc)
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) `LEITURA_NO_RELATORIO` diz de qual leitura são os blocos de cada prefixo que tem mais de uma, e `fechar_no_relatorio` aplica isso no --check e no --colar.
+# ! Motivo: a corrida 17 tem duas leituras (os 72 casos e os 36 inéditos) e as corridas 18 e 21 têm as repetições 18b (decisão 82) e 21b (roadmap §2.14), todas com os mesmos nomes de bloco. O --colar só aceitava o nome padrão, que nas corridas 18 e 21 é a leitura que não vale, e o --check da leitura de fora acusaria bloco divergente no relatório. Agora o --colar recusa a leitura de fora e a corrida que não bate com o .md gravado da leitura vigente, e o --check da leitura de fora confere só os arquivos dela.
+LEITURA_NO_RELATORIO = {PREFIXO: NOME, PREFIXO_TELA: "tela_v2", PREFIXO_CENARIOS: "cenarios_v2"}
+
+
+def fechar_no_relatorio(nome: str, dado: dict, md: str, prefixo: str, check: bool = False, colar: bool = False, pasta: Path | None = None, doc: Path = RELATORIO) -> int:
+    """`pre_fase4.fechar` para os prefixos com mais de uma leitura: os blocos do relatório são só os da leitura vigente (`LEITURA_NO_RELATORIO`)."""
+    vigente = LEITURA_NO_RELATORIO[prefixo]
+    if colar:
+        if nome != vigente:
+            raise SystemExit(f"--colar: os blocos {prefixo}* de {doc.name} são da leitura {vigente}, não de {nome}; use --nome {vigente} com a corrida dela")
+        arq_md = (pasta or pasta_fase4()) / f"{nome}.md"
+        gravado = arq_md.read_text(encoding="utf-8") if arq_md.exists() else ""
+        if gravado.split("\n", 3)[-1] != md.split("\n", 3)[-1]:
+            raise SystemExit(f"--colar: os blocos gerados desta corrida não são os de {arq_md.name}; confira --saida (o --check da leitura mostra o que difere)")
+    return pf.fechar(nome, dado, md, prefixo, check=check, colar=colar, pasta=pasta, doc=doc, blocos_de=None if nome == vigente else vigente)
+
+
 def nome_dos_arquivos(pedido: str | None, modo: str) -> str:
     """O nome dos arquivos da leitura em resultados_alvo/fase4: o pedido por --nome ou o padrão do modo
     (reproducibilidade, calibracao, tela)."""
-    padrao = {"reproducao": NOME, "calibracao": NOME_CALIBRACAO, "tela": NOME_TELA, "cura": NOME_CURA, "biblioteca": NOME_BIBLIOTECA}[modo]
+    padrao = {"reproducao": NOME, "calibracao": NOME_CALIBRACAO, "tela": NOME_TELA, "cura": NOME_CURA, "biblioteca": NOME_BIBLIOTECA,
+              "cenarios": NOME_CENARIOS, "trilha": NOME_TRILHA, "revisao": NOME_REVISAO}[modo]
     return pedido or padrao
 
 
@@ -985,6 +1609,11 @@ def montar_parser() -> argparse.ArgumentParser:
     ap.add_argument("--pontes", action="store_true", help="regrava resultados_alvo/fase4/pontes.json a partir das pontes já rodadas")
     ap.add_argument("--cura", action="store_true", help="avalia a corrida 19 (cura de seletor, regra R3)")
     ap.add_argument("--biblioteca", action="store_true", help="avalia a corrida 20 (biblioteca em produção e ciclo de correção, regras R4 e R5)")
+    ap.add_argument("--cenarios", action="store_true", help="avalia a corrida 21 (ensaio dos cenários da Fase 5: MTTR e Task Success)")
+    ap.add_argument("--trilha", action="store_true", help="avalia a corrida 22 (avaliação da própria trilha: TPR x TNR, sonda, mutações, amostra de revisão)")
+    # ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) `--revisao` lê a planilha preenchida da sessão contra trilha.json.
+    # ! Motivo: é a última medida da especificação da trilha (seção 12 c) e não sai de uma corrida, sai das respostas do revisor.
+    ap.add_argument("--revisao", action="store_true", help="lê a sessão de revisão: a planilha revisao_trilha.md preenchida contra o acerto de cada caso em trilha.json")
     ap.add_argument("--saida", default="fase4_reproducao")
     # ! Alteração de IA - Revisar: (01/11/2026, ficha 37) `--nome` sem padrão fixo: cada modo tem o seu (reproducibilidade,
     # tela) e `--tela --nome tela_v2` grava a leitura da repetição da corrida 18 sem regravar `tela.{json,md}`.
@@ -1002,9 +1631,9 @@ def main() -> int:
     ap = montar_parser()
     args = ap.parse_args()
     print(caminhos.descricao())
-    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca") if getattr(args, m)]
+    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca", "cenarios", "trilha", "revisao") if getattr(args, m)]
     if len(modos) != 1:
-        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca ou --pontes")
+        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca, --cenarios, --trilha, --revisao ou --pontes")
     pasta = Path(args.pasta) if args.pasta else pasta_fase4()
     oficial = pasta.resolve() == pasta_fase4().resolve()
 
@@ -1017,6 +1646,39 @@ def main() -> int:
 
     if args.pontes:
         return _conferir_ou_gravar_json(pasta / "pontes.json", pontes_conhecidas(), args.check)
+    if args.revisao:
+        return fechar_revisao(pasta, nome_dos_arquivos(args.nome, "revisao"), check=args.check, colar=args.colar)
+    if args.trilha:
+        bruto = ler_trilha(args.saida)
+        if not bruto["avaliacao"]:
+            print(f"sem avaliacao.jsonl em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        nome_t = nome_dos_arquivos(args.nome, "trilha")
+        if args.colar and nome_t != NOME_TRILHA:
+            ap.error("--colar só com o nome padrão")
+        dado = resumir_trilha(bruto, corrida=args.saida)
+        codigo = pf.fechar(nome_t, dado, render_trilha(dado), PREFIXO_TRILHA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
+        if not args.colar:
+            codigo = max(codigo, relatorios_da_amostra(dado, bruto["eventos"], args.saida, pasta, check=args.check))
+        if not args.check and not args.colar:
+            # a planilha da sessão de revisão nasce ao lado da leitura e nunca é regravada depois de preenchida (como revisao_do_lote.md)
+            import biblioteca_fase4 as bf
+            estado = bf.gravar_planilha_de_revisao(pasta / f"revisao_{nome_t}.md", planilha_de_revisao_da_trilha(dado))
+            print(f"planilha da sessão de revisão: revisao_{nome_t}.md {estado}")
+        return codigo
+    if args.cenarios:
+        bruto = ler_cenarios(args.saida)
+        if not bruto["registros"]:
+            print(f"sem cenarios.jsonl em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        nome_c = nome_dos_arquivos(args.nome, "cenarios")
+        dado = resumir_cenarios(bruto, corrida=args.saida)
+        titulo_c = args.titulo if args.titulo != TITULO else TITULO_CENARIOS
+        return fechar_no_relatorio(nome_c, dado, render_cenarios(dado, titulo_c), PREFIXO_CENARIOS, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
     if args.biblioteca:
         bruto = ler_biblioteca(args.saida)
         if not bruto["registros"]:
@@ -1043,14 +1705,12 @@ def main() -> int:
         return pf.fechar(nome_c, dado, render_cura(dado), PREFIXO_CURA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
     if args.reproducao:
         nome = nome_dos_arquivos(args.nome, "reproducao")
-        if args.colar and nome != NOME:
-            ap.error("--colar só com o nome padrão: os blocos das duas corridas têm os mesmos nomes no relatório")
         registros, fora = ler(args.saida)
         if not registros and not fora:
             print(f"sem reproducao.jsonl em {caminhos.fase3(args.saida)['raiz']}")
             return 2
         dado = resumir(registros, fora, corrida=args.saida)
-        return pf.fechar(nome, dado, render(dado, args.titulo), PREFIXO, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
+        return fechar_no_relatorio(nome, dado, render(dado, args.titulo), PREFIXO, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
     if args.calibracao:
         bruto = ler_calibracao(args.saida)
         if not bruto["k"]:
@@ -1072,9 +1732,7 @@ def main() -> int:
     dado = resumir_tela(bruto["tela"], bruto["fixture"], bruto["casos"], bruto["por_caso"], bruto["trilha_info"], bruto["calibracao"], corrida=args.saida,
                         vivos=bruto.get("vivos"))
     nome_t = nome_dos_arquivos(args.nome, "tela")
-    if args.colar and nome_t != NOME_TELA:
-        ap.error("--colar só com o nome padrão: os blocos das duas corridas têm os mesmos nomes no relatório")
-    return pf.fechar(nome_t, dado, render_tela(dado), PREFIXO_TELA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
+    return fechar_no_relatorio(nome_t, dado, render_tela(dado), PREFIXO_TELA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
 
 
 if __name__ == "__main__":

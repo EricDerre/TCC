@@ -1,0 +1,177 @@
+{
+  "modo": "biblioteca",
+  "criado_em": "2026-11-04T16:24:36",
+  "saida": "fase4_biblioteca",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.14",
+  "k": 3,
+  "limiares": {
+    "medida": "p_rotulo",
+    "leitura": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "baixo_ate": 0.8317943867608124,
+    "alto_a_partir_de": 0.9898271080008889,
+    "n": 90,
+    "sem_rotulo": 0,
+    "k": 3,
+    "origem": "fase4_calibracao/k3",
+    "erros": 22,
+    "revisados": 27,
+    "erros_pegos": 15,
+    "acertos_revisados": 12,
+    "risco_no_que_sobra": 0.1111,
+    "mediana_certos": 0.9898271080008889,
+    "mediana_errados": 0.7511499810137099,
+    "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+    "gravado_em": "2026-10-27T23:54:00"
+  },
+  "parcial": false,
+  "casos": 54,
+  "com_tela": 26,
+  "ineditos": 36,
+  "base_ineditos": "corrida12",
+  "origem_da_base": "pre_fase4_confianca (corrida 12, cópia curada 1fca10f1a6f6, Ollama 0.34.4)",
+  "conjunto_de_correcao": {
+    "desligados": [
+      "lex-9",
+      "run-7",
+      "sin-13",
+      "sin-15",
+      "sin-9"
+    ],
+    "mantidos": [
+      "lex-2",
+      "semt-13",
+      "sin-1",
+      "tra-12",
+      "tra-3"
+    ],
+    "regra": "sha256('correcao:' + id) ordena os casos ligados a notas e com tela; a primeira metade (arredondada para cima) tem o modo desligado, a outra fica com o modo ligado"
+  },
+  "casos_ligados_com_tela": [
+    "lex-2",
+    "lex-9",
+    "run-7",
+    "semt-13",
+    "sin-1",
+    "sin-13",
+    "sin-15",
+    "sin-9",
+    "tra-12",
+    "tra-3"
+  ],
+  "casos_da_sonda": [
+    "efe-10",
+    "efe-3",
+    "lex-9",
+    "run-7",
+    "sin-13",
+    "sin-15",
+    "sin-9"
+  ],
+  "sem_sonda": false,
+  "sem_correcao": false,
+  "inferencias_previstas": 158,
+  "biblioteca": {
+    "rotulo": "L1 curada",
+    "versao": 100,
+    "hash": "1fca10f1a6f6",
+    "origem": "Programacao/AgenteCore/biblioteca_producao"
+  },
+  "epocas": {
+    "lote": 101,
+    "correcoes": 102,
+    "sonda": 103
+  },
+  "hash_prompt_fixo": "2e42cf9c31826941",
+  "hash_indice": "f246174cb3902e1e",
+  "teto_proposta": 700,
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "filtros": [
+    "evidencia_obrigatoria",
+    "atomicidade",
+    "abstencao_valida",
+    "fonte_confiavel",
+    "granularidade",
+    "peso_por_tipo",
+    "redundancia",
+    "proveniencia",
+    "auditoria_por_etapa",
+    "conflito_deterministico",
+    "metricas_por_rodada",
+    "revisao_humana_amostral",
+    "regra_dos_40"
+  ],
+  "pesos": {
+    "nota": 1,
+    "sinalizacao": 1,
+    "retificacao": 2,
+    "novo_verbete": 3
+  },
+  "orcamento_de_peso_por_verbete": 4,
+  "limiar_redundancia": 0.5,
+  "parcela_para_revisao": 0.4,
+  "parcelas_para_revisao": {
+    "entidade-produto": 0.4667,
+    "contrato-produto": 0.4222
+  },
+  "calibracao": "fase4_calibracao\\k3\\qwen2.5_7b\\diagnosticos__L100.jsonl",
+  "recuperacao_dos_aprendidos": {
+    "atualizacao_imediata": 0,
+    "interface-estados": 0,
+    "interface-frontend": 0,
+    "rotas-inexistentes": 0
+  },
+  "aprendidos_sem_recuperacao": [
+    "atualizacao_imediata",
+    "interface-estados",
+    "interface-frontend",
+    "rotas-inexistentes"
+  ],
+  "regra_r4": "precisão e revocação da marca corrigido contra o conjunto conhecido de modos desligados (sem limiar pré-registrado: é medida)",
+  "regra_r5": "um lote de acréscimos entra se, na reavaliação nos 36 inéditos, o número de casos que passam a acertar for maior ou igual ao dos que passam a errar (b maior ou igual a c); senão o lote fica em espera com o motivo",
+  "versoes": {
+    "navegador": "156.0.8078.4",
+    "ollama": "0.40.2",
+    "playwright": "1.64.1",
+    "python": "3.14.7"
+  },
+  "canal": "chromium",
+  "hosts_permitidos": [
+    "localhost:8080",
+    "127.0.0.1:8080",
+    "[::1]:8080",
+    "localhost:8000",
+    "127.0.0.1:8000",
+    "[::1]:8000"
+  ],
+  "hosts_har": [
+    "code.jquery.com",
+    "ajax.googleapis.com",
+    "cdnjs.cloudflare.com",
+    "maxcdn.bootstrapcdn.com",
+    "stackpath.bootstrapcdn.com",
+    "cdn.jsdelivr.net",
+    "unpkg.com",
+    "fonts.googleapis.com",
+    "fonts.gstatic.com",
+    "use.fontawesome.com",
+    "kit.fontawesome.com",
+    "ka-f.fontawesome.com"
+  ],
+  "hosts_silenciosos": [
+    "maps.googleapis.com",
+    "maps.gstatic.com",
+    "www.google.com",
+    "maps.google.com"
+  ],
+  "limites": {
+    "nos_por_diagnostico": 40,
+    "nos_por_cura": 20,
+    "blob_inline_max_chars": 65536,
+    "retencao_meses": 6
+  },
+  "orcamento_de_tempo_ms": 1000,
+  "contrato": "id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano"
+}

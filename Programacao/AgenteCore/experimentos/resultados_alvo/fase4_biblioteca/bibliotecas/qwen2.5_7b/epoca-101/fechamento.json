@@ -1,0 +1,14 @@
+{
+  "modelo": "qwen2.5:7b",
+  "epoca": 101,
+  "hash": "9f3154eee72d",
+  "n_verbetes": 46,
+  "n_verbetes_novos": 10,
+  "n_notas": 22,
+  "n_retificacoes": 10,
+  "chars": 24737,
+  "tokens_estimados": 9514,
+  "aceitas_na_epoca": 19,
+  "versao_ollama": "0.40.14",
+  "fechado_em": "2026-11-04T00:37:23"
+}

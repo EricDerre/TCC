@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-10-28T00:06:38",
+    "gerado_em": "2026-11-05T10:56:38",
     "corrida": "fase4_calibracao",
     "fonte": "k<n>/<modelo>/diagnosticos__L100.jsonl e logprobs__L100.jsonl, sondagem_logprobs.json, ponte/ e pontes.json da corrida",
     "modelo": "qwen2.5:7b",
@@ -3879,6 +3879,7 @@
     "corrida": "fase3b_ponte_0402",
     "data": "2026-10-23",
     "modelo": "qwen2.5:7b",
+    "completa": true,
     "n": 35,
     "b": 1,
     "c": 0,

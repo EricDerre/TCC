@@ -1,0 +1,840 @@
+{
+  "edicoes": [
+    {
+      "epoca": 101,
+      "caso": "sin-1",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "campo_preco_ausente",
+      "arquivo": "aprendidos/campo_preco_ausente.md",
+      "texto": "Um campo preço ausente na resposta da API resulta em botões sem informações relevantes na interface web.",
+      "motivo": "Este novo verbete fornece um exemplo específico de campo ausente relacionado ao preço, ajudando a identificar rapidamente casos semelhantes no futuro.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "campo ausente",
+        "preco",
+        "interface web"
+      ],
+      "sintomas_novos": [
+        "botao com valor undefined",
+        "precos ausentes na interface"
+      ],
+      "novo": {
+        "titulo": "Campo preço ausente",
+        "sistema": "CobaiaFront",
+        "entidade": "Produto",
+        "causas": [
+          "campo_ausente"
+        ],
+        "arquivos": []
+      },
+      "modelo": "qwen2.5:7b",
+      "peso": 3,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "sin-1",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "tra-3",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "novo_verbete",
+      "arquivo": "aprendidos/novo_verbete.md",
+      "texto": "Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+      "motivo": "O caso mostrou que a junção entre tabelas estava incorreta, levando a categorias incorretas nos produtos, e a documentação não abordava explicitamente a necessidade de corrigir essa junção.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "juncao",
+        "juncao incorreta",
+        "juncao de tabelas"
+      ],
+      "sintomas_novos": [
+        "tipo_divergente",
+        "chave_de_juncao_errada"
+      ],
+      "novo": {
+        "titulo": "Junção de tabelas incorreta",
+        "sistema": "CobaiaAPI",
+        "entidade": "Produto",
+        "causas": [
+          "chave_de_juncao_errada"
+        ],
+        "arquivos": [
+          "Programacao/CobaiaAPI/app/models.py"
+        ]
+      },
+      "modelo": "qwen2.5:7b",
+      "peso": 3,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "tra-3",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "tra-5",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "pessoas_incorretas",
+      "arquivo": "aprendidos/pessoas_incorretas.md",
+      "texto": "Adicionar validação no número de pessoas no pedido para evitar valores incorretos.",
+      "motivo": "O caso demonstrou a necessidade de validação adicional para garantir que a quantidade de pessoas seja correta.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "conversao",
+        "arredondamento",
+        "quantidade"
+      ],
+      "sintomas_novos": [
+        "pessoas menor que 1",
+        "reserva nem ativa nem cancelada na tela"
+      ],
+      "novo": {
+        "titulo": "Inconsistência na quantidade de pessoas reservadas",
+        "sistema": "CobaiaAPI",
+        "entidade": "Pedido",
+        "causas": [
+          "escala_ou_unidade_errada",
+          "valor_fora_do_dominio"
+        ],
+        "arquivos": []
+      },
+      "modelo": "qwen2.5:7b",
+      "peso": 3,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "tra-5",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "run-3",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "limite_de_requisicoes",
+      "arquivo": "erros/limite_de_requisicoes.md",
+      "texto": "Corrigir que o 429 pode ser emitido pelo próprio servidor ou intermediários, não necessariamente pelo CobaiaAPI.",
+      "motivo": "A retificação corrigirá a percepção de que o 429 sempre vem de um servidor diferente, permitindo que o próximo diagnóstico considere essa possibilidade.",
+      "trecho": "A CobaiaAPI não tem limitador (main.py só registra CORS e routers); um 429 vem de proxy, gateway ou servidor diferente do esperado.",
+      "palavras_chave_novas": [
+        "429",
+        "status de erro",
+        "limitador de requisicoes"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 2,
+      "granularidade": "retificar",
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "run-3",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "run-5",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "contrato-pedido",
+      "arquivo": "contratos/contrato-pedido.md",
+      "texto": "Adicionar nota sobre a possibilidade de POST /api/pedidos inserir registros duplicados sem idempotência, causando registros com id consecutivo e duas respostas 201 para um único POST.",
+      "motivo": "Este caso mostrou que a falta de mecanismo de idempotência no POST /api/pedidos pode resultar em registros duplicados, algo não coberto nos verbetes existentes.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "post duplo",
+        "registros duplicados"
+      ],
+      "sintomas_novos": [
+        "duas reservas iguais apos um unico post",
+        "registros com id consecutivo"
+      ],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "run-5",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "efe-4",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "estado_da_tela_divergente",
+      "arquivo": "erros/estado_da_tela_divergente.md",
+      "texto": "Corrigir a lógica para atualizar o estado corretamente, independentemente de ser uma coleção ou um objeto.",
+      "motivo": "Este caso mostrou que a lógica de atualização do estado da tela não está adequada, precisando ser verificada e ajustada para lidar com diferentes tipos de respostas.",
+      "trecho": "na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).",
+      "palavras_chave_novas": [
+        "fetch",
+        "innerhtml",
+        "redirect"
+      ],
+      "sintomas_novos": [
+        "lista vazia",
+        "botao que nao muda"
+      ],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 2,
+      "granularidade": "retificar",
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-4",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "sin-15",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "colecao_no_lugar_de_objeto",
+      "arquivo": "erros/colecao_no_lugar_de_objeto.md",
+      "texto": "Adicionar nota sobre a necessidade de tratar a categoria como uma string, não uma lista, no front-end.",
+      "motivo": "Este caso mostrou que a categoria deve ser tratada como uma string, não uma lista, corrigindo a lacuna na documentação.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "formato_de_resposta",
+        "estrutura_json"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "sin-15",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "semt-6",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "arquivo": "erros/tipo_divergente.md",
+      "texto": "Adicionar nota sobre a necessidade de conversão correta do tipo id em inteiro no front-end, considerando que o backend retorna como string.",
+      "motivo": "Este caso mostrou que a conversão incorreta do tipo id pode causar confusões na interface, e a documentação não explicitava essa necessidade.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "convercao",
+        "tipo",
+        "json"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "semt-6",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "semt-7",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "tipo_divergente",
+      "arquivo": "erros/tipo_divergente.md",
+      "texto": "Adicionar exemplo de campo \"pessoas\" como número em vez de string, causando inconsistência na contagem total de lugares reservados.",
+      "motivo": "O caso mostrou que a contagem total de lugares reservados está incorreta, indicando que o tipo do campo \"pessoas\" está divergindo do esperado, necessitando de um exemplo explícito na documentação.",
+      "trecho": "Chave certa com o tipo JSON errado: número entre aspas ('89.90'), booleano como texto ('Sim') ou número (1), inteiro como texto ('4'). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; '89,90' com vírgula não converte; destaque fora de true/false sai literal.",
+      "palavras_chave_novas": [],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 2,
+      "granularidade": "retificar",
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "semt-7",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "semt-10",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "arquivo": "erros/tipo_divergente.md",
+      "texto": "Adicionar nota sobre a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano.",
+      "motivo": "Este caso mostra que a converção de tipos entre a API e a interface web precisa ser claramente documentada, pois o usuário pode interpretar incorretamente os dados.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "tipo",
+        "convercao",
+        "json"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "semt-10",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "semt-15",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "validacao-na-api",
+      "arquivo": "aprendidos/validacao-na-api.md",
+      "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio permitido pelo formulário.",
+      "motivo": "O caso mostrou a necessidade de validar os campos na API para corresponder às restrições do formulário, evitando reservas inválidas.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "validacao",
+        "restricoes",
+        "formulario"
+      ],
+      "sintomas_novos": [],
+      "novo": {
+        "titulo": "Validação na API",
+        "sistema": "CobaiaAPI",
+        "entidade": "Pedido",
+        "causas": [
+          "valor_fora_do_dominio"
+        ],
+        "arquivos": []
+      },
+      "modelo": "qwen2.5:7b",
+      "peso": 3,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "semt-15",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "tra-6",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "formato_preco",
+      "arquivo": "aprendidos/formato_preco.md",
+      "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "motivo": "Este verbete aborda a necessidade de formatação correta do preço no front-end, conforme mencionado na documentação, ajudando a diagnosticar casos futuros com formatos de preço incorretos.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "formatacao",
+        "monetario",
+        "localidade"
+      ],
+      "sintomas_novos": [],
+      "novo": {
+        "titulo": "Formato de preço errado",
+        "sistema": "CobaiaFront",
+        "entidade": "Interface",
+        "causas": [
+          "escala_ou_unidade_errada"
+        ],
+        "arquivos": []
+      },
+      "modelo": "qwen2.5:7b",
+      "peso": 3,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "tra-6",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "tra-14",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contagem_inconsistente",
+      "arquivo": "erros/contagem_inconsistente.md",
+      "texto": "Adicionar nota sobre a necessidade de incluir o total na resposta da API /api/produtos, para evitar contagens inconsistentes.",
+      "motivo": "Este caso mostrou que a falta de total na resposta da API pode levar a contagens inconsistentes na interface, evidenciando a necessidade de incluir este campo.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "contagem",
+        "lista",
+        "total"
+      ],
+      "sintomas_novos": [
+        "menos itens na interface",
+        "lista crua sem total"
+      ],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "tra-14",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "run-12",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "erro_interno_do_servidor",
+      "arquivo": "erros/erro_interno_do_servidor.md",
+      "texto": "Adicionar que a conversão de ErrorFault em 500 pode ser causada por problemas na rota.",
+      "motivo": "Este caso mostrou que a documentação poderia ser mais detalhada sobre a origem do erro 500, ajudando a diferenciar de outros tipos de falhas.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "converte",
+        "errorfault",
+        "500"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "run-12",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "efe-8",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "estado_da_tela_divergente",
+      "arquivo": "erros/estado_da_tela_divergente.md",
+      "texto": "Adicionar nota sobre a necessidade de atualização correta do estado da tela após a resposta da API.",
+      "motivo": "Este caso mostrou que a documentação não aborda a atualização correta do estado da tela, diferentemente do tratamento do corpo da resposta.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "fetch",
+        "innerhtml",
+        "redirect"
+      ],
+      "sintomas_novos": [
+        "carregando...",
+        "lista vazia",
+        "botao inativo"
+      ],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-8",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "efe-8",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "atualizacao-da-tela",
+      "arquivo": "aprendidos/atualizacao-da-tela.md",
+      "texto": "Adicionar verbete sobre a necessidade de atualização correta do estado da tela após a resposta da API, utilizando promises ou async/await.",
+      "motivo": "Este caso demonstrou a necessidade de documentar a atualização correta do estado da tela, diferentemente do tratamento atual do corpo da resposta.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "fetch",
+        "innerhtml",
+        "redirect",
+        "promise"
+      ],
+      "sintomas_novos": [
+        "carregando...",
+        "lista vazia",
+        "botao inativo"
+      ],
+      "novo": {
+        "titulo": "Atualização da Tela após a API",
+        "sistema": "Ambos",
+        "entidade": "Interface",
+        "causas": [
+          "estado_da_tela_divergente"
+        ],
+        "arquivos": [
+          "Programacao/CobaiaFront/produtos_api.php",
+          "Programacao/CobaiaFront/cliente/cliente_cancelar.php"
+        ]
+      },
+      "modelo": "qwen2.5:7b",
+      "peso": 3,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-8",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "efe-10",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "interface-frontend",
+      "arquivo": "aprendidos/interface-frontend.md",
+      "texto": "Adicionar nota sobre a importância de atualizações corretas do DOM e a dependência de redirects na interface frontend.",
+      "motivo": "Este caso mostrou que a interface não atualiza corretamente o DOM mesmo com a API retornando dados atualizados, evidenciando a necessidade de melhor documentação sobre atualizações do DOM e redirects.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "dom",
+        "atualizacao",
+        "redirect"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-10",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "efe-11",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "localizador_quebrado",
+      "arquivo": "erros/localizador_quebrado.md",
+      "texto": "Adicionar que a falta de ORDER BY na consulta pode causar ordem aleatória indeterminada dos produtos.",
+      "motivo": "Este caso mostrou que a ordem dos produtos pode variar, indicando a necessidade de uma consulta ordenada.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "localizador",
+        "order by",
+        "consulta"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-11",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    },
+    {
+      "epoca": 101,
+      "caso": "efe-13",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "estado_da_tela_divergente",
+      "arquivo": "erros/estado_da_tela_divergente.md",
+      "texto": "O cancelamento depende de um redirect, o que pode causar divergência na interface.",
+      "motivo": "Este caso mostrou que a dependência de redirect para cancelamento pode levar a divergência na interface, mesmo com a resposta correta da API.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "cancelar",
+        "redirect",
+        "cliente_cancelar.php"
+      ],
+      "sintomas_novos": [],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-13",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      }
+    }
+  ],
+  "para_revisao": [
+    {
+      "epoca": 101,
+      "caso": "efe-4",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contrato-produto",
+      "arquivo": "contratos/contrato-produto.md",
+      "texto": "Adicionar nota sobre a necessidade de verificar se a resposta é um objeto ou uma coleção, pois a interface espera um objeto.",
+      "motivo": "Este caso mostrou que a interface não está preparada para receber uma coleção quando espera um objeto, evidenciando a necessidade de uma verificação adicional na API ou na interface.",
+      "trecho": null,
+      "palavras_chave_novas": [
+        "api",
+        "json",
+        "estrutura"
+      ],
+      "sintomas_novos": [
+        "lista vazia",
+        "botao que nao muda"
+      ],
+      "novo": null,
+      "modelo": "qwen2.5:7b",
+      "peso": 1,
+      "granularidade": null,
+      "proveniencia": {
+        "origem": "modelo",
+        "caso": "efe-4",
+        "modelo": "qwen2.5:7b",
+        "epoca": 101,
+        "data": "2026-11-03"
+      },
+      "para_revisao": true
+    }
+  ],
+  "parcelas": {
+    "entidade-produto": 0.4667,
+    "contrato-produto": 0.4222
+  },
+  "fechamento": {
+    "modelo": "qwen2.5:7b",
+    "epoca": 101,
+    "hash": "9f3154eee72d",
+    "n_verbetes": 46,
+    "n_verbetes_novos": 10,
+    "n_notas": 22,
+    "n_retificacoes": 10,
+    "chars": 24737,
+    "tokens_estimados": 9514,
+    "aceitas_na_epoca": 19,
+    "versao_ollama": "0.40.14",
+    "fechado_em": "2026-11-04T00:37:23"
+  },
+  "r5": {
+    "n": 36,
+    "b": 0,
+    "c": 0,
+    "ganhos": [],
+    "perdas": [],
+    "acerto_base": 27,
+    "acerto_novo": 27,
+    "p_mcnemar": 1.0,
+    "veredito": "aceito",
+    "motivo": "b = 0 (passaram a acertar) e c = 0 (passaram a errar) nos 36 casos pareados: o lote entra (b maior ou igual a c)"
+  },
+  "origem_da_base": "pre_fase4_confianca (corrida 12, cópia curada 1fca10f1a6f6, Ollama 0.34.4)",
+  "versao_ollama": "0.40.14",
+  "metricas": {
+    "casos": 54,
+    "abstencoes": 0,
+    "propostas": 92,
+    "aceitas": 19,
+    "para_revisao": 1,
+    "recusadas_fase3": {
+      "arquivo_inexistente": 4,
+      "duplicada": 14,
+      "id_repetido": 12,
+      "palavra_chave_invalida": 15,
+      "retificacao_sem_trecho": 1,
+      "teto_notas_verbete": 1,
+      "teto_verbetes_novos": 3,
+      "texto_curto": 2,
+      "texto_longo": 2,
+      "trecho_nao_encontrado": 2
+    },
+    "recusadas_p5": {
+      "mensagem_nao_encontrada_no_codigo": 5,
+      "redundante": 3,
+      "sem_evidencia_do_caso": 6,
+      "texto_de_origem_proibida": 1,
+      "texto_nao_atomico": 1
+    },
+    "por_filtro": {
+      "evidencia_obrigatoria": 6,
+      "atomicidade": 1,
+      "abstencao_valida": 0,
+      "fonte_confiavel": 5,
+      "granularidade": 0,
+      "peso_por_tipo": 0,
+      "redundancia": 3,
+      "proveniencia": 0,
+      "auditoria_por_etapa": 0,
+      "conflito_deterministico": 0,
+      "metricas_por_rodada": 0,
+      "revisao_humana_amostral": 0,
+      "regra_dos_40": 1,
+      "especificacao_10": 1
+    },
+    "aceitas_por_tipo": {
+      "nota": 10,
+      "novo_verbete": 6,
+      "retificacao": 3
+    },
+    "peso_aceito": 34,
+    "taxa_de_rejeicao_pct": 78.3
+  },
+  "conflitos": [],
+  "auditoria": {
+    "admissao": [
+      {
+        "verbete": "campo_preco_ausente",
+        "caso": "sin-1"
+      },
+      {
+        "verbete": "novo_verbete",
+        "caso": "tra-3"
+      },
+      {
+        "verbete": "pessoas_incorretas",
+        "caso": "tra-5"
+      },
+      {
+        "verbete": "limite_de_requisicoes",
+        "caso": "run-3"
+      },
+      {
+        "verbete": "contrato-pedido",
+        "caso": "run-5"
+      },
+      {
+        "verbete": "estado_da_tela_divergente",
+        "caso": "efe-4"
+      },
+      {
+        "verbete": "colecao_no_lugar_de_objeto",
+        "caso": "sin-15"
+      },
+      {
+        "verbete": "tipo_divergente",
+        "caso": "semt-6"
+      },
+      {
+        "verbete": "tipo_divergente",
+        "caso": "semt-7"
+      },
+      {
+        "verbete": "tipo_divergente",
+        "caso": "semt-10"
+      },
+      {
+        "verbete": "validacao-na-api",
+        "caso": "semt-15"
+      },
+      {
+        "verbete": "formato_preco",
+        "caso": "tra-6"
+      },
+      {
+        "verbete": "contagem_inconsistente",
+        "caso": "tra-14"
+      },
+      {
+        "verbete": "erro_interno_do_servidor",
+        "caso": "run-12"
+      },
+      {
+        "verbete": "estado_da_tela_divergente",
+        "caso": "efe-8"
+      },
+      {
+        "verbete": "atualizacao-da-tela",
+        "caso": "efe-8"
+      },
+      {
+        "verbete": "interface-frontend",
+        "caso": "efe-10"
+      },
+      {
+        "verbete": "localizador_quebrado",
+        "caso": "efe-11"
+      },
+      {
+        "verbete": "estado_da_tela_divergente",
+        "caso": "efe-13"
+      }
+    ],
+    "atualizacao": []
+  },
+  "amostra_para_revisao": [
+    {
+      "verbete": "contrato-produto",
+      "operacao": "nota",
+      "caso": "efe-4"
+    },
+    {
+      "verbete": "atualizacao-da-tela",
+      "operacao": "novo_verbete",
+      "caso": "efe-8"
+    },
+    {
+      "verbete": "campo_preco_ausente",
+      "operacao": "novo_verbete",
+      "caso": "sin-1"
+    },
+    {
+      "verbete": "formato_preco",
+      "operacao": "novo_verbete",
+      "caso": "tra-6"
+    },
+    {
+      "verbete": "novo_verbete",
+      "operacao": "novo_verbete",
+      "caso": "tra-3"
+    },
+    {
+      "verbete": "pessoas_incorretas",
+      "operacao": "novo_verbete",
+      "caso": "tra-5"
+    }
+  ]
+}

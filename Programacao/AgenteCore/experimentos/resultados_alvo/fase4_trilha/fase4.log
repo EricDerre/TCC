@@ -1,0 +1,56 @@
+﻿[2026-11-04 23:00:14] rodar_fase4.ps1: modo avaliacao_trilha, saida fase4_trilha, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-04 23:00:16] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 8 GB
+[2026-11-04 23:00:17] testar_fase4.py
+[2026-11-04 23:00:34] executar_fase4.py --modo avaliacao_trilha --saida fase4_trilha --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20
+[2026-11-04 23:00:37] INÍCIO avaliacao_trilha: Ollama 0.40.14, qwen2.5:7b, biblioteca de produção (95af35290860, lote fase4_biblioteca), k = 3; 36 caso(s) de texto, 4 roteiro(s) do seletor; 296 inferências previstas; 0 caso(s) e 0 roteiro(s) já feito(s)
+[2026-11-04 23:06:20] [1/36] lex-1: resposta_truncada (p 1.00, selo alto); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 334.38 s
+[2026-11-04 23:12:22] [2/36] lex-4: codificacao_incorreta (p 1.00, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: poda; 361.75 s
+[2026-11-04 23:19:05] [3/36] sin-4: colecao_no_lugar_de_objeto (p 0.86, selo medio); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 403.48 s
+[2026-11-04 23:25:50] [4/36] sin-5: colecao_no_lugar_de_objeto (p 0.62, selo baixo); intervenções 4 (3 mudaram o rótulo, 0 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: poda; 405.0 s
+[2026-11-04 23:32:08] [5/36] semt-1: tipo_divergente (p 0.93, selo medio); intervenções 4 (1 mudaram o rótulo, 0 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: poda; 377.83 s
+[2026-11-04 23:39:30] [6/36] semt-3: valor_fora_do_dominio (p 0.99, selo alto); intervenções 4 (1 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 441.96 s
+[2026-11-04 23:45:48] [7/36] semt-5: nulo_inesperado (p 1.00, selo alto); intervenções 4 (1 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 377.48 s
+[2026-11-04 23:52:50] [8/36] tra-1: escala_ou_unidade_errada (p 0.99, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 421.88 s
+[2026-11-04 23:59:06] [9/36] tra-4: contagem_inconsistente (p 0.97, selo medio); intervenções 4 (3 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 375.95 s
+[2026-11-05 00:04:47] [10/36] run-1: erro_interno_do_servidor (p 0.98, selo medio); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 341.18 s
+[2026-11-05 00:10:39] [11/36] run-2: tempo_de_resposta_excedido (p 1.00, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 351.59 s
+[2026-11-05 00:16:40] [12/36] run-4: dado_desatualizado (p 1.00, selo alto); intervenções 4 (1 mudaram o rótulo, 1 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 361.94 s
+[2026-11-05 00:22:53] [13/36] efe-1: tempo_de_resposta_excedido (p 0.90, selo medio); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: cita o plantado, rótulo mudou; verbete trocado: recuperacao; contrato alterado: n/a; 372.65 s
+[2026-11-05 00:27:38] [14/36] efe-2: estado_da_tela_divergente (p 0.72, selo baixo); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 284.92 s
+[2026-11-05 00:33:13] [15/36] efe-3: campo_ausente (p 0.57, selo baixo); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita, rótulo mudou; verbete trocado: recuperacao; contrato alterado: poda; 334.99 s
+[2026-11-05 00:39:20] [16/36] efe-5: localizador_quebrado (p 0.98, selo medio); intervenções 4 (3 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 366.63 s
+[2026-11-05 00:44:42] [17/36] lex-7: corpo_vazio (p 1.00, selo alto); intervenções 4 (3 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 322.6 s
+[2026-11-05 00:51:35] [18/36] lex-8: codificacao_incorreta (p 0.75, selo baixo); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 412.25 s
+[2026-11-05 00:56:44] [19/36] lex-10: resposta_truncada (p 1.00, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 309.58 s
+[2026-11-05 01:02:40] [20/36] lex-11: codificacao_incorreta (p 1.00, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 355.53 s
+[2026-11-05 01:09:24] [21/36] sin-7: campo_ausente (p 0.91, selo medio); intervenções 4 (1 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 404.36 s
+[2026-11-05 01:15:42] [22/36] sin-10: campo_renomeado (p 0.99, selo alto); intervenções 4 (1 mudaram o rótulo, 0 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: poda; 377.74 s
+[2026-11-05 01:21:07] [23/36] sin-11: estrutura_aninhada_divergente (p 1.00, selo alto); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 324.75 s
+[2026-11-05 01:27:05] [24/36] sin-14: colecao_no_lugar_de_objeto (p 0.30, selo baixo); intervenções 4 (3 mudaram o rótulo, 1 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: poda; 358.17 s
+[2026-11-05 01:32:13] [25/36] semt-8: nulo_inesperado (p 0.86, selo medio); intervenções 4 (3 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 307.86 s
+[2026-11-05 01:37:37] [26/36] semt-9: tipo_divergente (p 1.00, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 323.68 s
+[2026-11-05 01:43:15] [27/36] semt-14: nulo_inesperado (p 0.74, selo baixo); intervenções 4 (1 mudaram o rótulo, 1 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 338.29 s
+[2026-11-05 01:47:44] [28/36] tra-8: contagem_inconsistente (p 0.98, selo medio); intervenções 4 (3 mudaram o rótulo, 2 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 268.96 s
+[2026-11-05 01:53:15] [29/36] tra-10: chave_de_juncao_errada (p 1.00, selo alto); intervenções 4 (1 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: poda; 330.55 s
+[2026-11-05 01:58:54] [30/36] tra-11: contagem_inconsistente (p 0.98, selo medio); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 338.86 s
+[2026-11-05 02:04:08] [31/36] tra-15: registro_duplicado (p 0.64, selo baixo); intervenções 4 (3 mudaram o rótulo, 2 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: n/a; 314.18 s
+[2026-11-05 02:08:50] [32/36] run-9: tempo_de_resposta_excedido (p 1.00, selo alto); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 282.46 s
+[2026-11-05 02:14:51] [33/36] run-10: limite_de_requisicoes (p 0.87, selo medio); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 360.69 s
+[2026-11-05 02:19:39] [34/36] run-13: registro_duplicado (p 0.84, selo medio); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: cita o plantado; verbete trocado: recuperacao; contrato alterado: n/a; 287.65 s
+[2026-11-05 02:25:06] [35/36] efe-7: localizador_quebrado (p 0.93, selo medio); intervenções 4 (0 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 326.78 s
+[2026-11-05 02:30:41] [36/36] efe-14: localizador_quebrado (p 1.00, selo alto); intervenções 4 (2 mudaram o rótulo, 0 com limite inferior); sonda: não cita; verbete trocado: recuperacao; contrato alterado: n/a; 334.63 s
+[2026-11-05 02:30:47] referência front-busca (id_renomeado, localizador #buscar): passou em 0.496 s; alvo searchbox "search"
+[2026-11-05 02:32:21] referência front-busca (id_renomeado+nome_do_alvo, localizador #buscar): passou em 0.39 s; alvo searchbox "search"
+[2026-11-05 02:33:30] [seletor 1/4] front-busca: dourada papel_e_nome (localizador_quebrado); mutada papel_e_nome_parecido (localizador_quebrado); primeiro nó divergente cura (previsto cura: sim); 163.14 s
+[2026-11-05 02:33:30] referência front-admin-login (classe_trocada, localizador button.btn-primary): passou em 0.393 s; alvo button "Entrar"
+[2026-11-05 02:34:36] referência front-admin-login (classe_trocada+nome_do_alvo, localizador button.btn-primary): passou em 0.335 s; alvo button "Entrar"
+[2026-11-05 02:35:24] [seletor 2/4] front-admin-login: dourada papel_e_nome (localizador_quebrado); mutada papel_e_nome_parecido (localizador_quebrado); primeiro nó divergente cura (previsto cura: sim); 114.52 s
+[2026-11-05 02:35:25] referência front-admin-produtos (texto_alterado, localizador role=button[name=/EXCLUIR$/] >> nth=0): passou em 0.694 s; alvo button " EXCLUIR"
+[2026-11-05 02:36:58] referência front-admin-produtos (texto_alterado+nome_do_alvo, localizador role=button[name=/EXCLUIR$/] >> nth=0): passou em 0.795 s; alvo button " EXCLUIR"
+[2026-11-05 02:38:04] [seletor 3/4] front-admin-produtos: dourada papel_e_nome_parecido (localizador_quebrado); mutada papel_e_nome_parecido (localizador_quebrado); primeiro nó divergente cura (previsto cura: sim); 159.4 s
+[2026-11-05 02:38:05] referência front-cliente-reserva (estrutura_alterada, localizador #reserva_login > input[type=submit]): passou em 0.686 s; alvo button "Reservar"
+[2026-11-05 02:39:33] referência front-cliente-reserva (estrutura_alterada+nome_do_alvo, localizador #reserva_login > input[type=submit]): passou em 0.728 s; alvo button "Reservar"
+[2026-11-05 02:40:30] [seletor 4/4] front-cliente-reserva: dourada papel_e_nome (localizador_quebrado); mutada papel_e_nome_parecido (localizador_quebrado); primeiro nó divergente cura (previsto cura: sim); 146.23 s
+[2026-11-05 02:40:37] FIM avaliacao_trilha: 36 de 36 casos de texto; 4 de 4 roteiros do seletor; duração 13202 s; trilha 4045385 bytes
+[2026-11-05 02:40:39] avaliar_fase4.py --avaliacao_trilha --saida fase4_trilha
+[2026-11-05 02:40:40] !! avaliar_fase4.py saiu com codigo 2

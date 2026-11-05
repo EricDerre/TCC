@@ -26,8 +26,20 @@
 # (fumaca) e -TetoProposta; a avaliacao do modo e avaliar_fase4.py --biblioteca.
 # ! Motivo: plano aprovado, secao 6 (corrida 20: rodar_fase4.ps1 -Modo biblioteca -Saida fase4_biblioteca) e regras R4 e R5;
 # a corrida le a biblioteca de producao e nunca escreve nela (o lote so e promovido depois da revisao do Eric).
+# ! Alteracao de IA - Revisar: em 04/11/2026 (pacote P6) ganhou o modo cenarios (corrida 21, com modelo: os dez cenarios da
+# ficha 36, com diagnostico ao vivo nos dez e cura nos quatro de localizador), que usa -Repeticoes (o ensaio usa 1); a
+# avaliacao do modo e avaliar_fase4.py --cenarios.
+# ! Motivo: plano aprovado, secao 6 (corrida 21: rodar_fase4.ps1 -Modo cenarios -Saida fase4_ensaio -Repeticoes 1) e fichas 35
+# e 36; a corrida mede MTTR e Task Success de cada cenario e o tempo que a Fase 5 vai pedir.
+# ! Alteracao de IA - Revisar: em 04/11/2026 (pacote P7) ganhou o modo avaliacao_trilha (corrida 22, com modelo: os 36 casos de
+# avaliacao lidos do fixture com as quatro intervencoes, a sonda de pos-racionalizacao e as mutacoes verbete trocado e contrato
+# alterado, e no fim a mutacao do seletor nos quatro roteiros de localizador, com as cobaias) e -SemSeletor (fumaca sem as cobaias:
+# pula o bloco do seletor e a avaliacao grava na pasta da corrida); a avaliacao do modo e avaliar_fase4.py --trilha.
+# ! Motivo: plano aprovado, secao 6 (corrida 22: rodar_fase4.ps1 -Modo avaliacao_trilha -Saida fase4_trilha) e especificacao da
+# trilha, secao 12; uma fumaca sem o bloco do seletor e uma corrida parcial e nunca grava derivado oficial.
 #
 # Uso (PowerShell, de dentro de experimentos\):
+#   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo avaliacao_trilha -Saida fase4_trilha
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo reproducao -Saida fase4_reproducao
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo reproducao -Saida fase4_reproducao_ineditos -Banco ineditos_fase4 -Nome reproducibilidade_ineditos -Titulo "Reproducao na tela (corrida 17 sobre os 36 ineditos da ficha 27)"
 #   powershell -ExecutionPolicy Bypass -File rodar_fase4.ps1 -Modo calibracao -Saida fase4_calibracao -K 3,5
@@ -45,7 +57,7 @@
 #   -Top N          alternativas por posicao pedidas ao Ollama (padrao 20)
 #   -Intervencoes   tela: roda as intervencoes da especificacao quando um gatilho dispara (padrao: desligadas)
 #   -Amostra        tela: os 36 casos oficiais de avaliacao disparam o gatilho da amostra fixa
-#   -Repeticoes N   cura: repeticoes por celula (roteiro x modo x forma; padrao 5)
+#   -Repeticoes N   cura: repeticoes por celula (roteiro x modo x forma; padrao 5); cenarios: repeticoes dos dez cenarios (o ensaio usa 1)
 #   -Formas X       cura: formas da quebra separadas por virgula (padrao harness,php)
 #   -Roteiros X     cura: so estes roteiros do front legado, separados por virgula (fumaca); com filtro a avaliacao grava na pasta da corrida
 #   -Modos X        cura: so estes modos de quebra, separados por virgula (fumaca)
@@ -53,8 +65,9 @@
 #   -SemSonda       biblioteca: nao repete a sonda de correcao (fumaca)
 #   -SemCorrecao    biblioteca: nao roda o ciclo de correcao (fumaca)
 #   -TetoProposta N biblioteca: teto de tokens de saida da proposta de edicao (padrao 700)
+#   -SemSeletor     avaliacao_trilha: nao roda a mutacao do seletor na tela (fumaca sem as cobaias; a avaliacao grava na pasta da corrida)
 param(
-    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca")][string]$Modo,
+    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha")][string]$Modo,
     [Parameter(Mandatory = $true)][string]$Saida,
     [int]$Casos = 0,
     [ValidateSet("chromium", "msedge")][string]$Canal = "chromium",
@@ -74,7 +87,8 @@ param(
     [ValidateSet("corrida12", "propria")][string]$BaseIneditos = "corrida12",
     [switch]$SemSonda,
     [switch]$SemCorrecao,
-    [int]$TetoProposta = 700
+    [int]$TetoProposta = 700,
+    [switch]$SemSeletor
 )
 $ErrorActionPreference = "Stop"
 $env:PYTHONIOENCODING = "utf-8"
@@ -84,7 +98,7 @@ $env:RESULTADOS_DIR = $Resultados
 $Aqui = Split-Path -Parent $MyInvocation.MyCommand.Path
 Set-Location $Aqui
 $Inicio = Get-Date
-$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca")
+$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca") -or ($Modo -eq "cenarios") -or ($Modo -eq "avaliacao_trilha")
 $Venv = Join-Path $Aqui "..\.venv\Scripts\python.exe"
 if (-not (Test-Path $Venv)) {
     Write-Host "!! venv do AgenteCore nao encontrada em $Venv (rode install.py primeiro)"
@@ -158,6 +172,16 @@ function EsperarRam($modelo) {
     return ((RamLivreGB) -ge $minimo)
 }
 
+# ! Alteracao de IA - Revisar: (05/11/2026, leitura da corrida 22) FlagDaLeitura: a opcao de avaliar_fase4.py que le cada modo. O
+# nome e o do modo, menos em avaliacao_trilha, cuja leitura e --trilha.
+# ! Motivo: a linha montava "--$Modo"; na corrida 22 ela chamou avaliar_fase4.py --avaliacao_trilha, que nao existe, e o .ps1 saiu
+# com codigo 2 depois de o executor terminar inteiro (3h40 de maquina), sem gravar a leitura. O plano aprovado fixa os dois nomes
+# (secao 5, P7), entao o mapa fica aqui; teste_rodar_fase4_ps1_cada_modo_chama_uma_leitura_que_o_avaliador_aceita roda esta linha.
+function FlagDaLeitura([string]$ModoDaCorrida) {
+    if ($ModoDaCorrida -eq "avaliacao_trilha") { return "--trilha" }
+    return "--$ModoDaCorrida"
+}
+
 Marco "rodar_fase4.ps1: modo $Modo, saida $Saida, canal $Canal, resultados $Resultados, casos $Casos"
 $VersaoInicio = ""
 if ($ComModelo) {
@@ -200,10 +224,18 @@ if ($Modo -eq "cura") {
     # fumaca ou corrida filtrada: a avaliacao grava na pasta da corrida, nunca em resultados_alvo\fase4
     $CuraParcial = ($Roteiros -ne "") -or ($Modos -ne "") -or ($Repeticoes -ne 5) -or ($Formas -ne "harness,php")
 }
+if ($Modo -eq "cenarios") {
+    $Argumentos += @("--repeticoes", "$Repeticoes")
+}
 if ($Modo -eq "biblioteca") {
     $Argumentos += @("--base-ineditos", $BaseIneditos, "--teto-proposta", "$TetoProposta")
     if ($SemSonda) { $Argumentos += @("--sem-sonda") }
     if ($SemCorrecao) { $Argumentos += @("--sem-correcao") }
+}
+$TrilhaParcial = $false
+if ($Modo -eq "avaliacao_trilha") {
+    # sem o bloco do seletor a corrida e parcial: a avaliacao grava na pasta da corrida, nunca em resultados_alvo\fase4
+    if ($SemSeletor) { $Argumentos += @("--sem-seletor"); $TrilhaParcial = $true }
 }
 Marco ("executar_fase4.py " + (($Argumentos | Select-Object -Skip 1) -join " "))
 & $Venv @Argumentos
@@ -217,10 +249,10 @@ if ($ComModelo) {
 }
 if ($CodigoExecutor -ne 0) { Marco "!! executar_fase4.py saiu com codigo $CodigoExecutor"; exit $CodigoExecutor }
 
-$Avaliacao = @("avaliar_fase4.py", "--$Modo", "--saida", $Saida)
+$Avaliacao = @("avaliar_fase4.py", (FlagDaLeitura $Modo), "--saida", $Saida)
 if ($Nome) { $Avaliacao += @("--nome", $Nome) }
 if ($Titulo) { $Avaliacao += @("--titulo", $Titulo) }
-if (($Casos -gt 0) -or $CuraParcial) { $Avaliacao += @("--pasta", (Join-Path (Join-Path $Aqui $Resultados) $Saida)) }
+if (($Casos -gt 0) -or $CuraParcial -or $TrilhaParcial) { $Avaliacao += @("--pasta", (Join-Path (Join-Path $Aqui $Resultados) $Saida)) }
 Marco ("avaliar_fase4.py " + (($Avaliacao | Select-Object -Skip 1) -join " "))
 & python @Avaliacao
 if ($LASTEXITCODE -ne 0) { Marco "!! avaliar_fase4.py saiu com codigo $LASTEXITCODE"; exit $LASTEXITCODE }

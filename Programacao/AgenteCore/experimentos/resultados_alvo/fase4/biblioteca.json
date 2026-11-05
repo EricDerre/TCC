@@ -1,0 +1,2220 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-04T16:53:48",
+    "corrida": "fase4_biblioteca",
+    "fonte": "biblioteca.jsonl, propostas__E101.jsonl, lote.json, reavaliacao__E101.jsonl, correcoes.jsonl e sonda.json gravados por executar_fase4.py --modo biblioteca",
+    "parcial": false
+  },
+  "resumo": {
+    "casos": 54,
+    "da_tela": 24,
+    "do_fixture": 30,
+    "acertos_diagnostico": 37,
+    "acerto_pct": 68.5,
+    "propostas": 92,
+    "aceitas": 19,
+    "abstencoes": 0,
+    "para_revisao": 1,
+    "recusadas_p5": 16,
+    "recusadas_fase3": 56,
+    "taxa_de_rejeicao_pct": 78.3,
+    "peso_aceito": 34,
+    "casos_com_verbete_por_id": 10,
+    "inferencias": 158,
+    "segundos": 16466.1,
+    "trilha_bytes": 3347613,
+    "trilha_eventos": 3119,
+    "k": 3,
+    "hash_biblioteca": "1fca10f1a6f6",
+    "hash_do_lote": "9f3154eee72d",
+    "base_ineditos": "corrida12"
+  },
+  "filtros": [
+    {
+      "filtro": "evidencia_obrigatoria",
+      "recusas": 6
+    },
+    {
+      "filtro": "atomicidade",
+      "recusas": 1
+    },
+    {
+      "filtro": "abstencao_valida",
+      "recusas": 0
+    },
+    {
+      "filtro": "fonte_confiavel",
+      "recusas": 5
+    },
+    {
+      "filtro": "granularidade",
+      "recusas": 0
+    },
+    {
+      "filtro": "peso_por_tipo",
+      "recusas": 0
+    },
+    {
+      "filtro": "redundancia",
+      "recusas": 3
+    },
+    {
+      "filtro": "proveniencia",
+      "recusas": 0
+    },
+    {
+      "filtro": "auditoria_por_etapa",
+      "recusas": 0
+    },
+    {
+      "filtro": "conflito_deterministico",
+      "recusas": 0
+    },
+    {
+      "filtro": "metricas_por_rodada",
+      "recusas": 0
+    },
+    {
+      "filtro": "revisao_humana_amostral",
+      "recusas": 0
+    },
+    {
+      "filtro": "regra_dos_40",
+      "recusas": 1
+    }
+  ],
+  "rejeicoes": {
+    "fase3": {
+      "arquivo_inexistente": 4,
+      "duplicada": 14,
+      "id_repetido": 12,
+      "palavra_chave_invalida": 15,
+      "retificacao_sem_trecho": 1,
+      "teto_notas_verbete": 1,
+      "teto_verbetes_novos": 3,
+      "texto_curto": 2,
+      "texto_longo": 2,
+      "trecho_nao_encontrado": 2
+    },
+    "p5": {
+      "mensagem_nao_encontrada_no_codigo": 5,
+      "redundante": 3,
+      "sem_evidencia_do_caso": 6,
+      "texto_de_origem_proibida": 1,
+      "texto_nao_atomico": 1
+    }
+  },
+  "lote": {
+    "edicoes": 19,
+    "para_revisao": 1,
+    "hash": "9f3154eee72d",
+    "n_notas": 22,
+    "n_verbetes": 46,
+    "n_verbetes_novos": 10,
+    "por_tipo": {
+      "nota": 10,
+      "novo_verbete": 6,
+      "retificacao": 3
+    },
+    "peso": 34,
+    "aceitas_por_tipo": {
+      "nota": 10,
+      "novo_verbete": 6,
+      "retificacao": 3
+    },
+    "lista": [
+      {
+        "verbete": "campo_preco_ausente",
+        "operacao": "novo_verbete",
+        "caso": "sin-1",
+        "peso": 3,
+        "granularidade": null
+      },
+      {
+        "verbete": "novo_verbete",
+        "operacao": "novo_verbete",
+        "caso": "tra-3",
+        "peso": 3,
+        "granularidade": null
+      },
+      {
+        "verbete": "pessoas_incorretas",
+        "operacao": "novo_verbete",
+        "caso": "tra-5",
+        "peso": 3,
+        "granularidade": null
+      },
+      {
+        "verbete": "limite_de_requisicoes",
+        "operacao": "retificacao",
+        "caso": "run-3",
+        "peso": 2,
+        "granularidade": "retificar"
+      },
+      {
+        "verbete": "contrato-pedido",
+        "operacao": "nota",
+        "caso": "run-5",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "estado_da_tela_divergente",
+        "operacao": "retificacao",
+        "caso": "efe-4",
+        "peso": 2,
+        "granularidade": "retificar"
+      },
+      {
+        "verbete": "colecao_no_lugar_de_objeto",
+        "operacao": "nota",
+        "caso": "sin-15",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "tipo_divergente",
+        "operacao": "nota",
+        "caso": "semt-6",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "tipo_divergente",
+        "operacao": "retificacao",
+        "caso": "semt-7",
+        "peso": 2,
+        "granularidade": "retificar"
+      },
+      {
+        "verbete": "tipo_divergente",
+        "operacao": "nota",
+        "caso": "semt-10",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "validacao-na-api",
+        "operacao": "novo_verbete",
+        "caso": "semt-15",
+        "peso": 3,
+        "granularidade": null
+      },
+      {
+        "verbete": "formato_preco",
+        "operacao": "novo_verbete",
+        "caso": "tra-6",
+        "peso": 3,
+        "granularidade": null
+      },
+      {
+        "verbete": "contagem_inconsistente",
+        "operacao": "nota",
+        "caso": "tra-14",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "erro_interno_do_servidor",
+        "operacao": "nota",
+        "caso": "run-12",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "estado_da_tela_divergente",
+        "operacao": "nota",
+        "caso": "efe-8",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "atualizacao-da-tela",
+        "operacao": "novo_verbete",
+        "caso": "efe-8",
+        "peso": 3,
+        "granularidade": null
+      },
+      {
+        "verbete": "interface-frontend",
+        "operacao": "nota",
+        "caso": "efe-10",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "localizador_quebrado",
+        "operacao": "nota",
+        "caso": "efe-11",
+        "peso": 1,
+        "granularidade": null
+      },
+      {
+        "verbete": "estado_da_tela_divergente",
+        "operacao": "nota",
+        "caso": "efe-13",
+        "peso": 1,
+        "granularidade": null
+      }
+    ],
+    "revisao": [
+      {
+        "verbete": "contrato-produto",
+        "operacao": "nota",
+        "caso": "efe-4",
+        "peso": 1
+      }
+    ],
+    "conflitos": []
+  },
+  "reavaliacao": {
+    "n": 36,
+    "b": 0,
+    "c": 0,
+    "ganhos": [],
+    "perdas": [],
+    "acerto_base": 27,
+    "acerto_novo": 27,
+    "p_mcnemar": 1.0,
+    "veredito": "aceito",
+    "motivo": "b = 0 (passaram a acertar) e c = 0 (passaram a errar) nos 36 casos pareados: o lote entra (b maior ou igual a c)",
+    "acerto_base_pct": 75.0,
+    "acerto_novo_pct": 75.0,
+    "origem_da_base": "pre_fase4_confianca (corrida 12, cópia curada 1fca10f1a6f6, Ollama 0.34.4)"
+  },
+  "correcao": {
+    "universo": 9,
+    "desligados": 4,
+    "mantidos": 5,
+    "marcados": 4,
+    "acertos": 4,
+    "falsos_positivos": 0,
+    "perdidos": 0,
+    "precisao_pct": 100.0,
+    "revocacao_pct": 100.0,
+    "sem_sintoma_antes": [
+      "sin-15"
+    ],
+    "kappa": 1.0,
+    "por_caso": [
+      {
+        "caso": "lex-2",
+        "cenario": "api-catalogo",
+        "modo": "corpo_nao_e_json",
+        "verbetes": [
+          "corpo_nao_e_json"
+        ],
+        "desligado": false,
+        "reproduziu_antes": true,
+        "passou_depois": false,
+        "ha_diff_http": false,
+        "ha_diff_arvore": false,
+        "sintoma_sumiu": false,
+        "marcado": false,
+        "motivo": "a reexecução ainda falha: nada a marcar",
+        "estados": {},
+        "segundos": 1.31
+      },
+      {
+        "caso": "lex-9",
+        "cenario": "api-catalogo",
+        "modo": "corpo_nao_e_json",
+        "verbetes": [
+          "corpo_nao_e_json"
+        ],
+        "desligado": true,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": true,
+        "ha_diff_arvore": true,
+        "sintoma_sumiu": true,
+        "marcado": true,
+        "motivo": "o roteiro passou e o fio e a árvore mudaram entre a corrida que falhava e a que passou",
+        "estados": {
+          "corpo_nao_e_json": [
+            "nao_corrigido",
+            "corrigido"
+          ]
+        },
+        "segundos": 0.66
+      },
+      {
+        "caso": "run-7",
+        "cenario": "api-detalhe",
+        "modo": "recurso_inexistente",
+        "verbetes": [
+          "recurso_inexistente"
+        ],
+        "desligado": true,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": true,
+        "ha_diff_arvore": true,
+        "sintoma_sumiu": false,
+        "marcado": true,
+        "motivo": "o roteiro passou e o fio e a árvore mudaram entre a corrida que falhava e a que passou",
+        "estados": {
+          "recurso_inexistente": [
+            "nao_corrigido",
+            "corrigido"
+          ]
+        },
+        "segundos": 1.56
+      },
+      {
+        "caso": "semt-13",
+        "cenario": "api-catalogo",
+        "modo": "type_drift",
+        "verbetes": [
+          "entidade-produto"
+        ],
+        "desligado": false,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": false,
+        "ha_diff_arvore": false,
+        "sintoma_sumiu": false,
+        "marcado": false,
+        "motivo": "o roteiro passou, mas nada mudou no fio (corpo e tempo da chamada iguais): sem evidência de correção",
+        "estados": {},
+        "segundos": 0.69
+      },
+      {
+        "caso": "sin-1",
+        "cenario": "api-catalogo",
+        "modo": "field_missing",
+        "verbetes": [
+          "campo_ausente"
+        ],
+        "desligado": false,
+        "reproduziu_antes": true,
+        "passou_depois": false,
+        "ha_diff_http": false,
+        "ha_diff_arvore": false,
+        "sintoma_sumiu": false,
+        "marcado": false,
+        "motivo": "a reexecução ainda falha: nada a marcar",
+        "estados": {},
+        "segundos": 0.68
+      },
+      {
+        "caso": "sin-13",
+        "cenario": "api-catalogo",
+        "modo": "estrutura_aninhada_divergente",
+        "verbetes": [
+          "estrutura_aninhada_divergente"
+        ],
+        "desligado": true,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": true,
+        "ha_diff_arvore": true,
+        "sintoma_sumiu": true,
+        "marcado": true,
+        "motivo": "o roteiro passou e o fio e a árvore mudaram entre a corrida que falhava e a que passou",
+        "estados": {
+          "estrutura_aninhada_divergente": [
+            "nao_corrigido",
+            "corrigido"
+          ]
+        },
+        "segundos": 0.67
+      },
+      {
+        "caso": "sin-15",
+        "cenario": "api-catalogo",
+        "modo": "colecao_no_lugar_de_objeto",
+        "verbetes": [
+          "colecao_no_lugar_de_objeto"
+        ],
+        "desligado": true,
+        "reproduziu_antes": false,
+        "passou_depois": true,
+        "ha_diff_http": false,
+        "ha_diff_arvore": false,
+        "sintoma_sumiu": true,
+        "marcado": false,
+        "motivo": "o roteiro passou, mas nada mudou no fio (corpo e tempo da chamada iguais): sem evidência de correção",
+        "estados": {},
+        "segundos": 0.72
+      },
+      {
+        "caso": "sin-9",
+        "cenario": "api-catalogo",
+        "modo": "field_renamed",
+        "verbetes": [
+          "campo_renomeado"
+        ],
+        "desligado": true,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": true,
+        "ha_diff_arvore": true,
+        "sintoma_sumiu": true,
+        "marcado": true,
+        "motivo": "o roteiro passou e o fio e a árvore mudaram entre a corrida que falhava e a que passou",
+        "estados": {
+          "campo_renomeado": [
+            "nao_corrigido",
+            "corrigido"
+          ]
+        },
+        "segundos": 0.66
+      },
+      {
+        "caso": "tra-12",
+        "cenario": "api-catalogo",
+        "modo": "escala_ou_unidade_errada",
+        "verbetes": [
+          "escala_ou_unidade_errada"
+        ],
+        "desligado": false,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": false,
+        "ha_diff_arvore": false,
+        "sintoma_sumiu": true,
+        "marcado": false,
+        "motivo": "o roteiro passou, mas nada mudou no fio (corpo e tempo da chamada iguais): sem evidência de correção",
+        "estados": {},
+        "segundos": 0.67
+      },
+      {
+        "caso": "tra-3",
+        "cenario": "api-catalogo",
+        "modo": "chave_de_juncao_errada",
+        "verbetes": [
+          "chave_de_juncao_errada"
+        ],
+        "desligado": false,
+        "reproduziu_antes": true,
+        "passou_depois": true,
+        "ha_diff_http": false,
+        "ha_diff_arvore": false,
+        "sintoma_sumiu": true,
+        "marcado": false,
+        "motivo": "o roteiro passou, mas nada mudou no fio (corpo e tempo da chamada iguais): sem evidência de correção",
+        "estados": {},
+        "segundos": 0.69
+      }
+    ]
+  },
+  "sonda": {
+    "casos": 7,
+    "acertos": 6,
+    "mudaram_proposta": 2,
+    "sem_sonda_anterior": 5,
+    "mencionam_correcao": 0,
+    "abstencoes": 0,
+    "com_verbete_por_id": 1,
+    "origem": "epoca-102",
+    "epoca": 103,
+    "por_caso": [
+      {
+        "caso": "efe-3",
+        "rotulo": "campo_ausente",
+        "acertou": true,
+        "n_propostas": 2,
+        "n_aceitas": 1,
+        "abstencao": false,
+        "motivos": [
+          "duplicada"
+        ],
+        "menciona_correcao": false,
+        "por_id": [],
+        "segundos": 229.19,
+        "rotulo_anterior": "campo_ausente",
+        "acertou_anterior": true,
+        "n_propostas_anterior": 2,
+        "n_aceitas_anterior": 0,
+        "motivos_anteriores": [
+          "teto_notas_verbete",
+          "duplicada"
+        ],
+        "mudou_proposta": true
+      },
+      {
+        "caso": "lex-9",
+        "rotulo": "corpo_nao_e_json",
+        "acertou": true,
+        "n_propostas": 2,
+        "n_aceitas": 2,
+        "abstencao": false,
+        "motivos": [],
+        "menciona_correcao": false,
+        "por_id": [],
+        "segundos": 223.4,
+        "rotulo_anterior": null,
+        "acertou_anterior": null,
+        "n_propostas_anterior": null,
+        "n_aceitas_anterior": null,
+        "motivos_anteriores": [],
+        "mudou_proposta": null
+      },
+      {
+        "caso": "sin-9",
+        "rotulo": "campo_renomeado",
+        "acertou": true,
+        "n_propostas": 2,
+        "n_aceitas": 0,
+        "abstencao": false,
+        "motivos": [
+          "bloco_malformado",
+          "bloco_malformado"
+        ],
+        "menciona_correcao": false,
+        "por_id": [],
+        "segundos": 237.67,
+        "rotulo_anterior": null,
+        "acertou_anterior": null,
+        "n_propostas_anterior": null,
+        "n_aceitas_anterior": null,
+        "motivos_anteriores": [],
+        "mudou_proposta": null
+      },
+      {
+        "caso": "sin-13",
+        "rotulo": "estrutura_aninhada_divergente",
+        "acertou": true,
+        "n_propostas": 2,
+        "n_aceitas": 0,
+        "abstencao": false,
+        "motivos": [
+          "duplicada",
+          "duplicada"
+        ],
+        "menciona_correcao": false,
+        "por_id": [],
+        "segundos": 258.55,
+        "rotulo_anterior": null,
+        "acertou_anterior": null,
+        "n_propostas_anterior": null,
+        "n_aceitas_anterior": null,
+        "motivos_anteriores": [],
+        "mudou_proposta": null
+      },
+      {
+        "caso": "sin-15",
+        "rotulo": "colecao_no_lugar_de_objeto",
+        "acertou": true,
+        "n_propostas": 2,
+        "n_aceitas": 1,
+        "abstencao": false,
+        "motivos": [
+          "trecho_nao_encontrado"
+        ],
+        "menciona_correcao": false,
+        "por_id": [],
+        "segundos": 228.35,
+        "rotulo_anterior": null,
+        "acertou_anterior": null,
+        "n_propostas_anterior": null,
+        "n_aceitas_anterior": null,
+        "motivos_anteriores": [],
+        "mudou_proposta": null
+      },
+      {
+        "caso": "run-7",
+        "rotulo": "recurso_inexistente",
+        "acertou": true,
+        "n_propostas": 2,
+        "n_aceitas": 0,
+        "abstencao": false,
+        "motivos": [
+          "palavra_chave_invalida",
+          "palavra_chave_invalida"
+        ],
+        "menciona_correcao": false,
+        "por_id": [],
+        "segundos": 248.3,
+        "rotulo_anterior": null,
+        "acertou_anterior": null,
+        "n_propostas_anterior": null,
+        "n_aceitas_anterior": null,
+        "motivos_anteriores": [],
+        "mudou_proposta": null
+      },
+      {
+        "caso": "efe-10",
+        "rotulo": "dado_desatualizado",
+        "acertou": false,
+        "n_propostas": 2,
+        "n_aceitas": 0,
+        "abstencao": false,
+        "motivos": [
+          "duplicada",
+          "duplicada"
+        ],
+        "menciona_correcao": false,
+        "por_id": [
+          "interface-frontend"
+        ],
+        "segundos": 254.24,
+        "rotulo_anterior": "dado_desatualizado",
+        "acertou_anterior": false,
+        "n_propostas_anterior": 2,
+        "n_aceitas_anterior": 1,
+        "motivos_anteriores": [
+          "teto_notas_verbete"
+        ],
+        "mudou_proposta": true
+      }
+    ]
+  },
+  "recuperacao": {
+    "aprendidos_na_calibracao": {
+      "atualizacao_imediata": 0,
+      "interface-estados": 0,
+      "interface-frontend": 0,
+      "rotas-inexistentes": 0
+    },
+    "aprendidos_sem_recuperacao": [
+      "atualizacao_imediata",
+      "interface-estados",
+      "interface-frontend",
+      "rotas-inexistentes"
+    ],
+    "casos_com_verbete_por_id": 10,
+    "verbetes_por_id": {
+      "chave_de_juncao_errada": 1,
+      "interface-estados": 1,
+      "campo_renomeado": 1,
+      "estrutura_aninhada_divergente": 1,
+      "entidade-produto": 1,
+      "escala_ou_unidade_errada": 1,
+      "recurso_inexistente": 1,
+      "rotas-inexistentes": 1,
+      "interface-frontend": 1,
+      "atualizacao_imediata": 1
+    }
+  },
+  "regra_r4": {
+    "texto": "precisão e revocação da marca corrigido contra o conjunto conhecido de modos desligados (sem limiar pré-registrado: é medida)",
+    "cumprida": null
+  },
+  "regra_r5": {
+    "texto": "um lote de acréscimos entra se, na reavaliação nos 36 inéditos, o número de casos que passam a acertar for maior ou igual ao dos que passam a errar (b maior ou igual a c); senão o lote fica em espera com o motivo",
+    "veredito": "aceito"
+  },
+  "casos": [
+    {
+      "caso": "lex-2",
+      "classe": 1,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "corpo_nao_e_json",
+      "cenario": "api-catalogo",
+      "rotulo": "corpo_nao_e_json",
+      "acertou": true,
+      "p_rotulo": 0.9915185566168581,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "mensagem_nao_encontrada_no_codigo"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 105.75,
+      "segundos_proposta": 123.99
+    },
+    {
+      "caso": "lex-3",
+      "classe": 1,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "corpo_vazio",
+      "cenario": "api-catalogo",
+      "rotulo": "corpo_vazio",
+      "acertou": true,
+      "p_rotulo": 0.9871406554719555,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 95.48,
+      "segundos_proposta": 185.87
+    },
+    {
+      "caso": "lex-5",
+      "classe": 1,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "resposta_truncada",
+      "acertou": true,
+      "p_rotulo": 0.9999003410307415,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "sem_evidencia_do_caso",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 73.23,
+      "segundos_proposta": 170.41
+    },
+    {
+      "caso": "sin-1",
+      "classe": 2,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "field_missing",
+      "cenario": "api-catalogo",
+      "rotulo": "campo_ausente",
+      "acertou": true,
+      "p_rotulo": 0.998016476671494,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "texto_nao_atomico"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "campo_preco_ausente"
+      ],
+      "segundos_diagnostico": 105.67,
+      "segundos_proposta": 146.03
+    },
+    {
+      "caso": "sin-2",
+      "classe": 2,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "field_renamed",
+      "cenario": "api-catalogo",
+      "rotulo": "campo_renomeado",
+      "acertou": true,
+      "p_rotulo": 0.9667516944463882,
+      "selo": "medio",
+      "divergencia": true,
+      "falha": "citacao_fora_do_contexto",
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "mensagem_nao_encontrada_no_codigo",
+        "mensagem_nao_encontrada_no_codigo"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 95.7,
+      "segundos_proposta": 166.8
+    },
+    {
+      "caso": "sin-3",
+      "classe": 2,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "estrutura_aninhada_divergente",
+      "cenario": "api-catalogo",
+      "rotulo": "tipo_divergente",
+      "acertou": false,
+      "p_rotulo": 0.9829703567515394,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada",
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 106.04,
+      "segundos_proposta": 170.47
+    },
+    {
+      "caso": "semt-2",
+      "classe": 3,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "type_drift",
+      "cenario": "api-catalogo",
+      "rotulo": "tipo_divergente",
+      "acertou": true,
+      "p_rotulo": 0.997086465311301,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "texto_curto",
+        "arquivo_inexistente"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 106.45,
+      "segundos_proposta": 160.23
+    },
+    {
+      "caso": "semt-4",
+      "classe": 3,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "formato_de_data_divergente",
+      "acertou": true,
+      "p_rotulo": 0.9996993541765201,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida",
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 62.91,
+      "segundos_proposta": 172.01
+    },
+    {
+      "caso": "tra-2",
+      "classe": 4,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "nome_nulo_vindo_da_view",
+      "acertou": false,
+      "p_rotulo": 0.8507014496503978,
+      "selo": "medio",
+      "divergencia": true,
+      "falha": "rotulo_fora_da_taxonomia",
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "arquivo_inexistente"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 64.55,
+      "segundos_proposta": 149.21
+    },
+    {
+      "caso": "tra-3",
+      "classe": 4,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "chave_de_juncao_errada",
+      "cenario": "api-catalogo",
+      "rotulo": "tipo_divergente",
+      "acertou": false,
+      "p_rotulo": 0.5778472253772081,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "chave_de_juncao_errada"
+      ],
+      "verbetes_editados": [
+        "novo_verbete"
+      ],
+      "segundos_diagnostico": 126.66,
+      "segundos_proposta": 191.66
+    },
+    {
+      "caso": "tra-5",
+      "classe": 4,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "contagem_inconsistente",
+      "acertou": false,
+      "p_rotulo": 0.7599119536269914,
+      "selo": "baixo",
+      "divergencia": true,
+      "falha": "causa_sem_verbete_que_a_trate",
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "pessoas_incorretas"
+      ],
+      "segundos_diagnostico": 69.24,
+      "segundos_proposta": 163.39
+    },
+    {
+      "caso": "run-3",
+      "classe": 5,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "limite_de_requisicoes",
+      "cenario": "api-catalogo",
+      "rotulo": "limite_de_requisicoes",
+      "acertou": true,
+      "p_rotulo": 0.9995237588803331,
+      "selo": "alto",
+      "divergencia": true,
+      "falha": "causa_sem_verbete_que_a_trate",
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "texto_de_origem_proibida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "limite_de_requisicoes"
+      ],
+      "segundos_diagnostico": 108.82,
+      "segundos_proposta": 168.57
+    },
+    {
+      "caso": "run-5",
+      "classe": 5,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "registro_duplicado",
+      "acertou": true,
+      "p_rotulo": 0.998194634872963,
+      "selo": "alto",
+      "divergencia": true,
+      "falha": "causa_sem_verbete_que_a_trate",
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "contrato-pedido"
+      ],
+      "segundos_diagnostico": 66.04,
+      "segundos_proposta": 168.66
+    },
+    {
+      "caso": "efe-4",
+      "classe": 6,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acertou": false,
+      "p_rotulo": 0.5333606491280808,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 1,
+      "recusadas": [],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "interface-estados"
+      ],
+      "verbetes_editados": [
+        "estado_da_tela_divergente"
+      ],
+      "segundos_diagnostico": 71.41,
+      "segundos_proposta": 162.91
+    },
+    {
+      "caso": "lex-6",
+      "classe": 1,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "recurso_inexistente",
+      "acertou": false,
+      "p_rotulo": 0.5765632300218532,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 70.85,
+      "segundos_proposta": 133.09
+    },
+    {
+      "caso": "lex-9",
+      "classe": 1,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "corpo_nao_e_json",
+      "cenario": "api-catalogo",
+      "rotulo": "corpo_nao_e_json",
+      "acertou": true,
+      "p_rotulo": 0.9873676295700055,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "mensagem_nao_encontrada_no_codigo"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 16.89,
+      "segundos_proposta": 125.35
+    },
+    {
+      "caso": "lex-12",
+      "classe": 1,
+      "nivel": 3,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "corpo_nao_e_json",
+      "cenario": "api-catalogo",
+      "rotulo": "corpo_nao_e_json",
+      "acertou": true,
+      "p_rotulo": 0.9873676295700055,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "arquivo_inexistente"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 16.75,
+      "segundos_proposta": 132.88
+    },
+    {
+      "caso": "sin-6",
+      "classe": 2,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "field_missing",
+      "cenario": "api-catalogo",
+      "rotulo": "campo_ausente",
+      "acertou": true,
+      "p_rotulo": 0.9994443058688333,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 104.97,
+      "segundos_proposta": 141.6
+    },
+    {
+      "caso": "sin-8",
+      "classe": 2,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": false,
+      "modo": "colecao_no_lugar_de_objeto",
+      "cenario": "api-catalogo",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acertou": true,
+      "p_rotulo": 0.9886061552835194,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada",
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 74.12,
+      "segundos_proposta": 161.18
+    },
+    {
+      "caso": "sin-9",
+      "classe": 2,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "field_renamed",
+      "cenario": "api-catalogo",
+      "rotulo": "campo_renomeado",
+      "acertou": true,
+      "p_rotulo": 0.9997289776843572,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "sem_evidencia_do_caso",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "campo_renomeado"
+      ],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 105.47,
+      "segundos_proposta": 138.29
+    },
+    {
+      "caso": "sin-12",
+      "classe": 2,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acertou": false,
+      "p_rotulo": 0.5936127401696909,
+      "selo": "baixo",
+      "divergencia": true,
+      "falha": "causa_sem_verbete_que_a_trate",
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "texto_curto",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 64.15,
+      "segundos_proposta": 154.31
+    },
+    {
+      "caso": "sin-13",
+      "classe": 2,
+      "nivel": 3,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "estrutura_aninhada_divergente",
+      "cenario": "api-catalogo",
+      "rotulo": "tipo_divergente",
+      "acertou": false,
+      "p_rotulo": 0.9516927000150045,
+      "selo": "medio",
+      "divergencia": true,
+      "falha": "citacao_fora_do_contexto",
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "estrutura_aninhada_divergente"
+      ],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 121.48,
+      "segundos_proposta": 148.8
+    },
+    {
+      "caso": "sin-15",
+      "classe": 2,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": false,
+      "modo": "colecao_no_lugar_de_objeto",
+      "cenario": "api-catalogo",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acertou": true,
+      "p_rotulo": 0.9802332524671383,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "redundante"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "colecao_no_lugar_de_objeto"
+      ],
+      "segundos_diagnostico": 40.27,
+      "segundos_proposta": 146.55
+    },
+    {
+      "caso": "semt-6",
+      "classe": 3,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "type_drift",
+      "cenario": "api-catalogo",
+      "rotulo": "contagem_inconsistente",
+      "acertou": false,
+      "p_rotulo": 0.8636262949925831,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "tipo_divergente"
+      ],
+      "segundos_diagnostico": 103.01,
+      "segundos_proposta": 154.88
+    },
+    {
+      "caso": "semt-7",
+      "classe": 3,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "formato_de_data_divergente",
+      "acertou": false,
+      "p_rotulo": 0.60535757719284,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "tipo_divergente"
+      ],
+      "segundos_diagnostico": 37.24,
+      "segundos_proposta": 164.2
+    },
+    {
+      "caso": "semt-10",
+      "classe": 3,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "type_drift",
+      "cenario": "api-catalogo",
+      "rotulo": "tipo_divergente",
+      "acertou": true,
+      "p_rotulo": 0.9969019888698402,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "sem_evidencia_do_caso"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "tipo_divergente"
+      ],
+      "segundos_diagnostico": 35.77,
+      "segundos_proposta": 153.03
+    },
+    {
+      "caso": "semt-11",
+      "classe": 3,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "valor_fora_do_dominio",
+      "acertou": true,
+      "p_rotulo": 0.9727032186773363,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "arquivo_inexistente"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 71.28,
+      "segundos_proposta": 122.33
+    },
+    {
+      "caso": "semt-12",
+      "classe": 3,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "formato_de_data_divergente",
+      "acertou": true,
+      "p_rotulo": 0.8407750172203757,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 33.37,
+      "segundos_proposta": 128.16
+    },
+    {
+      "caso": "semt-13",
+      "classe": 3,
+      "nivel": 3,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "type_drift",
+      "cenario": "api-catalogo",
+      "rotulo": "tipo_divergente",
+      "acertou": true,
+      "p_rotulo": 0.9935147761241928,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "teto_notas_verbete"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "entidade-produto"
+      ],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 106.29,
+      "segundos_proposta": 108.6
+    },
+    {
+      "caso": "semt-15",
+      "classe": 3,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "valor_fora_do_dominio",
+      "acertou": true,
+      "p_rotulo": 0.6653118685756259,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "validacao-na-api"
+      ],
+      "segundos_diagnostico": 66.94,
+      "segundos_proposta": 154.57
+    },
+    {
+      "caso": "tra-6",
+      "classe": 4,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "escala_ou_unidade_errada",
+      "cenario": "api-catalogo",
+      "rotulo": "escala_ou_unidade_errada",
+      "acertou": true,
+      "p_rotulo": 0.7682724625200564,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "formato_preco"
+      ],
+      "segundos_diagnostico": 115.98,
+      "segundos_proposta": 169.83
+    },
+    {
+      "caso": "tra-7",
+      "classe": 4,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "chave_de_juncao_errada",
+      "cenario": "api-catalogo",
+      "rotulo": "campo_renomeado",
+      "acertou": false,
+      "p_rotulo": 0.9847041367499533,
+      "selo": "medio",
+      "divergencia": true,
+      "falha": "campo_errado",
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 111.27,
+      "segundos_proposta": 186.61
+    },
+    {
+      "caso": "tra-9",
+      "classe": 4,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "formato_de_data_divergente",
+      "acertou": false,
+      "p_rotulo": 0.9404434577748375,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida",
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 64.67,
+      "segundos_proposta": 173.37
+    },
+    {
+      "caso": "tra-12",
+      "classe": 4,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "escala_ou_unidade_errada",
+      "cenario": "api-catalogo",
+      "rotulo": "escala_ou_unidade_errada",
+      "acertou": true,
+      "p_rotulo": 0.9376664771102183,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada",
+        "trecho_nao_encontrado"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "escala_ou_unidade_errada"
+      ],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 130.62,
+      "segundos_proposta": 194.58
+    },
+    {
+      "caso": "tra-13",
+      "classe": 4,
+      "nivel": 2,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "chave_de_juncao_errada",
+      "cenario": "api-catalogo",
+      "rotulo": "imagem_fora_do_dominio",
+      "acertou": false,
+      "p_rotulo": 0.2030690290029865,
+      "selo": "baixo",
+      "divergencia": true,
+      "falha": "rotulo_fora_da_taxonomia",
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "redundante"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 90.4,
+      "segundos_proposta": 140.2
+    },
+    {
+      "caso": "tra-14",
+      "classe": 4,
+      "nivel": 3,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "contagem_inconsistente",
+      "cenario": "api-catalogo",
+      "rotulo": "contagem_inconsistente",
+      "acertou": true,
+      "p_rotulo": 0.9653595671082679,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "contagem_inconsistente"
+      ],
+      "segundos_diagnostico": 74.25,
+      "segundos_proposta": 159.36
+    },
+    {
+      "caso": "run-6",
+      "classe": 5,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "erro_interno_do_servidor",
+      "acertou": true,
+      "p_rotulo": 0.9872358445882804,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "texto_longo"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 68.72,
+      "segundos_proposta": 135.12
+    },
+    {
+      "caso": "run-7",
+      "classe": 5,
+      "nivel": 1,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "recurso_inexistente",
+      "cenario": "api-detalhe",
+      "rotulo": "recurso_inexistente",
+      "acertou": true,
+      "p_rotulo": 0.9950532317118365,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "recurso_inexistente"
+      ],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 112.84,
+      "segundos_proposta": 121.71
+    },
+    {
+      "caso": "run-8",
+      "classe": 5,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "recurso_inexistente",
+      "acertou": true,
+      "p_rotulo": 0.955186128272443,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "rotas-inexistentes"
+      ],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 67.44,
+      "segundos_proposta": 158.2
+    },
+    {
+      "caso": "run-11",
+      "classe": 5,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "valor_fora_do_dominio",
+      "acertou": false,
+      "p_rotulo": 0.97493660394545,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "sem_evidencia_do_caso"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 63.5,
+      "segundos_proposta": 122.11
+    },
+    {
+      "caso": "run-12",
+      "classe": 5,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "erro_interno_do_servidor",
+      "acertou": true,
+      "p_rotulo": 0.9415813082387314,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "erro_interno_do_servidor"
+      ],
+      "segundos_diagnostico": 67.4,
+      "segundos_proposta": 170.09
+    },
+    {
+      "caso": "run-14",
+      "classe": 5,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "dado_desatualizado",
+      "acertou": true,
+      "p_rotulo": 0.9994258880827783,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 69.14,
+      "segundos_proposta": 110.78
+    },
+    {
+      "caso": "run-15",
+      "classe": 5,
+      "nivel": 3,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "latency",
+      "cenario": "api-catalogo",
+      "rotulo": "tempo_de_resposta_excedido",
+      "acertou": true,
+      "p_rotulo": 0.9774953724855124,
+      "selo": "medio",
+      "divergencia": true,
+      "falha": "causa_sem_verbete_que_a_trate",
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "sem_evidencia_do_caso"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 104.76,
+      "segundos_proposta": 117.06
+    },
+    {
+      "caso": "efe-6",
+      "classe": 6,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "localizador_quebrado",
+      "acertou": true,
+      "p_rotulo": 0.8435873399645051,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida",
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 70.54,
+      "segundos_proposta": 169.13
+    },
+    {
+      "caso": "efe-8",
+      "classe": 6,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "estado_da_tela_divergente",
+      "acertou": true,
+      "p_rotulo": 0.9887740612333277,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 2,
+      "para_revisao": 0,
+      "recusadas": [],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "estado_da_tela_divergente",
+        "atualizacao-da-tela"
+      ],
+      "segundos_diagnostico": 65.92,
+      "segundos_proposta": 158.37
+    },
+    {
+      "caso": "efe-9",
+      "classe": 6,
+      "nivel": 1,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "localizador_quebrado",
+      "acertou": true,
+      "p_rotulo": 0.9991523027499827,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "palavra_chave_invalida",
+        "palavra_chave_invalida"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 68.74,
+      "segundos_proposta": 158.25
+    },
+    {
+      "caso": "efe-10",
+      "classe": 6,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "valor_fora_do_dominio",
+      "acertou": false,
+      "p_rotulo": 0.6232928710698566,
+      "selo": "baixo",
+      "divergencia": true,
+      "falha": "causa_sem_verbete_que_a_trate",
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "trecho_nao_encontrado"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "interface-frontend"
+      ],
+      "verbetes_editados": [
+        "interface-frontend"
+      ],
+      "segundos_diagnostico": 77.32,
+      "segundos_proposta": 159.03
+    },
+    {
+      "caso": "efe-11",
+      "classe": 6,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "localizador_quebrado",
+      "acertou": false,
+      "p_rotulo": 0.5070676940552508,
+      "selo": "baixo",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "teto_verbetes_novos"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [
+        "localizador_quebrado"
+      ],
+      "segundos_diagnostico": 67.0,
+      "segundos_proposta": 154.78
+    },
+    {
+      "caso": "efe-12",
+      "classe": 6,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "localizador_quebrado",
+      "acertou": true,
+      "p_rotulo": 0.9993736147730101,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "redundante",
+        "texto_longo"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 76.85,
+      "segundos_proposta": 189.84
+    },
+    {
+      "caso": "efe-13",
+      "classe": 6,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "dado_desatualizado",
+      "acertou": false,
+      "p_rotulo": 0.9129044985954963,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "para_revisao": 0,
+      "recusadas": [
+        "teto_verbetes_novos"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [
+        "atualizacao_imediata"
+      ],
+      "verbetes_editados": [
+        "estado_da_tela_divergente"
+      ],
+      "segundos_diagnostico": 75.69,
+      "segundos_proposta": 142.01
+    },
+    {
+      "caso": "efe-15",
+      "classe": 6,
+      "nivel": 3,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "estado_da_tela_divergente",
+      "acertou": true,
+      "p_rotulo": 0.999033927924014,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "id_repetido",
+        "sem_evidencia_do_caso"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 56.6,
+      "segundos_proposta": 168.67
+    },
+    {
+      "caso": "lex-13",
+      "classe": 1,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "corpo_vazio",
+      "acertou": true,
+      "p_rotulo": 0.9901935458679886,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 1,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "id_repetido"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 66.1,
+      "segundos_proposta": 117.13
+    },
+    {
+      "caso": "lex-14",
+      "classe": 1,
+      "nivel": 2,
+      "origem": "fixture",
+      "reproduz": null,
+      "modo": null,
+      "cenario": null,
+      "rotulo": "resposta_truncada",
+      "acertou": true,
+      "p_rotulo": 0.9999245405220246,
+      "selo": "alto",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "duplicada",
+        "teto_verbetes_novos"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 67.48,
+      "segundos_proposta": 158.83
+    },
+    {
+      "caso": "lex-15",
+      "classe": 1,
+      "nivel": 3,
+      "origem": "tela",
+      "reproduz": true,
+      "modo": "corpo_nao_e_json",
+      "cenario": "api-catalogo",
+      "rotulo": "corpo_nao_e_json",
+      "acertou": true,
+      "p_rotulo": 0.9873676295700055,
+      "selo": "medio",
+      "divergencia": false,
+      "falha": null,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "para_revisao": 0,
+      "recusadas": [
+        "mensagem_nao_encontrada_no_codigo",
+        "retificacao_sem_trecho"
+      ],
+      "abstencao": false,
+      "recuperacao_por_id": [],
+      "verbetes_editados": [],
+      "segundos_diagnostico": 17.38,
+      "segundos_proposta": 179.2
+    }
+  ],
+  "condicoes": {
+    "k": 3,
+    "casos": 54,
+    "com_tela": 26,
+    "ineditos": 36,
+    "base_ineditos": "corrida12",
+    "origem_da_base": "pre_fase4_confianca (corrida 12, cópia curada 1fca10f1a6f6, Ollama 0.34.4)",
+    "conjunto_de_correcao": {
+      "desligados": [
+        "lex-9",
+        "run-7",
+        "sin-13",
+        "sin-15",
+        "sin-9"
+      ],
+      "mantidos": [
+        "lex-2",
+        "semt-13",
+        "sin-1",
+        "tra-12",
+        "tra-3"
+      ],
+      "regra": "sha256('correcao:' + id) ordena os casos ligados a notas e com tela; a primeira metade (arredondada para cima) tem o modo desligado, a outra fica com o modo ligado"
+    },
+    "casos_da_sonda": [
+      "efe-10",
+      "efe-3",
+      "lex-9",
+      "run-7",
+      "sin-13",
+      "sin-15",
+      "sin-9"
+    ],
+    "parcelas_para_revisao": {
+      "entidade-produto": 0.4667,
+      "contrato-produto": 0.4222
+    },
+    "parcela_para_revisao": 0.4,
+    "inferencias_previstas": 158,
+    "parcial": false,
+    "teto_proposta": 700
+  }
+}

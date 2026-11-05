@@ -556,6 +556,44 @@ def armar_quebra(pagina, quebra_: dict, forma: str, base: str = BASE_PADRAO) -> 
             "como": f"cookies {COOKIE_DA_QUEBRA}={quebra_['modo']} e {COOKIE_DA_PAGINA}={quebra_['pagina']} lidos por quebra.php"}
 
 
+# ! Alteração de IA - Revisar: (04/11/2026, P6) roteiro_com_seletor: o roteiro com um seletor no lugar do localizador quebrado
+# (marcando o passo como curado); a reexecução da cura (executar_fase4.Cura._roteiro_curado) e a conferência da linha de base
+# manual (conferir_localizador_manual.py) usam a mesma troca.
+# ! Motivo: o Task Success do cenário de localizador do agente e o do integrante têm de ser conferidos do mesmo jeito para a Fase 5
+# comparar os dois; com a troca num lugar só, uma mudança nela vale para os dois lados.
+def roteiro_com_seletor(cenario_: dict, quebra_: dict, seletor: str) -> dict:
+    """O cenário com `seletor` em todo passo que usava o localizador quebrado, marcado como curado; o original não muda."""
+    import copy
+    novo = copy.deepcopy(cenario_)
+    for p in novo["passos"]:
+        if p.get("seletor") == quebra_["localizador"]:
+            p["seletor"] = seletor
+            p["curado"] = True
+    return novo
+
+
+# ! Alteração de IA - Revisar: (04/11/2026, P6) motivo_do_roteiro: a ficha da falha de um roteiro que parou, numa linha: o passo,
+# o que ele fazia e o erro (cortado em 200 caracteres), ou a conferência que falhou com o esperado e o observado.
+# ! Motivo: o ensaio da Fase 5 (executar_fase4.rodar_cenarios) grava esta ficha em cenarios.jsonl (campo motivo_deteccao) e o
+# ajudante da linha de base manual (linha_de_base_manual.py) a mostra ao integrante; com o texto montado num lugar só, o
+# integrante recebe a mesma falha que a detecção do agente acusou.
+def _uma_linha(texto, limite: int) -> str:
+    return " ".join(str(texto).split())[:limite]
+
+
+def motivo_do_roteiro(resultado: dict) -> str | None:
+    """A ficha da falha do roteiro em uma linha; None quando o roteiro passou."""
+    if resultado.get("passou"):
+        return None
+    cf = resultado.get("conferencia_falha") or {}
+    n = (resultado.get("passo_falho") or 0) + 1
+    if resultado.get("erro"):
+        nome = cf.get("nome") or f"passo {n}"
+        return f"o {nome} não terminou: {_uma_linha(resultado['erro'], 200)}"
+    return (f'a conferência "{cf.get("nome")}" (passo {n}) falhou: esperado {_uma_linha(cf.get("esperado"), 80)}, '
+            f'observado {_uma_linha(cf.get("observado"), 120)}')
+
+
 # ------------------------------------------------------------------ cronômetro e critério da Fase 5
 
 def mttr_segundos(deteccao: str, validacao: str) -> float:
@@ -567,3 +605,85 @@ def mttr_segundos(deteccao: str, validacao: str) -> float:
 def task_success(resultado: dict) -> bool:
     """Fluxo restaurado e roteiro concluído sem erro: o cenário passou e nenhuma conferência falhou."""
     return bool(resultado.get("passou")) and all(c.get("passou") for c in resultado.get("conferencias") or [])
+
+
+# ------------------------------------------------------------------ os dez cenários do ensaio da Fase 5 (pacote P6)
+
+# ! Alteração de IA - Revisar: (04/11/2026, P6) o catálogo dos dez cenários da ficha 36 (decisão 79): seis de contrato em
+# produtos_api.php (roteiro api-catalogo), um por modo, e quatro de localizador, um por roteiro do front legado, cada um com um
+# modo de quebra fixo, armado pelo harness. A lista da opção (a) trocou latency por escala_ou_unidade_errada (TROCA_DA_FICHA_36).
+# ! Motivo: a decisão 79 fixou 6 de contrato e 4 de localizador e pediu trocar cenários de contrato por modos novos da ficha 28 que
+# cobrissem mais classes; os seis da opção (a) cobriam as classes 1, 2, 3 e 5, e com uma troca os seis cobrem as cinco classes de
+# contrato (a 6, efeito, vem dos quatro de localizador). Os quatro modos de quebra entram um em cada roteiro, para o ensaio passar
+# pelos quatro; a forma "harness" deixa o front intocado (ficha 29).
+TROCA_DA_FICHA_36 = {
+    "sai": "latency", "entra": "escala_ou_unidade_errada",
+    "motivo": ("os seis modos da opção (a) cobriam as classes 1, 2, 3 e 5; a decisão 79 pede trocar cenários de contrato por modos "
+               "novos da ficha 28 que cubram mais classes. Sai latency, que repete a classe 5 de error_500 e tem o MTTR dominado pela "
+               "espera do tempo limite; entra escala_ou_unidade_errada em preco, da classe 4 (tradução), que nenhum dos seis cobria."),
+}
+CENARIOS_DE_CONTRATO = tuple(
+    {"id": f"contrato-{modo}", "tipo": "contrato", "cenario": "api-catalogo", "modo": modo, "campo": campo, "causa": causa, "classe": classe,
+     "nivel": nivel}
+    for modo, campo, causa, classe, nivel in (
+        ("malformed_json", None, "resposta_truncada", 1, 1),
+        ("field_missing", "preco", "campo_ausente", 2, 1),
+        ("field_renamed", "preco", "campo_renomeado", 2, 2),
+        ("type_drift", "preco", "tipo_divergente", 3, 2),
+        ("escala_ou_unidade_errada", "preco", "escala_ou_unidade_errada", 4, 2),
+        ("error_500", None, "erro_interno_do_servidor", 5, 1),
+    ))
+CENARIOS_DE_LOCALIZADOR = tuple(
+    {"id": f"localizador-{roteiro}", "tipo": "localizador", "cenario": roteiro, "modo": modo, "forma": "harness", "campo": None,
+     "causa": "localizador_quebrado", "classe": 6, "nivel": 2}
+    for roteiro, modo in (("front-busca", "id_renomeado"), ("front-admin-login", "classe_trocada"),
+                          ("front-admin-produtos", "texto_alterado"), ("front-cliente-reserva", "estrutura_alterada")))
+CENARIOS_DO_ENSAIO = CENARIOS_DE_CONTRATO + CENARIOS_DE_LOCALIZADOR
+LINHAS_DO_DIAGNOSTICO = ("CAUSA_RAIZ", "CAMPO", "IMPACTO", "FONTE")
+
+
+# ! Alteração de IA - Revisar: (04/11/2026, P6) o cronômetro em relógio monotônico (mttr_monotonico), a conferência do
+# diagnóstico em código da ficha 35 (diagnostico_conferido) e o Task Success do cenário de contrato (task_success_contrato).
+# ! Motivo: ficha 35 (a), decisão 79: na quebra de contrato o agente não corrige a API, ele diagnostica; o resultado é o
+# diagnóstico conferido em código (quatro linhas válidas, causa dentro das 23, campo existente no caso), o MTTR para nele e o Task
+# Success é a causa e o campo certos. mttr_segundos (ISO, segundos inteiros) não serve para tempos de fração de segundo.
+def mttr_monotonico(t_deteccao: float | None, t_fim: float | None, descontar: float = 0.0) -> float | None:
+    """Da detecção ao fim do cronômetro (diagnóstico conferido ou reexecução validada), em segundos, descontando o tempo de
+    restaurar o banco entre os dois; None sem detecção, sem fim ou com o fim antes da detecção."""
+    if t_deteccao is None or t_fim is None or t_fim < t_deteccao:
+        return None
+    return round(max(0.0, t_fim - t_deteccao - (descontar or 0.0)), 3)
+
+
+def diagnostico_conferido(resposta: str | None, caso: dict) -> dict:
+    """Ficha 35: as quatro linhas presentes, a causa dentro das 23 (sem acento, como avaliar.py) e o campo citado existente no
+    contrato ou no corpo do caso (ou "nenhum")."""
+    import avaliar
+    texto = (resposta or "").replace("*", "").replace("`", "")
+    linhas = {n: re.search(rf"^\s*{n}\s*:\s*\S", texto, re.IGNORECASE | re.MULTILINE) is not None for n in LINHAS_DO_DIAGNOSTICO}
+    lido = avaliar.extrair(texto)
+    causa = lido["causa_raiz"]
+    causa_ok = causa is not None and avaliar._normalizar(causa) in avaliar._PERMITIDAS
+    campo = (lido["campo"] or "").strip()
+    if not campo or "nenhum" in avaliar._normalizar(campo):
+        campo_ok, campo_lido = True, None
+    else:
+        token = re.split(r"[\s,;()]+", campo.strip("'\". "))[0]
+        e = caso.get("entrada") or {}
+        onde = f"{e.get('contrato') or ''}\n{e.get('corpo') or ''}"
+        campo_ok = bool(token) and re.search(rf"(?<!\w){re.escape(token)}(?!\w)", onde) is not None
+        campo_lido = token
+    return {"conferido": all(linhas.values()) and causa_ok and campo_ok, "linhas": linhas, "causa_no_conjunto": causa_ok,
+            "campo_no_caso": campo_ok, "causa": causa, "campo": campo_lido}
+
+
+def task_success_contrato(conferencia: dict | None, causa_esperada: str, campo_esperado: str | None) -> bool:
+    """Ficha 35: no cenário de contrato, Task Success é o diagnóstico conferido com a causa e o campo certos."""
+    import avaliar
+    if not conferencia or not conferencia.get("conferido"):
+        return False
+    if avaliar._normalizar(conferencia.get("causa") or "") != avaliar._normalizar(causa_esperada):
+        return False
+    if campo_esperado is None:
+        return conferencia.get("campo") is None
+    return conferencia.get("campo") is not None and avaliar._normalizar(campo_esperado) in avaliar._normalizar(conferencia["campo"])

@@ -422,12 +422,18 @@ def _sustentada_por(causa: str | None, ctx: dict, por_id: dict) -> list[str]:
 
 def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], indice: rec.Indice, *, k: int, modelo: str, comum: dict,
                  limiares: dict | None = None, intervencoes: str = "desligadas", amostra=(), top: int = TOP_LOGPROBS,
-                 teto: int = TETO_TOKENS, evidencia=(), ts: str | None = None, causas: list[str] | None = None, extras=()) -> dict:
+                 teto: int = TETO_TOKENS, evidencia=(), ts: str | None = None, causas: list[str] | None = None, extras=(), apos_candidatos=None) -> dict:
     """Diagnostica um caso (ao vivo ou lido do fixture, sempre sem gabarito) e emite tudo na trilha v2: candidatos,
     prompt, inferencia, declaracao (uma por linha e por verbete citado), verificacao (as oito sem gabarito mais as duas
     da Fase 4), as intervenções (cada uma com a própria inferencia e um evento intervencao ligados à inferência de
     base) e, por último, o nó de decisão `diagnostico`. `evidencia` são os eventos que quem chama já emitiu (poda,
-    interceptação) e que o nó deve apontar. Devolve o registro oficial, a linha lateral, o nó e os resumos."""
+    interceptação) e que o nó deve apontar. Devolve o registro oficial, a linha lateral, o nó e os resumos.
+    ! Alteração de IA - Revisar: (04/11/2026, P7) `apos_candidatos`, um gancho opcional chamado logo depois do evento
+    `candidatos` (antes do prompt e da inferência) com o seq desse evento, o contexto, os sinais e os itens da busca.
+    ! Motivo: a avaliação da própria trilha (avaliacao_trilha.py) emite o nó de decisão `recuperacao` entre os candidatos
+    e o prompt, para a trilha de referência ter os nós poda, recuperacao e diagnostico nessa ordem (especificação, seção
+    9); sem o gancho o nó só poderia entrar depois do nó `diagnostico`, e o diff apontaria o nó errado. Sem o gancho,
+    nada muda."""
     if intervencoes not in MODOS_DE_INTERVENCAO:
         raise ValueError(f"modo de intervenção desconhecido: {intervencoes!r} (use um de {MODOS_DE_INTERVENCAO})")
     ts = ts or agora()
@@ -442,6 +448,8 @@ def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], 
     sinais, itens = tr.candidatos(indice, caso, k)
     s_cand = trilha.evento("candidatos", tid, {"k": k, "sinais": sinais, "itens": itens, "hash_indice": hash_indice(indice), "por_id": ctx.get("por_id") or []},
                            "ao_vivo", ts=ts)
+    if apos_candidatos is not None:
+        apos_candidatos({"seq_candidatos": s_cand, "ctx": ctx, "sinais": sinais, "itens": itens, "tid": tid, "ts": ts})
     sha_prompt = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:12]
     s_prompt = trilha.evento("prompt", tid, {"etapa": "diagnostico", "sha": trilha.blob(prompt, "prompt"), "prompt_sha256": sha_prompt,
                                              "chars": len(prompt), "hash_prompt_fixo": hash_prompt_fixo(verbetes, ctx, caso, prompt),

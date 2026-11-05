@@ -1,0 +1,287 @@
+{
+  "casos": [
+    {
+      "caso": "efe-3",
+      "rotulo": "campo_ausente",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "abstencao": false,
+      "motivos": [
+        "duplicada"
+      ],
+      "menciona_correcao": false,
+      "por_id": [],
+      "verbetes_ids": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_ausente"
+      ],
+      "segundos": 229.19,
+      "decisoes": [
+        {
+          "operacao": "nota",
+          "verbete": "campo_ausente",
+          "aceita": true,
+          "motivo": null
+        },
+        {
+          "operacao": "nota",
+          "verbete": "contrato-produto",
+          "aceita": false,
+          "motivo": "duplicada"
+        }
+      ]
+    },
+    {
+      "caso": "lex-9",
+      "rotulo": "corpo_nao_e_json",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 2,
+      "abstencao": false,
+      "motivos": [],
+      "menciona_correcao": false,
+      "por_id": [],
+      "verbetes_ids": [
+        "corpo_nao_e_json",
+        "pagina-produtos-api",
+        "contrato-produto"
+      ],
+      "segundos": 223.4,
+      "decisoes": [
+        {
+          "operacao": "nota",
+          "verbete": "corpo_nao_e_json",
+          "aceita": true,
+          "motivo": null
+        },
+        {
+          "operacao": "novo_verbete",
+          "verbete": "corpo_xml_nao_e_json",
+          "aceita": true,
+          "motivo": null
+        }
+      ]
+    },
+    {
+      "caso": "sin-9",
+      "rotulo": "campo_renomeado",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "abstencao": false,
+      "motivos": [
+        "bloco_malformado",
+        "bloco_malformado"
+      ],
+      "menciona_correcao": false,
+      "por_id": [],
+      "verbetes_ids": [
+        "entidade-produto",
+        "campo_renomeado",
+        "contrato-produto"
+      ],
+      "segundos": 237.67,
+      "decisoes": [
+        {
+          "operacao": "nota",
+          "verbete": "campo_renomeado",
+          "aceita": false,
+          "motivo": "bloco_malformado"
+        },
+        {
+          "operacao": "novo_verbete",
+          "verbete": "campo_renomeado",
+          "aceita": false,
+          "motivo": "bloco_malformado"
+        }
+      ]
+    },
+    {
+      "caso": "sin-13",
+      "rotulo": "estrutura_aninhada_divergente",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "abstencao": false,
+      "motivos": [
+        "duplicada",
+        "duplicada"
+      ],
+      "menciona_correcao": false,
+      "por_id": [],
+      "verbetes_ids": [
+        "entidade-produto",
+        "contrato-produto",
+        "estrutura_aninhada_divergente"
+      ],
+      "segundos": 258.55,
+      "decisoes": [
+        {
+          "operacao": "nota",
+          "verbete": "estrutura_aninhada_divergente",
+          "aceita": false,
+          "motivo": "duplicada"
+        },
+        {
+          "operacao": "retificacao",
+          "verbete": "estrutura_aninhada_divergente",
+          "aceita": false,
+          "motivo": "duplicada"
+        }
+      ]
+    },
+    {
+      "caso": "sin-15",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "abstencao": false,
+      "motivos": [
+        "trecho_nao_encontrado"
+      ],
+      "menciona_correcao": false,
+      "por_id": [],
+      "verbetes_ids": [
+        "entidade-produto",
+        "contrato-produto",
+        "colecao_no_lugar_de_objeto"
+      ],
+      "segundos": 228.35,
+      "decisoes": [
+        {
+          "operacao": "retificacao",
+          "verbete": "colecao_no_lugar_de_objeto",
+          "aceita": false,
+          "motivo": "trecho_nao_encontrado"
+        },
+        {
+          "operacao": "nota",
+          "verbete": "contrato-produto",
+          "aceita": true,
+          "motivo": null
+        }
+      ]
+    },
+    {
+      "caso": "run-7",
+      "rotulo": "recurso_inexistente",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "abstencao": false,
+      "motivos": [
+        "palavra_chave_invalida",
+        "palavra_chave_invalida"
+      ],
+      "menciona_correcao": false,
+      "por_id": [],
+      "verbetes_ids": [
+        "recurso_inexistente",
+        "contrato-produto",
+        "mensagens-de-erro-do-codigo"
+      ],
+      "segundos": 248.3,
+      "decisoes": [
+        {
+          "operacao": "nota",
+          "verbete": "recurso_inexistente",
+          "aceita": false,
+          "motivo": "palavra_chave_invalida"
+        },
+        {
+          "operacao": "novo_verbete",
+          "verbete": "campo_incorreto",
+          "aceita": false,
+          "motivo": "palavra_chave_invalida"
+        }
+      ]
+    },
+    {
+      "caso": "efe-10",
+      "rotulo": "dado_desatualizado",
+      "acertou": false,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "abstencao": false,
+      "motivos": [
+        "duplicada",
+        "duplicada"
+      ],
+      "menciona_correcao": false,
+      "por_id": [
+        "interface-frontend"
+      ],
+      "verbetes_ids": [
+        "contrato-produto",
+        "entidade-produto",
+        "estado_da_tela_divergente",
+        "interface-frontend"
+      ],
+      "segundos": 254.24,
+      "decisoes": [
+        {
+          "operacao": "nota",
+          "verbete": "interface-frontend",
+          "aceita": false,
+          "motivo": "duplicada"
+        },
+        {
+          "operacao": "retificacao",
+          "verbete": "estado_da_tela_divergente",
+          "aceita": false,
+          "motivo": "duplicada"
+        }
+      ]
+    }
+  ],
+  "anterior": {
+    "efe-3": {
+      "rotulo": "campo_ausente",
+      "acertou": true,
+      "n_propostas": 2,
+      "n_aceitas": 0,
+      "motivos": [
+        "teto_notas_verbete",
+        "duplicada"
+      ],
+      "abstencao": false,
+      "verbetes_ids": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_ausente"
+      ]
+    },
+    "efe-10": {
+      "rotulo": "dado_desatualizado",
+      "acertou": false,
+      "n_propostas": 2,
+      "n_aceitas": 1,
+      "motivos": [
+        "teto_notas_verbete"
+      ],
+      "abstencao": false,
+      "verbetes_ids": [
+        "contrato-produto",
+        "entidade-produto",
+        "estado_da_tela_divergente"
+      ]
+    }
+  },
+  "origem": "epoca-102",
+  "epoca": 103,
+  "hash_lido": "f5e88fb016b5",
+  "recuperacao_por_id": true,
+  "ids": [
+    "efe-10",
+    "efe-3",
+    "lex-9",
+    "run-7",
+    "sin-13",
+    "sin-15",
+    "sin-9"
+  ],
+  "k": 3
+}

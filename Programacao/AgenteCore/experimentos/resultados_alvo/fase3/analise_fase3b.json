@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-10-23T11:38:11",
+    "gerado_em": "2026-11-04T18:17:53",
     "doador": "qwen2.5:7b",
     "leitores": [
       "qwen2.5-coder:7b",
@@ -16,6 +16,7 @@
     "corridas_depois_da_correcao": [
       "cruzada",
       "fase3b_ponte_0344",
+      "fase3b_ponte_04014",
       "fase3b_ponte_0402"
     ],
     "fontes": {
@@ -23,7 +24,8 @@
       "pontes": [
         "fase3b_ponte",
         "fase3b_ponte_0344",
-        "fase3b_ponte_0402"
+        "fase3b_ponte_0402",
+        "fase3b_ponte_04014"
       ],
       "ineditos": "fase3b_ineditos",
       "ineditos_extra": [
@@ -93,6 +95,24 @@
       ],
       "inicio": "23/10 08:04",
       "fim": "23/10 09:25"
+    },
+    {
+      "saida": "fase3b_ponte_04014",
+      "modo": "ponte",
+      "doador": null,
+      "modelos": [
+        "qwen2.5:7b"
+      ],
+      "n_registros": 36,
+      "versoes_ollama": [
+        "0.40.14"
+      ],
+      "erros": 0,
+      "bibliotecas": [
+        "L0=3196327e7fd5"
+      ],
+      "inicio": "03/11 17:59",
+      "fim": "03/11 18:41"
     },
     {
       "saida": "fase3b_ineditos",
@@ -481,6 +501,46 @@
           "pareavel_mesma_entrada": true
         }
       ]
+    },
+    {
+      "saida": "fase3b_ponte_04014",
+      "versao": "0.40.14",
+      "linhas": [
+        {
+          "modelo": "qwen2.5:7b",
+          "n": 36,
+          "acerto_pct": 80.6,
+          "ic95": [
+            65.0,
+            90.2
+          ],
+          "acuracia_balanceada_pct": 83.8,
+          "n_comuns": 36,
+          "b": 1,
+          "c": 0,
+          "p_mcnemar": 1.0,
+          "g_cohen": 0.5,
+          "delta_pp": 2.8,
+          "ganhos": [
+            "sin-14"
+          ],
+          "perdas": [],
+          "rotulos_diferentes": 2,
+          "pareavel": true,
+          "casos_de_texto_alterado": [
+            "efe-3"
+          ],
+          "n_mesma_entrada": 35,
+          "b_mesma_entrada": 1,
+          "c_mesma_entrada": 0,
+          "p_mesma_entrada": 1.0,
+          "discordantes_mesma_entrada": 1,
+          "casos_mesma_entrada": [
+            "sin-14"
+          ],
+          "pareavel_mesma_entrada": true
+        }
+      ]
     }
   ],
   "ruido_l0": [
@@ -558,6 +618,30 @@
     },
     {
       "modelo": "qwen2.5:7b",
+      "corrida_a": "Fase 3 (0.34.0)",
+      "corrida_b": "ponte 0.40.14",
+      "n_comuns": 36,
+      "discordantes": 1,
+      "b": 1,
+      "c": 0,
+      "casos": [
+        "sin-14"
+      ],
+      "rotulos_diferentes": 2,
+      "casos_de_texto_alterado": [
+        "efe-3"
+      ],
+      "n_mesma_entrada": 35,
+      "b_mesma_entrada": 1,
+      "c_mesma_entrada": 0,
+      "p_mesma_entrada": 1.0,
+      "discordantes_mesma_entrada": 1,
+      "casos_mesma_entrada": [
+        "sin-14"
+      ]
+    },
+    {
+      "modelo": "qwen2.5:7b",
       "corrida_a": "ponte 0.34.1",
       "corrida_b": "ponte 0.34.4",
       "n_comuns": 36,
@@ -610,6 +694,30 @@
     },
     {
       "modelo": "qwen2.5:7b",
+      "corrida_a": "ponte 0.34.1",
+      "corrida_b": "ponte 0.40.14",
+      "n_comuns": 36,
+      "discordantes": 1,
+      "b": 1,
+      "c": 0,
+      "casos": [
+        "tra-10"
+      ],
+      "rotulos_diferentes": 1,
+      "casos_de_texto_alterado": [
+        "efe-3"
+      ],
+      "n_mesma_entrada": 35,
+      "b_mesma_entrada": 1,
+      "c_mesma_entrada": 0,
+      "p_mesma_entrada": 1.0,
+      "discordantes_mesma_entrada": 1,
+      "casos_mesma_entrada": [
+        "tra-10"
+      ]
+    },
+    {
+      "modelo": "qwen2.5:7b",
       "corrida_a": "ponte 0.34.4",
       "corrida_b": "ponte 0.40.2",
       "n_comuns": 36,
@@ -631,6 +739,48 @@
         "sin-14",
         "tra-4"
       ]
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "corrida_a": "ponte 0.34.4",
+      "corrida_b": "ponte 0.40.14",
+      "n_comuns": 36,
+      "discordantes": 2,
+      "b": 2,
+      "c": 0,
+      "casos": [
+        "sin-14",
+        "tra-4"
+      ],
+      "rotulos_diferentes": 2,
+      "casos_de_texto_alterado": [],
+      "n_mesma_entrada": 36,
+      "b_mesma_entrada": 2,
+      "c_mesma_entrada": 0,
+      "p_mesma_entrada": 0.5,
+      "discordantes_mesma_entrada": 2,
+      "casos_mesma_entrada": [
+        "sin-14",
+        "tra-4"
+      ]
+    },
+    {
+      "modelo": "qwen2.5:7b",
+      "corrida_a": "ponte 0.40.2",
+      "corrida_b": "ponte 0.40.14",
+      "n_comuns": 36,
+      "discordantes": 0,
+      "b": 0,
+      "c": 0,
+      "casos": [],
+      "rotulos_diferentes": 0,
+      "casos_de_texto_alterado": [],
+      "n_mesma_entrada": 36,
+      "b_mesma_entrada": 0,
+      "c_mesma_entrada": 0,
+      "p_mesma_entrada": 1.0,
+      "discordantes_mesma_entrada": 0,
+      "casos_mesma_entrada": []
     },
     {
       "modelo": "qwen2.5-coder:7b",
@@ -1727,8 +1877,8 @@
           ],
           "rotulos_diferentes": 3
         },
-        "versao_da_ultima_ponte": "0.40.2",
-        "pareavel_pela_ultima_ponte": true
+        "versao_da_ponte": "0.40.2",
+        "pareavel_pela_ponte": true
       },
       {
         "modelo": "qwen2.5:7b",
@@ -1760,8 +1910,8 @@
           "perdas": [],
           "rotulos_diferentes": 1
         },
-        "versao_da_ultima_ponte": "0.40.2",
-        "pareavel_pela_ultima_ponte": true
+        "versao_da_ponte": "0.40.2",
+        "pareavel_pela_ponte": true
       }
     ],
     "entre_modelos": [

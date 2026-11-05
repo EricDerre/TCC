@@ -12,8 +12,9 @@ causa_raiz: tipo_divergente
 arquivos: [Programacao/CobaiaAPI/app/fault_injection.py, Programacao/CobaiaFront/produtos_api.php, Programacao/CobaiaAPI/app/routers/produtos.py]
 endpoints: [GET /api/produtos, GET /api/pedidos]
 sintomas: [numero como texto, booleano como Sim, destaque 1, ordenacao errada, soma errada]
-palavras_chave: [tipo, texto, string, numero, booleano, Sim, aspas, type_drift, str, virgula decimal]
+palavras_chave: [tipo, texto, string, numero, booleano, Sim, aspas, type_drift, str, virgula decimal, convercao, json]
 causas_relacionadas: [valor_fora_do_dominio, formato_de_data_divergente, escala_ou_unidade_errada]
+# ! Alteração por modelo qwen2.5:7b (E101, caso semt-10) - Revisar: nota acrescentada.
 ---
 ## Resumo
 Chave certa com o tipo JSON errado: número entre aspas ("89.90"), booleano como texto ("Sim") ou número (1), inteiro como texto ("4").
@@ -24,3 +25,6 @@ Chave certa com o tipo JSON errado: número entre aspas ("89.90"), booleano como
 
 ## Causa
 O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).
+
+## Notas do modelo
+- [E101 · semt-10 · nota] Adicionar nota sobre a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano. — Motivo: Este caso mostra que a converção de tipos entre a API e a interface web precisa ser claramente documentada, pois o usuário pode interpretar incorretamente os dados.

@@ -5,14 +5,13 @@
 
 # Índice da biblioteca (biblioteca_producao)
 
-40 verbetes. 40 verbetes {'aprendidos': 4, 'contratos': 2, 'defeitos_conhecidos': 3, 'erros': 24, 'falhas_injetadas': 1, 'negocio': 6}; biblioteca inteira: 21351 caracteres ≈ 8212 tokens
+39 verbetes. 39 verbetes {'aprendidos': 3, 'contratos': 2, 'defeitos_conhecidos': 3, 'erros': 24, 'falhas_injetadas': 1, 'negocio': 6}; biblioteca inteira: 22298 caracteres ≈ 8576 tokens
 
 | Pasta | Id | Título | Tipo | Causas |
 |---|---|---|---|---|
-| aprendidos | `atualizacao_imediata` | Atualização imediata do grid | aprendido | estado_da_tela_divergente |
-| aprendidos | `interface-estados` | Estados da Interface | aprendido | estado_da_tela_divergente |
-| aprendidos | `interface-frontend` | Interface Frontend | aprendido | estado_da_tela_divergente, tipo_divergente |
-| aprendidos | `rotas-inexistentes` | Rotas Inexistentes | aprendido | recurso_inexistente |
+| aprendidos | `atualizacao-da-tela` | Atualização da Tela após a API | aprendido | estado_da_tela_divergente |
+| aprendidos | `campo_preco_ausente` | Campo preço ausente | aprendido | campo_ausente |
+| aprendidos | `novo_verbete` | Junção de tabelas incorreta | aprendido | chave_de_juncao_errada |
 | contratos | `contrato-pedido` | Contrato de /api/pedidos | contrato | formato_de_data_divergente, valor_fora_do_dominio, recurso_inexistente, campo_ausente |
 | contratos | `contrato-produto` | Contrato de /api/produtos | contrato | campo_ausente, campo_renomeado, colecao_no_lugar_de_objeto, tipo_divergente, recurso_inexistente |
 | defeitos_conhecidos | `ancora-saiba-mais` | Link "Saiba Mais..." abre produto vazio | defeito_conhecido | localizador_quebrado, recurso_inexistente, estado_da_tela_divergente |

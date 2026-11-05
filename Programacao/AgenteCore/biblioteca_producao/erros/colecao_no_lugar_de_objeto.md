@@ -12,9 +12,10 @@ causa_raiz: colecao_no_lugar_de_objeto
 arquivos: [Programacao/CobaiaAPI/app/routers/produtos.py, Programacao/CobaiaFront/produtos_api.php]
 endpoints: [GET /api/produtos, GET /api/produtos/{id}]
 sintomas: [detalhe sem preencher campos, colchetes ao redor do valor, nenhum produto retornado]
-palavras_chave: [lista, array, colecao, objeto, unico, recurso, colchetes, detalhe, modal]
+palavras_chave: [lista, array, colecao, objeto, unico, recurso, colchetes, detalhe, modal, formato_de_resposta, estrutura_json]
 causas_relacionadas: [estrutura_aninhada_divergente, campo_ausente]
 # ! Alteração por modelo qwen2.5:7b (E1, caso sin-15) - Revisar: retificação acrescentada.
+# ! Alteração por modelo qwen2.5:7b (E101, caso sin-15) - Revisar: nota acrescentada.
 ---
 ## Resumo
 Forma trocada: lista onde se esperava objeto único (GET /api/produtos/{id} devolvendo [{...}]), objeto onde se esperava lista, ou escalar como lista (["Carnes"]).
@@ -28,3 +29,4 @@ GET /api/produtos devolve lista, GET /api/produtos/{id} objeto (produtos.py); a 
 
 ## Notas do modelo
 - [E1 · sin-15 · retificação de "Forma trocada: lista onde se esperava objeto único (GET /api/produtos/{id} devolvendo [{...}]), objeto onde se esperava lista, ou escalar como lista (['Carnes'])."] Corrigir que o campo "tipo" deve ser tratado como uma string, não uma lista. — Motivo: O sintoma mostrou que o campo "tipo" foi tratado como uma lista, quando na verdade é uma string.
+- [E101 · sin-15 · nota] Adicionar nota sobre a necessidade de tratar a categoria como uma string, não uma lista, no front-end. — Motivo: Este caso mostrou que a categoria deve ser tratada como uma string, não uma lista, corrigindo a lacuna na documentação.

@@ -90,22 +90,25 @@ def _frases_do_corpo(diff_corpo: dict) -> list[str]:
         return [f"A resposta não é JSON (começa por {trecho[:40]!r})."]
     if corpo == "truncado":
         return [f"A resposta veio cortada (termina em {trecho[-40:]!r})."]
+    # ! Alteração de IA - Revisar: (05/11/2026, ficha 41, decisão 89) a frase diz em qual item está a diferença, quando ela só aparece a partir do segundo.
+    # ! Motivo: a poda passou a olhar todos os itens da lista; sem o item, "o campo resumo não veio na resposta" afirmaria que ele falta em todos, e o sintoma mentiria sobre o caso.
     for d in diff_corpo.get("diferencas") or []:
         campo, tipo = d.get("campo"), d.get("tipo")
+        no_item = f" no item {d['item']}" if d.get("item") else ""
         if tipo == "ausente":
-            frases.append(f"O campo {campo} não veio na resposta.")
+            frases.append(f"O campo {campo} não veio{no_item} da resposta." if no_item else f"O campo {campo} não veio na resposta.")
         elif tipo == "renomeado":
-            frases.append(f"O campo {d.get('esperado')} veio como {d.get('recebido')}.")
+            frases.append(f"O campo {d.get('esperado')} veio como {d.get('recebido')}{no_item}.")
         elif tipo == "tipo_diferente":
-            frases.append(f"O campo {campo} veio como {d.get('recebido')} em vez de {d.get('esperado')}.")
+            frases.append(f"O campo {campo} veio como {d.get('recebido')} em vez de {d.get('esperado')}{no_item}.")
         elif tipo == "fora_do_dominio":
-            frases.append(f"O campo {campo} veio com um valor fora do esperado ({d.get('recebido')}).")
+            frases.append(f"O campo {campo} veio com um valor fora do esperado ({d.get('recebido')}){no_item}.")
         elif tipo == "formato_divergente":
-            frases.append(f"O campo {campo} veio em outro formato ({d.get('recebido')}).")
+            frases.append(f"O campo {campo} veio em outro formato ({d.get('recebido')}){no_item}.")
         elif tipo == "nulo_inesperado":
-            frases.append(f"O campo {campo} veio nulo.")
+            frases.append(f"O campo {campo} veio nulo{no_item}.")
         elif tipo == "inesperado":
-            frases.append(f"A resposta trouxe o campo {campo}, que o contrato não prevê.")
+            frases.append(f"A resposta trouxe o campo {campo}{no_item}, que o contrato não prevê.")
         elif tipo == "forma_diferente":
             frases.append(f"A resposta veio como {d.get('recebido')} em vez de {d.get('esperado')}.")
     return frases

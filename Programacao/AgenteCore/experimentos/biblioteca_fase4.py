@@ -533,6 +533,29 @@ def _esc(texto: str) -> str:
     return str(texto).replace("|", "\\|").replace("\n", " ")
 
 
+# ! Alteração de IA - Revisar: (04/11/2026) a planilha de revisão passa a ser gravada por gravar_planilha_de_revisao: ela
+# regrava revisao_do_lote.md quando a planilha não existe ou quando todas as células de Avaliação e Comentário ainda
+# estão como o harness deixou; com alguma célula mexida à mão, a planilha fica e a versão nova vai para
+# revisao_do_lote.nova.md ao lado.
+# ! Motivo: a fase B regravava a planilha a cada partida da corrida, inclusive na retomada (a corrida 20 foi relançada em
+# 04/11/2026); uma revisão já começada pelo Eric sumiria sem aviso, e ela é a porta final de --promover. Olhar só as
+# células da revisão (e não o arquivo inteiro) deixa uma planilha em branco de um lote antigo ser trocada pela do lote novo.
+def _revisao_intocada(planilha: str) -> bool:
+    """Toda linha de edição ainda termina com a Avaliação em branco e o Comentário vazio, como planilha_de_revisao grava."""
+    linhas = [l for l in planilha.splitlines() if l.startswith("| ") and not l.startswith("| # |")]
+    return all(l.rstrip().endswith(f"| {CELULA_EM_BRANCO} |  |") for l in linhas)
+
+
+def gravar_planilha_de_revisao(caminho: Path, texto: str) -> str:
+    """Grava a planilha e devolve "gravada", ou mantém a que tem revisão começada à mão e devolve "mantida" (a versão nova
+    vai para o arquivo .nova.md ao lado)."""
+    if caminho.exists() and not _revisao_intocada(caminho.read_text(encoding="utf-8")):
+        caminho.with_name(caminho.stem + ".nova.md").write_text(texto, encoding="utf-8", newline="\n")
+        return "mantida"
+    caminho.write_text(texto, encoding="utf-8", newline="\n")
+    return "gravada"
+
+
 def revisao_preenchida(planilha: str) -> bool:
     """A planilha está preenchida quando tem ao menos uma linha de edição e nenhuma célula de avaliação em branco."""
     linhas = [l for l in planilha.splitlines() if l.startswith("| ") and not l.startswith("| # |")]
@@ -665,11 +688,28 @@ def solucao_aplicada_por_molde(caso_id: str, cenario: str, modo: str, evidencia:
     return frase[:TETO_CHARS_CORRECOES]
 
 
+# ! Alteração de IA - Revisar: (04/11/2026) a seção de correção que ainda não existe passa a ser criada logo antes de
+# "## Notas do modelo" (no fim do arquivo só quando o verbete ainda não tem nota), e não mais sempre no fim.
+# ! Motivo: a corrida 20 parou na sonda (04/11/2026, 01:46): a fase C criou "Solução sugerida" e "Solução aplicada" no fim
+# do arquivo, depois das notas, e evolucao_biblioteca.aplicar_edicao (Fase 3, congelada) grava a nota do modelo sempre no
+# fim do arquivo; a nota da época 103 caiu na seção "Solução aplicada" e o validador recusou a biblioteca. Mantendo "##
+# Notas do modelo" como a última seção, a nota gravada no fim continua dentro dela e a conferência congelada de só
+# acréscimo (o corpo novo começa pelo antigo) continua valendo para o modelo.
+CABECALHO_DAS_NOTAS = "## Notas do modelo"
+
+
 def _inserir_na_secao(linhas: list[str], secao: str, nova: str) -> list[str]:
-    """Acrescenta `nova` ao fim da seção `## <secao>` (criando a seção no fim do arquivo quando não existe)."""
+    """Acrescenta `nova` ao fim da seção `## <secao>`. A seção que não existe é criada logo antes de `## Notas do modelo`,
+    que fica sempre a última (é onde aplicar_edicao grava a nota), ou no fim do arquivo quando o verbete não tem nota."""
     cabecalho = f"## {secao}"
     inicio = next((i for i, l in enumerate(linhas) if l.strip() == cabecalho), None)
     if inicio is None:
+        notas = next((i for i, l in enumerate(linhas) if l.strip() == CABECALHO_DAS_NOTAS), None)
+        if notas is not None:
+            bloco = [cabecalho, nova, ""]
+            if notas > 0 and linhas[notas - 1].strip() != "":
+                bloco = [""] + bloco
+            return linhas[:notas] + bloco + linhas[notas:]
         while linhas and linhas[-1].strip() == "":
             linhas.pop()
         return linhas + ["", cabecalho, nova]
@@ -680,9 +720,10 @@ def _inserir_na_secao(linhas: list[str], secao: str, nova: str) -> list[str]:
 
 
 def corrigir(raiz: Path, verbete_id: str, caso_id: str, sugerida: str, aplicada: str, data: str) -> Path:
-    """A operação "correção": acrescenta a linha do caso às seções "Solução sugerida" e "Solução aplicada" (criadas no fim do
-    arquivo quando não existem), avança o status para corrigido mexendo só na linha do status (com uma linha de comentário
-    dizendo de onde avançou) e nunca remove texto. Verbete obsoleto não se corrige."""
+    """A operação "correção": acrescenta a linha do caso às seções "Solução sugerida" e "Solução aplicada" (criadas logo
+    antes de "## Notas do modelo" quando não existem; ver _inserir_na_secao), avança o status para corrigido mexendo só na
+    linha do status (com uma linha de comentário dizendo de onde avançou) e nunca remove texto. Verbete obsoleto não se
+    corrige."""
     arquivo = next((p for p in raiz.rglob(f"{verbete_id}.md") if not evo._e_gerado(p.name)), None)
     if arquivo is None:
         raise ValueError(f"verbete {verbete_id!r} não existe em {raiz}")
@@ -711,12 +752,50 @@ def corrigir(raiz: Path, verbete_id: str, caso_id: str, sugerida: str, aplicada:
 
 
 _STATUS_MUDOU_RE = re.compile(r"^(?P<rel>.+?): 'status' mudou de '(?P<de>[^']*)' para '(?P<para>[^']*)'$")
+_CORPO_FORA_DE_ACRESCIMO_RE = re.compile(r"^(?P<rel>.+?): corpo alterado fora de acréscimo$")
+
+
+# ! Alteração de IA - Revisar: (04/11/2026) conferência própria do corpo de um verbete corrigido: toda linha antiga continua,
+# na mesma ordem, e o que entrou são só linhas em branco, os cabeçalhos das duas seções de correção e linhas de correção
+# (`- [caso · data] texto`) dos casos corrigidos.
+# ! Motivo: com as seções de correção entrando antes de "## Notas do modelo" (ver _inserir_na_secao), o corpo corrigido
+# deixa de começar pelo antigo, e a regra congelada da Fase 3 (feita para a nota do modelo, que só entra no fim) acusaria
+# toda correção. A regra do plano para a correção (§3.7) é "nunca remove"; esta conferência garante isso linha a linha e
+# ainda recusa qualquer texto acrescentado que não seja de correção.
+def insercao_so_de_correcao(corpo_antigo: str, corpo_novo: str, casos: list[str]) -> list[str]:
+    """Os problemas do corpo corrigido contra o antigo (lista vazia quando a correção só inseriu material de correção)."""
+    antigas = corpo_antigo.rstrip("\n").split("\n")
+    novas = corpo_novo.rstrip("\n").split("\n")
+    i = 0
+    acrescidas = []
+    for linha in novas:
+        if i < len(antigas) and linha == antigas[i]:
+            i += 1
+        else:
+            acrescidas.append(linha)
+    problemas = []
+    if i < len(antigas):
+        problemas.append(f"a linha antiga {antigas[i].strip()[:60]!r} sumiu ou mudou de lugar")
+    cabecalhos = {f"## {s}" for s in bib.SECOES_DA_CORRECAO}
+    for linha in acrescidas:
+        s = linha.strip()
+        if not s or s in cabecalhos:
+            continue
+        m = bib.LINHA_DA_CORRECAO_RE.match(s)
+        if not m or m.group(1) not in casos:
+            problemas.append(f"linha acrescentada que não é de correção dos casos corrigidos: {s[:60]!r}")
+    return problemas
+
+
+def _corpo_do_verbete(v: dict) -> str:
+    return bib._parse_frontmatter(v["caminho"].read_text(encoding="utf-8"))[1]
 
 
 def conferir_correcao(raiz_antes: Path, raiz_depois: Path, corrigidos: dict[str, list[str]]) -> list[str]:
-    """A validação da correção: o invariante de só acréscimo da Fase 3 continua valendo (fora o avanço permitido do status
-    nos verbetes corrigidos), o estado só avança, o trecho apontado (a nota do caso) continua no verbete, as duas seções
-    têm a linha de cada caso e as correções renderizadas cabem no teto."""
+    """A validação da correção: o invariante de só acréscimo da Fase 3 continua valendo para tudo fora dos verbetes
+    corrigidos; nos corrigidos, o status só avança e o corpo passa pela conferência própria (insercao_so_de_correcao,
+    porque a correção entra antes das notas); o trecho apontado (a nota do caso) continua no verbete, as duas seções têm a
+    linha de cada caso e as correções renderizadas cabem no teto."""
     violacoes = []
     antes = {v["id"]: v for v in evo._carregar_verbetes(raiz_antes)}
     depois = {v["id"]: v for v in evo._carregar_verbetes(raiz_depois)}
@@ -726,7 +805,14 @@ def conferir_correcao(raiz_antes: Path, raiz_depois: Path, corrigidos: dict[str,
             vid = Path(m.group("rel")).stem
             if m.group("para") == "corrigido" and m.group("de") in ("ativo", "nao_corrigido") and vid in corrigidos:
                 continue
+        m = _CORPO_FORA_DE_ACRESCIMO_RE.match(msg)
+        if m and Path(m.group("rel")).stem in corrigidos:
+            continue     # o corpo do verbete corrigido é conferido abaixo por insercao_so_de_correcao
         violacoes.append(msg)
+    for vid, casos in corrigidos.items():
+        va, vd = antes.get(vid), depois.get(vid)
+        if va is not None and vd is not None:
+            violacoes.extend(f"[{vid}]: {p}" for p in insercao_so_de_correcao(_corpo_do_verbete(va), _corpo_do_verbete(vd), casos))
     for vid, va in antes.items():
         vd = depois.get(vid)
         if vd is None:
@@ -1036,43 +1122,131 @@ def sonda_anterior(pasta: Path | None = None, versao: int = 1) -> dict:
 
 # ------------------------------------------------------------------ promoção à produção e a pasta de espera (ficha 32)
 
-def promover(saida: str, destino: Path = PASTA_CURADA, planilha: Path | None = None, modelo: str = "qwen2.5:7b", epoca: int = 101) -> dict:
-    """Aplica à biblioteca de produção o lote aceito pela regra R5 e revisado pelo Eric: só com `lote.json` dizendo
-    `aceito`, a planilha de revisão preenchida e o invariante de só acréscimo contra a cópia atual; grava o fechamento.json
-    novo com o hash e a origem do lote. Nunca roda sozinha: é o comando que o Eric dispara depois da revisão."""
-    raiz = caminhos.fase3(saida)["raiz"]
+# ! Alteração de IA - Revisar: (04/11/2026) a promoção passa a seguir a política da curadoria da L1 (ficha 2, 29/09/2026): lê o
+# veredito de cada linha da planilha (vereditos_da_planilha), confere que reaplicar as edições do lote.json sobre a produção
+# reproduz o hash da época do lote, reconstrói a produção aplicando só o que não é Errada (a edição segurada pela regra dos 40%
+# entra quando aprovada; a nota que depende de verbete novo que saiu também sai), valida, confere só acréscimo e registra no
+# fechamento.json o que saiu e por quê.
+# ! Motivo: o promover do P5 copiava a época 101 inteira e só conferia se a planilha estava preenchida; uma edição marcada
+# Errada entrava na produção do mesmo jeito, e a segurada nunca entrava, porque não está na época 101. A pré-revisão de
+# 04/11/2026 marcou 9 das 20 linhas do lote da corrida 20 como Errada. A reconstrução é a mesma de curar_biblioteca.py.
+VEREDITOS_DA_REVISAO = ("Correta", "Parcial", "Errada")
+REMOVER_NA_PROMOCAO = ("Errada",)
+_CELULA_RE = re.compile(r"(?<!\\)\|")
+
+
+def _chave_da_planilha(e: dict) -> tuple[str, str, str, str]:
+    return (str(e.get("caso") or ""), str(e.get("verbete")), str(e.get("operacao")), _esc(e.get("texto") or ""))
+
+
+def vereditos_da_planilha(planilha: str) -> dict[tuple[str, str, str, str], tuple[str, str]]:
+    """(caso, verbete, operação, texto como a planilha grava) -> (avaliação, comentário), de cada linha de edição."""
+    saida: dict = {}
+    for linha in planilha.splitlines():
+        if not linha.startswith("| ") or linha.startswith("| # |"):
+            continue
+        cel = [c.strip() for c in _CELULA_RE.split(linha)[1:-1]]
+        if len(cel) != 11 or not cel[0].isdigit():
+            continue
+        chave = (cel[3], cel[1].strip("`"), cel[2], cel[7])
+        if chave in saida:
+            raise SystemExit(f"a planilha tem duas linhas para {chave[:3]}")
+        saida[chave] = (cel[9], cel[10])
+    return saida
+
+
+def promover(saida: str, destino: Path = PASTA_CURADA, planilha: Path | None = None, modelo: str = "qwen2.5:7b", epoca: int = 101,
+             raiz: Path | None = None, remover: tuple[str, ...] = REMOVER_NA_PROMOCAO) -> dict:
+    """Aplica à biblioteca de produção o lote aceito pela regra R5 e revisado pelo Eric, com a política da curadoria da L1: só
+    entra o que não tem veredito em `remover` (padrão: Errada). Exige `lote.json` aceito, a planilha com um veredito válido para
+    cada edição do lote (as aceitas e as seguradas) e que reaplicar as edições aceitas sobre a produção reproduza o hash da
+    época do lote; grava a produção nova, o índice e o fechamento.json com a origem, a política e o que saiu. Recusa antes de
+    tocar na produção. Nunca roda sozinha: é o comando que o Eric dispara depois da revisão."""
+    import tempfile
+
+    import executar_fase3b as e3b
+    raiz = raiz or caminhos.fase3(saida)["raiz"]
     lote = json.loads((raiz / "lote.json").read_text(encoding="utf-8"))
     if (lote.get("r5") or {}).get("veredito") != "aceito":
         raise SystemExit(f"o lote de {saida} não foi aceito pela regra R5 ({(lote.get('r5') or {}).get('veredito')}): nada a promover")
     planilha = planilha or raiz / "revisao_do_lote.md"
     if not planilha.exists() or not revisao_preenchida(planilha.read_text(encoding="utf-8")):
         raise SystemExit(f"a planilha de revisão {planilha} não existe ou tem avaliação em branco: a revisão humana é a porta final")
+    vered = vereditos_da_planilha(planilha.read_text(encoding="utf-8"))
+    invalidos = sorted({a for a, _ in vered.values() if a not in VEREDITOS_DA_REVISAO})
+    if invalidos:
+        raise SystemExit(f"veredito fora de {'/'.join(VEREDITOS_DA_REVISAO)} na planilha: {invalidos}")
+    edicoes, seguradas = list(lote.get("edicoes") or []), list(lote.get("para_revisao") or [])
+    sem = [f"{e.get('caso')}/{e.get('verbete')}/{e.get('operacao')}" for e in edicoes + seguradas if _chave_da_planilha(e) not in vered]
+    if sem:
+        raise SystemExit(f"{len(sem)} edição(ões) do lote sem linha na planilha: {sem[:5]}")
     origem = raiz / "bibliotecas" / executar_fase3._slug(modelo) / f"epoca-{epoca}"
     if not evo.snapshot_fechado(origem):
         raise SystemExit(f"a época do lote ({origem}) não está fechada")
-    violacoes = evo.conferir_somente_acrescimo(destino, origem)
-    if violacoes:
-        raise SystemExit("o lote não é só acréscimo sobre a produção atual: " + "; ".join(violacoes))
+    hash_lote = json.loads((origem / "fechamento.json").read_text(encoding="utf-8"))["hash"]
     hash_antes = evo.hash_biblioteca(destino)
-    for arq in sorted(origem.rglob("*.md")):
-        if evo._e_gerado(arq.name):
-            continue
-        alvo = destino / arq.relative_to(origem)
-        alvo.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(arq, alvo)
+    mantidas, removidas = [], []
+    with tempfile.TemporaryDirectory() as tmp:
+        todas = Path(tmp) / "todas"
+        evo.copiar_biblioteca(destino, todas)
+        evo._limpar_gerados(todas)
+        for e in edicoes:
+            evo.aplicar_edicao(todas, e)
+        if evo.hash_biblioteca(todas) != hash_lote:
+            raise SystemExit(f"reaplicar as {len(edicoes)} edições do lote sobre a produção dá hash {evo.hash_biblioteca(todas)}, e a época do lote "
+                             f"tem {hash_lote}: a reconstrução não é fiel; nada foi gravado")
+        nova = Path(tmp) / "nova"
+        evo.copiar_biblioteca(destino, nova)
+        evo._limpar_gerados(nova)
+        for e in edicoes + seguradas:
+            aval, coment = vered[_chave_da_planilha(e)]
+            saida_ = None
+            if aval in remover:
+                saida_ = aval
+            elif e["operacao"] != "novo_verbete" and not (nova / e["arquivo"]).exists():
+                saida_ = "depende de verbete que saiu"
+            if saida_:
+                removidas.append({"caso": e.get("caso"), "verbete": e.get("verbete"), "operacao": e.get("operacao"), "texto": e.get("texto"),
+                                  "segurada": bool(e.get("para_revisao")), "avaliacao": aval, "comentario": coment, "motivo_da_saida": saida_})
+                continue
+            evo.aplicar_edicao(nova, e)
+            mantidas.append(e)
+        problemas = bib.validar(bib.carregar(nova), e3b.TODOS_OS_CASOS, teto_global=None)
+        if problemas:
+            raise SystemExit("a produção reconstruída não passa no validador: " + "; ".join(problemas))
+        violacoes = evo.conferir_somente_acrescimo(destino, nova)
+        if violacoes:
+            raise SystemExit("a promoção não é só acréscimo sobre a produção atual: " + "; ".join(violacoes))
+        for arq in sorted(nova.rglob("*.md")):
+            if evo._e_gerado(arq.name):
+                continue
+            alvo = destino / arq.relative_to(nova)
+            alvo.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(arq, alvo)
     verbetes = evo._carregar_verbetes(destino)
     validar_banco.escrever_indice(verbetes, destino)
-    dado = evo.fechar_snapshot(destino, epoca, modelo, len(lote.get("edicoes") or []), versao_ollama=lote.get("versao_ollama"))
-    dado = {**dado, "origem_do_lote": saida, "hash_anterior": hash_antes, "planilha": planilha.name, "promovido_em": dt.datetime.now().isoformat(timespec="seconds")}
+    dado = evo.fechar_snapshot(destino, epoca, modelo, len(mantidas), versao_ollama=lote.get("versao_ollama"))
+    dado = {**dado, "origem_do_lote": saida, "hash_anterior": hash_antes, "hash_do_lote": hash_lote, "planilha": planilha.name,
+            "politica": {"remover": list(remover)}, "mantidas": len(mantidas), "removidas": removidas,
+            "promovido_em": dt.datetime.now().isoformat(timespec="seconds")}
     evo._gravar_json_atomico(destino / "fechamento.json", dado)
     return dado
 
 
-def mover_para_espera(origem: Path = PASTA_CURADA, destino: Path = PASTA_DE_ESPERA, ids: list[str] | None = None, registros=None) -> list[str]:
+# ! Alteração de IA - Revisar: (04/11/2026) mover_para_espera ganha `avaliados`, a lista dos aprendidos que a calibração leu;
+# com ela, só esses podem sair. O --espera passa os aprendidos da cópia da biblioteca da calibração (corrida 16, k = 3).
+# ! Motivo: a espera contava os aprendidos da produção atual; rodada depois da promoção do lote da corrida 20, os verbetes novos
+# que o lote trouxe (nunca lidos pela calibração, logo com zero recuperações) sairiam junto com os quatro da ficha 32. A ordem
+# segura é promover e depois mandar para a espera: o promover confere a reconstrução contra a época do lote, que ainda tem os quatro.
+def mover_para_espera(origem: Path = PASTA_CURADA, destino: Path = PASTA_DE_ESPERA, ids: list[str] | None = None, registros=None,
+                      avaliados: list[str] | None = None) -> list[str]:
     """Ficha 32: os verbetes aprendidos que a calibração nunca recuperou saem do índice para `aprendidos_em_espera/` (pasta
-    irmã da biblioteca, fora do que bib.carregar lê), sem apagar; o fechamento.json da produção é regravado."""
+    irmã da biblioteca, fora do que bib.carregar lê), sem apagar; o fechamento.json da produção é regravado com as estatísticas
+    novas, mantendo o que a promoção gravou. Com `avaliados`, só os aprendidos dessa lista (os que a calibração leu) entram na conta."""
     verbetes = evo._carregar_verbetes(origem)
     aprendidos = [v["id"] for v in verbetes if v["pasta"] == evo.PASTA_APRENDIDOS]
+    if avaliados is not None:
+        aprendidos = [a for a in aprendidos if a in set(avaliados)]
     if ids is None:
         ids = aprendidos_sem_recuperacao(recuperacao_dos_aprendidos(registros or [], aprendidos))
     movidos = []
@@ -1087,7 +1261,14 @@ def mover_para_espera(origem: Path = PASTA_CURADA, destino: Path = PASTA_DE_ESPE
         antigo = json.loads((origem / "fechamento.json").read_text(encoding="utf-8")) if (origem / "fechamento.json").exists() else {}
         dado = evo.fechar_snapshot(origem, antigo.get("epoca", 100), antigo.get("modelo", "qwen2.5:7b"), antigo.get("aceitas_na_epoca", 0),
                                    versao_ollama=antigo.get("versao_ollama"))
-        evo._gravar_json_atomico(origem / "fechamento.json", {**dado, "aprendidos_em_espera": movidos, "hash_anterior": antigo.get("hash")})
+        # ! Alteração de IA - Revisar: (04/11/2026) o fechamento novo parte do antigo: os campos que a promoção gravou (origem do lote,
+        # planilha, política, mantidas e removidas, hash_anterior da promoção, promovido_em) ficam; as estatísticas são as de agora;
+        # a lista da espera soma à que já havia e o hash de antes da espera vai para hash_antes_da_espera.
+        # ! Motivo: no fechar_p5.ps1 de 04/11/2026 o --espera rodou logo depois do --promover e regravou o fechamento só com as
+        # estatísticas: a origem do lote da corrida 20 sumiu da produção (o lancar_corrida21.ps1 confere esse campo antes de partir) e
+        # o hash_anterior, que dizia de que biblioteca a promoção partiu, virou o hash de antes da espera.
+        espera = sorted(set(antigo.get("aprendidos_em_espera") or []) | set(movidos))
+        evo._gravar_json_atomico(origem / "fechamento.json", {**antigo, **dado, "aprendidos_em_espera": espera, "hash_antes_da_espera": antigo.get("hash")})
     return movidos
 
 
@@ -1112,7 +1293,11 @@ def main() -> int:
         return 0
     if args.espera:
         arq = caminhos.RESULTADOS / "fase4_calibracao" / "k3" / executar_fase3._slug(args.modelo) / "diagnosticos__L100.jsonl"
-        movidos = mover_para_espera(registros=executar_bateria.ler_jsonl(arq))
+        # ! Alteração de IA - Revisar: (04/11/2026) os avaliados são os aprendidos da cópia da biblioteca que a calibração leu.
+        # ! Motivo: ver mover_para_espera; sem eles, um aprendido trazido pela promoção sairia por nunca ter sido avaliado.
+        bib_cal = caminhos.RESULTADOS / "fase4_calibracao" / "k3" / "bibliotecas" / executar_fase3._slug(args.modelo) / "epoca-100"
+        avaliados = [v["id"] for v in evo._carregar_verbetes(bib_cal) if v["pasta"] == evo.PASTA_APRENDIDOS]
+        movidos = mover_para_espera(registros=executar_bateria.ler_jsonl(arq), avaliados=avaliados)
         print(f"movidos para {PASTA_DE_ESPERA}: {movidos or 'nenhum'}")
         return 0
     ap.print_help()

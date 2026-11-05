@@ -11,9 +11,10 @@ tipo: erro
 status: ativo
 causa_raiz: estado_da_tela_divergente
 arquivos: [Programacao/CobaiaFront/produtos_api.php, Programacao/CobaiaFront/cliente/reserva_cli.php]
-sintomas: [api respondeu certo mas a tela nao, carregando parado, lista vazia com resposta cheia, botao continua habilitado apos cancelar]
-palavras_chave: [tela, estado, divergente, render, renderiza, atualiza, recarregar, filtro, ordem aleatoria, carregando, innerHTML]
+sintomas: [api respondeu certo mas a tela nao, carregando parado, lista vazia com resposta cheia, botao continua habilitado apos cancelar, carregando..., lista vazia, botao inativo]
+palavras_chave: [tela, estado, divergente, render, renderiza, atualiza, recarregar, filtro, ordem aleatoria, carregando, innerHTML, fetch, redirect]
 causas_relacionadas: [localizador_quebrado, dado_desatualizado, corpo_vazio]
+# ! Alteração por modelo qwen2.5:7b (E101, caso efe-8) - Revisar: nota acrescentada.
 ---
 ## Resumo
 A rede está certa — status e corpo conferem — e o usuário vê outra coisa: "Carregando" parado, lista vazia, botão que não muda.
@@ -24,3 +25,6 @@ A rede está certa — status e corpo conferem — e o usuário vê outra coisa:
 
 ## Causa
 produtos_api.php só limpa "Carregando..." no then() do fetch e substitui o grid por innerHTML; na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).
+
+## Notas do modelo
+- [E101 · efe-8 · nota] Adicionar nota sobre a necessidade de atualização correta do estado da tela após a resposta da API. — Motivo: Este caso mostrou que a documentação não aborda a atualização correta do estado da tela, diferentemente do tratamento do corpo da resposta.

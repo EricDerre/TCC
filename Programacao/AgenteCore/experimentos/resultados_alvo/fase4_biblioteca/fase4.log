@@ -1,0 +1,170 @@
+﻿[2026-11-03 15:38:51] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-03 15:38:53] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 7,5 GB
+[2026-11-03 15:38:54] testar_fase4.py
+[2026-11-03 15:39:26] executar_fase4.py --modo biblioteca --saida fase4_biblioteca --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --base-ineditos corrida12 --teto-proposta 700
+[2026-11-03 15:39:29] !! a versão 0.40.14 do Ollama não tem ponte completa registrada (regra R6): rode --modo calibracao antes
+[2026-11-03 15:39:29] !! executar_fase4.py saiu com codigo 2
+[2026-11-03 15:41:33] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-03 15:41:35] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 7,3 GB
+[2026-11-03 15:41:36] testar_fase4.py
+[2026-11-03 15:41:47] executar_fase4.py --modo biblioteca --saida fase4_biblioteca --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --base-ineditos corrida12 --teto-proposta 700
+[2026-11-03 15:41:49] !! a versão 0.40.14 do Ollama não tem ponte completa registrada (regra R6): rode --modo calibracao antes
+[2026-11-03 15:41:49] !! executar_fase4.py saiu com codigo 2
+[2026-11-03 18:43:55] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-03 18:43:56] !! ha modelo residente no Ollama; regra do experimento: um modelo por vez (ollama stop <modelo>)
+[2026-11-03 19:18:51] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-03 19:18:54] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 8,1 GB
+[2026-11-03 19:18:54] testar_fase4.py
+[2026-11-03 19:18:55] !! testar_fase4.py falhou (codigo 1)
+[2026-11-03 19:56:30] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-03 19:56:33] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 7,4 GB
+[2026-11-03 19:56:33] testar_fase4.py
+[2026-11-03 19:56:44] executar_fase4.py --modo biblioteca --saida fase4_biblioteca --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --base-ineditos corrida12 --teto-proposta 700
+[2026-11-03 19:56:47] INÍCIO biblioteca: Ollama 0.40.14, qwen2.5:7b, L1 curada (1fca10f1a6f6), k = 3; 54 casos de aprendizado (26 com tela), 36 inéditos (base corrida12), correção em 10 casos (5 desligados), sonda em 7; 158 inferências previstas; 0 caso(s) já feito(s)
+[2026-11-03 19:56:47] !! executar_fase4.py saiu com codigo 1
+[2026-11-03 21:00:41] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-03 21:00:44] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 7,2 GB
+[2026-11-03 21:00:44] testar_fase4.py
+[2026-11-03 21:00:59] executar_fase4.py --modo biblioteca --saida fase4_biblioteca --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --base-ineditos corrida12 --teto-proposta 700
+[2026-11-03 21:01:01] INÍCIO biblioteca: Ollama 0.40.14, qwen2.5:7b, L1 curada (1fca10f1a6f6), k = 3; 54 casos de aprendizado (26 com tela), 36 inéditos (base corrida12), correção em 10 casos (5 desligados), sonda em 7; 158 inferências previstas; 0 caso(s) já feito(s)
+[2026-11-03 21:01:22] referência api-catalogo: passou em 0.509 s; árvore 193 nós, 39 linhas
+[2026-11-03 21:01:23] referência api-detalhe produto 1: passou em 0.572 s; árvore 197 nós, 42 linhas
+[2026-11-03 21:05:22] [A 1/54] lex-2 (tela): corpo_nao_e_json (p 0.99, acertou) | proposta: 0/1 no lote, 0 para revisão, mensagem_nao_encontrada_no_codigo | por id: nenhum | 105.75 + 123.99 s
+[2026-11-03 21:10:12] [A 2/54] lex-3 (tela): corpo_vazio (p 0.99, acertou) | proposta: 0/2 no lote, 0 para revisão, duplicada, id_repetido | por id: nenhum | 95.48 + 185.87 s
+[2026-11-03 21:14:24] [A 3/54] lex-5 (fixture): resposta_truncada (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, sem_evidencia_do_caso, id_repetido | por id: nenhum | 73.23 + 170.41 s
+[2026-11-03 21:18:45] [A 4/54] sin-1 (tela): campo_ausente (p 1.00, acertou) | proposta: 1/2 no lote, 0 para revisão, texto_nao_atomico | por id: nenhum | 105.67 + 146.03 s
+[2026-11-03 21:23:18] [A 5/54] sin-2 (tela): campo_renomeado (p 0.97, acertou) | proposta: 0/2 no lote, 0 para revisão, mensagem_nao_encontrada_no_codigo, mensagem_nao_encontrada_no_codigo | por id: nenhum | 95.7 + 166.8 s
+[2026-11-03 21:28:03] [A 6/54] sin-3 (tela): tipo_divergente (p 0.98, errou) | proposta: 0/2 no lote, 0 para revisão, duplicada, duplicada | por id: nenhum | 106.04 + 170.47 s
+[2026-11-03 21:32:38] [A 7/54] semt-2 (tela): tipo_divergente (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, texto_curto, arquivo_inexistente | por id: nenhum | 106.45 + 160.23 s
+[2026-11-03 21:36:41] [A 8/54] semt-4 (fixture): formato_de_data_divergente (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, palavra_chave_invalida, palavra_chave_invalida | por id: nenhum | 62.91 + 172.01 s
+[2026-11-03 21:40:23] [A 9/54] tra-2 (fixture): nome_nulo_vindo_da_view (p 0.85, errou) | proposta: 0/1 no lote, 0 para revisão, arquivo_inexistente | por id: nenhum | 64.55 + 149.21 s
+[2026-11-03 21:45:51] [A 10/54] tra-3 (tela): tipo_divergente (p 0.58, errou) | proposta: 1/2 no lote, 0 para revisão, duplicada | por id: chave_de_juncao_errada | 126.66 + 191.66 s
+[2026-11-03 21:49:52] [A 11/54] tra-5 (fixture): contagem_inconsistente (p 0.76, errou) | proposta: 1/2 no lote, 0 para revisão, duplicada | por id: nenhum | 69.24 + 163.39 s
+[2026-11-03 21:54:39] [A 12/54] run-3 (tela): limite_de_requisicoes (p 1.00, acertou) | proposta: 1/2 no lote, 0 para revisão, texto_de_origem_proibida | por id: nenhum | 108.82 + 168.57 s
+[2026-11-03 21:58:42] [A 13/54] run-5 (fixture): registro_duplicado (p 1.00, acertou) | proposta: 1/2 no lote, 0 para revisão, id_repetido | por id: nenhum | 66.04 + 168.66 s
+[2026-11-03 22:02:45] [A 14/54] efe-4 (fixture): colecao_no_lugar_de_objeto (p 0.53, errou) | proposta: 1/2 no lote, 1 para revisão, para_revisao_humana | por id: interface-estados | 71.41 + 162.91 s
+[2026-11-03 22:06:18] [A 15/54] lex-6 (fixture): recurso_inexistente (p 0.58, errou) | proposta: 0/1 no lote, 0 para revisão, palavra_chave_invalida | por id: nenhum | 70.85 + 133.09 s
+[2026-11-03 22:08:49] [A 16/54] lex-9 (tela): corpo_nao_e_json (p 0.99, acertou) | proposta: 0/1 no lote, 0 para revisão, mensagem_nao_encontrada_no_codigo | por id: nenhum | 16.89 + 125.35 s
+[2026-11-03 22:11:27] [A 17/54] lex-12 (tela): corpo_nao_e_json (p 0.99, acertou) | proposta: 0/1 no lote, 0 para revisão, arquivo_inexistente | por id: nenhum | 16.75 + 132.88 s
+[2026-11-03 22:15:42] [A 18/54] sin-6 (tela): campo_ausente (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, palavra_chave_invalida, id_repetido | por id: nenhum | 104.97 + 141.6 s
+[2026-11-03 22:19:46] [A 19/54] sin-8 (fixture): colecao_no_lugar_de_objeto (p 0.99, acertou) | proposta: 0/2 no lote, 0 para revisão, duplicada, duplicada | por id: nenhum | 74.12 + 161.18 s
+[2026-11-03 22:23:59] [A 20/54] sin-9 (tela): campo_renomeado (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, sem_evidencia_do_caso, id_repetido | por id: campo_renomeado | 105.47 + 138.29 s
+[2026-11-03 22:27:46] [A 21/54] sin-12 (fixture): colecao_no_lugar_de_objeto (p 0.59, errou) | proposta: 0/2 no lote, 0 para revisão, texto_curto, id_repetido | por id: nenhum | 64.15 + 154.31 s
+[2026-11-03 22:32:24] [A 22/54] sin-13 (tela): tipo_divergente (p 0.95, errou) | proposta: 0/1 no lote, 0 para revisão, duplicada | por id: estrutura_aninhada_divergente | 121.48 + 148.8 s
+[2026-11-03 22:35:41] [A 23/54] sin-15 (fixture): colecao_no_lugar_de_objeto (p 0.98, acertou) | proposta: 1/2 no lote, 0 para revisão, redundante | por id: nenhum | 40.27 + 146.55 s
+[2026-11-03 22:40:08] [A 24/54] semt-6 (tela): contagem_inconsistente (p 0.86, errou) | proposta: 1/2 no lote, 0 para revisão, palavra_chave_invalida | por id: nenhum | 103.01 + 154.88 s
+[2026-11-03 22:43:38] [A 25/54] semt-7 (fixture): formato_de_data_divergente (p 0.61, errou) | proposta: 1/2 no lote, 0 para revisão, id_repetido | por id: nenhum | 37.24 + 164.2 s
+[2026-11-03 22:46:56] [A 26/54] semt-10 (tela): tipo_divergente (p 1.00, acertou) | proposta: 1/2 no lote, 0 para revisão, sem_evidencia_do_caso | por id: nenhum | 35.77 + 153.03 s
+[2026-11-03 22:50:18] [A 27/54] semt-11 (fixture): valor_fora_do_dominio (p 0.97, acertou) | proposta: 0/1 no lote, 0 para revisão, arquivo_inexistente | por id: nenhum | 71.28 + 122.33 s
+[2026-11-03 22:53:08] [A 28/54] semt-12 (fixture): formato_de_data_divergente (p 0.84, acertou) | proposta: 0/1 no lote, 0 para revisão, palavra_chave_invalida | por id: nenhum | 33.37 + 128.16 s
+[2026-11-03 22:56:51] [A 29/54] semt-13 (tela): tipo_divergente (p 0.99, acertou) | proposta: 0/1 no lote, 0 para revisão, teto_notas_verbete | por id: entidade-produto | 106.29 + 108.6 s
+[2026-11-03 23:00:41] [A 30/54] semt-15 (fixture): valor_fora_do_dominio (p 0.67, acertou) | proposta: 1/2 no lote, 0 para revisão, duplicada | por id: nenhum | 66.94 + 154.57 s
+[2026-11-03 23:05:37] [A 31/54] tra-6 (tela): escala_ou_unidade_errada (p 0.77, acertou) | proposta: 1/2 no lote, 0 para revisão, duplicada | por id: nenhum | 115.98 + 169.83 s
+[2026-11-03 23:10:43] [A 32/54] tra-7 (tela): campo_renomeado (p 0.98, errou) | proposta: 0/2 no lote, 0 para revisão, duplicada, id_repetido | por id: nenhum | 111.27 + 186.61 s
+[2026-11-03 23:14:49] [A 33/54] tra-9 (fixture): formato_de_data_divergente (p 0.94, errou) | proposta: 0/2 no lote, 0 para revisão, palavra_chave_invalida, palavra_chave_invalida | por id: nenhum | 64.67 + 173.37 s
+[2026-11-03 23:20:23] [A 34/54] tra-12 (tela): escala_ou_unidade_errada (p 0.94, acertou) | proposta: 0/2 no lote, 0 para revisão, duplicada, trecho_nao_encontrado | por id: escala_ou_unidade_errada | 130.62 + 194.58 s
+[2026-11-03 23:24:23] [A 35/54] tra-13 (tela): imagem_fora_do_dominio (p 0.20, errou) | proposta: 0/1 no lote, 0 para revisão, redundante | por id: nenhum | 90.4 + 140.2 s
+[2026-11-03 23:28:26] [A 36/54] tra-14 (tela): contagem_inconsistente (p 0.97, acertou) | proposta: 1/2 no lote, 0 para revisão, palavra_chave_invalida | por id: nenhum | 74.25 + 159.36 s
+[2026-11-03 23:31:58] [A 37/54] run-6 (fixture): erro_interno_do_servidor (p 0.99, acertou) | proposta: 0/1 no lote, 0 para revisão, texto_longo | por id: nenhum | 68.72 + 135.12 s
+[2026-11-03 23:36:01] [A 38/54] run-7 (tela): recurso_inexistente (p 1.00, acertou) | proposta: 0/1 no lote, 0 para revisão, palavra_chave_invalida | por id: recurso_inexistente | 112.84 + 121.71 s
+[2026-11-03 23:39:54] [A 39/54] run-8 (fixture): recurso_inexistente (p 0.96, acertou) | proposta: 0/2 no lote, 0 para revisão, palavra_chave_invalida, id_repetido | por id: rotas-inexistentes | 67.44 + 158.2 s
+[2026-11-03 23:43:09] [A 40/54] run-11 (fixture): valor_fora_do_dominio (p 0.97, errou) | proposta: 0/1 no lote, 0 para revisão, sem_evidencia_do_caso | por id: nenhum | 63.5 + 122.11 s
+[2026-11-03 23:47:15] [A 41/54] run-12 (fixture): erro_interno_do_servidor (p 0.94, acertou) | proposta: 1/2 no lote, 0 para revisão, duplicada | por id: nenhum | 67.4 + 170.09 s
+[2026-11-03 23:50:23] [A 42/54] run-14 (fixture): dado_desatualizado (p 1.00, acertou) | proposta: 0/1 no lote, 0 para revisão, palavra_chave_invalida | por id: nenhum | 69.14 + 110.78 s
+[2026-11-03 23:54:43] [A 43/54] run-15 (tela): tempo_de_resposta_excedido (p 0.98, acertou) | proposta: 0/1 no lote, 0 para revisão, sem_evidencia_do_caso | por id: nenhum | 104.76 + 117.06 s
+[2026-11-03 23:58:51] [A 44/54] efe-6 (fixture): localizador_quebrado (p 0.84, acertou) | proposta: 0/2 no lote, 0 para revisão, palavra_chave_invalida, id_repetido | por id: nenhum | 70.54 + 169.13 s
+[2026-11-04 00:02:44] [A 45/54] efe-8 (fixture): estado_da_tela_divergente (p 0.99, acertou) | proposta: 2/2 no lote, 0 para revisão, sem recusa | por id: nenhum | 65.92 + 158.37 s
+[2026-11-04 00:06:39] [A 46/54] efe-9 (fixture): localizador_quebrado (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, palavra_chave_invalida, palavra_chave_invalida | por id: nenhum | 68.74 + 158.25 s
+[2026-11-04 00:10:44] [A 47/54] efe-10 (fixture): valor_fora_do_dominio (p 0.62, errou) | proposta: 1/2 no lote, 0 para revisão, trecho_nao_encontrado | por id: interface-frontend | 77.32 + 159.03 s
+[2026-11-04 00:14:35] [A 48/54] efe-11 (fixture): localizador_quebrado (p 0.51, errou) | proposta: 1/2 no lote, 0 para revisão, teto_verbetes_novos | por id: nenhum | 67.0 + 154.78 s
+[2026-11-04 00:19:10] [A 49/54] efe-12 (fixture): localizador_quebrado (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, redundante, texto_longo | por id: nenhum | 76.85 + 189.84 s
+[2026-11-04 00:22:57] [A 50/54] efe-13 (fixture): dado_desatualizado (p 0.91, errou) | proposta: 1/2 no lote, 0 para revisão, teto_verbetes_novos | por id: atualizacao_imediata | 75.69 + 142.01 s
+[2026-11-04 00:26:51] [A 51/54] efe-15 (fixture): estado_da_tela_divergente (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, id_repetido, sem_evidencia_do_caso | por id: nenhum | 56.6 + 168.67 s
+[2026-11-04 00:30:02] [A 52/54] lex-13 (fixture): corpo_vazio (p 0.99, acertou) | proposta: 0/1 no lote, 0 para revisão, id_repetido | por id: nenhum | 66.1 + 117.13 s
+[2026-11-04 00:33:57] [A 53/54] lex-14 (fixture): resposta_truncada (p 1.00, acertou) | proposta: 0/2 no lote, 0 para revisão, duplicada, teto_verbetes_novos | por id: nenhum | 67.48 + 158.83 s
+[2026-11-04 00:37:23] [A 54/54] lex-15 (tela): corpo_nao_e_json (p 0.99, acertou) | proposta: 0/2 no lote, 0 para revisão, mensagem_nao_encontrada_no_codigo, retificacao_sem_trecho | por id: nenhum | 17.38 + 179.2 s
+[2026-11-04 00:37:23] epoca-101 (o lote) fechada: hash 9f3154eee72d, 22 notas, 10 retificações, 10 verbetes novos, 19 edições aceitas
+[2026-11-04 00:38:36] [B lote 1/36] lex-16: resposta_truncada (68.3 s)
+[2026-11-04 00:39:44] [B lote 2/36] lex-17: corpo_vazio (64.4 s)
+[2026-11-04 00:41:02] [B lote 3/36] lex-18: valor_fora_do_dominio (74.1 s)
+[2026-11-04 00:42:19] [B lote 4/36] lex-19: erro_interno_do_servidor (72.42 s)
+[2026-11-04 00:43:36] [B lote 5/36] lex-20: resposta_truncada (72.78 s)
+[2026-11-04 00:44:54] [B lote 6/36] lex-21: codificacao_incorreta (74.63 s)
+[2026-11-04 00:46:08] [B lote 7/36] sin-16: campo_ausente (69.87 s)
+[2026-11-04 00:47:32] [B lote 8/36] sin-17: campo_renomeado (79.26 s)
+[2026-11-04 00:48:32] [B lote 9/36] sin-18: estrutura_aninhada_divergente (55.87 s)
+[2026-11-04 00:49:45] [B lote 10/36] sin-19: colecao_no_lugar_de_objeto (69.2 s)
+[2026-11-04 00:50:33] [B lote 11/36] sin-20: campo_ausente (43.86 s)
+[2026-11-04 00:52:04] [B lote 12/36] sin-21: estrutura_aninhada_divergente (86.61 s)
+[2026-11-04 00:53:06] [B lote 13/36] semt-16: tipo_divergente (58.3 s)
+[2026-11-04 00:54:09] [B lote 14/36] semt-17: nulo_inesperado (58.62 s)
+[2026-11-04 00:55:35] [B lote 15/36] semt-18: tipo_divergente (82.25 s)
+[2026-11-04 00:56:51] [B lote 16/36] semt-19: formato_de_data_divergente (71.67 s)
+[2026-11-04 00:57:31] [B lote 17/36] semt-20: valor_fora_do_dominio (35.51 s)
+[2026-11-04 00:58:34] [B lote 18/36] semt-21: campo_vazio (58.95 s)
+[2026-11-04 00:59:33] [B lote 19/36] tra-16: contagem_inconsistente (55.01 s)
+[2026-11-04 01:00:14] [B lote 20/36] tra-17: tipo_divergente (36.86 s)
+[2026-11-04 01:01:23] [B lote 21/36] tra-18: contagem_inconsistente (64.68 s)
+[2026-11-04 01:02:08] [B lote 22/36] tra-19: escala_ou_unidade_errada (41.69 s)
+[2026-11-04 01:03:20] [B lote 23/36] tra-20: chave_de_juncao_errada (67.29 s)
+[2026-11-04 01:04:32] [B lote 24/36] tra-21: contagem_inconsistente (68.44 s)
+[2026-11-04 01:05:47] [B lote 25/36] run-16: recurso_inexistente (70.08 s)
+[2026-11-04 01:06:59] [B lote 26/36] run-17: erro_interno_do_servidor (68.04 s)
+[2026-11-04 01:08:10] [B lote 27/36] run-18: limite_de_requisicoes (66.94 s)
+[2026-11-04 01:09:21] [B lote 28/36] run-19: tempo_de_resposta_excedido (66.89 s)
+[2026-11-04 01:10:40] [B lote 29/36] run-20: dado_desatualizado (74.76 s)
+[2026-11-04 01:11:29] [B lote 30/36] run-21: registro_duplicado (45.09 s)
+[2026-11-04 01:12:48] [B lote 31/36] efe-16: tempo_de_resposta_excedido (75.27 s)
+[2026-11-04 01:14:01] [B lote 32/36] efe-17: localizador_quebrado (68.17 s)
+[2026-11-04 01:15:01] [B lote 33/36] efe-18: localizador_quebrado (55.83 s)
+[2026-11-04 01:16:12] [B lote 34/36] efe-19: localizador_quebrado (67.15 s)
+[2026-11-04 01:17:27] [B lote 35/36] efe-20: corpo_vazio (71.12 s)
+[2026-11-04 01:18:38] [B lote 36/36] efe-21: nulo_inesperado (66.81 s)
+[2026-11-04 01:18:38] regra R5: b = 0 (passaram a acertar) e c = 0 (passaram a errar) nos 36 casos pareados: o lote entra (b maior ou igual a c) (p = 1.0); lote com 19 edição(ões), 1 para revisão humana
+[2026-11-04 01:18:39] [C 1/10] lex-2 (corpo_nao_e_json, mantido): antes falhou e reproduz, depois falhou; fio igual, árvore igual; não marcado
+[2026-11-04 01:18:40] [C 2/10] lex-9 (corpo_nao_e_json, desligado): antes falhou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO corpo_nao_e_json
+[2026-11-04 01:18:41] [C 3/10] run-7 (recurso_inexistente, desligado): antes falhou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO recurso_inexistente
+[2026-11-04 01:18:42] [C 4/10] semt-13 (type_drift, mantido): antes passou e reproduz, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 01:18:42] [C 5/10] sin-1 (field_missing, mantido): antes falhou e reproduz, depois falhou; fio igual, árvore igual; não marcado
+[2026-11-04 01:18:43] [C 6/10] sin-13 (estrutura_aninhada_divergente, desligado): antes passou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO estrutura_aninhada_divergente
+[2026-11-04 01:18:44] [C 7/10] sin-15 (colecao_no_lugar_de_objeto, desligado): antes passou, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 01:18:45] [C 8/10] sin-9 (field_renamed, desligado): antes passou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO campo_renomeado
+[2026-11-04 01:18:46] [C 9/10] tra-12 (escala_ou_unidade_errada, mantido): antes passou e reproduz, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 01:18:47] [C 10/10] tra-3 (chave_de_juncao_errada, mantido): antes passou e reproduz, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 01:18:47] epoca-102 (correções) fechada: hash 86b6af32f757, 4 correção(ões) em 4 verbete(s)
+[2026-11-04 01:18:47] regra R4: 4 marcada(s), 4 certa(s) de 4 desligado(s); precisão 100.0%, revocação 100.0%
+[2026-11-04 01:46:22] !! corrida parou: época 103 do modelo qwen2.5:7b não fecha: biblioteca inválida — erros/corpo_nao_e_json.md: linha 2 da seção 'Solução aplicada' fora do formato '- [caso · data] texto'
+[2026-11-04 01:46:24] !! executar_fase4.py saiu com codigo 1
+[2026-11-04 16:24:05] rodar_fase4.ps1: modo biblioteca, saida fase4_biblioteca, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-04 16:24:07] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 7,8 GB
+[2026-11-04 16:24:08] testar_fase4.py
+[2026-11-04 16:24:36] executar_fase4.py --modo biblioteca --saida fase4_biblioteca --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --base-ineditos corrida12 --teto-proposta 700
+[2026-11-04 16:24:38] INÍCIO biblioteca: Ollama 0.40.14, qwen2.5:7b, L1 curada (1fca10f1a6f6), k = 3; 54 casos de aprendizado (26 com tela), 36 inéditos (base corrida12), correção em 10 casos (5 desligados), sonda em 7; 158 inferências previstas; 54 caso(s) já feito(s)
+[2026-11-04 16:24:57] retomando a trilha de trilha_biblioteca.jsonl: 3115 eventos
+[2026-11-04 16:24:57] regra R5: b = 0 (passaram a acertar) e c = 0 (passaram a errar) nos 36 casos pareados: o lote entra (b maior ou igual a c) (p = 1.0); lote com 19 edição(ões), 1 para revisão humana
+[2026-11-04 16:24:57] fase C refeita: 260 evento(s) da tentativa anterior saíram da trilha
+[2026-11-04 16:24:57] sonda descartada: ela lê a época 102, que vai ser refeita
+[2026-11-04 16:24:58] referência api-catalogo: passou em 0.502 s; árvore 193 nós, 39 linhas
+[2026-11-04 16:24:58] [C 1/10] lex-2 (corpo_nao_e_json, mantido): antes falhou e reproduz, depois falhou; fio igual, árvore igual; não marcado
+[2026-11-04 16:24:59] [C 2/10] lex-9 (corpo_nao_e_json, desligado): antes falhou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO corpo_nao_e_json
+[2026-11-04 16:25:00] referência api-detalhe produto 1: passou em 0.557 s; árvore 197 nós, 42 linhas
+[2026-11-04 16:25:01] [C 3/10] run-7 (recurso_inexistente, desligado): antes falhou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO recurso_inexistente
+[2026-11-04 16:25:01] [C 4/10] semt-13 (type_drift, mantido): antes passou e reproduz, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 16:25:02] [C 5/10] sin-1 (field_missing, mantido): antes falhou e reproduz, depois falhou; fio igual, árvore igual; não marcado
+[2026-11-04 16:25:03] [C 6/10] sin-13 (estrutura_aninhada_divergente, desligado): antes passou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO estrutura_aninhada_divergente
+[2026-11-04 16:25:03] [C 7/10] sin-15 (colecao_no_lugar_de_objeto, desligado): antes passou, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 16:25:04] [C 8/10] sin-9 (field_renamed, desligado): antes passou e reproduz, depois passou; fio mudou, árvore mudou; CORRIGIDO campo_renomeado
+[2026-11-04 16:25:05] [C 9/10] tra-12 (escala_ou_unidade_errada, mantido): antes passou e reproduz, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 16:25:06] [C 10/10] tra-3 (chave_de_juncao_errada, mantido): antes passou e reproduz, depois passou; fio igual, árvore igual; não marcado
+[2026-11-04 16:25:06] epoca-102 (correções) fechada: hash f5e88fb016b5, 4 correção(ões) em 4 verbete(s)
+[2026-11-04 16:25:06] regra R4: 4 marcada(s), 4 certa(s) de 4 desligado(s); precisão 100.0%, revocação 100.0%
+[2026-11-04 16:53:39] [D] efe-3: campo_ausente (acertou); 1/2 propostas aceitas; por id: nenhum; menciona a correção: não
+[2026-11-04 16:53:39] [D] lex-9: corpo_nao_e_json (acertou); 2/2 propostas aceitas; por id: nenhum; menciona a correção: não
+[2026-11-04 16:53:39] [D] sin-9: campo_renomeado (acertou); 0/2 propostas aceitas; por id: nenhum; menciona a correção: não
+[2026-11-04 16:53:39] [D] sin-13: estrutura_aninhada_divergente (acertou); 0/2 propostas aceitas; por id: nenhum; menciona a correção: não
+[2026-11-04 16:53:39] [D] sin-15: colecao_no_lugar_de_objeto (acertou); 1/2 propostas aceitas; por id: nenhum; menciona a correção: não
+[2026-11-04 16:53:39] [D] run-7: recurso_inexistente (acertou); 0/2 propostas aceitas; por id: nenhum; menciona a correção: não
+[2026-11-04 16:53:39] [D] efe-10: dado_desatualizado (errou); 0/2 propostas aceitas; por id: interface-frontend; menciona a correção: não
+[2026-11-04 16:53:45] FIM biblioteca: 54 de 54 casos de aprendizado; 19 edição(ões) no lote; R5 aceito (b = 0, c = 0); correção: 4 marcada(s) de 4 desligado(s); sonda em 7 caso(s); duração 1749 s; trilha 3347613 bytes
+[2026-11-04 16:53:47] avaliar_fase4.py --biblioteca --saida fase4_biblioteca
+[2026-11-04 16:53:48] FIM rodar_fase4.ps1 (modo biblioteca) - duracao total 00h29

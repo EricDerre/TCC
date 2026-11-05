@@ -1,0 +1,30 @@
+{
+  "modelo": "qwen2.5:7b",
+  "epoca": 102,
+  "hash": "f5e88fb016b5",
+  "n_verbetes": 46,
+  "n_verbetes_novos": 10,
+  "n_notas": 22,
+  "n_retificacoes": 10,
+  "chars": 26437,
+  "tokens_estimados": 10168,
+  "aceitas_na_epoca": 4,
+  "versao_ollama": "0.40.14",
+  "fechado_em": "2026-11-04T16:25:06",
+  "correcoes": 4,
+  "verbetes_corrigidos": {
+    "campo_renomeado": [
+      "sin-9"
+    ],
+    "corpo_nao_e_json": [
+      "lex-9"
+    ],
+    "estrutura_aninhada_divergente": [
+      "sin-13"
+    ],
+    "recurso_inexistente": [
+      "run-7"
+    ]
+  },
+  "operacao": "correcao"
+}

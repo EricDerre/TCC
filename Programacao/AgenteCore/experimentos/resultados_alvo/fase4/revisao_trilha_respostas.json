@@ -1,0 +1,129 @@
+[
+  {
+    "aberto_em": "2026-11-05T12:17:29.200Z",
+    "avaliacao": "certo",
+    "caso": "relatorio-1",
+    "comentario": "",
+    "decidido_em": "2026-11-05T12:28:54.265Z",
+    "decisao": "aceitar",
+    "erro_localizado": "sim",
+    "pausas": 0,
+    "posicao": 1,
+    "retomadas": 0,
+    "salvo_em": "2026-11-05T12:29:03.116Z",
+    "segundos": 307,
+    "segundos_relogio": 685,
+    "utilidade": 4,
+    "origem": "revisor"
+  },
+  {
+    "posicao": 2,
+    "caso": "relatorio-2",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "n.a.",
+    "decisao": "aceitar",
+    "utilidade": 3,
+    "avaliacao": "certo",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 3,
+    "caso": "relatorio-3",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "n.a.",
+    "decisao": "aceitar",
+    "utilidade": 4,
+    "avaliacao": "certo",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 4,
+    "caso": "relatorio-4",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "não",
+    "decisao": "recusar",
+    "utilidade": 2,
+    "avaliacao": "errado",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 5,
+    "caso": "relatorio-5",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "sim",
+    "decisao": "recusar",
+    "utilidade": 4,
+    "avaliacao": "errado",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 6,
+    "caso": "relatorio-6",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "n.a.",
+    "decisao": "aceitar",
+    "utilidade": 3,
+    "avaliacao": "certo",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 7,
+    "caso": "relatorio-7",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "n.a.",
+    "decisao": "aceitar",
+    "utilidade": 3,
+    "avaliacao": "certo",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 8,
+    "caso": "relatorio-8",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "sim",
+    "decisao": "recusar",
+    "utilidade": 5,
+    "avaliacao": "errado",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 9,
+    "caso": "relatorio-9",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "n.a.",
+    "decisao": "aceitar",
+    "utilidade": 4,
+    "avaliacao": "certo",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 10,
+    "caso": "relatorio-10",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "sim",
+    "decisao": "recusar",
+    "utilidade": 3,
+    "avaliacao": "errado",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  },
+  {
+    "posicao": 11,
+    "caso": "relatorio-11",
+    "segundos": null,
+    "origem": "parecer_aprovado",
+    "erro_localizado": "sim",
+    "decisao": "recusar",
+    "utilidade": 5,
+    "avaliacao": "errado",
+    "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86)."
+  }
+]

@@ -1,0 +1,563 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-05T10:06:58",
+    "corrida": "fase4_trilha",
+    "gerado_por": "avaliar_fase4.py --revisao",
+    "planilha": "revisao_trilha.md"
+  },
+  "resumo": {
+    "relatorios": 11,
+    "respostas_do_revisor": 1,
+    "pareceres_aprovados": 10,
+    "acertos_na_amostra": 6,
+    "erros_na_amostra": 5,
+    "acertos_na_corrida": 31,
+    "erros_na_corrida": 5,
+    "adesao_apropriada": 11,
+    "adesao_pct": 100.0,
+    "adesao_ic": [
+      74.1,
+      100.0
+    ],
+    "tempo_mediana_s": 307,
+    "erros_localizados": 4,
+    "utilidade_mediana": 4
+  },
+  "por_origem": [
+    {
+      "origem": "revisor",
+      "n": 1,
+      "apropriadas": 1,
+      "pct": 100.0,
+      "ic": [
+        20.7,
+        100.0
+      ],
+      "avaliacao_bate": 1
+    },
+    {
+      "origem": "parecer_aprovado",
+      "n": 10,
+      "apropriadas": 10,
+      "pct": 100.0,
+      "ic": [
+        72.2,
+        100.0
+      ],
+      "avaliacao_bate": 10
+    }
+  ],
+  "parecer": {
+    "n": 11,
+    "apropriadas": 11,
+    "pct": 100.0,
+    "ic": [
+      74.1,
+      100.0
+    ],
+    "causa_certa": 11,
+    "pct_causa": 100.0,
+    "avaliacao_bate": 11,
+    "errou_a_decisao": [],
+    "errou_a_causa": []
+  },
+  "duvidas_de_leitura": [
+    "run-4"
+  ],
+  "adesao": [
+    {
+      "grupo": "diagnóstico certo",
+      "n": 6,
+      "aceitou": 6,
+      "recusou": 0,
+      "apropriadas": 6,
+      "pct": 100.0,
+      "ic": [
+        61.0,
+        100.0
+      ]
+    },
+    {
+      "grupo": "diagnóstico errado",
+      "n": 5,
+      "aceitou": 0,
+      "recusou": 5,
+      "apropriadas": 5,
+      "pct": 100.0,
+      "ic": [
+        56.6,
+        100.0
+      ]
+    },
+    {
+      "grupo": "todos",
+      "n": 11,
+      "aceitou": 6,
+      "recusou": 5,
+      "apropriadas": 11,
+      "pct": 100.0,
+      "ic": [
+        74.1,
+        100.0
+      ]
+    }
+  ],
+  "localizacao": [
+    {
+      "grupo": "diagnóstico errado",
+      "n": 5,
+      "sim": 4,
+      "nao": 1,
+      "na": 0,
+      "pct_sim": 80.0,
+      "ic": [
+        37.6,
+        96.4
+      ]
+    },
+    {
+      "grupo": "diagnóstico certo",
+      "n": 6,
+      "sim": 1,
+      "nao": 0,
+      "na": 5,
+      "pct_sim": 16.7,
+      "ic": [
+        3.0,
+        56.4
+      ]
+    }
+  ],
+  "tempo": [
+    {
+      "grupo": "todos",
+      "n": 1,
+      "mediana": 307,
+      "minimo": 307,
+      "maximo": 307
+    },
+    {
+      "grupo": "diagnóstico certo",
+      "n": 1,
+      "mediana": 307,
+      "minimo": 307,
+      "maximo": 307
+    },
+    {
+      "grupo": "diagnóstico errado",
+      "n": 0,
+      "mediana": null,
+      "minimo": null,
+      "maximo": null
+    },
+    {
+      "grupo": "aceitos",
+      "n": 1,
+      "mediana": 307,
+      "minimo": 307,
+      "maximo": 307
+    },
+    {
+      "grupo": "recusados",
+      "n": 0,
+      "mediana": null,
+      "minimo": null,
+      "maximo": null
+    }
+  ],
+  "utilidade": [
+    {
+      "grupo": "todos",
+      "n": 11,
+      "mediana": 4,
+      "contagem": {
+        "1": 0,
+        "2": 1,
+        "3": 4,
+        "4": 4,
+        "5": 2
+      }
+    },
+    {
+      "grupo": "diagnóstico certo",
+      "n": 6,
+      "mediana": 3.5,
+      "contagem": {
+        "1": 0,
+        "2": 0,
+        "3": 3,
+        "4": 3,
+        "5": 0
+      }
+    },
+    {
+      "grupo": "diagnóstico errado",
+      "n": 5,
+      "mediana": 4,
+      "contagem": {
+        "1": 0,
+        "2": 1,
+        "3": 1,
+        "4": 1,
+        "5": 2
+      }
+    }
+  ],
+  "avaliacao": {
+    "n": 11,
+    "acertos": 11,
+    "pct": 100.0,
+    "ic": [
+      74.1,
+      100.0
+    ],
+    "certo_disse_certo": 6,
+    "certo_disse_errado": 0,
+    "errado_disse_certo": 0,
+    "errado_disse_errado": 5,
+    "decisao_e_avaliacao_discordam": []
+  },
+  "casos": [
+    {
+      "posicao": 1,
+      "caso": "run-4",
+      "origem": "revisor",
+      "segundos": 307,
+      "erro_localizado": "sim",
+      "decisao": "aceitar",
+      "utilidade": 4,
+      "avaliacao": "certo",
+      "comentario": "",
+      "classe": 5,
+      "gabarito": "dado_desatualizado",
+      "rotulo": "dado_desatualizado",
+      "acerto": true,
+      "selo": "alto",
+      "p_rotulo": 0.9967579246080666,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "n.a.",
+        "decisao": "aceitar",
+        "utilidade": 3,
+        "avaliacao": "certo",
+        "causa": null,
+        "confianca": "alta",
+        "causa_dada": "dado_desatualizado",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 2,
+      "caso": "run-1",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "n.a.",
+      "decisao": "aceitar",
+      "utilidade": 3,
+      "avaliacao": "certo",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 5,
+      "gabarito": "erro_interno_do_servidor",
+      "rotulo": "erro_interno_do_servidor",
+      "acerto": true,
+      "selo": "medio",
+      "p_rotulo": 0.9835882188842313,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "n.a.",
+        "decisao": "aceitar",
+        "utilidade": 3,
+        "avaliacao": "certo",
+        "causa": null,
+        "confianca": "alta",
+        "causa_dada": "erro_interno_do_servidor",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 3,
+      "caso": "lex-10",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "n.a.",
+      "decisao": "aceitar",
+      "utilidade": 4,
+      "avaliacao": "certo",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 1,
+      "gabarito": "resposta_truncada",
+      "rotulo": "resposta_truncada",
+      "acerto": true,
+      "selo": "alto",
+      "p_rotulo": 0.9995792508184513,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "n.a.",
+        "decisao": "aceitar",
+        "utilidade": 4,
+        "avaliacao": "certo",
+        "causa": null,
+        "confianca": "alta",
+        "causa_dada": "resposta_truncada",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 4,
+      "caso": "semt-9",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "não",
+      "decisao": "recusar",
+      "utilidade": 2,
+      "avaliacao": "errado",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 3,
+      "gabarito": "valor_fora_do_dominio",
+      "rotulo": "tipo_divergente",
+      "acerto": false,
+      "selo": "alto",
+      "p_rotulo": 0.9977216123735696,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "não",
+        "decisao": "recusar",
+        "utilidade": 2,
+        "avaliacao": "errado",
+        "causa": "valor_fora_do_dominio",
+        "confianca": "média",
+        "causa_dada": "valor_fora_do_dominio",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 5,
+      "caso": "tra-15",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "sim",
+      "decisao": "recusar",
+      "utilidade": 4,
+      "avaliacao": "errado",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 4,
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo": "registro_duplicado",
+      "acerto": false,
+      "selo": "baixo",
+      "p_rotulo": 0.6388301346448427,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "sim",
+        "decisao": "recusar",
+        "utilidade": 4,
+        "avaliacao": "errado",
+        "causa": "escala_ou_unidade_errada",
+        "confianca": "alta",
+        "causa_dada": "escala_ou_unidade_errada",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 6,
+      "caso": "sin-11",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "n.a.",
+      "decisao": "aceitar",
+      "utilidade": 3,
+      "avaliacao": "certo",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 2,
+      "gabarito": "estrutura_aninhada_divergente",
+      "rotulo": "estrutura_aninhada_divergente",
+      "acerto": true,
+      "selo": "alto",
+      "p_rotulo": 0.99954622982571,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "n.a.",
+        "decisao": "aceitar",
+        "utilidade": 3,
+        "avaliacao": "certo",
+        "causa": null,
+        "confianca": "alta",
+        "causa_dada": "estrutura_aninhada_divergente",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 7,
+      "caso": "lex-8",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "n.a.",
+      "decisao": "aceitar",
+      "utilidade": 3,
+      "avaliacao": "certo",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 1,
+      "gabarito": "codificacao_incorreta",
+      "rotulo": "codificacao_incorreta",
+      "acerto": true,
+      "selo": "baixo",
+      "p_rotulo": 0.7490766046227897,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "n.a.",
+        "decisao": "aceitar",
+        "utilidade": 3,
+        "avaliacao": "certo",
+        "causa": null,
+        "confianca": "alta",
+        "causa_dada": "codificacao_incorreta",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 8,
+      "caso": "efe-1",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "sim",
+      "decisao": "recusar",
+      "utilidade": 5,
+      "avaliacao": "errado",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 6,
+      "gabarito": "localizador_quebrado",
+      "rotulo": "tempo_de_resposta_excedido",
+      "acerto": false,
+      "selo": "medio",
+      "p_rotulo": 0.901645663545176,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "sim",
+        "decisao": "recusar",
+        "utilidade": 5,
+        "avaliacao": "errado",
+        "causa": "localizador_quebrado",
+        "confianca": "alta",
+        "causa_dada": "localizador_quebrado",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 9,
+      "caso": "semt-5",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "n.a.",
+      "decisao": "aceitar",
+      "utilidade": 4,
+      "avaliacao": "certo",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 3,
+      "gabarito": "nulo_inesperado",
+      "rotulo": "nulo_inesperado",
+      "acerto": true,
+      "selo": "alto",
+      "p_rotulo": 0.9997981190616122,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "n.a.",
+        "decisao": "aceitar",
+        "utilidade": 4,
+        "avaliacao": "certo",
+        "causa": null,
+        "confianca": "alta",
+        "causa_dada": "nulo_inesperado",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 10,
+      "caso": "sin-5",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "sim",
+      "decisao": "recusar",
+      "utilidade": 3,
+      "avaliacao": "errado",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 2,
+      "gabarito": "campo_ausente",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acerto": false,
+      "selo": "baixo",
+      "p_rotulo": 0.624550459924769,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "sim",
+        "decisao": "recusar",
+        "utilidade": 3,
+        "avaliacao": "errado",
+        "causa": "campo_ausente",
+        "confianca": "alta",
+        "causa_dada": "campo_ausente",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    },
+    {
+      "posicao": 11,
+      "caso": "sin-14",
+      "origem": "parecer_aprovado",
+      "segundos": null,
+      "erro_localizado": "sim",
+      "decisao": "recusar",
+      "utilidade": 5,
+      "avaliacao": "errado",
+      "comentario": "Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86).",
+      "classe": 2,
+      "gabarito": "campo_renomeado",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acerto": false,
+      "selo": "baixo",
+      "p_rotulo": 0.3007152809091236,
+      "apropriada": true,
+      "avaliacao_bate": true,
+      "parecer": {
+        "erro_localizado": "sim",
+        "decisao": "recusar",
+        "utilidade": 5,
+        "avaliacao": "errado",
+        "causa": "campo_renomeado",
+        "confianca": "alta",
+        "causa_dada": "campo_renomeado",
+        "causa_certa": true,
+        "apropriada": true,
+        "avaliacao_bate": true
+      }
+    }
+  ]
+}

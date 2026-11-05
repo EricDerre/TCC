@@ -12,8 +12,9 @@ causa_raiz: limite_de_requisicoes
 arquivos: [Programacao/CobaiaAPI/app/main.py, Programacao/CobaiaFront/produtos_api.php]
 endpoints: [GET /api/produtos]
 sintomas: [HTTP 429, too many requests, rate limit, para de funcionar apos varias tentativas]
-palavras_chave: [429, limite, rate limit, too many requests, retry_after, cota, excesso, recarregar]
+palavras_chave: [429, limite, rate limit, too many requests, retry_after, cota, excesso, recarregar, status de erro, limitador de requisicoes]
 causas_relacionadas: [tempo_de_resposta_excedido, erro_interno_do_servidor]
+# ! Alteração por modelo qwen2.5:7b (E101, caso run-3) - Revisar: retificação acrescentada.
 ---
 ## Resumo
 Status 429: o servidor ou um intermediário recusou por excesso de requisições num intervalo. Resposta rápida e com corpo — não é lentidão nem erro interno.
@@ -24,3 +25,6 @@ Status 429: o servidor ou um intermediário recusou por excesso de requisições
 
 ## Causa
 A CobaiaAPI não tem limitador (main.py só registra CORS e routers); um 429 vem de proxy, gateway ou servidor diferente do esperado.
+
+## Notas do modelo
+- [E101 · run-3 · retificação de "A CobaiaAPI não tem limitador (main.py só registra CORS e routers); um 429 vem de proxy, gateway ou servidor diferente do esperado."] Corrigir que o 429 pode ser emitido pelo próprio servidor ou intermediários, não necessariamente pelo CobaiaAPI. — Motivo: A retificação corrigirá a percepção de que o 429 sempre vem de um servidor diferente, permitindo que o próximo diagnóstico considere essa possibilidade.

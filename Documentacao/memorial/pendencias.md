@@ -534,6 +534,113 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). A regra R2 existe para pegar defeito do caso de entrada; esse defeito foi corrigido e medido. O que sobra é o modelo lendo a taxonomia, e descrever melhor sem citar a causa (b) começa a escrever a resposta no sintoma; (c) muda a regra depois de ver o resultado.
 - **Decisão:** (a), pelo Eric em 01/11/2026, no quadro da sessão (decisão 82): a corrida 18b vale como a corrida 18 da Fase 4; a regra R2 fica registrada como não cumprida no limite de 3 (b + c = 9, p = 0,180), com o saldo de +10 acertos na tela contra a corrida original, como limitação declarada da fase; as confusões restantes entre rótulos vizinhos (estrutura aninhada e tipo, nulo e ausente, codificação e formato de data, chave de junção e tipo) são insumo do P5 (biblioteca em produção). Próximo pacote: P4 (cura de seletor e a variante de quebra no front PHP, ficha 29 c). O limite de 3 da regra R2 não muda.
 
+<!-- ! Alteração de IA - Revisar: bloco novo (05/11/2026) com a ficha 39, aberta pela leitura da corrida 22 (roadmap §2.15). Números de `resultados_alvo/fase4/trilha.json`, escritos por script.
+     ! Motivo: a divergência que o relatório mostra como carimbo de conflito quase não separou erro de acerto com as intervenções em todos os casos, e mudar o que ela conta muda a especificação (seções 4.2 e 11): é decisão do Eric, e depende da sessão de revisão. -->
+## Aberta pela corrida 22 (05/11/2026)
+
+### 39. O carimbo de conflito do relatório: o que ele deve contar depois da corrida 22
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** O relatório de cada caso mostra o carimbo **CONFLITO** quando a divergência do nó de diagnóstico está ligada: uma conferência em código não conferiu, ou uma intervenção mudou o rótulo. Na corrida 22, com as quatro intervenções em todos os 36 casos, ele acendeu em 24: pegou 4 dos 5 erros e acusou 20 dos 31 acertos (TPR x TNR de 0,284, contra 0,250 do acaso). Ele acende tanto porque a documentação pesa na resposta, o que é o esperado: sem documentação nenhuma, o rótulo mudou em 16 de 36 casos. Contado como o agente roda fora da avaliação, com intervenção só quando a probabilidade está baixa ou a FONTE diverge, o carimbo daria 0,542; o selo baixo sozinho, sem nenhuma inferência a mais, dá 0,523. Leitura no roadmap, §2.15.
+- **Por que importa:** O carimbo é a primeira coisa que o desenvolvedor lê no relatório (especificação, seção 11). Se ele aparece na maioria dos casos certos, ensina a ignorá-lo. Mas a medida é fraca: são só 5 erros, com o TPR entre 37,6 a 96,4%, e a conta por gatilho é feita sobre uma corrida que não rodou desse jeito.
+- **Opções:**
+  - (a) Manter a regra como está: fora da avaliação, as intervenções só rodam por gatilho, e o carimbo acende em 6 de 36, com 3 erros e 3 alarmes falsos (TPR x TNR de 0,542). A especificação e o molde não mudam, e o TCC reporta as duas contas. Continua contando como conflito o caso em que só a inferência sem documentação mudou a resposta.
+  - (b) Mudar a regra da divergência: o carimbo passa a contar só a conferência em código e a remoção ou a troca do verbete; a inferência sem documentação vira informação na seção da FONTE. Nesta corrida, remoção ou troca dá 0,465, com 13 alarmes falsos. Muda a especificação (seção 4.2) e o molde do relatório.
+  - (c) Deixar a divergência como registro na trilha e tirar o carimbo do topo do relatório: a primeira linha passa a avisar pelo selo baixo, e o conflito fica na seção da FONTE. Custa zero inferência. Muda a especificação (seção 11).
+- **Depois da sessão (05/11/2026):** a sessão não mediu o carimbo com um leitor humano (decisões 85 e 86). Pelo gabarito, na amostra ele acendeu em 4 dos 5 errados e em 3 dos 6 certos. A opção (b) manteria os 4 errados e deixaria 1 dos 3 alarmes falsos. Na única resposta humana, o Eric aceitou um diagnóstico certo com o carimbo aceso.
+- **Conta por gatilho (05/11/2026):** com as intervenções em todos os casos, a regra atual acende em 24 de 36, com 4 erros e 20 alarmes falsos (TPR x TNR de 0,284), e a opção (b), em 18 de 36, com 4 erros e 14 alarmes falsos (TPR x TNR de 0,439). Por gatilho, que é como o agente roda fora da avaliação, a regra atual acende em 6 de 36, com 3 erros e 3 alarmes falsos (TPR x TNR de 0,542); a opção (b), em 5 de 36, com 3 erros e 2 alarmes falsos (TPR x TNR de 0,561); e o selo baixo da opção (c), em 7 de 36, com 3 erros e 4 alarmes falsos (TPR x TNR de 0,523). Bloco `tb_f4_trilha_sinais` de `trilha.md`.
+- **Recomendação:** (a). Por gatilho, o carimbo já acende pouco, e a opção (b) só tiraria mais 1 alarme falso, ao custo de mudar a especificação e o molde. Com 5 erros, nenhuma conta separa as opções. Esta recomendação substitui a anterior, de ir para (b), feita antes desta conta. Nada disso impede o P8.
+- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 88): a regra fica como está, a especificação e o molde não mudam, e o TCC reporta as duas contas, dizendo que a contagem por gatilho sai de uma corrida que não rodou assim.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (05/11/2026) com as fichas 40 e 41, abertas pelo fechamento da sessão de revisão da corrida 22. Números de `resultados_alvo/fase4/leitura_revisao_trilha.json`, escritos por script.
+     ! Motivo: a medida com revisor humano não ficou feita (decisões 85 e 86) e a pré-análise achou dois defeitos da poda; fazer a medida com um colega e mexer na poda antes da Fase 5 são decisões do Eric. -->
+## Abertas pelo fechamento da sessão de revisão (05/11/2026)
+
+### 40. A medida com revisor humano: um colega faz às cegas ou fica como limitação
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** A especificação da trilha (seção 12 c) pede, com um revisor humano, a localização do erro, o tempo até a decisão e a adesão apropriada. Na sessão de 05/11, só 1 dos 11 relatórios teve resposta sua, dada antes de ler a pré-análise; os outros 10 são o parecer do Claude, que você aprovou (decisões 85 e 86). O parecer acertou 11 de 11 decisões e 11 de 11 causas. Isso mede um leitor que sabia quantos erros a amostra tem e consultou a biblioteca, não o que o relatório vale para quem lê.
+- **Por que importa:** É a única parte do P7 que responde se o relatório ajuda uma pessoa a decidir. Sem ela, o TCC pode dizer que a evidência está no relatório, mas não que alguém consegue usá-la. Você já não serve como revisor às cegas dos relatórios 2 a 11, porque leu o parecer.
+- **Opções:**
+  - (a) Declarar como limitação no TCC e seguir para o P8: a medida fica com uma resposta humana só, e a leitura mostra o parecer do Claude separado. Custo zero, mas a banca pode perguntar por quê.
+  - (b) Um colega do grupo faz a sessão às cegas nos 11 relatórios, na mesma página, no encontro da linha de base manual: cerca de 1 hora dele. A página precisa de uma coleção de respostas por revisor e do compartilhamento. Ele recebe só o link da página: a planilha, os arquivos da trilha, a pré-análise e a aba do painel agora trazem o resultado.
+- **Recomendação:** (b). Custa cerca de 1 hora, aproveita um encontro que já vai acontecer e é a única forma de o P7 responder a própria pergunta. Se o grupo não puder, (a).
+- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 87): a medida com revisor humano fica como limitação declarada, sem nova sessão. Ela entra no relatório da fase, no P8, e na próxima versão do documento do TCC.
+
+### 41. Dois defeitos da poda: corrigir antes da Fase 5 ou deixar como estão
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** A pré-análise achou dois defeitos, conferidos no código e no gabarito. Primeiro: `poda.diff_contrato` só olha o primeiro item de uma lista, então em `sin-5`, onde o segundo item não tem `resumo`, a poda disse "sem diferença" e o agente errou a causa. Segundo: ela chama um número em campo booleano de tipo diferente, enquanto a biblioteca separa `destaque 1` (`tipo_divergente`) de `destaque 2` (`valor_fora_do_dominio`); em `semt-9`, o sinal da poda aponta para o rótulo errado, com selo alto e sem nenhum alarme.
+- **O tamanho da mudança:** uma contagem sem modelo, em 05/11/2026, mostra que a poda mudaria em 5 dos 72 casos do banco: 4 pelo primeiro item da lista e 1 pelo booleano. Na corrida 22, 2 dos 5 erros estão nesses casos (`semt-9`, `sin-5`).
+- **Por que importa:** O relatório não ajuda a ver esses dois erros. Mas a poda entra no prompt dos casos na tela: corrigir agora faz as corridas seguintes deixarem de ser comparáveis às da Fase 4, embora as já feitas não mudem.
+- **Opções:**
+  - (a) Corrigir antes da Fase 5, com teste: a poda passa a olhar todos os itens da lista e a seguir a regra da biblioteca para booleano. A Fase 5 registra a mudança, e uma corrida curta só nos casos afetados mede o efeito.
+  - (b) Não mexer e declarar como limitação: preserva a comparação com a Fase 4, e os dois defeitos seguem presentes na Fase 5.
+- **Recomendação:** (a). São defeitos de código com conserto pequeno e que afetam poucos casos, então o custo em comparabilidade é baixo e fica medido.
+- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 89): os dois defeitos foram consertados, com teste, em `poda.diff_contrato`.
+- **Correção (05/11/2026):** esta ficha dizia que o conserto mudava o que o modelo recebe, e isso estava errado para os casos de texto. Nos casos de texto, o prompt leva o corpo inteiro e o resultado da poda não chega ao modelo: ela só alimenta a trilha, a tabela do contrato e a justificativa do relatório. Por isso os erros de `sin-5` e `semt-9` na corrida 22 não vieram dos defeitos da poda. Só nos casos na tela o trecho da poda vai ao prompt, e ali nenhum corpo guardado muda. A corrida curta prevista na opção (a) não é necessária. Comparada com a versão anterior, sem modelo, a poda muda em 5 dos 65 casos de texto com contrato (`sin-5`, `semt-9`, `semt-14`, `sin-20`, `semt-17`) e em nenhum dos 209 corpos guardados nas 7 corridas na tela, 158 deles listas com mais de um item, inclusive os cenários da Fase 5 (`resultados_alvo/fase4/poda_antes_e_depois.json`).
+
+<!-- ! Alteração de IA - Revisar: bloco novo (05/11/2026, pacote P8) com as fichas 42 a 45, abertas no fechamento da Fase 4.
+     ! Motivo: ao conferir o plano aprovado contra o que rodou, quatro pontos ficaram sem entrega e sem decisão: a regra do tamanho do prompt, o experimento da ficha 34, os 36 inéditos da ficha 27 e o trace, o "Cérebro ao vivo" e o explorador. A decisão é do Eric, e a regra das pendências manda abrir ficha; nenhuma impede a Fase 5. Números de `tela_v2.json`, dos registros das corridas 18b e 21b e de `biblioteca_producao/fechamento.json`, lidos por script. -->
+<!-- ! Alteração de IA - Revisar: (05/11/2026, pacote P8) 6 trecho(s) corrigido(s) por script no fechamento da Fase 4, depois da revisão deste documento por um revisor; a lista com o trecho antigo, o novo e o motivo de cada um está em `Documentacao/memorial/5-metodo-e-ferramental/dados/revisao-fase-4-2026-11-05.json`.
+     ! Motivo: o plano aprovado (P8) prevê um revisor por documento de texto; as correções entram declaradas, para o texto continuar rastreável. -->
+<!-- ! Alteração de IA - Revisar: (05/11/2026) fichas 42 a 45 fechadas com as respostas do Eric no quadro da sessão (decisões 90 a 93); o resto de cada ficha ficou como foi aberta. Os números da ficha 42 vêm de `resultados_alvo/fase4/prompt_tela_blocos.json`, lidos por script.
+     ! Motivo: o Eric respondeu uma a uma, e fechar é trocar o Estado e preencher a Decisão; a ficha 42 ganhou a medida porque a opção (b) falava só da poda da árvore, e a árvore sozinha não cabe no limite. -->
+## Abertas pelo fechamento da Fase 4 (05/11/2026)
+
+### 42. O prompt na tela passou do limite do plano: declarar como limitação ou apertar a poda antes da Fase 5
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** O plano aprovado (seção 3.3) fixou antes de rodar que o prompt montado da tela não pode passar o maior prompt da calibração em mais de 10%, e que, se passar, a poda aperta antes da próxima corrida. O limite dá 1409 tokens. Na corrida 18b os 37 prompts passaram do limite, o maior com 2034 tokens, e nos dez cenários da corrida 21b 9 de 10 passam do limite. A poda não apertou, e nenhuma decisão tratou disso: a decisão 82 fala só da regra R2.
+- **Por que importa:** O MTTR da Fase 5 (tempo da detecção da falha até a correção validada na reexecução) é quase todo o tempo do diagnóstico, e 83,1% desse tempo (mediana da corrida 21b) é o modelo lendo o prompt. Prompt maior é MTTR maior. Além disso, os limiares do selo de confiança foram calibrados com prompts de até 1281 tokens.
+- **Opções:**
+  - (a) Declarar como limitação e ir para a Fase 5 com o prompt como está.
+  - (b) Apertar a poda da árvore antes da Fase 5 e repetir as corridas 18 e 21, cerca de 1h47 de máquina. Isso muda o caso ao vivo pela terceira vez.
+  - (c) Mudar o limite da regra, com o motivo escrito.
+- **Recomendação:** (a). Os dez cenários acertaram com esse tamanho de prompt, e apertar a poda agora abriria outra revisão do caso ao vivo logo antes da Fase 5. O custo é um MTTR maior, que fica declarado junto com a regra descumprida.
+- **Decisão:** (b), pelo Eric em 05/11/2026, no quadro da sessão (decisão 90); a recomendação era (a). O caso ao vivo encurta antes da Fase 5, sem tocar no prompt fixo, e as corridas 18 e 21 são repetidas em pasta nova (18c e 21c, roadmap §2). A medida sem modelo nos prompts guardados (`medir_prompt_tela.py`, `resultados_alvo/fase4/prompt_tela_blocos.json`) mostra que só a árvore não basta: reduzida ao título e ao que difere da referência em modo normal, ela ainda deixa 12 de 37 prompts da corrida 18b e 5 de 10 da 21b acima de 1409 tokens, e sem nenhuma árvore ficam 4 e 1. Tirando também a linha OBSERVAÇÃO ADICIONAL e as listas `faltam` e `sobram` do SINTOMA, sobram 1 e 3, por causa de linhas repetidas e de linhas que a referência podada não tem, que o corte em código trata. Por isso o corte alcança esses dois blocos do caso ao vivo, e isso revê a decisão 82 só no ponto em que ela dizia que o molde do sintoma não passaria por terceira revisão: o molde perde texto e não ganha descrição.
+
+### 43. O experimento da ficha 34 não rodou: rodar antes da Fase 5 ou registrar como não feito
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** A ficha 34, opção (a), manteve o prompt congelado e mandou medir em texto, nos 90 casos, os itens da decisão 55 (exemplar resolvido fixo e forma dos rótulos), cerca de 1h30 de máquina, com número para decidir na Fase 5. O experimento não entrou na tabela de corridas do plano (seção 6), o código não foi escrito e nenhuma corrida o mediu.
+- **Por que importa:** A decisão 79 diz que ele seria reportado, e sem ele o TCC não tem número para esses dois itens. O agente não muda em nenhuma das duas opções, porque o prompt continua congelado.
+- **Opções:**
+  - (a) Escrever e rodar antes da Fase 5: uma sessão de código e cerca de 1h30 de máquina.
+  - (b) Registrar como não feito, com o prompt congelado também na Fase 5. Os dois itens ficam como trabalho futuro no TCC.
+- **Recomendação:** (b). Mudar o prompt na Fase 5 quebraria a comparação entre as etapas (projeto ABNT §3.4) e pediria nova calibração, então o número ficaria como trabalho futuro, e não como a decisão para a Fase 5 que a ficha 34 previa.
+- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 91); a recomendação era (b). O experimento é escrito e roda antes da Fase 5, em texto, nos 90 casos (corrida 23, roadmap §2), em código novo e com o prompt do agente congelado: o número vai para o TCC e não muda o agente, nem na Fase 5. A estimativa de cerca de 1h30 da ficha 34 é de uma condição; medir os dois itens separados são duas condições, cerca de 3 h de máquina.
+
+### 44. Os 36 inéditos da ficha 27: conferir e diagnosticar, ou ficar só na reprodução
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** A ficha 27, opção (a), criou 36 casos inéditos para o conjunto de avaliação chegar a 108 casos, com conferência do Eric antes da corrida 16. Os casos existem (`banco_casos_ineditos_fase4.py`), foram conferidos por script e a corrida 17 os rodou: 25 dos 36 reproduzem na tela. Mas a conferência do Eric não está registrada, e nenhuma corrida com modelo os leu: as corridas 16, 18, 20 e 22 leram outros conjuntos, e os inéditos da regra R5 são os 36 da Fase 3-B.
+- **Por que importa:** A biblioteca de produção de agora (`95af35290860`) nunca foi medida em casos inéditos: a regra R5 mediu o lote inteiro (`9f3154eee72d`) nos 36 inéditos da Fase 3-B, antes de a revisão tirar as edições marcadas como erradas, e a corrida 22 leu a produção nos 36 casos de avaliação, que a Fase 3 já tinha usado. Esses 36 são a medida que falta. Sem eles, o TCC fala em 72 casos, não em 108.
+- **Opções:**
+  - (a) O Eric confere os 36, e uma corrida em texto os diagnostica com a biblioteca de produção: cerca de 40 minutos de máquina, mais uma sessão curta de código, porque hoje só o modo `reproducao` aceita `--banco`.
+  - (b) Ficam só na reprodução. O TCC declara os 72 casos e que a biblioteca final não foi medida em casos inéditos.
+- **Recomendação:** (a). É a corrida mais barata que sobra e dá a única medida da biblioteca final em casos inéditos.
+- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 92): o Eric confere os 36 e, depois da conferência, uma corrida em texto os diagnostica com a biblioteca de produção (corrida 24, roadmap §2), cerca de 40 minutos de máquina, mais uma sessão curta de código. Com ela, o conjunto de avaliação chega aos 108 casos da ficha 27 e sai a medida da biblioteca final em casos inéditos.
+
+### 45. O que o plano previa para a evidência e para o painel e não foi feito: trace na falha, "Cérebro ao vivo" e explorador com a trilha v2
+- **Estado:** fechada em 05/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** Três entregas do plano não saíram. O trace do Playwright gravado só na falha (ficha 33 e plano, seção 3.2): as corridas guardam a árvore, o corpo e os eventos na trilha, mas nenhuma grava trace, e `navegador.py` só traz o comentário que o anuncia. A aba "Cérebro ao vivo" (plano, seções 3.2 e 3.8), com a probabilidade do rótulo, as alternativas e os verbetes regravados num HTML local a cada diagnóstico. E o explorador de casos lendo trilhas v2 (plano, seção 3.8): ele continua lendo só as trilhas da Pré-Fase 4. O Eric tinha dito que detalha a interface para o analista ao fim desta fase (roadmap §7), e é lá que as três cabem.
+- **Por que importa:** Nenhuma das três muda número nenhum, e a trilha já guarda o que a árvore de decisão do caso precisa. Mas a ficha 33 decidiu pelo trace, e o TCC não pode dizer que ele existe.
+- **Opções:**
+  - (a) Juntar as três à interface para o analista, que o Eric especifica agora, para depois da Fase 5, registrando que não foram feitas na Fase 4.
+  - (b) Fazer o trace na falha antes da Fase 5, em uma sessão, e o resto como em (a).
+  - (c) Descartar as três, com o motivo registrado.
+- **Recomendação:** (a). Nada disso muda a medida da Fase 5, e a interface para o analista é o lugar das três.
+- **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 93): o trace na falha, o "Cérebro ao vivo" e o explorador com a trilha v2 entram na interface para o analista, que o Eric especifica, para depois da Fase 5 (roadmap §7), e ficam registrados como não feitos na Fase 4. A Fase 5 roda sem trace, e o TCC não pode dizer que ele existe: as corridas guardam a árvore, o corpo e os eventos na trilha.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

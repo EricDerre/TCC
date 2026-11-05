@@ -410,7 +410,9 @@ body.menu-aberto .lateral{transform:none}body.menu-aberto .fundo{display:block}.
 h1{font:600 30px/1.15 var(--fd);margin:0 0 6px;text-wrap:balance}h2{font:600 22px/1.2 var(--fd);margin:34px 0 10px;text-wrap:balance}
 h3{font:600 17px/1.25 var(--fd);margin:24px 0 8px}h4{font:600 14px var(--fb);margin:14px 0 6px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
 p{max-width:78ch;margin:8px 0}p.nota,.nota{color:var(--ink2);font-size:13px}.lead{font-size:17px;color:var(--ink)}
-code{font:13px var(--fm);background:var(--acento2);padding:1px 4px;border-radius:4px}
+/* ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) code quebra a linha quando um caminho não cabe (overflow-wrap:break-word).
+   ! Motivo: na aba "Avaliação da trilha", em largura de celular, resultados_alvo/fase4/relatorios_revisao_trilha/ passava 30 px da janela e a página inteira rolava de lado; break-word só quebra onde ia estourar e não muda a largura das colunas das tabelas, ao contrário de anywhere. */
+code{font:13px var(--fm);background:var(--acento2);padding:1px 4px;border-radius:4px;overflow-wrap:break-word}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:18px 0}
 .kpi{background:var(--bg2);border:1px solid var(--linha);border-radius:10px;padding:14px 16px}
 .kpi b{display:block;font:600 26px/1.1 var(--fd);font-variant-numeric:tabular-nums}.kpi span{font-size:12px;color:var(--ink2);text-transform:uppercase;letter-spacing:.04em}
@@ -1095,9 +1097,30 @@ def contexto_fase4() -> dict:
     # ! Alteração de IA - Revisar: (03/11/2026, P5) o contexto da Fase 4 passa a trazer a leitura da corrida 20 (`biblioteca.json`),
     # lida por painel_topicos.secao_biblioteca.
     # ! Motivo: a corrida 20 é a quinta análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+    # ! Alteração de IA - Revisar: (04/11/2026, P6) o contexto da Fase 4 passa a trazer a leitura da corrida 21 (`cenarios.json`),
+    # lida por painel_topicos.secao_cenarios.
+    # ! Motivo: a corrida 21 é a sexta análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+    # ! Alteração de IA - Revisar: (04/11/2026, P7) o contexto da Fase 4 passa a trazer a leitura da corrida 22 (`trilha.json`),
+    # lida por painel_topicos.secao_trilha.
+    # ! Motivo: a corrida 22 é a sétima análise da Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) o contexto diz se a planilha da sessão de revisão da trilha está preenchida
+    # (uma linha por relatório e nenhuma célula "(em branco)"), a mesma regra de biblioteca_fase4.revisao_preenchida.
+    # ! Motivo: a aba só mostra o resultado de cada caso depois da sessão, que é às cegas; a planilha é o registro de que ela aconteceu.
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 86) o contexto passa a trazer a leitura da sessão de revisão (leitura_revisao_trilha.json).
+    # ! Motivo: é de lá que a aba da trilha tira quem decidiu cada relatório e o parecer do Claude contra o gabarito.
+    revisao = pasta / "revisao_trilha.md"
+    linhas_rev = [l for l in revisao.read_text(encoding="utf-8").splitlines() if l.startswith("| ") and not l.startswith("| # |")] if revisao.exists() else []
     return {"reproducao": le("reproducibilidade.json"), "reproducao_ineditos": le("reproducibilidade_ineditos.json"),
+            "revisao_trilha_preenchida": bool(linhas_rev) and not any("| (em branco) |" in l for l in linhas_rev),
             "calibracao": le("calibracao.json"), "limiares": le("limiares.json"), "tela": le("tela.json"), "tela_v2": le("tela_v2.json"),
-            "cura": le("cura.json"), "biblioteca": le("biblioteca.json")}
+            "cura": le("cura.json"), "biblioteca": le("biblioteca.json"), "cenarios": le("cenarios.json"), "trilha": le("trilha.json"), "revisao_trilha": le("leitura_revisao_trilha.json"),
+            # ! Alteração de IA - Revisar: (04/11/2026) a leitura da corrida 21b (`cenarios_v2.json`), lida por painel_topicos.secao_cenarios.
+            # ! Motivo: a repetição do ensaio com a correção da cura é a leitura vigente, e a aba mostra as duas corridas.
+            "cenarios_v2": le("cenarios_v2.json"),
+            # ! Alteração de IA - Revisar: (05/11/2026, P8) o relatório da fase, de onde a aba "Fechamento da fase" lê a tabela das regras e as limitações.
+            # ! Motivo: a aba do fechamento mostra o que o relatório diz, sem repetir número nenhum no código do painel.
+            "relatorio_f4": ((MEMORIAL / "3-resultados-e-analises" / "fase-4-relatorio.md").read_text(encoding="utf-8")
+                             if (MEMORIAL / "3-resultados-e-analises" / "fase-4-relatorio.md").exists() else None)}
 
 
 def main() -> None:

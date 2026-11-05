@@ -84,6 +84,12 @@ def _cel(texto) -> str:
     return " ".join(str("" if texto is None else texto).split()).replace("|", "\\|")
 
 
+# ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) `_cod`: valor declarado pelo modelo entre crases, com as crases que ele escreveu trocadas por aspas simples.
+# ! Motivo: numa frase de impacto com crases, o trecho de código do relatório quebrava no meio (na linha IMPACTO da seção 1 e na linha da árvore).
+def _cod(valor) -> str:
+    return "`" + _cel(valor).replace("`", "'") + "`"
+
+
 def _num(v, casas: int = 1) -> str:
     if v is None:
         return "não registrado"
@@ -507,7 +513,7 @@ def _resumo_do_evento(e: dict, blobs: dict) -> str:
     if tipo == "decisao":
         return f"{d.get('decisao')}: escolha {d.get('escolha')}; divergência {'sim' if (d.get('divergencia') or {}).get('ha') else 'não'}"
     if tipo == "declaracao":
-        return f"{d.get('campo')}: " + ("ausente" if d.get("ausente") else f"`{_cel(d.get('valor'))}`")
+        return f"{d.get('campo')}: " + ("ausente" if d.get("ausente") else _cod(d.get('valor')))
     if tipo == "verificacao":
         return f"{d.get('regra')}: {d.get('resultado')}" + (" (só na avaliação, ao fim desta seção)" if d.get("usa_gabarito") else "")
     if tipo == "interceptacao":
@@ -538,6 +544,18 @@ def _resumo_do_evento(e: dict, blobs: dict) -> str:
     if tipo in ("acao", "incidente", "revisao", "prompt"):
         return _cel(json.dumps({k: v for k, v in d.items() if not isinstance(v, (dict, list))}, ensure_ascii=False))[:160]
     return ""
+
+
+_EFEITO_DA_INTERVENCAO = {"remocao": ("mudou a resposta: o verbete pesou na decisão", "sem efeito medido do contexto"),
+                          "troca": ("mudou a resposta: o verbete errado pesou na decisão", "sem efeito medido do contexto"),
+                          "sem_documentacao": ("sem documentação a resposta muda: a documentação pesou na decisão", "sem documentação a resposta fica a mesma"),
+                          "repeticao_da_base": ("a resposta mudou com o mesmo prompt: variação natural", "o mesmo prompt manteve o rótulo")}
+
+
+def _efeito_da_intervencao(i: dict) -> str:
+    """O que a intervenção mediu, pelo tipo dela; um tipo desconhecido cai na frase da remoção (a forma da trilha da Pré-Fase 4)."""
+    mudou, manteve = _EFEITO_DA_INTERVENCAO.get(i.get("tipo") or "remocao", _EFEITO_DA_INTERVENCAO["remocao"])
+    return mudou if i.get("mudou_rotulo") else manteve
 
 
 def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str | None = None, pasta_blobs: Path | None = None) -> str:
@@ -587,7 +605,7 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
         d = decl.get(chave)
         if d is None or d.get("ausente"):
             return "**a linha não está na resposta**"
-        return f"`{_cel(d.get('valor'))}`"
+        return _cod(d.get('valor'))
 
     confianca = (diag or {}).get("confianca") or {}
     selo = confianca.get("selo") or "sem selo"
@@ -666,7 +684,11 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
     if podas:
         for e in podas:
             d = e["dados"]
-            linhas = [[_cel(x.get("campo")), _cel(x.get("esperado")), _cel(x.get("recebido"))] for x in d.get("diff") or []]
+            # ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) a linha do corpo que não é JSON sai com o nome "(corpo inteiro)" na coluna do campo.
+            # ! Motivo: essa linha não tem campo (avaliacao_trilha.linhas_diff_do_contrato) e a primeira coluna saía vazia, sem dizer do que a linha falava.
+            # ! Alteração de IA - Revisar: (05/11/2026, ficha 41) quando a diferença só aparece a partir do segundo item, a coluna do campo diz o item.
+            # ! Motivo: a poda passou a olhar todos os itens da lista; sem o item, a tabela afirmaria que o campo falta na lista inteira.
+            linhas = [[_cel((x.get("campo") or "(corpo inteiro)") + (f" (item {x['item']})" if x.get("item") else "")), _cel(x.get("esperado")), _cel(x.get("recebido"))] for x in d.get("diff") or []]
             evidencia += [f"Poda de `{d.get('alvo')}` (evento {e['seq']}): regras {', '.join(d.get('regras') or [])}; "
                           f"antes {_cel(json.dumps(d.get('antes'), ensure_ascii=False))}, depois {_cel(json.dumps(d.get('depois'), ensure_ascii=False))}.", ""]
             if linhas:
@@ -678,11 +700,17 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
         d = e["dados"]
         evidencia += [f"Interceptação (evento {e['seq']}): `{d.get('metodo')} {d.get('caminho')}` status {d.get('status')}; corpo `{d.get('corpo')}`, "
                       f"árvore `{d.get('arvore')}`.", ""]
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) um caso lido em texto mostra sempre como foi ao prompt: sem poda, como
+    # antes; com poda (os casos da corrida 22), antes dela, no começo da seção.
+    # ! Motivo: o texto só saía quando a trilha não tinha poda, e o P7 passou a emitir poda nos casos de texto; os 11 relatórios da amostra da
+    # corrida 22 ficaram sem o sintoma, a requisição e o contrato, e quem revisa não teria como julgar o diagnóstico.
+    texto_caso = blobs.get(entrada.get("texto")) if entrada.get("texto") else None
     if not podas and not interceptacoes and cura is None:
-        texto_caso = blobs.get(entrada.get("texto")) if entrada.get("texto") else None
         evidencia += ["Não houve interceptação nem poda nesta trilha: o caso entrou em texto." + ("" if texto_caso is None else " Como foi posto no prompt:"), ""]
         if texto_caso is not None:
             evidencia += [_bloco(texto_caso), ""]
+    elif texto_caso is not None:
+        evidencia = ["O caso, como foi posto no prompt:", "", _bloco(texto_caso), ""] + evidencia
 
     contraste = []
     no_principal = diag if diag is not None else no_cura
@@ -699,7 +727,7 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
     if cura is not None and diag is None:
         fonte = ["Não se aplica: a cura de seletor roda sem modelo; nenhum verbete foi citado.", ""]
     else:
-        fonte = [f"Linha FONTE como veio: {valor('fonte')}; verbetes citados: " + (", ".join(f"`{_cel(c.get('valor'))}`" for c in citadas) or "nenhum") + ".", ""]
+        fonte = [f"Linha FONTE como veio: {valor('fonte')}; verbetes citados: " + (", ".join(_cod(c.get('valor')) for c in citadas) or "nenhum") + ".", ""]
     conf_fonte = [v for v in sem_gabarito if str(v.get("regra", "")).startswith("fonte_") or v.get("regra") == "rotulo_sustentado_por_verbete_do_contexto"]
     if conf_fonte:
         fonte += [_tabela(["Conferência", "Sobre", "Resultado", "Evidência"],
@@ -708,10 +736,13 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
     if cura is not None and diag is None:
         pass
     elif intervencoes:
+        # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 22) o Efeito sai por tipo de intervenção (_efeito_da_intervencao) e a célula do
+        # verbete diz "não se aplica" onde a intervenção não tem verbete.
+        # ! Motivo: a tabela dizia "o verbete pesou na decisão" na inferência sem documentação, que não tem verbete, e "sem efeito medido do contexto" na
+        # repetição da base; quem revisa lê essa coluna, e o molde promete não afirmar mais do que foi medido (especificação, seção 7).
         fonte += [_tabela(["Intervenção", "Verbete", "Rótulo antes", "Rótulo depois", "p antes", "p depois", "Efeito"],
-                          [[_cel(i.get("tipo")), f"`{_cel(i.get('verbete'))}`", _cel(i.get("rotulo_antes")), _cel(i.get("rotulo_depois")),
-                            _prob(i.get("p_antes")), _prob(i.get("p_depois")),
-                            ("mudou a resposta: o verbete pesou na decisão" if i.get("mudou_rotulo") else "sem efeito medido do contexto")
+                          [[_cel(i.get("tipo")), f"`{_cel(i.get('verbete'))}`" if i.get("verbete") else "não se aplica", _cel(i.get("rotulo_antes")), _cel(i.get("rotulo_depois")),
+                            _prob(i.get("p_antes")), _prob(i.get("p_depois")), _efeito_da_intervencao(i)
                             + (" (só um limite inferior da queda: o rótulo saiu das alternativas devolvidas)" if i.get("limite_inferior") else "")]
                            for i in intervencoes]), ""]
     else:
@@ -719,7 +750,14 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
 
     campo_decl = (decl.get("campo") or {}).get("lido")
     onde = next((f"`{e['dados'].get('metodo')} {e['dados'].get('caminho')}`" for e in interceptacoes), None)
-    if cura is not None and diag is None:
+    # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) a linha de ação da cura vale sempre que a trilha tem o evento `cura`,
+    # mesmo com diagnóstico, e o campo declarado "nenhum" não vira "Confira o campo `nenhum`".
+    # ! Motivo: os casos de localizador da Fase 5 têm diagnóstico e cura; o relatório exigia não haver diagnóstico e mandava conferir o
+    # campo `nenhum` contra o contrato numa página sem contrato. Nos cenários de contrato sem campo (malformed_json, error_500) a frase
+    # também não fazia sentido.
+    if str(campo_decl or "").strip().lower() == "nenhum":
+        campo_decl = None
+    if cura is not None:
         ap = cura.get("aplicado") or {}
         if cura.get("curado"):
             acao = [f"Sugestão (o agente não altera a aplicação): no passo {cura.get('passo')} do roteiro, trocar o localizador `{_cel(cura.get('localizador'))}` por "

@@ -1,0 +1,264 @@
+{
+ "_tag": "! Alteração de IA - Revisar: registro novo (05/11/2026, pacote P8) das correções da revisão dos documentos de texto do fechamento da Fase 4.",
+ "_motivo": "! Motivo: o plano aprovado (P8) prevê um revisor por documento de texto, e as correções entram declaradas, com o trecho antigo, o novo e o motivo, para o texto continuar rastreável. Cada apontamento foi conferido no código e nos dados antes de entrar; os textos ajustados estão aqui como ficaram.",
+ "data": "2026-11-05",
+ "o_que": "Cinco revisores (Sonnet, só leitura): relatório da fase; achados 4.54 a 4.62 e fichas 42 a 45; roadmap; README e índice do Memorial; handoff e anexo do plano. O revisor confere coerência, frases desatualizadas e números sem origem; não cobre o mérito das decisões.",
+ "correcoes": [
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "| R1 | Um caso reproduz quando o roteiro falha ou o fio sai do normal, com o sinal do gabarito |",
+   "para": "| R1 | Um caso reproduz quando a chamada sai do normal ou uma conferência do roteiro falha; o plano pedia também o passo esperado e o campo do gabarito |",
+   "motivo": "A seção 3 define a R1 sem o sinal do gabarito e a seção 10 diz 'com o sinal do gabarito'. A função executar_fase4.reproduz (e o texto de avaliar_fase4.py, linha 221) só testa status, contrato, corpo, tempo, árvore e conferência do roteiro, sem olhar o campo do gabarito; o plano (seção 4, R1) pedia o campo do gabarito no diff ou no sintoma.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "A contagem é em código, sem modelo.",
+   "para": "**A regra R1, como rodou, é mais larga que o texto do plano.** (parágrafo novo na seção 3, com os números de reproducibilidade.json, e um item novo nas seções 12 e 15)",
+   "motivo": "executar_fase4.reproduz não compara o campo do gabarito; o relatório não declara essa diferença entre a R1 do plano e a R1 que rodou, e o anexo do plano também não a lista.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "O que sobra são confusões entre rótulos vizinhos.",
+   "para": "O que sobra são, na maior parte, confusões entre rótulos vizinhos; `semt-21` e `run-19` não têm essa leitura.",
+   "motivo": "tela_v2.json, casos: dos 11 erros, 9 são pares próximos (decisão 82 cita estrutura aninhada e tipo, nulo e ausente, codificação e formato de data, chave de junção e tipo), mas semt-21 e run-19 não são vizinhos; a frase generaliza para todos.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "O que diz algo sobre o modelo é o rótulo, que mudou em 17, 3 e 0 casos, respectivamente.",
+   "para": "Na tabela do seletor, o MTTR da mutada é menor que o da dourada, mas não serve para comparar: a mutada roda logo depois da dourada e aproveita o prompt em cache (roadmap §2.15).",
+   "motivo": "trilha.json, seletor, e roadmap.md §2.15 ('O MTTR do bloco não serve para comparar'): o relatório cola a tabela com as duas colunas de MTTR sem o aviso, e um leitor concluiria que a mutada cura mais rápido.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "só olha onde a probabilidade baixa ou a FONTE divergente as dispararia.",
+   "para": "e a conta só olha onde a probabilidade baixa ou a FONTE divergente (a linha da resposta em que o modelo cita os verbetes que usou) as dispararia.",
+   "motivo": "A FONTE aparece em 9.1 e 9.2 sem definição no relatório; só faz sentido para quem leu a especificação da trilha (seções 4 e 6.2).",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "Nas duas corridas os 37 prompts passaram:",
+   "para": "Nas duas corridas os 37 prompts passaram do limite:",
+   "motivo": "O mesmo ajuste da ficha 42: 'passaram' sozinho pode ser lido como 'passaram no teste'.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "O parecer acertou 11 de 11 decisões",
+   "para": "O parecer cobre os 11 relatórios, inclusive o 1, e acertou 11 de 11 decisões",
+   "motivo": "O mesmo ajuste do achado 4.62: a frase anterior fala em 10 pareceres aprovados, e a leitura conta o parecer nos 11.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md",
+   "de": "22 sem tela (as rotas de pedidos, que nenhuma página consome)",
+   "para": "22 sem tela: 20 de rotas de pedidos, que nenhuma página consome, e 2 de catálogo (`run-10`, `semt-18`), com o defeito de `selecionar_casos` declarado",
+   "motivo": "reproducibilidade.json, fora: dois casos 'sem tela' são de /api/produtos.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/achados-dos-modelos.md",
+   "de": "Os de fora são rotas de pedidos sem página, causas de efeito armadas pelo harness e `dado_desatualizado`, que não tem modo.",
+   "para": "Os de fora são rotas de pedidos sem página, causas de efeito armadas pelo harness, `dado_desatualizado`, que não tem modo, e dois casos de catálogo (`run-10`, `semt-18`) que um defeito de `selecionar_casos` deixou de fora: a requisição deles traz uma anotação entre parênteses, e a expressão não a aceita. A regra R1, como rodou, é mais larga que o texto do plano: ela não confere o campo do gabarito, e só 12 dos 37 derrubam uma conferência do roteiro. Os 37 dizem que a falha injetada muda o fio ou a tela.",
+   "motivo": "Dois dos 22 casos 'sem tela' são rotas de /api/produtos, não de pedidos (reproducibilidade.json, fora), e a causa é a expressão _ROTA_CATALOGO de executar_fase4.selecionar_casos; executar_fase4.reproduz não confere o campo do gabarito que o plano pedia (conferido no código).",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/3-resultados-e-analises/achados-dos-modelos.md",
+   "de": "O parecer acertou 11 de 11 decisões e 11 de 11 causas,",
+   "para": "O parecer do Claude, que cobre os 11 relatórios, inclusive o 1, respondido antes pelo Eric, acertou 11 de 11 decisões e 11 de 11 causas,",
+   "motivo": "A frase anterior fala em 10 pareceres aprovados e em seguida 'o parecer acertou 11 de 11'; leitura_revisao_trilha.json (parecer.n = 11, por_origem: 1 revisor + 10 parecer_aprovado) mostra que o parecer foi contado nos 11, e o leitor não vê de onde saem os 11.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/pendencias.md",
+   "de": "Na corrida 18b os 37 prompts passaram, o maior com 2034 tokens, e nos dez cenários da corrida 21b 9 de 10 passam.",
+   "para": "Na corrida 18b os 37 prompts passaram do limite, o maior com 2034 tokens, e nos dez cenários da corrida 21b 9 de 10 passam do limite.",
+   "motivo": "'Passaram' sem complemento pode ser lido como 'passaram no teste'. tela_v2.json (prompt_contra_calibracao.acima, 37 casos; maximo_da_tela 2034) mostra que todos ficaram acima de 1409.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/pendencias.md",
+   "de": "O MTTR da Fase 5 é quase todo o tempo do diagnóstico,",
+   "para": "O MTTR da Fase 5 (tempo da detecção da falha até a correção validada na reexecução) é quase todo o tempo do diagnóstico,",
+   "motivo": "MTTR aparece pela primeira vez na ficha 42 sem explicação; o formato das fichas exige termo técnico explicado na primeira menção (definição na ficha 35 e no projeto ABNT §3.4).",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/pendencias.md",
+   "de": "O agente não muda em nenhum dos dois casos, porque o prompt continua congelado.",
+   "para": "O agente não muda em nenhuma das duas opções, porque o prompt continua congelado.",
+   "motivo": "'Nenhum dos dois casos' é ambíguo: as duas opções (a) e (b) são o que a frase quer dizer, não dois casos de teste.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/pendencias.md",
+   "de": "Mudar o prompt na Fase 5 quebraria a comparação entre as etapas (projeto ABNT §3.4), então o número não mudaria nenhuma decisão até a entrega.",
+   "para": "Mudar o prompt na Fase 5 quebraria a comparação entre as etapas (projeto ABNT §3.4) e pediria nova calibração, então o número ficaria como trabalho futuro, e não como a decisão para a Fase 5 que a ficha 34 previa.",
+   "motivo": "A ficha 34 (Decisão (a), decisão 79) diz que o experimento seria reportado 'com número para a decisão na Fase 5'; afirmar que o número 'não mudaria nenhuma decisão' contradiz essa finalidade sem dizer que a finalidade mudou.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/pendencias.md",
+   "de": "A biblioteca de produção de agora (`95af35290860`) nunca foi medida em casos que ela não viu: a regra R5 mediu o lote inteiro, antes da revisão, e a corrida 22 leu os 36 casos de avaliação.",
+   "para": "A biblioteca de produção de agora (`95af35290860`) nunca foi medida em casos inéditos: a regra R5 mediu o lote inteiro (`9f3154eee72d`) nos 36 inéditos da Fase 3-B, antes de a revisão tirar as edições marcadas como erradas, e a corrida 22 leu a produção nos 36 casos de avaliação, que a Fase 3 já tinha usado.",
+   "motivo": "A corrida 22 (trilha.json resumo: 31 de 36) mediu a produção 95af35290860 em casos fora dos 54 de aprendizado, então 'nunca medida em casos que ela não viu' é mais forte que a evidência; o que falta é medida em casos inéditos (biblioteca.json: hash_do_lote 9f3154eee72d, base_ineditos corrida12; fechamento.json: hash 95af35290860, 11 mantidas de 20).",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/pendencias.md",
+   "de": "dá a única medida da biblioteca final fora dos casos que ela já viu.",
+   "para": "dá a única medida da biblioteca final em casos inéditos.",
+   "motivo": "A mesma correção do apontamento da ficha 44, na recomendação: a corrida 22 leu casos fora do aprendizado; o que falta é medida em casos inéditos.",
+   "revisor": "achados"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "(cerca de 01h24) espera o sim do Eric",
+   "para": "(cerca de 01h24) foi feita em seguida, como a corrida 18b (linha abaixo)",
+   "motivo": "A linha da corrida 18 ainda diz que a repetição espera o sim do Eric; a corrida 18b está feita (tela_v2.json, 01/11/2026 14:06 a 15:35) e a linha 18b dela mesma diz 'feita'.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "156 / cerca de 2h39 estimados",
+   "para": "158 / 16466 s medidos (campos `inferencias` e `segundos` de `biblioteca.json`; a estimativa era 156 / cerca de 2h39)",
+   "motivo": "A linha está 'feita', mas a coluna de tempo ainda traz só a estimativa; biblioteca.json resumo registra 158 inferências e 16466,1 s, como as demais corridas feitas mostram o medido.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "depois, a sessão de revisão de 12 relatórios com o Eric pela planilha",
+   "para": "depois, a sessão de revisão dos relatórios sorteados (previstos 12; a amostra saiu com 11, porque a corrida teve só 5 erros) com o Eric pela planilha",
+   "motivo": "A amostra real tem 11 relatórios (trilha.json amostra_revisao e leitura_revisao_trilha.json resumo.relatorios = 11, §2.15), não 12.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "já na tabela do §2 com estado `aguarda`",
+   "para": "já na tabela do §2 (todas com estado `feita` desde 05/11/2026)",
+   "motivo": "As corridas 16 a 22 estão todas 'feita' na tabela §2; o 'aguarda' ficou desatualizado depois do fechamento da Fase 4.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "fica o BM25 com sinais em código, com k = 5 e sinais para a classe de tradução a medir",
+   "para": "fica o BM25 com sinais em código; k = 3 pela regra R8 (corrida 16), e os sinais para a classe de tradução seguem a medir",
+   "motivo": "O §7 ainda trata k = 5 como a medir, mas a corrida 16 mediu e escolheu k = 3 (calibracao.json r8: 81,5% contra 75,7%).",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "(detecção → correção validada na reexecução)",
+   "para": "(da detecção até a correção validada na reexecução)",
+   "motivo": "Seta no texto corrido do §5; a regra de documentação do projeto proíbe → fora de código.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "MACIAK → INSTATUNNEL",
+   "para": "MACIAK trocado por INSTATUNNEL",
+   "motivo": "Seta no texto corrido do §6; a regra de documentação do projeto proíbe → fora de código.",
+   "revisor": "roadmap"
+  },
+  {
+   "arquivo": "Documentacao/memorial/roadmap.md",
+   "de": "os 35 de fora são 22 de rotas de pedidos sem página,",
+   "para": "os 35 de fora são 22 sem tela (20 de rotas de pedidos sem página e 2 de catálogo, `run-10` e `semt-18`, deixados de fora por um defeito de `selecionar_casos`, achado em 05/11/2026),",
+   "motivo": "reproducibilidade.json, fora: dois casos 'sem tela' são de /api/produtos; a expressão _ROTA_CATALOGO recusa a anotação entre parênteses da requisição.",
+   "revisor": "relatorio"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "a etapa prevista\n  para a Fase 4.",
+   "para": "a etapa implementada\n  na Fase 4.",
+   "motivo": "Tipo 2: a Fase 4 fechou em 05/11/2026; fase-4-relatorio.md e resultados_alvo/fase4/cura.json (160 execuções, 160 curadas) mostram a cura feita, e o README ainda a chama de prevista.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "no ensaio dos dez\ncenários, 10 de 10 com Task Success e MTTR médio de 105,2 s, sem linha de base manual ainda.",
+   "para": "no ensaio dos dez\ncenários, com uma repetição por cenário, 10 de 10 com Task Success (Wilson 95% de 72,2 a 100,0%; a rodada anterior deu 9 de 10, antes de um conserto na cura) e MTTR médio de 105,2 s, sem linha de base manual ainda.",
+   "motivo": "Tipo 4: cenarios_v2.json (corrida 21b) dá 10 de 10 com Wilson 72,2 a 100,0, mas cenarios.json (corrida 21) deu 9 de 10; o relatório da fase (seção 8) declara uma repetição por cenário e intervalos largos, e o README só traz o resultado melhor sem o intervalo.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "depois de preenchida.; `--revisao`",
+   "para": "depois de preenchida; `--revisao`",
+   "motivo": "Tipo 5: ponto e vírgula colado ao ponto, erro de redação.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "e não sai enquanto houver relatório em branco.",
+   "para": "e não sai enquanto houver relatório em branco; ela separa a resposta própria do revisor dos pareceres do Claude aprovados sem resposta própria e sem tempo medido (decisões 85 e 86), e por isso não cumpre a medida com revisor humano (decisão 87).",
+   "motivo": "Tipo 2: leitura_revisao_trilha.md (blocos tb_f4_revisao_origem e tb_f4_revisao_parecer) e as decisões 85 a 87 mostram que só 1 de 11 relatórios tem resposta humana; a linha de avaliar_fase4.py descreve --revisao como se medisse adesão do revisor sobre todos.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "trecho em disputa.; desde 05/11/2026",
+   "para": "trecho em disputa; desde 05/11/2026",
+   "motivo": "Tipo 5: ponto e vírgula colado ao ponto, erro de redação.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "(93 testes)",
+   "para": "(97 testes)",
+   "motivo": "Tipo 1: testar_fase4.py tem 97 funções teste_ (contadas por script, as que o main executa); o README diz 93, número anterior ao conserto da poda e aos quatro testes do P8.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "Trabalho futuro do AgenteCore, centenas de MB",
+   "para": "Usados pelo AgenteCore desde a Fase 4, centenas de MB",
+   "motivo": "Tipo 2: o Chromium do Playwright já é instalado e usado pelas corridas 17 a 22 (resultados_alvo/fase4/ambiente.json, cenarios_v2.json com navegador 156.0.8078.4); não é mais trabalho futuro.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "(Fases 2-A, 2-B,\n3 e 3-B), as ferramentas",
+   "para": "(Fases 2-A, 2-B,\n3, 3-B e 4), as ferramentas",
+   "motivo": "Tipo 2: a Fase 4 (o agente na tela) está concluída e tem script, testes e resultados em experimentos/ e resultados_alvo/fase4/; a introdução lista só as fases até a 3-B.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "README.md",
+   "de": "(Fases 2-A, 2-B, 3 e 3-B) e os registros",
+   "para": "(Fases 2-A, 2-B, 3, 3-B e 4) e os registros",
+   "motivo": "Tipo 2: experimentos/ guarda os módulos da Fase 4 (executar_fase4.py, avaliar_fase4.py, testar_fase4.py) e resultados_alvo/fase4/; a árvore para na 3-B.",
+   "revisor": "readme"
+  },
+  {
+   "arquivo": "claude-memoria/plano-aprovado-fase-4.md",
+   "de": "| Cobaias descritas pelo código (seção 1.3) | PHP e MariaDB não existiam nesta máquina; instalados sem administrador, e `install.py` passou a cobrir esse caminho | Roadmap §1 |",
+   "para": "| Cobaias descritas pelo código (seção 1.3) | PHP e MariaDB não existiam nesta máquina; instalados sem administrador, e `install.py` passou a cobrir esse caminho | Roadmap §1 |\n| Corrida 22: mutações (P7 e seção 8: 108, três por caso) | Duas por caso (verbete trocado e contrato alterado) e a do seletor por roteiro, nos 4 do front legado, com 8 inferências; as de contrato sem alvo não rodam | Roadmap §2.15; livro-razão, P7 desenhado |\n| Regra R1: o roteiro falha no passo esperado e o caso ao vivo traz o campo do gabarito (seção 5) | Rodou mais larga: a chamada sai do normal (status, contrato, tempo, corpo ou árvore diferentes da referência) ou uma conferência falha, e `executar_fase4.reproduz` não confere o campo do gabarito. Só 12 dos 37 casos derrubam uma conferência | Relatório, seção 3; roadmap §2.8 |\n| Seleção dos casos da corrida 17 | `run-10` e `semt-18`, de catálogo, ficaram de fora como \"sem tela\": a requisição deles traz uma anotação entre parênteses, e `_ROTA_CATALOGO` não a aceita. Achado no fechamento; a corrida não foi repetida e o código não mudou | Relatório, seção 3 |",
+   "motivo": "O anexo só registrava a contagem final da corrida 22, não a mudança de desenho das mutações (revisor); a regra R1 e a seleção dos casos apareceram na revisão do relatório e foram conferidas no código.",
+   "revisor": "handoff"
+  }
+ ],
+ "nao_aplicadas": [
+  {
+   "arquivo": "claude-memoria/contexto/2026-11-05-fase-4-fechada.md",
+   "de": "Regerado, testado e republicado no mesmo endereço, https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN.",
+   "para": "Regerado e testado; a republicação no mesmo endereço, https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN, é o último passo do fechamento (trocar para \"republicado\" só depois de feita).",
+   "motivo": "Tipo 4: a republicação do painel ainda não aconteceu quando o handoff foi revisado, mas o texto a dá como feita.",
+   "revisor": "handoff",
+   "motivo_de_nao_aplicar": "O texto do handoff passa a ser verdade no último passo do fechamento, antes de o Eric ler: o painel foi republicado depois da revisão."
+  },
+  {
+   "arquivo": "claude-memoria/contexto/2026-11-05-fase-4-fechada.md",
+   "de": "com as correções em `Documentacao/memorial/5-metodo-e-ferramental/dados/revisao-fase-4-2026-11-05.json`",
+   "para": "com as correções a gravar em `Documentacao/memorial/5-metodo-e-ferramental/dados/revisao-fase-4-2026-11-05.json` (o arquivo nasce no fechamento das correções)",
+   "motivo": "Tipo 4: o arquivo não existe ainda (a pasta dados/ só tem medicao-permanencia-mcp.json, revisao-pre-fase-4-2026-10-26.json e revisao-tcc-v1-2026-11-03.json); o handoff o cita como existente.",
+   "revisor": "handoff",
+   "motivo_de_nao_aplicar": "O arquivo é este registro, gravado no fechamento das correções."
+  }
+ ]
+}

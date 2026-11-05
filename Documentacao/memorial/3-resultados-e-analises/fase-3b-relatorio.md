@@ -27,6 +27,7 @@ A análise decisória (§9) fechou a Fase 3 com sete limitações declaradas. A 
 | `fase3b_ponte` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.1 | 0 | L0=3196327e7fd5 | 21/09 14:24 | 21/09 18:35 |
 | `fase3b_ponte_0344` | ponte | qwen2.5-coder:3b, qwen2.5-coder:7b, qwen2.5:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5 | 30/09 20:39 | 30/09 22:25 |
 | `fase3b_ponte_0402` | ponte | qwen2.5-coder:7b, qwen2.5:7b | 72 | 0.40.2 | 0 | L0=3196327e7fd5 | 23/10 08:04 | 23/10 09:25 |
+| `fase3b_ponte_04014` | ponte | qwen2.5:7b | 36 | 0.40.14 | 0 | L0=3196327e7fd5 | 03/11 17:59 | 03/11 18:41 |
 | `fase3b_ineditos` | ineditos | qwen2.5-coder:3b, qwen2.5:7b | 216 | 0.34.1 | 0 | L0=3196327e7fd5; L1=3394d203cab9; L1=53ccf19abeac; L3=71258b553152; L3=d9a86e383103 | 28/09 20:13 | 28/09 23:15 |
 | `fase3b_cruzada_qwen` | cruzada | qwen2.5-coder:3b, qwen2.5-coder:7b | 144 | 0.34.4 | 0 | L1=3394d203cab9; L3=71258b553152 | 30/09 23:58 | 01/10 02:09 |
 | `fase3b_ineditos_coder7b` | ineditos | qwen2.5-coder:7b | 108 | 0.34.4 | 0 | L0=3196327e7fd5; L1=0f0a6b7f3b37; L3=2b7c441cb9e3 | 06/10 10:26 | 06/10 12:45 |
@@ -51,6 +52,7 @@ A ponte repete a biblioteca original (L0) nos 36 casos de avaliação, com o mes
 | 0.34.4 | `qwen2.5:7b` | 75,0% (58,9 a 86,2) | 79,6% | 0 | 1 | 1,0000 | nenhum | `tra-4` | sim | 0 / 1 | `efe-3` |
 | 0.40.2 | `qwen2.5-coder:7b` | 77,8% (61,9 a 88,3) | 81,7% | 1 | 0 | 1,0000 | `efe-3` | nenhum | sim | 0 / 0 | `efe-3` |
 | 0.40.2 | `qwen2.5:7b` | 80,6% (65,0 a 90,2) | 83,8% | 1 | 0 | 1,0000 | `sin-14` | nenhum | sim | 1 / 0 | `efe-3` |
+| 0.40.14 | `qwen2.5:7b` | 80,6% (65,0 a 90,2) | 83,8% | 1 | 0 | 1,0000 | `sin-14` | nenhum | sim | 1 / 0 | `efe-3` |
 <!-- /tabela:tb_pontes -->
 
 <!-- tabela:tb_ruido -->
@@ -59,9 +61,13 @@ A ponte repete a biblioteca original (L0) nos 36 casos de avaliação, com o mes
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.34.1 | 2 | 2 | 1 | 1 | 3 | `sin-14`, `tra-10` |
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.34.4 | 1 | 1 | 0 | 1 | 3 | `tra-4` |
 | `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.40.2 | 1 | 1 | 1 | 0 | 2 | `sin-14` |
+| `qwen2.5:7b` | Fase 3 (0.34.0) | ponte 0.40.14 | 1 | 1 | 1 | 0 | 2 | `sin-14` |
 | `qwen2.5:7b` | ponte 0.34.1 | ponte 0.34.4 | 3 | 3 | 1 | 2 | 3 | `sin-14`, `tra-10`, `tra-4` |
 | `qwen2.5:7b` | ponte 0.34.1 | ponte 0.40.2 | 1 | 1 | 1 | 0 | 1 | `tra-10` |
+| `qwen2.5:7b` | ponte 0.34.1 | ponte 0.40.14 | 1 | 1 | 1 | 0 | 1 | `tra-10` |
 | `qwen2.5:7b` | ponte 0.34.4 | ponte 0.40.2 | 2 | 2 | 2 | 0 | 2 | `sin-14`, `tra-4` |
+| `qwen2.5:7b` | ponte 0.34.4 | ponte 0.40.14 | 2 | 2 | 2 | 0 | 2 | `sin-14`, `tra-4` |
+| `qwen2.5:7b` | ponte 0.40.2 | ponte 0.40.14 | 0 | 0 | 0 | 0 | 0 | nenhum |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.34.1 | 0 | 0 | 0 | 0 | 1 | nenhum |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.34.4 | 4 | 3 | 3 | 1 | 4 | `efe-3`, `semt-14`, `sin-14`, `tra-11` |
 | `qwen2.5-coder:7b` | Fase 3 (0.34.0) | ponte 0.40.2 | 1 | 0 | 1 | 0 | 1 | `efe-3` |
@@ -167,7 +173,7 @@ Leitura:
 O Ollama passou de 0.34.4 (corridas de 06/10) para 0.40.2. Antes da repetição rodou a ponte de versão (corrida 14, `resultados_alvo/fase3b_ponte_0402/`, 23/10 08:05 a 09:25): L0 nos 36 oficiais com o `qwen2.5-coder:7b` e o `qwen2.5:7b`. Os dois ficaram pareáveis com a Fase 3 (bloco `tb_pontes`, §3): b/c 1/0 nos dois e, sem o caso de texto corrigido, 0/0 no Coder e 1/0 no qwen; a maior variação entre corridas iguais de L0 com a mesma entrada continua em 3 casos (bloco `tb_ruido`). Na corrida 15 (`resultados_alvo/fase3b_ineditos_repeticao/`, 23/10 09:29 a 11:01) os dois modelos repetiram os 36 inéditos com a L1 de cada um, numa corrida só.
 
 <!-- tabela:tb_repeticao -->
-| Modelo | Biblioteca (a de cada um) | Acerto na repetição (IC 95%) | Acerto na corrida original | Contra a original: b (só a repetição) / c (só a original) | p (McNemar) | Rótulos que mudaram | Passaram a certos | Passaram a errados | Pareável pela ponte mais recente | s por diagnóstico (mediana) |
+| Modelo | Biblioteca (a de cada um) | Acerto na repetição (IC 95%) | Acerto na corrida original | Contra a original: b (só a repetição) / c (só a original) | p (McNemar) | Rótulos que mudaram | Passaram a certos | Passaram a errados | Pareável pela ponte da versão em que rodou | s por diagnóstico (mediana) |
 |---|---|---|---|---|---|---|---|---|---|---|
 | `qwen2.5-coder:7b` | L1 | 83,3% (68,1 a 92,1) | 86,1% | 0 / 1 | 1,0000 | 3 | nenhum | `lex-19` | sim (0.40.2) | 74,5 |
 | `qwen2.5:7b` | L1 | 72,2% (56,0 a 84,2) | 72,2% | 0 / 0 | 1,0000 | 1 | nenhum | nenhum | sim (0.40.2) | 75,2 |
