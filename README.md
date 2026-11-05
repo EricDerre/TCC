@@ -139,6 +139,8 @@ vêm dos registros em `resultados_alvo/` e do Memorial.
 
 <!-- ! Alteração de IA - Revisar: a lista abaixo ganhou o item da cópia no repositório da disciplina (22/10/2026, decisão 72).
      ! Motivo: o orientador passou a acompanhar o TCC por um repositório próprio, e quem lê este README precisa saber que aquele é cópia, que este é o principal e qual script mantém os dois iguais. -->
+<!-- ! Alteração de IA - Revisar: (05/11/2026) a lista abaixo ganhou o item do documento do TCC: a fonte em Markdown e o .docx da versão 2.
+     ! Motivo: o README não citava o documento desde a versão 1, de 03/11/2026; quem chegava ao repositório por esta lista achava o projeto de pesquisa, mas não o texto do TCC. O Eric disse sim ao acréscimo em 05/11/2026. -->
 ## Documentação
 
 - [Painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN): estado por fase, pendências, roadmap e os resultados, numa página só; gerado por `ferramentas/gerar_dashboard.py`.
@@ -146,6 +148,7 @@ vêm dos registros em `resultados_alvo/` e do Memorial.
 - [Roadmap](Documentacao/memorial/roadmap.md) e [pendências](Documentacao/memorial/pendencias.md): o que falta rodar e as decisões, em fichas.
 - [Relatório da Fase 4](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md): o agente na tela, corrida a corrida, as regras R1 a R8, as limitações declaradas e o que o documento do TCC precisa carregar.
 - [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
+- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) e o [.docx da versão 2](Documentacao/TCC_v2_20261105.docx), de 05/11/2026, gerado a partir dele por `ferramentas/gerar_tcc_docx.py` no molde do orientador: texto provisório, com a Fase 4 até a corrida 22, à espera da leitura do grupo e dos números das corridas 18c, 21c, 23 e 24. O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho.
 - Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
 - Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório, sem a `.claude/` nem a `.venv` da CobaiaAPI, na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
 
