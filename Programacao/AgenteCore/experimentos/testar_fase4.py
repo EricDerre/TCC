@@ -4613,22 +4613,22 @@ def teste_avaliar_fase4_o_relatorio_guarda_so_a_leitura_vigente_de_cada_prefixo(
     import io
     import avaliar_fase4 as av
     assert av.LEITURA_NO_RELATORIO[av.PREFIXO] == "reproducibilidade"
-    assert av.LEITURA_NO_RELATORIO[av.PREFIXO_TELA] == "tela_v2" and av.LEITURA_NO_RELATORIO[av.PREFIXO_CENARIOS] == "cenarios_v2"
+    assert av.LEITURA_NO_RELATORIO[av.PREFIXO_TELA] == "tela_v4" and av.LEITURA_NO_RELATORIO[av.PREFIXO_CENARIOS] == "cenarios_v4"   # (06/11/2026) a 18d e a 21d passaram a valer (decisões 97 e 98)
     pasta = _temp()
     doc = pasta / "relatorio.md"
     prefixo = av.PREFIXO_TELA
     nome_bloco = f"{prefixo}resumo"
     original = f"# relatório\n\n<!-- tabela:{nome_bloco} -->\n<!-- /tabela:{nome_bloco} -->\n"
     doc.write_text(original, encoding="utf-8", newline="\n")
-    md_18, md_18b = _bloco_de_teste(prefixo, "corrida 18"), _bloco_de_teste(prefixo, "corrida 18b")
-    dado_18, dado_18b = {"metadados": {}, "corrida": "18"}, {"metadados": {}, "corrida": "18b"}
+    md_18, md_18c = _bloco_de_teste(prefixo, "corrida 18"), _bloco_de_teste(prefixo, "corrida 18c")
+    dado_18, dado_18c = {"metadados": {}, "corrida": "18"}, {"metadados": {}, "corrida": "18c"}
     silencio = io.StringIO()
     with contextlib.redirect_stdout(silencio):
         assert av.fechar_no_relatorio("tela", dado_18, md_18, prefixo, pasta=pasta, doc=doc) == 0
-        assert av.fechar_no_relatorio("tela_v2", dado_18b, md_18b, prefixo, pasta=pasta, doc=doc) == 0
+        assert av.fechar_no_relatorio("tela_v4", dado_18c, md_18c, prefixo, pasta=pasta, doc=doc) == 0
     assert doc.read_text(encoding="utf-8") == original, "gravar a leitura não mexe no relatório"
     # colar: só a leitura vigente, e só com a corrida dela
-    for nome, md, trecho in (("tela", md_18, "tela_v2"), ("tela_v2", md_18, "tela_v2.md")):
+    for nome, md, trecho in (("tela", md_18, "tela_v4"), ("tela_v4", md_18, "tela_v4.md")):
         try:
             with contextlib.redirect_stdout(silencio):
                 av.fechar_no_relatorio(nome, dado_18, md, prefixo, colar=True, pasta=pasta, doc=doc)
@@ -4638,22 +4638,22 @@ def teste_avaliar_fase4_o_relatorio_guarda_so_a_leitura_vigente_de_cada_prefixo(
             raise AssertionError(f"--colar de {nome} com a corrida 18 devia recusar")
         assert doc.read_text(encoding="utf-8") == original, "a recusa não mexe no relatório"
     with contextlib.redirect_stdout(silencio):
-        assert av.fechar_no_relatorio("tela_v2", dado_18b, md_18b, prefixo, colar=True, pasta=pasta, doc=doc) == 0
-    assert "corrida 18b" in doc.read_text(encoding="utf-8")
+        assert av.fechar_no_relatorio("tela_v4", dado_18c, md_18c, prefixo, colar=True, pasta=pasta, doc=doc) == 0
+    assert "corrida 18c" in doc.read_text(encoding="utf-8")
     # check: a vigente confere os blocos, e a outra confere só os arquivos dela
     saida = io.StringIO()
     with contextlib.redirect_stdout(saida):
-        assert av.fechar_no_relatorio("tela_v2", dado_18b, md_18b, prefixo, check=True, pasta=pasta, doc=doc) == 0
+        assert av.fechar_no_relatorio("tela_v4", dado_18c, md_18c, prefixo, check=True, pasta=pasta, doc=doc) == 0
         assert av.fechar_no_relatorio("tela", dado_18, md_18, prefixo, check=True, pasta=pasta, doc=doc) == 0
-    assert "são da leitura tela_v2" in saida.getvalue(), saida.getvalue()
+    assert "são da leitura tela_v4" in saida.getvalue(), saida.getvalue()
     with contextlib.redirect_stdout(silencio):
         assert av.fechar_no_relatorio("tela", {"metadados": {}, "corrida": "outra"}, md_18, prefixo, check=True, pasta=pasta, doc=doc) == 1, "a leitura antiga ainda confere o próprio JSON"
-        (pasta / "tela_v2.md").write_text(md_18, encoding="utf-8", newline="\n")
-        assert av.fechar_no_relatorio("tela_v2", dado_18b, md_18b, prefixo, check=True, pasta=pasta, doc=doc) == 1
-    (pasta / "tela_v2.md").write_text(md_18b, encoding="utf-8", newline="\n")
-    doc.write_text(doc.read_text(encoding="utf-8").replace("corrida 18b", "corrida 18"), encoding="utf-8", newline="\n")
+        (pasta / "tela_v4.md").write_text(md_18, encoding="utf-8", newline="\n")
+        assert av.fechar_no_relatorio("tela_v4", dado_18c, md_18c, prefixo, check=True, pasta=pasta, doc=doc) == 1
+    (pasta / "tela_v4.md").write_text(md_18c, encoding="utf-8", newline="\n")
+    doc.write_text(doc.read_text(encoding="utf-8").replace("corrida 18c", "corrida 18"), encoding="utf-8", newline="\n")
     with contextlib.redirect_stdout(silencio):
-        assert av.fechar_no_relatorio("tela_v2", dado_18b, md_18b, prefixo, check=True, pasta=pasta, doc=doc) == 1, "bloco colado da corrida errada aparece no --check"
+        assert av.fechar_no_relatorio("tela_v4", dado_18c, md_18c, prefixo, check=True, pasta=pasta, doc=doc) == 1, "bloco colado da corrida errada aparece no --check"
 
 
 def teste_avaliar_fase4_main_leva_o_nome_pedido_ao_colar_das_tres_leituras_com_duas_corridas():
@@ -4671,7 +4671,7 @@ def teste_avaliar_fase4_main_leva_o_nome_pedido_ao_colar_das_tres_leituras_com_d
         av.render = lambda dado, titulo: ""
         av.ler_tela = lambda saida: {"tela": [{}], "fixture": [], "casos": [], "por_caso": {}, "trilha_info": {}, "calibracao": {}, "condicoes": {}}
         av.resumir_tela = lambda *a, **k: {}
-        av.render_tela = lambda dado: ""
+        av.render_tela = lambda dado, titulo: ""
         for args, esperado in ((["--cenarios", "--saida", "fase4_ensaio_v2", "--nome", "cenarios_v2", "--colar"], ("cenarios_v2", av.PREFIXO_CENARIOS, True)),
                                (["--tela", "--saida", "fase4_tela_v2", "--nome", "tela_v2", "--colar"], ("tela_v2", av.PREFIXO_TELA, True)),
                                (["--reproducao", "--saida", "fase4_reproducao", "--colar"], ("reproducibilidade", av.PREFIXO, True)),
@@ -4715,8 +4715,9 @@ def teste_relatorio_da_fase_tem_os_blocos_da_leitura_vigente():
         print("  (sem o relatório da fase ou sem resultados_alvo/fase4 nesta máquina: teste pulado)")
         return
     no_relatorio = a3b.blocos_de(av.RELATORIO.read_text(encoding="utf-8"))
-    leituras = {av.PREFIXO: "reproducibilidade", av.PREFIXO_CALIBRACAO: "calibracao", av.PREFIXO_TELA: "tela_v2", av.PREFIXO_CURA: "cura", av.PREFIXO_BIBLIOTECA: "biblioteca",
-                av.PREFIXO_CENARIOS: "cenarios_v2", av.PREFIXO_TRILHA: "trilha", av.PREFIXO_REVISAO: "leitura_revisao_trilha"}
+    # (05/11/2026) a tela e os cenários seguem a leitura vigente de `LEITURA_NO_RELATORIO` (decisão 90), e o experimento da corrida 23 entra na conta (decisão 91)
+    leituras = {av.PREFIXO: "reproducibilidade", av.PREFIXO_CALIBRACAO: "calibracao", av.PREFIXO_TELA: av.LEITURA_NO_RELATORIO[av.PREFIXO_TELA], av.PREFIXO_CURA: "cura", av.PREFIXO_BIBLIOTECA: "biblioteca",
+                av.PREFIXO_CENARIOS: av.LEITURA_NO_RELATORIO[av.PREFIXO_CENARIOS], av.PREFIXO_TRILHA: "trilha", av.PREFIXO_REVISAO: "leitura_revisao_trilha", "tb_f4_exp_": "experimento_prompt"}
     for prefixo, nome in leituras.items():
         gerados = a3b.blocos_de((pasta / f"{nome}.md").read_text(encoding="utf-8"))
         assert gerados, nome
@@ -5023,6 +5024,42 @@ def teste_corte_conferencia_diz_se_o_verbete_da_causa_certa_ficou_no_contexto():
     assert cc.linha_do_caso("d", "x", [], [], "xx", 2, [])["ouro_antes"] is None, "sem gabarito, sem conta"
 
 
+# ! Alteração de IA - Revisar: (06/11/2026) a conferência sem modelo diz, caso a caso, se o prompt ficou igual ao guardado na corrida.
+# ! Motivo: o teto nas listas do caso ao vivo só vale sem corrida nova se os prompts das corridas 18d e 21d não mudarem, e isso precisa sair de uma comparação byte a byte.
+def teste_corte_conferencia_diz_se_o_prompt_ficou_igual():
+    import conferir_corte_tela as cc
+    igual = cc.linha_do_caso("a@tela", "abc", [], [], "abc", 2, [])
+    diferente = cc.linha_do_caso("b@tela", "abd", [], [], "abc", 2, [])
+    assert igual["prompt_igual"] is True and diferente["prompt_igual"] is False
+    r = cc.resumir([igual, diferente], 1409)
+    assert r["prompt_igual"] == 1 and r["prompt_diferente"] == ["b@tela"]
+    assert set(cc.CORRIDAS_DE_ANTES) == {"18d", "18e", "21d"} and cc.ARQUIVO == "teto_prompt_tela.json"
+
+
+# ! Alteração de IA - Revisar: (06/11/2026) a conferência mede com o próprio Ollama os prompts que mudaram de tamanho, sem cache e sem gerar resposta.
+# ! Motivo: a estimativa pela razão de tokens por caractere exagerou em `semt-27`: disse 1447, e o medido foi 1367, porque o texto que saiu tinha mais tokens por caractere que o resto do prompt. O número que vai para o documento precisa ser o medido.
+def teste_corte_conferencia_mede_os_tokens_sem_cache_e_so_nos_prompts_que_mudaram():
+    import conferir_corte_tela as cc
+    pedidos = []
+
+    def post_de_teste(rota, corpo):
+        pedidos.append((rota, corpo))
+        return {"prompt_eval_count": 7}
+
+    original = cc.co._post
+    cc.co._post = post_de_teste
+    try:
+        assert cc.medir_tokens("abc") == 7
+        rota, corpo = pedidos[0]
+        assert rota == "/api/generate" and corpo["keep_alive"] == 0 and corpo["options"]["num_predict"] == 1 and corpo["options"]["num_ctx"] == cc.co.NUM_CTX and corpo["options"]["num_gpu"] == 0, corpo
+        linhas = [cc.linha_do_caso("a", "xx", [], [], "xxx", 3, []), cc.linha_do_caso("b", "yyy", [], [], "yyy", 3, []), cc.linha_do_caso("c", "zzz", [], [], "zzy", 3, [])]
+        cc.medir_os_que_mudaram_de_tamanho(linhas, {"a": "xx", "b": "yyy", "c": "zzz"})
+        assert [l.get("tokens_medidos") for l in linhas] == [7, None, None], linhas
+        assert len(pedidos) == 2, "só mede o prompt que mudou de tamanho; o resto só muda o tempo medido na hora"
+    finally:
+        cc.co._post = original
+
+
 def teste_corte_conferencia_compara_com_o_fixture_e_acha_o_prompt_de_cada_corrida():
     import conferir_corte_tela as cc
     a = cc.linha_do_caso("a@tela", "x", ["campo_ausente"], ["campo_ausente"], "xx", 2, ["v1"], causa="campo_ausente", ids_fixture=["campo_ausente", "v2"])
@@ -5032,6 +5069,9 @@ def teste_corte_conferencia_compara_com_o_fixture_e_acha_o_prompt_de_cada_corrid
     guardados = {"contrato-x#1": ["v1"], "lex-1@tela": ["v2"], "localizador-y@cenario": ["v3"]}
     assert cc.verbetes_do_caso(guardados, "contrato-x#1@tela") == ["v1"] and cc.verbetes_do_caso(guardados, "lex-1@tela") == ["v2"]
     assert cc.verbetes_do_caso(guardados, "localizador-y@cenario") == ["v3"] and cc.verbetes_do_caso(guardados, "outro@tela") == []
+    # ! Alteração de IA - Revisar: (06/11/2026) o cenário de localizador tem o id `localizador-z@cenario` no caso e `localizador-z#1` na trilha.
+    # ! Motivo: a conferência não achava o prompt guardado desses quatro cenários e dizia que o verbete certo não estava lá: "de 1 para 9 dos 10 cenários", quando o medido nos registros é de 5 para 9.
+    assert cc.verbetes_do_caso({"localizador-z#1": ["v4"], "localizador-zz#1": ["v5"]}, "localizador-z@cenario") == ["v4"], "o id da trilha leva o número da repetição"
 
 
 # ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) testes das corridas em texto: o experimento dos itens da decisão 55 (corrida
@@ -5129,6 +5169,7 @@ def teste_corrida23_resumo_compara_com_a_corrida_16_caso_a_caso():
     assert e["tokens_entrada_mediana"] == 1050.0 and e["avaliacao"]["n"] == 3 and e["avaliacao"]["acertos"] == 2, e
     r = next(x for x in d["por_condicao"] if x["condicao"] == "rotulos_por_extenso")
     assert r["n"] == 2 and r["completo"] is False and r["fora_do_conjunto"] == 1 and r["forma"] == {"oficial": 0, "por_extenso": 1, "outra": 1}, r
+    assert ct._mediana([1.111, 1.114]) == 1.11, "a mediana sai em duas casas: na corrida 23 a leitura imprimiu 55,364999999999995"
     md = ct.render_experimento(d)
     for bloco in ("tb_f4_exp_resumo", "tb_f4_exp_mudaram"):
         assert f"<!-- tabela:{bloco} -->" in md, bloco
@@ -5150,6 +5191,26 @@ def teste_corrida23_diagnostico_de_uma_condicao_grava_o_registro_oficial():
     assert chamadas[0].get("logprobs") is True, "como na corrida 16"
 
 
+# ! Alteração de IA - Revisar: (06/11/2026) a leitura da corrida 24 separa o acerto com e sem o verbete certo no contexto e compara com o lado escrito e com a tela da corrida 18e.
+# ! Motivo: a corrida mostrou 18 de 20 com o verbete certo e 7 de 16 sem ele, e os mesmos 25 casos já tinham sido lidos em texto na 18e; os dois números precisam sair da leitura, com `--check`, e não de uma conta à parte.
+def teste_corrida24_separa_o_verbete_certo_e_compara_com_a_corrida_18e():
+    import corridas_em_texto as ct
+    casos = [{"id": "lex-22", "classe": 1, "nivel": 1, "gabarito": {"causa_raiz": "corpo_vazio"}}, {"id": "sin-22", "classe": 2, "nivel": 1, "gabarito": {"causa_raiz": "campo_ausente"}},
+             {"id": "efe-22", "classe": 6, "nivel": 3, "gabarito": {"causa_raiz": "localizador_quebrado"}}]
+    regs = [_registro_em_texto("lex-22", "CAUSA_RAIZ: corpo_vazio"), _registro_em_texto("sin-22", "CAUSA_RAIZ: tipo_divergente"), _registro_em_texto("efe-22", "CAUSA_RAIZ: localizador_quebrado")]
+    linhas = [{"caso": "lex-22", "p_rotulo": .99, "selo": "alto", "verbetes_ids": ["corpo_vazio"]}, {"caso": "sin-22", "p_rotulo": .5, "selo": "baixo", "verbetes_ids": ["tipo_divergente"]},
+              {"caso": "efe-22", "p_rotulo": .9, "selo": "medio", "verbetes_ids": ["campo_ausente"]}]
+    tela = [{"caso": "lex-22", "rotulo_fixture": "corpo_vazio", "acerto_fixture": True, "acerto_tela": True}, {"caso": "sin-22", "rotulo_fixture": "campo_ausente", "acerto_fixture": True, "acerto_tela": False}]
+    d = ct.resumir_ineditos(regs, linhas, casos, {}, corrida="x", lado_escrito=tela)
+    assert d["verbete_certo"] == {"presente": {"casos": 1, "acertos": 1}, "ausente": {"casos": 2, "acertos": 1}}, d["verbete_certo"]
+    assert d["lado_escrito_18e"] == {"casos": 2, "mesmo_rotulo": 1, "acertos_aqui": 1, "acertos_escrito": 2, "acertos_tela": 1, "rotulo_diferente": ["sin-22"]}, d["lado_escrito_18e"]
+    md = ct.render_ineditos(d)
+    for bloco in ("tb_f4_ineditos_verbete", "tb_f4_ineditos_18e"):
+        assert f"<!-- tabela:{bloco} -->" in md, bloco
+    sem = ct.resumir_ineditos(regs, linhas, casos, {}, corrida="x")
+    assert sem["lado_escrito_18e"] is None and "<!-- tabela:tb_f4_ineditos_18e -->" in ct.render_ineditos(sem), "sem a 18e, o bloco diz que não há leitura"
+
+
 def teste_corrida24_resumo_le_o_gabarito_so_na_leitura():
     import corridas_em_texto as ct
     casos = [{"id": "lex-22", "classe": 1, "nivel": 1, "gabarito": {"causa_raiz": "corpo_vazio"}}, {"id": "sin-22", "classe": 2, "nivel": 1, "gabarito": {"causa_raiz": "campo_ausente"}},
@@ -5169,6 +5230,297 @@ def teste_corrida24_resumo_le_o_gabarito_so_na_leitura():
     assert "—" not in md and "→" not in md
 
 
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a regra R2 conta os casos que a tela perde para o caso escrito (c até 3), com b e a soma ao lado.
+# ! Motivo: a regra se chama "a tela não piora", e a conta b + c penalizava a tela que passa à frente do caso escrito. A leitura foi fixada pelo Eric antes da corrida 18d, sem conhecer o resultado dela; nas corridas 18, 18b e 18c nada muda, porque c foi 16, 7 e 5.
+def _resumo_r2_de_teste(pares):
+    import avaliar_fase4 as av
+    casos = [{"id": f"x{i}", "classe": 1, "nivel": 1, "gabarito": {"causa_raiz": "campo_ausente"}} for i in range(len(pares))]
+
+    def reg(i, certo):
+        return {"caso": f"x{i}@tela", "resposta": f"CAUSA_RAIZ: {'campo_ausente' if certo else 'tipo_divergente'}", "verbetes_ids": [], "tokens_entrada": 1000, "segundos": 50.0}
+
+    tela = [reg(i, a) for i, (a, _) in enumerate(pares)]
+    fixture = [reg(i, b) for i, (_, b) in enumerate(pares)]
+    return av.resumir_tela(tela, fixture, casos, [], gerado_em="2026-11-06T10:00:00", corrida="x")
+
+
+def teste_avaliar_fase4_regra_r2_conta_o_que_a_tela_perde():
+    import avaliar_fase4 as av
+    melhor = _resumo_r2_de_teste([(True, False)] * 5 + [(False, True)] * 1 + [(True, True)] * 4)
+    r = melhor["resumo"]
+    assert (r["b"], r["c"], r["discordantes"]) == (5, 1, 6)
+    assert r["dentro_do_limite_r2"] is True, "a tela à frente do caso escrito não reprova a regra"
+    assert r["dentro_pela_soma"] is False, "a conta antiga continua à vista"
+    no_limite = _resumo_r2_de_teste([(False, True)] * 3 + [(True, True)] * 4)["resumo"]
+    assert no_limite["c"] == 3 and no_limite["dentro_do_limite_r2"] is True and no_limite["dentro_pela_soma"] is True
+    acima = _resumo_r2_de_teste([(False, True)] * 4 + [(True, True)] * 4)["resumo"]
+    assert acima["c"] == 4 and acima["dentro_do_limite_r2"] is False
+    md = av.render_tela(melhor)
+    assert "decisão 98" in md and "b + c" in md and "—" not in md
+
+
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a chave que volta a busca do caso ao vivo à da corrida 18c.
+# ! Motivo: se a regra não fechar, o agente volta mudando uma linha, sem perder as decisões registradas nem a leitura da regra; restaurar os arquivos do ponto seguro apagaria as duas dos documentos.
+def teste_busca_a_chave_do_ponto_seguro_desliga_os_sinais():
+    import caso_ao_vivo as cv
+    a = {"id": 1, "nome": "Água Mineral", "tipo": "Bebidas", "preco": 6.0, "destaque": False}
+    b = {"id": 2, "nome": "Picanha", "tipo": "Carnes", "preco": 89.9, "destaque": True}
+    assert cv.SINAIS_DA_REFERENCIA_NA_BUSCA is True, "a busca nova é a que está valendo"
+    assert _fenomenos_de_teste([a, b, b]) == ["duplicado", "duplicado"]
+    cv.SINAIS_DA_REFERENCIA_NA_BUSCA = False
+    try:
+        assert _fenomenos_de_teste([a, b, b]) == [] and _fenomenos_de_teste([{**a, "preco": 600.0}, b], tempo_ms=2000) == [], "desligada, a busca é a da corrida 18c"
+    finally:
+        cv.SINAIS_DA_REFERENCIA_NA_BUSCA = True
+
+
+# ! Alteração de IA - Revisar: (06/11/2026) teto nas listas do caso ao vivo: ids que faltam e sobram, ids repetidos e campos diferentes; o diff guardado continua completo.
+# ! Motivo: na corrida 18e, `semt-27` (todos os ids trocados por negativos) listou 28 ids no CORPO e de novo no SINTOMA, com 1829 tokens, e `tra-26` (seis campos diferentes) escreveu uma frase por campo, com 1620; o limite do plano é 1409, e ele manda a poda apertar. Nos prompts guardados das corridas 18d e 21d nenhuma lista passa destes tetos, então nenhum deles muda.
+def _diff_de_teste(ref, atual):
+    import caso_ao_vivo as cv
+    return cv.diff_referencia(json.dumps(ref), json.dumps(atual), 10, 10)
+
+
+def teste_caso_ao_vivo_lista_que_muda_inteira_tem_teto():
+    import caso_ao_vivo as cv
+    ref = [{"id": i, "nome": f"Produto {i}", "preco": 10.0} for i in range(1, 15)]
+    d = _diff_de_teste(ref, [{**x, "id": -(x["id"] + 1)} for x in ref])
+    assert len(d["faltam"]) == 14 and len(d["sobram"]) == 14, "o diff guarda tudo: o teto é só do texto"
+    corpo = cv.corpo_do_caso({"corpo": "json", "diferencas": [], "trecho": "x"}, d)
+    sintoma = " ".join(cv.frases_da_referencia(d))
+    for texto in (corpo, sintoma):
+        assert "faltam 14 ids, entre eles 1, 2, 3" in texto and "sobram 14 ids, entre eles -2, -3, -4" in texto, texto
+        assert "Produto 7" not in texto, texto
+    assert len(corpo) < 150 and len(sintoma) < 150, (len(corpo), len(sintoma))
+
+
+def teste_caso_ao_vivo_lista_ate_o_teto_continua_com_os_nomes():
+    import caso_ao_vivo as cv
+    ref = [{"id": i, "nome": f"Produto {i}", "preco": 10.0} for i in range(1, 15)]
+    assert cv._clausulas_de_lista(_diff_de_teste(ref, ref[:-3])) == ['faltam os ids 12 ("Produto 12"), 13 ("Produto 13"), 14 ("Produto 14")']
+    assert cv._clausulas_de_lista(_diff_de_teste(ref, ref[:-1])) == ['falta o id 14 ("Produto 14")']
+    assert cv._clausulas_de_lista(_diff_de_teste(ref, ref + ref[:1])) == ['o id 1 ("Produto 1") aparece 2 vezes']
+
+
+def teste_caso_ao_vivo_lista_dobrada_tem_teto_nos_repetidos():
+    import caso_ao_vivo as cv
+    ref = [{"id": i, "nome": f"Produto {i}", "preco": 10.0} for i in range(1, 15)]
+    assert cv._clausulas_de_lista(_diff_de_teste(ref, ref + ref)) == ['o id 1 ("Produto 1") aparece 2 vezes', 'o id 2 ("Produto 2") aparece 2 vezes', 'o id 3 ("Produto 3") aparece 2 vezes', "mais 11 ids aparecem repetidos"]
+
+
+def teste_caso_ao_vivo_muitos_campos_diferentes_tem_teto():
+    import caso_ao_vivo as cv
+    ref = [{"id": i, "nome": f"P{i}", "resumo": f"R{i}", "preco": 10.0, "imagem": f"i{i}", "destaque": False, "tipo": "T"} for i in range(1, 6)]
+    atual = [{**x, "nome": x["nome"] + "x", "resumo": x["resumo"] + "x", "preco": 11.0, "imagem": x["imagem"] + "x", "destaque": True, "tipo": "U"} for x in ref]
+    d = _diff_de_teste(ref, atual)
+    assert cv.frases_da_referencia(d) == ['O campo nome veio diferente da referência em modo normal em 5 itens, por exemplo no id 1: "P1x" em vez de "P1".',
+                                          'O campo resumo veio diferente da referência em modo normal em 5 itens, por exemplo no id 1: "R1x" em vez de "R1".',
+                                          "Mais 4 campos vieram diferentes: preco, imagem, destaque, tipo."]
+    corpo = cv.corpo_do_caso({"corpo": "json", "diferencas": [], "trecho": "x"}, d)
+    assert corpo == "lista com 5 itens (referência em modo normal: 5); nome diferente em 5 itens; resumo diferente em 5 itens; mais 4 campos diferentes", corpo
+    # no objeto (detalhe) o teto é o mesmo
+    d2 = _diff_de_teste(ref[0], atual[0])
+    assert cv.frases_da_referencia(d2)[-1] == "Mais 4 campos vieram diferentes: preco, imagem, destaque, tipo."
+    assert cv.corpo_do_caso({"corpo": "json", "diferencas": [], "trecho": "t"}, d2) == 't (contra a referência em modo normal: nome "P1x" em vez de "P1", resumo "R1x" em vez de "R1"; mais 4 campos diferentes)'
+    d3 = _diff_de_teste(ref[0], {**ref[0], "nome": "a", "resumo": "b", "preco": 1.0})
+    assert cv.frases_da_referencia(d3)[-1] == "Mais 1 campo veio diferente: preco."
+
+
+def teste_caso_ao_vivo_um_campo_diferente_continua_igual():
+    import caso_ao_vivo as cv
+    ref = [{"id": i, "nome": f"P{i}", "preco": 10.0} for i in range(1, 4)]
+    d = _diff_de_teste(ref, [{**x, "preco": 1000.0} for x in ref])
+    assert cv.frases_da_referencia(d) == ["O campo preco veio diferente da referência em modo normal em 3 itens, por exemplo no id 1: 1000.0 em vez de 10.0."]
+    corpo = cv.corpo_do_caso({"corpo": "json", "diferencas": [], "trecho": "x"}, d)
+    assert corpo.startswith("lista com 3 itens (referência em modo normal: 3); preco diferente em 3 itens; por exemplo: "), corpo
+
+
+# ! Alteração de IA - Revisar: (06/11/2026) o interceptador espera a resposta em andamento antes de a corrida ler as chamadas.
+# ! Motivo: reproduzido sem modelo: 1 em 25 execuções do modo error_500 saía sem a chamada capturada, com a tela já mostrando "HTTP 500". O roteiro quebra tão rápido que `registros()` lia a lista enquanto a resposta ainda estava sendo guardada; o caso ia ao modelo sem status e sem corpo, e o erro seria do teste, não do agente.
+class _RespostaDeTeste:
+    def __init__(self, requisicao):
+        self.request, self.url, self.status, self.headers = requisicao, requisicao.url, 500, {}
+
+    def text(self):
+        return '{"detail": "x"}'
+
+
+class _RequisicaoDeTeste:
+    def __init__(self, url):
+        self.url, self.method, self.resource_type, self.failure = url, "GET", "fetch", "falhou"
+        self.frame = type("F", (), {"url": "http://localhost/p.php"})()
+
+
+class _PaginaDeTeste:
+    def __init__(self, ao_esperar=None):
+        self.url, self.esperas, self.ao_esperar = "http://localhost/p.php", 0, ao_esperar
+        self.context = type("C", (), {"route": lambda *a, **k: None, "route_from_har": lambda *a, **k: None})()
+
+    def on(self, *_):
+        return None
+
+    def wait_for_timeout(self, _ms):
+        self.esperas += 1
+        if self.ao_esperar:
+            self.ao_esperar()
+
+
+def teste_interceptador_espera_a_resposta_em_andamento():
+    import interceptador as ic
+    url = f"http://{ic.HOST_DA_API}/api/produtos"
+    req = _RequisicaoDeTeste(url)
+    pagina = _PaginaDeTeste()
+    inter = ic.Interceptador(pagina, har=None)
+    inter.esperar_respostas(50)
+    assert pagina.esperas == 0, "sem nada em andamento, não espera"
+    inter._ao_pedir(req)
+    assert inter.registros() == [], "a resposta ainda não chegou"
+    pagina.ao_esperar = lambda: inter._ao_responder(_RespostaDeTeste(req))
+    inter.esperar_respostas(2000)
+    assert pagina.esperas == 1 and [r["status"] for r in inter.registros()] == [500], "a resposta entra no registro antes de a corrida ler"
+    # a chamada que falhou também encerra a espera
+    req2 = _RequisicaoDeTeste(url)
+    pagina2 = _PaginaDeTeste()
+    inter2 = ic.Interceptador(pagina2, har=None)
+    inter2._ao_pedir(req2)
+    pagina2.ao_esperar = lambda: inter2._ao_falhar(req2)
+    inter2.esperar_respostas(2000)
+    assert pagina2.esperas == 1
+    # o que não é da CobaiaAPI não segura a corrida, e a espera tem limite
+    pagina3 = _PaginaDeTeste()
+    inter3 = ic.Interceptador(pagina3, har=None)
+    inter3._ao_pedir(_RequisicaoDeTeste("http://localhost/imagem.png"))
+    inter3.esperar_respostas(2000)
+    assert pagina3.esperas == 0, "só as chamadas à CobaiaAPI contam"
+    pagina4 = _PaginaDeTeste()
+    inter4 = ic.Interceptador(pagina4, har=None)
+    inter4._ao_pedir(_RequisicaoDeTeste(url))
+    inter4.esperar_respostas(30)
+    assert pagina4.esperas >= 1, "esperou"
+
+
+def teste_rodar_cenario_espera_as_respostas_antes_de_ler_as_chamadas():
+    import cenarios_fase4 as cen
+    ordem = []
+    inter = type("I", (), {"esperar_respostas": lambda self: ordem.append("espera"), "registros": lambda self: ordem.append("le") or [], "capturar": lambda self: {"nos": [], "aria": "", "contagem": 0}})()
+    cen.rodar_cenario({"id": "c", "passos": []}, None, inter)
+    assert ordem == ["espera", "le"], ordem
+
+
+# ! Alteração de IA - Revisar: (06/11/2026, ficha 47, decisão 97) o que a comparação com a referência mede vira fenômenos, só para a busca.
+# ! Motivo: na corrida 18c o verbete certo chegou ao modelo em 21 dos 37 casos na tela, porque o caso da tela mede a diferença em números e nenhum passo a traduzia para as palavras da biblioteca.
+# Os testes usam dados sintéticos: as regras saem da definição de cada fenômeno, não dos casos.
+def _fenomenos_de_teste(atual, tempo_ms=60, ref=None):
+    import caso_ao_vivo as cv
+    ref = ref if ref is not None else [{"id": 1, "nome": "Água Mineral", "tipo": "Bebidas", "preco": 6.0, "destaque": False}, {"id": 2, "nome": "Picanha", "tipo": "Carnes", "preco": 89.9, "destaque": True}]
+    c_ref, c_at = json.dumps(ref, ensure_ascii=False), json.dumps(atual, ensure_ascii=False)
+    return cv.fenomenos_contra_a_referencia(c_ref, c_at, cv.diff_referencia(c_ref, c_at, 50, tempo_ms))
+
+
+def teste_busca_fenomenos_de_valor_contra_a_referencia():
+    a = {"id": 1, "nome": "Água Mineral", "tipo": "Bebidas", "preco": 6.0, "destaque": False}
+    b = {"id": 2, "nome": "Picanha", "tipo": "Carnes", "preco": 89.9, "destaque": True}
+    assert _fenomenos_de_teste([a, b]) == [], "igual à referência não dá sinal nenhum"
+    quebrado = "Água Mineral".encode().decode("latin-1")
+    assert _fenomenos_de_teste([{**a, "nome": quebrado}, b]) == ["codificacao"], "acento quebrado que, consertado, é o valor da referência"
+    assert _fenomenos_de_teste([{**a, "preco": 600.0}, {**b, "preco": 8990.0}]) == ["escala", "escala"], "um por item afetado, como nos sinais do contrato"
+    assert _fenomenos_de_teste([{**a, "preco": 0.6}, b]) == ["escala"], "dez vezes menor também é escala"
+    assert _fenomenos_de_teste([a, {**b, "preco": 84.9}]) == [], "uma diferença pequena de preço não é escala nem domínio"
+    assert _fenomenos_de_teste([{**a, "preco": -6.1}, b]) == ["dominio"], "negativo onde a referência é positiva"
+    assert _fenomenos_de_teste([{**a, "preco": 0}, b]) == ["dominio"], "zero onde a referência é positiva"
+    assert _fenomenos_de_teste([{**a, "tipo": "Carnes"}, b]) == ["troca"], "o valor existe na referência, em outro item"
+    assert _fenomenos_de_teste([{**a, "nome": "Água (inválido)"}, b]) == ["dominio"], "texto que a referência não tem nesse campo"
+    for trocado in ({"preco": "6.0"}, {"destaque": "talvez"}, {"nome": None}, {"tipo": ["Bebidas"]}):
+        assert _fenomenos_de_teste([{**a, **trocado}, b]) == [], f"tipo diferente é dos sinais do contrato: {trocado}"
+
+
+def teste_busca_fenomenos_de_lista_e_de_tempo():
+    import caso_ao_vivo as cv
+    a = {"id": 1, "nome": "Água Mineral", "tipo": "Bebidas", "preco": 6.0, "destaque": False}
+    b = {"id": 2, "nome": "Picanha", "tipo": "Carnes", "preco": 89.9, "destaque": True}
+    assert _fenomenos_de_teste([a, b, b]) == ["duplicado", "duplicado"], "as duas ocorrências do item repetido, e não contagem"
+    assert _fenomenos_de_teste([a]) == ["contagem"], "item a menos"
+    assert _fenomenos_de_teste([a, b, {**b, "id": 3}]) == ["contagem"], "item a mais, sem repetir id"
+    assert _fenomenos_de_teste([a, b], tempo_ms=2000) == ["lento"], "acima do orçamento de tempo"
+    assert _fenomenos_de_teste(a, ref=dict(a)) == [] and _fenomenos_de_teste({**a, "preco": 600.0}, ref=dict(a)) == ["escala"], "objeto contra objeto"
+    assert cv.fenomenos_contra_a_referencia('[{"id": 1}]', "isto não é json", None) == [], "sem comparação não há sinal"
+    assert cv.fenomenos_contra_a_referencia(None, None, None) == []
+
+
+def teste_busca_os_termos_vao_so_para_a_busca_e_o_caso_escrito_nao_muda():
+    import caso_ao_vivo as cv
+    import diagnostico_ao_vivo as dv
+    import estrategias
+    for fenomeno, termos in cv.TERMOS_DO_FENOMENO.items():
+        assert termos and "_" not in termos and not any(c.isdigit() for c in termos), fenomeno
+    assert cv.termos_da_busca(["escala", "escala"]) == f"{cv.TERMOS_DO_FENOMENO['escala']} {cv.TERMOS_DO_FENOMENO['escala']}"
+    assert cv.termos_da_busca([]) == ""
+    caso = cv.montar_caso("x-1@tela", "GET /api/produtos", 200, "id: inteiro", "trecho", "Sintoma X")
+    caso["corpo_completo"] = '[{"id": 1}]'
+    caso["sinais_da_busca"] = ["codificacao"]
+    busca = dv.caso_da_busca(caso)
+    assert cv.TERMOS_DO_FENOMENO["codificacao"] in busca["entrada"]["observacao"] and busca["entrada"]["corpo"] == '[{"id": 1}]'
+    assert "observacao" not in caso["entrada"] and caso["entrada"]["corpo"] == "trecho", "o caso que vai ao prompt não muda"
+    assert "mojibake" not in estrategias._dados_do_caso(caso), "o prompt não leva os termos"
+    assert cv.tamanho_do_caso(caso) == cv.tamanho_do_caso({k: v for k, v in caso.items() if k != "sinais_da_busca"}), "o tamanho do caso conta só o que vai ao modelo"
+    com_obs = cv.montar_caso("x-2@tela", "GET /api/produtos", 200, "id: inteiro", "trecho", "Sintoma", observacao="Vista antes")
+    com_obs["sinais_da_busca"] = ["lento"]
+    assert dv.caso_da_busca(com_obs)["entrada"]["observacao"].startswith("Vista antes "), "a observação do caso continua na busca"
+    so_corpo = cv.montar_caso("x-3@tela", "GET /api/produtos", 200, "id: inteiro", "trecho", "Sintoma")
+    so_corpo["corpo_completo"] = "[]"
+    assert "observacao" not in dv.caso_da_busca(so_corpo)["entrada"], "sem fenômeno, a busca é a de antes"
+    escrito = {"id": "lex-1", "entrada": {"requisicao": "GET /api/produtos", "corpo": "x", "sintoma": "y"}}
+    assert dv.caso_da_busca(escrito) is escrito, "o caso escrito não passa por nada disto"
+
+
+def teste_busca_caso_da_tela_guarda_os_fenomenos_fora_do_prompt():
+    import executar_fase4 as ex
+    item = {"id": "tra-1", "requisicao": "GET /api/produtos", "classe": 4, "nivel": 1}
+    ref = {"arvore": 'document "P"', "nomes": set()}
+    caso = ex.caso_vivo_da_tela(item, 200, "id: inteiro", "trecho", "Sintoma", None, ref, "obs", corpo_completo="[]", sinais_da_busca=["escala"])
+    assert caso["sinais_da_busca"] == ["escala"] and "sinais_da_busca" not in caso["entrada"]
+    sem = ex.caso_vivo_da_tela(item, 200, "id: inteiro", "trecho", "Sintoma", None, ref, "obs", corpo_completo="[]")
+    assert "sinais_da_busca" not in sem, "sem fenômeno o caso fica como era"
+
+
+def teste_busca_corrida_na_tela_escolhe_os_casos_pelo_banco():
+    import executar_fase4 as ex
+    casos, arq = ex.casos_e_reproducao_da_tela("avaliacao")
+    assert arq == "reproducibilidade.json" and {c["id"] for c in casos} == {c["id"] for c in ex.casos_de_avaliacao("avaliacao")}
+    casos_i, arq_i = ex.casos_e_reproducao_da_tela("ineditos_fase4")
+    assert arq_i == "reproducibilidade_ineditos.json" and len(casos_i) == 36 and casos_i[0]["id"] == "lex-22"
+
+
+def teste_busca_leitura_da_tela_acha_o_gabarito_dos_ineditos():
+    import avaliar_fase4 as av
+    import banco_casos_ineditos_fase4 as bi4
+    assert av.casos_com_gabarito_da_tela()[-1]["id"] == bi4.CASOS_INEDITOS_FASE4[-1]["id"], "a leitura da tela acha também os inéditos da ficha 27"
+
+
+# ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 18c) a leitura da tela conta o acerto com e sem o verbete da causa certa entre os entregues, nos dois lados, e o acerto por selo na tela; `render_tela` aceita o título.
+# ! Motivo: na 18c quase todos os erros na tela são de casos sem o verbete certo no contexto, e o texto do relatório e o painel precisam dessa conta saída de script; o título fixo diria "corrida 18" na leitura da 18c.
+def teste_avaliar_fase4_tela_le_o_verbete_certo_e_o_selo():
+    import avaliar_fase4 as av
+
+    def reg(caso: str, rotulo: str, verbetes: list[str]) -> dict:
+        return {"caso": f"{caso}@tela", "resposta": f"CAUSA_RAIZ: {rotulo}", "verbetes_ids": verbetes, "tokens_entrada": 1000, "segundos": 50.0}
+
+    casos = [{"id": i, "classe": 1, "nivel": 1, "gabarito": {"causa_raiz": "campo_ausente"}} for i in ("a", "b", "c", "d")]
+    tela = [reg("a", "campo_ausente", ["campo_ausente", "x"]), reg("b", "tipo_divergente", ["campo_ausente"]), reg("c", "campo_ausente", ["x"]), reg("d", "tipo_divergente", ["x", "y"])]
+    fixture = [reg("a", "campo_ausente", ["campo_ausente"]), reg("b", "campo_ausente", ["campo_ausente"]), reg("c", "campo_ausente", ["campo_ausente"]), reg("d", "tipo_divergente", ["x"])]
+    por_caso = [{"caso": "a", "selo_tela": "alto"}, {"caso": "b", "selo_tela": "baixo"}, {"caso": "c", "selo_tela": "alto"}, {"caso": "d", "selo_tela": "baixo"}]
+    d = av.resumir_tela(tela, fixture, casos, por_caso, gerado_em="2026-11-05T20:00:00", corrida="x")
+    assert d["verbete_certo"]["tela"] == {"presente": {"casos": 2, "acertos": 1}, "ausente": {"casos": 2, "acertos": 1}}, d["verbete_certo"]
+    assert d["verbete_certo"]["fixture"] == {"presente": {"casos": 3, "acertos": 3}, "ausente": {"casos": 1, "acertos": 0}}, d["verbete_certo"]
+    assert d["acerto_por_selo"] == {"alto": {"casos": 2, "acertos": 2}, "medio": {"casos": 0, "acertos": 0}, "baixo": {"casos": 2, "acertos": 0}}, d["acerto_por_selo"]
+    md = av.render_tela(d, "Título da corrida")
+    assert "Título da corrida" in md and av.TITULO_TELA not in md
+    assert av.TITULO_TELA in av.render_tela(d)
+    for bloco in ("tb_f4_tela_verbete", "tb_f4_tela_selo"):
+        assert f"<!-- tabela:{bloco} -->" in md, bloco
+    assert "—" not in md and "→" not in md
+
+
 # ! Alteração de IA - Revisar: (05/11/2026, decisões 90 e 91) a fila das corridas 18c, 21c e 23: BOM, sem travessão, os três comandos do roadmap e a parada na primeira falha.
 # ! Motivo: a fila roda sem ninguém olhando, numa janela do PowerShell 5.1, que quebra o arquivo inteiro sem BOM; a corrida 24 não entra porque espera a conferência da ficha 46.
 def teste_fila_das_corridas_pendentes():
@@ -5178,12 +5530,14 @@ def teste_fila_das_corridas_pendentes():
     texto = dados[3:].decode("utf-8")
     assert "—" not in texto and "–" not in texto and "→" not in texto
     assert "de IA - Revisar" in texto and "! Motivo:" in texto
-    for trecho in ('"tela", "-Saida", "fase4_tela_v3", "-Nome", "tela_v3"', '"cenarios", "-Saida", "fase4_ensaio_v3", "-Repeticoes", "1", "-Nome", "cenarios_v3"', '"experimento_prompt", "-Saida", "fase4_experimento"',
-                   "rodar_fase4.ps1", "$LASTEXITCODE", "exit $LASTEXITCODE"):
+    # ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a fila passa às corridas com os sinais da busca: 18d, 21d e os inéditos na tela (18e).
+    # ! Motivo: as corridas 18c, 21c e 23 já rodaram, e os inéditos que reproduzem na tela são a conferência limpa dos sinais, escritos olhando só os 37 casos.
+    for trecho in ('"tela", "-Saida", "fase4_tela_v4", "-Nome", "tela_v4"', '"cenarios", "-Saida", "fase4_ensaio_v4", "-Repeticoes", "1", "-Nome", "cenarios_v4"',
+                   '"tela", "-Saida", "fase4_tela_ineditos", "-Nome", "tela_ineditos", "-Banco", "ineditos_fase4"', "rodar_fase4.ps1", "$LASTEXITCODE", "exit $LASTEXITCODE"):
         assert trecho in texto, trecho
     assert '"ineditos"' not in texto, "a corrida 24 espera a conferência (decisão 92)"
     roadmap = (EXP.parent.parent.parent / "Documentacao" / "memorial" / "roadmap.md").read_text(encoding="utf-8")
-    for comando in ("-Modo tela -Saida fase4_tela_v3 -Nome tela_v3", "-Modo cenarios -Saida fase4_ensaio_v3 -Repeticoes 1 -Nome cenarios_v3", "-Modo experimento_prompt -Saida fase4_experimento"):
+    for comando in ("-Modo tela -Saida fase4_tela_v4 -Nome tela_v4", "-Modo cenarios -Saida fase4_ensaio_v4 -Repeticoes 1 -Nome cenarios_v4", "-Modo tela -Saida fase4_tela_ineditos -Nome tela_ineditos -Banco ineditos_fase4"):
         assert comando in roadmap, comando
 
 

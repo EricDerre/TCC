@@ -1,0 +1,21 @@
+{
+  "o_que_e": "as respostas do Eric à conferência dos 36 inéditos da ficha 27 (ficha 46, decisão 100), copiadas do quadro de perguntas da sessão",
+  "gerado_em": "2026-11-06",
+  "quem": "Eric",
+  "como": "os 10 casos apontados pela pré-análise foram ao quadro um a um, com o texto do caso, a dúvida e o que o código e os verbetes dizem; os outros 26 foram numa lista de uma linha por caso, com o texto inteiro na aba do painel; o quadro não mostrou resultado nenhum de corrida",
+  "recomendacoes": "escritas pelo Claude, que já tinha visto os resultados da corrida 18e; em cada um dos 36 casos o Eric seguiu a recomendação",
+  "respostas": {
+    "lex-27": "fica como está",
+    "sin-24": "fica como está",
+    "semt-26": "fica como está",
+    "semt-27": "fica como está",
+    "tra-27": "fica como está",
+    "run-26": "fica como está",
+    "run-27": "fica como está",
+    "efe-24": "fica como está",
+    "efe-26": "fica como está",
+    "efe-27": "fica como está"
+  },
+  "outros": "ficam como estão",
+  "mudancas": []
+}

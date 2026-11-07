@@ -308,6 +308,7 @@ def rodar_cenario(cenario_: dict, pagina, inter=None, base: str = BASE_PADRAO, c
     r["fim"] = agora()
     r["segundos"] = round(time.monotonic() - t0, 3)
     if inter is not None:
+        inter.esperar_respostas()
         r["chamadas"] = inter.registros()
     return r
 

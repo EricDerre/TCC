@@ -54,7 +54,7 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 | 3 | Biblioteca gerida pelo próprio modelo, quatro modelos, três épocas | Concluída em 15/09/2026 |
 | 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
 | Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Concluída em 26/10/2026 (relatório fechado; parte B da pesquisa integrada; especificação da trilha aprovada; corrida 13 cancelada) |
-| 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Em andamento: pacotes P0 a P8 e corridas 16 a 22 feitos em 05/11/2026 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 como limitação declarada, decisão 82; medida com revisor humano em aberto, decisão 95); faltam as corridas 18c, 21c, 23 e 24 (decisões 90 a 92) |
+| 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Concluída em 06/11/2026: pacotes P0 a P8 e corridas 16 a 24 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 cumprida na corrida 18d, no limite exato, decisões 97 e 98; medida com revisor humano em aberto, decisão 95) |
 | Pós-Fase 4 | Ajustes e ideias focadas no visual do projeto: tipo de resposta e formatação, com possibilidade de gráficos ou de um dashboard dinâmico (decisão 94) | Não iniciada |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
 
@@ -89,19 +89,27 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
      ! Motivo: o README dizia que as fichas estavam abertas e a fase concluída; as decisões 90 a 92 pedem as corridas 18c, 21c, 23 e 24 antes da Fase 5. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026) "Resultado principal" e "Estado em 05/11/2026" viraram subseções com listas, um assunto por item.
      ! Motivo: o Eric reclamou (05/11/2026) que os assuntos mais novos estavam sem formatação e poluíam a leitura; os dois blocos eram parágrafos corridos de 10 linhas. Nenhum fato foi tirado. -->
-### Estado em 05/11/2026
+<!-- ! Alteração de IA - Revisar: (06/11/2026) a tabela de fases, o estado e o que a Fase 4 mediu ganham a corrida 24, e a Fase 4 passa a concluída.
+     ! Motivo: era a última pendência da fase. Números de `ineditos.json`, lidos por script. -->
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) a tabela de fases, o estado e o que a Fase 4 mediu passam às corridas 18d, 21d e 18e, com a regra R2 pelos casos que a tela perde.
+     ! Motivo: a regra fechou com os sinais novos da busca, e a corrida seguinte da fila é a 24. Números de `tela_v4.json`, `tela_ineditos.json` e `cenarios_v4.json`, lidos por script. -->
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a tabela de fases e o resumo do diagnóstico na tela citam as corridas que faltam e a regra R2 pelos casos que a tela perde.
+     ! Motivo: a tabela ainda dizia que só faltava a corrida 24, e a leitura da regra mudou antes da corrida 18d. Números dos campos `b` e `c` de `tela_v3.json`. -->
+### Estado em 06/11/2026
 
 - Fases 1, 2-A, 2-B, 3 e 3-B concluídas.
 - Pré-Fase 4, uma pausa de pesquisa antes do agente na tela, concluída em 26/10 (decisões 75 a 78).
-- Fase 4, o agente na tela, com os pacotes P0 a P8 feitos em 05/11 e o [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md).
+- Fase 4, o agente na tela, com os pacotes P0 a P8 feitos em 05/11, as corridas 18d, 21d, 18e e 24 em 06/11 e o [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md).
 - O agente lê a tela, diagnostica, cura localizador em código, propõe acréscimos à biblioteca atrás de validação e grava uma trilha aberta de cada passo.
 
 #### O que a Fase 4 mediu
 
 - Reprodução: a tela reproduz 37 dos 72 casos de avaliação.
-- Diagnóstico na tela: mesmo rótulo do caso escrito em 26 de 37, com a regra R2 fora do limite e declarada como limitação (decisão 82).
+- Diagnóstico na tela: 32 acertos de 37 na tela e 30 no caso escrito (corrida 18d, com os sinais novos da busca, decisão 97), mesmo rótulo em 28. A tela perde 3 casos e ganha 5; o limite é de 3 perdidos, e a regra R2 fecha sem folga (decisão 98; pela soma dos dois lados, 8). O verbete certo chega em 36 de 37, e com ele são 32 acertos de 36. Nos 25 inéditos, que a busca nunca viu (corrida 18e): 22 na tela e 18 no caso escrito, com a tela perdendo 0 e ganhando 4.
+- Biblioteca final em casos inéditos (corrida 24, em texto): 25 de 36 (69,4%; Wilson 95% de 53,1 a 82,0), contra 31 de 36 nos casos de avaliação, que não são os mesmos. Com o verbete certo, 18 de 20; sem ele, 7 de 16.
 - Cura de localizador: 160 de 160 quebras armadas curadas em código.
-- Ensaio dos dez cenários, com uma repetição por cenário: 10 de 10 com Task Success (Wilson 95% de 72,2 a 100,0%; a rodada anterior deu 9 de 10, antes de um conserto na cura) e MTTR médio de 105,2 s, sem linha de base manual ainda.
+- Ensaio dos dez cenários, com uma repetição por cenário: 10 de 10 com Task Success (Wilson 95% de 72,2 a 100,0%; a rodada anterior deu 9 de 10, antes de um conserto na cura) e MTTR médio de 74,0 s com o prompt dentro do limite e os sinais novos da busca (72,5 s na corrida anterior; 105,2 s antes do corte), sem linha de base manual ainda.
+- Experimento dos itens da decisão 55, nos 90 casos: 70 acertos com o exemplar e 67 com os rótulos em palavras, contra 68 na corrida 16, sem se separar do acaso (decisão 91).
 <!-- ! Alteração de IA - Revisar: (05/11/2026) a medida com revisor humano passou a em aberto (decisão 95), e a tabela das fases ganhou a Pós-Fase 4 (decisão 94).
      ! Motivo: o Eric pediu "em aberto" nesta data; o texto dizia limitação declarada, sem nova sessão. -->
 - Avaliação da trilha: a medida com revisor humano da especificação da trilha está em aberto: será feita depois da Pós-Fase 4 (decisão 95).
@@ -128,7 +136,7 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 - [Roadmap](Documentacao/memorial/roadmap.md) e [pendências](Documentacao/memorial/pendencias.md): o que falta rodar e as decisões, em fichas.
 - [Relatório da Fase 4](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md): o agente na tela, corrida a corrida, as regras R1 a R8, as limitações declaradas e o que o documento do TCC precisa carregar.
 - [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
-- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) e o [.docx da versão 3](Documentacao/TCC_v3_20261105.docx), de 05/11/2026, gerado a partir dele por `ferramentas/gerar_tcc_docx.py` no molde do orientador: texto provisório, com a Fase 4 até a corrida 22, à espera da leitura do grupo e dos números das corridas 18c, 21c, 23 e 24. O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho.
+- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) e o [.docx da versão 3](Documentacao/TCC_v3_20261105.docx), de 05/11/2026, gerado a partir dele por `ferramentas/gerar_tcc_docx.py` no molde do orientador: texto provisório, com a Fase 4 até a corrida 22, à espera da leitura do grupo e dos números das corridas 18c, 21c, 23 e 24; as corridas 18c, 21c e 23 já rodaram, e as figuras dela já mudaram em `Documentacao/figuras/`, com o texto ainda por atualizar. O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho.
 - Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
 - Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório, sem a `.claude/` nem a `.venv` da CobaiaAPI, na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
 
@@ -900,6 +908,10 @@ O que não coube nas células da tabela:
 | `testar_fase4.py` | Testes sem LLM da Fase 4, listados por pacote abaixo. | - |
 | `linha_de_base_manual.py` | (P6) O ajudante da sessão da linha de base manual da Fase 5 ([protocolo](Documentacao/memorial/5-metodo-e-ferramental/protocolo-linha-de-base-manual.md)), com quatro comandos (lista abaixo). | `python linha_de_base_manual.py armar --vez 1 3` |
 | `avaliacao_trilha.py` | (P7) A avaliação da própria trilha (especificação da trilha, seção 12); lista abaixo. | usado por `executar_fase4.py --modo avaliacao_trilha` e `avaliar_fase4.py --trilha` |
+| `corridas_em_texto.py` | (decisões 91 e 92) As corridas 23 e 24, em texto: as condições do experimento como transformação do prompt pronto, a leitura da linha CAUSA_RAIZ inteira e os resumos das duas. | modos `experimento_prompt` e `ineditos` de `executar_fase4.py` |
+| `conferir_corte_tela.py` | (decisões 90, 96, 97 e 99) Hoje compara com as corridas 18d, 18e e 21d, diz se o prompt ficou igual byte a byte, mede com o Ollama os que mudaram de tamanho (`--medir-tokens`) e grava `teto_prompt_tela.json`; as conferências anteriores ficam em `corte_prompt_tela.json` e `busca_prompt_tela.json`. Monta sem modelo, com as cobaias de verdade, o prompt das corridas 18c e 21c e compara com o guardado: tokens estimados, verbetes recuperados e verbete certo. | grava `resultados_alvo/fase4/corte_prompt_tela.json` |
+| `gerar_conferencia_ineditos.py` | (decisão 92) O documento da conferência dos 36 inéditos: cada caso, o que a corrida 17 viu e a pré-análise. | grava `resultados_alvo/fase4/conferencia_ineditos.{json,md}` |
+| `rodar_pendencias_fase4.ps1` | Fila das corridas 18c, 21c e 23 pelo `rodar_fase4.ps1`, parando na primeira que falhar. | janela do Eric |
 | `gerar_figuras_documentos.py` (+ `testar_figuras_documentos.py`) | Figuras do README e do documento do TCC, em `Documentacao/figuras/`, e a tabela de cada uma em `dados-das-figuras.md`, tudo lido dos JSON de `resultados_alvo/`. | `../.venv/Scripts/python.exe gerar_figuras_documentos.py` (com matplotlib); `--check` confere sem desenhar |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4. | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
@@ -926,7 +938,7 @@ O que não coube nas células da tabela:
   - Entregue em 27/10/2026 por um agente que leu só o código das cobaias e os 14 modos novos.
   - Cada caso anota a fonte (arquivo:linha) e o modo da API que o reproduz, ou "sem modo" quando é um cenário descrito.
   - Os corpos foram cruzados com a CobaiaAPI real no mesmo dia.
-  - Esperam a conferência do Eric antes da corrida 24 (decisão 92); até lá, só passaram pela reprodução sem modelo (`--banco ineditos_fase4` em `executar_fase4.py`). <!-- ! Alteração de IA - Revisar: (05/11/2026) a frase deixa de dizer que os casos ainda não entram no executor. ! Motivo: dizia "antes da corrida 16" e "ainda não entram", mas a corrida 17 os leu pelo --banco em 27/10, e a decisão 92 fixou a corrida 24 para ler esses casos com o modelo. -->
+  - O Eric os conferiu em 06/11/2026, sem mudar nenhum (ficha 46, decisão 100). O modelo leu 25 deles na corrida 18e; os 36 em texto são a corrida 24: 25 de 36. <!-- ! Alteração de IA - Revisar: (05/11/2026) a frase deixa de dizer que os casos ainda não entram no executor. ! Motivo: dizia "antes da corrida 16" e "ainda não entram", mas a corrida 17 os leu pelo --banco em 27/10, e a decisão 92 fixou a corrida 24 para ler esses casos com o modelo. -->
 - `cache_respostas.py`: desligado por padrão (`CACHE_RESPOSTAS=1` liga), recusa em `resultados_alvo/` e marca todo acerto com `do_cache=True` e tempos zerados; nunca entra numa corrida medida (decisão 48).
 
 #### `cenarios_fase4.py`, por pacote
@@ -1020,6 +1032,8 @@ Os 13 filtros da decisão 65:
 | `biblioteca` | 20 | Os 54 casos de aprendizado diagnosticados com recuperação por id e a proposta de edição filtrada; o ciclo de correção sem modelo; a sonda de 28/09 repetida. | `biblioteca.jsonl`, `correcoes.jsonl`, `lote.json`, `revisao_do_lote.md`, `sonda.json`, a trilha v2 e os relatórios por caso. | `--base-ineditos` (`corrida12` ou `propria`), `--sem-sonda`, `--sem-correcao` |
 | `cenarios` | 21 | Os dez cenários da ficha 36: o contrato pelo caminho do modo `tela` e o localizador pelo do modo `cura`. | `cenarios.jsonl` (com a ficha da falha de cada detecção em `motivo_deteccao`), a trilha v2 e os relatórios por execução. | `--repeticoes` |
 | `avaliacao_trilha` | 22 | Os 36 casos de avaliação lidos do fixture, sem gabarito, e a mutação do seletor nos quatro roteiros de localizador. | `avaliacao.jsonl`, `seletor.jsonl`, os registros de 37 chaves por etapa, a trilha v2 e os relatórios por caso. | `--sem-seletor` (`-SemSeletor`) |
+| `experimento_prompt` | 23 | Os 90 casos em texto, uma condição por item da decisão 55, com a biblioteca e o k da corrida 16. | `qwen2.5_7b/diagnosticos__<condição>.jsonl` |
+| `ineditos` | 24 | Os 36 inéditos da ficha 27 em texto, pelo diagnóstico do agente, com a biblioteca de produção. | `qwen2.5_7b/diagnosticos__ineditos.jsonl`, `logprobs__ineditos.jsonl`, `ineditos.jsonl`, `trilha_ineditos.jsonl` |
 
 O que não coube nas células da tabela:
 
@@ -1065,13 +1079,16 @@ O que não coube nas células da tabela:
 | `--reproducao` | 17 | A corrida por classe, nível e modo, com o custo por cenário e os tamanhos. | `resultados_alvo/fase4/reproducibilidade.{json,md}` (`--check`, `--colar`) |
 | `--nome` e `--titulo` | outra corrida | A mesma leitura para outra corrida sem regravar a da 17. | `reproducibilidade_ineditos.{json,md}` para os 36 inéditos da ficha 27 |
 | `--calibracao` | 16 | Acerto e acurácia balanceada por k, AUROC da probabilidade do rótulo e da conjunta com intervalo, revisão humana por parcela, curva risco-cobertura, regra R8, ponte e sondagem. | `calibracao.{json,md}` e `limiares.json` |
-| `--tela` | 18 | Acerto na tela e no fixture, concordância, regra R2 com b e c, selos, gatilhos, divergências, tempos, tamanho da trilha, o prompt da tela contra o maior da calibração. | `tela.{json,md}` |
+| `--tela` | 18 | Acerto na tela e no fixture, concordância, regra R2 com b e c (c até o limite, decisão 98; a soma ao lado), selos, gatilhos, divergências, tempos, tamanho da trilha, o prompt da tela contra o maior da calibração. | `tela.{json,md}` |
 | `--pontes` | - | As pontes já rodadas. | `pontes.json`, regravado |
 | `--pasta` | corrida parcial | Manda os derivados de uma corrida parcial para a pasta dela. | A pasta da corrida parcial |
 | `--cura` | 19 | Regra R3: taxa de cura por modo, roteiro e forma, mesmo elemento contra outro elemento, MTTR da detecção à reexecução validada, o rendimento de cada estratégia, a comparação harness contra PHP. | `cura.{json,md}` |
 | `--biblioteca` | 20 | Casos da tela e do fixture, acerto, o que cada filtro barrou, o lote, a regra R5 com b e c, a regra R4 com precisão e revocação, a sonda caso a caso contra 28/09, a recuperação dos aprendidos. | `biblioteca.{json,md}` (blocos `tb_f4_biblioteca_*`) |
 | `--cenarios` | 21 | Task Success com intervalo de Wilson e MTTR médio com intervalo por reamostragem de semente fixa, no geral, por tipo e por cenário. | `cenarios.{json,md}` (blocos `tb_f4_cenarios_*`) |
 | `--cenarios` com `--nome cenarios_v2` e `--titulo` | 21b | A leitura da corrida 21b. | `cenarios_v2` |
+| `--tela` com `--nome tela_v3` e `--titulo`, e `--cenarios` com `--nome cenarios_v3` e `--titulo` | 18c e 21c | As leituras vigentes, com o prompt dentro do limite; a da tela conta também o acerto com e sem o verbete certo no contexto e o acerto por selo. | `tela_v3`, `cenarios_v3` |
+| `--experimento_prompt` | 23 | Cada condição contra a corrida 16, caso a caso: acerto, acurácia balanceada, b e c, trocas de rótulo, a forma da resposta e o custo. | `experimento_prompt.{json,md}` (blocos `tb_f4_exp_*`) |
+| `--ineditos` | 24 | Os 36 inéditos da ficha 27 lidos pelo modelo: acerto, por classe, nível e selo, com e sem o verbete certo no contexto, e a comparação com a corrida 18e. | `ineditos.{json,md}` (blocos `tb_f4_ineditos_*`) |
 | `--trilha` | 22 | O acerto de cada caso contra o gabarito e TPR x TNR de cada sinal da trilha contra os erros reais. | `trilha.{json,md}` (blocos `tb_f4_trilha_*`), os relatórios da sessão de revisão em `relatorios_revisao_trilha/` e a planilha `revisao_trilha.md`, nunca regravada depois de preenchida |
 | `--revisao` | 22 | A planilha `revisao_trilha.md` preenchida contra o acerto de cada caso em `trilha.json`: adesão apropriada, localização do erro, tempo até a decisão e utilidade. | `leitura_revisao_trilha.{json,md}` (blocos `tb_f4_revisao_*`) |
 
@@ -1090,7 +1107,7 @@ O que não coube nas células da tabela:
 - `--revisao`:
   - Não sai enquanto houver relatório em branco.
   - Separa a resposta própria do revisor dos pareceres do Claude aprovados sem resposta própria e sem tempo medido (decisões 85 e 86), e por isso não cumpre a medida com revisor humano, que fica em aberto (decisão 95).
-- Os blocos de cada prefixo no relatório da fase vêm de uma leitura só (`LEITURA_NO_RELATORIO`: `reproducibilidade`, `tela_v2` e `cenarios_v2`, as vigentes):
+- Os blocos de cada prefixo no relatório da fase vêm de uma leitura só (`LEITURA_NO_RELATORIO`: `reproducibilidade`, `tela_v3` e `cenarios_v3`, as vigentes):
   - o `--colar` recusa as outras e a corrida que não bate com o `.md` gravado;
   - o `--check` delas confere só os próprios arquivos.
 

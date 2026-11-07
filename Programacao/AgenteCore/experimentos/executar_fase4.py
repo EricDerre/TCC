@@ -264,6 +264,12 @@ def ler_ids(texto: str | None) -> list[str]:
     return [parte.strip() for parte in str(texto or "").split(",") if parte.strip()]
 
 
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a corrida na tela escolhe os casos e a leitura da corrida 17 pelo banco pedido.
+# ! Motivo: os 25 inéditos da ficha 27 que reproduzem na tela são a conferência limpa dos sinais da busca, que foram escritos olhando os 37 casos de avaliação; sem isto, o modo `tela` só lia esses 37.
+def casos_e_reproducao_da_tela(banco: str) -> tuple[list[dict], str]:
+    return casos_de_avaliacao(banco), "reproducibilidade_ineditos.json" if banco == "ineditos_fase4" else "reproducibilidade.json"
+
+
 def casos_que_reproduzem(reproducibilidade: dict) -> list[str]:
     """Os ids dos casos que a corrida 17 marcou como reproduzidos na tela (resultados_alvo/fase4/reproducibilidade.json)."""
     return [c["id"] for c in reproducibilidade.get("casos", []) if c.get("reproduz")]
@@ -629,9 +635,9 @@ def com_guarda_de_versao(esperada: str | None):
 # ! Motivo: o limite do plano (seção 3.3) passa a valer antes da Fase 5. A OBSERVAÇÃO só repetia contagens que o CORPO e o SINTOMA já
 # dizem, e pesava cerca de 250 caracteres em cada prompt; a leitura `--tela` ainda precisa dela para o bloco `tb_f4_tela_corpo`.
 def caso_vivo_da_tela(item: dict, status: int | None, contrato: str, corpo_caso: str, sintoma: str, podada: dict | None, ref: dict, observacao: str,
-                      corpo_completo: str | None = None) -> dict:
-    """O caso ao vivo de um caso da tela, sem gabarito, com os metadados que o registro oficial lê (classe e nível) e o corpo inteiro da
-    resposta, que só a busca lê (decisão 96)."""
+                      corpo_completo: str | None = None, sinais_da_busca: list[str] | None = None) -> dict:
+    """O caso ao vivo de um caso da tela, sem gabarito, com os metadados que o registro oficial lê (classe e nível) e o que só a busca lê:
+    o corpo inteiro da resposta (decisão 96) e os fenômenos medidos contra a referência (decisão 97)."""
     arvore = cv.arvore_do_prompt(podada["texto"], ref.get("arvore"), ref.get("nomes")) if podada else None
     caso = cv.montar_caso(f"{item['id']}@tela", item["requisicao"], status, contrato, corpo_caso, sintoma, arvore=arvore or None)
     # classe e nível são metadados do caso (não o gabarito): vão no registro oficial do diagnóstico ao vivo
@@ -639,6 +645,8 @@ def caso_vivo_da_tela(item: dict, status: int | None, contrato: str, corpo_caso:
     caso["observacao_da_poda"] = observacao
     if corpo_completo is not None:
         caso["corpo_completo"] = corpo_completo
+    if sinais_da_busca:
+        caso["sinais_da_busca"] = list(sinais_da_busca)
     return caso
 
 
@@ -726,7 +734,8 @@ class Tela:
                            f"{len(diff_ref['valores']) + diff_ref['valores_a_mais']} valor(es) diferente(s)")
             if diff_ref.get("tempo_ms") is not None:
                 observacao += f", chamada em {diff_ref['tempo_ms']:.0f} ms" + (f" (referência {diff_ref['tempo_ref_ms']:.0f} ms)" if diff_ref.get("tempo_ref_ms") is not None else "")
-        caso_vivo = caso_vivo_da_tela(item, status, self.contrato, corpo_caso, sintoma, podada, ref, observacao, corpo_completo=corpo)
+        caso_vivo = caso_vivo_da_tela(item, status, self.contrato, corpo_caso, sintoma, podada, ref, observacao, corpo_completo=corpo,
+                                      sinais_da_busca=cv.fenomenos_contra_a_referencia(corpo_ref, corpo, diff_ref))
         return {"item": item, "cenario": cenario_, "usado": usado, "ref": ref, "r": r, "inter": inter, "chamada": chamada, "do_alvo": do_alvo,
                 "corpo": corpo, "diff": diff, "diff_ref": diff_ref, "captura": captura, "podada": podada, "diff_arv": diff_arv, "diff_completa": diff_completa,
                 "comparacao": comparacao, "veredito": veredito, "status": status, "sintoma": sintoma, "observacao": observacao,
@@ -1055,8 +1064,8 @@ def rodar_tela(args: argparse.Namespace) -> int:
     ids_pedidos = ler_ids(args.ids)
     versoes = _ambiente().get("versoes", {})
     contrato = _contrato_do_produto()
-    arq_rep = caminhos.RESULTADOS / "fase4" / "reproducibilidade.json"
-    todos = casos_de_avaliacao("avaliacao")
+    todos, nome_rep = casos_e_reproducao_da_tela(args.banco)
+    arq_rep = caminhos.RESULTADOS / "fase4" / nome_rep
     por_id = {c["id"]: c for c in todos}
     sel = selecionar_casos(todos)
     if arq_rep.exists():
@@ -1098,12 +1107,14 @@ def rodar_tela(args: argparse.Namespace) -> int:
         return 2
     condicoes = {"modo": "tela", "criado_em": inicio, "saida": args.saida, "modelo": modelo, "versao_ollama": versao, "k": k,
                  "limiares": limiares, "intervencoes": args.intervencoes, "amostra": len(amostra), "top_logprobs": args.top, "teto_tokens": args.teto,
-                 "leitura_da_probabilidade": dv.LEITURA_DA_PROBABILIDADE, "parcial": parcial, "casos": len(itens), "origem_dos_casos": origem_dos_casos,
+                 "leitura_da_probabilidade": dv.LEITURA_DA_PROBABILIDADE, "parcial": parcial, "casos": len(itens), "banco": args.banco, "origem_dos_casos": origem_dos_casos,
                  "biblioteca": {"rotulo": dv.ROTULO_CURADA, "versao": dv.VERSAO_CURADA, "hash": hash_curada, "origem": "Programacao/AgenteCore/biblioteca_producao"},
                  "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes, "canal": args.canal,
                  "hosts_permitidos": list(ic.HOSTS_PERMITIDOS), "hosts_har": list(ic.CDN_PADRAO), "hosts_silenciosos": list(ic.HOSTS_SILENCIOSOS),
-                 "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "contrato": contrato, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO,
-                 "regra_r2": "nos casos que reproduzem, o rótulo da tela e o do fixture, na mesma sessão do Ollama, diferem em no máximo 3 casos"}
+                 "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "contrato": contrato, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO, "sinais_da_referencia_na_busca": cv.SINAIS_DA_REFERENCIA_NA_BUSCA,
+                 # ! Alteração de IA - Revisar: (06/11/2026, decisão 98) o texto da regra nas condições da corrida passa a dizer a leitura fixada antes da corrida 18d.
+                 # ! Motivo: as condições gravadas junto da corrida são o que se confere depois; com a frase antiga, a 18d pareceria medida pela soma dos dois lados.
+                 "regra_r2": "nos casos que reproduzem, a tela não perde mais de 3 casos para o mesmo caso lido do fixture, na mesma sessão do Ollama (c até 3; b e a soma ficam ao lado, decisão 98)"}
     (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
     marco(f"INÍCIO tela: Ollama {versao}, {modelo}, {dv.ROTULO_CURADA} ({hash_curada}), k = {k}, intervenções {args.intervencoes}; "
           f"{origem_dos_casos}{'; corrida PARCIAL' if parcial else ''}; {len(feitos)} já feito(s)")
@@ -2204,7 +2215,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                  "task_success": {"contrato": "diagnóstico conferido com a causa e o campo certos (ficha 35)",
                                   "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"},
                  "top_logprobs": args.top, "teto_tokens": args.teto, "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes,
-                 "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO}
+                 "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO, "sinais_da_referencia_na_busca": cv.SINAIS_DA_REFERENCIA_NA_BUSCA}
     (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
     marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
           f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "

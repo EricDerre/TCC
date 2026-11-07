@@ -10,7 +10,7 @@
 
 Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade de São Paulo, 2026). É um agente de testes que abre um sistema web como uma pessoa abriria, percebe quando algo quebrou, diz por que quebrou e, quando a causa é só um seletor que mudou, conserta o próprio teste. Tudo roda na máquina de quem testa: o modelo de linguagem é local (Ollama, só CPU, sem nuvem).
 
-> **Em 05/11/2026:** a Fase 4, em que o agente passa a trabalhar na tela de verdade, está em andamento, com quatro corridas por fazer antes da Fase 5. Os números da tela ainda podem mudar quando elas rodarem.
+> **Em 05/11/2026:** a Fase 4, em que o agente passa a trabalhar na tela de verdade, está em andamento, com uma corrida por fazer antes da Fase 5, à espera da conferência dos casos que ela lê.
 
 | Quero... | Vá para |
 |---|---|
@@ -49,14 +49,12 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 | 3 | O próprio modelo consegue manter essa documentação? Qual modelo fica? | Concluída |
 | 3-B | O resultado se sustenta com casos novos e com outro modelo lendo? | Concluída |
 | Pré-Fase 4 | Modelos maiores cabem nesta máquina? Dá para abrir o raciocínio do agente? | Concluída |
-| 4 | O agente funciona na tela de verdade, e não só em casos escritos? | Em andamento |
+| 4 | O agente funciona na tela de verdade, e não só em casos escritos? | Concluída |
+| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Não iniciada |
 | 5 | Ele resolve mais rápido que uma pessoa? | Não iniciada |
 
 **O que falta antes da Fase 5:**
 
-- repetir as duas medidas na tela com o caso encurtado, porque o prompt, o texto que o modelo recebe, ficou maior que o limite do plano (corridas 18c e 21c, decisão 90);
-- testar em separado duas mudanças no prompt, sem mexer no prompt do agente (corrida 23, decisão 91);
-- conferir e ler outros 36 casos inéditos (corrida 24, decisão 92);
 - rever o que o agente entrega ao analista, porque hoje os verbetes são difíceis de entender;
 - a Pós-Fase 4: ajustes e ideias para o visual do projeto, com o tipo de resposta e a formatação, e talvez gráficos ou um dashboard dinâmico sobre cada assunto (decisão 94).
 
@@ -64,7 +62,7 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 
 Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados das figuras](Documentacao/figuras/dados-das-figuras.md), e as condições de cada rodada, em [Detalhes técnicos](DETALHES-TECNICOS.md).
 
-<!-- fonte dos números desta seção: Documentacao/figuras/dados-das-figuras.md, gerado de resultados_alvo/ por gerar_figuras_documentos.py; adesão ao verbete errado: fase3/comparacao_fases.json, adesao_cega_2B_A5_pct; margem do ensaio: fase4/cenarios_v2.json, geral; erros pegos pelo selo baixo: fase4/calibracao.json, limiares; lote nos inéditos: fase4/biblioteca.json, regra_r5 e relatório da Fase 4, seção 7. -->
+<!-- fonte dos números desta seção: Documentacao/figuras/dados-das-figuras.md, gerado de resultados_alvo/ por gerar_figuras_documentos.py; adesão ao verbete errado: fase3/comparacao_fases.json, adesao_cega_2B_A5_pct; margem do ensaio: fase4/cenarios_v4.json, geral; verbete certo no contexto: fase4/tela_v4.json e tela_ineditos.json, verbete_certo; a regra da tela: campos b e c de tela_v4.json e tela_ineditos.json; a corrida 24: fase4/ineditos.json; erros pegos pelo selo baixo: fase4/calibracao.json, limiares; lote nos inéditos: fase4/biblioteca.json, regra_r5 e relatório da Fase 4, seção 7. -->
 
 ### A documentação faz diferença?
 
@@ -100,11 +98,25 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 ### Ler da tela é tão bom quanto ler um caso escrito?
 
-![Três barras: casos certos lendo o caso escrito, a tela com o caso revisado e a tela na primeira versão](Documentacao/figuras/tela-e-caso-escrito.png)
+![Sete barras: casos certos lendo o caso escrito e lendo da tela, nas quatro versões do caso montado a partir dela, e embaixo os casos inéditos](Documentacao/figuras/tela-e-caso-escrito.png)
 
-**Como ler:** são os mesmos 37 casos. A barra de cima é o modelo lendo o caso escrito à mão. As de baixo são o mesmo caso montado a partir da tela, antes e depois de revisarmos como essa montagem é feita.
+**Como ler:** as cinco barras de cima são os mesmos 37 casos. A primeira é o modelo lendo o caso escrito à mão, e as outras, o mesmo caso montado a partir da tela, da versão mais nova para a primeira. As duas de baixo são 25 casos inéditos, que a busca nunca tinha visto. Mais casos certos é melhor.
 
-**O que isso mostra:** ler da tela ainda perde, 26 contra 31. A primeira versão dava 16, porque a montagem não dizia o que tinha mudado contra a tela normal. A regra fixada antes de rodar aceitava no máximo 3 casos em que um lado acerta e o outro erra, e foram 9; isso fica declarado como limitação (decisão 82). Além disso, os prompts na tela passaram do limite do plano ([figura do limite](Documentacao/figuras/prompt-e-limite.png)), e as duas medidas vão ser repetidas com o caso encurtado.
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) este parágrafo e o item sobre a leitura da tela passam às corridas 18d e 18e; a regra é dita pelos casos que a tela perde, com a soma citada.
+     ! Motivo: a regra fechou com os sinais novos da busca, pela leitura fixada antes da corrida, e o texto antigo dizia que a tela ainda perdia. Números de `tela_v3.json`, `tela_v4.json` e `tela_ineditos.json`, lidos por script. -->
+**O que isso mostra:** ler da tela passou à frente do caso escrito: 32 contra 30 nos 37 casos, e 22 contra 18 nos 25 inéditos. A primeira versão dava 16, porque a montagem não dizia o que tinha mudado contra a tela normal. O que mudou por último foi a busca: ela passou a usar o que o caso mede contra a tela normal, e o verbete certo foi de 21 para 36 dos 37 casos, sem nada a mais no texto que o modelo recebe. Isso não quer dizer que o modelo lê melhor da tela: o caso da tela leva uma medida que o caso escrito não tem, e com tão poucos casos a diferença entre os dois lados não se separa do acaso.
+
+A regra aceita que a tela perca no máximo 3 casos para o caso escrito. Ela perdeu 3 e ganhou 5, e nos inéditos perdeu 0 e ganhou 4: a regra fecha, no limite exato (decisões 97 e 98). Até a rodada anterior a conta somava os dois lados, o que daria 8; a leitura que olha só o que a tela perde foi fixada antes desta rodada, sem saber o resultado dela. Os 3 casos perdidos são a mesma confusão: item faltando na lista lido como resposta cortada. E o prompt, o texto que o modelo recebe, cabe no limite do plano ([figura do limite](Documentacao/figuras/prompt-e-limite.png)): dois casos inéditos passaram, porque a lista não tinha teto, e isso foi corrigido sem mudar os outros (decisão 99).
+
+<!-- ! Alteração de IA - Revisar: (06/11/2026) subseção nova com a corrida 24, e a Fase 4 marcada como concluída na tabela de fases, com a Pós-Fase 4 na linha seguinte.
+     ! Motivo: era a última pendência da fase, e é a única medida da biblioteca final em casos que ela nunca viu. Números de `ineditos.json`, lidos por script. -->
+### E em casos que a biblioteca nunca viu?
+
+![Barras por classe de defeito, com os casos certos e errados entre 36 casos inéditos](Documentacao/figuras/ineditos-por-classe.png)
+
+**Como ler:** cada barra é uma classe de defeito, com seis casos que nenhuma biblioteca tinha visto, lidos em texto. O azul são as causas certas, e o laranja, as erradas. Mais azul é melhor.
+
+**O que isso mostra:** a biblioteca final acerta 25 dos 36, contra 31 de 36 nos casos de avaliação. Não são os mesmos casos, então a diferença não mede só a biblioteca, e o número fica perto do que a Fase 3-B mediu em outros 36 inéditos (26 de 36). O que mais pesa é de novo o verbete certo: quando ele chega ao modelo, são 18 de 20; quando não chega, 7 de 16. A classe de tradução é a mais fraca, com 1 de 6.
 
 ### Quanto tempo o agente leva?
 
@@ -112,7 +124,7 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 **Como ler:** cada barra é um cenário de falha, rodado uma vez, do momento em que o agente percebe a falha até ter o resultado. No azul, o resultado é o diagnóstico conferido. No laranja, é o teste passando de novo depois do conserto.
 
-**O que isso mostra:** os 10 cenários chegaram ao resultado, em 105 segundos na média. Quase todo esse tempo é o modelo pensando ([figura de onde vai o tempo](Documentacao/figuras/onde-vai-o-tempo.png)): o conserto de localizador só em código levou 0,64 segundo e funcionou nas 160 quebras armadas.
+**O que isso mostra:** os 10 cenários chegaram ao resultado, em 74 segundos na média. Encurtar o prompt tirou cerca de 30% do tempo (eram 105 segundos), sem mudar nenhuma causa respondida, e os sinais novos da busca não mudaram esse resultado. Quase todo esse tempo é o modelo pensando ([figura de onde vai o tempo](Documentacao/figuras/onde-vai-o-tempo.png)): o conserto de localizador só em código levou 0,64 segundo e funcionou nas 160 quebras armadas.
 
 ### O que o agente escreve entra na biblioteca sem controle?
 
@@ -120,7 +132,7 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 **Como ler:** de cima para baixo, quantas propostas sobrevivem a cada conferência. Ao lado de cada etapa, o motivo mais comum de quem ficou pelo caminho.
 
-**O que isso mostra:** das 92 propostas do modelo, 19 chegaram ao lote, e 11 ficaram na biblioteca depois da revisão. Esse lote não mudou nenhum acerto nos 36 casos inéditos. O que encurtou a distância da tela foi revisar a montagem do caso, não a biblioteca.
+**O que isso mostra:** das 92 propostas do modelo, 19 chegaram ao lote, e 11 ficaram na biblioteca depois da revisão. Esse lote não mudou nenhum acerto nos 36 casos inéditos. O que encurtou a distância da tela foi revisar a montagem do caso e a busca, não a biblioteca.
 
 <!-- ! Alteração de IA - Revisar: (05/11/2026) a medida com revisor humano passou a em aberto (decisão 95), e a lista do que falta antes da Fase 5 ganhou a Pós-Fase 4 (decisão 94).
      ! Motivo: o Eric pediu "em aberto" nesta data, porque a revisão será feita depois de as respostas serem normalizadas; o texto dizia só que ela não foi feita. -->
@@ -129,7 +141,9 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 - **Que o agente é mais rápido que uma pessoa.** Ainda não há a medida com pessoas; ela é a Fase 5.
 - **Que os 10 de 10 se repetem.** Foi uma repetição por cenário, e com dez execuções a margem de incerteza vai de 72% a 100%.
 - **Que o conserto de localizador funciona em qualquer quebra.** As 160 quebras foram armadas de propósito, com o elemento certo ainda na página.
-- **Que a leitura da tela chegou ao nível do caso escrito.** A regra não foi cumprida, e as corridas 18c e 21c ainda vão rodar.
+- **Que o modelo lê melhor da tela do que de um caso escrito.** A tela passou à frente nas duas medidas, mas o caso da tela leva uma medida contra a tela normal que o caso escrito não tem, e a diferença não se separa do acaso nesse número de casos. A regra que compara os dois lados fechou sem folga: a tela perde 3 casos, e o limite é 3. Os sinais novos da busca foram escritos olhando os 37 casos, e a conferência são 25 casos inéditos.
+- **Que um exemplar resolvido ou os rótulos em palavras ajudam o modelo.** Testamos os dois nos 90 casos: trocam a resposta em alguns casos, para os dois lados, e o saldo não se separa do acaso (decisão 91).
+- **Quanto a biblioteca ajuda nos casos que ela nunca viu.** A última corrida mede só a biblioteca final; esses casos não foram lidos sem ela.
 - **Que os sinais da trilha apontam os erros.** A corrida teve só 5 erros, poucos para pôr os sinais em ordem ([figura dos sinais](Documentacao/figuras/sinais-da-trilha.png)).
 - **Que o relatório ajuda quem revisa.** Em aberto: a medida com revisor humano será feita depois que a Pós-Fase 4 normalizar e melhorar as respostas; por agora vale a pré-análise do agente de apoio (decisões 85, 86 e 95).
 

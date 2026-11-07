@@ -333,3 +333,49 @@ Corrida 22 (blocos `tb_f4_trilha_mutacoes` e `tb_f4_trilha_sonda`): o primeiro n
 ### 4.62 O parecer do Claude acerta todos os relatórios da amostra, e isso não mede o que a especificação pede
 
 Sessão de revisão (05/11/2026; `leitura_revisao_trilha.json`): 1 resposta do Eric e 10 pareceres do Claude aprovados por ele (decisões 85 e 86). O parecer do Claude, que cobre os 11 relatórios, inclusive o 1, respondido antes pelo Eric, acertou 11 de 11 decisões e 11 de 11 causas, por quem sabia quantos erros a amostra tem e consultou a biblioteca. Isso mostra que a evidência para julgar existe; não mostra quanto o relatório ajuda um analista. Dos 5 erros, 4 estavam à vista no próprio relatório; o de `semt-9` tem selo alto, nenhum conflito e todas as conferências certas. A medida com revisor humano da especificação (seção 12 c) fica em aberto até a Pós-Fase 4 (decisão 95, que revê a 87). A mesma leitura achou dois defeitos da poda (decisão 89), que não causaram os erros da corrida 22, porque nos casos de texto a poda não chega ao modelo.
+
+<!-- ! Alteração de IA - Revisar: achados 4.63 a 4.66 acrescentados em 05/11/2026, com o que as corridas 18c, 21c e 23 mostraram.
+     ! Motivo: a corrida 18c explicou o que ainda separa a tela do caso escrito, e a 21c mediu o efeito do tamanho do prompt, com tudo o mais igual. Números de `resultados_alvo/fase4/tela_v3.json`, `cenarios_v3.json` e `experimento_prompt.json`, lidos por script. -->
+### 4.63 Encurtar o caso ao vivo tira cerca de 30% do tempo e não muda a causa respondida
+
+Corridas 21b e 21c, no mesmo Ollama, com a mesma biblioteca e os mesmos dez cenários: o MTTR médio foi de 105,2 s para 72,5 s, com Task Success de 10 de 10 nas duas e o rótulo igual em 10 de 10. O maior prompt foi de 1950 para 1340 tokens. Tirar da árvore e do SINTOMA o que não difere da referência não custou diagnóstico nesses cenários, e, como a leitura do prompt é a maior parte do tempo, o que se tira dele volta quase inteiro em segundos. A estimativa da noite da Fase 5 caiu de 1,50 h para 1,05 h.
+
+### 4.64 O que ainda separa a tela do caso escrito é a busca, não a leitura do modelo
+
+Corrida 18c (bloco `tb_f4_tela_verbete`): com o verbete da causa certa entre os entregues, o modelo acerta 19 de 21 lendo da tela e 26 de 27 lendo o caso escrito; sem ele, 8 de 16 e 4 de 10. As taxas são parecidas nos dois lados; o que muda é quantas vezes o verbete chega: 21 na tela e 27 no caso escrito. Sem o verbete certo, o modelo vai para `tipo_divergente`, resposta de 7 dos 10 erros na tela. A busca lê o corpo inteiro desde a decisão 96, que levou o verbete certo de 15 para 21 casos; o molde do sintoma, por não citar a causa, continua com menos termos que o texto escrito à mão. A causa exata é que o caso da tela mede a diferença em números e nenhum passo a traduzia para as palavras da biblioteca; a decisão 97 faz essa tradução em código, e os inéditos conferem, porque ajustar olhando só estes casos contaminaria a medida (achados 4.67 e 4.68).
+
+### 4.65 Com o prompt do tamanho da calibração, o selo de confiança separa melhor na tela
+
+Corridas 18b e 18c (bloco `tb_f4_tela_selo`): o selo alto foi de 9 de 11 para 14 de 15 acertos; o baixo, de 2 de 8 para 6 de 13. Na 18c, 7 dos 10 erros têm selo baixo, e só 1 tem selo alto (`semt-9`). Os limiares vieram de prompts menores (plano, seção 3.3), e a regra de ficar perto desse tamanho se pagou. São 37 casos, e o resultado mistura o corte com a troca de biblioteca e de versão do Ollama.
+
+### 4.66 Um exemplar resolvido ou os rótulos em palavras não mudam o acerto de forma que se possa medir com 90 casos
+
+Corrida 23 (blocos `tb_f4_exp_*`): 70 de 90 com o exemplar (b = 6, c = 4, p = 0,754) e 67 de 90 com os rótulos em palavras (b = 5, c = 6, p = 1,000), contra 68 de 90 na corrida 16. Cada condição troca a causa em 17 casos, para os dois lados. O modelo segue a forma pedida (87 de 90 respostas em palavras) e não copia a causa do exemplar (3 vezes, como na corrida 16). O prompt fica como está (decisão 91).
+
+<!-- ! Alteração de IA - Revisar: achados 4.67 a 4.70 acrescentados em 06/11/2026, com o que as corridas 18d, 21d e 18e mostraram.
+     ! Motivo: a regra R2 fechou com a busca lendo o que o caso mede, os inéditos conferiram, e a leitura achou a confusão que sobra e um defeito de tamanho do caso ao vivo. Números de `tela_v3.json`, `tela_v4.json`, `tela_ineditos.json`, `cenarios_v4.json` e `teto_prompt_tela.json`, lidos por script. -->
+### 4.67 Traduzir a medida para as palavras da biblioteca traz o verbete certo, e o acerto vem junto
+
+Corridas 18c e 18d, no mesmo Ollama, com a mesma biblioteca: a busca do caso ao vivo passou a ler o que ele mede contra a referência, nas palavras dos verbetes, sem nada a mais no prompt (decisão 97). O verbete certo foi de 21 para 36 dos 37 casos, e o acerto na tela, de 27 para 32. O fixture, que não recebe os sinais, não mudou a causa em nenhum caso: é o controle. Com o verbete certo, o modelo acerta 32 de 36 na tela. O que faltava não era leitura do modelo: era o verbete chegar. Nos dez cenários, que já recebiam o verbete certo em 9 de 10, nada mudou (corrida 21d: 10 de 10, 74,0 s, o rótulo igual em 10 de 10).
+
+### 4.68 Nos casos que a busca nunca viu, o ganho se repete
+
+Corrida 18e, com os 25 inéditos da ficha 27 que reproduzem na tela, que não foram olhados para escrever os sinais: o verbete certo chega em 23 de 25 na tela e em 14 no caso escrito, e o modelo acerta 22 e 18 (b = 4, c = 0, p = 0,125). A tela leva uma medida contra a referência que o caso escrito não tem, então isso não diz que o modelo lê melhor da tela: diz que comparar com a tela normal e contar isso à busca vale mais que as palavras de quem escreveu o caso. São 25 casos, sem a conferência da ficha 46, e eles deixam de servir de conferência limpa para outro ajuste.
+
+### 4.69 O que a tela ainda perde é uma confusão só: item faltando lido como resposta cortada
+
+Corrida 18d: os 3 casos que a tela perde para o caso escrito são `contagem_inconsistente` lido como `resposta_truncada` (`tra-4`, `tra-8` e `tra-21`), com o verbete certo entregue e selo baixo. A causa `resposta_truncada` sai 6 vezes na tela e é o gabarito de 3 casos. Nos inéditos, `tra-25` erra do mesmo jeito nos dois lados. Não é a busca: é a leitura de dois verbetes vizinhos, e é assunto para os verbetes que o Eric quer rever antes da Fase 5.
+
+### 4.70 Quando a resposta muda inteira, a comparação por id lista tudo, e o prompt estoura
+
+Corrida 18e: em `semt-27` todos os ids vêm trocados por negativos, e a comparação escreveu 14 ids faltando e 14 sobrando, no CORPO e de novo no SINTOMA (1829 tokens); em `tra-26`, seis campos diferentes viraram seis frases (1620 tokens). Os casos de avaliação não tinham essa forma, e por isso o corte da decisão 90 não a pegou. O teto nas listas (decisão 99) os leva a 1367 e 1387 tokens, medidos, sem mudar os prompts das corridas 18d e 21d. A estimativa pela razão de tokens por caractere dizia 1447 para `semt-27`: quando o texto que sai é mais denso que o resto do prompt, ela exagera, e o número que vale é o medido. A busca de `semt-27` segue indo para `contagem_inconsistente`, porque cada id trocado conta como item faltando ou sobrando; ficou registrado, sem mexer, porque ajustar olhando os inéditos tiraria deles o valor de conferência.
+
+<!-- ! Alteração de IA - Revisar: achados 4.71 e 4.72 acrescentados em 06/11/2026, com o que a corrida 24 mostrou.
+     ! Motivo: é a única medida da biblioteca final em casos que ela nunca viu, e a repetição em texto mediu a variação de uma leitura. Números de `ineditos.json`, lidos por script. -->
+### 4.71 Em casos que nunca viu, a biblioteca final acerta sete em cada dez, e o verbete certo continua pesando mais que tudo
+
+Corrida 24, em texto: 25 de 36 (69,4%; Wilson 95% de 53,1 a 82,0), contra 31 de 36 nos casos de avaliação e 26 de 36 em outros 36 inéditos, na Fase 3-B. Com o verbete certo no contexto, 18 de 20; sem ele, 7 de 16. A classe de tradução faz 1 de 6, e o nível 3, 5 de 12. Não são os mesmos casos dos 36 de avaliação, e não houve leitura sem biblioteca: a corrida diz onde a biblioteca final chega, não quanto ela ajuda.
+
+### 4.72 Lido duas vezes em texto, o mesmo caso deu a mesma causa
+
+Corridas 18e e 24: com o mesmo prompt, a mesma versão do Ollama e a mesma biblioteca, os 25 casos lidos nas duas deram o mesmo rótulo em 25, em sessões diferentes do Ollama, a temperatura 0,1. Nesses mesmos casos, a leitura da tela faz 22 acertos, contra 18 em texto. A diferença entre os dois lados não é variação de corrida.

@@ -1,0 +1,359 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-05T23:15:58",
+    "corrida": "fase4_ensaio_v3",
+    "gerado_por": "avaliar_fase4.py --cenarios"
+  },
+  "condicoes": {
+    "repeticoes": 1,
+    "parcial": false,
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.14",
+    "k": 3,
+    "execucoes": 10,
+    "troca_da_ficha_36": {
+      "sai": "latency",
+      "entra": "escala_ou_unidade_errada",
+      "motivo": "os seis modos da opção (a) cobriam as classes 1, 2, 3 e 5; a decisão 79 pede trocar cenários de contrato por modos novos da ficha 28 que cubram mais classes. Sai latency, que repete a classe 5 de error_500 e tem o MTTR dominado pela espera do tempo limite; entra escala_ou_unidade_errada em preco, da classe 4 (tradução), que nenhum dos seis cobria."
+    },
+    "biblioteca": {
+      "hash": "95af35290860",
+      "origem": "Programacao/AgenteCore/biblioteca_producao",
+      "origem_do_lote": "fase4_biblioteca",
+      "epoca": 101
+    },
+    "mttr": {
+      "contrato": "da detecção (conferência do roteiro que falhou, ou o fio diferente do contrato e da referência, pela regra R1) ao diagnóstico conferido em código (ficha 35)",
+      "localizador": "da detecção (o passo do localizador falhou) à reexecução validada, com o diagnóstico entre as duas e a restauração do banco descontada"
+    },
+    "task_success": {
+      "contrato": "diagnóstico conferido com a causa e o campo certos (ficha 35)",
+      "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"
+    }
+  },
+  "geral": {
+    "n": 10,
+    "sucessos": 10,
+    "task_success_pct": 100.0,
+    "wilson_lo_pct": 72.2,
+    "wilson_hi_pct": 100.0,
+    "detectados": 10,
+    "mttr_n": 10,
+    "mttr_media_s": 72.53,
+    "mttr_mediana_s": 72.62,
+    "mttr_ic_lo_s": 63.87,
+    "mttr_ic_hi_s": 79.96
+  },
+  "por_tipo": [
+    {
+      "tipo": "contrato",
+      "n": 6,
+      "sucessos": 6,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 61.0,
+      "wilson_hi_pct": 100.0,
+      "detectados": 6,
+      "mttr_n": 6,
+      "mttr_media_s": 79.88,
+      "mttr_mediana_s": 78.08,
+      "mttr_ic_lo_s": 74.44,
+      "mttr_ic_hi_s": 85.95
+    },
+    {
+      "tipo": "localizador",
+      "n": 4,
+      "sucessos": 4,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 51.0,
+      "wilson_hi_pct": 100.0,
+      "detectados": 4,
+      "mttr_n": 4,
+      "mttr_media_s": 61.51,
+      "mttr_mediana_s": 66.04,
+      "mttr_ic_lo_s": 48.01,
+      "mttr_ic_hi_s": 70.22
+    }
+  ],
+  "por_cenario": [
+    {
+      "cenario": "contrato-malformed_json",
+      "tipo": "contrato",
+      "modo": "malformed_json",
+      "classe": 1,
+      "causa_esperada": "resposta_truncada",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 88.37,
+      "mttr_mediana_s": 88.37,
+      "mttr_ic_lo_s": 88.37,
+      "mttr_ic_hi_s": 88.37,
+      "rotulos": {
+        "resposta_truncada": 1
+      },
+      "segundos_media": 88.6,
+      "fichas_da_falha": [
+        "a conferência \"grid com 14 cartões\" (passo 3) falhou: esperado 14 elementos, observado 0 elementos"
+      ]
+    },
+    {
+      "cenario": "contrato-field_missing",
+      "tipo": "contrato",
+      "modo": "field_missing",
+      "classe": 2,
+      "causa_esperada": "campo_ausente",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 72.62,
+      "mttr_mediana_s": 72.62,
+      "mttr_ic_lo_s": 72.62,
+      "mttr_ic_hi_s": 72.62,
+      "rotulos": {
+        "campo_ausente": 1
+      },
+      "segundos_media": 73.1,
+      "fichas_da_falha": [
+        "a conferência \"preço do primeiro cartão\" (passo 4) falhou: esperado texto no padrão ^R\\$ \\d+,\\d{2}$, observado undefined"
+      ]
+    },
+    {
+      "cenario": "contrato-field_renamed",
+      "tipo": "contrato",
+      "modo": "field_renamed",
+      "classe": 2,
+      "causa_esperada": "campo_renomeado",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 72.62,
+      "mttr_mediana_s": 72.62,
+      "mttr_ic_lo_s": 72.62,
+      "mttr_ic_hi_s": 72.62,
+      "rotulos": {
+        "campo_renomeado": 1
+      },
+      "segundos_media": 73.0,
+      "fichas_da_falha": [
+        "a conferência \"preço do primeiro cartão\" (passo 4) falhou: esperado texto no padrão ^R\\$ \\d+,\\d{2}$, observado undefined"
+      ]
+    },
+    {
+      "cenario": "contrato-type_drift",
+      "tipo": "contrato",
+      "modo": "type_drift",
+      "classe": 3,
+      "causa_esperada": "tipo_divergente",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 72.72,
+      "mttr_mediana_s": 72.72,
+      "mttr_ic_lo_s": 72.72,
+      "mttr_ic_hi_s": 72.72,
+      "rotulos": {
+        "tipo_divergente": 1
+      },
+      "segundos_media": 73.1,
+      "fichas_da_falha": [
+        "o roteiro passou na tela, mas o fio acusou: diff do contrato: tipo_diferente; corpo diferente da referência em modo normal"
+      ]
+    },
+    {
+      "cenario": "contrato-escala_ou_unidade_errada",
+      "tipo": "contrato",
+      "modo": "escala_ou_unidade_errada",
+      "classe": 4,
+      "causa_esperada": "escala_ou_unidade_errada",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 89.5,
+      "mttr_mediana_s": 89.5,
+      "mttr_ic_lo_s": 89.5,
+      "mttr_ic_hi_s": 89.5,
+      "rotulos": {
+        "escala_ou_unidade_errada": 1
+      },
+      "segundos_media": 89.9,
+      "fichas_da_falha": [
+        "o roteiro passou na tela, mas o fio acusou: corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais"
+      ]
+    },
+    {
+      "cenario": "contrato-error_500",
+      "tipo": "contrato",
+      "modo": "error_500",
+      "classe": 5,
+      "causa_esperada": "erro_interno_do_servidor",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 83.44,
+      "mttr_mediana_s": 83.44,
+      "mttr_ic_lo_s": 83.44,
+      "mttr_ic_hi_s": 83.44,
+      "rotulos": {
+        "erro_interno_do_servidor": 1
+      },
+      "segundos_media": 83.8,
+      "fichas_da_falha": [
+        "a conferência \"grid com 14 cartões\" (passo 3) falhou: esperado 14 elementos, observado 0 elementos"
+      ]
+    },
+    {
+      "cenario": "localizador-front-busca",
+      "tipo": "localizador",
+      "modo": "id_renomeado",
+      "classe": 6,
+      "causa_esperada": "localizador_quebrado",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 71.78,
+      "mttr_mediana_s": 71.78,
+      "mttr_ic_lo_s": 71.78,
+      "mttr_ic_hi_s": 71.78,
+      "rotulos": {
+        "localizador_quebrado": 1
+      },
+      "segundos_media": 77.7,
+      "fichas_da_falha": [
+        "o passo 2 (esperar #buscar visível) não terminou: TimeoutError: Page.wait_for_selector: Timeout 5000ms exceeded. Call log: - waiting for locator(\"#buscar\") to be visible"
+      ]
+    },
+    {
+      "cenario": "localizador-front-admin-login",
+      "tipo": "localizador",
+      "modo": "classe_trocada",
+      "classe": 6,
+      "causa_esperada": "localizador_quebrado",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 42.16,
+      "mttr_mediana_s": 42.16,
+      "mttr_ic_lo_s": 42.16,
+      "mttr_ic_hi_s": 42.16,
+      "rotulos": {
+        "localizador_quebrado": 1
+      },
+      "segundos_media": 47.9,
+      "fichas_da_falha": [
+        "o passo 5 (clicar em button.btn-primary) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator(\"button.btn-primary\")"
+      ]
+    },
+    {
+      "cenario": "localizador-front-admin-produtos",
+      "tipo": "localizador",
+      "modo": "texto_alterado",
+      "classe": 6,
+      "causa_esperada": "localizador_quebrado",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 66.53,
+      "mttr_mediana_s": 66.53,
+      "mttr_ic_lo_s": 66.53,
+      "mttr_ic_hi_s": 66.53,
+      "rotulos": {
+        "localizador_quebrado": 1
+      },
+      "segundos_media": 72.9,
+      "fichas_da_falha": [
+        "o passo 11 (clicar em role=button[name=/EXCLUIR$/] >> nth=0) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator(\"role=button[name=/EXCLUIR$/]\").first"
+      ]
+    },
+    {
+      "cenario": "localizador-front-cliente-reserva",
+      "tipo": "localizador",
+      "modo": "estrutura_alterada",
+      "classe": 6,
+      "causa_esperada": "localizador_quebrado",
+      "n": 1,
+      "sucessos": 1,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 20.7,
+      "wilson_hi_pct": 100.0,
+      "detectados": 1,
+      "mttr_n": 1,
+      "mttr_media_s": 65.55,
+      "mttr_mediana_s": 65.55,
+      "mttr_ic_lo_s": 65.55,
+      "mttr_ic_hi_s": 65.55,
+      "rotulos": {
+        "localizador_quebrado": 1
+      },
+      "segundos_media": 73.1,
+      "fichas_da_falha": [
+        "o passo 11 (clicar em #reserva_login > input[type=submit]) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator(\"#reserva_login > input[type=submit]\")"
+      ]
+    }
+  ],
+  "tempo": {
+    "execucoes": 10,
+    "segundos_media": 75.3,
+    "segundos_total": 753.1,
+    "estimativa_fase5_h": 1.05
+  },
+  "deteccao": {
+    "conferencia_do_roteiro": 4,
+    "contrato_no_fio": 2,
+    "passo_do_localizador": 4
+  },
+  "sem_task_success": [],
+  "navegador": {
+    "versoes": [
+      "156.0.8078.4"
+    ],
+    "unica": true
+  },
+  "banco": {
+    "hashes_de_inicio": [
+      "9fe5e7cb64288c9d"
+    ],
+    "unico": true
+  },
+  "prompt": {
+    "maximo_da_calibracao": 1281,
+    "limite_mais_10_pct": 1409,
+    "acima": [],
+    "maximo_da_tela": 1340
+  }
+}

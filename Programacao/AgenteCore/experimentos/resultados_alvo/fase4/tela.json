@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-11-01T13:24:07",
+    "gerado_em": "2026-11-06T09:39:31",
     "corrida": "fase4_tela",
     "fonte": "diagnosticos__tela.jsonl, diagnosticos__fixture.jsonl, tela.jsonl e trilha_tela.jsonl da corrida; gabarito dos bancos de casos"
   },
@@ -15,6 +15,7 @@
     "discordantes": 17,
     "limite_r2": 3,
     "dentro_do_limite_r2": false,
+    "dentro_pela_soma": false,
     "p_mcnemar": 0.0003,
     "casos_que_mudaram": [
       "lex-11",
@@ -292,6 +293,42 @@
       "tra-17",
       "tra-20"
     ]
+  },
+  "verbete_certo": {
+    "tela": {
+      "presente": {
+        "casos": 8,
+        "acertos": 8
+      },
+      "ausente": {
+        "casos": 29,
+        "acertos": 8
+      }
+    },
+    "fixture": {
+      "presente": {
+        "casos": 28,
+        "acertos": 26
+      },
+      "ausente": {
+        "casos": 9,
+        "acertos": 5
+      }
+    }
+  },
+  "acerto_por_selo": {
+    "alto": {
+      "casos": 5,
+      "acertos": 4
+    },
+    "medio": {
+      "casos": 22,
+      "acertos": 11
+    },
+    "baixo": {
+      "casos": 10,
+      "acertos": 1
+    }
   },
   "casos": [
     {

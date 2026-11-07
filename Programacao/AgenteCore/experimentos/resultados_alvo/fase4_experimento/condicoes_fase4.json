@@ -1,0 +1,47 @@
+{
+  "modo": "experimento_prompt",
+  "criado_em": "2026-11-05T20:10:18",
+  "saida": "fase4_experimento",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.14",
+  "k": 3,
+  "condicoes": [
+    "exemplar",
+    "rotulos_por_extenso"
+  ],
+  "casos": 90,
+  "parcial": false,
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "biblioteca": {
+    "hash": "1fca10f1a6f6",
+    "origem": "fase4_calibracao/k3/bibliotecas/qwen2.5_7b/epoca-100"
+  },
+  "exemplar": "EXEMPLO RESOLVIDO (de outro sistema, só para mostrar a forma da resposta):\nREQUISIÇÃO: GET /api/clientes/7\n\nSTATUS HTTP: 500\n\nCONTRATO ESPERADO PELA INTERFACE: id: inteiro | nome: texto\n\nCORPO DA RESPOSTA:\n{\"error\": \"database connection lost\"}\n\nSINTOMA OBSERVADO: A tela do cliente mostra uma mensagem de erro no lugar dos dados.\n\nO servidor falhou ao atender a chamada: a resposta 500 traz só a mensagem de erro, sem os campos do contrato.\nCAUSA_RAIZ: erro_interno_do_servidor\nCAMPO: nenhum\nIMPACTO: O usuário não vê os dados do cliente.\nFONTE: nenhum\n\nCASO A ANALISAR:\n",
+  "causa_do_exemplar": "erro_interno_do_servidor",
+  "rotulos_por_extenso": {
+    "corpo_nao_e_json": "corpo não é JSON",
+    "corpo_vazio": "corpo vazio",
+    "resposta_truncada": "resposta truncada",
+    "codificacao_incorreta": "codificação incorreta",
+    "campo_ausente": "campo ausente",
+    "campo_renomeado": "campo renomeado",
+    "estrutura_aninhada_divergente": "estrutura aninhada divergente",
+    "colecao_no_lugar_de_objeto": "coleção no lugar de objeto",
+    "tipo_divergente": "tipo divergente",
+    "valor_fora_do_dominio": "valor fora do domínio",
+    "formato_de_data_divergente": "formato de data divergente",
+    "nulo_inesperado": "nulo inesperado",
+    "escala_ou_unidade_errada": "escala ou unidade errada",
+    "chave_de_juncao_errada": "chave de junção errada",
+    "contagem_inconsistente": "contagem inconsistente",
+    "tempo_de_resposta_excedido": "tempo de resposta excedido",
+    "limite_de_requisicoes": "limite de requisições",
+    "dado_desatualizado": "dado desatualizado",
+    "registro_duplicado": "registro duplicado",
+    "erro_interno_do_servidor": "erro interno do servidor",
+    "recurso_inexistente": "recurso inexistente",
+    "localizador_quebrado": "localizador quebrado",
+    "estado_da_tela_divergente": "estado da tela divergente"
+  }
+}

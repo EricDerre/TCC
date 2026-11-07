@@ -88,47 +88,48 @@ Os números de cada figura de [`Documentacao/figuras/`](.), lidos dos registros 
 
 ## O agente acerta tanto lendo da tela?
 
-[Figura](tela-e-caso-escrito.png). Fonte: `fase4/tela.json` e `fase4/tela_v2.json` (`resumo`, corridas 18 e 18b).
+[Figura](tela-e-caso-escrito.png). Fonte: `fase4/tela.json`, `tela_v2.json`, `tela_v3.json`, `tela_v4.json` e `tela_ineditos.json` (`resumo`, corridas 18, 18b, 18c, 18d e 18e).
 
 | Leitura | Casos certos | De |
 |---|---|---|
-| Caso escrito | 31 | 37 |
+| Caso escrito (corrida 18d) | 30 | 37 |
+| Tela, com os sinais novos da busca (corrida 18d) | 32 | 37 |
+| Tela, com o prompt dentro do limite (corrida 18c) | 27 | 37 |
 | Tela, com o caso ao vivo revisado (corrida 18b) | 26 | 37 |
 | Tela, primeira versão do caso ao vivo (corrida 18) | 16 | 37 |
+| Inéditos, caso escrito (corrida 18e) | 18 | 25 |
+| Inéditos, tela (corrida 18e) | 22 | 25 |
 
 ## O prompt na tela cabe no limite?
 
-[Figura](prompt-e-limite.png). Fonte: `fase4/prompt_tela_blocos.json` (limite de 1409 tokens: maior prompt da calibração mais 10%; tokens estimados).
+[Figura](prompt-e-limite.png). Fonte: tokens de entrada medidos em `fase4/tela_v2.json`, `tela_v3.json`, `tela_v4.json` e `tela_ineditos.json` (`casos`) e em `fase4_ensaio_v2/`, `fase4_ensaio_v3/` e `fase4_ensaio_v4/` (`diagnosticos__cenarios.jsonl`); limite de 1409 tokens: maior prompt da calibração mais 10%.
 
-| Corrida | Corte | Menor | Mediana | Maior | Acima do limite | De |
+| Conjunto | Corrida | Menor | Mediana | Maior | Acima do limite | De |
 |---|---|---|---|---|---|---|
-| 18b | Como rodou | 1595 | 1803 | 2034 | 37 | 37 |
-| 18b | Árvore só com o que mudou | 1148 | 1331 | 1565 | 12 | 37 |
-| 18b | E sem a linha de observação | 1068 | 1249 | 1484 | 5 | 37 |
-| 18b | E o sintoma só com contagens | 1053 | 1231 | 1454 | 1 | 37 |
-| 18b | Sem árvore nenhuma (só para comparar) | 1055 | 1280 | 1461 | 4 | 37 |
-| 21b | Como rodou | 1219 | 1689,5 | 1950 | 9 | 10 |
-| 21b | Árvore só com o que mudou | 1014 | 1400,0 | 1669 | 5 | 10 |
-| 21b | E sem a linha de observação | 934 | 1325,5 | 1585 | 3 | 10 |
-| 21b | E o sintoma só com contagens | 934 | 1301,0 | 1585 | 3 | 10 |
-| 21b | Sem árvore nenhuma (só para comparar) | 987 | 1267,5 | 1419 | 1 | 10 |
+| Casos lidos da tela | Antes do corte (18b) | 1595 | 1803 | 2034 | 37 | 37 |
+| Casos lidos da tela | Depois do corte (18c) | 1069 | 1239 | 1373 | 0 | 37 |
+| Casos lidos da tela | Com os sinais da busca (18d) | 1069 | 1219 | 1385 | 0 | 37 |
+| Casos lidos da tela | Inéditos, com os sinais da busca (18e) | 1080 | 1231 | 1829 | 2 | 25 |
+| 10 cenários | Antes do corte (21b) | 1219 | 1689,5 | 1950 | 9 | 10 |
+| 10 cenários | Depois do corte (21c) | 1107 | 1164,5 | 1340 | 0 | 10 |
+| 10 cenários | Com os sinais da busca (21d) | 1107 | 1164,5 | 1385 | 0 | 10 |
 
 ## Quanto tempo o agente leva, cenário a cenário
 
-[Figura](tempo-por-cenario.png). Fonte: `fase4/cenarios_v2.json` (`por_cenario`, `geral`, corrida 21b).
+[Figura](tempo-por-cenario.png). Fonte: `fase4/cenarios_v4.json` (`por_cenario`, `geral`, corrida 21d) e `fase4/cenarios_v2.json` (`geral`, corrida 21b, a média de antes do corte).
 
 | Cenário | Tipo | Segundos da detecção ao resultado | Chegou ao resultado | Execuções |
 |---|---|---|---|---|
-| Resposta cortada no meio | contrato | 126,0 | 1 | 1 |
-| Campo sumiu da resposta | contrato | 111,8 | 1 | 1 |
-| Campo mudou de nome | contrato | 116,9 | 1 | 1 |
-| Campo mudou de tipo | contrato | 74,5 | 1 | 1 |
-| Preço na escala errada | contrato | 135,5 | 1 | 1 |
-| API devolve erro 500 | contrato | 123,8 | 1 | 1 |
-| Busca | localizador | 117,7 | 1 | 1 |
-| Login do administrador | localizador | 63,7 | 1 | 1 |
-| Lista de produtos do administrador | localizador | 93,0 | 1 | 1 |
-| Reserva do cliente | localizador | 88,9 | 1 | 1 |
+| Resposta cortada no meio | contrato | 92,7 | 1 | 1 |
+| Campo sumiu da resposta | contrato | 73,3 | 1 | 1 |
+| Campo mudou de nome | contrato | 73,1 | 1 | 1 |
+| Campo mudou de tipo | contrato | 73,4 | 1 | 1 |
+| Preço na escala errada | contrato | 91,2 | 1 | 1 |
+| API devolve erro 500 | contrato | 85,0 | 1 | 1 |
+| Busca | localizador | 73,3 | 1 | 1 |
+| Login do administrador | localizador | 42,3 | 1 | 1 |
+| Lista de produtos do administrador | localizador | 66,4 | 1 | 1 |
+| Reserva do cliente | localizador | 68,8 | 1 | 1 |
 
 ## O que acontece com o que o agente propõe
 
@@ -170,25 +171,38 @@ Os números de cada figura de [`Documentacao/figuras/`](.), lidos dos registros 
 
 ## Onde a leitura da tela perde acertos
 
-[Figura](tela-por-classe.png). Fonte: `fase4/tela_v2.json` (`por_classe`, corrida 18b).
+[Figura](tela-por-classe.png). Fonte: `fase4/tela_v4.json` (`por_classe`, corrida 18d).
 
 | Classe de defeito | Casos | Certos na tela | Certos no caso escrito |
 |---|---|---|---|
-| Léxica | 8 | 6 | 7 |
-| Sintática | 7 | 5 | 5 |
-| Semântica | 8 | 4 | 6 |
-| Tradução | 8 | 6 | 7 |
-| Runtime | 5 | 4 | 5 |
+| Léxica | 8 | 8 | 7 |
+| Sintática | 7 | 7 | 5 |
+| Semântica | 8 | 6 | 5 |
+| Tradução | 8 | 5 | 7 |
+| Runtime | 5 | 5 | 5 |
 | Efeito | 1 | 1 | 1 |
+
+## E em casos que a biblioteca nunca viu?
+
+[Figura](ineditos-por-classe.png). Fonte: `fase4/ineditos.json` (`por_classe`, `resumo`, `referencia`, corrida 24).
+
+| Classe de defeito | Casos | Certos | Errados |
+|---|---|---|---|
+| Léxica | 6 | 6 | 0 |
+| Sintática | 6 | 5 | 1 |
+| Semântica | 6 | 4 | 2 |
+| Tradução | 6 | 1 | 5 |
+| Runtime | 6 | 5 | 1 |
+| Efeito | 6 | 4 | 2 |
 
 ## Onde o tempo vai
 
-[Figura](onde-vai-o-tempo.png). Fonte: `fase4/cura.json` (`resumo`, corrida 19), `fase4/tela_v2.json` (`resumo`, corrida 18b), `fase4/cenarios_v2.json` (`por_tipo`, corrida 21b).
+[Figura](onde-vai-o-tempo.png). Fonte: `fase4/cura.json` (`resumo`, corrida 19), `fase4/tela_v4.json` (`resumo`, corrida 18d), `fase4/cenarios_v4.json` (`por_tipo`, corrida 21d).
 
 | Etapa | Segundos (mediana) | Usa o modelo |
 |---|---|---|
 | Cura de localizador só em código | 0,6 | não |
-| Diagnóstico de um caso escrito | 51,5 | sim |
-| Diagnóstico de um caso da tela | 82,5 | sim |
-| Localizador, da detecção à reexecução | 90,9 | sim |
-| Contrato, da detecção ao diagnóstico conferido | 120,3 | sim |
+| Diagnóstico de um caso escrito | 58,0 | sim |
+| Diagnóstico de um caso da tela | 59,2 | sim |
+| Localizador, da detecção à reexecução | 67,6 | sim |
+| Contrato, da detecção ao diagnóstico conferido | 79,2 | sim |

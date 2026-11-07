@@ -332,6 +332,10 @@ Patch no código da aplicação-alvo (ABNT §2.1); troca de modelo, de motor ou 
      ! Motivo: o plano aprovado (P8) prevê um revisor por documento de texto; as correções entram declaradas, para o texto continuar rastreável. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026, depois do P8) as seis linhas que apontavam para as fichas 42 a 45 passaram a dizer a resposta do Eric (decisões 90 a 93).
      ! Motivo: as fichas foram respondidas no mesmo dia; o anexo diria que ainda dependem de decisão. -->
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) as linhas da regra R2 e do limite do prompt no anexo ganham o resultado das corridas 18d e 18e e o teto nas listas.
+     ! Motivo: o anexo diz onde a execução saiu do plano, e essas duas regras fecharam com desvios que precisam estar aqui. Números de `tela_v4.json`, `tela_ineditos.json` e `teto_prompt_tela.json`, lidos por script. -->
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a linha da regra R2 no anexo diz a leitura fixada antes da corrida 18d; o texto aprovado da regra, na seção 5, fica como está.
+     ! Motivo: o plano diz "diferem em no máximo 3 casos" sem dizer para que lado, e a leitura nova é um desvio que precisa estar registrado aqui. -->
 ## Anexo: desvios do plano (fechamento em 05/11/2026)
 
 O texto acima fica como foi aprovado. Esta tabela diz onde a execução saiu dele e por quê. O relatório da fase está em `Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md`.
@@ -342,15 +346,15 @@ O texto acima fica como foi aprovado. Esta tabela diz onde a execução saiu del
 | Aba "Cérebro ao vivo" (seções 3.2 e 3.8) | Não foi feita | Ficha 45, decisão 93: entra na interface para o analista, depois da Fase 5 |
 | Explorador de casos lendo trilhas v2 (seção 3.8) | Não foi feito: ele lê só as trilhas da Pré-Fase 4 | Ficha 45, decisão 93: entra na interface para o analista, depois da Fase 5 |
 | Trace do Playwright só na falha (seção 3.2, ficha 33) | Não foi feito: as corridas guardam árvore, corpo e eventos na trilha, sem trace | Ficha 45, decisão 93: entra na interface para o analista, e a Fase 5 roda sem trace |
-| Prompt ao vivo até 10% acima do maior da calibração, senão a poda aperta (seção 3.3) | Não cumprido: na corrida 18b os 37 prompts passaram de 1409 tokens, o maior com 2034, e a poda não apertou | Ficha 42, decisão 90: o caso ao vivo encurta e as corridas 18c e 21c repetem as duas; relatório, seção 5 |
-| Experimento em texto com os itens da decisão 55 (ficha 34 a) | Não rodou: não entrou na tabela de corridas (seção 6), e o código não foi escrito | Ficha 43, decisão 91: é a corrida 23, com o prompt do agente congelado |
-| 36 inéditos conferidos pelo Eric antes da corrida 16 e o conjunto de 108 casos (ficha 27 a) | Os casos existem e passaram pela reprodução (25 de 36); a conferência do Eric não está registrada, e nenhuma corrida com modelo os leu | Ficha 44, decisão 92: o Eric confere, e a corrida 24 os lê |
+| Prompt ao vivo até 10% acima do maior da calibração, senão a poda aperta (seção 3.3) | Não cumprido: na corrida 18b os 37 prompts passaram de 1409 tokens, o maior com 2034, e a poda não apertou | Ficha 42, decisão 90: o caso ao vivo encurtou, e as corridas 18c e 21c cumpriram o limite em 05/11/2026 (maior prompt com 1373 e 1340 tokens), e a 18d e a 21d também (1385 e 1385). Na 18e, 2 de 25 passaram (1829 e 1620), e o teto nas listas os leva a 1367 e 1387, sem corrida nova (decisão 99); relatório, seções 5 e 8 |
+| Experimento em texto com os itens da decisão 55 (ficha 34 a) | Não rodou: não entrou na tabela de corridas (seção 6), e o código não foi escrito | Ficha 43, decisão 91: rodou como corrida 23 em 05/11/2026, com o prompt do agente congelado; relatório, seção 4.1 |
+| 36 inéditos conferidos pelo Eric antes da corrida 16 e o conjunto de 108 casos (ficha 27 a) | Os casos existem e passaram pela reprodução (25 de 36); a conferência do Eric não está registrada, e nenhuma corrida com modelo os leu | Ficha 44, decisão 92: o Eric conferiu em 06/11/2026, sem mudar nenhum (ficha 46, decisão 100), e a corrida 24 os leu no mesmo dia (25 de 36); a corrida 18e leu 25 deles, na tela e em texto (decisão 97) |
 | `fase4.py`, irmão de `pre_fase4.py` (seção 3.2) | Não foi criado: `avaliar_fase4.py` usa `pre_fase4.fechar`, que ganhou o parâmetro `blocos_de`, e `LEITURA_NO_RELATORIO` escolhe a leitura de cada prefixo | `avaliar_fase4.py` |
 | `avaliar_fase4.py --custo` (seção 8) | Não foi criado: o custo saiu medido por corrida | Relatório, seção 2 |
 | `analisar_confianca.py` estendido aos 90 (P3) | A curva e os limiares saíram em `avaliar_fase4.py --calibracao`, com as funções de `analisar_confianca` | `calibracao.json`, `limiares.json` |
 | Varredura de `num_thread` (P0, item 4, opcional) | Não rodou | Livro-razão, 26/10 |
 | Corrida 18 (uma) | Duas: a 18 reprovou o caso de entrada, e a 18b vale como a corrida 18 | Decisões 81 e 82 |
-| Regra R2 | Não cumprida: b + c = 9 contra o limite de 3, limitação declarada | Decisão 82 |
+| Regra R2 | Não cumprida até a corrida 18c, limitação declarada: b + c = 9 na 18b e 7 na 18c, contra o limite de 3. O texto do plano não diz para que lado: desde 06/11/2026, antes da corrida 18d, a regra conta os casos que a tela perde para o fixture, com b e a soma ao lado. Cumprida na 18d (c = 3, b = 5, no limite exato) e nos inéditos, na 18e (c = 0, b = 4); pela soma ficaria fora | Decisões 82, 97 e 98 |
 | Corrida 19: 80 execuções | 160 execuções, porque a ficha 29 (c) pede as duas formas de quebra | Decisão 80 |
 | Corrida 20: 156 inferências, uma noite | 158 inferências, em duas partes: a primeira parou na sonda, e o conserto veio antes do relançamento | Roadmap §2.12 |
 | Corrida 21 (uma) | Duas: a 21 mostrou o defeito do recarregamento do login, e a 21b, a leitura vigente, conferiu o conserto com o modelo | Roadmap §2.13 e §2.14 |

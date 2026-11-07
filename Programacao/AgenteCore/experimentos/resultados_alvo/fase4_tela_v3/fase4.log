@@ -1,0 +1,47 @@
+﻿[2026-11-05 18:39:03] rodar_fase4.ps1: modo tela, saida fase4_tela_v3, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-05 18:39:06] Ollama 0.40.14; modelo qwen2.5:7b; RAM livre 7,9 GB
+[2026-11-05 18:39:06] testar_fase4.py
+[2026-11-05 18:39:34] executar_fase4.py --modo tela --saida fase4_tela_v3 --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20
+[2026-11-05 18:39:36] INÍCIO tela: Ollama 0.40.14, qwen2.5:7b, L1 curada (95af35290860), k = 3, intervenções desligadas; os 37 casos que reproduzem em reproducibilidade.json (corrida 17); 0 já feito(s)
+[2026-11-05 18:39:51] referência api-catalogo: passou em 0.446 s; árvore 193 nós, 39 linhas
+[2026-11-05 18:39:52] referência api-detalhe produto 1: passou em 0.587 s; árvore 197 nós, 42 linhas
+[2026-11-05 18:42:40] [1/37] lex-1 (malformed_json): tela resposta_truncada (p 1.00, selo alto) | fixture resposta_truncada (p 1.00, selo alto) | concordam | 89.28 + 70.53 s
+[2026-11-05 18:44:41] [2/37] lex-4 (codificacao_incorreta): tela codificacao_incorreta (p 0.97, selo medio) | fixture codificacao_incorreta (p 1.00, selo alto) | concordam | 62.98 + 48.57 s
+[2026-11-05 18:46:40] [3/37] sin-4 (colecao_no_lugar_de_objeto): tela colecao_no_lugar_de_objeto (p 1.00, selo alto) | fixture colecao_no_lugar_de_objeto (p 0.86, selo medio) | concordam | 71.48 + 39.02 s
+[2026-11-05 18:48:57] [4/37] sin-5 (field_missing): tela campo_ausente (p 0.95, selo medio) | fixture colecao_no_lugar_de_objeto (p 0.62, selo baixo) | DISCORDAM | 71.54 + 56.75 s
+[2026-11-05 18:51:29] [5/37] semt-1 (type_drift): tela tipo_divergente (p 1.00, selo alto) | fixture tipo_divergente (p 0.93, selo medio) | concordam | 70.68 + 72.73 s
+[2026-11-05 18:53:41] [6/37] tra-1 (escala_ou_unidade_errada): tela escala_ou_unidade_errada (p 0.47, selo baixo) | fixture escala_ou_unidade_errada (p 1.00, selo alto) | concordam | 50.02 + 73.86 s
+[2026-11-05 18:56:10] [7/37] tra-4 (contagem_inconsistente): tela resposta_truncada (p 0.56, selo baixo) | fixture contagem_inconsistente (p 0.97, selo medio) | DISCORDAM | 63.52 + 76.65 s
+[2026-11-05 18:58:41] [8/37] run-1 (error_500): tela erro_interno_do_servidor (p 0.99, selo alto) | fixture erro_interno_do_servidor (p 0.98, selo medio) | concordam | 83.89 + 59.22 s
+[2026-11-05 19:01:09] [9/37] run-2 (latency): tela tempo_de_resposta_excedido (p 0.71, selo baixo) | fixture tempo_de_resposta_excedido (p 1.00, selo alto) | concordam | 38.56 + 71.59 s
+[2026-11-05 19:02:42] [10/37] efe-3 (field_missing): tela campo_ausente (p 0.99, selo medio) | fixture campo_ausente (p 0.57, selo baixo) | concordam | 36.13 + 48.82 s
+[2026-11-05 19:05:09] [11/37] lex-7 (corpo_vazio): tela corpo_vazio (p 1.00, selo alto) | fixture corpo_vazio (p 1.00, selo alto) | concordam | 80.58 + 58.03 s
+[2026-11-05 19:07:14] [12/37] lex-8 (codificacao_incorreta): tela tipo_divergente (p 0.91, selo medio) | fixture codificacao_incorreta (p 0.75, selo baixo) | DISCORDAM | 46.15 + 70.56 s
+[2026-11-05 19:08:58] [13/37] lex-10 (malformed_json): tela resposta_truncada (p 1.00, selo alto) | fixture resposta_truncada (p 1.00, selo alto) | concordam | 19.1 + 75.68 s
+[2026-11-05 19:11:10] [14/37] lex-11 (codificacao_incorreta): tela codificacao_incorreta (p 0.98, selo medio) | fixture codificacao_incorreta (p 1.00, selo alto) | concordam | 62.25 + 61.27 s
+[2026-11-05 19:13:53] [15/37] sin-11 (estrutura_aninhada_divergente): tela estrutura_aninhada_divergente (p 0.96, selo medio) | fixture estrutura_aninhada_divergente (p 1.00, selo alto) | concordam | 78.1 + 76.6 s
+[2026-11-05 19:16:06] [16/37] sin-14 (field_renamed): tela campo_renomeado (p 1.00, selo alto) | fixture colecao_no_lugar_de_objeto (p 0.31, selo baixo) | DISCORDAM | 69.32 + 55.04 s
+[2026-11-05 19:18:29] [17/37] semt-8 (nulo_inesperado): tela nulo_inesperado (p 1.00, selo alto) | fixture nulo_inesperado (p 0.85, selo medio) | concordam | 67.13 + 67.8 s
+[2026-11-05 19:20:26] [18/37] semt-9 (valor_fora_do_dominio): tela tipo_divergente (p 1.00, selo alto) | fixture tipo_divergente (p 1.00, selo alto) | concordam | 71.75 + 36.79 s
+[2026-11-05 19:22:04] [19/37] semt-14 (nulo_inesperado): tela nulo_inesperado (p 1.00, selo alto) | fixture nulo_inesperado (p 0.74, selo baixo) | concordam | 35.08 + 54.06 s
+[2026-11-05 19:23:54] [20/37] tra-8 (contagem_inconsistente): tela resposta_truncada (p 0.55, selo baixo) | fixture contagem_inconsistente (p 0.98, selo medio) | DISCORDAM | 63.08 + 38.11 s
+[2026-11-05 19:25:58] [21/37] tra-11 (contagem_inconsistente): tela contagem_inconsistente (p 0.58, selo baixo) | fixture contagem_inconsistente (p 0.98, selo medio) | concordam | 47.55 + 67.93 s
+[2026-11-05 19:28:10] [22/37] run-9 (latency): tela tempo_de_resposta_excedido (p 0.71, selo baixo) | fixture tempo_de_resposta_excedido (p 1.00, selo alto) | concordam | 40.16 + 54.67 s
+[2026-11-05 19:30:33] [23/37] lex-16 (malformed_json): tela resposta_truncada (p 1.00, selo alto) | fixture resposta_truncada (p 1.00, selo alto) | concordam | 80.25 + 54.34 s
+[2026-11-05 19:32:26] [24/37] lex-18 (codificacao_incorreta): tela tipo_divergente (p 0.91, selo medio) | fixture valor_fora_do_dominio (p 0.42, selo baixo) | DISCORDAM | 46.39 + 58.37 s
+[2026-11-05 19:34:07] [25/37] sin-16 (field_missing): tela campo_ausente (p 0.99, selo alto) | fixture campo_ausente (p 1.00, selo alto) | concordam | 54.53 + 37.99 s
+[2026-11-05 19:35:53] [26/37] sin-20 (field_missing): tela campo_ausente (p 0.99, selo medio) | fixture campo_ausente (p 1.00, selo alto) | concordam | 51.99 + 45.4 s
+[2026-11-05 19:38:32] [27/37] sin-21 (estrutura_aninhada_divergente): tela estrutura_aninhada_divergente (p 0.99, selo alto) | fixture estrutura_aninhada_divergente (p 1.00, selo alto) | concordam | 81.09 + 68.66 s
+[2026-11-05 19:39:51] [28/37] semt-16 (type_drift): tela tipo_divergente (p 1.00, selo alto) | fixture tipo_divergente (p 0.97, selo medio) | concordam | 36.0 + 34.21 s
+[2026-11-05 19:41:17] [29/37] semt-17 (nulo_inesperado): tela nulo_inesperado (p 0.97, selo medio) | fixture nulo_inesperado (p 0.91, selo medio) | concordam | 35.25 + 42.7 s
+[2026-11-05 19:43:10] [30/37] semt-20 (valor_fora_do_dominio): tela tipo_divergente (p 0.78, selo baixo) | fixture tipo_divergente (p 0.53, selo baixo) | concordam | 67.84 + 36.06 s
+[2026-11-05 19:44:52] [31/37] semt-21 (valor_fora_do_dominio): tela campo_renomeado (p 0.76, selo baixo) | fixture campo_ausente (p 0.96, selo medio) | DISCORDAM | 43.98 + 50.29 s
+[2026-11-05 19:46:14] [32/37] tra-17 (chave_de_juncao_errada): tela tipo_divergente (p 0.56, selo baixo) | fixture tipo_divergente (p 0.88, selo medio) | concordam | 38.03 + 34.9 s
+[2026-11-05 19:47:55] [33/37] tra-19 (escala_ou_unidade_errada): tela escala_ou_unidade_errada (p 0.47, selo baixo) | fixture escala_ou_unidade_errada (p 0.61, selo baixo) | concordam | 49.66 + 42.99 s
+[2026-11-05 19:49:51] [34/37] tra-20 (chave_de_juncao_errada): tela tipo_divergente (p 0.56, selo baixo) | fixture chave_de_juncao_errada (p 1.00, selo alto) | DISCORDAM | 37.55 + 69.75 s
+[2026-11-05 19:51:43] [35/37] tra-21 (contagem_inconsistente): tela contagem_inconsistente (p 0.57, selo baixo) | fixture contagem_inconsistente (p 0.99, selo medio) | concordam | 49.77 + 53.96 s
+[2026-11-05 19:54:24] [36/37] run-19 (latency): tela tipo_divergente (p 0.55, selo baixo) | fixture tempo_de_resposta_excedido (p 1.00, selo alto) | DISCORDAM | 51.29 + 69.93 s
+[2026-11-05 19:56:03] [37/37] run-21 (registro_duplicado): tela registro_duplicado (p 1.00, selo alto) | fixture registro_duplicado (p 0.91, selo medio) | concordam | 44.76 + 46.15 s
+[2026-11-05 19:56:10] FIM tela: 37 de 37 casos diagnosticados na tela e no fixture; concordam 28; duração 4596 s; trilha 2067101 bytes
+[2026-11-05 19:56:12] avaliar_fase4.py --tela --saida fase4_tela_v3 --nome tela_v3
+[2026-11-05 19:56:13] FIM rodar_fase4.ps1 (modo tela) - duracao total 01h17

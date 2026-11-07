@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 import sys
 import textwrap
 from pathlib import Path
@@ -55,10 +56,6 @@ NOME_SINAL = {
     "falha": "Conferência em código não passa", "repeticao_mudou": "Repetir a pergunta muda a resposta",
 }
 NOME_FORA = {"armada pelo harness (ficha 29)": "Falha armada pelo próprio teste", "sem modo para a causa dado_desatualizado": "Sem modo na API para a causa", "sem tela": "A falha não passa pela tela"}
-NOME_CORTE = {
-    "hoje": "Como rodou", "arvore": "Árvore só com o que mudou", "arvore_observacao": "E sem a linha de observação",
-    "arvore_observacao_sintoma": "E o sintoma só com contagens", "sem_arvore": "Sem árvore nenhuma (só para comparar)",
-}
 NOME_REJEICAO = {
     "palavra_chave_invalida": "palavra-chave inválida", "duplicada": "repetida", "id_repetido": "identificador repetido",
     "sem_evidencia_do_caso": "sem evidência no caso", "mensagem_nao_encontrada_no_codigo": "mensagem que não existe no código",
@@ -81,11 +78,14 @@ def _num(v, casas: int = 1) -> str:
 def coletar() -> dict[str, dict]:
     """Lê os JSON e devolve, por figura, o título, a fonte e a tabela de dados. Só biblioteca padrão."""
     cal = _j("fase4/calibracao.json")
-    t1, t2 = _j("fase4/tela.json"), _j("fase4/tela_v2.json")
-    cen = _j("fase4/cenarios_v2.json")
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) as figuras da tela e dos cenários passam às leituras vigentes, 18c e 21c; a 18 e a 18b ficam como as barras de antes.
+    # ! Motivo: a decisão 90 diz que as leituras novas passam a valer quando as corridas rodarem, e o README mostra o resultado vigente.
+    # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 e 98) as figuras da tela e dos cenários passam à 18d e à 21d, e entram os inéditos (18e); a média de antes do corte continua a da 21b.
+    # ! Motivo: a regra R2 fechou na 18d, e os inéditos são a conferência em casos que a busca nunca viu; o README mostra o resultado vigente, com o caminho até ele.
+    t1, t2, t3, t4, ti = _j("fase4/tela.json"), _j("fase4/tela_v2.json"), _j("fase4/tela_v3.json"), _j("fase4/tela_v4.json"), _j("fase4/tela_ineditos.json")
+    cen, cen_ant = _j("fase4/cenarios_v4.json"), _j("fase4/cenarios_v2.json")
     bib = _j("fase4/biblioteca.json")
     tri = _j("fase4/trilha.json")
-    pro = _j("fase4/prompt_tela_blocos.json")
     cur = _j("fase4/cura.json")
     rep, rep_i = _j("fase4/reproducibilidade.json"), _j("fase4/reproducibilidade_ineditos.json")
     an = _j("fase3/analise_fase3b.json")
@@ -150,26 +150,46 @@ def coletar() -> dict[str, dict]:
     }
     # tela e caso escrito
     figs["tela-e-caso-escrito"] = {
-        "titulo": "O agente acerta tanto lendo da tela?", "fonte": "`fase4/tela.json` e `fase4/tela_v2.json` (`resumo`, corridas 18 e 18b)",
+        "titulo": "O agente acerta tanto lendo da tela?", "fonte": "`fase4/tela.json`, `tela_v2.json`, `tela_v3.json`, `tela_v4.json` e `tela_ineditos.json` (`resumo`, corridas 18, 18b, 18c, 18d e 18e)",
         "cab": ["Leitura", "Casos certos", "De"],
-        "linhas": [["Caso escrito", t2["resumo"]["acerto_fixture"], t2["resumo"]["casos"]],
+        "linhas": [["Caso escrito (corrida 18d)", t4["resumo"]["acerto_fixture"], t4["resumo"]["casos"]],
+                   ["Tela, com os sinais novos da busca (corrida 18d)", t4["resumo"]["acerto_tela"], t4["resumo"]["casos"]],
+                   ["Tela, com o prompt dentro do limite (corrida 18c)", t3["resumo"]["acerto_tela"], t3["resumo"]["casos"]],
                    ["Tela, com o caso ao vivo revisado (corrida 18b)", t2["resumo"]["acerto_tela"], t2["resumo"]["casos"]],
-                   ["Tela, primeira versão do caso ao vivo (corrida 18)", t1["resumo"]["acerto_tela"], t1["resumo"]["casos"]]],
+                   ["Tela, primeira versão do caso ao vivo (corrida 18)", t1["resumo"]["acerto_tela"], t1["resumo"]["casos"]],
+                   ["Inéditos, caso escrito (corrida 18e)", ti["resumo"]["acerto_fixture"], ti["resumo"]["casos"]],
+                   ["Inéditos, tela (corrida 18e)", ti["resumo"]["acerto_tela"], ti["resumo"]["casos"]]],
     }
-    # prompt e limite
+    # prompt e limite: os tokens medidos em cada corrida, antes e depois do corte
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) a figura passa a mostrar os tokens medidos nas corridas, antes e depois do corte, no lugar da estimativa dos cortes possíveis.
+    # ! Motivo: a estimativa servia para decidir o corte; com as corridas 18c e 21c rodadas, o que vale é a medida do próprio Ollama.
+    limite = t3["prompt_contra_calibracao"]["limite_mais_10_pct"]
+
+    def tokens_de(pasta: str) -> list[int]:
+        arq = RES / pasta / "qwen2.5_7b" / "diagnosticos__cenarios.jsonl"
+        return [json.loads(x)["tokens_entrada"] for x in arq.read_text(encoding="utf-8").splitlines() if x.strip()]
+
+    def linha_prompt(grupo: str, rotulo: str, tokens: list[int]) -> list:
+        return [grupo, rotulo, min(tokens), statistics.median(tokens), max(tokens), sum(1 for x in tokens if x > limite), len(tokens)]
+
     figs["prompt-e-limite"] = {
-        "titulo": "O prompt na tela cabe no limite?", "fonte": f"`fase4/prompt_tela_blocos.json` (limite de {pro['limite']['tokens']} tokens: maior prompt da calibração mais 10%; tokens estimados)",
-        "cab": ["Corrida", "Corte", "Menor", "Mediana", "Maior", "Acima do limite", "De"],
-        "linhas": [[c, NOME_CORTE[k], d["cenarios"][k]["min"], d["cenarios"][k]["mediana"], d["cenarios"][k]["max"], d["cenarios"][k]["acima_do_limite"], d["prompts"]]
-                   for c, d in pro["corridas"].items() for k in NOME_CORTE],
-        "limite": pro["limite"]["tokens"],
+        "titulo": "O prompt na tela cabe no limite?", "fonte": f"tokens de entrada medidos em `fase4/tela_v2.json`, `tela_v3.json`, `tela_v4.json` e `tela_ineditos.json` (`casos`) e em `fase4_ensaio_v2/`, `fase4_ensaio_v3/` e `fase4_ensaio_v4/` (`diagnosticos__cenarios.jsonl`); limite de {limite} tokens: maior prompt da calibração mais 10%",
+        "cab": ["Conjunto", "Corrida", "Menor", "Mediana", "Maior", "Acima do limite", "De"],
+        "linhas": [linha_prompt("Casos lidos da tela", "Antes do corte (18b)", [c["tokens_entrada_tela"] for c in t2["casos"]]),
+                   linha_prompt("Casos lidos da tela", "Depois do corte (18c)", [c["tokens_entrada_tela"] for c in t3["casos"]]),
+                   linha_prompt("Casos lidos da tela", "Com os sinais da busca (18d)", [c["tokens_entrada_tela"] for c in t4["casos"]]),
+                   linha_prompt("Casos lidos da tela", "Inéditos, com os sinais da busca (18e)", [c["tokens_entrada_tela"] for c in ti["casos"]]),
+                   linha_prompt("10 cenários", "Antes do corte (21b)", tokens_de("fase4_ensaio_v2")),
+                   linha_prompt("10 cenários", "Depois do corte (21c)", tokens_de("fase4_ensaio_v3")),
+                   linha_prompt("10 cenários", "Com os sinais da busca (21d)", tokens_de("fase4_ensaio_v4"))],
+        "limite": limite,
     }
     # tempo por cenário
     figs["tempo-por-cenario"] = {
-        "titulo": "Quanto tempo o agente leva, cenário a cenário", "fonte": "`fase4/cenarios_v2.json` (`por_cenario`, `geral`, corrida 21b)",
+        "titulo": "Quanto tempo o agente leva, cenário a cenário", "fonte": "`fase4/cenarios_v4.json` (`por_cenario`, `geral`, corrida 21d) e `fase4/cenarios_v2.json` (`geral`, corrida 21b, a média de antes do corte)",
         "cab": ["Cenário", "Tipo", "Segundos da detecção ao resultado", "Chegou ao resultado", "Execuções"],
         "linhas": [[NOME_CENARIO[c["cenario"]], c["tipo"], c["mttr_media_s"], c["sucessos"], c["n"]] for c in cen["por_cenario"]],
-        "por_tipo": {t["tipo"]: t["mttr_media_s"] for t in cen["por_tipo"]}, "geral": cen["geral"],
+        "por_tipo": {t["tipo"]: t["mttr_media_s"] for t in cen["por_tipo"]}, "geral": cen["geral"], "media_anterior": cen_ant["geral"]["mttr_media_s"],
     }
     # funil da biblioteca: `fechamento.json` da produção guarda o que ficou depois da revisão do lote (relatório da Fase 4, seção 7)
     r = bib["resumo"]
@@ -204,18 +224,27 @@ def coletar() -> dict[str, dict]:
     }
     # tela por classe
     figs["tela-por-classe"] = {
-        "titulo": "Onde a leitura da tela perde acertos", "fonte": "`fase4/tela_v2.json` (`por_classe`, corrida 18b)",
+        "titulo": "Onde a leitura da tela perde acertos", "fonte": "`fase4/tela_v4.json` (`por_classe`, corrida 18d)",
         "cab": ["Classe de defeito", "Casos", "Certos na tela", "Certos no caso escrito"],
-        "linhas": [[NOME_CLASSE[c["classe"]], c["casos"], c["acerto_tela"], c["acerto_fixture"]] for c in t2["por_classe"]],
+        "linhas": [[NOME_CLASSE[c["classe"]], c["casos"], c["acerto_tela"], c["acerto_fixture"]] for c in t4["por_classe"]],
+    }
+    # ! Alteração de IA - Revisar: (06/11/2026) a figura da corrida 24: certos e errados por classe de defeito, nos 36 inéditos da ficha 27.
+    # ! Motivo: é a única medida da biblioteca final em casos que ela nunca viu, e a classe de tradução é onde ela mais erra.
+    ined = _j("fase4/ineditos.json")
+    figs["ineditos-por-classe"] = {
+        "titulo": "E em casos que a biblioteca nunca viu?", "fonte": "`fase4/ineditos.json` (`por_classe`, `resumo`, `referencia`, corrida 24)",
+        "cab": ["Classe de defeito", "Casos", "Certos", "Errados"],
+        "linhas": [[NOME_CLASSE[c["classe"]], c["casos"], c["acertos"], c["erros"]] for c in ined["por_classe"]],
+        "resumo": ined["resumo"], "referencia": ined["referencia"],
     }
     # onde vai o tempo
     tipos = {t["tipo"]: t for t in cen["por_tipo"]}
     figs["onde-vai-o-tempo"] = {
-        "titulo": "Onde o tempo vai", "fonte": "`fase4/cura.json` (`resumo`, corrida 19), `fase4/tela_v2.json` (`resumo`, corrida 18b), `fase4/cenarios_v2.json` (`por_tipo`, corrida 21b)",
+        "titulo": "Onde o tempo vai", "fonte": "`fase4/cura.json` (`resumo`, corrida 19), `fase4/tela_v4.json` (`resumo`, corrida 18d), `fase4/cenarios_v4.json` (`por_tipo`, corrida 21d)",
         "cab": ["Etapa", "Segundos (mediana)", "Usa o modelo"],
         "linhas": [["Cura de localizador só em código", cur["resumo"]["mttr_mediana_s"], "não"],
-                   ["Diagnóstico de um caso escrito", t2["resumo"]["segundos_fixture_mediana"], "sim"],
-                   ["Diagnóstico de um caso da tela", t2["resumo"]["segundos_tela_mediana"], "sim"],
+                   ["Diagnóstico de um caso escrito", t4["resumo"]["segundos_fixture_mediana"], "sim"],
+                   ["Diagnóstico de um caso da tela", t4["resumo"]["segundos_tela_mediana"], "sim"],
                    ["Localizador, da detecção à reexecução", tipos["localizador"]["mttr_mediana_s"], "sim"],
                    ["Contrato, da detecção ao diagnóstico conferido", tipos["contrato"]["mttr_mediana_s"], "sim"]],
     }
@@ -483,33 +512,35 @@ def desenhar(figs: dict[str, dict]) -> None:
 
     # ---- tela e caso escrito
     f = figs["tela-e-caso-escrito"]
-    fig, ax = base(8.2, 2.9)
+    fig, ax = base(8.2, 5.0)
     limpar(ax, "x")
+    # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 e 98) sete barras em dois grupos: os 37 casos, da corrida mais nova para a primeira, e embaixo os inéditos.
+    # ! Motivo: os inéditos são a conferência em casos que a busca nunca viu, e o total deles é outro; o espaço entre os grupos evita ler as barras como a mesma escala de casos.
     linhas = f["linhas"][::-1]
-    cores = [NEUTROS[1], AZUL, NEUTROS[0]]
-    ax.barh(range(3), [l[1] for l in linhas], color=cores, height=0.56, zorder=3)
-    for i, l in enumerate(linhas):
-        ax.text(l[1] + 0.4, i, f"{l[1]} de {l[2]}", va="center", fontsize=9.5, color=TINTA)
-    ax.set_yticks(range(3))
-    ax.set_yticklabels(["\n".join(textwrap.wrap(l[0], 30)) for l in linhas], fontsize=9, color=TINTA)
-    ax.set_xlim(0, linhas[0][2] * 1.14)
+    ys = [0.0, 1.0] + [2.7 + i for i in range(len(linhas) - 2)]
+    cores = [NEUTROS[0] if "caso escrito" in l[0].lower() else AZUL if "18d" in l[0] or "Inéditos, tela" in l[0] else NEUTROS[2] if "(corrida 18)" in l[0] else NEUTROS[1] for l in linhas]
+    ax.barh(ys, [l[1] for l in linhas], color=cores, height=0.6, zorder=3)
+    for y, l in zip(ys, linhas):
+        ax.text(l[1] + 0.4, y, f"{l[1]} de {l[2]}", va="center", fontsize=9.5, color=TINTA)
+    ax.set_yticks(ys)
+    ax.set_yticklabels(["\n".join(textwrap.wrap(l[0], 34)) for l in linhas], fontsize=9, color=TINTA)
+    ax.set_xlim(0, max(l[2] for l in linhas) * 1.14)
     ax.set_xlabel("casos com a causa certa", fontsize=9, color=TINTA_2)
-    titular(fig, f["titulo"], "Os mesmos casos, lidos da tela e do texto escrito, na mesma sessão do modelo")
+    titular(fig, f["titulo"], "Os mesmos casos, lidos da tela e do texto escrito, na mesma sessão do modelo; embaixo, casos que a busca nunca viu")
     salvar(fig, "tela-e-caso-escrito")
 
     # ---- prompt e limite
     f = figs["prompt-e-limite"]
     corridas = list(dict.fromkeys(l[0] for l in f["linhas"]))
-    fig, eixos = plt.subplots(1, 2, figsize=(9.6, 3.7), dpi=200, sharey=True)
+    fig, eixos = plt.subplots(1, 2, figsize=(10.6, 3.2), dpi=200, sharey=False)
     fig.patch.set_facecolor(SUPERFICIE)
-    nome_corrida = {"18b": "Corrida 18b: 37 casos da tela", "21b": "Corrida 21b: 10 cenários"}
     for ax, c in zip(eixos, corridas):
         ax.set_facecolor(SUPERFICIE)
         limpar(ax, "x")
         ls = [l for l in f["linhas"] if l[0] == c][::-1]
         for i, l in enumerate(ls):
             _, _, mi, me, ma, acima, de = l
-            cor = NEUTROS[0] if "comparar" in l[1] else AZUL
+            cor = NEUTROS[0] if "Antes" in l[1] else AZUL
             ax.plot([mi, ma], [i, i], color=cor, linewidth=2.2, zorder=3, solid_capstyle="round")
             ax.scatter([me], [i], s=46, color=cor, edgecolor=SUPERFICIE, linewidth=1.2, zorder=4)
             ax.text(2120, i, f"{acima} de {de}", va="center", ha="left", fontsize=8.8, color=TINTA)
@@ -519,8 +550,8 @@ def desenhar(figs: dict[str, dict]) -> None:
         ax.set_yticklabels([l[1] for l in ls], fontsize=8.8, color=TINTA)
         ax.set_xlim(850, 2420)
         ax.set_ylim(-0.6, len(ls) - 0.1)
-        ax.set_xlabel("tokens do prompt (estimados)", fontsize=8.8, color=TINTA_2)
-        ax.set_title(nome_corrida.get(c, c), fontsize=9.5, color=TINTA, loc="left", pad=12)
+        ax.set_xlabel("tokens do prompt", fontsize=8.8, color=TINTA_2)
+        ax.set_title(c, fontsize=9.5, color=TINTA, loc="left", pad=12)
         ax.text(2120, len(ls) - 0.45, "acima do limite", fontsize=8, color=TINTA_2, va="bottom")
     titular(fig, f["titulo"], "Cada linha vai do menor ao maior prompt, e o ponto é o valor do meio; o traço laranja é o limite do plano")
     fig.tight_layout(rect=(0, 0, 1, topo(fig)))
@@ -542,7 +573,7 @@ def desenhar(figs: dict[str, dict]) -> None:
     ax.set_xlim(0, max(l[2] for l in ordem) * 1.12)
     ax.set_xlabel("segundos, da detecção da falha até o resultado", fontsize=9, color=TINTA_2)
     g = f["geral"]
-    titular(fig, f["titulo"], f"{g['sucessos']} de {g['n']} chegaram ao resultado, com uma repetição por cenário e ainda sem a comparação com pessoas")
+    titular(fig, f["titulo"], f"{g['sucessos']} de {g['n']} chegaram ao resultado, em {_num(g['mttr_media_s'], 0)} s na média (eram {_num(f['media_anterior'], 0)} s com o prompt maior); uma repetição por cenário")
     pt = f["por_tipo"]
     legenda(fig, [Patch(facecolor=AZUL, label=f"Falha de contrato (média de {_num(pt['contrato'], 0)} s)"), Patch(facecolor=LARANJA, label=f"Localizador quebrado (média de {_num(pt['localizador'], 0)} s)")], y=-0.005)
     fig.tight_layout(rect=(0, 0.07, 1, topo(fig)))
@@ -631,12 +662,34 @@ def desenhar(figs: dict[str, dict]) -> None:
     ax.set_xticks(range(0, 101, 20))
     ax.xaxis.set_major_formatter(lambda v, _: f"{v:.0f}%")
     ax.set_xlabel("casos com a causa certa", fontsize=9, color=TINTA_2)
-    titular(fig, f["titulo"], "Corrida 18b, por classe de defeito; à direita, os certos na tela e no caso escrito")
+    titular(fig, f["titulo"], "Corrida 18d, por classe de defeito; à direita, os certos na tela e no caso escrito")
     legenda(fig, [Line2D([], [], color=AZUL, marker="o", linestyle="", markersize=7, label="Lendo da tela"), Line2D([], [], color=NEUTROS[0], marker="o", linestyle="", markersize=7, label="Lendo o caso escrito")], y=-0.01)
     fig.tight_layout(rect=(0, 0.08, 1, topo(fig)))
     fig.savefig(SAIDA / "tela-por-classe.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
     plt.close(fig)
     print("  tela-por-classe.png")
+
+    # ---- inéditos por classe (corrida 24)
+    f = figs["ineditos-por-classe"]
+    fig, ax = base(7.6, 3.5)
+    limpar(ax, "x")
+    linhas = f["linhas"][::-1]
+    for i, l in enumerate(linhas):
+        nome, casos, certos, errados = l
+        ax.barh(i, certos, color=AZUL, height=0.56, zorder=3)
+        ax.barh(i, errados, left=certos, color=LARANJA, height=0.56, zorder=3)
+        ax.text(casos + 0.12, i, f"{certos} de {casos}", va="center", fontsize=9.5, color=TINTA)
+    ax.set_yticks(range(len(linhas)))
+    ax.set_yticklabels([l[0] for l in linhas], fontsize=9, color=TINTA)
+    ax.set_xlim(0, max(l[1] for l in linhas) * 1.2)
+    ax.set_xticks(range(max(l[1] for l in linhas) + 1))
+    ax.set_xlabel("casos", fontsize=9, color=TINTA_2)
+    titular(fig, f["titulo"], f'{f["resumo"]["acertos"]} de {f["resumo"]["casos"]} na corrida 24; nos casos de avaliação, com a mesma biblioteca, {f["referencia"]["acertos"]} de {f["referencia"]["casos"]}')
+    legenda(fig, [Patch(color=AZUL, label="Causa certa"), Patch(color=LARANJA, label="Causa errada")], y=-0.01)
+    fig.tight_layout(rect=(0, 0.08, 1, topo(fig)))
+    fig.savefig(SAIDA / "ineditos-por-classe.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
+    plt.close(fig)
+    print("  ineditos-por-classe.png")
 
     # ---- onde vai o tempo
     f = figs["onde-vai-o-tempo"]

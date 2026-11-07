@@ -1128,6 +1128,18 @@ def contexto_fase4() -> dict:
             # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) o documento da conferência dos 36 inéditos, lido por painel_topicos.secao_conferencia.
             # ! Motivo: a ficha 46 pede a conferência do Eric antes da corrida 24, e ele decide pelo painel.
             "conferencia_ineditos": le("conferencia_ineditos.json"),
+            # ! Alteração de IA - Revisar: (06/11/2026, decisão 100) as respostas do Eric à conferência dos 36 inéditos.
+            # ! Motivo: a aba da conferência passa a dizer que os casos foram conferidos, por quem e como; sem o arquivo, ela fica como era.
+            "conferencia_respostas": le("conferencia_ineditos_respostas.json"),
+            # ! Alteração de IA - Revisar: (06/11/2026) a leitura da corrida 24, lida por painel_topicos.secao_ineditos_f4.
+            # ! Motivo: pela regra do painel, a análise nova vira uma aba lida do JSON.
+            "ineditos_f4": le("ineditos.json"),
+            # ! Alteração de IA - Revisar: (05/11/2026, decisões 90 e 91) as leituras das corridas 18c, 21c e 23.
+            # ! Motivo: a 18c e a 21c passaram a valer no lugar da 18b e da 21b, e o experimento ganhou uma aba.
+            "tela_v3": le("tela_v3.json"), "cenarios_v3": le("cenarios_v3.json"), "experimento_prompt": le("experimento_prompt.json"),
+            # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) as leituras das corridas 18d, 21d e 18e e a conferência do teto nas listas do caso ao vivo.
+            # ! Motivo: a 18d e a 21d passaram a valer no lugar da 18c e da 21c, e os inéditos são a conferência em casos que a busca nunca viu.
+            "tela_v4": le("tela_v4.json"), "cenarios_v4": le("cenarios_v4.json"), "tela_ineditos": le("tela_ineditos.json"), "teto_prompt": le("teto_prompt_tela.json"),
             # ! Alteração de IA - Revisar: (05/11/2026, P8) o relatório da fase, de onde a aba "Fechamento da fase" lê a tabela das regras e as limitações.
             # ! Motivo: a aba do fechamento mostra o que o relatório diz, sem repetir número nenhum no código do painel.
             "relatorio_f4": ((MEMORIAL / "3-resultados-e-analises" / "fase-4-relatorio.md").read_text(encoding="utf-8")

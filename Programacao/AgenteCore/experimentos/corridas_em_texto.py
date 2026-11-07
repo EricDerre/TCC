@@ -153,7 +153,9 @@ def _forma(resposta: str | None) -> str:
 
 def _mediana(valores: list) -> float | None:
     numeros = [v for v in valores if isinstance(v, (int, float))]
-    return statistics.median(numeros) if numeros else None
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 23) a mediana sai em duas casas.
+    # ! Motivo: a leitura imprimiu "55,364999999999995" na tabela do relatório, resto da conta em ponto flutuante.
+    return round(statistics.median(numeros), 2) if numeros else None
 
 
 def _pct(parte: int, total: int) -> float | None:
@@ -341,8 +343,11 @@ def rodar_experimento(args: argparse.Namespace) -> int:
 
 # ------------------------------------------------------------------ corrida 24: os 36 inéditos da ficha 27
 
-def resumir_ineditos(registros: list[dict], linhas: list[dict], casos: list[dict], condicoes: dict | None, referencia: dict | None = None, corrida: str | None = None, gerado_em: str | None = None) -> dict:
-    """A biblioteca de produção nos inéditos: acerto, acurácia balanceada, por classe, nível e selo. O gabarito entra só aqui, pelo id do caso."""
+# ! Alteração de IA - Revisar: (06/11/2026) a leitura ganha o acerto com e sem o verbete certo no contexto e a comparação com a corrida 18e, que leu 25 destes casos em texto e na tela.
+# ! Motivo: a leitura da corrida 24 mostrou que o verbete certo pesa de novo (18 de 20 com ele, 7 de 16 sem ele) e que o rótulo se repetiu nos 25 casos lidos duas vezes; os dois números precisam sair daqui, com `--check`.
+def resumir_ineditos(registros: list[dict], linhas: list[dict], casos: list[dict], condicoes: dict | None, referencia: dict | None = None, corrida: str | None = None, gerado_em: str | None = None,
+                     lado_escrito: list[dict] | None = None) -> dict:
+    """A biblioteca de produção nos inéditos: acerto, acurácia balanceada, por classe, nível e selo, com e sem o verbete certo, e contra a corrida 18e. O gabarito entra só aqui, pelo id do caso."""
     por_id = {c["id"]: c for c in casos}
     extras = {x["caso"]: x for x in linhas}
     itens = []
@@ -364,7 +369,18 @@ def resumir_ineditos(registros: list[dict], linhas: list[dict], casos: list[dict
             saida.append({chave: valor, "casos": len(sub), "acertos": sum(1 for i in sub if i["acerto"]), "erros": sum(1 for i in sub if not i["acerto"])})
         return saida
 
+    def conta(sub: list[dict]) -> dict:
+        return {"casos": len(sub), "acertos": sum(1 for i in sub if i["acerto"])}
+
+    comparacao = None
+    if lado_escrito:
+        e18 = {x["caso"]: x for x in lado_escrito}
+        comuns = [i for i in itens if i["caso"] in e18]
+        comparacao = {"casos": len(comuns), "mesmo_rotulo": sum(1 for i in comuns if i["rotulo"] == e18[i["caso"]]["rotulo_fixture"]), "acertos_aqui": sum(1 for i in comuns if i["acerto"]),
+                      "acertos_escrito": sum(1 for i in comuns if e18[i["caso"]]["acerto_fixture"]), "acertos_tela": sum(1 for i in comuns if e18[i["caso"]]["acerto_tela"]),
+                      "rotulo_diferente": [i["caso"] for i in comuns if i["rotulo"] != e18[i["caso"]]["rotulo_fixture"]]}
     return {"metadados": {"gerado_em": gerado_em or time.strftime("%Y-%m-%dT%H:%M:%S"), "corrida": corrida}, "condicoes": condicoes or {},
+            "verbete_certo": {"presente": conta([i for i in itens if i["verbete_certo_no_contexto"]]), "ausente": conta([i for i in itens if not i["verbete_certo_no_contexto"]])}, "lado_escrito_18e": comparacao,
             "resumo": {"casos": n, "acertos": acertos, "acerto_pct": _pct(acertos, n), "wilson_lo_pct": lo, "wilson_hi_pct": hi,
                        "acuracia_balanceada_pct": avaliar_fase3.acuracia_balanceada([(i["gabarito"], i["rotulo"] or "") for i in itens]) if itens else None,
                        "erros": sorted(i["caso"] for i in itens if not i["acerto"]), "verbete_certo_no_contexto": sum(1 for i in itens if i["verbete_certo_no_contexto"]),
@@ -374,7 +390,7 @@ def resumir_ineditos(registros: list[dict], linhas: list[dict], casos: list[dict
 
 
 def render_ineditos(dado: dict) -> str:
-    r, ref = dado["resumo"], dado.get("referencia") or {}
+    r, ref, e = dado["resumo"], dado.get("referencia") or {}, dado.get("lado_escrito_18e")
 
     def grupo(nome: str, chave: str, rotulo: str, linhas: list[dict]) -> str:
         return a3b.tab(nome, [rotulo, "Casos", "Acertos", "Erros"], [[_n(x[chave]), _n(x["casos"]), _n(x["acertos"]), _n(x["erros"])] for x in linhas] or [["sem casos", "", "", ""]])
@@ -386,6 +402,10 @@ def render_ineditos(dado: dict) -> str:
                         f"{_n(ref.get('acertos'))} de {_n(ref.get('casos'))} ({_n(ref.get('acerto_pct'))}%)" if ref else "n/d"]]),
               grupo("tb_f4_ineditos_classe", "classe", "Classe", dado["por_classe"]), grupo("tb_f4_ineditos_nivel", "nivel", "Nível", dado["por_nivel"]),
               grupo("tb_f4_ineditos_selo", "selo", "Selo", dado["por_selo"]),
+              a3b.tab("tb_f4_ineditos_verbete", ["Verbete da causa certa entre os entregues", "Casos", "Acertos", "Acerto (%)"],
+                      [[rotulo, _n(v["casos"]), _n(v["acertos"]), _n(_pct(v["acertos"], v["casos"]))] for rotulo, v in (("sim", dado["verbete_certo"]["presente"]), ("não", dado["verbete_certo"]["ausente"]))]),
+              a3b.tab("tb_f4_ineditos_18e", ["Casos também lidos na corrida 18e", "Mesmo rótulo do caso escrito da 18e", "Acertos aqui", "Acertos no caso escrito da 18e", "Acertos na tela da 18e"],
+                      [[_n(e["casos"]), _n(e["mesmo_rotulo"]), _n(e["acertos_aqui"]), _n(e["acertos_escrito"]), _n(e["acertos_tela"])]] if e else [["sem a leitura da corrida 18e", "", "", "", ""]]),
               a3b.tab("tb_f4_ineditos_casos", ["Caso", "Classe", "Nível", "Gabarito", "Rótulo", "Certo", "Probabilidade", "Selo", "Verbete certo no contexto"],
                       [[f"`{i['caso']}`", _n(i["classe"]), _n(i["nivel"]), f"`{i['gabarito']}`", f"`{i['rotulo']}`", "sim" if i["acerto"] else "não", _p(i["p_rotulo"]), _n(i["selo"]),
                         "sim" if i["verbete_certo_no_contexto"] else "não"] for i in dado["casos"]] or [["nenhum"] + [""] * 8])]
@@ -400,9 +420,12 @@ def ler_ineditos(saida: str, modelo: str = "qwen2.5:7b") -> dict:
     arq_cond = raiz / "condicoes_fase4.json"
     arq_ref = caminhos.RESULTADOS / "fase4" / "trilha.json"
     resumo_ref = (json.loads(arq_ref.read_text(encoding="utf-8")).get("resumo") or {}) if arq_ref.exists() else {}
+    arq_18e = caminhos.RESULTADOS / "fase4" / "tela_ineditos.json"
+    lado_escrito = json.loads(arq_18e.read_text(encoding="utf-8")).get("casos") if arq_18e.exists() else None
     return {"registros": executar_bateria.ler_jsonl(raiz / executar_fase3._slug(modelo) / "diagnosticos__ineditos.jsonl"), "linhas": executar_bateria.ler_jsonl(raiz / "ineditos.jsonl"),
             "casos": bi4.CASOS_INEDITOS_FASE4, "condicoes": json.loads(arq_cond.read_text(encoding="utf-8")) if arq_cond.exists() else {},
-            "referencia": {k: resumo_ref.get(k) for k in ("casos", "acertos", "acerto_pct")} if resumo_ref else None}
+            "referencia": {k: resumo_ref.get(k) for k in ("casos", "acertos", "acerto_pct")} if resumo_ref else None,
+            "lado_escrito": lado_escrito}
 
 
 def rodar_ineditos(args: argparse.Namespace) -> int:

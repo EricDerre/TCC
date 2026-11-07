@@ -559,9 +559,24 @@ def resumir_tela(tela: list[dict], fixture: list[dict], casos: list[dict], por_c
         por_classe.append({"classe": c, "casos": len(sub), "acerto_tela": sum(1 for l in sub if l["acerto_tela"]),
                            "acerto_fixture": sum(1 for l in sub if l["acerto_fixture"]), "concordam": sum(1 for l in sub if l["concordam"])})
     prompt = prompt_contra_o_limite(calibracao, {l["caso"]: l["tokens_entrada_tela"] for l in linhas})
+
+    # ! Alteração de IA - Revisar: (05/11/2026, leitura da corrida 18c) o acerto com e sem o verbete da causa certa entre os entregues, nos dois lados, e o acerto por selo na tela.
+    # ! Motivo: na 18c quase todos os erros na tela são de casos sem o verbete certo no contexto; essa é a medida que explica o que ainda separa a tela do caso escrito, e o relatório e o painel precisam dela saída de script.
+    def verbete_certo(registros: dict, chave_acerto: str) -> dict:
+        saida = {"presente": {"casos": 0, "acertos": 0}, "ausente": {"casos": 0, "acertos": 0}}
+        for l in linhas:
+            lado = saida["presente" if l["gabarito"] in (registros[l["caso"]].get("verbetes_ids") or []) else "ausente"]
+            lado["casos"] += 1
+            lado["acertos"] += int(l[chave_acerto])
+        return saida
+
+    acerto_por_selo = {s: {"casos": sum(1 for l in linhas if l["selo_tela"] == s), "acertos": sum(1 for l in linhas if l["selo_tela"] == s and l["acerto_tela"])} for s in ("alto", "medio", "baixo")}
+    # ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a regra R2 conta os casos que a tela perde para o caso escrito (c até o limite); a conta de antes (b + c) continua na leitura, em `dentro_pela_soma`.
+    # ! Motivo: a regra se chama "a tela não piora", e a soma contava como defeito o caso que só a tela acerta. O Eric fixou esta leitura antes da corrida 18d, sem conhecer o resultado dela; nas corridas 18, 18b e 18c o estado não muda, porque c foi 16, 7 e 5.
     resumo = {"casos": n, "reproduzem": sum(1 for l in linhas if l["reproduz"]), "acerto_tela": sum(1 for l in linhas if l["acerto_tela"]),
               "acerto_fixture": sum(1 for l in linhas if l["acerto_fixture"]), "concordam": sum(1 for l in linhas if l["concordam"]),
-              "b": par["b"], "c": par["c"], "discordantes": par["b"] + par["c"], "limite_r2": LIMITE_R2, "dentro_do_limite_r2": par["b"] + par["c"] <= LIMITE_R2,
+              "b": par["b"], "c": par["c"], "discordantes": par["b"] + par["c"], "limite_r2": LIMITE_R2, "dentro_do_limite_r2": par["c"] <= LIMITE_R2,
+              "dentro_pela_soma": par["b"] + par["c"] <= LIMITE_R2,
               "p_mcnemar": par["p_mcnemar"], "casos_que_mudaram": sorted(par["ganhos"] + par["perdas"]),
               "selos_tela": selos("selo_tela"), "selos_fixture": selos("selo_fixture"), "gatilhos_tela": sum(1 for l in linhas if l["gatilho_tela"]),
               "divergencias_tela": sum(1 for l in linhas if l["divergencia_tela"]), "intervencoes_tela": sum(l["intervencoes_tela"] for l in linhas),
@@ -574,20 +589,30 @@ def resumir_tela(tela: list[dict], fixture: list[dict], casos: list[dict], por_c
     resumo["concordancia_pct"] = _pct(resumo["concordam"], n)
     return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida,
                           "fonte": "diagnosticos__tela.jsonl, diagnosticos__fixture.jsonl, tela.jsonl e trilha_tela.jsonl da corrida; gabarito dos bancos de casos"},
-            "resumo": resumo, "por_classe": por_classe, "prompt_contra_calibracao": prompt, "rotulos": rotulos, "corpo": corpo, "casos": linhas}
+            "resumo": resumo, "por_classe": por_classe, "prompt_contra_calibracao": prompt, "rotulos": rotulos, "corpo": corpo,
+            "verbete_certo": {"tela": verbete_certo(t, "acerto_tela"), "fixture": verbete_certo(f, "acerto_fixture")}, "acerto_por_selo": acerto_por_selo, "casos": linhas}
 
 
-def render_tela(dado: dict) -> str:
+# ! Alteração de IA - Revisar: (05/11/2026, corrida 18c) render_tela aceita o título, e o `--titulo` passa a valer também para `--tela`.
+# ! Motivo: a repetição grava em tela_v3.md, e o título fixo diria "corrida 18" na leitura da corrida 18c, como já dizia na 18b.
+def render_tela(dado: dict, titulo: str = TITULO_TELA) -> str:
     r = dado["resumo"]
     pr = dado.get("prompt_contra_calibracao")
     cp = dado.get("corpo") or {}
+    vc = dado.get("verbete_certo") or {}
+    selos = dado.get("acerto_por_selo") or {}
+
+    def linha_verbete(lado: str, chave_lado: str, chave: str, rotulo: str) -> list[str]:
+        x = (vc.get(chave_lado) or {}).get(chave) or {"casos": 0, "acertos": 0}
+        return [lado, rotulo, str(x["casos"]), str(x["acertos"]), _n(_pct(x["acertos"], x["casos"]) if x["casos"] else None)]
+
     blocos = [
         a3b.tab("tb_f4_tela_resumo", ["Casos", "Reproduzem na tela", "Acerto na tela", "Acerto no fixture", "Concordam (mesmo rótulo)", "Concordância (%)",
-                                      "b (só a tela acerta)", "c (só o fixture acerta)", "b + c", "Limite R2", "Dentro do limite", "p (McNemar exato)",
+                                      "b (só a tela acerta)", "c (só o fixture acerta)", "b + c", "Limite R2 (c)", "Dentro do limite", "b + c até o limite (conta de antes)", "p (McNemar exato)",
                                       "Selos na tela (alto / médio / baixo)", "Gatilhos na tela", "Divergências na tela", "s por caso na tela (mediana)",
                                       "s por caso no fixture (mediana)", "Trilha (bytes)"],
                 [[str(r["casos"]), str(r["reproduzem"]), f"{r['acerto_tela']} ({_n(r['acerto_tela_pct'])}%)", f"{r['acerto_fixture']} ({_n(r['acerto_fixture_pct'])}%)",
-                  str(r["concordam"]), _n(r["concordancia_pct"]), str(r["b"]), str(r["c"]), str(r["discordantes"]), str(r["limite_r2"]), _sim(r["dentro_do_limite_r2"]),
+                  str(r["concordam"]), _n(r["concordancia_pct"]), str(r["b"]), str(r["c"]), str(r["discordantes"]), str(r["limite_r2"]), _sim(r["dentro_do_limite_r2"]), _sim(r["dentro_pela_soma"]),
                   _tres(r["p_mcnemar"]), f"{r['selos_tela']['alto']} / {r['selos_tela']['medio']} / {r['selos_tela']['baixo']}", str(r["gatilhos_tela"]),
                   str(r["divergencias_tela"]), _n(r["segundos_tela_mediana"]), _n(r["segundos_fixture_mediana"]), _n(r["trilha_bytes"])]]),
         a3b.tab("tb_f4_tela_por_classe", ["Classe", "Casos", "Acerto na tela", "Acerto no fixture", "Concordam"],
@@ -595,6 +620,12 @@ def render_tela(dado: dict) -> str:
         # ! Alteração de IA - Revisar: (01/11/2026) blocos `tb_f4_tela_rotulos` e `tb_f4_tela_corpo`, e as duas colunas finais
         # de `tb_f4_tela_casos` (diferenças contra o contrato e o começo do CORPO do caso ao vivo).
         # ! Motivo: são a origem citável de "o rótulo que a tela puxa" e de "a poda mostrou o primeiro item" no roadmap e no painel.
+        a3b.tab("tb_f4_tela_verbete", ["Lado", "Verbete da causa certa entre os entregues", "Casos", "Acertos", "Acerto (%)"],
+                [linha_verbete("tela", "tela", "presente", "sim"), linha_verbete("tela", "tela", "ausente", "não"),
+                 linha_verbete("fixture", "fixture", "presente", "sim"), linha_verbete("fixture", "fixture", "ausente", "não")]),
+        a3b.tab("tb_f4_tela_selo", ["Selo na tela", "Casos", "Acertos", "Acerto (%)"],
+                [[s, str((selos.get(s) or {}).get("casos", 0)), str((selos.get(s) or {}).get("acertos", 0)),
+                  _n(_pct(selos[s]["acertos"], selos[s]["casos"]) if (selos.get(s) or {}).get("casos") else None)] for s in ("alto", "medio", "baixo")]),
         a3b.tab("tb_f4_tela_rotulos", ["Rótulo", "Dado na tela", "Dado no fixture", "É o gabarito de"],
                 [[f"`{x['rotulo']}`", str(x["tela"]), str(x["fixture"]), str(x["gabarito"])] for x in dado.get("rotulos") or []] or [["nenhum", "", "", ""]]),
         a3b.tab("tb_f4_tela_corpo", ["Casos com o caso ao vivo lido", "Sem diferença contra o contrato", "Desses, mesmo rótulo", "Desses, acerto na tela",
@@ -611,12 +642,18 @@ def render_tela(dado: dict) -> str:
                   _n(l.get("diferencas_contra_contrato")), ("`" + str(l.get("corpo_tela") or "")[:60].replace("|", "¦").replace("`", "'") + "`") if l.get("corpo_tela") else "n/d"]
                  for l in dado["casos"]]),
     ]
-    cab = pf.cabecalho(TITULO_TELA, "avaliar_fase4.py", "os registros da tela e do fixture, tela.jsonl e a trilha da corrida 18",
+    cab = pf.cabecalho(titulo, "avaliar_fase4.py", "os registros da tela e do fixture, tela.jsonl e a trilha da corrida 18",
                        dado["metadados"]["gerado_em"][:10])
-    cab += ["", f"Regra R2 do plano aprovado: nos casos que reproduzem, o rótulo dado ao caso lido da tela e o rótulo dado ao caso lido do fixture, na "
-                f"mesma sessão do Ollama, diferem em no máximo {LIMITE_R2} casos (a variação entre corridas iguais); acima disso, o molde do sintoma e a "
-                "poda são revistos antes da próxima noite. O gabarito entra só nesta leitura, nunca no agente." + frase_do_prompt(pr), ""]
+    cab += ["", f"Regra R2 do plano aprovado (a tela não piora): nos casos que reproduzem, o caso lido da tela e o mesmo caso lido do fixture, na mesma sessão do Ollama, "
+                f"não se afastam mais que a variação entre corridas iguais, {LIMITE_R2} casos. Desde 06/11/2026 (decisão 98, antes da corrida 18d) o limite vale para os casos que a tela perde para o fixture (c); "
+                "os que só a tela acerta (b) e a soma b + c, a conta usada até a corrida 18c, ficam ao lado. O gabarito entra só nesta leitura, nunca no agente." + frase_do_prompt(pr), ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
+
+
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a leitura da tela acha o gabarito nos dois bancos.
+# ! Motivo: a corrida 18e roda os inéditos da ficha 27 na tela; os ids dos dois bancos não se repetem, e a leitura só usa os casos que a corrida rodou.
+def casos_com_gabarito_da_tela() -> list[dict]:
+    return ex.casos_de_avaliacao("todos")
 
 
 def ler_tela(saida: str) -> dict:
@@ -647,7 +684,7 @@ def ler_tela(saida: str) -> dict:
                     vivos[str(reg["id"])] = entrada_do_caso_gravado(reg)
     return {"tela": executar_bateria.ler_jsonl(raiz / slug / "diagnosticos__tela.jsonl"),
             "fixture": executar_bateria.ler_jsonl(raiz / slug / "diagnosticos__fixture.jsonl"),
-            "casos": ex.casos_de_avaliacao("avaliacao"), "por_caso": executar_bateria.ler_jsonl(raiz / "tela.jsonl"), "trilha_info": info,
+            "casos": casos_com_gabarito_da_tela(), "por_caso": executar_bateria.ler_jsonl(raiz / "tela.jsonl"), "trilha_info": info,
             "calibracao": _json(pasta_fase4() / f"{NOME_CALIBRACAO}.json"), "condicoes": cond, "vivos": vivos}
 
 
@@ -1598,7 +1635,11 @@ def fechar_revisao(pasta: Path, nome: str = NOME_REVISAO, check: bool = False, c
 
 # ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) `LEITURA_NO_RELATORIO` diz de qual leitura são os blocos de cada prefixo que tem mais de uma, e `fechar_no_relatorio` aplica isso no --check e no --colar.
 # ! Motivo: a corrida 17 tem duas leituras (os 72 casos e os 36 inéditos) e as corridas 18 e 21 têm as repetições 18b (decisão 82) e 21b (roadmap §2.14), todas com os mesmos nomes de bloco. O --colar só aceitava o nome padrão, que nas corridas 18 e 21 é a leitura que não vale, e o --check da leitura de fora acusaria bloco divergente no relatório. Agora o --colar recusa a leitura de fora e a corrida que não bate com o .md gravado da leitura vigente, e o --check da leitura de fora confere só os arquivos dela.
-LEITURA_NO_RELATORIO = {PREFIXO: NOME, PREFIXO_TELA: "tela_v2", PREFIXO_CENARIOS: "cenarios_v2"}
+# ! Alteração de IA - Revisar: (05/11/2026) a 18c e a 21c passam a ser as leituras vigentes da tela e dos cenários.
+# ! Motivo: a decisão 90 diz que as leituras novas passam a valer quando as corridas rodarem; a 18b e a 21b ficam nos arquivos delas, como o registro de antes do corte.
+# ! Alteração de IA - Revisar: (06/11/2026, decisões 97 e 98) as leituras vigentes passam à corrida 18d e à 21d.
+# ! Motivo: a regra R2 fechou na 18d pela leitura fixada antes dela, e os dez cenários não mudaram na 21d; pelo que o Eric decidiu, o agente fica com os sinais novos da busca, e o relatório mostra o que está valendo.
+LEITURA_NO_RELATORIO = {PREFIXO: NOME, PREFIXO_TELA: "tela_v4", PREFIXO_CENARIOS: "cenarios_v4"}
 
 
 def fechar_no_relatorio(nome: str, dado: dict, md: str, prefixo: str, check: bool = False, colar: bool = False, pasta: Path | None = None, doc: Path = RELATORIO) -> int:
@@ -1699,7 +1740,7 @@ def main() -> int:
         if args.experimento_prompt:
             dado = ct.resumir_experimento(bruto["base"], bruto["por_condicao"], bruto["condicoes"], corrida=args.saida)
             return pf.fechar(args.nome or ct.NOME_EXPERIMENTO, dado, ct.render_experimento(dado), ct.PREFIXO_EXPERIMENTO, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
-        dado = ct.resumir_ineditos(bruto["registros"], bruto["linhas"], bruto["casos"], bruto["condicoes"], referencia=bruto["referencia"], corrida=args.saida)
+        dado = ct.resumir_ineditos(bruto["registros"], bruto["linhas"], bruto["casos"], bruto["condicoes"], referencia=bruto["referencia"], corrida=args.saida, lado_escrito=bruto["lado_escrito"])
         return pf.fechar(args.nome or ct.NOME_INEDITOS, dado, ct.render_ineditos(dado), ct.PREFIXO_INEDITOS, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
     if args.revisao:
         return fechar_revisao(pasta, nome_dos_arquivos(args.nome, "revisao"), check=args.check, colar=args.colar)
@@ -1787,7 +1828,8 @@ def main() -> int:
     dado = resumir_tela(bruto["tela"], bruto["fixture"], bruto["casos"], bruto["por_caso"], bruto["trilha_info"], bruto["calibracao"], corrida=args.saida,
                         vivos=bruto.get("vivos"))
     nome_t = nome_dos_arquivos(args.nome, "tela")
-    return fechar_no_relatorio(nome_t, dado, render_tela(dado), PREFIXO_TELA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
+    titulo_t = args.titulo if args.titulo != TITULO else TITULO_TELA
+    return fechar_no_relatorio(nome_t, dado, render_tela(dado, titulo_t), PREFIXO_TELA, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
 
 
 if __name__ == "__main__":

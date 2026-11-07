@@ -6,7 +6,7 @@
 
 Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md). O plano é [`claude-memoria/plano-aprovado-fase-4.md`](../../../claude-memoria/plano-aprovado-fase-4.md) (decisões 79 e 80), e os desvios dele estão no anexo daquele arquivo. A primeira leitura de cada corrida, com os detalhes de lançamento e os defeitos achados, está no [roadmap](../roadmap.md), §2.8 a §2.15; os gráficos estão no grupo Fase 4 do [painel](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN). As tabelas saem de `avaliar_fase4.py` (pasta `resultados_alvo/fase4/`), são coladas aqui por `--colar` e conferidas por `--check`. Os números do texto foram lidos dos mesmos JSON por script, nenhum digitado à mão, e as probabilidades e os MTTR da cura aparecem com três casas.
 
-> **Estado em 05/11/2026:** os pacotes P0 a P8 estão feitos, e as corridas 16 a 22 rodaram e foram lidas. O agente lê a tela, diagnostica, cura localizador em código, propõe acréscimos à biblioteca atrás de validação e grava uma trilha aberta de cada passo. Fica como limitação declarada a regra R2 (seção 5). A medida com revisor humano da especificação da trilha está em aberto: será feita depois de a Pós-Fase 4 normalizar as respostas (seção 9.5, decisão 95). A poda foi consertada depois das corridas, sem corrida nova (seção 9.6). Quatro pontos que o plano previa não saíram, e o Eric respondeu as fichas 42 a 45 no mesmo dia (decisões 90 a 93, seção 13). Três respostas pedem trabalho antes da Fase 5: as corridas 18c, 21c, 23 e 24. Quando a 18c e a 21c rodarem, as leituras delas passam a valer no lugar da 18b e da 21b. Nada foi commitado: quem commita é o Eric.
+> **Estado em 06/11/2026:** os pacotes P0 a P8 estão feitos, e as corridas 16 a 24, com as repetições 18d, 21d e 18e, rodaram e foram lidas. O agente lê a tela, diagnostica, cura localizador em código, propõe acréscimos à biblioteca atrás de validação e grava uma trilha aberta de cada passo. A medida com revisor humano da especificação da trilha está em aberto: será feita depois de a Pós-Fase 4 normalizar as respostas (seção 9.5, decisão 95). A poda foi consertada depois das corridas, sem corrida nova (seção 9.6). Quatro pontos que o plano previa não saíram, e o Eric respondeu as fichas 42 a 45 no mesmo dia (decisões 90 a 93, seção 13). As corridas 18c, 21c e 23 rodaram em 05/11/2026 à noite, e as corridas 18d, 21d e 18e, com os sinais novos da busca, em 06/11/2026: a regra R2 fechou pela leitura fixada antes delas (decisões 97 e 98), e as leituras da 18d e da 21d são as que valem. A corrida 24 rodou no mesmo dia, com a conferência do Eric feita (ficha 46, decisão 100; seção 7.1), e a fase fica concluída. Antes da Fase 5 vem a Pós-Fase 4 (decisão 94). Nada foi commitado: quem commita é o Eric.
 
 ## 1. O que a fase perguntou e o que ela respondeu
 
@@ -14,10 +14,12 @@ Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md)
 |---|---|---|
 | A tela reproduz os casos de avaliação? | Em parte: 37 dos 72 casos (51,4%), todos os que têm tela e modo de injeção, pela regra R1 como rodou, mais larga que o texto do plano, e 25 dos 36 inéditos da ficha 27. O resto continua avaliado só em texto. | Seção 3, corrida 17 |
 | Com quantos verbetes o agente lê e onde ficam os limiares do selo de confiança? | k = 3 pela regra R8 (81,5% contra 75,7% de acurácia balanceada). Selo baixo até p = 0,832 e alto a partir de p = 0,990. A probabilidade do rótulo separa acerto de erro (AUROC 0,799), mas 3 erros saem com selo alto: é triagem, não barreira. | Seção 4, corrida 16 |
-| O agente dá o mesmo diagnóstico ao caso lido da tela e ao caso escrito? | Não dentro do limite fixado: mesmo rótulo em 26 de 37 casos, 26 acertos na tela contra 31 no fixture, b + c = 9 contra o limite de 3 (p = 0,180). A regra R2 fica como limitação declarada (decisão 82). | Seção 5, corridas 18 e 18b |
+| O agente dá o mesmo diagnóstico ao caso lido da tela e ao caso escrito? | Não em todos os casos, mas a tela não piora, pela regra fixada: mesmo rótulo em 28 de 37 casos, 32 acertos na tela contra 30 no fixture; a tela perde 3 casos e ganha 5, e o limite é de 3 perdidos (decisão 98; pela soma dos dois lados, 8; p = 0,727). Nos 25 inéditos, 22 contra 18, e a tela perde 0 e ganha 4. O que mudou foi a busca: o verbete certo chega em 36 de 37 na tela. O caso da tela leva uma medida que o caso escrito não tem, então isso não diz que o modelo lê melhor da tela. | Seção 5, corridas 18 a 18e |
+| Um exemplar resolvido ou os rótulos em palavras mudam o acerto? | Não dá para dizer: 70 de 90 com o exemplar (b = 6, c = 4, p = 0,754) e 67 de 90 com os rótulos em palavras (b = 5, c = 6, p = 1,000), contra 68 de 90 na corrida 16. O prompt do agente continua congelado (decisão 91). | Seção 4.1, corrida 23 |
 | A cura de seletor em código funciona? | Nas quebras armadas, sim: 160 de 160, sempre pelo mesmo elemento, MTTR mediano de 0,639 s, sem modelo. As duas formas de quebra deram a mesma árvore e o mesmo resultado em 16 das 16 células. Os 100% vêm do desenho da corrida. | Seção 6, corrida 19 |
 | O que o agente propõe para a biblioteca passa pelos filtros e ajuda? | 19 de 92 propostas entraram no lote. A regra R5 aceitou o lote com b = 0 e c = 0: não piorou, e também não mudou acerto nenhum nos 36 inéditos. O ciclo de correção marcou certo (precisão e revocação de 100,0% em 9 casos), e o modelo não percebe a correção registrada (0 de 7 a mencionam). | Seção 7, corrida 20 |
-| Quanto tempo o agente inteiro leva e em quantos cenários acerta? | 10 de 10 com Task Success (a tarefa concluída, pelo critério da ficha 35) na repetição, com Wilson 95% de 72,2 a 100,0%, e MTTR (tempo da detecção ao reparo validado) médio de 105,2 s, quase todo do modelo. Uma repetição por cenário, sem linha de base manual. | Seção 8, corridas 21 e 21b |
+| A biblioteca final acerta em casos que nunca viu? | Menos que nos casos de avaliação: 25 de 36 (69,4%; Wilson 95% de 53,1 a 82,0), contra 31 de 36 nos casos de avaliação, que não são os mesmos. Com o verbete certo, 18 de 20; sem ele, 7 de 16. A classe de tradução faz 1 de 6. Há uma condição só: a corrida não diz quanto a biblioteca ajuda nesses casos. | Seção 7.1, corrida 24 |
+| Quanto tempo o agente inteiro leva e em quantos cenários acerta? | 10 de 10 com Task Success (a tarefa concluída, pelo critério da ficha 35) na repetição, com Wilson 95% de 72,2 a 100,0%, e MTTR (tempo da detecção ao reparo validado) médio de 74,0 s com o prompt dentro do limite e os sinais novos da busca (72,5 s na 21c; 105,2 s antes do corte), quase todo do modelo. Uma repetição por cenário, sem linha de base manual. | Seção 8, corridas 21, 21b, 21c e 21d |
 | A divergência da trilha aponta os erros reais? | Com as intervenções em todos os casos, quase não: TPR x TNR (erros pegos vezes acertos deixados em paz) de 0,284 contra 0,250 do acaso. Contada por gatilho, 0,542, numa corrida que não rodou assim. São só 5 erros. Nas mutações, o nó previsto em 100%, o que é esperado por construção. | Seções 9.1 a 9.3, corrida 22 |
 | O relatório por caso ajuda um revisor humano a decidir? | Em aberto: a sessão de 05/11 tem 1 resposta do Eric e 10 pareceres do Claude aprovados por ele, e a medida será feita depois da Pós-Fase 4 (decisões 85, 86 e 95). | Seção 9.5 |
 
@@ -31,14 +33,21 @@ Máquina: i5-1235U, 16 GB, só CPU, a mesma das fases anteriores; `qwen2.5:7b`, 
 | 17, reprodução (36 inéditos) | `fase4_reproducao_ineditos` | 27/10, 17:52 | 64 | 0 | sem modelo | |
 | 16, calibração | `fase4_calibracao` | 27/10, 20:46 | 11219 | 183 | 0.40.2 | L1 curada, `1fca10f1a6f6` |
 | 18, tela e fixture | `fase4_tela` | 01/11, 11:09 | 5077 | 74 | 0.40.2 | `1fca10f1a6f6` |
-| 18b, repetição (a que vale) | `fase4_tela_v2` | 01/11, 14:06 | 5316 | 74 | 0.40.2 | `1fca10f1a6f6` |
+| 18b, repetição | `fase4_tela_v2` | 01/11, 14:06 | 5316 | 74 | 0.40.2 | `1fca10f1a6f6` |
 | 19, cura de seletor | `fase4_cura` | 01/11, 19:58 | 1006 | 0 | sem modelo | |
 | 20, biblioteca | `fase4_biblioteca` | 03/11, 21:01, e 04/11, 16:24 | 1749 no relançamento; a primeira parte levou 4h45 (roadmap §2.12) | 158 | 0.40.14 | `1fca10f1a6f6` |
 | 21, ensaio dos cenários | `fase4_ensaio` | 04/11, 20:19 | 1037 | 10 | 0.40.14 | `95af35290860` |
-| 21b, repetição (a vigente) | `fase4_ensaio_v2` | 04/11, 21:31 | 1121 | 10 | 0.40.14 | `95af35290860` |
+| 21b, repetição | `fase4_ensaio_v2` | 04/11, 21:31 | 1121 | 10 | 0.40.14 | `95af35290860` |
 | 22, avaliação da trilha | `fase4_trilha` | 04/11, 23:00 | 13202 | 277 | 0.40.14 | `95af35290860` |
+| 18c, repetição com o prompt no limite | `fase4_tela_v3` | 05/11, 18:39 | 4596 | 74 | 0.40.14 | `95af35290860` |
+| 21c, repetição com o prompt no limite | `fase4_ensaio_v3` | 05/11, 19:56 | 794 | 10 | 0.40.14 | `95af35290860` |
+| 23, experimento em texto | `fase4_experimento` | 05/11, 20:09 | 10581 | 180 | 0.40.14 | `1fca10f1a6f6`, a da corrida 16 |
+| 18d, com os sinais da busca (a que vale) | `fase4_tela_v4` | 06/11, 09:53 | 4770 | 74 | 0.40.14 | `95af35290860` |
+| 21d, com os sinais da busca (a vigente) | `fase4_ensaio_v4` | 06/11, 11:13 | 808 | 10 | 0.40.14 | `95af35290860` |
+| 18e, os inéditos na tela | `fase4_tela_ineditos` | 06/11, 11:26 | 3739 | 50 | 0.40.14 | `95af35290860` |
+| 24, os 36 inéditos em texto | `fase4_ineditos` | 06/11, 13:52 | 2610 | 36 | 0.40.14 | `95af35290860` |
 
-Somando o executor de cada corrida e a primeira parte da corrida 20, foram 15h50 de máquina, sem contar a ponte do Ollama 0.40.14 nem as partidas que caíram antes de começar. O plano estimava de 11h06 a 15h55 sem as repetições 18b e 21b.
+Somando o executor de cada corrida e a primeira parte da corrida 20, foram 15h50 de máquina, sem contar a ponte do Ollama 0.40.14 nem as partidas que caíram antes de começar. O plano estimava de 11h06 a 15h55 sem as repetições 18b e 21b. As corridas 18c, 21c e 23, pedidas depois do fechamento (decisões 90 e 91), somam mais 4h26 de executor, em fila, por `rodar_pendencias_fase4.ps1`, e as corridas 18d, 21d e 18e (decisão 97), mais 2h35, na mesma fila, e a corrida 24, mais 0h43.
 
 **Regra R6 (ponte de versão).** A versão 0.40.2 já tinha ponte (`fase3b_ponte_0402`: b = 1, c = 0 em 35 casos). Em 03/11 o Ollama se atualizou sozinho para 0.40.14, o executor recusou a corrida até haver ponte, e a ponte `fase3b_ponte_04014` deu b = 1, c = 0 em 35 casos, dentro do limite de 2 (decisão 47). Os limiares do selo vêm da 0.40.2 e não foram recalibrados: a ponte iguala os rótulos, e a sondagem iguala a probabilidade num caso, não a curva inteira.
 
@@ -355,65 +364,159 @@ A probabilidade do rótulo continua sendo triagem, não barreira: AUROC 0,799 [0
 
 </details>
 
-## 5. A tela contra o caso escrito (corridas 18 e 18b, regra R2)
+<!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 91) seção nova com a leitura da corrida 23.
+     ! Motivo: a ficha 34 (a) e a decisão 79 mandaram medir os dois itens, e o número vai para o TCC. Números de `resultados_alvo/fase4/tela_v3.json`, `cenarios_v3.json` e `experimento_prompt.json`, lidos por script. -->
+### 4.1 O experimento dos itens da decisão 55 (corrida 23)
 
-A regra R2 pede que, nos casos que reproduzem, o rótulo do caso lido da tela e o do mesmo caso lido do fixture (o caso escrito), na mesma sessão do Ollama, difiram em no máximo 3 casos, que é a variação entre corridas iguais.
+A decisão 55 deixou para medir dois itens da literatura: um exemplar resolvido fixo no prompt e a forma dos rótulos. A corrida 23 mede cada um em separado, em texto, nos 90 casos, com a mesma biblioteca e o mesmo k da corrida 16. O prompt do agente não muda em nenhuma condição: cada uma é uma transformação de texto do prompt pronto, conferida em teste (`corridas_em_texto.py`), e o número vai para o TCC sem decidir nada na Fase 5 (decisão 91).
+
+**Nenhuma das duas se separa do acaso.** Na corrida 16, 68 de 90 (75,6%; acurácia balanceada de 81,5%). Com o exemplar, 70 de 90 (77,8%; 83,3%), b = 6, c = 4, p = 0,754. Com os rótulos em palavras, 67 de 90 (74,4%; 79,7%), b = 5, c = 6, p = 1,000. Nos 36 casos de avaliação, a corrida 16 acertou 31, o exemplar 29 e os rótulos em palavras 30. As duas condições trocam a causa em 17 dos 90 casos, para os dois lados, e duas corridas iguais já variaram de 0 a 3 casos em 36 (Fase 3-B).
+
+**O exemplar custa tempo e não puxa a resposta.** Ele leva o prompt de 1106,5 para 1282,5 tokens (medianas), e o tempo por caso foi de 69,6 s, contra 40,6 s da outra condição, na mesma sessão. A causa do exemplar, `erro_interno_do_servidor`, foi respondida 3 vezes, como na corrida 16 (3): o modelo não copia o exemplo.
+
+**O modelo escreve como a lista pede.** Com os rótulos em palavras, 87 das 90 respostas vieram em palavras, 1 com o nome oficial e 2 fora da lista. Uma das 2 é `run-10`: a causa certa veio entre colchetes, com o título do verbete (`[limite_de_requisicoes] Limite de requisições`), e conta como fora da lista, como no leitor oficial; contada como certa, o saldo fica empatado e nada muda. Para a Pós-Fase 4, isso quer dizer que mostrar o nome da causa em palavras a quem lê não pede mudar o prompt: um mapa em código basta.
+
+**Cuidado na comparação.** A corrida 16 rodou no Ollama 0.40.2, e as condições no 0.40.14. A ponte entre as duas versões deu b + c dentro do limite (seção 2), então o acerto se compara; o tempo, não. Um teste confere que a leitura nova da linha CAUSA_RAIZ devolve o mesmo acerto do leitor oficial nos 90 registros da corrida 16.
+
+<!-- tabela:tb_f4_exp_resumo -->
+| Condição | Casos | Acertos | Acerto (%) | Acurácia balanceada (%) | b | c | p (McNemar) | Nos 36 de avaliação | Trocas de rótulo | Fora do conjunto ou sem rótulo | Tokens de entrada (mediana) | Segundos (mediana) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| corrida 16 (k = 3) | 90 | 68 | 75,6 | 81,5 |  |  |  | 31 de 36 |  |  | 1106,5 | 55,36 |
+| `exemplar` | 90 | 70 | 77,8 | 83,3 | 6 | 4 | 0,754 | 29 de 36 | 17 | 1 | 1282,5 | 69,56 |
+| `rotulos_por_extenso` | 90 | 67 | 74,4 | 79,7 | 5 | 6 | 1,000 | 30 de 36 | 17 | 2 | 1089,5 | 40,64 |
+<!-- /tabela:tb_f4_exp_resumo -->
+
+<details><summary>Os casos que mudaram de certo para errado ou o contrário (tb_f4_exp_mudaram)</summary>
+
+<!-- tabela:tb_f4_exp_mudaram -->
+| Condição | Caso | Gabarito | Corrida 16 | Na condição | Efeito |
+|---|---|---|---|---|---|
+| `exemplar` | `efe-1` | `localizador_quebrado` | `tempo_de_resposta_excedido` | `localizador_quebrado` | ganhou |
+| `exemplar` | `efe-3` | `campo_ausente` | `campo_ausente` | `colecao_no_lugar_de_objeto` | perdeu |
+| `exemplar` | `lex-3` | `corpo_vazio` | `tempo_de_resposta_excedido` | `corpo_vazio` | ganhou |
+| `exemplar` | `lex-6` | `corpo_nao_e_json` | `recurso_inexistente` | `corpo_nao_e_json` | ganhou |
+| `exemplar` | `semt-1` | `tipo_divergente` | `tipo_divergente` | `formato_de_data_divergente` | perdeu |
+| `exemplar` | `semt-13` | `tipo_divergente` | `tipo_divergente` | `escala_ou_unidade_errada` | perdeu |
+| `exemplar` | `semt-6` | `tipo_divergente` | `colecao_no_lugar_de_objeto` | `tipo_divergente` | ganhou |
+| `exemplar` | `semt-8` | `nulo_inesperado` | `nulo_inesperado` | `valor_fora_do_dominio` | perdeu |
+| `exemplar` | `sin-2` | `campo_renomeado` | `tipo_divergente` | `campo_renomeado` | ganhou |
+| `exemplar` | `tra-12` | `escala_ou_unidade_errada` | `tipo_divergente` | `escala_ou_unidade_errada` | ganhou |
+| `rotulos_por_extenso` | `efe-2` | `estado_da_tela_divergente` | `estado_da_tela_divergente` | `valor_fora_do_dominio` | perdeu |
+| `rotulos_por_extenso` | `efe-6` | `localizador_quebrado` | `localizador_quebrado` | `tempo_de_resposta_excedido` | perdeu |
+| `rotulos_por_extenso` | `efe-8` | `estado_da_tela_divergente` | `estado_da_tela_divergente` | `colecao_no_lugar_de_objeto` | perdeu |
+| `rotulos_por_extenso` | `run-10` | `limite_de_requisicoes` | `limite_de_requisicoes` | `[limite_de_requisicoes] Limite de requisições` | perdeu |
+| `rotulos_por_extenso` | `semt-13` | `tipo_divergente` | `tipo_divergente` | `formato_de_data_divergente` | perdeu |
+| `rotulos_por_extenso` | `semt-6` | `tipo_divergente` | `colecao_no_lugar_de_objeto` | `tipo_divergente` | ganhou |
+| `rotulos_por_extenso` | `semt-8` | `nulo_inesperado` | `nulo_inesperado` | `tipo_divergente` | perdeu |
+| `rotulos_por_extenso` | `sin-14` | `campo_renomeado` | `colecao_no_lugar_de_objeto` | `campo_renomeado` | ganhou |
+| `rotulos_por_extenso` | `sin-2` | `campo_renomeado` | `tipo_divergente` | `campo_renomeado` | ganhou |
+| `rotulos_por_extenso` | `sin-5` | `campo_ausente` | `colecao_no_lugar_de_objeto` | `campo_ausente` | ganhou |
+| `rotulos_por_extenso` | `tra-3` | `chave_de_juncao_errada` | `tipo_divergente` | `chave_de_juncao_errada` | ganhou |
+<!-- /tabela:tb_f4_exp_mudaram -->
+
+</details>
+
+## 5. A tela contra o caso escrito (corridas 18, 18b, 18c, 18d e 18e, regra R2)
+
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a seção 5, a seção 1, a linha R2 da seção 10 e as seções 12, 14 e 15 passam a dizer a regra R2 pelos casos que a tela perde, com a soma ao lado.
+     ! Motivo: o Eric fixou essa leitura antes da corrida 18d, porque a soma contaria como defeito o caso que só a tela acerta; o que a regra dizia até a 18c continua aqui, e os números vêm dos campos `b`, `c` e `discordantes` de `tela.json`, `tela_v2.json` e `tela_v3.json`. -->
+A regra R2 pede que, nos casos que reproduzem, o rótulo do caso lido da tela e o do mesmo caso lido do fixture (o caso escrito), na mesma sessão do Ollama, difiram em no máximo 3 casos, que é a variação entre corridas iguais. O texto do plano não diz para que lado. Até a corrida 18c, a conta foi b + c até 3, em que b são os casos que só a tela acerta e c, os que só o caso escrito acerta. Em 06/11/2026, antes da corrida 18d e sem conhecer o resultado dela, o Eric fixou a leitura pelo que a regra protege, a tela não piorar: c até 3, com b e a soma ao lado (ficha 48, decisão 98). Nas corridas 18, 18b e 18c o estado é o mesmo nas duas contas: c foi 16, 7 e 5, e a soma, 17, 9 e 7.
 
 **A corrida 18 mediu um defeito do caso de entrada, não o agente** (`tela.json`): mesmo rótulo em 16 de 37, 16 acertos na tela contra 31 no fixture, b = 1, c = 16, p = 0,0003. Em 22 dos 37 casos a poda não achou diferença de campo contra o contrato e levou ao modelo o primeiro produto da lista, normal; `colecao_no_lugar_de_objeto` saiu 12 vezes na tela. A decisão 81 (ficha 37) passou a levar ao caso ao vivo o que mudou contra a referência em modo normal, no CORPO e no SINTOMA, e a corrida foi repetida em pasta nova.
 
-**A corrida 18b é a que vale (decisão 82), e os blocos abaixo são dela** (`tela_v2.json`): mesmo rótulo em 26 de 37 (70,3%), 26 acertos na tela (70,3%) contra 31 no fixture (83,8%), b = 2, c = 7, p = 0,180. Nos 22 casos sem diferença de campo, 16 dão o mesmo rótulo (eram 5) e 15 acertam na tela (eram 5); `colecao_no_lugar_de_objeto` cai de 12 para 2 na tela. Entre as duas corridas, 11 casos passaram a acertar na tela, 1 deixou (`sin-11`) e o rótulo da tela mudou em 17.
+**A corrida 18b corrigiu o caso de entrada (decisão 82)** (`tela_v2.json`): mesmo rótulo em 26 de 37 (70,3%), 26 acertos na tela (70,3%) contra 31 no fixture (83,8%), b = 2, c = 7, p = 0,180. Nos 22 casos sem diferença de campo, 16 dão o mesmo rótulo (eram 5) e 15 acertam na tela (eram 5); `colecao_no_lugar_de_objeto` cai de 12 para 2 na tela. Entre as duas corridas, 11 casos passaram a acertar na tela, 1 deixou (`sin-11`) e o rótulo da tela mudou em 17.
 
-**A regra R2 fica como limitação declarada (decisão 82):** b + c = 9 continua acima do limite de 3. O limite não mudou, o saldo é de +10 acertos na tela contra a corrida 18, e o molde do sintoma não passou por terceira revisão, porque descrever melhor sem citar a causa começaria a escrever a resposta no sintoma. O teste pareado não separa os dois lados nesses 37 casos (p = 0,180), mas o limite da regra é o da variação entre corridas iguais, e 9 casos é o triplo dele. O que sobra são, na maior parte, confusões entre rótulos vizinhos; `semt-21` e `run-19` não têm essa leitura. Os 11 erros na tela: `lex-8`, `codificacao_incorreta` lido como `formato_de_data_divergente`; `sin-11`, `estrutura_aninhada_divergente` lido como `tipo_divergente`; `semt-9`, `valor_fora_do_dominio` lido como `tipo_divergente`; `lex-18`, `codificacao_incorreta` lido como `formato_de_data_divergente`; `sin-21`, `estrutura_aninhada_divergente` lido como `tipo_divergente`; `semt-17`, `nulo_inesperado` lido como `campo_ausente`; `semt-20`, `valor_fora_do_dominio` lido como `tipo_divergente`; `semt-21`, `valor_fora_do_dominio` lido como `campo_renomeado`; `tra-17`, `chave_de_juncao_errada` lido como `tipo_divergente`; `tra-20`, `chave_de_juncao_errada` lido como `tipo_divergente`; `run-19`, `tempo_de_resposta_excedido` lido como `colecao_no_lugar_de_objeto`. Em resumo, o agente na tela acerta menos que o mesmo agente lendo o caso que uma pessoa escreveu, e esta fase não fechou essa diferença.
+**Na 18b, a regra R2 ficou como limitação declarada (decisão 82):** b + c = 9 continuou acima do limite de 3. O limite não mudou, o saldo é de +10 acertos na tela contra a corrida 18, e o molde do sintoma não passou por terceira revisão, porque descrever melhor sem citar a causa começaria a escrever a resposta no sintoma. O teste pareado não separa os dois lados nesses 37 casos (p = 0,180), mas o limite da regra é o da variação entre corridas iguais, e 9 casos é o triplo dele. O que sobra são, na maior parte, confusões entre rótulos vizinhos; `semt-21` e `run-19` não têm essa leitura. Os 11 erros na tela: `lex-8`, `codificacao_incorreta` lido como `formato_de_data_divergente`; `sin-11`, `estrutura_aninhada_divergente` lido como `tipo_divergente`; `semt-9`, `valor_fora_do_dominio` lido como `tipo_divergente`; `lex-18`, `codificacao_incorreta` lido como `formato_de_data_divergente`; `sin-21`, `estrutura_aninhada_divergente` lido como `tipo_divergente`; `semt-17`, `nulo_inesperado` lido como `campo_ausente`; `semt-20`, `valor_fora_do_dominio` lido como `tipo_divergente`; `semt-21`, `valor_fora_do_dominio` lido como `campo_renomeado`; `tra-17`, `chave_de_juncao_errada` lido como `tipo_divergente`; `tra-20`, `chave_de_juncao_errada` lido como `tipo_divergente`; `run-19`, `tempo_de_resposta_excedido` lido como `colecao_no_lugar_de_objeto`. Em resumo, o agente na tela acerta menos que o mesmo agente lendo o caso que uma pessoa escreveu, e esta fase não fechou essa diferença.
 
-**O prompt da tela passou do limite do plano, e o Eric decidiu encurtar e repetir (ficha 42, decisão 90).** O plano (seção 3.3) fixou antes de rodar que o prompt ao vivo não passa o maior prompt da calibração (1281 tokens) em mais de 10% (1409 tokens), e que, se passar, a poda aperta antes da próxima corrida. Nas duas corridas os 37 prompts passaram do limite: o maior foi de 1939 tokens na 18 e de 2034 na 18b, porque a revisão do caso ao vivo acrescentou texto. A poda não apertou. Nos dez cenários, 9 de 10 prompts passam do limite. O limite importa por dois motivos: os limiares do selo foram calibrados com prompts menores, e o tempo do diagnóstico cresce com o prompt (seção 8). A medida sem modelo nos prompts guardados (`medir_prompt_tela.py`, `resultados_alvo/fase4/prompt_tela_blocos.json`) mostra que só a árvore não basta: reduzida ao título e ao que difere da referência em modo normal, ela ainda deixa 12 de 37 prompts da corrida 18b e 5 de 10 da 21b acima de 1409 tokens, e sem nenhuma árvore ficam 4 e 1. Tirando também a linha OBSERVAÇÃO ADICIONAL e as listas `faltam` e `sobram` do SINTOMA, sobram 1 e 3, por causa de linhas repetidas e de linhas que a referência podada não tem, que o corte em código trata. As corridas 18c e 21c repetem a 18b e a 21b em pasta nova, com o caso ao vivo encurtado e o prompt fixo intacto; esta seção fica como a leitura da 18b até lá.
+**O prompt da tela passou do limite do plano, e o Eric decidiu encurtar e repetir (ficha 42, decisão 90).** O plano (seção 3.3) fixou antes de rodar que o prompt ao vivo não passa o maior prompt da calibração (1281 tokens) em mais de 10% (1409 tokens), e que, se passar, a poda aperta antes da próxima corrida. Nas duas corridas os 37 prompts passaram do limite: o maior foi de 1939 tokens na 18 e de 2034 na 18b, porque a revisão do caso ao vivo acrescentou texto. A poda não apertou. Nos dez cenários, 9 de 10 prompts passam do limite. O limite importa por dois motivos: os limiares do selo foram calibrados com prompts menores, e o tempo do diagnóstico cresce com o prompt (seção 8). A medida sem modelo nos prompts guardados (`medir_prompt_tela.py`, `resultados_alvo/fase4/prompt_tela_blocos.json`) mostra que só a árvore não basta: reduzida ao título e ao que difere da referência em modo normal, ela ainda deixa 12 de 37 prompts da corrida 18b e 5 de 10 da 21b acima de 1409 tokens, e sem nenhuma árvore ficam 4 e 1. Tirando também a linha OBSERVAÇÃO ADICIONAL e as listas `faltam` e `sobram` do SINTOMA, sobram 1 e 3, por causa de linhas repetidas e de linhas que a referência podada não tem, que o corte em código trata. As corridas 18c e 21c repetem a 18b e a 21b em pasta nova, com o caso ao vivo encurtado e o prompt fixo intacto; o resultado vem a seguir.
 
 <!-- ! Alteração de IA - Revisar: (05/11/2026) parágrafo novo com o corte do caso ao vivo e a conferência sem modelo, antes da corrida 18c (decisões 90 e 96).
      ! Motivo: a decisão 90 mandou conferir sem modelo os prompts novos e os verbetes recuperados; o resultado da conferência fica registrado antes das corridas, e os números vêm de `resultados_alvo/fase4/corte_prompt_tela.json`. -->
-**O corte, conferido sem modelo (decisões 90 e 96).** O caso ao vivo passou a levar só o que difere da referência em modo normal: a árvore fica com o título e as linhas que mudaram, o SINTOMA guarda a contagem de linhas e perde as listas, e a linha OBSERVAÇÃO ADICIONAL sai do prompt. `conferir_corte_tela.py` monta, sem modelo e com as cobaias de verdade, o prompt que as corridas 18c e 21c mandariam: os 47 ficam abaixo de 1409 tokens, com o maior em 1395 nos 37 casos da 18b e 1358 nos 10 da 21b, estimados pela razão de tokens por caractere de cada prompt guardado. O corte sozinho derrubava o verbete certo no contexto, porque a busca compara o corpo com o contrato e um trecho podado parece ter campos ausentes; com a busca lendo o corpo inteiro (decisão 96), o verbete certo vai de 15 para 21 dos 37 casos e de 1 para 9 dos 10 cenários. No caso escrito, com os mesmos verbetes de produção, são 27 dos 37. Isso é a conferência; a medida é a corrida 18c.
+**O corte, conferido sem modelo (decisões 90 e 96).** O caso ao vivo passou a levar só o que difere da referência em modo normal: a árvore fica com o título e as linhas que mudaram, o SINTOMA guarda a contagem de linhas e perde as listas, e a linha OBSERVAÇÃO ADICIONAL sai do prompt. `conferir_corte_tela.py` monta, sem modelo e com as cobaias de verdade, o prompt que as corridas 18c e 21c mandariam: os 47 ficam abaixo de 1409 tokens, com o maior em 1395 nos 37 casos da 18b e 1358 nos 10 da 21b, estimados pela razão de tokens por caractere de cada prompt guardado. O corte sozinho derrubava o verbete certo no contexto, porque a busca compara o corpo com o contrato e um trecho podado parece ter campos ausentes; com a busca lendo o corpo inteiro (decisão 96), o verbete certo vai de 15 para 21 dos 37 casos e de 5 para 9 dos 10 cenários (medido nos registros; a conferência dizia 1 na 21b, porque não achava o prompt guardado dos quatro cenários de localizador). No caso escrito, com os mesmos verbetes de produção, são 27 dos 37. Isso é a conferência; a medida é a corrida 18c.
+
+<!-- ! Alteração de IA - Revisar: (05/11/2026, decisões 90 e 96) parágrafos novos com a leitura da corrida 18c, que passa a ser a vigente; os blocos abaixo são dela.
+     ! Motivo: a decisão 90 diz que a leitura nova passa a valer quando a corrida rodar. Números de `resultados_alvo/fase4/tela_v3.json`, `cenarios_v3.json` e `experimento_prompt.json`, lidos por script. -->
+**A corrida 18c** (`tela_v3.json`): os 37 prompts ficaram dentro do limite, de 1069 a 1373 tokens (na 18b, de 1595 a 2034). Mesmo rótulo em 28 de 37 (75,7%), 27 acertos na tela (73,0%) contra 30 no fixture (81,1%), b = 2, c = 5, p = 0,453. O tempo por caso na tela caiu de 82,5 s para 52,0 s (medianas). No fixture, que não encurtou, foi de 51,5 s para 55,0 s: o ganho vem do prompt menor, não da versão do Ollama.
+
+**Na 18c, a regra R2 seguiu como limitação declarada (decisão 82):** a tela perde 5 casos para o caso escrito e ganha 2. São 5 contra o limite de 3 pela leitura da decisão 98, e a soma dos dois lados, a conta de até então, dá 7. O molde do sintoma não passou por terceira revisão, porque a decisão 90 só alcança o que sai do prompt. Caso a caso contra a 18b, passaram a acertar na tela `semt-17`, `sin-11`, `sin-21`, e deixaram de acertar `tra-4`, `tra-8`, em que a falta do último item da lista passou a ser lida como `resposta_truncada`, com selo baixo. A causa na tela mudou em 8 dos 37 casos. A 18c trocou também a versão do Ollama e a biblioteca (a de produção, `95af35290860`, no lugar da curada), e o fixture serve de controle: ali a causa mudou em 1 (`semt-20`).
+
+**Na 18c, o que separava a tela do caso escrito era a busca** (`tela_v3.json`, campo `verbete_certo`). Com o verbete da causa certa entre os entregues, a tela acerta 19 de 21 e o fixture 26 de 27; sem ele, 8 de 16 e 4 de 10. A diferença é quantas vezes o verbete chega: 21 na tela (eram 15 na 18b, antes de a busca ler o corpo inteiro, decisão 96) e 27 no fixture. Dos 10 erros na tela, 8 são de casos sem o verbete certo, e 7 respondem `tipo_divergente`: essa causa sai 9 vezes na tela, 5 no fixture, e é o gabarito de 2 casos. O Eric decidiu mexer na busca (ficha 47, decisão 97): os sinais novos, conferidos sem modelo, levam o verbete certo a 36 dos 37 casos, e a medida com o modelo são as corridas 18d, 21d e 18e, a seguir. Se um dia for preciso voltar, a chave `caso_ao_vivo.SINAIS_DA_REFERENCIA_NA_BUSCA` devolve a busca à da 18c.
+
+**Na 18c, o selo ficou mais útil com o prompt do tamanho da calibração** (`tela_v3.json`, campo `acerto_por_selo`): selo alto acerta 14 de 15, médio 7 de 9 e baixo 6 de 13; na 18b eram 9 de 11, 15 de 18 e 2 de 8. O único erro com selo alto é `semt-9`. São poucos casos: é triagem, não barreira.
+
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) parágrafos novos com a leitura das corridas 18d e 18e; os blocos abaixo passam a ser da 18d.
+     ! Motivo: a regra R2 fechou na 18d pela leitura fixada antes dela, e o agente fica com os sinais novos da busca. Números de `tela_v3.json`, `tela_v4.json`, `tela_ineditos.json` e `teto_prompt_tela.json`, lidos por script. -->
+**A corrida 18d é a que vale agora, e os blocos abaixo são dela** (`tela_v4.json`): com os sinais da busca, o verbete certo chega ao modelo em 36 dos 37 casos na tela (eram 21), contra 27 no fixture, como a conferência sem modelo previa. O acerto na tela foi de 27 para 32 (86,5%), e o do fixture ficou em 30 (81,1%). Mesmo rótulo em 28 de 37 (75,7%), b = 5, c = 3, p = 0,727. Os 37 prompts ficaram dentro do limite, de 1069 a 1385 tokens, e o tempo por caso foi de 52,0 s para 59,2 s na tela e de 55,0 s para 58,0 s no fixture (medianas).
+
+**A regra R2 fechou, pela leitura fixada antes da corrida (decisão 98):** a tela perde 3 casos para o fixture, no limite exato, e ganha 5. Pela conta de antes, a soma dá 8, e a regra ficaria fora pelo lado bom; as duas contas ficam no bloco `tb_f4_tela_resumo`. Não há folga: corridas iguais já variaram até 3 casos, e o teste pareado não separa os dois lados (p = 0,727). A limitação declarada pela decisão 82 valia enquanto a regra estivesse fora, e deixa de valer para a leitura vigente.
+
+**O fixture é o controle:** da 18c para a 18d, na mesma versão do Ollama e com a mesma biblioteca, a causa mudou em 0 dos 37 casos no fixture, que não recebe os sinais. Na tela mudou em 7: passaram a acertar `lex-8`, `lex-18`, `semt-20`, `tra-17`, `tra-20` e `run-19`, e deixou de acertar `tra-21`. A diferença é dos sinais. **Isso não quer dizer que o modelo lê melhor da tela:** o caso da tela leva a medida contra a referência em modo normal, que o caso escrito não tem. O que a corrida mostra é que, quando o verbete certo chega, o modelo acerta nos dois lados: 32 de 36 na tela e 26 de 27 no fixture.
+
+**O que a tela ainda perde é uma confusão só:** `contagem_inconsistente` lido como `resposta_truncada` em `tra-4`, `tra-8` e `tra-21`, os três com o verbete certo entregue e selo baixo. A falta de um item da lista parece, ao modelo, uma resposta cortada: não é a busca, é a leitura de dois verbetes vizinhos. Erram nos dois lados `semt-9` e `semt-21`, com selo alto; `semt-9` é o único caso sem o verbete certo. O selo alto acerta 18 de 20, o médio 12 de 12 e o baixo 2 de 5, com os limiares da corrida 16.
+
+**A conferência limpa é a corrida 18e** (`tela_ineditos.json`): os sinais foram escritos olhando os 37 casos, e os 25 inéditos da ficha 27 que reproduzem na tela não foram olhados antes. Neles, 22 acertos na tela (88,0%) contra 18 no fixture (72,0%), mesmo rótulo em 19 de 25, b = 4 (`sin-26`, `semt-23`, `tra-22` e `tra-27`), c = 0, p = 0,125; o verbete certo chega em 23 de 25 na tela e em 14 no fixture. O ganho da busca se repete em casos novos, e a tela não perde nenhum. São 25 casos, e a conferência do Eric (ficha 46), feita depois desta corrida, não mudou nenhum deles (decisão 100). Depois desta leitura, esses casos não servem mais de conferência limpa para outro ajuste na busca.
+
+**Dois prompts da 18e passaram do limite, e o caso ao vivo ganhou um teto (decisão 99):** `semt-27`, em que todos os ids vêm trocados por negativos, com 1829 tokens, e `tra-26`, com seis campos diferentes, com 1620: a comparação escrevia tudo o que falta, sobra ou difere. Os dois erram também no fixture, então não podem entrar em c, e a regra R2 não depende deles. O teto (até 3 ids por cláusula, até 3 ids repetidos e até 2 campos com detalhe) os leva a 1367 e 1387 tokens, medidos com o próprio Ollama (`teto_prompt_tela.json`), e não muda os prompts das corridas 18d e 21d: 44 de 47 ficaram iguais byte a byte, e os outros 3 só mudam o tempo da referência medido na hora. Em `semt-27` há um segundo efeito, que ficou como está: a busca conta cada id trocado como item faltando ou sobrando e vai para `contagem_inconsistente`, mesmo com a lista do mesmo tamanho. Mexer nisso agora seria ajustar olhando os inéditos.
+
+<!-- tabela:tb_f4_tela_verbete -->
+| Lado | Verbete da causa certa entre os entregues | Casos | Acertos | Acerto (%) |
+|---|---|---|---|---|
+| tela | sim | 36 | 32 | 88,9 |
+| tela | não | 1 | 0 | 0,0 |
+| fixture | sim | 27 | 26 | 96,3 |
+| fixture | não | 10 | 4 | 40,0 |
+<!-- /tabela:tb_f4_tela_verbete -->
+
+<!-- tabela:tb_f4_tela_selo -->
+| Selo na tela | Casos | Acertos | Acerto (%) |
+|---|---|---|---|
+| alto | 20 | 18 | 90,0 |
+| medio | 12 | 12 | 100,0 |
+| baixo | 5 | 2 | 40,0 |
+<!-- /tabela:tb_f4_tela_selo -->
 
 <!-- tabela:tb_f4_tela_resumo -->
-| Casos | Reproduzem na tela | Acerto na tela | Acerto no fixture | Concordam (mesmo rótulo) | Concordância (%) | b (só a tela acerta) | c (só o fixture acerta) | b + c | Limite R2 | Dentro do limite | p (McNemar exato) | Selos na tela (alto / médio / baixo) | Gatilhos na tela | Divergências na tela | s por caso na tela (mediana) | s por caso no fixture (mediana) | Trilha (bytes) |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 37 | 37 | 26 (70,3%) | 31 (83,8%) | 26 | 70,3 | 2 | 7 | 9 | 3 | não | 0,180 | 11 / 18 / 8 | 15 | 9 | 82,5 | 51,5 | 2200836 |
+| Casos | Reproduzem na tela | Acerto na tela | Acerto no fixture | Concordam (mesmo rótulo) | Concordância (%) | b (só a tela acerta) | c (só o fixture acerta) | b + c | Limite R2 (c) | Dentro do limite | b + c até o limite (conta de antes) | p (McNemar exato) | Selos na tela (alto / médio / baixo) | Gatilhos na tela | Divergências na tela | s por caso na tela (mediana) | s por caso no fixture (mediana) | Trilha (bytes) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 37 | 37 | 32 (86,5%) | 30 (81,1%) | 28 | 75,7 | 5 | 3 | 8 | 3 | sim | não | 0,727 | 20 / 12 / 5 | 6 | 5 | 59,2 | 58,0 | 2051641 |
 <!-- /tabela:tb_f4_tela_resumo -->
 
 <!-- tabela:tb_f4_tela_por_classe -->
 | Classe | Casos | Acerto na tela | Acerto no fixture | Concordam |
 |---|---|---|---|---|
-| 1 | 8 | 6 | 7 | 6 |
-| 2 | 7 | 5 | 5 | 3 |
-| 3 | 8 | 4 | 6 | 5 |
-| 4 | 8 | 6 | 7 | 7 |
-| 5 | 5 | 4 | 5 | 4 |
+| 1 | 8 | 8 | 7 | 7 |
+| 2 | 7 | 7 | 5 | 5 |
+| 3 | 8 | 6 | 5 | 6 |
+| 4 | 8 | 5 | 7 | 4 |
+| 5 | 5 | 5 | 5 | 5 |
 | 6 | 1 | 1 | 1 | 1 |
 <!-- /tabela:tb_f4_tela_por_classe -->
 
 <!-- tabela:tb_f4_tela_rotulos -->
 | Rótulo | Dado na tela | Dado no fixture | É o gabarito de |
 |---|---|---|---|
-| `tipo_divergente` | 8 | 4 | 2 |
-| `campo_ausente` | 5 | 4 | 4 |
-| `contagem_inconsistente` | 4 | 4 | 4 |
-| `codificacao_incorreta` | 2 | 3 | 4 |
-| `resposta_truncada` | 3 | 3 | 3 |
-| `nulo_inesperado` | 2 | 3 | 3 |
-| `tempo_de_resposta_excedido` | 2 | 3 | 3 |
-| `colecao_no_lugar_de_objeto` | 2 | 3 | 1 |
+| `campo_ausente` | 4 | 4 | 4 |
+| `resposta_truncada` | 6 | 3 | 3 |
+| `codificacao_incorreta` | 4 | 3 | 4 |
+| `tipo_divergente` | 3 | 5 | 2 |
+| `contagem_inconsistente` | 1 | 4 | 4 |
+| `nulo_inesperado` | 3 | 3 | 3 |
+| `tempo_de_resposta_excedido` | 3 | 3 | 3 |
 | `escala_ou_unidade_errada` | 2 | 2 | 2 |
-| `valor_fora_do_dominio` | 0 | 2 | 3 |
-| `estrutura_aninhada_divergente` | 0 | 2 | 2 |
+| `estrutura_aninhada_divergente` | 2 | 2 | 2 |
+| `chave_de_juncao_errada` | 2 | 1 | 2 |
+| `colecao_no_lugar_de_objeto` | 1 | 3 | 1 |
+| `valor_fora_do_dominio` | 1 | 1 | 3 |
 | `campo_renomeado` | 2 | 0 | 1 |
-| `chave_de_juncao_errada` | 0 | 1 | 2 |
 | `corpo_vazio` | 1 | 1 | 1 |
 | `erro_interno_do_servidor` | 1 | 1 | 1 |
 | `registro_duplicado` | 1 | 1 | 1 |
-| `formato_de_data_divergente` | 2 | 0 | 0 |
 <!-- /tabela:tb_f4_tela_rotulos -->
 
 <!-- tabela:tb_f4_tela_corpo -->
 | Casos com o caso ao vivo lido | Sem diferença contra o contrato | Desses, mesmo rótulo | Desses, acerto na tela | Desses, colecao_no_lugar_de_objeto na tela | Com diferença contra o contrato | Desses, mesmo rótulo | Desses, acerto na tela | Sintoma "Nenhuma diferença medida" |
 |---|---|---|---|---|---|---|---|---|
-| 37 | 22 | 16 | 15 | 1 | 15 | 10 | 11 | 0 |
+| 37 | 22 | 15 | 18 | 0 | 15 | 13 | 14 | 0 |
 <!-- /tabela:tb_f4_tela_corpo -->
 
 <details><summary>Caso a caso da corrida 18b (tb_f4_tela_casos)</summary>
@@ -421,43 +524,43 @@ A regra R2 pede que, nos casos que reproduzem, o rótulo do caso lido da tela e 
 <!-- tabela:tb_f4_tela_casos -->
 | Caso | Classe | Gabarito | Rótulo na tela | Rótulo no fixture | Tela | Fixture | Concordam | p tela | Selo tela | p fixture | Selo fixture | Gatilho | Divergência | s tela | s fixture | Diferenças contra o contrato | CORPO do caso ao vivo (começo) |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `lex-1` | 1 | `resposta_truncada` | `resposta_truncada` | `resposta_truncada` | certo | certo | sim | 0,878 | medio | 1,000 | alto | não | não | 95,5 | 58,4 | 0 | `...[{"id": 1, "nome": "resposta truncada de propos` |
-| `lex-4` | 1 | `codificacao_incorreta` | `codificacao_incorreta` | `codificacao_incorreta` | certo | certo | sim | 0,891 | medio | 0,999 | alto | sim | sim | 86,8 | 40,0 | 0 | `lista com 14 itens (referência em modo normal: 14); nome dif` |
-| `sin-4` | 2 | `colecao_no_lugar_de_objeto` | `colecao_no_lugar_de_objeto` | `colecao_no_lugar_de_objeto` | certo | certo | sim | 0,998 | alto | 0,880 | medio | não | não | 81,3 | 58,1 | 1 | `{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grel` |
-| `sin-5` | 2 | `campo_ausente` | `campo_ausente` | `colecao_no_lugar_de_objeto` | certo | errado | não | 0,985 | medio | 0,758 | baixo | não | não | 88,8 | 49,3 | 1 | `{"resumo": "(ausente)"}` |
-| `semt-1` | 3 | `tipo_divergente` | `tipo_divergente` | `tipo_divergente` | certo | certo | sim | 0,997 | alto | 0,805 | baixo | não | não | 90,5 | 64,6 | 1 | `{"preco": "89.9"}` |
-| `tra-1` | 4 | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | certo | certo | sim | 0,774 | baixo | 0,995 | alto | sim | não | 97,3 | 62,8 | 0 | `lista com 14 itens (referência em modo normal: 14); preco di` |
-| `tra-4` | 4 | `contagem_inconsistente` | `contagem_inconsistente` | `contagem_inconsistente` | certo | certo | sim | 0,991 | alto | 0,984 | medio | não | não | 100,9 | 54,6 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
-| `run-1` | 5 | `erro_interno_do_servidor` | `erro_interno_do_servidor` | `erro_interno_do_servidor` | certo | certo | sim | 0,989 | medio | 0,985 | medio | sim | sim | 100,4 | 62,9 | 9 | `{"detail": "fault injection: error_500 em produto", "id": "(` |
-| `run-2` | 5 | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | certo | certo | sim | 0,985 | medio | 0,999 | alto | sim | sim | 66,1 | 57,3 | 0 | `lista com 14 itens, igual à referência em modo normal; prime` |
-| `efe-3` | 6 | `campo_ausente` | `campo_ausente` | `campo_ausente` | certo | certo | sim | 0,998 | alto | 0,585 | baixo | não | não | 64,2 | 31,0 | 1 | `{"imagem": "(ausente)"}` |
-| `lex-7` | 1 | `corpo_vazio` | `corpo_vazio` | `corpo_vazio` | certo | certo | sim | 0,977 | medio | 1,000 | alto | não | não | 89,4 | 52,5 | 0 | n/d |
-| `lex-8` | 1 | `codificacao_incorreta` | `formato_de_data_divergente` | `codificacao_incorreta` | errado | certo | não | 0,219 | baixo | 0,749 | baixo | sim | sim | 78,9 | 65,0 | 0 | `lista com 14 itens (referência em modo normal: 14); resumo d` |
-| `lex-10` | 1 | `resposta_truncada` | `resposta_truncada` | `resposta_truncada` | certo | certo | sim | 0,876 | medio | 1,000 | alto | não | não | 20,2 | 51,5 | 0 | `...[{"id": 1, "nome": "resposta truncada de propos` |
-| `lex-11` | 1 | `codificacao_incorreta` | `codificacao_incorreta` | `codificacao_incorreta` | certo | certo | sim | 0,906 | medio | 1,000 | alto | sim | sim | 82,5 | 56,4 | 0 | `lista com 14 itens (referência em modo normal: 14); nome dif` |
-| `sin-11` | 2 | `estrutura_aninhada_divergente` | `tipo_divergente` | `estrutura_aninhada_divergente` | errado | certo | não | 0,738 | baixo | 1,000 | alto | sim | não | 96,7 | 68,3 | 1 | `{"preco": {"valor": 89.9, "moeda": "BRL"}}` |
-| `sin-14` | 2 | `campo_renomeado` | `campo_renomeado` | `colecao_no_lugar_de_objeto` | certo | errado | não | 0,999 | alto | 0,309 | baixo | sim | sim | 90,5 | 51,1 | 1 | `{"imagem_v2": "picanha_alho.jpg"}` |
-| `semt-8` | 3 | `nulo_inesperado` | `nulo_inesperado` | `nulo_inesperado` | certo | certo | sim | 0,955 | medio | 0,850 | medio | não | não | 92,1 | 62,3 | 1 | `{"preco": null}` |
-| `semt-9` | 3 | `valor_fora_do_dominio` | `tipo_divergente` | `tipo_divergente` | errado | errado | sim | 0,997 | alto | 0,995 | alto | não | não | 96,5 | 48,1 | 1 | `{"destaque": "talvez"}` |
-| `semt-14` | 3 | `nulo_inesperado` | `nulo_inesperado` | `nulo_inesperado` | certo | certo | sim | 0,959 | medio | 0,740 | baixo | não | não | 62,6 | 48,9 | 1 | `{"tipo": null}` |
-| `tra-8` | 4 | `contagem_inconsistente` | `contagem_inconsistente` | `contagem_inconsistente` | certo | certo | sim | 0,983 | medio | 0,876 | medio | não | não | 31,7 | 34,3 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
-| `tra-11` | 4 | `contagem_inconsistente` | `contagem_inconsistente` | `contagem_inconsistente` | certo | certo | sim | 0,991 | alto | 0,986 | medio | não | não | 75,3 | 33,6 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
-| `run-9` | 5 | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | certo | certo | sim | 0,984 | medio | 0,999 | alto | sim | sim | 67,9 | 51,1 | 0 | `lista com 14 itens, igual à referência em modo normal; prime` |
-| `lex-16` | 1 | `resposta_truncada` | `resposta_truncada` | `resposta_truncada` | certo | certo | sim | 0,981 | medio | 1,000 | alto | não | não | 94,1 | 64,9 | 0 | `...[{"id": 1, "nome": "resposta truncada de propos` |
-| `lex-18` | 1 | `codificacao_incorreta` | `formato_de_data_divergente` | `valor_fora_do_dominio` | errado | errado | não | 0,214 | baixo | 0,492 | baixo | sim | sim | 82,0 | 67,7 | 0 | `lista com 14 itens (referência em modo normal: 14); resumo d` |
-| `sin-16` | 2 | `campo_ausente` | `campo_ausente` | `campo_ausente` | certo | certo | sim | 0,993 | alto | 0,997 | alto | não | não | 99,0 | 48,5 | 1 | `{"destaque": "(ausente)"}` |
-| `sin-20` | 2 | `campo_ausente` | `campo_ausente` | `campo_ausente` | certo | certo | sim | 0,996 | alto | 0,997 | alto | não | não | 60,6 | 42,1 | 1 | `{"id": "(ausente)"}` |
-| `sin-21` | 2 | `estrutura_aninhada_divergente` | `tipo_divergente` | `estrutura_aninhada_divergente` | errado | certo | não | 0,989 | medio | 0,999 | alto | não | não | 104,6 | 72,7 | 1 | `{"tipo": {"valor": "Carnes", "moeda": "BRL"}}` |
-| `semt-16` | 3 | `tipo_divergente` | `tipo_divergente` | `tipo_divergente` | certo | certo | sim | 0,988 | medio | 0,948 | medio | não | não | 65,8 | 46,4 | 1 | `{"tipo": 1}` |
-| `semt-17` | 3 | `nulo_inesperado` | `campo_ausente` | `nulo_inesperado` | errado | certo | não | 0,431 | baixo | 0,913 | medio | sim | não | 90,2 | 54,9 | 1 | `{"id": null}` |
-| `semt-20` | 3 | `valor_fora_do_dominio` | `tipo_divergente` | `valor_fora_do_dominio` | errado | certo | não | 0,580 | baixo | 0,464 | baixo | sim | não | 78,9 | 34,1 | 0 | `lista com 14 itens (referência em modo normal: 14); preco di` |
-| `semt-21` | 3 | `valor_fora_do_dominio` | `campo_renomeado` | `campo_ausente` | errado | errado | não | 0,990 | alto | 0,961 | medio | não | não | 102,5 | 44,7 | 0 | `lista com 14 itens (referência em modo normal: 14); nome dif` |
-| `tra-17` | 4 | `chave_de_juncao_errada` | `tipo_divergente` | `tipo_divergente` | errado | errado | sim | 0,979 | medio | 0,952 | medio | não | não | 70,9 | 33,9 | 0 | `lista com 14 itens (referência em modo normal: 14); tipo dif` |
-| `tra-19` | 4 | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | certo | certo | sim | 0,811 | baixo | 0,612 | baixo | sim | não | 78,2 | 39,5 | 0 | `lista com 14 itens (referência em modo normal: 14); preco di` |
-| `tra-20` | 4 | `chave_de_juncao_errada` | `tipo_divergente` | `chave_de_juncao_errada` | errado | certo | não | 0,971 | medio | 0,997 | alto | não | não | 33,1 | 63,8 | 0 | `lista com 14 itens (referência em modo normal: 14); tipo dif` |
-| `tra-21` | 4 | `contagem_inconsistente` | `contagem_inconsistente` | `contagem_inconsistente` | certo | certo | sim | 0,963 | medio | 0,970 | medio | não | não | 92,4 | 41,4 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
-| `run-19` | 5 | `tempo_de_resposta_excedido` | `colecao_no_lugar_de_objeto` | `tempo_de_resposta_excedido` | errado | certo | não | 0,393 | baixo | 1,000 | alto | sim | não | 77,6 | 63,1 | 0 | `{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grel` |
-| `run-21` | 5 | `registro_duplicado` | `registro_duplicado` | `registro_duplicado` | certo | certo | sim | 0,994 | alto | 0,686 | baixo | sim | sim | 72,1 | 42,7 | 0 | `lista com 15 itens (referência em modo normal: 14); o id 1 (` |
+| `lex-1` | 1 | `resposta_truncada` | `resposta_truncada` | `resposta_truncada` | certo | certo | sim | 0,999 | alto | 1,000 | alto | não | não | 87,8 | 69,1 | 0 | `...[{"id": 1, "nome": "resposta truncada de propos` |
+| `lex-4` | 1 | `codificacao_incorreta` | `codificacao_incorreta` | `codificacao_incorreta` | certo | certo | sim | 0,989 | medio | 0,999 | alto | não | não | 76,4 | 51,1 | 0 | `lista com 14 itens (referência em modo normal: 14); nome dif` |
+| `sin-4` | 2 | `colecao_no_lugar_de_objeto` | `colecao_no_lugar_de_objeto` | `colecao_no_lugar_de_objeto` | certo | certo | sim | 0,998 | alto | 0,865 | medio | não | não | 84,1 | 40,2 | 1 | `{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grel` |
+| `sin-5` | 2 | `campo_ausente` | `campo_ausente` | `colecao_no_lugar_de_objeto` | certo | errado | não | 0,949 | medio | 0,625 | baixo | não | não | 67,5 | 58,9 | 1 | `{"resumo": "(ausente)"}` |
+| `semt-1` | 3 | `tipo_divergente` | `tipo_divergente` | `tipo_divergente` | certo | certo | sim | 0,999 | alto | 0,929 | medio | não | não | 71,3 | 73,7 | 1 | `{"preco": "89.9"}` |
+| `tra-1` | 4 | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | certo | certo | sim | 0,980 | medio | 0,996 | alto | não | não | 88,5 | 83,5 | 0 | `lista com 14 itens (referência em modo normal: 14); preco di` |
+| `tra-4` | 4 | `contagem_inconsistente` | `resposta_truncada` | `contagem_inconsistente` | errado | certo | não | 0,507 | baixo | 0,968 | medio | sim | sim | 68,7 | 77,7 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
+| `run-1` | 5 | `erro_interno_do_servidor` | `erro_interno_do_servidor` | `erro_interno_do_servidor` | certo | certo | sim | 0,991 | alto | 0,979 | medio | não | não | 83,9 | 60,3 | 9 | `{"detail": "fault injection: error_500 em produto", "id": "(` |
+| `run-2` | 5 | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | certo | certo | sim | 0,999 | alto | 1,000 | alto | não | não | 54,5 | 70,5 | 0 | `lista com 14 itens, igual à referência em modo normal; prime` |
+| `efe-3` | 6 | `campo_ausente` | `campo_ausente` | `campo_ausente` | certo | certo | sim | 0,989 | medio | 0,566 | baixo | não | não | 36,7 | 48,8 | 1 | `{"imagem": "(ausente)"}` |
+| `lex-7` | 1 | `corpo_vazio` | `corpo_vazio` | `corpo_vazio` | certo | certo | sim | 0,996 | alto | 0,999 | alto | não | não | 80,8 | 58,0 | 0 | n/d |
+| `lex-8` | 1 | `codificacao_incorreta` | `codificacao_incorreta` | `codificacao_incorreta` | certo | certo | sim | 0,981 | medio | 0,679 | baixo | não | não | 42,5 | 64,8 | 0 | `lista com 14 itens (referência em modo normal: 14); resumo d` |
+| `lex-10` | 1 | `resposta_truncada` | `resposta_truncada` | `resposta_truncada` | certo | certo | sim | 0,999 | alto | 1,000 | alto | não | sim | 16,0 | 75,5 | 0 | `...[{"id": 1, "nome": "resposta truncada de propos` |
+| `lex-11` | 1 | `codificacao_incorreta` | `codificacao_incorreta` | `codificacao_incorreta` | certo | certo | sim | 0,989 | medio | 1,000 | alto | não | não | 43,3 | 71,1 | 0 | `lista com 14 itens (referência em modo normal: 14); nome dif` |
+| `sin-11` | 2 | `estrutura_aninhada_divergente` | `estrutura_aninhada_divergente` | `estrutura_aninhada_divergente` | certo | certo | sim | 0,957 | medio | 1,000 | alto | não | não | 76,0 | 77,3 | 1 | `{"preco": {"valor": 89.9, "moeda": "BRL"}}` |
+| `sin-14` | 2 | `campo_renomeado` | `campo_renomeado` | `colecao_no_lugar_de_objeto` | certo | errado | não | 0,998 | alto | 0,309 | baixo | não | não | 70,6 | 55,6 | 1 | `{"imagem_v2": "picanha_alho.jpg"}` |
+| `semt-8` | 3 | `nulo_inesperado` | `nulo_inesperado` | `nulo_inesperado` | certo | certo | sim | 0,996 | alto | 0,850 | medio | não | não | 68,5 | 70,3 | 1 | `{"preco": null}` |
+| `semt-9` | 3 | `valor_fora_do_dominio` | `tipo_divergente` | `tipo_divergente` | errado | errado | sim | 0,998 | alto | 0,998 | alto | não | não | 73,4 | 54,3 | 1 | `{"destaque": "talvez"}` |
+| `semt-14` | 3 | `nulo_inesperado` | `nulo_inesperado` | `nulo_inesperado` | certo | certo | sim | 0,997 | alto | 0,740 | baixo | não | não | 35,6 | 54,2 | 1 | `{"tipo": null}` |
+| `tra-8` | 4 | `contagem_inconsistente` | `resposta_truncada` | `contagem_inconsistente` | errado | certo | não | 0,474 | baixo | 0,976 | medio | sim | sim | 15,5 | 38,1 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
+| `tra-11` | 4 | `contagem_inconsistente` | `contagem_inconsistente` | `contagem_inconsistente` | certo | certo | sim | 0,777 | baixo | 0,979 | medio | sim | não | 48,9 | 68,7 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
+| `run-9` | 5 | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | certo | certo | sim | 0,999 | alto | 0,999 | alto | não | não | 55,7 | 55,8 | 0 | `lista com 14 itens, igual à referência em modo normal; prime` |
+| `lex-16` | 1 | `resposta_truncada` | `resposta_truncada` | `resposta_truncada` | certo | certo | sim | 0,999 | alto | 1,000 | alto | não | não | 88,2 | 54,1 | 0 | `...[{"id": 1, "nome": "resposta truncada de propos` |
+| `lex-18` | 1 | `codificacao_incorreta` | `codificacao_incorreta` | `valor_fora_do_dominio` | certo | errado | não | 0,981 | medio | 0,423 | baixo | não | não | 42,6 | 58,0 | 0 | `lista com 14 itens (referência em modo normal: 14); resumo d` |
+| `sin-16` | 2 | `campo_ausente` | `campo_ausente` | `campo_ausente` | certo | certo | sim | 0,992 | alto | 0,997 | alto | não | não | 52,8 | 39,0 | 1 | `{"destaque": "(ausente)"}` |
+| `sin-20` | 2 | `campo_ausente` | `campo_ausente` | `campo_ausente` | certo | certo | sim | 0,986 | medio | 0,997 | alto | não | não | 54,0 | 46,2 | 1 | `{"id": "(ausente)"}` |
+| `sin-21` | 2 | `estrutura_aninhada_divergente` | `estrutura_aninhada_divergente` | `estrutura_aninhada_divergente` | certo | certo | sim | 0,993 | alto | 0,999 | alto | não | não | 83,8 | 69,2 | 1 | `{"tipo": {"valor": "Carnes", "moeda": "BRL"}}` |
+| `semt-16` | 3 | `tipo_divergente` | `tipo_divergente` | `tipo_divergente` | certo | certo | sim | 0,999 | alto | 0,960 | medio | não | não | 36,7 | 51,9 | 1 | `{"tipo": 1}` |
+| `semt-17` | 3 | `nulo_inesperado` | `nulo_inesperado` | `nulo_inesperado` | certo | certo | sim | 0,972 | medio | 0,913 | medio | não | não | 37,1 | 60,7 | 1 | `{"id": null}` |
+| `semt-20` | 3 | `valor_fora_do_dominio` | `valor_fora_do_dominio` | `tipo_divergente` | certo | errado | não | 0,644 | baixo | 0,527 | baixo | sim | não | 81,5 | 36,7 | 0 | `lista com 14 itens (referência em modo normal: 14); preco di` |
+| `semt-21` | 3 | `valor_fora_do_dominio` | `campo_renomeado` | `campo_ausente` | errado | errado | não | 0,998 | alto | 0,960 | medio | sim | sim | 44,9 | 51,5 | 0 | `lista com 14 itens (referência em modo normal: 14); nome dif` |
+| `tra-17` | 4 | `chave_de_juncao_errada` | `chave_de_juncao_errada` | `tipo_divergente` | certo | errado | não | 0,995 | alto | 0,878 | medio | não | não | 85,5 | 35,3 | 0 | `lista com 14 itens (referência em modo normal: 14); tipo dif` |
+| `tra-19` | 4 | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | `escala_ou_unidade_errada` | certo | certo | sim | 0,980 | medio | 0,612 | baixo | não | não | 17,8 | 43,1 | 0 | `lista com 14 itens (referência em modo normal: 14); preco di` |
+| `tra-20` | 4 | `chave_de_juncao_errada` | `chave_de_juncao_errada` | `chave_de_juncao_errada` | certo | certo | sim | 0,995 | alto | 0,997 | alto | não | não | 17,9 | 71,2 | 0 | `lista com 14 itens (referência em modo normal: 14); tipo dif` |
+| `tra-21` | 4 | `contagem_inconsistente` | `resposta_truncada` | `contagem_inconsistente` | errado | certo | não | 0,791 | baixo | 0,986 | medio | sim | sim | 47,3 | 54,7 | 0 | `lista com 13 itens (referência em modo normal: 14); falta o ` |
+| `run-19` | 5 | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | certo | certo | sim | 0,981 | medio | 1,000 | alto | não | não | 71,2 | 61,1 | 0 | `{"id": 1, "nome": "Picanha ao Alho", "resumo": "Picanha grel` |
+| `run-21` | 5 | `registro_duplicado` | `registro_duplicado` | `registro_duplicado` | certo | certo | sim | 0,999 | alto | 0,895 | medio | não | não | 59,2 | 65,5 | 0 | `lista com 15 itens (referência em modo normal: 14); o id 1 (` |
 <!-- /tabela:tb_f4_tela_casos -->
 
 </details>
@@ -882,33 +985,146 @@ Os 54 casos de aprendizado (24 lidos da tela e 30 do fixture) foram diagnosticad
 
 </details>
 
-## 8. Os dez cenários da Fase 5 (corridas 21 e 21b)
+### 7.1 Os 36 inéditos da ficha 27, em texto (corrida 24)
 
-O agente inteiro nos dez cenários da ficha 36, seis de contrato e quatro de localizador, com uma repetição. No contrato (ficha 35), o MTTR vai da detecção ao diagnóstico conferido em código, e o Task Success é a causa e o campo certos. No localizador, o MTTR vai da detecção à reexecução validada, e o Task Success é o roteiro concluído sem erro depois da cura. Os dois MTTR não medem a mesma coisa, e nenhum deles tem linha de base ainda. Os blocos abaixo são os da corrida 21b, a leitura vigente (`cenarios_v2.json`); a corrida 21 fica como o registro de como o defeito apareceu (`cenarios.json`).
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisões 92 e 100) subseção nova com a leitura da corrida 24, e os blocos `tb_f4_ineditos_*`.
+     ! Motivo: é a única medida da biblioteca final em casos que ela nunca viu, e o número vai para o TCC. Números de `ineditos.json`, `conferencia_ineditos.json`, `calibracao.json` e `analise_fase3b.json`, lidos por script. -->
+A biblioteca de produção (`95af35290860`) leu em texto os 36 inéditos da ficha 27, escritos por um agente que só leu o código das cobaias e conferidos pelo Eric antes da corrida (ficha 46, decisão 100), com k = 3 e o prompt congelado. Rodou em 06/11/2026, de 13:52 a 14:35 (executor 2610 s), com 8,8 GB livres, no Ollama 0.40.14.
+
+**O resultado** (`ineditos.json`): 25 de 36 (69,4%; Wilson 95% de 53,1 a 82,0), com acurácia balanceada de 71,4%. Nos 36 casos de avaliação, com a mesma biblioteca, foram 31 de 36 (corrida 22). Não são os mesmos casos, e os autores são outros, então não há comparação caso a caso, e a diferença não mede só a biblioteca. O número fica perto do que a Fase 3-B mediu em outros 36 inéditos: 26 de 36 com a primeira biblioteca do mesmo modelo.
+
+**O verbete certo pesa de novo** (bloco `tb_f4_ineditos_verbete`): com ele no contexto, 18 de 20; sem ele, 7 de 16. Em texto ele chega em 20 dos 36 casos, porque os sinais da busca (decisão 97) só existem na tela, e 9 dos 11 erros são de casos sem ele.
+
+**Onde erra** (blocos `tb_f4_ineditos_classe` e `tb_f4_ineditos_nivel`): a tradução faz 1 de 6, e as outras classes ficam de 4 a 6 de 6. O nível 3, feito para enganar, faz 5 de 12, contra 9 de 12 no nível 1 e 11 de 12 no nível 2. As respostas erradas mais comuns são `tipo_divergente` (3), `colecao_no_lugar_de_objeto` (3), `resposta_truncada` (2). Dos 10 casos que a pré-análise apontou, 5 erram (`semt-27`, `tra-27`, `run-26`, `efe-26` e `efe-27`); dos outros 26, 6.
+
+**A repetição bate** (bloco `tb_f4_ineditos_18e`): os 25 casos que a corrida 18e também leu em texto deram o mesmo rótulo em 25, com o mesmo prompt, a mesma versão do Ollama e a mesma biblioteca. Lidos da tela, os mesmos casos fazem 22, contra 18 em texto: é o efeito dos sinais da busca, e só nos casos que têm tela. Os outros 11, sem tela, fazem 7.
+
+**O selo** (bloco `tb_f4_ineditos_selo`): o alto acerta 12 de 13, o médio 9 de 15 e o baixo 4 de 8, com os limiares da corrida 16; na calibração eram 34 de 37, 22 de 26 e 12 de 27. O único erro com selo alto é `tra-25`, e o selo médio perde mais aqui que na calibração. Continua sendo triagem, não barreira.
+
+**O que esta corrida não diz:** há uma condição só, a biblioteca final, então ela não diz quanto a biblioteca ajuda nestes casos, porque eles não foram lidos sem biblioteca. E valem as ressalvas da conferência (decisão 100, seção 12).
+
+<!-- tabela:tb_f4_ineditos_resumo -->
+| Casos | Acertos | Acerto (%) | Wilson 95% | Acurácia balanceada (%) | Verbete certo no contexto | Fora do conjunto ou sem rótulo | Tokens de entrada (mediana) | Segundos (mediana) | Os 36 oficiais, com a mesma biblioteca (corrida 22) |
+|---|---|---|---|---|---|---|---|---|---|
+| 36 | 25 | 69,4 | 53,1 a 82,0 | 71,4 | 20 | 0 | 1247,5 | 68,38 | 31 de 36 (86,1%) |
+<!-- /tabela:tb_f4_ineditos_resumo -->
+
+<!-- tabela:tb_f4_ineditos_verbete -->
+| Verbete da causa certa entre os entregues | Casos | Acertos | Acerto (%) |
+|---|---|---|---|
+| sim | 20 | 18 | 90,0 |
+| não | 16 | 7 | 43,8 |
+<!-- /tabela:tb_f4_ineditos_verbete -->
+
+<!-- tabela:tb_f4_ineditos_classe -->
+| Classe | Casos | Acertos | Erros |
+|---|---|---|---|
+| 1 | 6 | 6 | 0 |
+| 2 | 6 | 5 | 1 |
+| 3 | 6 | 4 | 2 |
+| 4 | 6 | 1 | 5 |
+| 5 | 6 | 5 | 1 |
+| 6 | 6 | 4 | 2 |
+<!-- /tabela:tb_f4_ineditos_classe -->
+
+<!-- tabela:tb_f4_ineditos_nivel -->
+| Nível | Casos | Acertos | Erros |
+|---|---|---|---|
+| 1 | 12 | 9 | 3 |
+| 2 | 12 | 11 | 1 |
+| 3 | 12 | 5 | 7 |
+<!-- /tabela:tb_f4_ineditos_nivel -->
+
+<!-- tabela:tb_f4_ineditos_selo -->
+| Selo | Casos | Acertos | Erros |
+|---|---|---|---|
+| alto | 13 | 12 | 1 |
+| baixo | 8 | 4 | 4 |
+| medio | 15 | 9 | 6 |
+<!-- /tabela:tb_f4_ineditos_selo -->
+
+<!-- tabela:tb_f4_ineditos_18e -->
+| Casos também lidos na corrida 18e | Mesmo rótulo do caso escrito da 18e | Acertos aqui | Acertos no caso escrito da 18e | Acertos na tela da 18e |
+|---|---|---|---|---|
+| 25 | 25 | 18 | 18 | 22 |
+<!-- /tabela:tb_f4_ineditos_18e -->
+
+<!-- tabela:tb_f4_ineditos_casos -->
+| Caso | Classe | Nível | Gabarito | Rótulo | Certo | Probabilidade | Selo | Verbete certo no contexto |
+|---|---|---|---|---|---|---|---|---|
+| `lex-22` | 1 | 1 | `corpo_nao_e_json` | `corpo_nao_e_json` | sim | 0,920 | medio | sim |
+| `lex-23` | 1 | 1 | `corpo_vazio` | `corpo_vazio` | sim | 0,987 | medio | sim |
+| `lex-24` | 1 | 2 | `codificacao_incorreta` | `codificacao_incorreta` | sim | 0,999 | alto | não |
+| `lex-25` | 1 | 2 | `codificacao_incorreta` | `codificacao_incorreta` | sim | 0,998 | alto | não |
+| `lex-26` | 1 | 3 | `codificacao_incorreta` | `codificacao_incorreta` | sim | 1,000 | alto | não |
+| `lex-27` | 1 | 3 | `codificacao_incorreta` | `codificacao_incorreta` | sim | 0,742 | baixo | não |
+| `sin-22` | 2 | 1 | `campo_ausente` | `campo_ausente` | sim | 0,944 | medio | sim |
+| `sin-23` | 2 | 1 | `campo_renomeado` | `campo_renomeado` | sim | 0,999 | alto | sim |
+| `sin-24` | 2 | 2 | `estrutura_aninhada_divergente` | `estrutura_aninhada_divergente` | sim | 0,797 | baixo | sim |
+| `sin-25` | 2 | 2 | `colecao_no_lugar_de_objeto` | `colecao_no_lugar_de_objeto` | sim | 0,994 | alto | sim |
+| `sin-26` | 2 | 3 | `campo_ausente` | `resposta_truncada` | não | 0,950 | medio | sim |
+| `sin-27` | 2 | 3 | `campo_renomeado` | `campo_renomeado` | sim | 0,413 | baixo | não |
+| `semt-22` | 3 | 1 | `nulo_inesperado` | `nulo_inesperado` | sim | 0,999 | alto | sim |
+| `semt-23` | 3 | 1 | `valor_fora_do_dominio` | `tipo_divergente` | não | 0,908 | medio | não |
+| `semt-24` | 3 | 2 | `tipo_divergente` | `tipo_divergente` | sim | 0,995 | alto | sim |
+| `semt-25` | 3 | 2 | `formato_de_data_divergente` | `formato_de_data_divergente` | sim | 0,984 | medio | sim |
+| `semt-26` | 3 | 3 | `nulo_inesperado` | `nulo_inesperado` | sim | 0,892 | medio | sim |
+| `semt-27` | 3 | 3 | `valor_fora_do_dominio` | `colecao_no_lugar_de_objeto` | não | 0,645 | baixo | não |
+| `tra-22` | 4 | 1 | `escala_ou_unidade_errada` | `tipo_divergente` | não | 0,811 | baixo | não |
+| `tra-23` | 4 | 1 | `escala_ou_unidade_errada` | `valor_fora_do_dominio` | não | 0,649 | baixo | não |
+| `tra-24` | 4 | 2 | `chave_de_juncao_errada` | `chave_de_juncao_errada` | sim | 0,915 | medio | sim |
+| `tra-25` | 4 | 2 | `contagem_inconsistente` | `resposta_truncada` | não | 0,997 | alto | sim |
+| `tra-26` | 4 | 3 | `chave_de_juncao_errada` | `colecao_no_lugar_de_objeto` | não | 0,915 | medio | não |
+| `tra-27` | 4 | 3 | `escala_ou_unidade_errada` | `tipo_divergente` | não | 0,958 | medio | não |
+| `run-22` | 5 | 1 | `limite_de_requisicoes` | `limite_de_requisicoes` | sim | 0,640 | baixo | sim |
+| `run-23` | 5 | 1 | `recurso_inexistente` | `recurso_inexistente` | sim | 0,996 | alto | sim |
+| `run-24` | 5 | 2 | `registro_duplicado` | `registro_duplicado` | sim | 0,970 | medio | não |
+| `run-25` | 5 | 2 | `tempo_de_resposta_excedido` | `tempo_de_resposta_excedido` | sim | 0,832 | medio | não |
+| `run-26` | 5 | 3 | `dado_desatualizado` | `registro_duplicado` | não | 0,757 | baixo | não |
+| `run-27` | 5 | 3 | `registro_duplicado` | `registro_duplicado` | sim | 1,000 | alto | sim |
+| `efe-22` | 6 | 1 | `localizador_quebrado` | `localizador_quebrado` | sim | 0,990 | alto | sim |
+| `efe-23` | 6 | 1 | `localizador_quebrado` | `localizador_quebrado` | sim | 1,000 | alto | sim |
+| `efe-24` | 6 | 2 | `localizador_quebrado` | `localizador_quebrado` | sim | 0,998 | alto | sim |
+| `efe-25` | 6 | 2 | `localizador_quebrado` | `localizador_quebrado` | sim | 0,959 | medio | sim |
+| `efe-26` | 6 | 3 | `estado_da_tela_divergente` | `colecao_no_lugar_de_objeto` | não | 0,906 | medio | não |
+| `efe-27` | 6 | 3 | `estado_da_tela_divergente` | `dado_desatualizado` | não | 0,875 | medio | não |
+<!-- /tabela:tb_f4_ineditos_casos -->
+
+## 8. Os dez cenários da Fase 5 (corridas 21, 21b, 21c e 21d)
+
+O agente inteiro nos dez cenários da ficha 36, seis de contrato e quatro de localizador, com uma repetição. No contrato (ficha 35), o MTTR vai da detecção ao diagnóstico conferido em código, e o Task Success é a causa e o campo certos. No localizador, o MTTR vai da detecção à reexecução validada, e o Task Success é o roteiro concluído sem erro depois da cura. Os dois MTTR não medem a mesma coisa, e nenhum deles tem linha de base ainda. Os blocos abaixo são os da corrida 21d, a leitura vigente (`cenarios_v4.json`); a 21c fica como a medida do corte (`cenarios_v3.json`), a 21b como a de antes dele (`cenarios_v2.json`), e a 21, como o registro de como o defeito da cura apareceu (`cenarios.json`).
 
 **Corrida 21:** 9 de 10 (Wilson 95% de 59,6 a 98,2%), MTTR médio de 101,1 s nas 9 execuções que chegaram ao fim do cronômetro. O login ficou sem cura (`candidato_invalido`): `admin/login.php` tem um recarregamento automático de 30 s, e os candidatos eram verificados na página da detecção, parada enquanto o modelo pensava. A corrida 19 não via isso porque não tinha modelo no meio. O conserto (`Cura._refazer_ate_o_passo`) verifica os candidatos numa página refeita até o passo que falhou, e o tempo de refazer entra no MTTR.
 
 **Corrida 21b:** 10 de 10 (Wilson 95% de 72,2 a 100,0%), MTTR médio de 105,2 s (reamostragem 95% de 90,6 a 118,0; mediana 114,3 s). Contrato: 6 de 6, MTTR médio de 114,7 s. Localizador: 4 de 4, MTTR médio de 90,8 s. Entre as duas corridas, o rótulo se repetiu em 10 de 10 cenários e a resposta inteira em 4 de 10: com temperatura 0,1 o texto varia sem mudar a causa.
 
-**O que domina o tempo é o modelo.** O diagnóstico levou de 61,0 a 133,4 s, e descontado ele sobram de 2,0 a 3,6 s. Dentro do diagnóstico, a mediana de 83,1% do tempo é a leitura do prompt (`prefill_ms` sobre `total_ms`), o que amarra o MTTR ao tamanho do prompt: os tokens de entrada vão de 1219 a 1950 (ficha 42, decisão 90). A estimativa da Fase 5, dez cenários com cinco repetições, é de 1,5 h de máquina.
+<!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 90) parágrafo novo com a leitura da corrida 21c, que passa a ser a vigente.
+     ! Motivo: a decisão 90 diz que a leitura nova passa a valer quando a corrida rodar, e a 21c mede o efeito do corte: da 21b para ela só mudou o tamanho do prompt. Números de `resultados_alvo/fase4/tela_v3.json`, `cenarios_v3.json` e `experimento_prompt.json`, lidos por script. -->
+**Corrida 21c:** 10 de 10 (Wilson 95% de 72,2 a 100,0%), MTTR médio de 72,5 s (reamostragem 95% de 63,9 a 80,0; mediana 72,6 s), contra 105,2 s na 21b: 31% a menos. Contrato: 6 de 6, MTTR médio de 79,9 s (era 114,7 s). Localizador: 4 de 4, MTTR médio de 61,5 s (era 90,8 s). Da 21b para a 21c só mudou o tamanho do prompt: mesma versão do Ollama, mesma biblioteca, e o rótulo igual em 10 de 10 cenários. Os prompts foram de 1107 a 1340 tokens, nenhum acima do limite; na 21b, 9 de 10 passavam, o maior com 1950. O diagnóstico levou de 39,5 a 87,5 s, e a leitura do prompt é a mediana de 78,8% do tempo dele. A estimativa da Fase 5, dez cenários com cinco repetições, cai para 1,05 h de máquina.
+
+<!-- ! Alteração de IA - Revisar: (06/11/2026, decisão 97) parágrafo novo com a leitura da corrida 21d, que passa a ser a vigente.
+     ! Motivo: da 21c para a 21d só mudou a busca, e a corrida diz se os sinais mexeram nos dez cenários da Fase 5. Números de `cenarios_v3.json` e `cenarios_v4.json`, lidos por script. -->
+**Corrida 21d, a vigente:** 10 de 10 (Wilson 95% de 72,2 a 100,0%), MTTR médio de 74,0 s (reamostragem 95% de 64,9 a 81,8; mediana 73,3 s), contra 72,5 s na 21c: dentro da margem. Contrato: 6 de 6, MTTR médio de 81,5 s. Localizador: 4 de 4, MTTR médio de 62,7 s. Da 21c para a 21d só mudou a busca, e o rótulo foi igual em 10 de 10 cenários: os sinais não mexeram nos dez cenários. O maior prompt tem 1385 tokens, nenhum acima do limite. A estimativa da Fase 5 fica em 1,07 h de máquina.
+
+**O que domina o tempo é o modelo.** Na 21b, o diagnóstico levou de 61,0 a 133,4 s, e descontado ele sobram de 2,0 a 3,6 s. Dentro do diagnóstico, a mediana de 83,1% do tempo é a leitura do prompt (`prefill_ms` sobre `total_ms`), o que amarra o MTTR ao tamanho do prompt: os tokens de entrada vão de 1219 a 1950 (ficha 42, decisão 90). A estimativa da Fase 5 era de 1,5 h de máquina nessa corrida.
 
 <!-- tabela:tb_f4_cenarios_resumo -->
 | Execuções | Task Success | Task Success (%) | Wilson 95% (%) | Detectadas | Com MTTR | MTTR médio (s) | Reamostragem 95% (s) | MTTR mediano (s) | Navegador | Banco no começo das repetições |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 10 | 10 | 100,0 | 72,2 a 100,0 | 10 | 10 | 105,2 | 90,6 a 118,0 | 114,3 | 156.0.8078.4 | o mesmo hash em todas: 9fe5e7cb64288c9d |
+| 10 | 10 | 100,0 | 72,2 a 100,0 | 10 | 10 | 74,0 | 64,9 a 81,8 | 73,3 | 156.0.8078.4 | o mesmo hash em todas: 9fe5e7cb64288c9d |
 <!-- /tabela:tb_f4_cenarios_resumo -->
 
 <!-- tabela:tb_f4_cenarios_por_tipo -->
 | Tipo | Execuções | Task Success | Task Success (%) | Wilson 95% (%) | Detectadas | Com MTTR | MTTR médio (s) | Reamostragem 95% (s) | MTTR mediano (s) |
 |---|---|---|---|---|---|---|---|---|---|
-| contrato | 6 | 6 | 100,0 | 61,0 a 100,0 | 6 | 6 | 114,7 | 97,1 a 128,0 | 120,3 |
-| localizador | 4 | 4 | 100,0 | 51,0 a 100,0 | 4 | 4 | 90,8 | 70,0 a 110,5 | 90,9 |
+| contrato | 6 | 6 | 100,0 | 61,0 a 100,0 | 6 | 6 | 81,5 | 75,2 a 88,5 | 79,2 |
+| localizador | 4 | 4 | 100,0 | 51,0 a 100,0 | 4 | 4 | 62,7 | 48,9 a 71,6 | 67,6 |
 <!-- /tabela:tb_f4_cenarios_por_tipo -->
 
 <!-- tabela:tb_f4_cenarios_tempo -->
 | Execuções | Segundos por execução (média) | Segundos no total | Estimativa da Fase 5 (10 cenários x 5 repetições, h) | Detecção pela conferência do roteiro | Detecção pelo fio (regra R1) | Detecção pelo passo do localizador |
 |---|---|---|---|---|---|---|
-| 10 | 108,0 | 1079,8 | 1,5 | 4 | 2 | 4 |
+| 10 | 76,7 | 767,2 | 1,1 | 4 | 2 | 4 |
 <!-- /tabela:tb_f4_cenarios_tempo -->
 
 <!-- tabela:tb_f4_cenarios_sem_sucesso -->
@@ -922,16 +1138,16 @@ O agente inteiro nos dez cenários da ficha 36, seis de contrato e quatro de loc
 <!-- tabela:tb_f4_cenarios_por_cenario -->
 | Cenário | Tipo | Modo | Classe | Causa esperada | Execuções | Task Success | MTTR médio (s) | MTTR mediano (s) | Rótulos do diagnóstico | Segundos por execução | O que a detecção acusou |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| `contrato-malformed_json` | contrato | `malformed_json` | 1 | `resposta_truncada` | 1 | 1 | 126,0 | 126,0 | `resposta_truncada` 1 | 126,3 | a conferência "grid com 14 cartões" (passo 3) falhou: esperado 14 elementos, observado 0 elementos |
-| `contrato-field_missing` | contrato | `field_missing` | 2 | `campo_ausente` | 1 | 1 | 111,8 | 111,8 | `campo_ausente` 1 | 112,2 | a conferência "preço do primeiro cartão" (passo 4) falhou: esperado texto no padrão ^R\$ \d+,\d{2}$, observado undefined |
-| `contrato-field_renamed` | contrato | `field_renamed` | 2 | `campo_renomeado` | 1 | 1 | 116,9 | 116,9 | `campo_renomeado` 1 | 117,2 | a conferência "preço do primeiro cartão" (passo 4) falhou: esperado texto no padrão ^R\$ \d+,\d{2}$, observado undefined |
-| `contrato-type_drift` | contrato | `type_drift` | 3 | `tipo_divergente` | 1 | 1 | 74,5 | 74,5 | `tipo_divergente` 1 | 75,0 | o roteiro passou na tela, mas o fio acusou: diff do contrato: tipo_diferente; corpo diferente da referência em modo normal |
-| `contrato-escala_ou_unidade_errada` | contrato | `escala_ou_unidade_errada` | 4 | `escala_ou_unidade_errada` | 1 | 1 | 135,5 | 135,5 | `escala_ou_unidade_errada` 1 | 135,9 | o roteiro passou na tela, mas o fio acusou: corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais |
-| `contrato-error_500` | contrato | `error_500` | 5 | `erro_interno_do_servidor` | 1 | 1 | 123,8 | 123,8 | `erro_interno_do_servidor` 1 | 124,1 | a conferência "grid com 14 cartões" (passo 3) falhou: esperado 14 elementos, observado 0 elementos |
-| `localizador-front-busca` | localizador | `id_renomeado` | 6 | `localizador_quebrado` | 1 | 1 | 117,7 | 117,7 | `localizador_quebrado` 1 | 123,6 | o passo 2 (esperar #buscar visível) não terminou: TimeoutError: Page.wait_for_selector: Timeout 5000ms exceeded. Call log: - waiting for locator("#buscar") to be visible |
-| `localizador-front-admin-login` | localizador | `classe_trocada` | 6 | `localizador_quebrado` | 1 | 1 | 63,7 | 63,7 | `localizador_quebrado` 1 | 69,5 | o passo 5 (clicar em button.btn-primary) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator("button.btn-primary") |
-| `localizador-front-admin-produtos` | localizador | `texto_alterado` | 6 | `localizador_quebrado` | 1 | 1 | 93,0 | 93,0 | `localizador_quebrado` 1 | 99,6 | o passo 11 (clicar em role=button[name=/EXCLUIR$/] >> nth=0) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator("role=button[name=/EXCLUIR$/]").first |
-| `localizador-front-cliente-reserva` | localizador | `estrutura_alterada` | 6 | `localizador_quebrado` | 1 | 1 | 88,9 | 88,9 | `localizador_quebrado` 1 | 96,4 | o passo 11 (clicar em #reserva_login > input[type=submit]) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator("#reserva_login > input[type=submit]") |
+| `contrato-malformed_json` | contrato | `malformed_json` | 1 | `resposta_truncada` | 1 | 1 | 92,7 | 92,7 | `resposta_truncada` 1 | 93,0 | a conferência "grid com 14 cartões" (passo 3) falhou: esperado 14 elementos, observado 0 elementos |
+| `contrato-field_missing` | contrato | `field_missing` | 2 | `campo_ausente` | 1 | 1 | 73,3 | 73,3 | `campo_ausente` 1 | 73,7 | a conferência "preço do primeiro cartão" (passo 4) falhou: esperado texto no padrão ^R\$ \d+,\d{2}$, observado undefined |
+| `contrato-field_renamed` | contrato | `field_renamed` | 2 | `campo_renomeado` | 1 | 1 | 73,1 | 73,1 | `campo_renomeado` 1 | 73,6 | a conferência "preço do primeiro cartão" (passo 4) falhou: esperado texto no padrão ^R\$ \d+,\d{2}$, observado undefined |
+| `contrato-type_drift` | contrato | `type_drift` | 3 | `tipo_divergente` | 1 | 1 | 73,4 | 73,4 | `tipo_divergente` 1 | 73,9 | o roteiro passou na tela, mas o fio acusou: diff do contrato: tipo_diferente; corpo diferente da referência em modo normal |
+| `contrato-escala_ou_unidade_errada` | contrato | `escala_ou_unidade_errada` | 4 | `escala_ou_unidade_errada` | 1 | 1 | 91,2 | 91,2 | `escala_ou_unidade_errada` 1 | 91,5 | o roteiro passou na tela, mas o fio acusou: corpo diferente da referência em modo normal; árvore diferente da referência: 14 linha(s) a menos e 14 a mais |
+| `contrato-error_500` | contrato | `error_500` | 5 | `erro_interno_do_servidor` | 1 | 1 | 85,0 | 85,0 | `erro_interno_do_servidor` 1 | 85,3 | a conferência "grid com 14 cartões" (passo 3) falhou: esperado 14 elementos, observado 0 elementos |
+| `localizador-front-busca` | localizador | `id_renomeado` | 6 | `localizador_quebrado` | 1 | 1 | 73,3 | 73,3 | `localizador_quebrado` 1 | 79,2 | o passo 2 (esperar #buscar visível) não terminou: TimeoutError: Page.wait_for_selector: Timeout 5000ms exceeded. Call log: - waiting for locator("#buscar") to be visible |
+| `localizador-front-admin-login` | localizador | `classe_trocada` | 6 | `localizador_quebrado` | 1 | 1 | 42,3 | 42,3 | `localizador_quebrado` 1 | 48,0 | o passo 5 (clicar em button.btn-primary) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator("button.btn-primary") |
+| `localizador-front-admin-produtos` | localizador | `texto_alterado` | 6 | `localizador_quebrado` | 1 | 1 | 66,4 | 66,4 | `localizador_quebrado` 1 | 72,8 | o passo 11 (clicar em role=button[name=/EXCLUIR$/] >> nth=0) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator("role=button[name=/EXCLUIR$/]").first |
+| `localizador-front-cliente-reserva` | localizador | `estrutura_alterada` | 6 | `localizador_quebrado` | 1 | 1 | 68,8 | 68,8 | `localizador_quebrado` 1 | 76,1 | o passo 11 (clicar em #reserva_login > input[type=submit]) não terminou: TimeoutError: Page.click: Timeout 5000ms exceeded. Call log: - waiting for locator("#reserva_login > input[type=submit]") |
 <!-- /tabela:tb_f4_cenarios_por_cenario -->
 
 </details>
@@ -1187,37 +1403,43 @@ A comparação da poda de antes com a de agora, sem modelo, está em `resultados
 | Regra | O que ela pede | Corrida | Resultado | Estado |
 |---|---|---|---|---|
 | R1 | Um caso reproduz quando a chamada sai do normal ou uma conferência do roteiro falha; o plano pedia também o passo esperado e o campo do gabarito | 17 | 37 de 37 nos 72 casos e 25 de 25 nos inéditos | Cumprida, com ressalva: como rodou, é mais larga que o texto do plano |
-| R2 | A tela não piora: rótulos na tela e no fixture diferem em no máximo 3 casos | 18b | b + c = 9, p = 0,180 | Não cumprida: limitação declarada, decisão 82 |
-| R3 | Uma cura só conta com o roteiro passando na reexecução | 19, 21b | 160 de 160 sem modelo; 4 de 4 com o modelo no meio | Cumprida, com ressalva: os 100% vêm do desenho da corrida 19 |
+| R2 | A tela não piora: rótulos na tela e no fixture diferem em no máximo 3 casos; desde a decisão 98, a tela não perde mais de 3 casos para o fixture | 18d, 18e | 18d: c = 3, b = 5, b + c = 8, p = 0,727. 18e, nos inéditos: c = 0, b = 4, b + c = 4, p = 0,125. Na 18c: c = 5, b = 2; na 18b: c = 7, b = 2 | Cumprida, com ressalva: no limite exato, pela leitura fixada antes da 18d (decisão 98); pela soma dos dois lados ficaria fora |
+| R3 | Uma cura só conta com o roteiro passando na reexecução | 19, 21b, 21c, 21d | 160 de 160 sem modelo; 4 de 4 com o modelo no meio, nas três repetições | Cumprida, com ressalva: os 100% vêm do desenho da corrida 19 |
 | R4 | Precisão e revocação da marca `corrigido` contra os modos desligados | 20 | 100,0% e 100,0% em 9 casos | Medida: o plano não fixou limite |
 | R5 | O lote entra se b for maior ou igual a c nos 36 inéditos | 20 | b = 0, c = 0: aceito | Cumprida, com ressalva: nenhum caso mudou, e a biblioteca promovida não foi reavaliada |
 | R6 | Ponte de versão antes de toda noite medida | todas | Pontes em 0.40.2 e 0.40.14, b + c até 2 | Cumprida |
-| R7 | Limiares do selo gravados antes da primeira corrida na tela | 16 | `limiares.json`, baixo até 0,832 e alto a partir de 0,990 | Cumprida, com ressalva: calibrados em 0.40.2 e com prompts menores |
+| R7 | Limiares do selo gravados antes da primeira corrida na tela | 16 | `limiares.json`, baixo até 0,832 e alto a partir de 0,990 | Cumprida, com ressalva: calibrados em 0.40.2; com o corte, os prompts da tela ficaram dentro do limite |
 | R8 | k = 5 só entra se acertar mais que k = 3 | 16 | k = 3 | Cumprida |
-| Prompt na tela (plano, seção 3.3) | O prompt ao vivo não passa o maior da calibração em mais de 10%; se passar, a poda aperta | 18, 18b, 21b | Os 37 prompts acima de 1409 tokens na 18b, o maior com 2034 | Não cumprida: corridas 18c e 21c pendentes, decisão 90 |
+| Prompt na tela (plano, seção 3.3) | O prompt ao vivo não passa o maior da calibração em mais de 10%; se passar, a poda aperta | 18c, 21c, 18d, 21d, 18e | Nenhum prompt acima de 1409 tokens nas corridas 18c, 21c, 18d e 21d: o maior com 1373, 1340, 1385 e 1385. Nas corridas 18b e 21b passavam 37 de 37 e 9 de 10. Na 18e, 2 de 25 passaram (1829 e 1620), e o teto nas listas os leva a 1367 e 1387 (decisão 99) | Cumprida, com ressalva: só nas repetições, depois das decisões 90 e 99 |
 
 ## 11. O que a Fase 4 entrega à Fase 5
 
-- **Cenários e leitura:** os dez cenários em `cenarios_fase4.CENARIOS_DO_ENSAIO`, com a troca de `latency` por `escala_ou_unidade_errada` registrada; `rodar_fase4.ps1 -Modo cenarios -Repeticoes N` e `avaliar_fase4.py --cenarios`. A noite estimada é de 1,5 h.
+- **Cenários e leitura:** os dez cenários em `cenarios_fase4.CENARIOS_DO_ENSAIO`, com a troca de `latency` por `escala_ou_unidade_errada` registrada; `rodar_fase4.ps1 -Modo cenarios -Repeticoes N` e `avaliar_fase4.py --cenarios`. A noite estimada é de 1,07 h, pela corrida 21d.
 - **Cronômetro e critério:** MTTR e Task Success como a ficha 35 fixou, com o banco restaurado e conferido por hash a cada repetição (`9fe5e7cb64288c9d`) e o navegador fixo (156.0.8078.4).
 - **Linha de base manual:** o [protocolo](../5-metodo-e-ferramental/protocolo-linha-de-base-manual.md), o ajudante `linha_de_base_manual.py` e a [planilha](../5-metodo-e-ferramental/planilha-linha-de-base-manual.csv). A sessão com os três integrantes depende do grupo e ainda não foi marcada.
-- **Agente:** `qwen2.5:7b`, k = 3, limiares de `limiares.json`, biblioteca de produção `95af35290860` (39 verbetes), poda consertada (seção 9.6), trilha v2 e relatório v2 por caso.
-- **Antes da noite da Fase 5:** as corridas 18c e 21c com o caso ao vivo encurtado (decisões 90 e 96); a corrida 23 (decisão 91); a conferência do Eric (ficha 46) e a corrida 24 dos 36 inéditos (decisão 92); e a ponte, se o Ollama mudar de versão (regra R6). O código das quatro está pronto, com testes.
+- **Agente:** `qwen2.5:7b`, k = 3, limiares de `limiares.json`, biblioteca de produção `95af35290860` (39 verbetes), poda consertada (seção 9.6), sinais da busca contra a referência (decisão 97), teto nas listas do caso ao vivo (decisão 99), trilha v2 e relatório v2 por caso.
+- **Antes da noite da Fase 5:** a Pós-Fase 4 (decisão 94) e a ponte, se o Ollama mudar de versão (regra R6).
 
 ## 12. Limitações
 
 - **A medida com revisor humano está em aberto** (decisões 85, 86 e 95, seção 9.5): 1 resposta do Eric e 10 pareceres do Claude aprovados. O parecer acertar não substitui a medida, que será feita depois da Pós-Fase 4.
 - **A regra R1 rodou mais larga que o texto do plano** (seção 3): não confere o campo do gabarito, e só 12 dos 37 casos derrubam uma conferência do roteiro.
-- **A regra R2 não foi cumprida** (decisão 82, seção 5): b + c = 9 contra o limite de 3, com acerto de 70,3% na tela contra 83,8% no fixture.
+- **A regra R2 fechou no limite exato, e por uma leitura fixada depois da 18c** (decisões 97 e 98, seção 5): a tela perde 3 casos para o caso escrito, e o limite é 3; pela soma dos dois lados, a conta usada até a 18c, são 8. A leitura foi fixada antes da 18d, sem conhecer o resultado, e as duas contas saem em toda leitura. Corridas iguais já variaram até 3 casos, então outra corrida pode passar do limite.
+- **Os sinais da busca foram escritos olhando os 37 casos da 18d** (decisão 97): a conferência limpa é a 18e, com 25 casos, e esses casos deixam de servir de conferência limpa para outro ajuste na busca. A corrida 24 releu esses 25 em texto e deu o mesmo rótulo nos 25.
+- **A tela leva uma medida que o caso escrito não tem** (seção 5): a tela à frente do fixture diz que a medida contra a referência ajuda a busca, não que o modelo lê melhor da tela.
+- **Quando a chave `id` muda em todos os itens, a comparação lê tudo como faltando e sobrando** (decisão 99): o teto resolve o tamanho do prompt, e a busca de `semt-27` continua indo para `contagem_inconsistente`. Ficou registrado, sem mexer, porque esses casos são a conferência limpa.
+- **A corrida 18c mudou três coisas de uma vez contra a 18b:** o caso ao vivo, a versão do Ollama e a biblioteca. O fixture serve de controle (a causa mudou em 1 de 37), mas a comparação não isola cada efeito.
 - **A conta do carimbo por gatilho não vem de uma corrida que rodou assim** (decisão 88, seção 9.1), e 5 erros não sustentam ordenar os sinais.
 - **A poda foi consertada depois das corridas, sem corrida nova** (decisão 89, seção 9.6): nenhum corpo guardado muda, e nos casos de texto ela não chega ao modelo.
-- **O limite do prompt na tela não foi cumprido nas corridas 18b e 21b** (plano, seção 3.3; decisão 90): os limiares foram calibrados com prompts menores que os da tela. As corridas 18c e 21c repetem as duas com o caso ao vivo encurtado.
-- **Os 36 inéditos da ficha 27 só passaram pela reprodução até agora** (decisão 92): o conjunto de avaliação de 108 casos ainda não foi diagnosticado pelo modelo, e a conferência do Eric vem antes da corrida 24. Os casos que a R5 usa são os 36 inéditos da Fase 3-B.
-- **O experimento dos itens da decisão 55 ainda não rodou** (ficha 34 a; decisão 91): é a corrida 23, e ela não muda o agente.
+- **O limite do prompt na tela só foi cumprido nas repetições** (plano, seção 3.3; decisão 90): as corridas 18, 18b e 21b passaram dele, e os prompts da 18c, da 21c, da 18d e da 21d cabem. Na 18e, 2 de 25 passaram, e o teto da decisão 99 veio depois da corrida. As leituras de antes ficam nos arquivos delas.
+- **A corrida 24 tem uma condição só** (decisão 92, seção 7.1): mede a biblioteca final em casos inéditos, não quanto ela ajuda neles, e não são os mesmos casos dos 36 de avaliação. Os casos que a R5 usa são outro conjunto, os 36 inéditos da Fase 3-B.
+- **A conferência dos inéditos seguiu as recomendações do Claude em todos os casos** (decisão 100): o Eric leu os 10 apontados, um a um, e passou os olhos nos outros 26, numa lista de uma linha por caso. As recomendações foram escritas por quem já tinha visto os resultados da corrida 18e, e o quadro não os mostrou. Ficaram aceitas três tensões: `semt-26` tem o gabarito `nulo_inesperado` com um contrato que aceita nulo; `run-26` é um cenário descrito, que a CobaiaAPI não produz; e o sintoma de `tra-27` cita uma conferência de preço que o roteiro do detalhe não tem.
+- **O experimento dos itens da decisão 55 não separa nenhum dos dois do acaso** (ficha 34 a; decisão 91, seção 4.1): compara com a corrida 16, de outra versão do Ollama, e não muda o agente.
 - **O trace do Playwright na falha não existe** (ficha 33; decisão 93): as corridas guardam a árvore, o corpo e os eventos na trilha, e a Fase 5 roda assim.
 - **A quebra de localizador é armada, não ocorrida** (seção 6), e os 100% da corrida 19 vêm do desenho dela.
 - **MTTR e Task Success são de um ensaio:** uma repetição por cenário, intervalos largos e nenhuma linha de base manual; a comparação é da Fase 5.
-- **Os limiares vêm do Ollama 0.40.2**, e as corridas 20 a 22 rodaram em 0.40.14 (seção 2).
+- **As corridas até a 18c e a 21c podiam, em tese, ter um caso sem a chamada capturada:** 1 em 25 execuções do modo error_500 saía assim, porque a corrida lia os registros enquanto a resposta ainda era guardada. Nenhum prompt guardado saiu sem status, e o conserto (`Interceptador.esperar_respostas`) deu 0 em 100 em cada um de três modos.
+- **Os limiares vêm do Ollama 0.40.2**, e as corridas 18c, 18d, 18e e 20 a 23 rodaram em 0.40.14 (seção 2).
 - **A revisão do lote foi a pré-revisão do Claude aprovada pelo Eric**, sem mudança, e a biblioteca promovida não foi reavaliada nos inéditos (seção 7).
 - **Em 5 dos 36 casos da corrida 22, 2 deles na amostra**, a justificativa gravada atribui a resposta ao sinal "recebido corpo nao_json", mas o corpo desses fixtures é texto corrido; o defeito foi consertado para as próximas corridas, e a frase fica nesses relatórios porque está gravada na trilha (roadmap §2.15). Os 133 relatórios de `fase4_trilha/relatorios/` não mostram o caso; os 11 da sessão foram regerados da mesma trilha com isso corrigido.
 - **Só 37 dos 72 casos têm tela e modo.** As rotas de pedidos não têm página, a classe de efeito entra pela quebra armada, e `run-10`, `semt-18` ficaram de fora por um defeito da seleção (seção 3): os outros seguem avaliados só em texto.
@@ -1227,9 +1449,9 @@ A comparação da poda de antes com a de agora, sem modelo, está em `resultados
 
 A lista completa dos desvios, com o motivo de cada um, está no anexo do [plano aprovado](../../../claude-memoria/plano-aprovado-fase-4.md). Quatro pontos dependiam do Eric e viraram as fichas 42 a 45 de [pendencias.md](../pendencias.md). Ele respondeu as quatro em 05/11/2026, no quadro da sessão (decisões 90 a 93), e três pedem trabalho antes da Fase 5:
 
-- **Ficha 42, decisão 90, opção (b):** o limite do prompt na tela (seção 5). O caso ao vivo encurta, sem tocar no prompt fixo, e as corridas 18 e 21 são repetidas em pasta nova (18c e 21c, cerca de 1h47 de máquina). As leituras novas passam a valer quando rodarem.
-- **Ficha 43, decisão 91, opção (a):** o experimento em texto nos 90 casos que a ficha 34 (a) mandou fazer, com o exemplar resolvido fixo e a forma dos rótulos, não entrou na tabela de corridas do plano e não rodou. Agora ele é escrito em código novo e roda como corrida 23, cerca de 3 h de máquina; o prompt do agente continua congelado, também na Fase 5.
-- **Ficha 44, decisão 92, opção (a):** os 36 inéditos da ficha 27 não têm conferência registrada e nenhuma corrida com modelo os leu. O Eric confere os 36, e a corrida 24 os diagnostica em texto com a biblioteca de produção, cerca de 40 minutos de máquina.
+- **Ficha 42, decisão 90, opção (b):** o limite do prompt na tela (seção 5). O caso ao vivo encurta, sem tocar no prompt fixo, e as corridas 18 e 21 foram repetidas em pasta nova: a 18c e a 21c rodaram em 05/11/2026 à noite, em 01h17 e 00h13 (seções 5 e 8). As leituras que valem agora são as das repetições seguintes, a 18d e a 21d (decisão 97).
+- **Ficha 43, decisão 91, opção (a):** o experimento em texto nos 90 casos que a ficha 34 (a) mandou fazer, com o exemplar resolvido fixo e a forma dos rótulos, não entrou na tabela de corridas do plano. Foi escrito em código novo (`corridas_em_texto.py`) e rodou como corrida 23, em 02h56 (seção 4.1); o prompt do agente continua congelado, também na Fase 5.
+- **Ficha 44, decisão 92, opção (a):** os 36 inéditos da ficha 27 não têm conferência registrada e, até então, nenhuma corrida com modelo os tinha lido; depois disso, a corrida 18e leu 25 deles (decisão 97). O Eric conferiu os 36 em 06/11/2026, sem mudar nenhum (ficha 46, decisão 100), e a corrida 24 os diagnosticou em texto com a biblioteca de produção, em 00h43 (seção 7.1).
 - **Ficha 45, decisão 93, opção (a):** o trace do Playwright na falha (ficha 33), a aba "Cérebro ao vivo" e o explorador de casos lendo a trilha v2 (plano, seção 3.8) não foram feitos nesta fase. Os três entram na interface para o analista, que o Eric especifica, para depois da Fase 5 (roadmap §7), e a Fase 5 roda sem trace.
 
 O `painel_fase4.py` do plano não foi criado: as abas da fase ficaram em `ferramentas/painel_topicos.py`, uma por análise, como manda a regra do painel, e o fechamento ganhou a aba "Fechamento da fase", lida deste relatório.
@@ -1238,13 +1460,13 @@ O `painel_fase4.py` do plano não foi criado: as abas da fase ficaram em `ferram
 
 | O quê | Onde |
 |---|---|
-| Leituras por corrida | `resultados_alvo/fase4/`: `reproducibilidade`, `reproducibilidade_ineditos`, `calibracao`, `tela`, `tela_v2`, `cura`, `biblioteca`, `cenarios`, `cenarios_v2`, `trilha`, `leitura_revisao_trilha` (`.json` e `.md`), `limiares.json`, `pontes.json`, `ambiente.json`, `poda_antes_e_depois.json`, `prompt_tela_blocos.json` (`medir_prompt_tela.py`) |
-| Qual leitura está nos blocos deste relatório | `avaliar_fase4.LEITURA_NO_RELATORIO`: `reproducibilidade`, `tela_v2` e `cenarios_v2`; `--colar` recusa as outras, e o `--check` delas confere só os próprios arquivos |
+| Leituras por corrida | `resultados_alvo/fase4/`: `reproducibilidade`, `reproducibilidade_ineditos`, `calibracao`, `tela`, `tela_v2`, `tela_v3`, `tela_v4`, `tela_ineditos`, `cura`, `biblioteca`, `cenarios`, `cenarios_v2`, `cenarios_v3`, `cenarios_v4`, `experimento_prompt`, `conferencia_ineditos` (com as respostas do Eric em `conferencia_ineditos_respostas.json`), `ineditos`, `trilha`, `leitura_revisao_trilha` (`.json` e `.md`), `limiares.json`, `pontes.json`, `ambiente.json`, `poda_antes_e_depois.json`, `prompt_tela_blocos.json` (`medir_prompt_tela.py`), `corte_prompt_tela.json`, `busca_prompt_tela.json` e `teto_prompt_tela.json` (`conferir_corte_tela.py`) |
+| Qual leitura está nos blocos deste relatório | `avaliar_fase4.LEITURA_NO_RELATORIO`: `reproducibilidade`, `tela_v4` e `cenarios_v4`; `--colar` recusa as outras, e o `--check` delas confere só os próprios arquivos |
 | Corridas (registros, trilhas, relatórios por caso, logs) | `resultados_alvo/fase4_*/`, nunca regravadas |
-| Comandos de conferência | em `Programacao/AgenteCore/experimentos`, `RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py <modo> --saida <pasta> --check`, com as corridas certas: `--reproducao --saida fase4_reproducao`; `--calibracao --saida fase4_calibracao`; `--tela --saida fase4_tela_v2 --nome tela_v2`; `--cura --saida fase4_cura`; `--biblioteca --saida fase4_biblioteca`; `--cenarios --saida fase4_ensaio_v2 --nome cenarios_v2`; `--trilha --saida fase4_trilha`; `--revisao` |
+| Comandos de conferência | em `Programacao/AgenteCore/experimentos`, `RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py <modo> --saida <pasta> --check`, com as corridas certas: `--reproducao --saida fase4_reproducao`; `--calibracao --saida fase4_calibracao`; `--tela --saida fase4_tela_v4 --nome tela_v4`; `--tela --saida fase4_tela_ineditos --nome tela_ineditos`; `--cura --saida fase4_cura`; `--biblioteca --saida fase4_biblioteca`; `--cenarios --saida fase4_ensaio_v4 --nome cenarios_v4`; `--experimento_prompt --saida fase4_experimento`; `--ineditos --saida fase4_ineditos`; `--trilha --saida fase4_trilha`; `--revisao` |
 | Sessão de revisão | `resultados_alvo/fase4/revisao_trilha.md` (planilha), `revisao_trilha_respostas.json` (a resposta crua), `pre_analise_revisao_trilha.md` (o parecer do Claude), `relatorios_revisao_trilha/`, `ferramentas/sessao_revisao.py` |
-| Decisões | [decisoes.md](../1-decisoes-e-historico/decisoes.md): 79 e 80 (plano), 81 e 82 (caso ao vivo e R2), 85 a 87 (revisão), 88 (carimbo), 89 (poda), 90 a 93 (fichas 42 a 45) |
-| Fichas | [pendencias.md](../pendencias.md): 26 a 45 fechadas |
+| Decisões | [decisoes.md](../1-decisoes-e-historico/decisoes.md): 79 e 80 (plano), 81 e 82 (caso ao vivo e R2), 85 a 87 (revisão), 88 (carimbo), 89 (poda), 90 a 93 (fichas 42 a 45), 94 e 95 (Pós-Fase 4 e revisor humano), 96 (a busca lê o corpo inteiro), 97 (sinais da busca contra a referência), 98 (a regra R2 pelos casos que a tela perde), 99 (o teto nas listas do caso ao vivo), 100 (a conferência dos 36 inéditos) |
+| Fichas | [pendencias.md](../pendencias.md): 26 a 39 e 41 a 48 fechadas; 40 aberta |
 | Especificação da trilha | [especificacao-trilha-e-relatorio.md](../5-metodo-e-ferramental/especificacao-trilha-e-relatorio.md) |
 | Plano e desvios | `claude-memoria/plano-aprovado-fase-4.md` (anexo), `.superpowers/sdd/fase-4/progress.md` (fora do git) |
 | Painel | grupo Fase 4 de `ferramentas/painel_topicos.py`, publicado em https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN |
@@ -1271,4 +1493,4 @@ A versão 2 do documento saiu em 05/11/2026, com o sim do Eric e os 12 itens aba
 11. **Seções 6.7 e 7, as decisões 91 a 93:** o experimento da decisão 55 (corrida 23) e os 36 inéditos (corrida 24) entram com os números quando rodarem, e até lá como pendentes, não como não feitos; o trace na falha, o "Cérebro ao vivo" e o explorador com a trilha v2 entram como não feitos na Fase 4, com a interface para o analista depois da Fase 5.
 12. **Apêndice B:** acrescentar este relatório, `resultados_alvo/fase4/` e a página da sessão de revisão.
 
-Depois da versão 3, a próxima versão precisa levar também: a medida com revisor humano como "em aberto", e não como limitação sem nova sessão (decisão 95: resumo, abstract, tabela da seção 5.1 e seções 5.7, 6.7, 6.8 e 6.9), e a Pós-Fase 4 na tabela das fases e no parágrafo do que falta (decisão 94).
+Depois da versão 3, a próxima versão precisa levar também: a medida com revisor humano como "em aberto", e não como limitação sem nova sessão (decisão 95: resumo, abstract, tabela da seção 5.1 e seções 5.7, 6.7, 6.8 e 6.9), e a Pós-Fase 4 na tabela das fases e no parágrafo do que falta (decisão 94). As corridas 18c, 21c e 23 também rodaram: a próxima versão leva os números delas (seções 4.1, 5 e 8 deste relatório) no lugar dos da 18b e da 21b. As figuras `tela-e-caso-escrito`, `prompt-e-limite`, `tempo-por-cenario`, `onde-vai-o-tempo` e `tela-por-classe` já mudaram em `Documentacao/figuras/`, e as legendas e o texto do documento ainda citam as corridas 18b e 21b: o texto precisa ser revisto antes de gerar o documento de novo. Em 06/11/2026 rodaram as corridas 18d, 21d e 18e: a próxima versão leva os números delas (seções 5 e 8) como a leitura vigente, com a regra R2 cumprida no limite exato, as duas contas e a data em que a leitura foi fixada (decisões 97 e 98), a conferência nos inéditos e o aviso de que o caso da tela leva uma medida que o caso escrito não tem; o teto nas listas (decisão 99) entra na descrição do caso ao vivo; e a conferência dos inéditos entra como feita, com as duas ressalvas da decisão 100. A corrida 24 também rodou: a próxima versão leva o número dela (25 de 36, seção 7.1), com o aviso de que há uma condição só, e a Fase 4 entra como concluída, com a Pós-Fase 4 na frente da Fase 5.

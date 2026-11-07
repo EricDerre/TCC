@@ -1,0 +1,1965 @@
+{
+  "o_que_e": "o prompt que as corridas com os sinais da busca (decisão 97) mandariam ao modelo, montado sem modelo e comparado com o prompt guardado nas corridas 18c e 21c; os tokens são estimados pela razão de tokens por caractere do prompt guardado de cada caso",
+  "limite": 1409,
+  "gerado_em": "2026-11-06T08:33:50",
+  "biblioteca_de_producao": "95af35290860",
+  "versao_do_caso_ao_vivo": 4,
+  "duracao_s": 143,
+  "corridas": {
+    "18c": {
+      "resumo": {
+        "casos": 37,
+        "acima_do_limite": [],
+        "tokens": {
+          "min": 1069,
+          "mediana": 1219,
+          "max": 1362
+        },
+        "mudou_pelo_corte": [
+          "lex-4@tela",
+          "tra-1@tela",
+          "tra-4@tela",
+          "run-2@tela",
+          "lex-8@tela",
+          "lex-11@tela",
+          "tra-8@tela",
+          "tra-11@tela",
+          "run-9@tela",
+          "lex-18@tela",
+          "semt-20@tela",
+          "semt-21@tela",
+          "tra-17@tela",
+          "tra-19@tela",
+          "tra-20@tela",
+          "tra-21@tela",
+          "run-19@tela",
+          "run-21@tela"
+        ],
+        "mudou_pela_biblioteca": [],
+        "ouro": {
+          "antes": 21,
+          "mesma_biblioteca": 36,
+          "producao": 36,
+          "fixture": 27
+        },
+        "perdeu_o_ouro_pelo_corte": [],
+        "ganhou_o_ouro_pelo_corte": [
+          "lex-4@tela",
+          "tra-1@tela",
+          "run-2@tela",
+          "lex-8@tela",
+          "lex-11@tela",
+          "run-9@tela",
+          "lex-18@tela",
+          "semt-20@tela",
+          "semt-21@tela",
+          "tra-17@tela",
+          "tra-19@tela",
+          "tra-20@tela",
+          "tra-21@tela",
+          "run-19@tela",
+          "run-21@tela"
+        ],
+        "perdeu_o_ouro_pela_biblioteca": [],
+        "ganhou_o_ouro_pela_biblioteca": []
+      },
+      "linhas": [
+        {
+          "caso": "lex-1@tela",
+          "causa": "resposta_truncada",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "resposta_truncada"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3938,
+          "chars_depois": 3938,
+          "tokens_antes": 1218,
+          "tokens_estimados": 1218,
+          "verbetes_antes": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: Unterminated string in JSON at position 47 (line 1 column 48)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio cortada (termina em ' 1, \"nome\": \"resposta truncada de propos'). A tela mostra 140 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "...[{\"id\": 1, \"nome\": \"resposta truncada de propos",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "lex-4@tela",
+          "causa": "codificacao_incorreta",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "estado_da_tela_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4047,
+          "chars_depois": 3807,
+          "tokens_antes": 1298,
+          "tokens_estimados": 1221,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Ã\\x81gua Mineral\"\n    button \"Saiba Mais...\" class=\"btn btn-info btn-xs saiba-mais\" data-id=\"8\"",
+          "sintoma": "O campo nome veio diferente da referência em modo normal em 3 itens, por exemplo no id 8: \"Ãgua Mineral\" em vez de \"Água Mineral\". A tela mostra 6 linha(s) a menos e 6 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); nome diferente em 3 itens; por exemplo: {\"id\": 8, \"nome\": \"Ãgua Mineral\", \"resumo\": \"Garrafa 500ml, com ou sem gás\", \"tipo\": \"Bebidas\", \"preco\": 6.0, \"imagem\": \"agua.png\", \"destaque\": false}",
+          "sinais_da_busca": [
+            "codificacao",
+            "codificacao",
+            "codificacao"
+          ]
+        },
+        {
+          "caso": "sin-4@tela",
+          "causa": "colecao_no_lugar_de_objeto",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto",
+            "contrato-produto"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3953,
+          "chars_depois": 3953,
+          "tokens_antes": 1259,
+          "tokens_estimados": 1259,
+          "verbetes_antes": [
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto",
+            "contrato-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"(sem descrição)\"",
+          "sintoma": "A resposta veio como lista em vez de objeto. A tela mostra 2 linha(s) a menos e 2 a mais que a referência.",
+          "corpo": "{\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "sin-5@tela",
+          "causa": "campo_ausente",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3409,
+          "chars_depois": 3409,
+          "tokens_antes": 1077,
+          "tokens_estimados": 1077,
+          "verbetes_antes": [
+            "contrato-produto",
+            "campo_ausente",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "contrato-produto",
+            "campo_ausente",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "contrato-produto",
+            "campo_ausente",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo resumo não veio na resposta. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"resumo\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-1@tela",
+          "causa": "tipo_divergente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "tipo_divergente",
+            "contrato-produto"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3485,
+          "chars_depois": 3485,
+          "tokens_antes": 1107,
+          "tokens_estimados": 1107,
+          "verbetes_antes": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_producao": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo preco veio como texto em vez de numero.",
+          "corpo": "{\"preco\": \"89.9\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "tra-1@tela",
+          "causa": "escala_ou_unidade_errada",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "escala_ou_unidade_errada",
+            "contrato-produto"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4127,
+          "chars_depois": 4196,
+          "tokens_antes": 1340,
+          "tokens_estimados": 1362,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "escala_ou_unidade_errada",
+            "entidade-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "escala_ou_unidade_errada",
+            "entidade-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"R$ 8990,00\" class=\"btn btn-default disable\"\n      button \"R$ 8490,00\" class=\"btn btn-default disable\"\n      button \"R$ 6990,00\" class=\"btn btn-default disable\"",
+          "sintoma": "O campo preco veio diferente da referência em modo normal em 14 itens, por exemplo no id 1: 8990.0 em vez de 89.9. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); preco diferente em 14 itens; por exemplo: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 8990.0, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala"
+          ]
+        },
+        {
+          "caso": "tra-4@tela",
+          "causa": "contagem_inconsistente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "contagem_inconsistente",
+            "entidade-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3922,
+          "chars_depois": 3922,
+          "tokens_antes": 1267,
+          "tokens_estimados": 1267,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "contagem_inconsistente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 13 elementos. A lista veio com 13 itens; a referência em modo normal tem 14: falta o id 14 (\"Abacaxi na Brasa\"). A tela mostra 10 linha(s) a menos que a referência.",
+          "corpo": "lista com 13 itens (referência em modo normal: 14); falta o id 14 (\"Abacaxi na Brasa\"); primeiro item: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "contagem"
+          ]
+        },
+        {
+          "caso": "run-1@tela",
+          "causa": "erro_interno_do_servidor",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "erro_interno_do_servidor",
+            "mensagens-de-erro-do-codigo",
+            "contagem_inconsistente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4228,
+          "chars_depois": 4228,
+          "tokens_antes": 1328,
+          "tokens_estimados": 1328,
+          "verbetes_antes": [
+            "erro_interno_do_servidor",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "erro_interno_do_servidor",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "erro_interno_do_servidor",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: HTTP 500\"",
+          "sintoma": "A requisição respondeu HTTP 500. A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio como objeto em vez de lista. Os campos id, nome, resumo, tipo, preco, imagem e destaque não vieram na resposta. A resposta trouxe o campo detail, que o contrato não prevê. A tela mostra 140 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "{\"detail\": \"fault injection: error_500 em produto\", \"id\": \"(ausente)\", \"nome\": \"(ausente)\", \"resumo\": \"(ausente)\", \"tipo\": \"(ausente)\", \"preco\": \"(ausente)\", \"imagem\": \"(ausente)\", \"destaque\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "run-2@tela",
+          "causa": "tempo_de_resposta_excedido",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "tempo_de_resposta_excedido",
+            "limite_de_requisicoes",
+            "estado_da_tela_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3725,
+          "chars_depois": 3580,
+          "tokens_antes": 1199,
+          "tokens_estimados": 1152,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contrato-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contrato-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A chamada levou 28,0 s; na referência em modo normal, 58 ms.",
+          "corpo": "lista com 14 itens, igual à referência em modo normal; primeiro item: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "lento"
+          ]
+        },
+        {
+          "caso": "efe-3@tela",
+          "causa": "campo_ausente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_ausente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3397,
+          "chars_depois": 3397,
+          "tokens_antes": 1069,
+          "tokens_estimados": 1069,
+          "verbetes_antes": [
+            "contrato-produto",
+            "campo_ausente",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "contrato-produto",
+            "campo_ausente",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "contrato-produto",
+            "campo_ausente",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo imagem não veio na resposta. A tela mostra 14 linha(s) a menos que a referência.",
+          "corpo": "{\"imagem\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "lex-7@tela",
+          "causa": "corpo_vazio",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "corpo_vazio",
+            "ancora-saiba-mais",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3889,
+          "chars_depois": 3889,
+          "tokens_antes": 1230,
+          "tokens_estimados": 1230,
+          "verbetes_antes": [
+            "corpo_vazio",
+            "colecao_no_lugar_de_objeto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "corpo_vazio",
+            "colecao_no_lugar_de_objeto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "corpo_vazio",
+            "colecao_no_lugar_de_objeto",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: Failed to execute 'json' on 'Response': Unexpected end of JSON input\"",
+          "sintoma": "A conferência 'grid carregado antes do detalhe' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio vazia. A tela mostra 144 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "lex-8@tela",
+          "causa": "codificacao_incorreta",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "codificacao_incorreta",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3895,
+          "chars_depois": 3739,
+          "tokens_antes": 1261,
+          "tokens_estimados": 1210,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo resumo veio diferente da referência em modo normal em 4 itens, por exemplo no id 8: \"Garrafa 500ml, com ou sem gÃ¡s\" em vez de \"Garrafa 500ml, com ou sem gás\". A tela mostra 4 linha(s) a menos e 4 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); resumo diferente em 4 itens; por exemplo: {\"id\": 8, \"nome\": \"Água Mineral\", \"resumo\": \"Garrafa 500ml, com ou sem gÃ¡s\", \"tipo\": \"Bebidas\", \"preco\": 6.0, \"imagem\": \"agua.png\", \"destaque\": false}",
+          "sinais_da_busca": [
+            "codificacao",
+            "codificacao",
+            "codificacao",
+            "codificacao"
+          ]
+        },
+        {
+          "caso": "lex-10@tela",
+          "causa": "resposta_truncada",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "resposta_truncada",
+            "contrato-produto"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3938,
+          "chars_depois": 3938,
+          "tokens_antes": 1218,
+          "tokens_estimados": 1218,
+          "verbetes_antes": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: Unterminated string in JSON at position 47 (line 1 column 48)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio cortada (termina em ' 1, \"nome\": \"resposta truncada de propos'). A tela mostra 140 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "...[{\"id\": 1, \"nome\": \"resposta truncada de propos",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "lex-11@tela",
+          "causa": "codificacao_incorreta",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "codificacao_incorreta",
+            "contrato-produto"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4047,
+          "chars_depois": 3807,
+          "tokens_antes": 1298,
+          "tokens_estimados": 1221,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Ã\\x81gua Mineral\"\n    button \"Saiba Mais...\" class=\"btn btn-info btn-xs saiba-mais\" data-id=\"8\"",
+          "sintoma": "O campo nome veio diferente da referência em modo normal em 3 itens, por exemplo no id 8: \"Ãgua Mineral\" em vez de \"Água Mineral\". A tela mostra 6 linha(s) a menos e 6 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); nome diferente em 3 itens; por exemplo: {\"id\": 8, \"nome\": \"Ãgua Mineral\", \"resumo\": \"Garrafa 500ml, com ou sem gás\", \"tipo\": \"Bebidas\", \"preco\": 6.0, \"imagem\": \"agua.png\", \"destaque\": false}",
+          "sinais_da_busca": [
+            "codificacao",
+            "codificacao",
+            "codificacao"
+          ]
+        },
+        {
+          "caso": "sin-11@tela",
+          "causa": "estrutura_aninhada_divergente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "estrutura_aninhada_divergente",
+            "contagem_inconsistente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3834,
+          "chars_depois": 3834,
+          "tokens_antes": 1219,
+          "tokens_estimados": 1219,
+          "verbetes_antes": [
+            "contrato-produto",
+            "estrutura_aninhada_divergente",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "contrato-produto",
+            "estrutura_aninhada_divergente",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "contrato-produto",
+            "estrutura_aninhada_divergente",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"[object Object]\" class=\"btn btn-default disable\"",
+          "sintoma": "A conferência 'preço do primeiro cartão' falhou: esperava texto no padrão ^R\\$ \\d+,\\d{2}$; viu [object Object]. O campo preco veio como objeto em vez de numero. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"preco\": {\"valor\": 89.9, \"moeda\": \"BRL\"}}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "sin-14@tela",
+          "causa": "campo_renomeado",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_renomeado"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3492,
+          "chars_depois": 3492,
+          "tokens_antes": 1080,
+          "tokens_estimados": 1080,
+          "verbetes_antes": [
+            "campo_ausente",
+            "contrato-produto",
+            "campo_renomeado"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "campo_ausente",
+            "contrato-produto",
+            "campo_renomeado"
+          ],
+          "verbetes_producao": [
+            "campo_ausente",
+            "contrato-produto",
+            "campo_renomeado"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo imagem veio como imagem_v2. A tela mostra 14 linha(s) a menos que a referência.",
+          "corpo": "{\"imagem_v2\": \"picanha_alho.jpg\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-8@tela",
+          "causa": "nulo_inesperado",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "nulo_inesperado",
+            "contrato-produto"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3389,
+          "chars_depois": 3389,
+          "tokens_antes": 1086,
+          "tokens_estimados": 1086,
+          "verbetes_antes": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"R$ 0,00\" class=\"btn btn-default disable\"",
+          "sintoma": "O campo preco veio nulo. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"preco\": null}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-9@tela",
+          "causa": "valor_fora_do_dominio",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": false,
+          "ouro_producao": false,
+          "chars_antes": 3589,
+          "chars_depois": 3589,
+          "tokens_antes": 1138,
+          "tokens_estimados": 1138,
+          "verbetes_antes": [
+            "tipo_divergente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "tipo_divergente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "tipo_divergente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      text \"destaque: talvez\"",
+          "sintoma": "O campo destaque veio como texto em vez de booleano. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"destaque\": \"talvez\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-14@tela",
+          "causa": "nulo_inesperado",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "nulo_inesperado"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3350,
+          "chars_depois": 3350,
+          "tokens_antes": 1072,
+          "tokens_estimados": 1072,
+          "verbetes_antes": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      text \"null\"",
+          "sintoma": "O campo tipo veio nulo. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"tipo\": null}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "tra-8@tela",
+          "causa": "contagem_inconsistente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "contagem_inconsistente",
+            "entidade-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3922,
+          "chars_depois": 3922,
+          "tokens_antes": 1267,
+          "tokens_estimados": 1267,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "contagem_inconsistente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 13 elementos. A lista veio com 13 itens; a referência em modo normal tem 14: falta o id 14 (\"Abacaxi na Brasa\"). A tela mostra 10 linha(s) a menos que a referência.",
+          "corpo": "lista com 13 itens (referência em modo normal: 14); falta o id 14 (\"Abacaxi na Brasa\"); primeiro item: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "contagem"
+          ]
+        },
+        {
+          "caso": "tra-11@tela",
+          "causa": "contagem_inconsistente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "contagem_inconsistente",
+            "estrutura_aninhada_divergente",
+            "tempo_de_resposta_excedido"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3922,
+          "chars_depois": 3922,
+          "tokens_antes": 1267,
+          "tokens_estimados": 1267,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "contagem_inconsistente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 13 elementos. A lista veio com 13 itens; a referência em modo normal tem 14: falta o id 14 (\"Abacaxi na Brasa\"). A tela mostra 10 linha(s) a menos que a referência.",
+          "corpo": "lista com 13 itens (referência em modo normal: 14); falta o id 14 (\"Abacaxi na Brasa\"); primeiro item: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "contagem"
+          ]
+        },
+        {
+          "caso": "run-9@tela",
+          "causa": "tempo_de_resposta_excedido",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "resposta_truncada"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3725,
+          "chars_depois": 3580,
+          "tokens_antes": 1199,
+          "tokens_estimados": 1152,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contrato-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contrato-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A chamada levou 28,0 s; na referência em modo normal, 58 ms.",
+          "corpo": "lista com 14 itens, igual à referência em modo normal; primeiro item: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "lento"
+          ]
+        },
+        {
+          "caso": "lex-16@tela",
+          "causa": "resposta_truncada",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "resposta_truncada",
+            "entidade-produto",
+            "corpo_nao_e_json"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4224,
+          "chars_depois": 4224,
+          "tokens_antes": 1299,
+          "tokens_estimados": 1299,
+          "verbetes_antes": [
+            "resposta_truncada",
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "resposta_truncada",
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "verbetes_producao": [
+            "resposta_truncada",
+            "entidade-produto",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: Unterminated string in JSON at position 47 (line 1 column 48)\"",
+          "sintoma": "A conferência 'grid carregado antes do detalhe' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio cortada (termina em ' 1, \"nome\": \"resposta truncada de propos'). A tela mostra 144 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "...[{\"id\": 1, \"nome\": \"resposta truncada de propos",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "lex-18@tela",
+          "causa": "codificacao_incorreta",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "contrato-produto",
+            "entidade-produto",
+            "estado_da_tela_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3895,
+          "chars_depois": 3739,
+          "tokens_antes": 1261,
+          "tokens_estimados": 1210,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "codificacao_incorreta",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo resumo veio diferente da referência em modo normal em 4 itens, por exemplo no id 8: \"Garrafa 500ml, com ou sem gÃ¡s\" em vez de \"Garrafa 500ml, com ou sem gás\". A tela mostra 4 linha(s) a menos e 4 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); resumo diferente em 4 itens; por exemplo: {\"id\": 8, \"nome\": \"Água Mineral\", \"resumo\": \"Garrafa 500ml, com ou sem gÃ¡s\", \"tipo\": \"Bebidas\", \"preco\": 6.0, \"imagem\": \"agua.png\", \"destaque\": false}",
+          "sinais_da_busca": [
+            "codificacao",
+            "codificacao",
+            "codificacao",
+            "codificacao"
+          ]
+        },
+        {
+          "caso": "sin-16@tela",
+          "causa": "campo_ausente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_ausente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3485,
+          "chars_depois": 3485,
+          "tokens_antes": 1095,
+          "tokens_estimados": 1095,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_ausente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_ausente"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_ausente"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      text \"destaque: undefined\"",
+          "sintoma": "O campo destaque não veio na resposta. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"destaque\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "sin-20@tela",
+          "causa": "campo_ausente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "campo_ausente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3425,
+          "chars_depois": 3425,
+          "tokens_antes": 1077,
+          "tokens_estimados": 1077,
+          "verbetes_antes": [
+            "campo_ausente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "campo_ausente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "campo_ausente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"Saiba Mais...\" class=\"btn btn-info btn-xs saiba-mais\" data-id=\"undefined\"",
+          "sintoma": "O campo id não veio na resposta.",
+          "corpo": "{\"id\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "sin-21@tela",
+          "causa": "estrutura_aninhada_divergente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "estrutura_aninhada_divergente",
+            "entidade-produto",
+            "pagina-produtos-api"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3992,
+          "chars_depois": 3992,
+          "tokens_antes": 1254,
+          "tokens_estimados": 1254,
+          "verbetes_antes": [
+            "estrutura_aninhada_divergente",
+            "contrato-produto",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "estrutura_aninhada_divergente",
+            "contrato-produto",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "verbetes_producao": [
+            "estrutura_aninhada_divergente",
+            "contrato-produto",
+            "colecao_no_lugar_de_objeto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      text \"{\"valor\":\"Carnes\",\"moeda\":\"BRL\"}\"",
+          "sintoma": "O campo tipo veio como objeto em vez de texto. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"tipo\": {\"valor\": \"Carnes\", \"moeda\": \"BRL\"}}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-16@tela",
+          "causa": "tipo_divergente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3558,
+          "chars_depois": 3558,
+          "tokens_antes": 1131,
+          "tokens_estimados": 1131,
+          "verbetes_antes": [
+            "tipo_divergente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "tipo_divergente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "tipo_divergente",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      text \"1\"",
+          "sintoma": "O campo tipo veio como inteiro em vez de texto. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"tipo\": 1}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-17@tela",
+          "causa": "nulo_inesperado",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "nulo_inesperado"
+          ],
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3347,
+          "chars_depois": 3347,
+          "tokens_antes": 1069,
+          "tokens_estimados": 1069,
+          "verbetes_antes": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "nulo_inesperado",
+            "contrato-produto",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"Saiba Mais...\" class=\"btn btn-info btn-xs saiba-mais\" data-id=\"null\"",
+          "sintoma": "O campo id veio nulo.",
+          "corpo": "{\"id\": null}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "semt-20@tela",
+          "causa": "valor_fora_do_dominio",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "nulo_inesperado"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4228,
+          "chars_depois": 3971,
+          "tokens_antes": 1373,
+          "tokens_estimados": 1290,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "valor_fora_do_dominio",
+            "entidade-produto",
+            "fluxo-reserva-e-cancelamento"
+          ],
+          "verbetes_producao": [
+            "valor_fora_do_dominio",
+            "entidade-produto",
+            "fluxo-reserva-e-cancelamento"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"R$ -90,90\" class=\"btn btn-default disable\"\n      button \"R$ -85,90\" class=\"btn btn-default disable\"\n      button \"R$ -70,90\" class=\"btn btn-default disable\"",
+          "sintoma": "A conferência 'preço do primeiro cartão' falhou: esperava texto no padrão ^R\\$ \\d+,\\d{2}$; viu R$ -90,90. O campo preco veio diferente da referência em modo normal em 14 itens, por exemplo no id 1: -90.9 em vez de 89.9. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); preco diferente em 14 itens; por exemplo: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": -90.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio"
+          ]
+        },
+        {
+          "caso": "semt-21@tela",
+          "causa": "valor_fora_do_dominio",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4142,
+          "chars_depois": 3885,
+          "tokens_antes": 1333,
+          "tokens_estimados": 1250,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "valor_fora_do_dominio",
+            "entidade-produto",
+            "fluxo-reserva-e-cancelamento"
+          ],
+          "verbetes_producao": [
+            "valor_fora_do_dominio",
+            "entidade-produto",
+            "fluxo-reserva-e-cancelamento"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      heading \"Picanha ao Alho (inválido)\" level=3\n      heading \"Picanha Simples (inválido)\" level=3\n      heading \"Fraldinha (inválido)\" level=3",
+          "sintoma": "O campo nome veio diferente da referência em modo normal em 14 itens, por exemplo no id 1: \"Picanha ao Alho (inválido)\" em vez de \"Picanha ao Alho\". A tela mostra 28 linha(s) a menos e 28 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); nome diferente em 14 itens; por exemplo: {\"id\": 1, \"nome\": \"Picanha ao Alho (inválido)\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio",
+            "dominio"
+          ]
+        },
+        {
+          "caso": "tra-17@tela",
+          "causa": "chave_de_juncao_errada",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3865,
+          "chars_depois": 4239,
+          "tokens_antes": 1239,
+          "tokens_estimados": 1359,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "chave_de_juncao_errada",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_producao": [
+            "chave_de_juncao_errada",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo tipo veio diferente da referência em modo normal em 4 itens, por exemplo no id 7: \"Bebidas\" em vez de \"Carnes\".",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); tipo diferente em 4 itens; por exemplo: {\"id\": 7, \"nome\": \"Cupim\", \"resumo\": \"Cupim assado lentamente, bem macio\", \"tipo\": \"Bebidas\", \"preco\": 76.9, \"imagem\": \"cupim.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "troca",
+            "troca",
+            "troca",
+            "troca"
+          ]
+        },
+        {
+          "caso": "tra-19@tela",
+          "causa": "escala_ou_unidade_errada",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "nulo_inesperado"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4127,
+          "chars_depois": 4196,
+          "tokens_antes": 1340,
+          "tokens_estimados": 1362,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "escala_ou_unidade_errada",
+            "entidade-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "escala_ou_unidade_errada",
+            "entidade-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"R$ 8990,00\" class=\"btn btn-default disable\"\n      button \"R$ 8490,00\" class=\"btn btn-default disable\"\n      button \"R$ 6990,00\" class=\"btn btn-default disable\"",
+          "sintoma": "O campo preco veio diferente da referência em modo normal em 14 itens, por exemplo no id 1: 8990.0 em vez de 89.9. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); preco diferente em 14 itens; por exemplo: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 8990.0, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala"
+          ]
+        },
+        {
+          "caso": "tra-20@tela",
+          "causa": "chave_de_juncao_errada",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "chave_de_juncao_errada"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3865,
+          "chars_depois": 4239,
+          "tokens_antes": 1239,
+          "tokens_estimados": 1359,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "chave_de_juncao_errada",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_producao": [
+            "chave_de_juncao_errada",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo tipo veio diferente da referência em modo normal em 4 itens, por exemplo no id 7: \"Bebidas\" em vez de \"Carnes\".",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); tipo diferente em 4 itens; por exemplo: {\"id\": 7, \"nome\": \"Cupim\", \"resumo\": \"Cupim assado lentamente, bem macio\", \"tipo\": \"Bebidas\", \"preco\": 76.9, \"imagem\": \"cupim.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "troca",
+            "troca",
+            "troca",
+            "troca"
+          ]
+        },
+        {
+          "caso": "tra-21@tela",
+          "causa": "contagem_inconsistente",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "contagem_inconsistente",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4017,
+          "chars_depois": 3913,
+          "tokens_antes": 1300,
+          "tokens_estimados": 1266,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 13 elementos. A lista veio com 13 itens; a referência em modo normal tem 14: falta o id 14 (\"Abacaxi na Brasa\"). A tela mostra 10 linha(s) a menos que a referência.",
+          "corpo": "lista com 13 itens (referência em modo normal: 14); falta o id 14 (\"Abacaxi na Brasa\"); primeiro item: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "contagem"
+          ]
+        },
+        {
+          "caso": "run-19@tela",
+          "causa": "tempo_de_resposta_excedido",
+          "ouro_fixture": true,
+          "verbetes_fixture": [
+            "tempo_de_resposta_excedido",
+            "pagina-produtos-api",
+            "registro_duplicado"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3627,
+          "chars_depois": 3539,
+          "tokens_antes": 1161,
+          "tokens_estimados": 1133,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estado_da_tela_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "tempo_de_resposta_excedido",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "tempo_de_resposta_excedido",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A chamada levou 2,0 s; na referência em modo normal, 14 ms.",
+          "corpo": "{\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "lento"
+          ]
+        },
+        {
+          "caso": "run-21@tela",
+          "causa": "registro_duplicado",
+          "ouro_fixture": false,
+          "verbetes_fixture": [
+            "entidade-produto",
+            "contrato-produto",
+            "tipo_divergente"
+          ],
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4048,
+          "chars_depois": 3773,
+          "tokens_antes": 1314,
+          "tokens_estimados": 1225,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "entidade-produto",
+            "contrato-produto",
+            "registro_duplicado"
+          ],
+          "verbetes_producao": [
+            "entidade-produto",
+            "contrato-produto",
+            "registro_duplicado"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 15 elementos. A lista veio com 15 itens; a referência em modo normal tem 14: o id 1 (\"Picanha ao Alho\") aparece 2 vezes. A tela mostra 10 linha(s) a mais que a referência.",
+          "corpo": "lista com 15 itens (referência em modo normal: 14); o id 1 (\"Picanha ao Alho\") aparece 2 vezes; por exemplo: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 89.9, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true} (aparece 2 vezes)",
+          "sinais_da_busca": [
+            "duplicado",
+            "duplicado"
+          ]
+        }
+      ]
+    },
+    "21c": {
+      "resumo": {
+        "casos": 10,
+        "acima_do_limite": [],
+        "tokens": {
+          "min": 1107,
+          "mediana": 1164.5,
+          "max": 1362
+        },
+        "mudou_pelo_corte": [
+          "contrato-escala_ou_unidade_errada#1@tela"
+        ],
+        "mudou_pela_biblioteca": [],
+        "ouro": {
+          "antes": 9,
+          "mesma_biblioteca": 10,
+          "producao": 10,
+          "fixture": 0
+        },
+        "perdeu_o_ouro_pelo_corte": [],
+        "ganhou_o_ouro_pelo_corte": [
+          "contrato-escala_ou_unidade_errada#1@tela"
+        ],
+        "perdeu_o_ouro_pela_biblioteca": [],
+        "ganhou_o_ouro_pela_biblioteca": []
+      },
+      "linhas": [
+        {
+          "caso": "contrato-malformed_json#1@tela",
+          "causa": "resposta_truncada",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3938,
+          "chars_depois": 3938,
+          "tokens_antes": 1218,
+          "tokens_estimados": 1218,
+          "verbetes_antes": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "verbetes_producao": [
+            "resposta_truncada",
+            "contagem_inconsistente",
+            "entidade-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: Unterminated string in JSON at position 47 (line 1 column 48)\"",
+          "sintoma": "A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio cortada (termina em ' 1, \"nome\": \"resposta truncada de propos'). A tela mostra 140 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "...[{\"id\": 1, \"nome\": \"resposta truncada de propos",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "contrato-field_missing#1@tela",
+          "causa": "campo_ausente",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3570,
+          "chars_depois": 3570,
+          "tokens_antes": 1124,
+          "tokens_estimados": 1124,
+          "verbetes_antes": [
+            "campo_ausente",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "campo_ausente",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "campo_ausente",
+            "entidade-produto",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"undefined\" class=\"btn btn-default disable\"",
+          "sintoma": "A conferência 'preço do primeiro cartão' falhou: esperava texto no padrão ^R\\$ \\d+,\\d{2}$; viu undefined. O campo preco não veio na resposta. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"preco\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "contrato-field_renamed#1@tela",
+          "causa": "campo_renomeado",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3650,
+          "chars_depois": 3650,
+          "tokens_antes": 1133,
+          "tokens_estimados": 1133,
+          "verbetes_antes": [
+            "campo_renomeado",
+            "campo_ausente",
+            "contrato-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "campo_renomeado",
+            "campo_ausente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "campo_renomeado",
+            "campo_ausente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"undefined\" class=\"btn btn-default disable\"",
+          "sintoma": "A conferência 'preço do primeiro cartão' falhou: esperava texto no padrão ^R\\$ \\d+,\\d{2}$; viu undefined. O campo preco veio como preco_v2. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "{\"preco_v2\": 89.9}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "contrato-type_drift#1@tela",
+          "causa": "tipo_divergente",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3485,
+          "chars_depois": 3485,
+          "tokens_antes": 1107,
+          "tokens_estimados": 1107,
+          "verbetes_antes": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "verbetes_producao": [
+            "contrato-produto",
+            "entidade-produto",
+            "tipo_divergente"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"",
+          "sintoma": "O campo preco veio como texto em vez de numero.",
+          "corpo": "{\"preco\": \"89.9\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "contrato-escala_ou_unidade_errada#1@tela",
+          "causa": "escala_ou_unidade_errada",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": false,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4127,
+          "chars_depois": 4196,
+          "tokens_antes": 1340,
+          "tokens_estimados": 1362,
+          "verbetes_antes": [
+            "entidade-produto",
+            "contrato-produto",
+            "estrutura_aninhada_divergente"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "escala_ou_unidade_errada",
+            "entidade-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "escala_ou_unidade_errada",
+            "entidade-produto",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": true,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n      button \"R$ 8990,00\" class=\"btn btn-default disable\"\n      button \"R$ 8490,00\" class=\"btn btn-default disable\"\n      button \"R$ 6990,00\" class=\"btn btn-default disable\"",
+          "sintoma": "O campo preco veio diferente da referência em modo normal em 14 itens, por exemplo no id 1: 8990.0 em vez de 89.9. A tela mostra 14 linha(s) a menos e 14 a mais que a referência.",
+          "corpo": "lista com 14 itens (referência em modo normal: 14); preco diferente em 14 itens; por exemplo: {\"id\": 1, \"nome\": \"Picanha ao Alho\", \"resumo\": \"Picanha grelhada com alho laminado na brasa\", \"tipo\": \"Carnes\", \"preco\": 8990.0, \"imagem\": \"picanha_alho.jpg\", \"destaque\": true}",
+          "sinais_da_busca": [
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala",
+            "escala"
+          ]
+        },
+        {
+          "caso": "contrato-error_500#1@tela",
+          "causa": "erro_interno_do_servidor",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4228,
+          "chars_depois": 4228,
+          "tokens_antes": 1328,
+          "tokens_estimados": 1328,
+          "verbetes_antes": [
+            "erro_interno_do_servidor",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "erro_interno_do_servidor",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "verbetes_producao": [
+            "erro_interno_do_servidor",
+            "contagem_inconsistente",
+            "contrato-produto"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha - Produtos (API)\"\n    text \"Erro ao carregar produtos da CobaiaAPI: HTTP 500\"",
+          "sintoma": "A requisição respondeu HTTP 500. A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio como objeto em vez de lista. Os campos id, nome, resumo, tipo, preco, imagem e destaque não vieram na resposta. A resposta trouxe o campo detail, que o contrato não prevê. A tela mostra 140 linha(s) a menos e 1 a mais que a referência.",
+          "corpo": "{\"detail\": \"fault injection: error_500 em produto\", \"id\": \"(ausente)\", \"nome\": \"(ausente)\", \"resumo\": \"(ausente)\", \"tipo\": \"(ausente)\", \"preco\": \"(ausente)\", \"imagem\": \"(ausente)\", \"destaque\": \"(ausente)\"}",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "localizador-front-busca@cenario",
+          "causa": "localizador_quebrado",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3586,
+          "chars_depois": 3586,
+          "tokens_antes": 1127,
+          "tokens_estimados": 1127,
+          "verbetes_antes": [
+            "localizador_quebrado",
+            "tempo_de_resposta_excedido",
+            "limites-do-sistema"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "localizador_quebrado",
+            "tempo_de_resposta_excedido",
+            "limites-do-sistema"
+          ],
+          "verbetes_producao": [
+            "localizador_quebrado",
+            "tempo_de_resposta_excedido",
+            "limites-do-sistema"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Churrascaria Fornalha\"\n    searchbox \"search\" id=\"buscar_v2\" name=\"buscar\" class=\"form-control\"",
+          "sintoma": "A conferência 'passo 2 (esperar #buscar visível)' falhou: esperava esperar #buscar visível; viu TimeoutError: Page.wait_for_selector: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator(\"#buscar\") to be visible\n.",
+          "corpo": "(HTML da página; nenhuma chamada à API falhou)",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "localizador-front-admin-login@cenario",
+          "causa": "localizador_quebrado",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3567,
+          "chars_depois": 3567,
+          "tokens_antes": 1118,
+          "tokens_estimados": 1118,
+          "verbetes_antes": [
+            "localizador_quebrado",
+            "tempo_de_resposta_excedido",
+            "limites-do-sistema"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "localizador_quebrado",
+            "tempo_de_resposta_excedido",
+            "limites-do-sistema"
+          ],
+          "verbetes_producao": [
+            "localizador_quebrado",
+            "tempo_de_resposta_excedido",
+            "limites-do-sistema"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Chuleta Quente - Login\"\n  button \"Entrar\" class=\"btn btn-entrar\"",
+          "sintoma": "A conferência 'passo 5 (clicar em button.btn-primary)' falhou: esperava clicar em button.btn-primary; viu TimeoutError: Page.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator(\"button.btn-primary\")\n.",
+          "corpo": "(HTML da página; nenhuma chamada à API falhou)",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "localizador-front-admin-produtos@cenario",
+          "causa": "localizador_quebrado",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 3766,
+          "chars_depois": 3766,
+          "tokens_antes": 1196,
+          "tokens_estimados": 1196,
+          "verbetes_antes": [
+            "localizador_quebrado",
+            "valor_fora_do_dominio",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "localizador_quebrado",
+            "valor_fora_do_dominio",
+            "tempo_de_resposta_excedido"
+          ],
+          "verbetes_producao": [
+            "localizador_quebrado",
+            "valor_fora_do_dominio",
+            "tempo_de_resposta_excedido"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Produtos - Lista\"\n    button \" EXCLUIR ITEM\"",
+          "sintoma": "A conferência 'passo 11 (clicar em role=button[name=/EXCLUIR$/] >> nth=0)' falhou: esperava clicar em role=button[name=/EXCLUIR$/] >> nth=0; viu TimeoutError: Page.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator(\"role=button[name=/EXCLUIR$/]\").first\n.",
+          "corpo": "(HTML da página; nenhuma chamada à API falhou)",
+          "sinais_da_busca": null
+        },
+        {
+          "caso": "localizador-front-cliente-reserva@cenario",
+          "causa": "localizador_quebrado",
+          "ouro_fixture": null,
+          "verbetes_fixture": null,
+          "ouro_antes": true,
+          "ouro_mesma_biblioteca": true,
+          "ouro_producao": true,
+          "chars_antes": 4116,
+          "chars_depois": 4116,
+          "tokens_antes": 1230,
+          "tokens_estimados": 1230,
+          "verbetes_antes": [
+            "localizador_quebrado",
+            "corpo_nao_e_json",
+            "resposta_truncada"
+          ],
+          "verbetes_mesma_biblioteca": [
+            "localizador_quebrado",
+            "corpo_nao_e_json",
+            "resposta_truncada"
+          ],
+          "verbetes_producao": [
+            "localizador_quebrado",
+            "corpo_nao_e_json",
+            "resposta_truncada"
+          ],
+          "mudou_pelo_corte": false,
+          "mudou_pela_biblioteca": false,
+          "arvore": "document \"Área do cliente - Cliente Teste\"",
+          "sintoma": "A conferência 'passo 11 (clicar em #reserva_login > input[type=submit])' falhou: esperava clicar em #reserva_login > input[type=submit]; viu TimeoutError: Page.click: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator(\"#reserva_login > input[type=submit]\")\n.",
+          "corpo": "(HTML da página; nenhuma chamada à API falhou)",
+          "sinais_da_busca": null
+        }
+      ]
+    }
+  }
+}

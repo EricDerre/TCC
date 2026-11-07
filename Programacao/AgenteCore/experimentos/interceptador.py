@@ -164,6 +164,7 @@ class Interceptador:
         self.incidentes: list[dict] = []
         self._inicio: dict = {}
         self._pendentes: list[tuple] = []
+        self._em_andamento: set = set()
         self._registros: list[dict] = []
         self._corpos: dict[str, str] = {}
         contexto = pagina.context
@@ -192,6 +193,8 @@ class Interceptador:
 
     def _ao_pedir(self, requisicao) -> None:
         self._inicio[requisicao] = time.monotonic() * 1000
+        if host_de(requisicao.url) == self.host_da_api:
+            self._em_andamento.add(requisicao)
 
     def _ao_responder(self, resposta) -> None:
         if host_de(resposta.url) != self.host_da_api:
@@ -203,11 +206,24 @@ class Interceptador:
         except Exception:  # noqa: BLE001 - o corpo pode não estar mais disponível; fica None e o registro diz
             corpo = None
         self._pendentes.append((resposta, self._inicio.get(resposta.request), fim, corpo))
+        self._em_andamento.discard(resposta.request)
 
     def _ao_falhar(self, requisicao) -> None:
+        self._em_andamento.discard(requisicao)
         if host_de(requisicao.url) == self.host_da_api:
             self.incidentes.append({"tipo": "requisicao_falhou", "url": requisicao.url, "erro": requisicao.failure,
                                     "quando": time.strftime("%Y-%m-%dT%H:%M:%S")})
+
+    # ! Alteração de IA - Revisar: (06/11/2026) espera, com limite, as chamadas à CobaiaAPI em andamento antes de a corrida ler os registros.
+    # ! Motivo: reproduzido sem modelo: 1 em 25 execuções do modo error_500 saía sem a chamada capturada, com a tela já mostrando "HTTP 500". O roteiro quebra tão rápido que a corrida lia a lista enquanto
+    # `_ao_responder` ainda guardava a resposta, e o caso ia ao modelo sem status e sem corpo: um erro do teste contado como erro do agente. O limite existe para uma chamada lenta de propósito não segurar a corrida.
+    def esperar_respostas(self, tempo_limite_ms: int = 2000) -> None:
+        limite = time.monotonic() + tempo_limite_ms / 1000
+        while self._em_andamento and time.monotonic() < limite:
+            try:
+                self.pagina.wait_for_timeout(20)
+            except Exception:  # noqa: BLE001 - página fechada: não há mais o que esperar
+                return
 
     def registros(self) -> list[dict]:
         """As trocas com a CobaiaAPI até agora, na ordem; o corpo de cada uma fica em `corpo(sha)`."""

@@ -643,20 +643,56 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). Nada disso muda a medida da Fase 5, e a interface para o analista é o lugar das três.
 - **Decisão:** (a), pelo Eric em 05/11/2026, no quadro da sessão (decisão 93): o trace na falha, o "Cérebro ao vivo" e o explorador com a trilha v2 entram na interface para o analista, que o Eric especifica, para depois da Fase 5 (roadmap §7), e ficam registrados como não feitos na Fase 4. A Fase 5 roda sem trace, e o TCC não pode dizer que ele existe: as corridas guardam a árvore, o corpo e os eventos na trilha.
 
+<!-- ! Alteração de IA - Revisar: (06/11/2026) a ficha passa a dizer que a corrida 18e já leu 25 destes casos e a pedir que a conferência olhe o caso, não o resultado.
+     ! Motivo: a frase de antes dizia que nenhuma corrida lia esse texto com o modelo, e isso deixou de ser verdade; olhar o resultado antes de mudar um caso contaminaria a corrida 24. -->
 <!-- ! Alteração de IA - Revisar: ficha nova em 05/11/2026: a conferência dos 36 inéditos pedida pela decisão 92, com o documento gerado por `gerar_conferencia_ineditos.py` e a pré-análise do Claude.
      ! Motivo: a corrida 24 só roda depois da conferência, e a pergunta precisa estar no painel, onde o Eric decide; os números e os ids vêm de `resultados_alvo/fase4/conferencia_ineditos.json`. -->
+<!-- ! Alteração de IA - Revisar: ficha fechada em 06/11/2026 com as respostas do Eric, no quadro da sessão (decisão 100).
+     ! Motivo: a resposta libera a corrida 24, e o registro dela é o que a ficha 44 pedia; as respostas ficam em `resultados_alvo/fase4/conferencia_ineditos_respostas.json`. -->
 ### 46. Os 36 inéditos da ficha 27: a sua conferência antes da corrida 24
-- **Estado:** aberta
+- **Estado:** fechada em 06/11/2026
 - **Quem decide:** Eric
 - **Aberta em:** 05/11/2026
 - **O que é:** A decisão 92 manda você conferir os 36 casos antes de a corrida 24 medi-los. O documento está em `resultados_alvo/fase4/conferencia_ineditos.md` (`gerar_conferencia_ineditos.py`) e na aba "Conferência dos inéditos" do painel: cada caso com a requisição, o corpo, o sintoma, o gabarito, o que a corrida 17 viu e a pré-análise. A pré-análise é de um agente do Claude que só leu o código: em 26 casos ela não tem nada a apontar, e aponta estes 10: `lex-27` (`codificacao_incorreta`); `sin-24` (`estrutura_aninhada_divergente`); `semt-26` (`nulo_inesperado`); `semt-27` (`valor_fora_do_dominio`); `tra-27` (`escala_ou_unidade_errada`); `run-26` (`dado_desatualizado`); `run-27` (`registro_duplicado`); `efe-24` (`localizador_quebrado`); `efe-26` (`estado_da_tela_divergente`); `efe-27` (`estado_da_tela_divergente`). Quase todos são casos em que outra causa da lista também caberia; o `run-26` é diferente: a CobaiaAPI não tem cache e grava antes de responder, então ela nunca produz esse corpo (é um cenário descrito, sem modo); e o `semt-26` tem o gabarito `nulo_inesperado` com um contrato que aceita nulo em `resumo`.
-- **Por que importa:** Um caso errado mede o modelo contra algo que o sistema não produz, ou contra uma resposta com mais de uma leitura honesta. A corrida 24 é a única medida da biblioteca final em casos inéditos, e o número vai para o TCC. Nenhuma pessoa conferiu esses casos até agora: a ficha 27 previa isso antes da corrida 16, e a conferência não foi registrada (ficha 44). Mudar o texto de um caso não mexe nas corridas 17, 18c, 21c e 23, porque nenhuma delas lê esse texto com o modelo.
+- **Por que importa:** Um caso errado mede o modelo contra algo que o sistema não produz, ou contra uma resposta com mais de uma leitura honesta. A corrida 24 é a única medida da biblioteca final em casos inéditos, e o número vai para o TCC. Nenhuma pessoa conferiu esses casos até agora: a ficha 27 previa isso antes da corrida 16, e a conferência não foi registrada (ficha 44). Mudar o texto de um caso não mexe nas corridas 17, 18c, 18d, 21c, 21d e 23, porque nenhuma delas lê esse texto com o modelo. A corrida 18e leu, no caso escrito, os 25 que reproduzem na tela: o caso que mudar roda de novo. Os resultados caso a caso da 18e estão na aba da tela do painel; para a conferência, leia o caso, não o resultado, porque mudar um caso por ter visto que o agente errou nele contaminaria a corrida 24.
 - **Opções:**
   - (a) Você lê os 10 apontados com atenção e passa os olhos nos outros 26. Basta dizer "ok como está" ou o id dos que mudam, e o que muda; o que for trocado eu refaço e confiro de novo por script. Pela pré-análise, os pontos que mais pedem a sua palavra são o `run-26` e o `semt-26`.
   - (b) Você lê os 36 com a mesma atenção, como fez com a planilha da curadoria (ficha 17).
   - (c) A pré-análise vale como a conferência: a corrida 24 roda como está, e o TCC declara que os casos foram conferidos por IA, não por uma pessoa.
-- **Recomendação:** (a). A pré-análise concentra a sua leitura onde há dúvida, e continua sendo uma pessoa dizendo que os casos estão certos, que é o que a decisão 92 pede. A corrida 24 espera por esta ficha; as corridas 18c, 21c e 23 não dependem dela.
-- **Decisão:** em aberto
+- **Recomendação:** (a). A pré-análise concentra a sua leitura onde há dúvida, e continua sendo uma pessoa dizendo que os casos estão certos, que é o que a decisão 92 pede. A corrida 24 espera por esta ficha; as corridas 18c, 18d, 18e, 21c, 21d e 23 não dependiam dela e já rodaram.
+- **Decisão:** (a), pelo Eric em 06/11/2026, no quadro da sessão (decisão 100): "Ler os 10 apontados", com "Fica como está" em cada um dos 10 e "Ficam como estão" nos outros 26. Nenhum caso mudou, então nenhuma corrida se repete, e a corrida 24 fica liberada. As recomendações que ele viu foram escritas pelo Claude, que já tinha visto os resultados da corrida 18e, e ele as seguiu em todos os casos; a decisão 100 registra isso e as três tensões aceitas, em `semt-26`, `run-26` e `tra-27`.
+
+<!-- ! Alteração de IA - Revisar: ficha nova em 05/11/2026, aberta pela leitura da corrida 18c: a busca na tela recupera o verbete certo menos vezes que no caso escrito.
+     ! Motivo: é a única regra da fase ainda não cumprida, e a causa apareceu nesta leitura; a pergunta precisa estar no painel, onde o Eric decide. Os números vêm de `resultados_alvo/fase4/tela_v3.json`, bloco `verbete_certo`. -->
+### 47. A busca na tela acha o verbete certo menos vezes: mexer antes da Fase 5 ou deixar como limitação
+- **Estado:** fechada em 06/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 05/11/2026
+- **O que é:** Na corrida 18c, com o prompt dentro do limite, a regra R2 (a que compara a tela com o caso escrito) ainda ficou fora: em 7 casos só um lado acerta, e o limite é 3. A leitura achou a causa principal. Quando o verbete da causa certa está entre os três entregues ao modelo, ele acerta 19 de 21 na tela e 26 de 27 no caso escrito; quando não está, 8 de 16 e 4 de 10. O verbete certo chega em 21 casos na tela e em 27 no caso escrito, porque o sintoma por molde não cita a causa e tem menos termos para a busca que o texto escrito à mão.
+- **Por que importa:** É a única regra da fase ainda não cumprida (decisão 82). Mexer pode aproximar os dois lados, mas a busca seria ajustada olhando os mesmos 37 casos que a regra mede, e o número deixaria de ser limpo. Nos dez cenários da Fase 5, a causa saiu certa em todos, então a medida da Fase 5 não depende disso.
+- **Opções:**
+  - (a) Deixar como está: a regra R2 fica como limitação declarada, com esta explicação no relatório e no TCC.
+  - (b) Acrescentar à busca do caso ao vivo sinais em código tirados do que ele já mede contra a referência (por exemplo, acento quebrado ou item faltando na lista), sem escrever nada a mais no prompt. A conferência sem modelo (`conferir_corte_tela.py`, cerca de 2,5 minutos) diz em quantos casos o verbete passa a chegar. Se valer, repetem as corridas 18 e 21 (cerca de 1h30) e os 25 inéditos que reproduzem na tela servem de conferência limpa (cerca de 50 minutos), mais uma sessão de código.
+- **Recomendação:** (a). A explicação já é um resultado para o TCC, a Fase 5 não depende disso e o ajuste contaminaria a medida. Se você preferir tentar cumprir a regra, (b) é o caminho, desde que os inéditos façam a conferência.
+- **Decisão:** (b), pelo Eric em 06/11/2026, contra a recomendação (decisão 97): "Vamos mexer na busca para tentar ajustar e seguir a regra, se não der, voltamos ao 'ponto seguro' do backup dessa parte". A conferência sem modelo deu o verbete certo em 36 dos 37 casos e em 10 dos 10 cenários. Resultado, em 06/11/2026: na corrida 18d o verbete certo chegou em 36 de 37 casos e o acerto na tela foi de 27 para 32, contra 30 no caso escrito; nos 25 inéditos (corrida 18e), 22 na tela e 18 no caso escrito; os dez cenários não mudaram (corrida 21d). O agente fica com os sinais novos.
+
+<!-- ! Alteração de IA - Revisar: ficha nova em 06/11/2026: como ler a regra R2 se a tela passar a acertar mais que o caso escrito; precisa de resposta antes da corrida 18d.
+     ! Motivo: com o verbete certo em 36 dos 37 casos na tela, contra 27 no caso escrito, é provável que a tela passe a acertar casos que o caso escrito erra, e a conta de hoje (b + c) penaliza isso. Decidir depois de ver o resultado seria mudar a regra para caber nele. -->
+<!-- ! Alteração de IA - Revisar: (06/11/2026) as fichas 47 e 48 ganham o resultado das corridas 18d, 21d e 18e, lido de `tela_v4.json`, `tela_ineditos.json` e `cenarios_v4.json`.
+     ! Motivo: as duas ficaram abertas à espera dessa medida, e quem lê a ficha precisa ver no que deu. -->
+<!-- ! Alteração de IA - Revisar: ficha fechada em 06/11/2026 com a resposta do Eric (decisão 98).
+     ! Motivo: a resposta veio antes da corrida 18d, que é o que a ficha pedia; sem fechar aqui, o painel continuaria mostrando a pergunta como aberta. -->
+### 48. Regra R2: o que conta se a tela passar a acertar mais que o caso escrito
+- **Estado:** fechada em 06/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 06/11/2026
+- **O que é:** A regra R2 se chama "a tela não piora", e a conta usada desde a corrida 18 é b + c até 3: b são os casos que só a tela acerta, e c, os que só o caso escrito acerta. O texto do plano diz que os rótulos "diferem em no máximo 3 casos", sem dizer para que lado. Hoje, na 18c, b = 2 e c = 5. Com os sinais novos, o verbete certo chega em 36 casos na tela e em 27 no caso escrito, e o caso escrito erra 7 dos 37 por conta própria. Se a tela passar a acertar parte deles, b sobe, mesmo com a tela melhor, e a regra pode continuar fora do limite pelo lado bom.
+- **Por que importa:** É preciso decidir antes da corrida 18d. Decidir depois de ver o resultado seria mudar a regra para caber nele, e isso não se sustenta no TCC.
+- **Opções:**
+  - (a) Ler a regra pelo que ela protege: a tela não pode perder mais de 3 casos para o caso escrito (c até 3). O relatório mostra b ao lado e declara que esta leitura foi fixada em 06/11/2026, antes da corrida. Nas corridas antigas nada muda, porque c era 16, 7 e 5.
+  - (b) Manter a conta de hoje (b + c até 3). Se a tela passar à frente do caso escrito, a regra fica não cumprida, com a explicação de que foi pelo lado bom.
+- **Recomendação:** (a). A regra existe para a tela não piorar: acima do limite, ela manda rever o molde e a poda, e isso não faz sentido quando a tela acerta mais. Os dois números saem sempre juntos, e quem ler o TCC vê as duas contas.
+- **Decisão:** (a), pelo Eric em 06/11/2026, no quadro da sessão (decisão 98): "Sim, ler assim (a)". A leitura foi fixada antes da corrida 18d, sem conhecer o resultado dela: a regra conta os casos que a tela perde para o caso escrito (c até 3), e `avaliar_fase4.py --tela` grava as duas contas, `dentro_do_limite_r2` e `dentro_pela_soma`. Nas corridas 18, 18b e 18c o estado é o mesmo: c foi 16, 7 e 5, e a regra fica fora nas duas contas. Resultado, em 06/11/2026: na corrida 18d, c = 3 e b = 5, e na 18e, c = 0 e b = 4; a regra fecha pela leitura fixada, no limite exato, e pela soma dos dois lados (8 e 4) ficaria fora.
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

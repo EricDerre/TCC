@@ -1,0 +1,641 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-06T15:28:16",
+    "corrida": "fase4_ineditos"
+  },
+  "condicoes": {
+    "modo": "ineditos",
+    "criado_em": "2026-11-06T13:52:23",
+    "saida": "fase4_ineditos",
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.14",
+    "k": 3,
+    "limiares": {
+      "medida": "p_rotulo",
+      "leitura": "primeiro_token_do_rotulo",
+      "parcela_baixa": 0.3,
+      "baixo_ate": 0.8317943867608124,
+      "alto_a_partir_de": 0.9898271080008889,
+      "n": 90,
+      "sem_rotulo": 0,
+      "k": 3,
+      "origem": "fase4_calibracao/k3",
+      "erros": 22,
+      "revisados": 27,
+      "erros_pegos": 15,
+      "acertos_revisados": 12,
+      "risco_no_que_sobra": 0.1111,
+      "mediana_certos": 0.9898271080008889,
+      "mediana_errados": 0.7511499810137099,
+      "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+      "gravado_em": "2026-10-27T23:54:00"
+    },
+    "casos": 36,
+    "parcial": false,
+    "top_logprobs": 20,
+    "teto_tokens": 600,
+    "hash_prompt_fixo": "2e42cf9c31826941",
+    "hash_indice": "11e763ba9cb1fdf4",
+    "biblioteca": {
+      "hash": "95af35290860",
+      "origem": "Programacao/AgenteCore/biblioteca_producao"
+    }
+  },
+  "verbete_certo": {
+    "presente": {
+      "casos": 20,
+      "acertos": 18
+    },
+    "ausente": {
+      "casos": 16,
+      "acertos": 7
+    }
+  },
+  "lado_escrito_18e": {
+    "casos": 25,
+    "mesmo_rotulo": 25,
+    "acertos_aqui": 18,
+    "acertos_escrito": 18,
+    "acertos_tela": 22,
+    "rotulo_diferente": []
+  },
+  "resumo": {
+    "casos": 36,
+    "acertos": 25,
+    "acerto_pct": 69.4,
+    "wilson_lo_pct": 53.1,
+    "wilson_hi_pct": 82.0,
+    "acuracia_balanceada_pct": 71.4,
+    "erros": [
+      "efe-26",
+      "efe-27",
+      "run-26",
+      "semt-23",
+      "semt-27",
+      "sin-26",
+      "tra-22",
+      "tra-23",
+      "tra-25",
+      "tra-26",
+      "tra-27"
+    ],
+    "verbete_certo_no_contexto": 20,
+    "fora_do_conjunto": 0,
+    "sem_rotulo": 0,
+    "tokens_entrada_mediana": 1247.5,
+    "segundos_mediana": 68.38
+  },
+  "por_classe": [
+    {
+      "classe": 1,
+      "casos": 6,
+      "acertos": 6,
+      "erros": 0
+    },
+    {
+      "classe": 2,
+      "casos": 6,
+      "acertos": 5,
+      "erros": 1
+    },
+    {
+      "classe": 3,
+      "casos": 6,
+      "acertos": 4,
+      "erros": 2
+    },
+    {
+      "classe": 4,
+      "casos": 6,
+      "acertos": 1,
+      "erros": 5
+    },
+    {
+      "classe": 5,
+      "casos": 6,
+      "acertos": 5,
+      "erros": 1
+    },
+    {
+      "classe": 6,
+      "casos": 6,
+      "acertos": 4,
+      "erros": 2
+    }
+  ],
+  "por_nivel": [
+    {
+      "nivel": 1,
+      "casos": 12,
+      "acertos": 9,
+      "erros": 3
+    },
+    {
+      "nivel": 2,
+      "casos": 12,
+      "acertos": 11,
+      "erros": 1
+    },
+    {
+      "nivel": 3,
+      "casos": 12,
+      "acertos": 5,
+      "erros": 7
+    }
+  ],
+  "por_selo": [
+    {
+      "selo": "alto",
+      "casos": 13,
+      "acertos": 12,
+      "erros": 1
+    },
+    {
+      "selo": "baixo",
+      "casos": 8,
+      "acertos": 4,
+      "erros": 4
+    },
+    {
+      "selo": "medio",
+      "casos": 15,
+      "acertos": 9,
+      "erros": 6
+    }
+  ],
+  "referencia": {
+    "casos": 36,
+    "acertos": 31,
+    "acerto_pct": 86.1
+  },
+  "casos": [
+    {
+      "caso": "lex-22",
+      "classe": 1,
+      "nivel": 1,
+      "gabarito": "corpo_nao_e_json",
+      "rotulo": "corpo_nao_e_json",
+      "acerto": true,
+      "p_rotulo": 0.9196558578410939,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1204,
+      "segundos": 70.79
+    },
+    {
+      "caso": "lex-23",
+      "classe": 1,
+      "nivel": 1,
+      "gabarito": "corpo_vazio",
+      "rotulo": "corpo_vazio",
+      "acerto": true,
+      "p_rotulo": 0.9868175985459685,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1159,
+      "segundos": 61.16
+    },
+    {
+      "caso": "lex-24",
+      "classe": 1,
+      "nivel": 2,
+      "gabarito": "codificacao_incorreta",
+      "rotulo": "codificacao_incorreta",
+      "acerto": true,
+      "p_rotulo": 0.9993702769150999,
+      "selo": "alto",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1149,
+      "segundos": 63.68
+    },
+    {
+      "caso": "lex-25",
+      "classe": 1,
+      "nivel": 2,
+      "gabarito": "codificacao_incorreta",
+      "rotulo": "codificacao_incorreta",
+      "acerto": true,
+      "p_rotulo": 0.9980434178759562,
+      "selo": "alto",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1341,
+      "segundos": 58.82
+    },
+    {
+      "caso": "lex-26",
+      "classe": 1,
+      "nivel": 3,
+      "gabarito": "codificacao_incorreta",
+      "rotulo": "codificacao_incorreta",
+      "acerto": true,
+      "p_rotulo": 0.9995741248070354,
+      "selo": "alto",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1176,
+      "segundos": 59.14
+    },
+    {
+      "caso": "lex-27",
+      "classe": 1,
+      "nivel": 3,
+      "gabarito": "codificacao_incorreta",
+      "rotulo": "codificacao_incorreta",
+      "acerto": true,
+      "p_rotulo": 0.7415031702903712,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1179,
+      "segundos": 66.52
+    },
+    {
+      "caso": "sin-22",
+      "classe": 2,
+      "nivel": 1,
+      "gabarito": "campo_ausente",
+      "rotulo": "campo_ausente",
+      "acerto": true,
+      "p_rotulo": 0.9443050018120723,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1163,
+      "segundos": 51.23
+    },
+    {
+      "caso": "sin-23",
+      "classe": 2,
+      "nivel": 1,
+      "gabarito": "campo_renomeado",
+      "rotulo": "campo_renomeado",
+      "acerto": true,
+      "p_rotulo": 0.9990315437183062,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1144,
+      "segundos": 70.56
+    },
+    {
+      "caso": "sin-24",
+      "classe": 2,
+      "nivel": 2,
+      "gabarito": "estrutura_aninhada_divergente",
+      "rotulo": "estrutura_aninhada_divergente",
+      "acerto": true,
+      "p_rotulo": 0.7967365993988412,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1276,
+      "segundos": 72.73
+    },
+    {
+      "caso": "sin-25",
+      "classe": 2,
+      "nivel": 2,
+      "gabarito": "colecao_no_lugar_de_objeto",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acerto": true,
+      "p_rotulo": 0.9936980605420108,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1224,
+      "segundos": 78.06
+    },
+    {
+      "caso": "sin-26",
+      "classe": 2,
+      "nivel": 3,
+      "gabarito": "campo_ausente",
+      "rotulo": "resposta_truncada",
+      "acerto": false,
+      "p_rotulo": 0.9503417008268268,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1275,
+      "segundos": 46.55
+    },
+    {
+      "caso": "sin-27",
+      "classe": 2,
+      "nivel": 3,
+      "gabarito": "campo_renomeado",
+      "rotulo": "campo_renomeado",
+      "acerto": true,
+      "p_rotulo": 0.41297742853449687,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1469,
+      "segundos": 73.5
+    },
+    {
+      "caso": "semt-22",
+      "classe": 3,
+      "nivel": 1,
+      "gabarito": "nulo_inesperado",
+      "rotulo": "nulo_inesperado",
+      "acerto": true,
+      "p_rotulo": 0.999215245234948,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1155,
+      "segundos": 75.61
+    },
+    {
+      "caso": "semt-23",
+      "classe": 3,
+      "nivel": 1,
+      "gabarito": "valor_fora_do_dominio",
+      "rotulo": "tipo_divergente",
+      "acerto": false,
+      "p_rotulo": 0.9082803751058014,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1236,
+      "segundos": 64.7
+    },
+    {
+      "caso": "semt-24",
+      "classe": 3,
+      "nivel": 2,
+      "gabarito": "tipo_divergente",
+      "rotulo": "tipo_divergente",
+      "acerto": true,
+      "p_rotulo": 0.9953889845607963,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1249,
+      "segundos": 70.71
+    },
+    {
+      "caso": "semt-25",
+      "classe": 3,
+      "nivel": 2,
+      "gabarito": "formato_de_data_divergente",
+      "rotulo": "formato_de_data_divergente",
+      "acerto": true,
+      "p_rotulo": 0.9840024119997266,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1169,
+      "segundos": 79.09
+    },
+    {
+      "caso": "semt-26",
+      "classe": 3,
+      "nivel": 3,
+      "gabarito": "nulo_inesperado",
+      "rotulo": "nulo_inesperado",
+      "acerto": true,
+      "p_rotulo": 0.891572056163855,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1176,
+      "segundos": 72.74
+    },
+    {
+      "caso": "semt-27",
+      "classe": 3,
+      "nivel": 3,
+      "gabarito": "valor_fora_do_dominio",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acerto": false,
+      "p_rotulo": 0.6447744429692802,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1338,
+      "segundos": 69.11
+    },
+    {
+      "caso": "tra-22",
+      "classe": 4,
+      "nivel": 1,
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo": "tipo_divergente",
+      "acerto": false,
+      "p_rotulo": 0.8107724826078103,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1246,
+      "segundos": 69.2
+    },
+    {
+      "caso": "tra-23",
+      "classe": 4,
+      "nivel": 1,
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo": "valor_fora_do_dominio",
+      "acerto": false,
+      "p_rotulo": 0.6494060130223378,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1182,
+      "segundos": 57.23
+    },
+    {
+      "caso": "tra-24",
+      "classe": 4,
+      "nivel": 2,
+      "gabarito": "chave_de_juncao_errada",
+      "rotulo": "chave_de_juncao_errada",
+      "acerto": true,
+      "p_rotulo": 0.915316524377665,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1518,
+      "segundos": 73.68
+    },
+    {
+      "caso": "tra-25",
+      "classe": 4,
+      "nivel": 2,
+      "gabarito": "contagem_inconsistente",
+      "rotulo": "resposta_truncada",
+      "acerto": false,
+      "p_rotulo": 0.9974324106236034,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1267,
+      "segundos": 60.93
+    },
+    {
+      "caso": "tra-26",
+      "classe": 4,
+      "nivel": 3,
+      "gabarito": "chave_de_juncao_errada",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acerto": false,
+      "p_rotulo": 0.9153030488691365,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1359,
+      "segundos": 63.24
+    },
+    {
+      "caso": "tra-27",
+      "classe": 4,
+      "nivel": 3,
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo": "tipo_divergente",
+      "acerto": false,
+      "p_rotulo": 0.9576197262102669,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1181,
+      "segundos": 55.8
+    },
+    {
+      "caso": "run-22",
+      "classe": 5,
+      "nivel": 1,
+      "gabarito": "limite_de_requisicoes",
+      "rotulo": "limite_de_requisicoes",
+      "acerto": true,
+      "p_rotulo": 0.639723956292674,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1207,
+      "segundos": 76.86
+    },
+    {
+      "caso": "run-23",
+      "classe": 5,
+      "nivel": 1,
+      "gabarito": "recurso_inexistente",
+      "rotulo": "recurso_inexistente",
+      "acerto": true,
+      "p_rotulo": 0.99611997612424,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1181,
+      "segundos": 75.17
+    },
+    {
+      "caso": "run-24",
+      "classe": 5,
+      "nivel": 2,
+      "gabarito": "registro_duplicado",
+      "rotulo": "registro_duplicado",
+      "acerto": true,
+      "p_rotulo": 0.9701996437733472,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1376,
+      "segundos": 67.43
+    },
+    {
+      "caso": "run-25",
+      "classe": 5,
+      "nivel": 2,
+      "gabarito": "tempo_de_resposta_excedido",
+      "rotulo": "tempo_de_resposta_excedido",
+      "acerto": true,
+      "p_rotulo": 0.8323317154358872,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1160,
+      "segundos": 63.57
+    },
+    {
+      "caso": "run-26",
+      "classe": 5,
+      "nivel": 3,
+      "gabarito": "dado_desatualizado",
+      "rotulo": "registro_duplicado",
+      "acerto": false,
+      "p_rotulo": 0.7565002340626116,
+      "selo": "baixo",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1292,
+      "segundos": 49.27
+    },
+    {
+      "caso": "run-27",
+      "classe": 5,
+      "nivel": 3,
+      "gabarito": "registro_duplicado",
+      "rotulo": "registro_duplicado",
+      "acerto": true,
+      "p_rotulo": 0.9996573925027621,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1272,
+      "segundos": 61.31
+    },
+    {
+      "caso": "efe-22",
+      "classe": 6,
+      "nivel": 1,
+      "gabarito": "localizador_quebrado",
+      "rotulo": "localizador_quebrado",
+      "acerto": true,
+      "p_rotulo": 0.9903596636696512,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1491,
+      "segundos": 93.05
+    },
+    {
+      "caso": "efe-23",
+      "classe": 6,
+      "nivel": 1,
+      "gabarito": "localizador_quebrado",
+      "rotulo": "localizador_quebrado",
+      "acerto": true,
+      "p_rotulo": 0.9996386766564875,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1478,
+      "segundos": 72.85
+    },
+    {
+      "caso": "efe-24",
+      "classe": 6,
+      "nivel": 2,
+      "gabarito": "localizador_quebrado",
+      "rotulo": "localizador_quebrado",
+      "acerto": true,
+      "p_rotulo": 0.9980639815405737,
+      "selo": "alto",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1505,
+      "segundos": 92.23
+    },
+    {
+      "caso": "efe-25",
+      "classe": 6,
+      "nivel": 2,
+      "gabarito": "localizador_quebrado",
+      "rotulo": "localizador_quebrado",
+      "acerto": true,
+      "p_rotulo": 0.9589058168174992,
+      "selo": "medio",
+      "verbete_certo_no_contexto": true,
+      "tokens_entrada": 1491,
+      "segundos": 58.67
+    },
+    {
+      "caso": "efe-26",
+      "classe": 6,
+      "nivel": 3,
+      "gabarito": "estado_da_tela_divergente",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "acerto": false,
+      "p_rotulo": 0.9063802363318589,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1580,
+      "segundos": 82.35
+    },
+    {
+      "caso": "efe-27",
+      "classe": 6,
+      "nivel": 3,
+      "gabarito": "estado_da_tela_divergente",
+      "rotulo": "dado_desatualizado",
+      "acerto": false,
+      "p_rotulo": 0.8746700321923563,
+      "selo": "medio",
+      "verbete_certo_no_contexto": false,
+      "tokens_entrada": 1409,
+      "segundos": 67.64
+    }
+  ]
+}

@@ -32,6 +32,7 @@ import analisar_confianca as conf
 import avaliar
 import biblioteca as bib
 import caminhos
+import caso_ao_vivo as cv
 import cliente_ollama as oll
 import estrategias
 import evolucao_biblioteca as evo
@@ -99,10 +100,19 @@ def caminho_dos_limiares() -> Path:
 # de `nulo_inesperado`; num resumo, ou num corpo cortado com o prefixo "...", não saía sinal nenhum. No caso escrito a busca lê o corpo
 # inteiro. A conferência sem modelo do corte (`conferir_corte_tela.py`) achou isso: o verbete certo estava no contexto em 15 dos 37 casos da
 # corrida 18b, e o corte, ao tirar a OBSERVAÇÃO e as listas do SINTOMA, derrubava para 10 os que só ficavam por palavras soltas.
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a busca do caso ao vivo lê também os fenômenos medidos contra a referência, em palavras da biblioteca, na OBSERVAÇÃO desta cópia.
+# ! Motivo: `recuperacao.sinais_do_caso` já lê a observação, e assim a busca dos casos escritos continua igual, byte a byte, sem mexer em `recuperacao.py`: a calibração e as corridas em texto seguem comparáveis.
 def caso_da_busca(caso: dict) -> dict:
-    """O caso como a busca o lê: com `corpo_completo` no lugar do CORPO, quando o caso ao vivo o traz; `entrada` não muda."""
-    corpo = caso.get("corpo_completo")
-    return caso if corpo is None else {**caso, "entrada": {**caso["entrada"], "corpo": corpo}}
+    """O caso como a busca o lê: com `corpo_completo` no lugar do CORPO e os termos dos fenômenos na OBSERVAÇÃO, quando o caso ao vivo os traz; `entrada` do caso, que vai ao prompt, não muda."""
+    corpo, fenomenos = caso.get("corpo_completo"), caso.get("sinais_da_busca")
+    if corpo is None and not fenomenos:
+        return caso
+    entrada = dict(caso["entrada"])
+    if corpo is not None:
+        entrada["corpo"] = corpo
+    if fenomenos:
+        entrada["observacao"] = " ".join(x for x in (entrada.get("observacao"), cv.termos_da_busca(fenomenos)) if x)
+    return {**caso, "entrada": entrada}
 
 
 def contexto_ao_vivo(verbetes: list[dict], indice: rec.Indice, caso: dict, k: int = 3, extras=()) -> dict:

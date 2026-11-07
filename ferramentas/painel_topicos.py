@@ -88,20 +88,26 @@ NAV = [
         ("reproducao", "Reprodução na tela", "Quantos casos de avaliação a tela consegue reproduzir, com que custo por cenário e o que fica fora: a corrida 17 nos 72 casos e a mesma corrida nos 36 inéditos da ficha 27."),
         # aba da corrida 16 (27/10/2026, P3): o id entra junto com a seção (secao_calibracao)
         ("calibracao", "Calibração", "Quantos verbetes entregar ao modelo, onde ficam os cortes do selo de confiança e quanto a probabilidade da resposta separa acerto de erro: a corrida 16 nos 90 casos."),
-        ("tela", "Tela e caso escrito", "O agente dá o mesmo diagnóstico ao caso lido da tela e ao mesmo caso escrito? As corridas 18 e 18b nos casos que reproduzem, com a regra que compara os dois lados, os selos, as causas respondidas e o tamanho do prompt."),
+        ("tela", "Tela e caso escrito", "O agente dá o mesmo diagnóstico ao caso lido da tela e ao mesmo caso escrito? As corridas 18 a 18e nos casos que reproduzem, com a regra que compara os dois lados, os selos, as causas respondidas e o tamanho do prompt."),
         # aba da corrida 19 (01/11/2026, P4): o id entra junto com a seção (secao_cura)
         ("cura", "Cura de seletor", "Quando o localizador de um passo quebra, o agente acha outro em código e o roteiro passa na reexecução? A corrida 19 nos quatro roteiros do front legado, com quatro modos de quebra nas duas formas, a taxa de cura e o tempo até o resultado."),
         # aba da corrida 20 (03/11/2026, P5): o id entra junto com a seção (secao_biblioteca)
         ("biblioteca", "Biblioteca em produção", "O que o agente propõe para a biblioteca passa pelos filtros em código, melhora os casos inéditos, e a marca de corrigido acerta? A corrida 20: o lote, os filtros, a reavaliação, a correção e a sonda."),
         # ! Alteração de IA - Revisar: (04/11/2026, P6) aba da corrida 21; o id entra junto com a seção (secao_cenarios).
         # ! Motivo: o ensaio dos cenários da Fase 5 é a sexta análise da Fase 4 e, pela regra do painel, vira uma aba.
-        ("cenarios", "Cenários da Fase 5", "Quanto tempo o agente leva da detecção ao resultado nos dez cenários da ficha 36 e em quantos acerta? As corridas 21 e 21b, o ensaio de uma repetição: tempo até o resultado, quantos chegaram a ele, a ficha da falha de cada cenário e o protocolo da medida com pessoas."),
+        ("cenarios", "Cenários da Fase 5", "Quanto tempo o agente leva da detecção ao resultado nos dez cenários da ficha 36 e em quantos acerta? As corridas 21, 21b, 21c e 21d, o ensaio de uma repetição: tempo até o resultado, quantos chegaram a ele, a ficha da falha de cada cenário e o protocolo da medida com pessoas."),
         # ! Alteração de IA - Revisar: (04/11/2026, P7) aba da corrida 22; o id entra junto com a seção (secao_trilha).
         # ! Motivo: a avaliação da própria trilha é a sétima análise da Fase 4 e, pela regra do painel, vira uma aba.
         ("trilha", "Avaliação da trilha", "A trilha do agente aponta os erros reais e o passo certo quando a falha é injetada de propósito? A corrida 22 nos 36 casos de avaliação: os sinais de alerta, as mudanças de propósito na entrada e a amostra de relatórios da sessão de revisão."),
         # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) aba da conferência dos 36 inéditos; o id entra junto com a seção (secao_conferencia).
         # ! Motivo: o Eric decide pelo painel, e a ficha 46 pede a conferência dele antes da corrida 24.
-        ("conferencia", "Conferência dos inéditos", "Os 36 casos que a corrida 24 vai medir estão certos? Cada caso com o gabarito, o que a corrida 17 viu e a pré-análise do Claude, para a conferência do Eric."),
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 91) aba da corrida 23; o id entra junto com a seção (secao_experimento).
+        # ! Motivo: o experimento dos itens da decisão 55 é uma análise nova da Fase 4 e, pela regra do painel, vira uma aba.
+        ("experimento", "Exemplar e rótulos", "Um exemplar resolvido ou os rótulos escritos em palavras mudam o acerto do modelo? A corrida 23 nos 90 casos, uma condição por item, contra a calibração da corrida 16."),
+        ("conferencia", "Conferência dos inéditos", "Os 36 casos que a corrida 24 mede estão certos? Cada caso com o gabarito, o que a corrida 17 viu, a pré-análise do Claude e a resposta do Eric."),
+        # ! Alteração de IA - Revisar: (06/11/2026) aba da corrida 24; o id entra junto com a seção (secao_ineditos_f4).
+        # ! Motivo: a medida da biblioteca final em casos que ela nunca viu é uma análise nova da Fase 4 e, pela regra do painel, vira uma aba.
+        ("ineditosf4", "Inéditos em texto", "A biblioteca final acerta em casos que nunca viu? A corrida 24 nos 36 inéditos da ficha 27, conferidos pelo Eric: o acerto por classe e por nível, o verbete certo no contexto, o selo e a comparação com a corrida 18e."),
     ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
@@ -1843,9 +1849,48 @@ function calCurva(){
     datasets:[{label:'risco (erros entre os casos respondidos, %)', data: P.map(p => Math.round(p.risco * 1000) / 10), borderColor: css('--s2'), backgroundColor: css('--s2'), fill:false, pointRadius:2, tension:0}]},
     options:{responsive:true, maintainAspectRatio:false, scales:{x:{title:{display:true,text:'cobertura (da maior probabilidade para a menor)'}}, y:{beginAtZero:true, title:{display:true,text:'risco (%)'}}}}});
 }
+// ! Alteração de IA - Revisar: (06/11/2026) a aba da corrida 24: certos e errados por classe de defeito e com e sem o verbete certo no contexto.
+// ! Motivo: são as duas coisas que a corrida mostrou: a classe de tradução é onde mais erra, e o verbete certo é o que mais pesa.
+function inedClasse(){
+  const C = (T.ineditosf4||{}).por_classe||[]; if(!C.length) return;
+  grafico('g-ined-classe', {type:'bar', data:{labels: C.map(c => c.classe+' '+c.nome), datasets:[
+    {label:'acertos', data: C.map(c => c.acertos), backgroundColor: css('--bom')},
+    {label:'erros', data: C.map(c => c.erros), backgroundColor: css('--ruim')}]},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:1}, title:{display:true,text:'casos'}}, y:{stacked:true}}}});
+}
+function inedVerbete(){
+  const V = (T.ineditosf4||{}).verbete; if(!V) return;
+  const lados = [['com o verbete certo', V.presente], ['sem o verbete certo', V.ausente]];
+  grafico('g-ined-verbete', {type:'bar', data:{labels: lados.map(x => x[0]), datasets:[
+    {label:'acertos', data: lados.map(x => x[1].acertos), backgroundColor: css('--bom')},
+    {label:'erros', data: lados.map(x => x[1].casos - x[1].acertos), backgroundColor: css('--ruim')}]},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, title:{display:true,text:'casos'}}, y:{stacked:true}}}});
+}
 // aba Tela e fixture (01/11/2026, corrida 18): acerto na tela e no fixture por classe; rótulos dados em cada lado
 function telaClasses(){
   const D = T.tela||{}; const C = D.por_classe||[]; if(!C.length) return;
+  // ! Alteração de IA - Revisar: (05/11/2026, corrida 18c) com a 18c, o gráfico compara a tela antes e depois do corte com o caso escrito, e a corrida 18 fica na tabela.
+  // ! Motivo: cinco séries por grupo não se liam, e o que importa agora é a 18c contra a 18b; a corrida 18 mediu um defeito do caso de entrada, já corrigido.
+  // ! Alteração de IA - Revisar: (06/11/2026, decisão 97) com a 18d, o gráfico compara a tela antes e depois dos sinais novos da busca com o caso escrito.
+  // ! Motivo: é o que a corrida mediu; as séries das corridas de antes continuam na tabela recolhida.
+  if(C.some(c => c.acerto_tela_v4 != null)){
+    grafico('g-tela-classe', {type:'bar', data:{labels: C.map(c => c.classe+' '+c.nome), datasets:[
+      {label:'casos', data: C.map(c => c.casos), backgroundColor: css('--s4')},
+      {label:'acerto na tela (18c, antes dos sinais da busca)', data: C.map(c => c.acerto_tela_v3), backgroundColor: css('--s3')},
+      {label:'acerto na tela (18d, com os sinais da busca)', data: C.map(c => c.acerto_tela_v4), backgroundColor: css('--s1')},
+      {label:'acerto no caso escrito (18d)', data: C.map(c => c.acerto_fixture_v4), backgroundColor: css('--s2')}]},
+      options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:1}}}}});
+    return;
+  }
+  if(C.some(c => c.acerto_tela_v3 != null)){
+    grafico('g-tela-classe', {type:'bar', data:{labels: C.map(c => c.classe+' '+c.nome), datasets:[
+      {label:'casos', data: C.map(c => c.casos), backgroundColor: css('--s4')},
+      {label:'acerto na tela (18b, prompt acima do limite)', data: C.map(c => c.acerto_tela_v2), backgroundColor: css('--s3')},
+      {label:'acerto na tela (18c, prompt dentro do limite)', data: C.map(c => c.acerto_tela_v3), backgroundColor: css('--s1')},
+      {label:'acerto no caso escrito (18c)', data: C.map(c => c.acerto_fixture_v3), backgroundColor: css('--s2')}]},
+      options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:1}}}}});
+    return;
+  }
   const ds = [
     {label:'casos', data: C.map(c => c.casos), backgroundColor: css('--s4')},
     {label:'acerto na tela (18)', data: C.map(c => c.acerto_tela), backgroundColor: css('--s1')},
@@ -1859,13 +1904,66 @@ function telaClasses(){
 }
 function telaRotulos(){
   const D = T.tela||{}; const R = D.rotulos||[]; if(!R.length) return;
-  const ds = [
+  const com18c = R.some(x => x.tela_v3 != null);
+  const com18d = R.some(x => x.tela_v4 != null);
+  const ds = com18d ? [
+    {label:'é o gabarito de', data: R.map(x => x.gabarito), backgroundColor: css('--s4')},
+    {label:'respondida na tela (18d)', data: R.map(x => x.tela_v4), backgroundColor: css('--s1')},
+    {label:'respondida no caso escrito (18d)', data: R.map(x => x.fixture_v4), backgroundColor: css('--s2')}] : com18c ? [
+    {label:'é o gabarito de', data: R.map(x => x.gabarito), backgroundColor: css('--s4')},
+    {label:'respondida na tela (18c)', data: R.map(x => x.tela_v3), backgroundColor: css('--s1')},
+    {label:'respondida no caso escrito (18c)', data: R.map(x => x.fixture_v3), backgroundColor: css('--s2')}] : [
     {label:'é o gabarito de', data: R.map(x => x.gabarito), backgroundColor: css('--s4')},
     {label:'respondida na tela (18)', data: R.map(x => x.tela), backgroundColor: css('--s1')},
     {label:'respondida no caso escrito', data: R.map(x => x.fixture), backgroundColor: css('--s2')}];
-  if(R.some(x => x.tela_v2 != null)) ds.push({label:'respondida na tela (18b, caso revisado)', data: R.map(x => x.tela_v2), backgroundColor: css('--s5')});
+  if(!com18c && R.some(x => x.tela_v2 != null)) ds.push({label:'respondida na tela (18b, caso revisado)', data: R.map(x => x.tela_v2), backgroundColor: css('--s5')});
   grafico('g-tela-rotulos', {type:'bar', data:{labels: R.map(x => nome(x.rotulo)), datasets: ds},
-    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:2}}}}});
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:2}}, y:{ticks:{autoSkip:false, font:{size:11}}}}}});
+}
+// ! Alteração de IA - Revisar: (05/11/2026, corrida 18c) o que mudou de uma corrida para outra e o acerto com e sem o verbete certo no contexto.
+// ! Motivo: a primeira responde se o corte ajudou, e a segunda explica o que ainda separa a tela do caso escrito.
+function telaCorridas(){
+  const L = (T.tela||{}).corridas||[]; if(!L.length) return;
+  grafico('g-tela-corridas', {type:'bar', data:{labels: L.map(x => 'corrida '+x.nome), datasets:[
+    {label:'acerto na tela', data: L.map(x => x.acerto_tela), backgroundColor: css('--s1')},
+    {label:'acerto no caso escrito', data: L.map(x => x.acerto_fixture), backgroundColor: css('--s2')},
+    {label:'mesma causa nos dois lados', data: L.map(x => x.concordam), backgroundColor: css('--s3')}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos, de '+L[L.length-1].casos}, beginAtZero:true}}}});
+}
+// ! Alteração de IA - Revisar: (06/11/2026, decisão 98) o que a tela perde e o que ela ganha para o caso escrito, corrida a corrida, contra o limite da regra R2.
+// ! Motivo: a regra passou a contar só os casos que a tela perde, e o gráfico mostra as duas contas lado a lado, como o Eric fixou antes da corrida 18d.
+function telaRegra(){
+  const D = T.tela||{}; const L = D.regra||[]; if(!L.length) return;
+  grafico('g-tela-regra', {type:'bar', data:{labels: L.map(x => x.rotulo), datasets:[
+    {label:'casos que a tela perde para o caso escrito', data: L.map(x => x.perde), backgroundColor: css('--ruim')},
+    {label:'casos que a tela ganha do caso escrito', data: L.map(x => x.ganha), backgroundColor: css('--bom')},
+    {type:'line', label:'limite de casos perdidos', data: L.map(() => D.limite_r2), borderColor: css('--s4'), backgroundColor: css('--s4'), pointRadius:0, borderWidth:2, fill:false}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'casos'}, beginAtZero:true, ticks:{stepSize:2}}}}});
+}
+function telaVerbete(){
+  const D = T.tela||{}; const V = (D.v4||D.v3||{}).verbete; if(!V) return;
+  const lados = [['tela, com o verbete certo', V.tela.presente], ['tela, sem o verbete certo', V.tela.ausente], ['caso escrito, com o verbete certo', V.fixture.presente], ['caso escrito, sem o verbete certo', V.fixture.ausente]];
+  grafico('g-tela-verbete', {type:'bar', data:{labels: lados.map(x => x[0]), datasets:[
+    {label:'acertos', data: lados.map(x => x[1].acertos), backgroundColor: css('--bom')},
+    {label:'erros', data: lados.map(x => x[1].casos - x[1].acertos), backgroundColor: css('--ruim')}]},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, title:{display:true,text:'casos'}}, y:{stacked:true, afterFit: s => { s.width = Math.max(s.width, 220); }}}}});
+}
+// ! Alteração de IA - Revisar: (05/11/2026, decisão 91) a aba do experimento: acerto de cada condição e os casos que só um lado acerta.
+// ! Motivo: a pergunta é se a condição muda o acerto, e a resposta só aparece com a contagem caso a caso ao lado do acerto.
+function expAcerto(){
+  const E = T.experimento||{}; const C = E.condicoes||[]; if(!C.length) return;
+  const L = [{nome:'corrida 16', acerto_pct:E.base.acerto_pct, avaliacao_pct:E.base.avaliacao_pct}].concat(C);
+  grafico('g-exp-acerto', {type:'bar', data:{labels: L.map(x => x.nome), datasets:[
+    {label:'acerto nos 90 casos', data: L.map(x => x.acerto_pct), backgroundColor: css('--s1')},
+    {label:'acerto nos 36 de avaliação', data: L.map(x => x.avaliacao_pct), backgroundColor: css('--s2')}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{title:{display:true,text:'% de acerto'}, beginAtZero:true, max:100}}}});
+}
+function expTrocas(){
+  const C = (T.experimento||{}).condicoes||[]; if(!C.length) return;
+  grafico('g-exp-trocas', {type:'bar', data:{labels: C.map(x => x.nome), datasets:[
+    {label:'só a condição acerta', data: C.map(x => x.b), backgroundColor: css('--bom')},
+    {label:'só a corrida 16 acerta', data: C.map(x => x.c), backgroundColor: css('--ruim')}]},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{beginAtZero:true, ticks:{stepSize:1}, title:{display:true,text:'casos'}}}}});
 }
 // aba Cura de seletor (01/11/2026, corrida 19): execuções por modo e por roteiro, empilhadas pela regra R3; MTTR por roteiro
 function curaEmpilhado(id, L, chave){
@@ -1901,7 +1999,7 @@ function cenMttr(){
   const C = T.cenarios||{}; const L = C.por_cenario||[];
   if(!L.length) return;
   const ds = C.duas_corridas
-    ? [{label:'corrida 21', data: L.map(x => x.mttr_anterior), backgroundColor: css('--s4')}, {label:'corrida 21b, com a correção da cura', data: L.map(x => x.mttr_media_s), backgroundColor: css('--s1')}]
+    ? [{label:C.rotulo_anterior, data: L.map(x => x.mttr_anterior), backgroundColor: css('--s4')}, {label:C.rotulo_vigente, data: L.map(x => x.mttr_media_s), backgroundColor: css('--s1')}]
     : [{label:'MTTR médio (s)', data: L.map(x => x.mttr_media_s), backgroundColor: L.map(x => x.tipo === 'contrato' ? css('--s1') : css('--s2'))}];
   grafico('g-cen-mttr', {type:'bar', data:{labels: L.map(x => nome(x.cenario)), datasets: ds},
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display: !!C.duas_corridas}},
@@ -1942,8 +2040,8 @@ function triMutacoes(){
 DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pesquisa": ["peRodadas"], "comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
                     "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"],
-                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaClasses", "telaRotulos"], "cura": ["curaModos", "curaRoteiros"],
-                    "biblioteca": ["bibFiltros", "bibReavaliacao"], "cenarios": ["cenMttr", "cenSucesso"], "trilha": ["triSinais", "triMutacoes"]}
+                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaRegra", "telaCorridas", "telaVerbete", "telaClasses", "telaRotulos"], "ineditosf4": ["inedClasse", "inedVerbete"], "cura": ["curaModos", "curaRoteiros"],
+                    "biblioteca": ["bibFiltros", "bibReavaliacao"], "cenarios": ["cenMttr", "cenSucesso"], "trilha": ["triSinais", "triMutacoes"], "experimento": ["expAcerto", "expTrocas"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
 
@@ -2285,18 +2383,20 @@ def secao_calibracao(cal: dict | None, lim: dict | None, road: dict, cartoes_cor
 # estado vazio com o cartão da corrida, como as outras abas.
 # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; a corrida 18 decide se o molde do sintoma e a poda
 # voltam para revisão antes da noite C (regra R2), e o Eric decide pelo painel.
-def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 90) secao_tela recebe também a leitura da 18c (tela_v3.json): com ela, os cartões, o primeiro parágrafo e os gráficos passam à corrida vigente, e a 18 e a 18b ficam recolhidas como o registro de antes do corte.
+# ! Motivo: a decisão 90 diz que a leitura nova passa a valer quando a corrida rodar; as abas continuam funcionando sem o arquivo, como nas outras corridas.
+def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corridas, tela_v3: dict | None = None, tela_v4: dict | None = None, tela_ineditos: dict | None = None, teto_prompt: dict | None = None) -> tuple[dict, str]:
     # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos sem b + c, p, "fixture", "rótulo", "gatilho", "poda" nem "harness" soltos.
     # ! Motivo: o texto à vista trazia siglas e números soltos que o Eric pediu para tirar; o cartão do corte sem diferença perdeu o trecho sobre o CORPO, que já está no item "Onde a tela perde" e nas tabelas.
-    fontes_ = fontes(["<code>resultados_alvo/fase4/tela.json</code> e <code>.md</code> (<code>avaliar_fase4.py --tela</code>, com <code>--check</code>; blocos <code>tb_f4_tela_*</code>); a repetição com o caso ao vivo revisado em <code>tela_v2.json</code> (<code>--nome tela_v2</code>)",
+    fontes_ = fontes(["<code>resultados_alvo/fase4/tela.json</code> e <code>.md</code> (<code>avaliar_fase4.py --tela</code>, com <code>--check</code>; blocos <code>tb_f4_tela_*</code>); a repetição com o caso ao vivo revisado em <code>tela_v2.json</code> (<code>--nome tela_v2</code>) a repetição com o prompt dentro do limite em <code>tela_v3.json</code> (<code>--nome tela_v3</code>), os sinais novos da busca em <code>tela_v4.json</code> (<code>--nome tela_v4</code>), os inéditos em <code>tela_ineditos.json</code> (<code>--nome tela_ineditos</code>) e o teto nas listas em <code>teto_prompt_tela.json</code> (<code>conferir_corte_tela.py</code>)",
                       "<code>executar_fase4.py --modo tela</code> (os casos que reproduzem em <code>reproducibilidade.json</code>, k e limiares de <code>limiares.json</code>, ponte de <code>pontes.json</code>; relatórios v2 por caso em <code>fase4_tela/relatorios/</code>)",
-                      "roadmap §2.10; plano aprovado da Fase 4, seções 3.3, 5 e 6 (regra R2); ficha 37"])
-    vazio = {"resumo": None, "por_classe": [], "rotulos": [], "v2": None}
+                      "roadmap §2.10, §2.16, §2.19 e §2.21; plano aprovado da Fase 4, seções 3.3, 5 e 6 (regra R2); fichas 37, 42, 47 e 48; decisões 82, 90 e 96 a 99"])
+    vazio = {"resumo": None, "por_classe": [], "rotulos": [], "v2": None, "v3": None, "v4": None, "ineditos": None, "corridas": [], "regra": [], "limite_r2": None}
     if not tela:
         html_ = f'''<section id="tela" hidden>
 <h1>Tela e caso escrito: o agente dá o mesmo diagnóstico nos dois?</h1>
 <p class="lead">A corrida 18 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/tela.json</code>, gerado por <code>avaliar_fase4.py --tela</code> depois de <code>executar_fase4.py --modo tela --saida fase4_tela</code> (noite B do plano aprovado).</p>
-{cartoes_corridas(road, numeros=["18", "18b"], sufixo="-tela")}
+{cartoes_corridas(road, numeros=["18", "18b", "18c", "18d", "18e"], sufixo="-tela")}
 {fontes_}
 </section>'''
         return vazio, html_
@@ -2312,6 +2412,18 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
     r2 = v2["resumo"] if v2 else None
     casos_v2 = {l["caso"]: l for l in (v2["casos"] if v2 else [])}
     classes_v2 = {x["classe"]: x for x in (v2["por_classe"] if v2 else [])}
+    v3 = tela_v3 if tela_v3 and tela_v3.get("resumo") else None
+    r3 = v3["resumo"] if v3 else None
+    casos_v3 = {l["caso"]: l for l in (v3["casos"] if v3 else [])}
+    classes_v3 = {x["classe"]: x for x in (v3["por_classe"] if v3 else [])}
+    # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 e 98) a aba lê também a corrida 18d (`tela_v4.json`) e os inéditos (`tela_ineditos.json`, corrida 18e): a regra pelos casos que a tela perde, nas cinco corridas, com a 18c recolhida.
+    # ! Motivo: a regra fechou na 18d pela leitura fixada antes dela, e os inéditos são a conferência em casos que a busca nunca viu; sem os arquivos, a aba fica como era.
+    v4 = tela_v4 if tela_v4 and tela_v4.get("resumo") else None
+    r4 = v4["resumo"] if v4 else None
+    casos_v4 = {l["caso"]: l for l in (v4["casos"] if v4 else [])}
+    classes_v4 = {x["classe"]: x for x in (v4["por_classe"] if v4 else [])}
+    ine = tela_ineditos if tela_ineditos and tela_ineditos.get("resumo") else None
+    ri = ine["resumo"] if ine else None
 
     def contagem(campo: str, lista=None) -> dict:
         c: dict = {}
@@ -2322,13 +2434,24 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
 
     ct, cf, cg = contagem("rotulo_tela"), contagem("rotulo_fixture"), contagem("gabarito")
     ct2 = contagem("rotulo_tela", list(casos_v2.values())) if v2 else {}
-    rotulos = [{"rotulo": x, "tela": ct.get(x, 0), "fixture": cf.get(x, 0), "gabarito": cg.get(x, 0), "tela_v2": ct2.get(x, 0) if v2 else None}
-               for x in sorted(set(ct) | set(cf) | set(cg) | set(ct2), key=lambda x: (-(ct.get(x, 0) + cf.get(x, 0) + cg.get(x, 0) + ct2.get(x, 0)), x))]
+    ct3 = contagem("rotulo_tela", list(casos_v3.values())) if v3 else {}
+    cf3 = contagem("rotulo_fixture", list(casos_v3.values())) if v3 else {}
+    ct4 = contagem("rotulo_tela", list(casos_v4.values())) if v4 else {}
+    cf4 = contagem("rotulo_fixture", list(casos_v4.values())) if v4 else {}
+    rotulos = [{"rotulo": x, "tela": ct.get(x, 0), "fixture": cf.get(x, 0), "gabarito": cg.get(x, 0), "tela_v2": ct2.get(x, 0) if v2 else None,
+                "tela_v3": ct3.get(x, 0) if v3 else None, "fixture_v3": cf3.get(x, 0) if v3 else None, "tela_v4": ct4.get(x, 0) if v4 else None, "fixture_v4": cf4.get(x, 0) if v4 else None}
+               for x in sorted(set(ct) | set(cf) | set(cg) | set(ct2) | set(ct3) | set(cf3) | set(ct4) | set(cf4), key=lambda x: (-(ct.get(x, 0) + cf.get(x, 0) + cg.get(x, 0) + ct2.get(x, 0) + ct3.get(x, 0) + cf3.get(x, 0) + ct4.get(x, 0) + cf4.get(x, 0)), x))]
     mais_tela = max(rotulos, key=lambda x: x["tela"]) if rotulos else None
     por_classe = [{"classe": x["classe"], "nome": CLASSES.get(x["classe"], ""), "casos": x["casos"], "acerto_tela": x["acerto_tela"],
                    "acerto_fixture": x["acerto_fixture"], "concordam": x["concordam"],
                    "acerto_tela_v2": classes_v2.get(x["classe"], {}).get("acerto_tela") if v2 else None,
-                   "concordam_v2": classes_v2.get(x["classe"], {}).get("concordam") if v2 else None} for x in tela["por_classe"]]
+                   "concordam_v2": classes_v2.get(x["classe"], {}).get("concordam") if v2 else None,
+                   "acerto_tela_v3": classes_v3.get(x["classe"], {}).get("acerto_tela") if v3 else None,
+                   "acerto_fixture_v3": classes_v3.get(x["classe"], {}).get("acerto_fixture") if v3 else None,
+                   "concordam_v3": classes_v3.get(x["classe"], {}).get("concordam") if v3 else None,
+                   "acerto_tela_v4": classes_v4.get(x["classe"], {}).get("acerto_tela") if v4 else None,
+                   "acerto_fixture_v4": classes_v4.get(x["classe"], {}).get("acerto_fixture") if v4 else None,
+                   "concordam_v4": classes_v4.get(x["classe"], {}).get("concordam") if v4 else None} for x in tela["por_classe"]]
     comparacao = []
     if v2:
         for l in casos:
@@ -2348,11 +2471,42 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
     sem_dif = cp.get("sem_diferenca_contra_contrato")
     chaves_resumo = ("casos", "acerto_tela", "acerto_fixture", "concordam", "b", "c", "discordantes", "limite_r2", "dentro_do_limite_r2", "p_mcnemar",
                      "gatilhos_tela", "divergencias_tela", "segundos_tela_mediana", "segundos_fixture_mediana", "p_tela_mediana", "p_fixture_mediana", "trilha_bytes")
+    comparacao_v3 = []
+    if v3 and v2:
+        for c, l3 in casos_v3.items():
+            l2 = casos_v2.get(c)
+            if l2:
+                comparacao_v3.append({"caso": c, "gabarito": l3["gabarito"], "tela_18b": l2["rotulo_tela"], "tela_18c": l3["rotulo_tela"], "fixture_18b": l2["rotulo_fixture"], "fixture_18c": l3["rotulo_fixture"],
+                                      "acerto_18b": l2["acerto_tela"], "acerto_18c": l3["acerto_tela"], "mudou": l2["rotulo_tela"] != l3["rotulo_tela"], "mudou_fixture": l2["rotulo_fixture"] != l3["rotulo_fixture"]})
+    ganhos_v3 = sum(1 for c in comparacao_v3 if c["acerto_18c"] and not c["acerto_18b"])
+    perdas_v3 = sum(1 for c in comparacao_v3 if c["acerto_18b"] and not c["acerto_18c"])
+    comparacao_v4 = []
+    if v4 and v3:
+        for c, l4 in casos_v4.items():
+            l3 = casos_v3.get(c)
+            if l3:
+                comparacao_v4.append({"caso": c, "gabarito": l4["gabarito"], "tela_18c": l3["rotulo_tela"], "tela_18d": l4["rotulo_tela"], "fixture_18d": l4["rotulo_fixture"],
+                                      "acerto_18c": l3["acerto_tela"], "acerto_18d": l4["acerto_tela"], "mudou": l3["rotulo_tela"] != l4["rotulo_tela"], "mudou_fixture": l3["rotulo_fixture"] != l4["rotulo_fixture"]})
+    ganhos_v4 = [c["caso"] for c in comparacao_v4 if c["acerto_18d"] and not c["acerto_18c"]]
+    perdas_v4 = [c["caso"] for c in comparacao_v4 if c["acerto_18c"] and not c["acerto_18d"]]
+    corridas_lidas = [("18", r), *([("18b", r2)] if v2 else []), *([("18c", r3)] if v3 else []), *([("18d", r4)] if v4 else [])]
+    regra = [{"nome": nome_, "rotulo": f"corrida {nome_}", "casos": x["casos"], "perde": x["c"], "ganha": x["b"]} for nome_, x in corridas_lidas]
+    if ri:
+        regra.append({"nome": "18e", "rotulo": "corrida 18e, inéditos", "casos": ri["casos"], "perde": ri["c"], "ganha": ri["b"]})
     dados_js = {"resumo": {k: r.get(k) for k in chaves_resumo}, "por_classe": por_classe, "rotulos": rotulos,
-                "v2": {"resumo": {k: r2.get(k) for k in chaves_resumo}, "ganhos": ganhos, "perdas": perdas, "mudaram": sum(1 for c in comparacao if c["mudou"])} if v2 else None}
+                "v2": {"resumo": {k: r2.get(k) for k in chaves_resumo}, "ganhos": ganhos, "perdas": perdas, "mudaram": sum(1 for c in comparacao if c["mudou"])} if v2 else None,
+                "v3": {"resumo": {k: r3.get(k) for k in chaves_resumo}, "ganhos": ganhos_v3, "perdas": perdas_v3, "mudaram": sum(1 for c in comparacao_v3 if c["mudou"]),
+                       "verbete": v3.get("verbete_certo"), "selo": v3.get("acerto_por_selo")} if v3 else None,
+                "v4": {"resumo": {k: r4.get(k) for k in chaves_resumo}, "ganhos": ganhos_v4, "perdas": perdas_v4, "mudaram": sum(1 for c in comparacao_v4 if c["mudou"]),
+                       "verbete": v4.get("verbete_certo"), "selo": v4.get("acerto_por_selo")} if v4 else None,
+                "ineditos": {"resumo": {k: ri.get(k) for k in chaves_resumo}, "verbete": ine.get("verbete_certo"), "selo": ine.get("acerto_por_selo")} if ine else None,
+                "regra": regra if v4 else [], "limite_r2": r.get("limite_r2"),
+                "corridas": [{"nome": nome_, "casos": x["casos"], "acerto_tela": x["acerto_tela"], "acerto_fixture": x["acerto_fixture"], "concordam": x["concordam"]} for nome_, x in corridas_lidas] if v3 else []}
+    # ! Alteração de IA - Revisar: (06/11/2026, decisão 98) os textos da aba, também os das corridas 18 e 18b, dizem a regra R2 pelos casos que a tela perde, com os que ela ganha ao lado.
+    # ! Motivo: `dentro_do_limite_r2` passou a contar só os que a tela perde; manter "só um lado acerta em N, limite 3" ao lado dele faria a aba dizer "dentro" com N acima de 3 quando a tela passar à frente do caso escrito.
     itens_kpi = [
         ("Mesma causa na tela e no caso escrito (regra R2)", f'{r["concordam"]} de {r["casos"]}',
-         f'{fmt(100 * r["concordam"] / n)}%; só um lado acerta em {r["discordantes"]}, limite {r["limite_r2"]}: {"dentro" if dentro else "fora"}'),
+         f'{fmt(100 * r["concordam"] / n)}%; a tela perde {r["c"]} e ganha {r["b"]}; o limite é de {r["limite_r2"]} perdidos: {"dentro" if dentro else "fora"}'),
         ("Acerto na tela", f'{r["acerto_tela"]} de {r["casos"]}', f'{fmt(100 * r["acerto_tela"] / n)}%; no caso escrito {r["acerto_fixture"]} de {r["casos"]} ({fmt(100 * r["acerto_fixture"] / n)}%)'),
         ("Causa mais respondida na tela", f'{esc(mais_tela["rotulo"])} em {mais_tela["tela"]}' if mais_tela else "n/d",
          f'no caso escrito, em {mais_tela["fixture"]}; é o gabarito de {mais_tela["gabarito"]} dos {r["casos"]} casos' if mais_tela else ""),
@@ -2374,31 +2528,39 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
                             [[f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(c['tela_18'] or 'sem rótulo')}</code>", f"<code>{esc(c['tela_18b'] or 'sem rótulo')}</code>",
                               f"<code>{esc(c['fixture_18b'] or 'sem rótulo')}</code>", "certo" if c["acerto_18"] else "errado", "certo" if c["acerto_18b"] else "errado",
                               "sim" if c["concordam_18"] else "não", "sim" if c["concordam_18b"] else "não", "sim" if c["mudou"] else "não"] for c in comparacao], raw=True) if v2 else ""
-    tab_classe = tabela(["Classe", "Casos", "Acerto na tela", "Acerto no fixture", "Mesmo rótulo"] + (["Acerto na tela (18b)", "Mesmo rótulo (18b)"] if v2 else []),
+    # ! Alteração de IA - Revisar: (05/11/2026, corrida 18c) as tabelas recolhidas ganham as colunas da 18c, e o caso a caso passa à leitura vigente.
+    # ! Motivo: na página publicada, "Caso a caso" ainda listava a corrida 18 com a 18c já valendo, e quem abrisse a tabela veria rótulos de antes das duas revisões.
+    tab_classe = tabela(["Classe", "Casos", "Acerto na tela", "Acerto no fixture", "Mesmo rótulo"] + (["Acerto na tela (18b)", "Mesmo rótulo (18b)"] if v2 else []) + (["Acerto na tela (18c)", "Acerto no fixture (18c)", "Mesmo rótulo (18c)"] if v3 else []) + (["Acerto na tela (18d)", "Acerto no fixture (18d)", "Mesmo rótulo (18d)"] if v4 else []),
                         [[f'{x["classe"]} {x["nome"]}', x["casos"], x["acerto_tela"], x["acerto_fixture"], x["concordam"]]
-                         + ([x["acerto_tela_v2"] if x["acerto_tela_v2"] is not None else "—", x["concordam_v2"] if x["concordam_v2"] is not None else "—"] if v2 else []) for x in por_classe])
-    tab_rotulos = tabela(["Rótulo", "Dado na tela", "Dado no fixture", "É o gabarito de"] + (["Dado na tela (18b)"] if v2 else []),
-                         [[f"<code>{esc(x['rotulo'])}</code>", x["tela"], x["fixture"], x["gabarito"]] + ([x["tela_v2"]] if v2 else []) for x in rotulos], raw=True)
-    tab_casos = tabela(["Caso", "Classe", "Gabarito", "Rótulo na tela", "Rótulo no fixture", "Tela", "Fixture", "Mesmo rótulo", "p tela", "Selo tela", "p fixture", "Selo fixture",
-                        "Gatilho", "Divergência", "s tela", "s fixture"],
-                       [[f"<code>{esc(l['caso'])}</code>", l["classe"], f"<code>{esc(l['gabarito'])}</code>", f"<code>{esc(l['rotulo_tela'] or 'sem rótulo')}</code>",
-                         f"<code>{esc(l['rotulo_fixture'] or 'sem rótulo')}</code>", "certo" if l["acerto_tela"] else "errado", "certo" if l["acerto_fixture"] else "errado",
-                         "sim" if l["concordam"] else "não", fmt(l["p_tela"], 2), esc(l.get("selo_tela") or "—"), fmt(l["p_fixture"], 2), esc(l.get("selo_fixture") or "—"),
-                         "sim" if l["gatilho_tela"] else "não", "sim" if l["divergencia_tela"] else "não", fmt(l["segundos_tela"]), fmt(l["segundos_fixture"])] for l in casos], raw=True)
+                         + ([x["acerto_tela_v2"] if x["acerto_tela_v2"] is not None else "—", x["concordam_v2"] if x["concordam_v2"] is not None else "—"] if v2 else [])
+                         + ([x["acerto_tela_v3"], x["acerto_fixture_v3"], x["concordam_v3"]] if v3 else [])
+                         + ([x["acerto_tela_v4"], x["acerto_fixture_v4"], x["concordam_v4"]] if v4 else []) for x in por_classe])
+    tab_rotulos = tabela(["Rótulo", "Dado na tela", "Dado no fixture", "É o gabarito de"] + (["Dado na tela (18b)"] if v2 else []) + (["Dado na tela (18c)", "Dado no fixture (18c)"] if v3 else []) + (["Dado na tela (18d)", "Dado no fixture (18d)"] if v4 else []),
+                         [[f"<code>{esc(x['rotulo'])}</code>", x["tela"], x["fixture"], x["gabarito"]] + ([x["tela_v2"]] if v2 else []) + ([x["tela_v3"], x["fixture_v3"]] if v3 else []) + ([x["tela_v4"], x["fixture_v4"]] if v4 else []) for x in rotulos], raw=True)
+
+    def tabela_de_casos(lista: list[dict]) -> str:
+        return tabela(["Caso", "Classe", "Gabarito", "Rótulo na tela", "Rótulo no fixture", "Tela", "Fixture", "Mesmo rótulo", "p tela", "Selo tela", "p fixture", "Selo fixture",
+                       "Gatilho", "Divergência", "s tela", "s fixture"],
+                      [[f"<code>{esc(l['caso'])}</code>", l["classe"], f"<code>{esc(l['gabarito'])}</code>", f"<code>{esc(l['rotulo_tela'] or 'sem rótulo')}</code>",
+                        f"<code>{esc(l['rotulo_fixture'] or 'sem rótulo')}</code>", "certo" if l["acerto_tela"] else "errado", "certo" if l["acerto_fixture"] else "errado",
+                        "sim" if l["concordam"] else "não", fmt(l["p_tela"], 2), esc(l.get("selo_tela") or "—"), fmt(l["p_fixture"], 2), esc(l.get("selo_fixture") or "—"),
+                        "sim" if l["gatilho_tela"] else "não", "sim" if l["divergencia_tela"] else "não", fmt(l["segundos_tela"]), fmt(l["segundos_fixture"])] for l in lista], raw=True)
+
+    tab_casos = tabela_de_casos(list(casos_v4.values()) if v4 else list(casos_v3.values()) if v3 else casos)
     lead = (f'{"Sim" if dentro else "Não"}. Nos {r["casos"]} casos que reproduzem, o agente dá o mesmo rótulo na tela e no fixture em {r["concordam"]} ({fmt(100 * r["concordam"] / n)}%): '
-            f'acerta {r["acerto_tela"]} na tela e {r["acerto_fixture"]} no fixture; só a tela acerta em {r["b"]}, só o fixture em {r["c"]} (b + c = {r["discordantes"]}, '
-            f'limite da regra R2 = {r["limite_r2"]}: {"dentro" if dentro else "fora"} do limite; p = {fmt(r["p_mcnemar"], 3)}). '
+            f'acerta {r["acerto_tela"]} na tela e {r["acerto_fixture"]} no fixture; só a tela acerta em {r["b"]}, só o fixture em {r["c"]} '
+            f'(limite da regra R2 = {r["limite_r2"]} para os que a tela perde: {"dentro" if dentro else "fora"} do limite; p = {fmt(r["p_mcnemar"], 3)}). '
             + (f'Na tela o rótulo mais dado é <code>{esc(mais_tela["rotulo"])}</code>, em {mais_tela["tela"]} casos ({mais_tela["fixture"]} no fixture; gabarito de {mais_tela["gabarito"]}). ' if mais_tela else "")
             + f'{len(acima)} dos {r["casos"]} prompts da tela passam do limite de tokens da calibração.'
             + (f' Na repetição com o caso ao vivo revisado (corrida 18b), o mesmo rótulo sai em {r2["concordam"]} de {r2["casos"]} e a tela acerta {r2["acerto_tela"]} '
-               f'(b + c = {r2["discordantes"]}, {"dentro" if r2.get("dentro_do_limite_r2") else "fora"} do limite da regra R2).' if v2 else ""))
+               f'(perde {r2["c"]} para o fixture e ganha {r2["b"]}, {"dentro" if r2.get("dentro_do_limite_r2") else "fora"} do limite da regra R2).' if v2 else ""))
     leitura_ = leitura([
         *([f"<strong>Repetição com o caso ao vivo revisado (corrida 18b).</strong> A mesma causa passou de {r['concordam']} para {r2['concordam']} dos {r2['casos']} casos e o acerto na tela de "
-           f"{r['acerto_tela']} para {r2['acerto_tela']} (caso escrito: {r['acerto_fixture']} e {r2['acerto_fixture']}). Os casos em que só um lado acertou são {r2['discordantes']}, contra o limite {r2['limite_r2']}: a regra que compara tela e caso escrito (R2) "
+           f"{r['acerto_tela']} para {r2['acerto_tela']} (caso escrito: {r['acerto_fixture']} e {r2['acerto_fixture']}). A tela perde {r2['c']} casos para o caso escrito e ganha {r2['b']}, contra o limite de {r2['limite_r2']} perdidos: a regra que compara tela e caso escrito (R2) "
            f"{'passa a valer' if r2.get('dentro_do_limite_r2') else 'continua fora do limite'}. Caso a caso, {ganhos} passaram a acertar na tela e {perdas} deixaram de acertar; "
            f"a causa respondida na tela mudou em {sum(1 for c in comparacao if c['mudou'])} casos (tabela de comparação; blocos <code>tb_f4_tela_resumo</code> e <code>tb_f4_tela_casos</code> de <code>tela_v2.json</code>)."] if v2 else []),
-        (f"<strong>Regra que compara tela e caso escrito (R2) {'cumprida' if dentro else 'não cumprida'}.</strong> {rotulos_diferentes} casos recebem causas diferentes nos dois lados e em {r['discordantes']} só um lado acerta "
-         f"(bloco <code>tb_f4_tela_resumo</code>); o limite é {r['limite_r2']}. "
+        (f"<strong>Regra que compara tela e caso escrito (R2) {'cumprida' if dentro else 'não cumprida'}.</strong> {rotulos_diferentes} casos recebem causas diferentes nos dois lados; a tela perde {r['c']} para o caso escrito e ganha {r['b']} "
+         f"(bloco <code>tb_f4_tela_resumo</code>); o limite é de {r['limite_r2']} perdidos. "
          + ("" if dentro else "Pelo plano aprovado (regra R2), o molde do sintoma e o corte em código do que o modelo lê no caso ao vivo (poda) voltam para revisão antes da próxima noite com modelo.")),
         (f"<strong>A causa que a tela puxa.</strong> <code>{esc(mais_tela['rotulo'])}</code> sai {mais_tela['tela']} vezes na tela, {mais_tela['fixture']} no caso escrito, e é o gabarito de "
          f"{mais_tela['gabarito']} casos (tabela de causas): o caso ao vivo leva o modelo para uma causa que o caso escrito não sugere." if mais_tela else "<strong>Causas respondidas.</strong> Sem casos."),
@@ -2415,24 +2577,155 @@ def secao_tela(tela: dict | None, tela_v2: dict | None, road: dict, cartoes_corr
         f"então a FONTE fica declarada, não verificada. No caso escrito {sf.get('alto', 0)} casos têm selo alto, na tela {st.get('alto', 0)}.",
         f"<strong>Custo.</strong> {fmt(r['segundos_tela_mediana'])} s por caso na tela e {fmt(r['segundos_fixture_mediana'])} s no caso escrito (medianas); a trilha v2 da corrida tem {r['trilha_bytes']} bytes.",
     ])
+    # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) o bloco da 18c: cartões, os dois gráficos novos, a leitura e a comparação caso a caso com a 18b.
+    # ! Motivo: é a leitura que vale agora. Na 18c o prompt coube no limite e o que ainda separa a tela do caso escrito é a busca, e o Eric precisa ver isso antes dos números das corridas anteriores.
+    bloco_v3, comparacao_v3_html, kpis_antigos = "", "", kpis(itens_kpi)
+
+    def de(x: dict | None) -> str:
+        return f'{(x or {}).get("acertos", 0)} de {(x or {}).get("casos", 0)}'
+
+    itens_v3: list = []
+    leitura_v3 = ""
+    if v3:
+        n3 = r3["casos"] or 1
+        pcc3, pcc2 = v3.get("prompt_contra_calibracao") or {}, (v2.get("prompt_contra_calibracao") or {}) if v2 else {}
+        vc = v3.get("verbete_certo") or {"tela": {"presente": {"casos": 0, "acertos": 0}, "ausente": {"casos": 0, "acertos": 0}}, "fixture": {"presente": {"casos": 0, "acertos": 0}, "ausente": {"casos": 0, "acertos": 0}}}
+        vc2 = (v2.get("verbete_certo") if v2 else None) or vc
+        selo3, selo2 = v3.get("acerto_por_selo") or {}, (v2.get("acerto_por_selo") if v2 else None) or {}
+        dentro3 = bool(r3.get("dentro_do_limite_r2"))
+        mais_tela3 = max(rotulos, key=lambda x: x["tela_v3"] or 0) if rotulos else None
+        itens_v3 = [
+            ("Mesma causa na tela e no caso escrito (corrida 18c)", f'{r3["concordam"]} de {r3["casos"]}', f'{fmt(100 * r3["concordam"] / n3)}%; a tela perde {r3["c"]} e ganha {r3["b"]}; o limite é de {r3["limite_r2"]} perdidos (decisão 98): {"dentro" if dentro3 else "fora"}'),
+            ("Acerto na tela", f'{r3["acerto_tela"]} de {r3["casos"]}', f'{fmt(100 * r3["acerto_tela"] / n3)}%; no caso escrito {r3["acerto_fixture"]} de {r3["casos"]} ({fmt(100 * r3["acerto_fixture"] / n3)}%)'),
+            ("Com o verbete certo no contexto", de(vc["tela"]["presente"]), f'acertos na tela; sem ele, {de(vc["tela"]["ausente"])}'),
+            ("O verbete certo chega ao modelo", f'{vc["tela"]["presente"]["casos"]} de {r3["casos"]}', f'na tela; no caso escrito, em {vc["fixture"]["presente"]["casos"]} de {r3["casos"]}'),
+            ("Selo alto na tela", de(selo3.get("alto")), f'acertos; no selo baixo, {de(selo3.get("baixo"))}'),
+            ("Prompt da tela acima do limite", f'{len(pcc3.get("acima") or [])} de {r3["casos"]}', f'limite de {pcc3.get("limite_mais_10_pct")} tokens; o maior tem {pcc3.get("maximo_da_tela")}; na 18b eram {len(pcc2.get("acima") or [])}'),
+            ("Tempo por caso na tela", f'{fmt(r3["segundos_tela_mediana"])} s', f'mediana; na 18b, {fmt(r2["segundos_tela_mediana"])} s; no caso escrito, {fmt(r3["segundos_fixture_mediana"])} s' if v2 else f'mediana; no caso escrito, {fmt(r3["segundos_fixture_mediana"])} s'),
+        ]
+        mudou_fixture = sum(1 for c in comparacao_v3 if c["mudou_fixture"])
+        lead = (f'{"Sim" if dentro3 else "Não dentro do limite"}. Na corrida 18c, com o caso ao vivo encurtado, o agente dá a mesma causa na tela e no caso escrito em {r3["concordam"]} dos {r3["casos"]} casos ({fmt(100 * r3["concordam"] / n3)}%): '
+                f'acerta {r3["acerto_tela"]} na tela e {r3["acerto_fixture"]} no caso escrito; só a tela acerta em {r3["b"]}, só o caso escrito em {r3["c"]} (limite da regra R2 = {r3["limite_r2"]} para os que a tela perde, decisão 98; p = {fmt(r3["p_mcnemar"], 3)}). '
+                f'{len(pcc3.get("acima") or [])} dos {r3["casos"]} prompts da tela passam do limite de {pcc3.get("limite_mais_10_pct")} tokens.')
+        leitura_v3 = leitura([
+            f'<strong>O corte fez o que devia.</strong> Os {r3["casos"]} prompts ficaram dentro do limite de {pcc3.get("limite_mais_10_pct")} tokens, o maior com {pcc3.get("maximo_da_tela")} (na 18b, o maior tinha {pcc2.get("maximo_da_tela")}). O tempo por caso na tela caiu de {fmt(r2["segundos_tela_mediana"]) if v2 else "n/d"} s para {fmt(r3["segundos_tela_mediana"])} s. No caso escrito, que não encurtou, foi de {fmt(r2["segundos_fixture_mediana"]) if v2 else "n/d"} s para {fmt(r3["segundos_fixture_mediana"])} s: o ganho vem do prompt menor, não da versão do Ollama.',
+            f'<strong>A regra que compara os dois lados (R2) {"está dentro do limite" if dentro3 else "segue fora do limite"}.</strong> A tela perde {r3["c"]} casos para o caso escrito (eram {r2["c"] if v2 else "n/d"}) e ganha {r3["b"]}; o limite é de {r3["limite_r2"]} perdidos (decisão 98, fixada antes da corrida 18d; pela conta de antes, b + c = {r3["discordantes"]}). A mesma causa subiu de {r2["concordam"] if v2 else "n/d"} para {r3["concordam"]} dos {r3["casos"]}; o acerto na tela, de {r2["acerto_tela"] if v2 else "n/d"} para {r3["acerto_tela"]}; o do caso escrito, de {r2["acerto_fixture"] if v2 else "n/d"} para {r3["acerto_fixture"]}.',
+            f'<strong>O que ainda separa os dois lados é a busca.</strong> Com o verbete da causa certa entre os entregues, a tela acerta {de(vc["tela"]["presente"])}; sem ele, {de(vc["tela"]["ausente"])}. No caso escrito é parecido: {de(vc["fixture"]["presente"])} e {de(vc["fixture"]["ausente"])}. A diferença está em quantas vezes o verbete chega: {vc["tela"]["presente"]["casos"]} na tela e {vc["fixture"]["presente"]["casos"]} no caso escrito (na 18b, {vc2["tela"]["presente"]["casos"]} na tela). O Eric decidiu mexer na busca (ficha 47, decisão 97), e as corridas 18d, 21d e 18e medem o efeito.',
+            *([f'<strong>A causa que a tela puxa.</strong> <code>{esc(mais_tela3["rotulo"])}</code> sai {mais_tela3["tela_v3"]} vezes na tela, {mais_tela3["fixture_v3"]} no caso escrito, e é o gabarito de {mais_tela3["gabarito"]} casos: sem o verbete certo, é para ela que o modelo vai.'] if mais_tela3 else []),
+            f'<strong>O selo de confiança ficou mais útil.</strong> Com o prompt do tamanho da calibração, o selo alto acerta {de(selo3.get("alto"))}, o médio {de(selo3.get("medio"))} e o baixo {de(selo3.get("baixo"))}; na 18b eram {de(selo2.get("alto"))}, {de(selo2.get("medio"))} e {de(selo2.get("baixo"))}. São poucos casos: serve de triagem, não de barreira.',
+            f'<strong>Caso a caso, contra a 18b.</strong> {ganhos_v3} casos passaram a acertar na tela e {perdas_v3} deixaram de acertar; a causa respondida na tela mudou em {sum(1 for c in comparacao_v3 if c["mudou"])}. A 18c também trocou a versão do Ollama e a biblioteca (a de produção, depois do lote), e o caso escrito serve de controle: ali a causa mudou em {mudou_fixture} dos {r3["casos"]}.',
+        ])
+        bloco_v3 = f"""<h2>O que mudou de uma corrida para outra</h2>
+<p>A corrida 18 mediu um defeito do caso de entrada; a 18b corrigiu o caso, com o prompt acima do limite; a 18c encurtou o prompt até caber no limite do plano.</p>
+<div class="chart baixo"><canvas id="g-tela-corridas"></canvas></div>
+<h2>O verbete certo no contexto é o que mais pesa</h2>
+<p>Cada barra separa os casos em que o verbete da causa certa estava entre os três entregues ao modelo e os casos em que não estava.</p>
+<div class="chart baixo"><canvas id="g-tela-verbete"></canvas></div>
+{leitura_v3}"""
+        kpis_antigos = detalhes("As corridas 18 e 18b, em números", kpis(itens_kpi))
+        itens_kpi = itens_v3
+        comparacao_v3_html = detalhes(f"Corrida 18b contra a 18c, caso a caso ({len(comparacao_v3)} casos)", tabela(
+            ["Caso", "Gabarito", "Rótulo na tela (18b)", "Rótulo na tela (18c)", "Rótulo no caso escrito (18c)", "Tela 18b", "Tela 18c", "Rótulo da tela mudou"],
+            [[f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(c['tela_18b'] or 'sem rótulo')}</code>", f"<code>{esc(c['tela_18c'] or 'sem rótulo')}</code>",
+              f"<code>{esc(c['fixture_18c'] or 'sem rótulo')}</code>", "certo" if c["acerto_18b"] else "errado", "certo" if c["acerto_18c"] else "errado", "sim" if c["mudou"] else "não"] for c in comparacao_v3], raw=True))
+    comparacao_v4_html, ineditos_html, leitura_18c_html = "", "", ""
+    if v4:
+        n4 = r4["casos"] or 1
+        pcc4 = v4.get("prompt_contra_calibracao") or {}
+        vc4, selo4 = v4["verbete_certo"], v4.get("acerto_por_selo") or {}
+        vc3_ = (v3.get("verbete_certo") if v3 else None) or vc4
+        dentro4 = bool(r4.get("dentro_do_limite_r2"))
+        mudou_fixture4 = sum(1 for c in comparacao_v4 if c["mudou_fixture"])
+
+        def lista_de_casos(ids: list[str]) -> str:
+            return ", ".join(f"<code>{esc(c)}</code>" for c in ids) or "nenhum"
+
+        perdidos = [l for l in casos_v4.values() if l["acerto_fixture"] and not l["acerto_tela"]]
+        erram_os_dois = [l["caso"] for l in casos_v4.values() if not l["acerto_fixture"] and not l["acerto_tela"]]
+        pares: dict = {}
+        for l in perdidos:
+            pares.setdefault((l["gabarito"], l["rotulo_tela"]), []).append(l["caso"])
+        texto_perdidos = "; ".join(f"<code>{esc(g_)}</code> lido como <code>{esc(rt or 'sem rótulo')}</code> em {lista_de_casos(ids)}" for (g_, rt), ids in pares.items())
+        selos_perdidos = {l.get("selo_tela") for l in perdidos}
+        itens_v4 = [
+            ("A tela perde para o caso escrito (regra R2, corrida 18d)", f'{r4["c"]} de {r4["casos"]}', f'a tela perde {r4["c"]} e ganha {r4["b"]}; o limite é de {r4["limite_r2"]} perdidos (decisão 98): {"dentro" if dentro4 else "fora"}; pela soma dos dois lados, {r4["discordantes"]}'),
+            ("Acerto na tela", f'{r4["acerto_tela"]} de {r4["casos"]}', f'{fmt(100 * r4["acerto_tela"] / n4)}%; no caso escrito {r4["acerto_fixture"]} de {r4["casos"]} ({fmt(100 * r4["acerto_fixture"] / n4)}%); eram {r3["acerto_tela"] if v3 else "n/d"} na 18c'),
+            *([("Nos inéditos, que a busca nunca viu (corrida 18e)", f'{ri["acerto_tela"]} de {ri["casos"]} na tela', f'{ri["acerto_fixture"]} no caso escrito; a tela perde {ri["c"]} e ganha {ri["b"]}')] if ri else []),
+            ("O verbete certo chega ao modelo", f'{vc4["tela"]["presente"]["casos"]} de {r4["casos"]}', f'na tela (eram {vc3_["tela"]["presente"]["casos"]} na 18c); no caso escrito, em {vc4["fixture"]["presente"]["casos"]} de {r4["casos"]}'),
+            ("Com o verbete certo no contexto", de(vc4["tela"]["presente"]), f'acertos na tela; sem ele, {de(vc4["tela"]["ausente"])}'),
+            ("Selo alto na tela", de(selo4.get("alto")), f'acertos; no médio, {de(selo4.get("medio"))}; no baixo, {de(selo4.get("baixo"))}'),
+            ("Prompt da tela acima do limite", f'{len(pcc4.get("acima") or [])} de {r4["casos"]}', f'limite de {pcc4.get("limite_mais_10_pct")} tokens; o maior tem {pcc4.get("maximo_da_tela")}'),
+            ("Tempo por caso na tela", f'{fmt(r4["segundos_tela_mediana"])} s', f'mediana; na 18c, {fmt(r3["segundos_tela_mediana"])} s; no caso escrito, {fmt(r4["segundos_fixture_mediana"])} s' if v3 else f'mediana; no caso escrito, {fmt(r4["segundos_fixture_mediana"])} s'),
+        ]
+        lead = (f'{"Dentro do que a regra aceita" if dentro4 else "Ainda fora do limite"}. Na corrida 18d, com a busca lendo o que o caso mede contra a referência, o agente acerta {r4["acerto_tela"]} dos {r4["casos"]} na tela e {r4["acerto_fixture"]} no caso escrito; '
+                f'a tela perde {r4["c"]} casos para o caso escrito e ganha {r4["b"]} (limite da regra R2 = {r4["limite_r2"]} para os que a tela perde, decisão 98; pela soma dos dois lados, {r4["discordantes"]}; p = {fmt(r4["p_mcnemar"], 3)}). '
+                + (f'Nos {ri["casos"]} inéditos, que a busca nunca viu (corrida 18e), são {ri["acerto_tela"]} na tela e {ri["acerto_fixture"]} no caso escrito, e a tela perde {ri["c"]} e ganha {ri["b"]} (p = {fmt(ri["p_mcnemar"], 3)}).' if ri else ""))
+        itens_leitura_v4 = [
+            f'<strong>A regra que compara os dois lados (R2) {"está dentro do limite" if dentro4 else "segue fora do limite"}.</strong> A tela perde {r4["c"]} casos para o caso escrito (eram {r3["c"] if v3 else "n/d"} na 18c) e ganha {r4["b"]} (eram {r3["b"] if v3 else "n/d"}); o limite é de {r4["limite_r2"]} perdidos. É o limite exato, sem folga, e corridas iguais já variaram até {r4["limite_r2"]} casos. A leitura foi fixada antes da corrida, sem conhecer o resultado dela (ficha 48, decisão 98). Pela conta de antes, a soma dos dois lados daria {r4["discordantes"]}, e a regra ficaria fora pelo lado bom.',
+            f'<strong>O que mudou foi a busca.</strong> O verbete certo chega em {vc4["tela"]["presente"]["casos"]} dos {r4["casos"]} casos na tela (eram {vc3_["tela"]["presente"]["casos"]}) e em {vc4["fixture"]["presente"]["casos"]} no caso escrito. O acerto na tela foi de {r3["acerto_tela"] if v3 else "n/d"} para {r4["acerto_tela"]}, e o caso escrito ficou em {r4["acerto_fixture"]}, com a causa mudando em {mudou_fixture4} casos: ele é o controle. A diferença vem dos sinais, que ficam só do lado da tela. Isso não quer dizer que o modelo lê melhor da tela: o caso da tela leva uma medida contra a referência que o caso escrito não tem.',
+        ]
+        if ri:
+            vci = ine["verbete_certo"]
+            itens_leitura_v4.append(f'<strong>A conferência limpa (corrida 18e).</strong> Os sinais foram escritos olhando os {r4["casos"]} casos, então a conta deles pode estar favorecida. Nos {ri["casos"]} inéditos, que a busca nunca viu, o agente acerta {ri["acerto_tela"]} na tela e {ri["acerto_fixture"]} no caso escrito; a tela perde {ri["c"]} e ganha {ri["b"]}, e o verbete certo chega em {vci["tela"]["presente"]["casos"]} de {ri["casos"]} na tela, contra {vci["fixture"]["presente"]["casos"]} no caso escrito. São poucos casos: o teste pareado não separa os dois lados (p = {fmt(ri["p_mcnemar"], 3)}), e a conferência da ficha 46 ainda não foi feita. Depois desta leitura, esses casos não servem mais de conferência limpa para outro ajuste na busca.')
+        itens_leitura_v4 += [
+            f'<strong>O que a tela ainda perde.</strong> {texto_perdidos}{"; todos com selo baixo" if selos_perdidos == {"baixo"} else ""}. Erram também no caso escrito: {lista_de_casos(erram_os_dois)}.',
+            f'<strong>O selo de confiança.</strong> O selo alto acerta {de(selo4.get("alto"))}, o médio {de(selo4.get("medio"))} e o baixo {de(selo4.get("baixo"))}. Os limiares são os da corrida 16, sem recalibrar, e são poucos casos: serve de triagem, não de barreira.',
+            f'<strong>Caso a caso, contra a 18c.</strong> Passaram a acertar na tela {lista_de_casos(ganhos_v4)}, e deixou de acertar {lista_de_casos(perdas_v4)}; a causa respondida na tela mudou em {sum(1 for c in comparacao_v4 if c["mudou"])} casos. O prompt ficou dentro do limite nos {r4["casos"]}, com o maior em {pcc4.get("maximo_da_tela")} tokens, e o tempo na tela foi de {fmt(r3["segundos_tela_mediana"]) if v3 else "n/d"} s para {fmt(r4["segundos_tela_mediana"])} s; no caso escrito, que não mudou, de {fmt(r3["segundos_fixture_mediana"]) if v3 else "n/d"} s para {fmt(r4["segundos_fixture_mediana"])} s.',
+        ]
+        if ine and (ine.get("prompt_contra_calibracao") or {}).get("acima"):
+            pcci = ine["prompt_contra_calibracao"]
+            antes_i = {l["caso"]: l for l in ine["casos"]}
+            medidos = {l["caso"]: l for l in ((teto_prompt or {}).get("corridas") or {}).get("18e", {}).get("linhas", [])}
+            partes_i = []
+            for c_ in pcci["acima"]:
+                m_ = medidos.get(f"{c_}@tela") or {}
+                depois = m_.get("tokens_medidos") or m_.get("tokens_estimados")
+                partes_i.append(f'<code>{esc(c_)}</code> com {antes_i[c_]["tokens_entrada_tela"]} tokens' + (f', que caiu para {depois}' if depois else ""))
+            itens_leitura_v4.append(f'<strong>Dois prompts dos inéditos passaram do limite.</strong> {"; ".join(partes_i)}; o limite é {pcci.get("limite_mais_10_pct")}. A causa era a lista sem teto, quando a resposta muda inteira. Os dois erram nos dois lados, então a regra R2 não depende deles. O caso ao vivo ganhou um teto nas listas (decisão 99), sem corrida nova: os prompts das corridas 18d e 21d não mudaram, salvo o tempo medido na hora.')
+        leitura_v4 = leitura(itens_leitura_v4)
+        bloco_v3 = f"""<h2>A regra: o que a tela perde e o que ela ganha</h2>
+<p>A regra R2 aceita que a tela perca até {r4["limite_r2"]} casos para o caso escrito. Cada grupo é uma corrida; a última são os inéditos, que a busca nunca viu.</p>
+<div class="chart baixo"><canvas id="g-tela-regra"></canvas></div>
+<h2>O que mudou de uma corrida para outra</h2>
+<p>A corrida 18 mediu um defeito do caso de entrada; a 18b corrigiu o caso, com o prompt acima do limite; a 18c encurtou o prompt até caber no limite do plano; a 18d traduziu para a busca o que o caso mede contra a referência.</p>
+<div class="chart baixo"><canvas id="g-tela-corridas"></canvas></div>
+<h2>O verbete certo no contexto é o que mais pesa</h2>
+<p>Cada barra separa os casos em que o verbete da causa certa estava entre os três entregues ao modelo e os casos em que não estava, na corrida 18d.</p>
+<div class="chart baixo"><canvas id="g-tela-verbete"></canvas></div>
+{leitura_v4}"""
+        if v3:
+            leitura_18c_html = detalhes("A leitura da corrida 18c", kpis(itens_v3) + leitura_v3)
+        itens_kpi = itens_v4
+        comparacao_v4_html = detalhes(f"Corrida 18c contra a 18d, caso a caso ({len(comparacao_v4)} casos)", tabela(
+            ["Caso", "Gabarito", "Rótulo na tela (18c)", "Rótulo na tela (18d)", "Rótulo no caso escrito (18d)", "Tela 18c", "Tela 18d", "Rótulo da tela mudou"],
+            [[f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(c['tela_18c'] or 'sem rótulo')}</code>", f"<code>{esc(c['tela_18d'] or 'sem rótulo')}</code>",
+              f"<code>{esc(c['fixture_18d'] or 'sem rótulo')}</code>", "certo" if c["acerto_18c"] else "errado", "certo" if c["acerto_18d"] else "errado", "sim" if c["mudou"] else "não"] for c in comparacao_v4], raw=True))
+        if ine:
+            ineditos_html = detalhes(f"Caso a caso, nos inéditos, corrida 18e ({ri['casos']} casos)", tabela_de_casos(ine["casos"]))
     html_ = f'''<section id="tela" hidden>
 <h1>Tela e caso escrito: o agente dá o mesmo diagnóstico nos dois?</h1>
 <p class="lead">{lead}</p>
-{kpis(itens_kpi)}
+{kpis(itens_kpi) if v3 else kpis_antigos}
+{bloco_v3}
 <h2>Acerto e concordância por classe de defeito</h2>
 <p>Cada caso que reproduz foi diagnosticado duas vezes na mesma sessão do Ollama: lido da tela (roteiro, interceptação, corte em código do que o modelo lê e sintoma por molde) e lido do caso escrito. O gabarito entra só nesta leitura.</p>
 <div class="chart"><canvas id="g-tela-classe"></canvas></div>
 {tab_classe}
 <h2>Que causas cada lado responde</h2>
 <p>Quantas vezes cada causa foi respondida na tela e no caso escrito, contra quantas vezes ela é o gabarito.</p>
-<div class="chart"><canvas id="g-tela-rotulos"></canvas></div>
+<div class="chart alto"><canvas id="g-tela-rotulos"></canvas></div>
 {tab_rotulos}
-{detalhes(f"Caso a caso ({len(casos)} casos)", tab_casos)}
+{detalhes(f"Caso a caso, na corrida 18d ({r4['casos']} casos)" if v4 else f"Caso a caso, na corrida 18c ({r3['casos']} casos)" if v3 else f"Caso a caso ({len(casos)} casos)", tab_casos)}
+{ineditos_html}
+{comparacao_v4_html}
+{comparacao_v3_html}
 {detalhes(f"Corrida 18 contra a repetição 18b, caso a caso ({len(comparacao)} casos)", tab_comparacao) if v2 else ""}
-{detalhes(f"Prompts da tela acima do limite da calibração ({len(acima)})", "<p>" + ", ".join(f"<code>{esc(c)}</code>" for c in acima) + "</p>" if acima else "<p>nenhum</p>")}
+{kpis_antigos if v3 else ""}
+{detalhes(f"Prompts da tela acima do limite, na corrida 18 ({len(acima)})" if v3 else f"Prompts da tela acima do limite da calibração ({len(acima)})", "<p>" + ", ".join(f"<code>{esc(c)}</code>" for c in acima) + "</p>" if acima else "<p>nenhum</p>")}
 <h2>As corridas no roadmap</h2>
-{cartoes_corridas(road, numeros=["18", "18b"], sufixo="-tela")}
-{leitura_}
+{cartoes_corridas(road, numeros=["18", "18b", "18c", "18d", "18e"], sufixo="-tela")}
+{leitura_18c_html}
+{detalhes("A leitura das corridas 18 e 18b", leitura_) if v3 else leitura_}
 {fontes_}
 </section>'''
     return dados_js, html_
@@ -2701,30 +2994,37 @@ def secao_biblioteca(bibl: dict | None, road: dict, cartoes_corridas) -> tuple[d
 # Success aparece com o nome da corrida.
 # ! Motivo: a 21b roda com a correção da cura e é a leitura vigente do ensaio; a 21 é o registro de como o defeito apareceu, e o painel,
 # onde o Eric decide, tem de mostrar as duas, como a aba "Tela e fixture" faz com as corridas 18 e 18b.
-def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 90) secao_cenarios recebe também a leitura da 21c (cenarios_v3.json): os cartões e os gráficos passam a ela, e a comparação cenário a cenário é contra a 21b.
+# ! Motivo: a 21c e a 21b só diferem no tamanho do prompt, com a mesma versão do Ollama e a mesma biblioteca: é a comparação que mede o corte.
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 97) secao_cenarios recebe também a leitura da 21d (cenarios_v4.json), e a comparação cenário a cenário é contra a 21c.
+# ! Motivo: da 21c para a 21d só mudou a busca; é essa comparação que diz se os sinais novos mexeram nos dez cenários da Fase 5.
+def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_corridas, cen_v3: dict | None = None, cen_v4: dict | None = None) -> tuple[dict, str]:
     # ! Alteração de IA - Revisar: (05/11/2026) cartões, títulos e itens de leitura à vista reescritos com "chegou ao resultado (Task Success)" e "tempo até o resultado (MTTR)", sem Wilson nem reamostragem.
     # ! Motivo: o texto à vista trazia siglas e nomes de método estatístico que o Eric pediu para tirar; o título "Execuções sem Task Success" passou a "Execuções que não chegaram ao resultado" e o teste do painel foi ajustado.
     protocolo = ("<p>A linha de base manual da Fase 5 segue o protocolo em <code>Documentacao/memorial/5-metodo-e-ferramental/protocolo-linha-de-base-manual.md</code>: "
                  "três integrantes, cada um nos dez cenários numa ordem sorteada com semente fixa, com a falha ligada pelo ajudante "
                  "<code>linha_de_base_manual.py</code> (as mesmas funções da corrida) e a planilha <code>planilha-linha-de-base-manual.csv</code>.</p>")
     fontes_ = fontes([("<code>resultados_alvo/fase4/cenarios.json</code> e <code>.md</code> (<code>avaliar_fase4.py --cenarios</code>, com <code>--check</code>; blocos <code>tb_f4_cenarios_*</code>); "
-                       "a repetição com a correção da cura em <code>cenarios_v2.json</code> (<code>--nome cenarios_v2</code>)"),
+                       "a repetição com a correção da cura em <code>cenarios_v2.json</code> (<code>--nome cenarios_v2</code>) a repetição com o prompt dentro do limite em <code>cenarios_v3.json</code> (<code>--nome cenarios_v3</code>) e a repetição com os sinais novos da busca em <code>cenarios_v4.json</code> (<code>--nome cenarios_v4</code>)"),
                       ("<code>executar_fase4.py --modo cenarios</code> (catálogo <code>cenarios_fase4.CENARIOS_DO_ENSAIO</code>; cronômetro <code>mttr_monotonico</code>; "
-                       "conferência do diagnóstico <code>diagnostico_conferido</code>; relatórios v2 por execução em <code>fase4_ensaio/relatorios/</code> e <code>fase4_ensaio_v2/relatorios/</code>)"),
-                      "protocolo da linha de base manual; roadmap §2.13 e §2.14 (corridas 21 e 21b); plano aprovado da Fase 4, seções 3.9 e 5 (P6); fichas 35 e 36, decisão 79"])
+                       "conferência do diagnóstico <code>diagnostico_conferido</code>; relatórios v2 por execução em <code>fase4_ensaio/relatorios/</code>, <code>fase4_ensaio_v2/relatorios/</code>, <code>fase4_ensaio_v3/relatorios/</code> e <code>fase4_ensaio_v4/relatorios/</code>)"),
+                      "protocolo da linha de base manual; roadmap §2.13, §2.14, §2.17 e §2.20 (corridas 21, 21b, 21c e 21d); plano aprovado da Fase 4, seções 3.9 e 5 (P6); fichas 35, 36, 42 e 47, decisões 79, 90 e 97"])
     vazio = {"geral": None, "por_tipo": [], "por_cenario": []}
     if not cen_ or not (cen_.get("geral") or {}).get("n"):
         html_ = f'''<section id="cenarios" hidden>
 <h1>Cenários da Fase 5: quanto tempo o agente leva da detecção ao resultado e em quantos cenários acerta?</h1>
 <p class="lead">A corrida 21 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/cenarios.json</code>, gerado por <code>avaliar_fase4.py --cenarios</code> depois de <code>rodar_fase4.ps1 -Modo cenarios -Saida fase4_ensaio -Repeticoes 1</code> (pacote P6 do plano aprovado, com modelo, de dia).</p>
 {protocolo}
-{cartoes_corridas(road, numeros=["21", "21b"], sufixo="-cen")}
+{cartoes_corridas(road, numeros=["21", "21b", "21c", "21d"], sufixo="-cen")}
 {fontes_}
 </section>'''
         return vazio, html_
-    anterior = None
-    if cen_v2 and (cen_v2.get("geral") or {}).get("n"):
-        anterior, cen_ = cen_, cen_v2
+    corridas_cen = [(n_, c_) for n_, c_ in (("21", cen_), ("21b", cen_v2), ("21c", cen_v3), ("21d", cen_v4)) if c_ and (c_.get("geral") or {}).get("n")]
+    por_nome_cen = dict(corridas_cen)
+    nome_vig, cen_ = corridas_cen[-1]
+    nome_ant, anterior = corridas_cen[-2] if len(corridas_cen) > 1 else (None, None)
+    ROTULOS_DA_CORRIDA = {"21": "corrida 21", "21b": "corrida 21b, prompt acima do limite" if nome_vig == "21c" else "corrida 21b, com a correção da cura", "21c": "corrida 21c, prompt dentro do limite", "21d": "corrida 21d, com os sinais novos da busca"}
+    ARQUIVO_DA_CORRIDA = {"21": "cenarios.md", "21b": "cenarios_v2.md", "21c": "cenarios_v3.md", "21d": "cenarios_v4.md"}
     antes = {x["cenario"]: x for x in (anterior or {}).get("por_cenario") or []}
     g, t = cen_["geral"], cen_.get("tempo") or {}
     cond, det = cen_.get("condicoes") or {}, cen_.get("deteccao") or {}
@@ -2744,7 +3044,7 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
                 "por_tipo": [{k: x.get(k) for k in ("tipo", "n", "sucessos", "mttr_media_s")} for x in cen_.get("por_tipo") or []],
                 "por_cenario": [{**{k: x.get(k) for k in ("cenario", "tipo", "n", "sucessos", "mttr_media_s")}, "mttr_anterior": (antes.get(x["cenario"]) or {}).get("mttr_media_s")}
                                 for x in cen_.get("por_cenario") or []],
-                "duas_corridas": bool(anterior)}
+                "duas_corridas": bool(anterior), "rotulo_anterior": ROTULOS_DA_CORRIDA.get(nome_ant), "rotulo_vigente": ROTULOS_DA_CORRIDA.get(nome_vig)}
     itens_kpi = [("Chegou ao resultado (Task Success)", ts(g), f'{nd(g["task_success_pct"])}% das {g["n"]} execuções; margem de incerteza de {faixa(g["wilson_lo_pct"], g["wilson_hi_pct"], "%")}')]
     itens_kpi.append(("Tempo até o resultado (MTTR), média", f'{nd(g["mttr_media_s"])} s', f'margem de incerteza de {faixa(g["mttr_ic_lo_s"], g["mttr_ic_hi_s"], " s")}; mediana {nd(g["mttr_mediana_s"])} s'))
     for tipo, nome in (("contrato", "Contrato (ficha 35)"), ("localizador", "Localizador")):
@@ -2766,7 +3066,7 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
     # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) as execuções sem Task Success, com o rótulo e a falha da cura.
     # ! Motivo: na corrida 21 a tabela por cenário só mostrava o zero do login; quem decide pelo painel precisa ver que o diagnóstico acertou
     # e que a cura falhou, e a explicação fica no roadmap, mostrado no cartão da corrida.
-    sem_ts = [("21", x) for x in (anterior or {}).get("sem_task_success") or []] + [("21b" if anterior else "21", x) for x in cen_.get("sem_task_success") or []]
+    sem_ts = [(n_, x) for n_, c_ in corridas_cen for x in c_.get("sem_task_success") or []]
     bloco_sem = ""
     if sem_ts:
         tab_sem = tabela(["Corrida", "Cenário", "Repetição", "Tipo", "Detectou", "Rótulo do diagnóstico", "Causa esperada", "Falha da cura", "Segundos"],
@@ -2778,15 +3078,31 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
     if anterior:
         por = cen_.get("por_cenario") or []
         mesmo = sum(1 for x in por if (antes.get(x["cenario"]) or {}).get("rotulos") == x.get("rotulos"))
-        tab_duas = tabela(["Cenário", "Tipo", "Task Success 21", "Task Success 21b", "MTTR 21 (s)", "MTTR 21b (s)", "Segundos 21", "Segundos 21b", "Mesmo rótulo"],
+        tab_duas = tabela(["Cenário", "Tipo", f"Task Success {nome_ant}", f"Task Success {nome_vig}", f"MTTR {nome_ant} (s)", f"MTTR {nome_vig} (s)", f"Segundos {nome_ant}", f"Segundos {nome_vig}", "Mesmo rótulo"],
                           [[f"<code>{esc(x['cenario'])}</code>", esc(x["tipo"]), (antes.get(x["cenario"]) or {}).get("sucessos"), x["sucessos"], nd((antes.get(x["cenario"]) or {}).get("mttr_media_s")),
                             nd(x["mttr_media_s"]), nd((antes.get(x["cenario"]) or {}).get("segundos_media")), nd(x.get("segundos_media")),
                             "sim" if (antes.get(x["cenario"]) or {}).get("rotulos") == x.get("rotulos") else "não"] for x in por], raw=True)
-        bloco_duas = f'<h2>As duas corridas, cenário a cenário</h2>\n<p>A corrida 21, antes da correção da cura, e a 21b, depois dela: blocos <code>tb_f4_cenarios_por_cenario</code> de <code>cenarios.md</code> e <code>cenarios_v2.md</code>.</p>\n{tab_duas}'
-        itens_duas = [(f"<strong>As duas corridas.</strong> Na corrida 21 chegaram ao resultado {ts(anterior['geral'])} execuções e, na 21b, com os candidatos da cura verificados numa página refeita até o passo que falhou, {ts(g)}. "
+        explica = {"21b": "A corrida 21, antes da correção da cura, e a 21b, depois dela", "21c": "A corrida 21b, com o prompt acima do limite, e a 21c, com o prompt dentro dele, na mesma versão do Ollama e com a mesma biblioteca",
+                  "21d": "A corrida 21c e a 21d, com os sinais novos da busca, na mesma versão do Ollama e com a mesma biblioteca"}[nome_vig]
+        bloco_duas = f'<h2>As duas últimas corridas, cenário a cenário</h2>\n<p>{explica}: blocos <code>tb_f4_cenarios_por_cenario</code> de <code>{ARQUIVO_DA_CORRIDA[nome_ant]}</code> e <code>{ARQUIVO_DA_CORRIDA[nome_vig]}</code>.</p>\n{tab_duas}'
+        pcc_ant, pcc_vig = anterior.get("prompt") or {}, cen_.get("prompt") or {}
+        if nome_vig == "21d":
+            c21b, c21c = por_nome_cen.get("21b"), por_nome_cen.get("21c")
+            itens_duas.append(f"<strong>Os sinais novos da busca.</strong> Da 21c para a 21d só mudou a busca. Chegaram ao resultado {ts(anterior['geral'])} e {ts(g)}, com a mesma causa em {mesmo} de {len(por)} cenários. O tempo até o resultado foi de {nd(anterior['geral'].get('mttr_media_s'))} s para {nd(g.get('mttr_media_s'))} s em média, dentro da margem de uma repetição ({faixa(g['mttr_ic_lo_s'], g['mttr_ic_hi_s'], ' s')}), e o maior prompt, de {pcc_ant.get('maximo_da_tela')} para {pcc_vig.get('maximo_da_tela')} tokens, abaixo do limite de {pcc_vig.get('limite_mais_10_pct')}. Os sinais não mudaram os dez cenários: o verbete certo já chegava em quase todos. A explicação está no roadmap, §2.20.")
+            if c21b and c21c:
+                itens_duas.append(f"<strong>O corte do prompt.</strong> Da 21b para a 21c, o tempo até o resultado caiu de {nd(c21b['geral'].get('mttr_media_s'))} s para {nd(c21c['geral'].get('mttr_media_s'))} s em média, sem mudar nenhuma causa (roadmap, §2.17).")
+        else:
+            itens_duas = [(f"<strong>O corte do prompt.</strong> Da 21b para a 21c só mudou o tamanho do prompt: os prompts acima do limite de {pcc_vig.get('limite_mais_10_pct')} tokens foram de {len(pcc_ant.get('acima') or [])} para {len(pcc_vig.get('acima') or [])} dos {g['n']}, e o maior foi de {pcc_ant.get('maximo_da_tela')} para {pcc_vig.get('maximo_da_tela')} tokens. "
+                       f"O tempo até o resultado caiu de {nd(anterior['geral'].get('mttr_media_s'))} s para {nd(g.get('mttr_media_s'))} s em média, e o tempo por execução, de {nd((anterior.get('tempo') or {}).get('segundos_media'))} s para {nd(t.get('segundos_media'))} s. Chegaram ao resultado {ts(anterior['geral'])} e {ts(g)}, com a mesma causa em {mesmo} de {len(por)} cenários. A corrida 21, antes da correção da cura, teve {ts(corridas_cen[0][1]['geral'])}. A explicação está no roadmap, §2.13, §2.14 e §2.17.")
+                      if nome_vig == "21c" else
+                      (f"<strong>As duas corridas.</strong> Na corrida 21 chegaram ao resultado {ts(anterior['geral'])} execuções e, na 21b, com os candidatos da cura verificados numa página refeita até o passo que falhou, {ts(g)}. "
                        f"A mesma causa respondida em {mesmo} de {len(por)} cenários. O tempo por execução passou de {nd((anterior.get('tempo') or {}).get('segundos_media'))} s a {nd(t.get('segundos_media'))} s. A explicação está no roadmap, §2.13 e §2.14.")]
     ct, lc = por_tipo.get("contrato"), por_tipo.get("localizador")
-    abertura = (f'Na repetição do ensaio (corrida 21b: {cond.get("repeticoes")} repetição dos dez cenários da ficha 36, {esc(cond.get("modelo") or "")}, Ollama {esc(cond.get("versao_ollama") or "n/d")}), já com a correção da cura, '
+    abertura = (f'Na repetição com os sinais novos da busca (corrida 21d: {cond.get("repeticoes")} repetição dos dez cenários da ficha 36, {esc(cond.get("modelo") or "")}, Ollama {esc(cond.get("versao_ollama") or "n/d")}), '
+                f'o agente teve Task Success em {ts(g)} execuções, como na corrida 21c ({ts(anterior["geral"])}), e MTTR médio de ' if nome_vig == "21d" else
+                f'Na repetição com o prompt dentro do limite (corrida 21c: {cond.get("repeticoes")} repetição dos dez cenários da ficha 36, {esc(cond.get("modelo") or "")}, Ollama {esc(cond.get("versao_ollama") or "n/d")}), '
+                f'o agente teve Task Success em {ts(g)} execuções, como na corrida 21b ({ts(anterior["geral"])}), e MTTR médio de ' if nome_vig == "21c" else
+                f'Na repetição do ensaio (corrida 21b: {cond.get("repeticoes")} repetição dos dez cenários da ficha 36, {esc(cond.get("modelo") or "")}, Ollama {esc(cond.get("versao_ollama") or "n/d")}), já com a correção da cura, '
                 f'o agente teve Task Success em {ts(g)} execuções, contra {ts(anterior["geral"])} na corrida 21, e MTTR médio de ' if anterior else
                 f'No ensaio da corrida 21 ({cond.get("repeticoes")} repetição dos dez cenários da ficha 36, {esc(cond.get("modelo") or "")}, Ollama {esc(cond.get("versao_ollama") or "n/d")}), '
                 f'o agente teve Task Success em {ts(g)} execuções e MTTR médio de ')
@@ -2814,7 +3130,7 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
 {bloco_sem}
 {bloco_duas}
 <h2>Cenário a cenário</h2>
-<p>Blocos <code>tb_f4_cenarios_resumo</code>, <code>tb_f4_cenarios_por_tipo</code>, <code>tb_f4_cenarios_por_cenario</code> e <code>tb_f4_cenarios_tempo</code> de <code>{"cenarios_v2.md" if anterior else "cenarios.md"}</code>.</p>
+<p>Blocos <code>tb_f4_cenarios_resumo</code>, <code>tb_f4_cenarios_por_tipo</code>, <code>tb_f4_cenarios_por_cenario</code> e <code>tb_f4_cenarios_tempo</code> de <code>{ARQUIVO_DA_CORRIDA[nome_vig]}</code>.</p>
 {tab_cen}
 <h2>A ficha da falha de cada cenário</h2>
 <p>O que a detecção do agente acusou: a frase que o integrante recebe na sessão da linha de base manual.</p>
@@ -2822,7 +3138,7 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
 <h2>A linha de base manual</h2>
 {protocolo}
 <h2>As corridas no roadmap</h2>
-{cartoes_corridas(road, numeros=["21", "21b"], sufixo="-cen")}
+{cartoes_corridas(road, numeros=["21", "21b", "21c", "21d"], sufixo="-cen")}
 {leitura_}
 {fontes_}
 </section>'''
@@ -2831,10 +3147,142 @@ def secao_cenarios(cen_: dict | None, cen_v2: dict | None, road: dict, cartoes_c
 
 # ------------------------------------------------------------------ Fase 4: fechamento da fase (pacote P8)
 
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 91) a aba da corrida 23, lida de `resultados_alvo/fase4/experimento_prompt.json`: o acerto de cada condição contra a corrida 16 e os casos que só um lado acerta.
+# ! Motivo: a regra do painel é uma aba por análise, lida dos JSON; o número dos dois itens vai para o TCC e não decide nada na Fase 5, e a aba precisa dizer isso.
+def secao_experimento(exp: dict | None, road: dict, cartoes_corridas) -> tuple[dict, str]:
+    titulo = "Exemplar e rótulos: um exemplar resolvido ou os rótulos em palavras mudam o acerto?"
+    fontes_ = fontes(["<code>resultados_alvo/fase4/experimento_prompt.json</code> e <code>.md</code> (<code>avaliar_fase4.py --experimento_prompt</code>, com <code>--check</code>; blocos <code>tb_f4_exp_*</code>)",
+                      "<code>corridas_em_texto.py</code> (as duas condições, como transformação de texto do prompt pronto, conferidas em teste)", "registros da corrida 16 em <code>fase4_calibracao/k3/</code>",
+                      "roadmap §2.18; fichas 34 e 43; decisões 55, 79 e 91"])
+    if not exp or not exp.get("por_condicao"):
+        return {"base": None, "condicoes": []}, (f'<section id="experimento" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A corrida 23 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/experimento_prompt.json</code>, gerado por '
+                                                 f'<code>rodar_fase4.ps1 -Modo experimento_prompt -Saida fase4_experimento</code>.</p>\n{cartoes_corridas(road, numeros=["23"], sufixo="-exp")}\n{fontes_}\n</section>')
+    b, conds = exp["base"], exp["por_condicao"]
+    nomes = {"exemplar": "Exemplar resolvido", "rotulos_por_extenso": "Rótulos em palavras"}
+
+    def nome_de(x: dict) -> str:
+        return nomes.get(x["condicao"], x["condicao"])
+
+    dados_js = {"base": {"acerto_pct": b["acerto_pct"], "avaliacao_pct": b["avaliacao"]["acerto_pct"]},
+                "condicoes": [{"nome": nome_de(x), "acerto_pct": x["acerto_pct"], "avaliacao_pct": x["avaliacao"]["acerto_pct"], "b": x["b"], "c": x["c"]} for x in conds]}
+    itens_kpi = [("Corrida 16, sem mudança", f'{b["acertos"]} de {b["n"]}', f'{fmt(b["acerto_pct"])}%; nos casos de avaliação, {b["avaliacao"]["acertos"]} de {b["avaliacao"]["n"]}')]
+    for x in conds:
+        itens_kpi.append((nome_de(x), f'{x["acertos"]} de {x["n"]}', f'{fmt(x["acerto_pct"])}%; só ela acerta em {x["b"]}, só a corrida 16 em {x["c"]}; nos casos de avaliação, {x["avaliacao"]["acertos"]} de {x["avaliacao"]["n"]}'))
+    exemplar = next((x for x in conds if x["condicao"] == "exemplar"), None)
+    extenso = next((x for x in conds if x["condicao"] == "rotulos_por_extenso"), None)
+    fora_extenso = [c for c in exp.get("casos_que_mudaram") or [] if c["condicao"] == "rotulos_por_extenso" and "[" in str(c.get("rotulo_condicao"))]
+    tab_resumo = tabela(["Condição", "Casos", "Acertos", "Acerto (%)", "Acurácia balanceada (%)", "Só a condição acerta", "Só a corrida 16 acerta", "p (McNemar)", "Nos casos de avaliação", "Trocas de causa", "Fora da lista", "Tokens de entrada (mediana)", "Segundos (mediana)"],
+                        [["corrida 16", b["n"], b["acertos"], fmt(b["acerto_pct"]), fmt(b["acuracia_balanceada_pct"]), "", "", "", f'{b["avaliacao"]["acertos"]} de {b["avaliacao"]["n"]}', "", "", fmt(b["tokens_entrada_mediana"]), fmt(b["segundos_mediana"])]]
+                        + [[nome_de(x), x["n"], x["acertos"], fmt(x["acerto_pct"]), fmt(x["acuracia_balanceada_pct"]), x["b"], x["c"], fmt(x["p_mcnemar"], 3), f'{x["avaliacao"]["acertos"]} de {x["avaliacao"]["n"]}', x["trocas_de_rotulo"], x["fora_do_conjunto"] + x["sem_rotulo"],
+                            fmt(x["tokens_entrada_mediana"]), fmt(x["segundos_mediana"])] for x in conds])
+    tab_mudaram = tabela(["Condição", "Caso", "Gabarito", "Corrida 16", "Na condição", "Efeito"],
+                         [[esc(nomes.get(c["condicao"], c["condicao"])), f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(str(c['rotulo_base']))}</code>", f"<code>{esc(str(c['rotulo_condicao']))}</code>", esc(c["efeito"])]
+                          for c in exp.get("casos_que_mudaram") or []], raw=True)
+    lead = (f'Não dá para dizer que mudam. Nos {b["n"]} casos, a corrida 16 acertou {b["acertos"]} ({fmt(b["acerto_pct"])}%); '
+            + "; ".join(f'{nome_de(x).lower()}, {x["acertos"]} ({fmt(x["acerto_pct"])}%), com {x["b"]} casos que só ela acerta e {x["c"]} que só a corrida 16 acerta (p = {fmt(x["p_mcnemar"], 3)})' for x in conds)
+            + ". O prompt do agente continua congelado (decisão 91).")
+    saldo = "; ".join(f'{nome_de(x)}: {x["b"]} casos a favor e {x["c"]} contra, p = {fmt(x["p_mcnemar"], 3)}' for x in conds)
+    nos_36 = ", ".join(f'{nome_de(x).lower()} {x["avaliacao"]["acertos"]}' for x in conds)
+    itens_leitura = [f'<strong>Nenhuma das duas condições se separa do acaso.</strong> {saldo}. Nos {b["avaliacao"]["n"]} casos de avaliação, a corrida 16 acertou {b["avaliacao"]["acertos"]}, {nos_36}: diferença de poucos casos, dentro da variação entre corridas iguais.']
+    if exemplar:
+        itens_leitura.append(f"<strong>O exemplar custa tempo e não puxa a resposta.</strong> Ele leva o prompt de {fmt(b['tokens_entrada_mediana'])} para {fmt(exemplar['tokens_entrada_mediana'])} tokens (medianas). A causa do exemplar, <code>erro_interno_do_servidor</code>, foi respondida {exemplar['causa_do_exemplar_respondida']} vezes, contra {exemplar['causa_do_exemplar_na_base']} na corrida 16: o modelo não copia o exemplo.")
+    if extenso:
+        forma = extenso.get("forma") or {}
+        texto_fora = f" Em <code>{esc(fora_extenso[0]['caso'])}</code> a causa certa veio entre colchetes, com o título do verbete, e conta como fora da lista, como no leitor oficial." if fora_extenso else ""
+        itens_leitura.append(f"<strong>O modelo escreve como a lista pede.</strong> Com os rótulos em palavras, {forma.get('por_extenso', 0)} das {extenso['n']} respostas vieram em palavras, e {extenso['fora_do_conjunto']} ficaram fora da lista.{texto_fora} Isso quer dizer que mostrar o nome da causa em palavras a quem lê não pede mudar o prompt: um mapa em código basta.")
+    itens_leitura.append("<strong>Cuidado na comparação.</strong> A corrida 16 rodou em outra versão do Ollama, e o tempo não se compara com ela; o acerto, com o que a ponte de versão mostrou, sim. O número vai para o TCC e não muda nada na Fase 5.")
+    html_ = f'''<section id="experimento" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Acerto em cada condição</h2>
+<p>As duas condições rodaram nos mesmos 90 casos, com a mesma biblioteca e os mesmos três verbetes da corrida 16. Cada uma muda um item só, e o resto do prompt fica igual, byte a byte.</p>
+<div class="chart baixo"><canvas id="g-exp-acerto"></canvas></div>
+<h2>Os casos que só um lado acerta</h2>
+<div class="chart baixo"><canvas id="g-exp-trocas"></canvas></div>
+{leitura(itens_leitura)}
+{detalhes("Os números de cada condição (bloco tb_f4_exp_resumo)", tab_resumo)}
+{detalhes(f"Os casos que mudaram de certo para errado ou o contrário ({len(exp.get('casos_que_mudaram') or [])}; bloco tb_f4_exp_mudaram)", tab_mudaram)}
+<h2>A corrida no roadmap</h2>
+{cartoes_corridas(road, numeros=["23"], sufixo="-exp")}
+{fontes_}
+</section>'''
+    return dados_js, html_
+
+
 # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a aba da conferência dos 36 inéditos, lida de `resultados_alvo/fase4/conferencia_ineditos.json`.
 # ! Motivo: o Eric decide pelo painel, e a ficha 46 pede a conferência dele antes da corrida 24; a aba mostra cada caso com o gabarito, o que a corrida 17 viu
 # e a pré-análise, sem número nem trecho de caso digitado à mão. Sem gráfico: a leitura aqui é caso a caso.
-def secao_conferencia(conf: dict | None) -> tuple[dict, str]:
+# ! Alteração de IA - Revisar: (06/11/2026) a aba da corrida 24, lida de `resultados_alvo/fase4/ineditos.json`: o acerto, por classe e por nível, com e sem o verbete certo, o selo e a comparação com a corrida 18e.
+# ! Motivo: é a única medida da biblioteca final em casos que ela nunca viu, e o número vai para o TCC; a aba diz também o que ela não mede, porque há uma condição só e os dois conjuntos de casos não são pareados.
+def secao_ineditos_f4(ined: dict | None, road: dict, cartoes_corridas, analise3b: dict | None = None) -> tuple[dict, str]:
+    fontes_ = fontes(["<code>resultados_alvo/fase4/ineditos.json</code> e <code>.md</code> (<code>avaliar_fase4.py --ineditos</code>, com <code>--check</code>; blocos <code>tb_f4_ineditos_*</code>)",
+                      "<code>rodar_fase4.ps1 -Modo ineditos</code> (<code>corridas_em_texto.py</code>; casos em <code>banco_casos_ineditos_fase4.py</code>)",
+                      "<code>conferencia_ineditos_respostas.json</code> (a conferência do Eric); roadmap §2.22; decisões 92 e 100; ficha 46"])
+    titulo = "Inéditos em texto: a biblioteca final acerta em casos que nunca viu?"
+    if not ined or not ined.get("resumo"):
+        return {"resumo": None, "por_classe": [], "verbete": None}, (f'''<section id="ineditosf4" hidden>
+<h1>{titulo}</h1>
+<p class="lead">A corrida 24 ainda não foi rodada nesta máquina: falta <code>resultados_alvo/fase4/ineditos.json</code>, gerado por <code>avaliar_fase4.py --ineditos</code> depois de <code>rodar_fase4.ps1 -Modo ineditos -Saida fase4_ineditos</code>.</p>
+{cartoes_corridas(road, numeros=["24"], sufixo="-ined")}
+{fontes_}
+</section>''')
+    r, ref = ined["resumo"], ined.get("referencia") or {}
+    v, e = ined["verbete_certo"], ined.get("lado_escrito_18e") or {}
+    selos = {x["selo"]: x for x in ined["por_selo"]}
+    niveis = {x["nivel"]: x for x in ined["por_nivel"]}
+    por_classe = [{"classe": x["classe"], "nome": CLASSES.get(x["classe"], ""), "casos": x["casos"], "acertos": x["acertos"], "erros": x["erros"]} for x in ined["por_classe"]]
+    pior = min(por_classe, key=lambda x: x["acertos"] / (x["casos"] or 1))
+    erradas = Counter(c["rotulo"] for c in ined["casos"] if not c["acerto"]).most_common(3)
+    sem_verbete_erros = sum(1 for c in ined["casos"] if not c["acerto"] and not c["verbete_certo_no_contexto"])
+    qwen3b = next((l for l in ((analise3b or {}).get("ineditos") or {}).get("linhas", []) if l["modelo"] == "qwen2.5:7b" and l["biblioteca_epoca"] == 1), None)
+
+    def de(x: dict) -> str:
+        return f'{x["acertos"]} de {x["casos"]}'
+
+    tab_casos = tabela(["Caso", "Classe", "Nível", "Gabarito", "Rótulo", "Certo", "Probabilidade", "Selo", "Verbete certo no contexto"],
+                       [[f'<code>{esc(c["caso"])}</code>', c["classe"], c["nivel"], f'<code>{esc(c["gabarito"])}</code>', f'<code>{esc(c["rotulo"] or "sem rótulo")}</code>', "sim" if c["acerto"] else "não",
+                         fmt(c["p_rotulo"], 3), esc(c.get("selo") or "n/d"), "sim" if c["verbete_certo_no_contexto"] else "não"] for c in ined["casos"]], raw=True)
+    tab_nivel = tabela(["Nível", "Casos", "Acertos", "Erros"], [[x["nivel"], x["casos"], x["acertos"], x["erros"]] for x in ined["por_nivel"]])
+    itens_kpi = [("Acerto nos inéditos", f'{r["acertos"]} de {r["casos"]}', f'{fmt(r["acerto_pct"])}%; margem de incerteza de {fmt(r["wilson_lo_pct"])} a {fmt(r["wilson_hi_pct"])}%'),
+                 ("Nos casos de avaliação", f'{ref.get("acertos")} de {ref.get("casos")}', f'{fmt(ref.get("acerto_pct"))}%; corrida 22, mesma biblioteca; não são os mesmos casos'),
+                 ("Com o verbete certo no contexto", de(v["presente"]), f'sem ele, {de(v["ausente"])}; ele chega em {v["presente"]["casos"]} de {r["casos"]}'),
+                 (f'Classe mais fraca: {pior["nome"]}', f'{pior["acertos"]} de {pior["casos"]}', "as outras classes ficam de 4 a 6 de 6" if all(x["acertos"] >= 4 for x in por_classe if x is not pior) else "por classe, na tabela"),
+                 ("Selo alto", de(selos["alto"]), f'no médio, {de(selos["medio"])}; no baixo, {de(selos["baixo"])}'),
+                 ("Lidos duas vezes em texto", f'{e.get("mesmo_rotulo")} de {e.get("casos")}', "com o mesmo rótulo na corrida 18e")]
+    lead = (f'Menos que nos casos de avaliação. A biblioteca de produção acerta {r["acertos"]} dos {r["casos"]} inéditos ({fmt(r["acerto_pct"])}%; margem de {fmt(r["wilson_lo_pct"])} a {fmt(r["wilson_hi_pct"])}%), contra {ref.get("acertos")} de {ref.get("casos")} nos casos de avaliação (corrida 22). '
+            f'Com o verbete certo no contexto são {de(v["presente"])}; sem ele, {de(v["ausente"])}.')
+    leitura_ = leitura([
+        '<strong>A diferença não mede só a biblioteca.</strong> São conjuntos diferentes, escritos por autores diferentes, então não há comparação caso a caso.' + (f' O número fica perto do que a Fase 3-B mediu em outros 36 inéditos: {qwen3b["acertos"]} de {qwen3b["n"]} com a primeira biblioteca do mesmo modelo.' if qwen3b else ""),
+        f'<strong>O verbete certo pesa de novo.</strong> Em texto ele chega em {v["presente"]["casos"]} dos {r["casos"]} casos, porque os sinais da busca (decisão 97) só existem na tela, e {sem_verbete_erros} dos {r["casos"] - r["acertos"]} erros são de casos sem ele.',
+        f'<strong>Onde erra.</strong> {pior["nome"].capitalize()} faz {de(pior)}; o nível 3, feito para enganar, {de(niveis[3])}, contra {de(niveis[1])} no nível 1 e {de(niveis[2])} no nível 2. As respostas erradas mais comuns são ' + ", ".join(f"<code>{esc(a)}</code> ({n})" for a, n in erradas) + ".",
+        f'<strong>A repetição bate.</strong> Os {e.get("casos")} casos que a corrida 18e também leu em texto deram o mesmo rótulo em {e.get("mesmo_rotulo")}. Lidos da tela, os mesmos casos fazem {e.get("acertos_tela")}, contra {e.get("acertos_escrito")} em texto: é o efeito dos sinais da busca, e só nos casos que têm tela.',
+        f'<strong>O selo.</strong> O alto acerta {de(selos["alto"])}, o médio {de(selos["medio"])} e o baixo {de(selos["baixo"])}, com os limiares da corrida 16: serve de triagem, não de barreira.',
+        "<strong>O que esta corrida não diz.</strong> Há uma condição só, a biblioteca final: como estes casos não foram lidos sem biblioteca, ela não diz quanto a biblioteca ajuda neles. A conferência dos casos seguiu as recomendações do Claude, e três tensões ficaram aceitas (decisão 100).",
+    ])
+    html_ = f'''<section id="ineditosf4" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Acerto por classe de defeito</h2>
+<p>Seis casos por classe, lidos em texto, com a biblioteca de produção (corrida 24).</p>
+<div class="chart"><canvas id="g-ined-classe"></canvas></div>
+<h2>O verbete certo no contexto</h2>
+<p>Os casos em que o verbete da causa certa estava entre os três entregues ao modelo e os casos em que não estava.</p>
+<div class="chart baixo"><canvas id="g-ined-verbete"></canvas></div>
+{leitura_}
+{detalhes(f"Caso a caso ({r['casos']} casos)", tab_casos)}
+{detalhes("Por nível", tab_nivel)}
+<h2>A corrida no roadmap</h2>
+{cartoes_corridas(road, numeros=["24"], sufixo="-ined")}
+{fontes_}
+</section>'''
+    return {"resumo": {k: r.get(k) for k in ("casos", "acertos", "acerto_pct", "wilson_lo_pct", "wilson_hi_pct")}, "por_classe": por_classe, "verbete": v}, html_
+
+
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 100) a aba lê também as respostas do Eric: cada caso ganha a resposta, e os cartões, o primeiro parágrafo e a leitura passam a dizer que os casos foram conferidos.
+# ! Motivo: a ficha 44 nasceu de a conferência não estar registrada; depois da resposta, a aba diria "nenhuma pessoa os conferiu ainda". Sem o arquivo, ela fica como era.
+def secao_conferencia(conf: dict | None, respostas: dict | None = None) -> tuple[dict, str]:
     if not conf:
         return {}, ('<section id="conferencia" hidden>\n<h1>Conferência dos inéditos: os casos da corrida 24 estão certos?</h1>\n'
                     '<p class="lead">O documento ainda não foi gerado: falta <code>resultados_alvo/fase4/conferencia_ineditos.json</code>, que sai de <code>gerar_conferencia_ineditos.py</code>.</p>\n</section>')
@@ -2856,6 +3304,8 @@ def secao_conferencia(conf: dict | None) -> tuple[dict, str]:
         else:
             linhas.append(["Pré-análise", "nada a apontar"])
         linhas.append(["Onde a pré-análise leu", x.get("evidencia") or "n/d"])
+        if respostas:
+            linhas.append(["Resposta do Eric", respostas["respostas"].get(x["caso"]) or respostas["outros"]])
         marca = chip("nao_cumprida", "para olhar") if x["veredito"] == "ver" else chip("adotado", "sem apontamento")
         return (f'<details><summary><code>{esc(x["caso"])}</code> classe {esc(str(x["classe"]))}, nível {esc(str(x["nivel"]))}: <code>{esc(g["causa_raiz"])}</code> {marca}</summary>'
                 # as aspas também são escapadas: a árvore da tela traz texto como id="modalDetalheTitulo", que seria lido como um id repetido da página
@@ -2866,11 +3316,17 @@ def secao_conferencia(conf: dict | None) -> tuple[dict, str]:
                         [[f'<code>{esc(x["caso"])}</code>', f'<code>{esc(x["gabarito"]["causa_raiz"])}</code>', f'<code>{esc(x["causa_vizinha"])}</code>' if x.get("causa_vizinha") else "nenhuma", esc(x["o_que_olhar"])]
                          for x in para_olhar], raw=True) if para_olhar else "<p>Nenhum caso apontado.</p>"
     classes = tabela(["Classe", "Casos", "Reproduzem na tela", "Sem apontamento", "Para olhar"], [[x["classe"], x["casos"], x["reproduzem"], x["ok"], x["ver"]] for x in conf["por_classe"]])
-    itens_kpi = [("Casos", str(r["casos"]), f'{len(conf["por_classe"])} classes; nenhuma pessoa conferiu ainda'), ("Reproduzem na tela", f'{r["reproduzem"]} de {r["casos"]}', f'corrida 17; {r["fora_da_tela"]} ficam fora da tela'),
+    n_ver = len((respostas or {}).get("respostas") or {})
+    mudaram = (respostas or {}).get("mudancas") or []
+    itens_kpi = [("Casos", str(r["casos"]), f'{len(conf["por_classe"])} classes; ' + (f'conferidos pelo Eric, {len(mudaram)} mudaram' if respostas else "nenhuma pessoa conferiu ainda")), ("Reproduzem na tela", f'{r["reproduzem"]} de {r["casos"]}', f'corrida 17; {r["fora_da_tela"]} ficam fora da tela'),
                  ("Sem apontamento", str(r["ok"]), "pré-análise do Claude, só lendo o código"), ("Para olhar", str(r["ver"]), "a pré-análise aponta uma dúvida")]
+    lead_ = (f'Conferidos. O Eric leu os {n_ver} apontados pela pré-análise, um a um, e passou os olhos nos outros {r["casos"] - n_ver}: {"nenhum caso mudou" if not mudaram else f"{len(mudaram)} mudaram"} (ficha 46, decisão 100). A corrida 24 mede a biblioteca final nestes {r["casos"]} casos, na aba "Inéditos em texto". As recomendações que ele viu foram escritas pelo Claude, que já conhecia os resultados da corrida 18e, e ele as seguiu em todos os casos; isso fica declarado.' if respostas else
+             f'A corrida 24 vai medir a biblioteca final nestes {r["casos"]} casos, e nenhuma pessoa os conferiu ainda. A pré-análise, de um agente do Claude que só leu o código, não aponta nada em {r["ok"]} e aponta {r["ver"]}. Ela indica onde olhar; quem confere é você, e a resposta vai na ficha 46.')
+    item_mudar = ("<strong>Nenhum texto mudou</strong>, então nenhuma corrida se repete, e o lado escrito da corrida 18e vale como rodou." if respostas and not mudaram else
+                  f"<strong>Mudar o texto de um caso</strong> não mexe nas corridas 17, 18c, 18d, 21c, 21d e 23, porque nenhuma delas lê esse texto com o modelo. A corrida 18e leu, no caso escrito, os {r['reproduzem']} que reproduzem: o caso que mudar roda de novo. O que for trocado é refeito e conferido de novo por script antes da corrida 24.")
     html_ = f"""<section id="conferencia" hidden>
 <h1>Conferência dos inéditos: os {r["casos"]} casos da corrida 24 estão certos?</h1>
-<p class="lead">A corrida 24 vai medir a biblioteca final nestes {r["casos"]} casos, e nenhuma pessoa os conferiu ainda. A pré-análise, de um agente do Claude que só leu o código, não aponta nada em {r["ok"]} e aponta {r["ver"]}. Ela indica onde olhar; quem confere é você, e a resposta vai na ficha 46.</p>
+<p class="lead">{lead_}</p>
 {kpis(itens_kpi)}
 <h2>Os casos para olhar</h2>
 <p>Nestes, a pré-análise acha que outra causa da lista também caberia, ou que o sistema não produz o que o caso descreve.</p>
@@ -2881,9 +3337,9 @@ def secao_conferencia(conf: dict | None) -> tuple[dict, str]:
 {leitura([
     "<strong>A pergunta de cada caso:</strong> a causa do gabarito é a leitura certa do que o corpo e o sintoma mostram? Um caso ruim mede o modelo contra algo que o sistema não produz, ou contra uma resposta com mais de uma leitura honesta.",
     "<strong>Na corrida 17</strong> diz o que a falha injetada fez de verdade: <em>reproduz</em> quando a chamada à CobaiaAPI saiu do normal na tela; <em>fora</em> quando a rota não tem tela ou o caso é um cenário descrito, sem modo de falha.",
-    "<strong>Mudar o texto de um caso</strong> não mexe nas corridas 17, 18c, 21c e 23, porque nenhuma delas lê esse texto com o modelo. O que for trocado é refeito e conferido de novo por script antes da corrida 24.",
+    item_mudar,
 ])}
-{fontes(["<code>resultados_alvo/fase4/conferencia_ineditos.json</code> e <code>.md</code> (<code>gerar_conferencia_ineditos.py</code>, com <code>--check</code>)", "<code>banco_casos_ineditos_fase4.py</code>", "<code>reproducibilidade_ineditos.json</code> (corrida 17)", "<code>conferencia_ineditos_preanalise.json</code> (pré-análise do Claude)", "decisão 92 e ficha 46"])}
+{fontes(["<code>resultados_alvo/fase4/conferencia_ineditos.json</code> e <code>.md</code> (<code>gerar_conferencia_ineditos.py</code>, com <code>--check</code>)", "<code>banco_casos_ineditos_fase4.py</code>", "<code>reproducibilidade_ineditos.json</code> (corrida 17)", "<code>conferencia_ineditos_preanalise.json</code> (pré-análise do Claude)", "<code>conferencia_ineditos_respostas.json</code> (as respostas do Eric)", "decisões 92 e 100 e ficha 46"])}
 </section>"""
     return {}, html_
 
@@ -2926,7 +3382,7 @@ def _lista_em_frase(itens: list[str]) -> str:
 
 
 def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, tela: dict | None = None, cura: dict | None = None, cenarios: dict | None = None, revisao: dict | None = None,
-                        road: dict | None = None, cartoes_corridas=None) -> tuple[dict, str]:
+                        road: dict | None = None, cartoes_corridas=None, corrida_tela: str = "18b", corrida_cenarios: str = "21b") -> tuple[dict, str]:
     # ! Alteração de IA - Revisar: (05/11/2026) três cartões (tela, cura, cenários) reescritos sem "b + c", "rótulo", MTTR e Task Success soltos.
     # ! Motivo: o texto à vista trazia siglas que o Eric pediu para tirar; os números são os mesmos, lidos dos mesmos JSON.
     titulo = "Fechamento da Fase 4: o agente na tela fez o que o plano pediu?"
@@ -2956,22 +3412,25 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
                  ("Não cumpridas", str(cont["nao"]), " e ".join(nomes_nao) or "nenhuma")]
     if tela:
         r = tela["resumo"]
-        itens_kpi.append(("Mesma causa na tela e no caso escrito", f'{r["concordam"]} de {r["casos"]}', f'corrida 18b; só um lado acerta em {r["discordantes"]}, limite {r["limite_r2"]}; limitação declarada'))
+        itens_kpi.append(("Mesma causa na tela e no caso escrito", f'{r["concordam"]} de {r["casos"]}', f'corrida {corrida_tela}; a tela perde {r["c"]} e ganha {r["b"]}, limite de {r["limite_r2"]} perdidos (decisão 98): ' + ("dentro" if r.get("dentro_do_limite_r2") else "fora; limitação declarada")))
     if cura:
         r = cura["resumo"]
         itens_kpi.append(("Quebras curadas em código", f'{r["curadas"]} de {r["execucoes"]}', f'corrida 19, sem modelo; mediana {fmt(r["mttr_mediana_s"], 3)} s até o resultado; os 100% vêm do desenho'))
     if cenarios:
         g = cenarios["geral"]
-        itens_kpi.append(("Cenários que chegaram ao resultado (Task Success)", f'{g["sucessos"]} de {g["n"]}', f'corrida 21b; média de {fmt(g["mttr_media_s"], 1)} s até o resultado; uma repetição, sem linha de base'))
+        itens_kpi.append(("Cenários que chegaram ao resultado (Task Success)", f'{g["sucessos"]} de {g["n"]}', f'corrida {corrida_cenarios}; média de {fmt(g["mttr_media_s"], 1)} s até o resultado; uma repetição, sem linha de base'))
     if revisao:
         r = revisao["resumo"]
         itens_kpi.append(("Medida com revisor humano", "em aberto", f'{r["respostas_do_revisor"]} resposta do Eric e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
     if faltam:
         itens_kpi.append(("Corridas que faltam antes da Fase 5", str(len(faltam)), f'{_lista_em_frase(faltam)}, pedidas pelas respostas às fichas 42 a 44'))
     itens_kpi.append(("Decisões do Eric em aberto", str(len(abertas)), "fichas na aba Pendências; não impedem a Fase 5" if abertas else "nenhuma ficha aberta"))
-    resposta = (f'Em parte. Das {len(linhas)} regras, {cont["cumprida"]} {"foi cumprida" if cont["cumprida"] == 1 else "foram cumpridas"} sem ressalva, {cont["ressalva"]} com ressalva'
+    # ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a resposta deixa de dizer "em parte" e "0 não: nenhuma" quando nenhuma regra ficou de fora.
+    # ! Motivo: a regra R2 fechou na corrida 18d e a tabela ficou sem regra não cumprida; o que falta é a medida com revisor humano e as corridas, que a frase diz em seguida.
+    resposta = (f'{"Em parte" if cont["nao"] else "Nas regras, sim"}. Das {len(linhas)} regras, {cont["cumprida"]} {"foi cumprida" if cont["cumprida"] == 1 else "foram cumpridas"} sem ressalva, {cont["ressalva"]} com ressalva'
                 + (f', {cont["medida"]} só medida' if cont["medida"] else "")
-                + f' e {cont["nao"]} não: {" e ".join(nomes_nao) or "nenhuma"}. A medida com revisor humano da especificação da trilha está em aberto: será feita depois da Pós-Fase 4 (decisão 95).'
+                + (f' e {cont["nao"]} não: {" e ".join(nomes_nao)}' if cont["nao"] else ", e nenhuma ficou de fora")
+                + '. A medida com revisor humano da especificação da trilha está em aberto: será feita depois da Pós-Fase 4 (decisão 95).'
                 + ((f' Falta {len(abertas)} decisão do Eric, que não impede a Fase 5.' if len(abertas) == 1 else f' Faltam {len(abertas)} decisões do Eric, que não impedem a Fase 5.') if abertas else "")
                 + (f' Antes da Fase 5 faltam as corridas {_lista_em_frase(faltam)}, e as leituras delas podem mudar estes números.' if faltam else ""))
     html_ = f'''<section id="fechamentof4" hidden>
@@ -2989,7 +3448,7 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
 {detalhes("Limitações declaradas (relatório, seção 12)", md_doc_para_html(secs.get("12", "")))}
 {detalhes("O que a Fase 4 entrega à Fase 5 (relatório, seção 11)", md_doc_para_html(secs.get("11", "")))}
 {detalhes("O que a próxima versão do documento do TCC precisa carregar (relatório, seção 15)", md_doc_para_html(secs.get("15", "")))}
-{fontes(["<code>3-resultados-e-analises/fase-4-relatorio.md</code>, seções 1, 10, 11, 12, 13 e 15, com os blocos <code>tb_f4_*</code> colados por <code>avaliar_fase4.py --colar</code>", "<code>resultados_alvo/fase4/tela_v2.json</code>, <code>cura.json</code>, <code>cenarios_v2.json</code> e <code>leitura_revisao_trilha.json</code>", "<code>pendencias.md</code> (fichas abertas)", "<code>roadmap.md</code>, §2 (as corridas que faltam, pelo estado)", "anexo de <code>claude-memoria/plano-aprovado-fase-4.md</code> (desvios do plano)"])}
+{fontes(["<code>3-resultados-e-analises/fase-4-relatorio.md</code>, seções 1, 10, 11, 12, 13 e 15, com os blocos <code>tb_f4_*</code> colados por <code>avaliar_fase4.py --colar</code>", "<code>resultados_alvo/fase4/tela_v4.json</code>, <code>cura.json</code>, <code>cenarios_v4.json</code> e <code>leitura_revisao_trilha.json</code>", "<code>pendencias.md</code> (fichas abertas)", "<code>roadmap.md</code>, §2 (as corridas que faltam, pelo estado)", "anexo de <code>claude-memoria/plano-aprovado-fase-4.md</code> (desvios do plano)"])}
 </section>'''
     return {"contagem": dict(cont), "fichas_abertas": len(abertas)}, html_
 
@@ -3229,18 +3688,22 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("reproducao", d, h))
     d, h = secao_calibracao(ctx.get("calibracao"), ctx.get("limiares"), road, ctx["cartoes_corridas"])
     partes.append(("calibracao", d, h))
-    d, h = secao_tela(ctx.get("tela"), ctx.get("tela_v2"), road, ctx["cartoes_corridas"])
+    d, h = secao_tela(ctx.get("tela"), ctx.get("tela_v2"), road, ctx["cartoes_corridas"], tela_v3=ctx.get("tela_v3"), tela_v4=ctx.get("tela_v4"), tela_ineditos=ctx.get("tela_ineditos"), teto_prompt=ctx.get("teto_prompt"))
     partes.append(("tela", d, h))
     d, h = secao_cura(ctx.get("cura"), road, ctx["cartoes_corridas"])
     partes.append(("cura", d, h))
     d, h = secao_biblioteca(ctx.get("biblioteca"), road, ctx["cartoes_corridas"])
     partes.append(("biblioteca", d, h))
-    d, h = secao_cenarios(ctx.get("cenarios"), ctx.get("cenarios_v2"), road, ctx["cartoes_corridas"])
+    d, h = secao_cenarios(ctx.get("cenarios"), ctx.get("cenarios_v2"), road, ctx["cartoes_corridas"], cen_v3=ctx.get("cenarios_v3"), cen_v4=ctx.get("cenarios_v4"))
     partes.append(("cenarios", d, h))
     d, h = secao_trilha(ctx.get("trilha"), road, ctx["cartoes_corridas"], revisao_preenchida=bool(ctx.get("revisao_trilha_preenchida")), rev=ctx.get("revisao_trilha"))
     partes.append(("trilha", d, h))
-    d, h = secao_conferencia(ctx.get("conferencia_ineditos"))
+    d, h = secao_experimento(ctx.get("experimento_prompt"), road, ctx["cartoes_corridas"])
+    partes.append(("experimento", d, h))
+    d, h = secao_conferencia(ctx.get("conferencia_ineditos"), ctx.get("conferencia_respostas"))
     partes.append(("conferencia", d, h))
-    d, h = secao_fechamento_f4(ctx.get("relatorio_f4"), ctx.get("pend", []), ctx["md_doc_para_html"], tela=ctx.get("tela_v2"), cura=ctx.get("cura"), cenarios=ctx.get("cenarios_v2"), revisao=ctx.get("revisao_trilha"), road=road, cartoes_corridas=ctx["cartoes_corridas"])
+    d, h = secao_ineditos_f4(ctx.get("ineditos_f4"), road, ctx["cartoes_corridas"], ctx.get("analise3b"))
+    partes.append(("ineditosf4", d, h))
+    d, h = secao_fechamento_f4(ctx.get("relatorio_f4"), ctx.get("pend", []), ctx["md_doc_para_html"], tela=ctx.get("tela_v4") or ctx.get("tela_v3") or ctx.get("tela_v2"), cura=ctx.get("cura"), cenarios=ctx.get("cenarios_v4") or ctx.get("cenarios_v3") or ctx.get("cenarios_v2"), revisao=ctx.get("revisao_trilha"), road=road, cartoes_corridas=ctx["cartoes_corridas"], corrida_tela="18d" if ctx.get("tela_v4") else "18c" if ctx.get("tela_v3") else "18b", corrida_cenarios="21d" if ctx.get("cenarios_v4") else "21c" if ctx.get("cenarios_v3") else "21b")
     partes.append(("fechamentof4", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

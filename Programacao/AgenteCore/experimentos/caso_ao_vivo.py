@@ -91,7 +91,7 @@ def diff_arvore(referencia: str, atual: str) -> dict:
 # da corrida 18b passaram disso, o maior com 2034; a árvore era o maior bloco do caso, cerca de 1700 caracteres, quase todos
 # iguais à referência, e 83,1% do tempo do diagnóstico (mediana da corrida 21b) é o modelo lendo o prompt. O corte não acrescenta
 # frase nenhuma: o molde perde texto, que era a condição da decisão 90 ao rever a 82.
-VERSAO_DO_CASO = 3  # 1: pacote P2 (corrida 18); 2: ficha 37 (corrida 18b); 3: decisão 90 (corridas 18c e 21c)
+VERSAO_DO_CASO = 5  # 1: pacote P2 (corrida 18); 2: ficha 37 (corrida 18b); 3: decisão 90 (corridas 18c e 21c); 4: decisão 97 (sinais da busca contra a referência; corridas 18d, 21d e 18e); 5: teto nas listas, sem mudar nenhum prompt das corridas 18d e 21d
 _AVISO_DA_PODA = re.compile(r'^\s*text "\(mais \d+ cartões omitidos pela poda\)"\s*$')
 _NOME_DA_LINHA = re.compile(r'^\s*\S+ "(.*?)"(?: |$)')
 
@@ -214,6 +214,10 @@ LIMITE_DE_VALORES = 60
 # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) um exemplo só no CORPO, em vez de dois.
 # ! Motivo: o segundo exemplo somava cerca de 200 caracteres e deixava `semt-20` e `semt-21` acima do limite do prompt na conferência sem modelo; a contagem de itens diferentes continua no CORPO.
 LIMITE_DE_EXEMPLOS = 1
+# ! Alteração de IA - Revisar: (06/11/2026) teto no que o CORPO e o SINTOMA listam: até 3 ids por cláusula, até 3 ids repetidos e até 2 campos com detalhe; o que passa disso vira contagem. O diff guardado na trilha continua completo.
+# ! Motivo: na corrida 18e, `semt-27` (todos os ids trocados por negativos) listou 28 ids no CORPO e de novo no SINTOMA, com 1829 tokens, e `tra-26` (seis campos diferentes) escreveu uma frase por campo, com 1620; o limite do plano é 1409, e ele manda a poda apertar. Os prompts guardados das corridas 18d e 21d não passam destes tetos: têm no máximo 1 id por cláusula, 1 id repetido e 1 campo, então nenhum muda.
+LIMITE_DE_IDS = 3
+LIMITE_DE_CAMPOS = 2
 
 
 def _valor(v) -> str:
@@ -304,18 +308,25 @@ def _por_campo(valores: list[dict]) -> list[tuple[str, list[dict]]]:
     return list(grupos.items())
 
 
+def _clausula_de_ids(ids: list, nomes: dict, um: str, varios: str, verbo: str) -> str:
+    """Os ids com o nome do item, até `LIMITE_DE_IDS`; acima disso, a contagem e os primeiros ids, sem os nomes."""
+    if len(ids) > LIMITE_DE_IDS:
+        return f"{verbo} {len(ids)} ids, entre eles " + ", ".join(str(i) for i in ids[:LIMITE_DE_IDS])
+    return (um if len(ids) == 1 else varios) + ", ".join(f"{i}{_nome_do_item({'nome': nomes.get(str(i))})}" for i in ids)
+
+
 def _clausulas_de_lista(d: dict) -> list[str]:
-    """As cláusulas de contagem: o que falta, o que sobra e o que se repete, com o nome do item quando há."""
+    """As cláusulas de contagem: o que falta, o que sobra e o que se repete, com o nome do item quando há e dentro do teto."""
     nomes = d.get("nomes") or {}
     partes = []
     if d["faltam"]:
-        ids = ", ".join(f"{i}{_nome_do_item({'nome': nomes.get(str(i))})}" for i in d["faltam"])
-        partes.append(("falta o id " if len(d["faltam"]) == 1 else "faltam os ids ") + ids)
+        partes.append(_clausula_de_ids(d["faltam"], nomes, "falta o id ", "faltam os ids ", "faltam"))
     if d["sobram"]:
-        ids = ", ".join(f"{i}{_nome_do_item({'nome': nomes.get(str(i))})}" for i in d["sobram"])
-        partes.append(("sobra o id " if len(d["sobram"]) == 1 else "sobram os ids ") + ids)
-    for dup in d["duplicados"]:
+        partes.append(_clausula_de_ids(d["sobram"], nomes, "sobra o id ", "sobram os ids ", "sobram"))
+    for dup in d["duplicados"][:LIMITE_DE_IDS]:
         partes.append(f"o id {dup['id']}{_nome_do_item({'nome': nomes.get(str(dup['id']))})} aparece {dup['vezes']} vezes")
+    if len(d["duplicados"]) > LIMITE_DE_IDS:
+        partes.append(f"mais {len(d['duplicados']) - LIMITE_DE_IDS} ids aparecem repetidos")
     return partes
 
 
@@ -333,9 +344,8 @@ def frases_da_referencia(d: dict | None, ignorar_campos=()) -> list[str]:
         clausulas = _clausulas_de_lista(d)
         if clausulas:
             frases.append(f"A lista veio com {d['itens']} itens; a referência em modo normal tem {d['itens_ref']}: " + "; ".join(clausulas) + ".")
-    for campo, grupo in _por_campo(d["valores"]):
-        if campo in ignorar_campos:
-            continue
+    grupos = [(campo, grupo) for campo, grupo in _por_campo(d["valores"]) if campo not in ignorar_campos]
+    for campo, grupo in grupos[:LIMITE_DE_CAMPOS]:
         ex = grupo[0]
         if d["forma"] == "lista":
             quantos = f"{len(grupo)} {'item' if len(grupo) == 1 else 'itens'}"
@@ -343,10 +353,95 @@ def frases_da_referencia(d: dict | None, ignorar_campos=()) -> list[str]:
                           f"{ex['recebido']} em vez de {ex['referencia']}.")
         else:
             frases.append(f"O campo {campo} veio {ex['recebido']}; na referência em modo normal, {ex['referencia']}.")
+    resto = [str(campo) for campo, _ in grupos[LIMITE_DE_CAMPOS:]]
+    if resto:
+        frases.append(("Mais 1 campo veio diferente: " if len(resto) == 1 else f"Mais {len(resto)} campos vieram diferentes: ") + ", ".join(resto) + ".")
     if d["lento"]:
         frases.append(f"A chamada levou {_segundos(d['tempo_ms'])}"
                       + (f"; na referência em modo normal, {d['tempo_ref_ms']:.0f} ms." if d.get("tempo_ref_ms") is not None else "."))
     return frases
+
+
+# ! Alteração de IA - Revisar: (06/11/2026, ficha 47, decisão 97) o que a comparação com a referência mede vira fenômenos, e os fenômenos viram palavras da biblioteca, só para a busca.
+# ! Motivo: na corrida 18c o verbete certo chegou ao modelo em 21 dos 37 casos na tela, contra 27 no caso escrito, e com ele o modelo acerta 19 de 21; sem ele, 8 de 16. O caso escrito à mão diz
+# "cem vezes", "aparece duas vezes", "demora", "caracteres estranhos", que são as palavras dos verbetes. O caso da tela mede exatamente isso contra a referência em modo normal, mas só em números
+# ("8990.0 em vez de 89.9"), e nenhum passo traduzia a medida para a busca: `recuperacao.sinais_deterministicos` faz essa tradução só contra o contrato, e, como o contrato não mudou nesses casos,
+# ela ainda soma "nenhum erro". As palavras abaixo vêm de `palavras_chave` e `sintomas` dos verbetes, e cada fenômeno sai só do que foi medido: nada disto vai ao prompt, e o gabarito nunca entra aqui.
+TERMOS_DO_FENOMENO = {
+    "codificacao": "codificacao encoding utf latin acento mojibake charset acentos trocados simbolos caracteres estranhos",
+    "escala": "escala unidade fator multiplic divid vezes maiores menores cem centavos",
+    "troca": "juncao join chave fk troca registro errado campo derivado categoria errada",
+    "dominio": "dominio enum permitido conjunto negativo validacao zero",
+    "lento": "timeout lento lentidao demora latencia segundos tempo esgotado carregando",
+    "duplicado": "duplicad duplicat repetid dois registros identicos",
+    "contagem": "contagem total itens quantidade inconsistente menos",
+}
+FATOR_DE_ESCALA = 5  # cinco vezes para mais ou para menos; abaixo disso é uma diferença de valor, não de unidade
+# ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a chave que volta a busca à da corrida 18c.
+# ! Motivo: é o ponto seguro que o Eric pediu: se a regra R2 não fechar com os sinais, esta linha em False desfaz o efeito deles sem apagar as decisões registradas nem a leitura nova da regra, o que a cópia dos arquivos faria.
+SINAIS_DA_REFERENCIA_NA_BUSCA = True
+
+
+def _texto_consertado(texto: str) -> str | None:
+    """O texto relido como UTF-8, para saber se ele é o valor certo com a codificação quebrada; None quando não dá para reler."""
+    for codificacao in ("latin-1", "cp1252"):
+        try:
+            return texto.encode(codificacao).decode("utf-8")
+        except (UnicodeEncodeError, UnicodeDecodeError):
+            continue
+    return None
+
+
+def _fenomeno_do_valor(v_ref, v_atual, dominio: set) -> str | None:
+    """O que aconteceu com um valor do mesmo tipo do da referência. Tipo diferente fica de fora: é dos sinais do contrato."""
+    if isinstance(v_ref, bool) or isinstance(v_atual, bool):
+        return None
+    if isinstance(v_ref, str) and isinstance(v_atual, str):
+        if _texto_consertado(v_atual) == v_ref:
+            return "codificacao"
+        return "troca" if v_atual in dominio else "dominio"
+    if isinstance(v_ref, (int, float)) and isinstance(v_atual, (int, float)) and v_ref > 0:
+        if v_atual <= 0:
+            return "dominio"
+        if v_atual / v_ref >= FATOR_DE_ESCALA or v_ref / v_atual >= FATOR_DE_ESCALA:
+            return "escala"
+    return None
+
+
+def fenomenos_contra_a_referencia(corpo_ref: str | None, corpo_atual: str | None, diff_ref: dict | None) -> list[str]:
+    """Um fenômeno por item afetado, como `recuperacao.sinais_deterministicos` faz com o contrato: quanto mais itens, mais peso na busca.
+    O tempo conta uma vez; o id repetido, uma vez por ocorrência; item a menos ou a mais só conta quando não é repetição."""
+    if not diff_ref or not SINAIS_DA_REFERENCIA_NA_BUSCA:
+        return []
+    fenomenos = ["lento"] if diff_ref.get("lento") else []
+    if diff_ref.get("duplicados"):
+        fenomenos += ["duplicado"] * sum(x["vezes"] for x in diff_ref["duplicados"])
+    else:
+        fenomenos += ["contagem"] * (len(diff_ref.get("faltam") or []) + len(diff_ref.get("sobram") or []))
+    ref, atual = json.loads(corpo_ref), json.loads(corpo_atual)
+    itens_ref = {x.get("id"): x for x in (ref if isinstance(ref, list) else [ref]) if isinstance(x, dict)}
+    dominio: dict = {}
+    for item in itens_ref.values():
+        for campo, valor in item.items():
+            if isinstance(valor, str):
+                dominio.setdefault(campo, set()).add(valor)
+    for item in (atual if isinstance(atual, list) else [atual]):
+        if not isinstance(item, dict) or item.get("id") not in itens_ref:
+            continue
+        for campo, v_ref in itens_ref[item["id"]].items():
+            if campo in item and item[campo] != v_ref:
+                fenomeno = _fenomeno_do_valor(v_ref, item[campo], dominio.get(campo, set()))
+                if fenomeno:
+                    fenomenos.append(fenomeno)
+    return fenomenos
+
+
+def termos_da_busca(fenomenos: list[str]) -> str:
+    return " ".join(TERMOS_DO_FENOMENO[f] for f in fenomenos)
+
+
+def _mais_campos(quantos: int) -> str:
+    return "mais 1 campo diferente" if quantos == 1 else f"mais {quantos} campos diferentes"
 
 
 def corpo_do_caso(diff_corpo: dict | None, diff_ref: dict | None) -> str:
@@ -363,11 +458,17 @@ def corpo_do_caso(diff_corpo: dict | None, diff_ref: dict | None) -> str:
         if d["igual"]:
             return f"lista com {d['itens']} itens, igual à referência em modo normal; primeiro item: {trecho}"
         partes = [f"lista com {d['itens']} itens (referência em modo normal: {d['itens_ref']})"] + _clausulas_de_lista(d)
-        partes += [f"{campo} diferente em {len(grupo)} {'item' if len(grupo) == 1 else 'itens'}" for campo, grupo in _por_campo(d["valores"])]
+        grupos = _por_campo(d["valores"])
+        partes += [f"{campo} diferente em {len(grupo)} {'item' if len(grupo) == 1 else 'itens'}" for campo, grupo in grupos[:LIMITE_DE_CAMPOS]]
+        if len(grupos) > LIMITE_DE_CAMPOS:
+            # O exemplo sai junto: com tantos campos diferentes, o item inteiro não cabe, e o SINTOMA já traz o valor dos dois primeiros campos.
+            return "; ".join(partes + [_mais_campos(len(grupos) - LIMITE_DE_CAMPOS)])
         texto = "; ".join(partes)
         return texto + ("; por exemplo: " + "; ".join(d["exemplos"]) if d["exemplos"] else f"; primeiro item: {trecho}")
     if d["forma"] == "objeto" and d["valores"]:
-        return trecho + " (contra a referência em modo normal: " + ", ".join(f"{v['campo']} {v['recebido']} em vez de {v['referencia']}" for v in d["valores"]) + ")"
+        visiveis = ", ".join(f"{v['campo']} {v['recebido']} em vez de {v['referencia']}" for v in d["valores"][:LIMITE_DE_CAMPOS])
+        resto = len(d["valores"]) - LIMITE_DE_CAMPOS
+        return trecho + " (contra a referência em modo normal: " + visiveis + (f"; {_mais_campos(resto)}" if resto > 0 else "") + ")"
     return trecho
 
 
@@ -433,7 +534,7 @@ def sintoma_por_molde(conferencia: dict | None, diff_corpo: dict | None, diff_ar
 # ! Alteração de IA - Revisar: (05/11/2026, decisão 96) o tamanho do caso conta só o que vai ao modelo.
 # ! Motivo: o caso ao vivo passou a guardar o corpo inteiro e a observação da poda fora de `entrada`; contados, o `caso_chars` da leitura diria que o caso cresceu quando ele encurtou.
 def tamanho_do_caso(caso: dict) -> int:
-    return len(json.dumps({k: v for k, v in caso.items() if k not in ("corpo_completo", "observacao_da_poda")}, ensure_ascii=False))
+    return len(json.dumps({k: v for k, v in caso.items() if k not in ("corpo_completo", "observacao_da_poda", "sinais_da_busca")}, ensure_ascii=False))
 
 
 def montar_caso(id_caso: str, requisicao: str, status: int | None, contrato: str, corpo: str, sintoma: str,

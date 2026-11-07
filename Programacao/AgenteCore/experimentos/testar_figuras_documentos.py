@@ -59,6 +59,39 @@ def teste_todos_os_nomes_tem_texto_sem_sigla_de_codigo():
     assert all("_" not in l[0] for l in FIGS["sinais-da-trilha"]["linhas"])
 
 
+# ! Alteração de IA - Revisar: (05/11/2026, decisão 90) as figuras da tela e dos cenários leem a 18c e a 21c, e a do prompt mede os tokens reais, antes e depois do corte.
+# ! Motivo: a decisão 90 diz que as leituras novas passam a valer quando as corridas rodarem; a figura do prompt mostrava estimativas de cortes possíveis, e agora há a medida.
+def teste_figuras_usam_as_leituras_vigentes():
+    # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 e 98) as figuras passam à 18d e à 21d, e a da tela ganha as linhas da 18c e dos inéditos (18e).
+    # ! Motivo: a regra R2 fechou na 18d pela leitura fixada antes dela, e os inéditos são a conferência limpa: o README precisa mostrar as duas.
+    t4, ti, c4, c2 = g._j("fase4/tela_v4.json")["resumo"], g._j("fase4/tela_ineditos.json")["resumo"], g._j("fase4/cenarios_v4.json")["geral"], g._j("fase4/cenarios_v2.json")["geral"]
+    linhas = FIGS["tela-e-caso-escrito"]["linhas"]
+    assert [l[1] for l in linhas][:2] == [t4["acerto_fixture"], t4["acerto_tela"]], linhas
+    assert "18d" in linhas[1][0] and any("18c" in l[0] for l in linhas) and any("18b" in l[0] for l in linhas) and any("(corrida 18)" in l[0] for l in linhas), linhas
+    ine = [l for l in linhas if "18e" in l[0]]
+    assert [l[1:] for l in ine] == [[ti["acerto_fixture"], ti["casos"]], [ti["acerto_tela"], ti["casos"]]], ine
+    assert FIGS["tempo-por-cenario"]["geral"]["mttr_media_s"] == c4["mttr_media_s"]
+    assert FIGS["tempo-por-cenario"]["media_anterior"] == c2["mttr_media_s"], "a referência do tempo continua a de antes do corte do prompt"
+    assert "18d" in FIGS["tela-por-classe"]["fonte"] and "21d" in FIGS["onde-vai-o-tempo"]["fonte"] and "18d" in FIGS["onde-vai-o-tempo"]["fonte"]
+    prompt = FIGS["prompt-e-limite"]
+    assert prompt["limite"] == 1409
+    assert [l[1] for l in prompt["linhas"]] == ["Antes do corte (18b)", "Depois do corte (18c)", "Com os sinais da busca (18d)", "Inéditos, com os sinais da busca (18e)", "Antes do corte (21b)", "Depois do corte (21c)", "Com os sinais da busca (21d)"], prompt["linhas"]
+    for l in prompt["linhas"]:
+        assert l[2] <= l[3] <= l[4], l
+    assert [l[5] for l in prompt["linhas"]] == [37, 0, 0, 2, 9, 0, 0], "só os dois inéditos em que a lista muda inteira passaram do limite depois do corte"
+    assert len({l[0] for l in prompt["linhas"]}) == 2, "dois painéis: casos da tela e cenários"
+
+
+# ! Alteração de IA - Revisar: (06/11/2026) a figura da corrida 24: certos e errados por classe de defeito, nos 36 inéditos.
+# ! Motivo: é a única medida da biblioteca final em casos que ela nunca viu, e a classe de tradução é onde ela mais erra; o README precisa mostrar isso.
+def teste_figura_dos_ineditos_da_corrida_24():
+    d = g._j("fase4/ineditos.json")
+    f = FIGS["ineditos-por-classe"]
+    assert sum(l[2] for l in f["linhas"]) == d["resumo"]["acertos"] and sum(l[3] for l in f["linhas"]) == d["resumo"]["casos"] - d["resumo"]["acertos"], f["linhas"]
+    assert f["resumo"]["casos"] == d["resumo"]["casos"] and f["referencia"]["acertos"] == d["referencia"]["acertos"]
+    assert all("_" not in l[0] for l in f["linhas"]), "o nome na figura é o texto simples"
+
+
 def teste_titulos_sem_travessao_nem_seta():
     for f in FIGS.values():
         for c in "—→↔":

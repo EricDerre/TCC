@@ -1,0 +1,189 @@
+{
+  "modo": "cenarios",
+  "criado_em": "2026-11-06T11:13:26",
+  "saida": "fase4_ensaio_v4",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.14",
+  "k": 3,
+  "limiares": {
+    "medida": "p_rotulo",
+    "leitura": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "baixo_ate": 0.8317943867608124,
+    "alto_a_partir_de": 0.9898271080008889,
+    "n": 90,
+    "sem_rotulo": 0,
+    "k": 3,
+    "origem": "fase4_calibracao/k3",
+    "erros": 22,
+    "revisados": 27,
+    "erros_pegos": 15,
+    "acertos_revisados": 12,
+    "risco_no_que_sobra": 0.1111,
+    "mediana_certos": 0.9898271080008889,
+    "mediana_errados": 0.7511499810137099,
+    "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+    "gravado_em": "2026-10-27T23:54:00"
+  },
+  "repeticoes": 1,
+  "parcial": false,
+  "execucoes": 10,
+  "cenarios": [
+    "contrato-malformed_json",
+    "contrato-field_missing",
+    "contrato-field_renamed",
+    "contrato-type_drift",
+    "contrato-escala_ou_unidade_errada",
+    "contrato-error_500",
+    "localizador-front-busca",
+    "localizador-front-admin-login",
+    "localizador-front-admin-produtos",
+    "localizador-front-cliente-reserva"
+  ],
+  "catalogo": [
+    {
+      "id": "contrato-malformed_json",
+      "tipo": "contrato",
+      "cenario": "api-catalogo",
+      "modo": "malformed_json",
+      "campo": null,
+      "causa": "resposta_truncada",
+      "classe": 1,
+      "nivel": 1
+    },
+    {
+      "id": "contrato-field_missing",
+      "tipo": "contrato",
+      "cenario": "api-catalogo",
+      "modo": "field_missing",
+      "campo": "preco",
+      "causa": "campo_ausente",
+      "classe": 2,
+      "nivel": 1
+    },
+    {
+      "id": "contrato-field_renamed",
+      "tipo": "contrato",
+      "cenario": "api-catalogo",
+      "modo": "field_renamed",
+      "campo": "preco",
+      "causa": "campo_renomeado",
+      "classe": 2,
+      "nivel": 2
+    },
+    {
+      "id": "contrato-type_drift",
+      "tipo": "contrato",
+      "cenario": "api-catalogo",
+      "modo": "type_drift",
+      "campo": "preco",
+      "causa": "tipo_divergente",
+      "classe": 3,
+      "nivel": 2
+    },
+    {
+      "id": "contrato-escala_ou_unidade_errada",
+      "tipo": "contrato",
+      "cenario": "api-catalogo",
+      "modo": "escala_ou_unidade_errada",
+      "campo": "preco",
+      "causa": "escala_ou_unidade_errada",
+      "classe": 4,
+      "nivel": 2
+    },
+    {
+      "id": "contrato-error_500",
+      "tipo": "contrato",
+      "cenario": "api-catalogo",
+      "modo": "error_500",
+      "campo": null,
+      "causa": "erro_interno_do_servidor",
+      "classe": 5,
+      "nivel": 1
+    },
+    {
+      "id": "localizador-front-busca",
+      "tipo": "localizador",
+      "cenario": "front-busca",
+      "modo": "id_renomeado",
+      "forma": "harness",
+      "campo": null,
+      "causa": "localizador_quebrado",
+      "classe": 6,
+      "nivel": 2
+    },
+    {
+      "id": "localizador-front-admin-login",
+      "tipo": "localizador",
+      "cenario": "front-admin-login",
+      "modo": "classe_trocada",
+      "forma": "harness",
+      "campo": null,
+      "causa": "localizador_quebrado",
+      "classe": 6,
+      "nivel": 2
+    },
+    {
+      "id": "localizador-front-admin-produtos",
+      "tipo": "localizador",
+      "cenario": "front-admin-produtos",
+      "modo": "texto_alterado",
+      "forma": "harness",
+      "campo": null,
+      "causa": "localizador_quebrado",
+      "classe": 6,
+      "nivel": 2
+    },
+    {
+      "id": "localizador-front-cliente-reserva",
+      "tipo": "localizador",
+      "cenario": "front-cliente-reserva",
+      "modo": "estrutura_alterada",
+      "forma": "harness",
+      "campo": null,
+      "causa": "localizador_quebrado",
+      "classe": 6,
+      "nivel": 2
+    }
+  ],
+  "troca_da_ficha_36": {
+    "sai": "latency",
+    "entra": "escala_ou_unidade_errada",
+    "motivo": "os seis modos da opção (a) cobriam as classes 1, 2, 3 e 5; a decisão 79 pede trocar cenários de contrato por modos novos da ficha 28 que cubram mais classes. Sai latency, que repete a classe 5 de error_500 e tem o MTTR dominado pela espera do tempo limite; entra escala_ou_unidade_errada em preco, da classe 4 (tradução), que nenhum dos seis cobria."
+  },
+  "biblioteca": {
+    "hash": "95af35290860",
+    "origem": "Programacao/AgenteCore/biblioteca_producao",
+    "origem_do_lote": "fase4_biblioteca",
+    "epoca": 101
+  },
+  "mttr": {
+    "contrato": "da detecção (conferência do roteiro que falhou, ou o fio diferente do contrato e da referência, pela regra R1) ao diagnóstico conferido em código (ficha 35)",
+    "localizador": "da detecção (o passo do localizador falhou) à reexecução validada, com o diagnóstico entre as duas e a restauração do banco descontada"
+  },
+  "task_success": {
+    "contrato": "diagnóstico conferido com a causa e o campo certos (ficha 35)",
+    "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"
+  },
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "hash_prompt_fixo": "2e42cf9c31826941",
+  "hash_indice": "11e763ba9cb1fdf4",
+  "versoes": {
+    "navegador": "156.0.8078.4",
+    "ollama": "0.40.2",
+    "playwright": "1.64.1",
+    "python": "3.14.7"
+  },
+  "canal": "chromium",
+  "contrato": "id: inteiro | nome: texto | resumo: texto|nulo | tipo: texto | preco: numero | imagem: texto|nulo | destaque: booleano",
+  "limites": {
+    "nos_por_diagnostico": 40,
+    "nos_por_cura": 20,
+    "blob_inline_max_chars": 65536,
+    "retencao_meses": 6
+  },
+  "orcamento_de_tempo_ms": 1000,
+  "versao_do_caso_ao_vivo": 4,
+  "sinais_da_referencia_na_busca": true
+}

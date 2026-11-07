@@ -654,6 +654,164 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("tb_f4_biblioteca_filtros", secao)
         self.assertIn("regra R4", secao.lower().replace("r4", "R4").replace("regra r4", "regra R4"))
 
+    def teste_tela_mostra_a_18c_como_leitura_vigente(self):
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) a aba da tela lê tela_v3.json: as três corridas, o verbete certo no contexto e o selo, com a 18b e a 18 como o registro de antes.
+        # ! Motivo: a decisão 90 diz que a leitura nova passa a valer quando a corrida rodar, e o Eric decide pelo painel.
+        tela, v2, v3 = self.ctx.get("tela"), self.ctx.get("tela_v2"), self.ctx.get("tela_v3")
+        if not v3:
+            return
+        d, h = tp.secao_tela(tela, v2, self.ctx["road"], gd.cartoes_corridas, tela_v3=v3)
+        r3 = v3["resumo"]
+        self.assertEqual(d["v3"]["resumo"]["concordam"], r3["concordam"])
+        self.assertEqual(d["v3"]["verbete"], v3["verbete_certo"])
+        self.assertEqual(d["v3"]["selo"], v3["acerto_por_selo"])
+        self.assertEqual([x["nome"] for x in d["corridas"]], ["18", "18b", "18c"])
+        self.assertEqual(d["corridas"][-1]["acerto_tela"], r3["acerto_tela"])
+        self.assertEqual([x["acerto_tela_v3"] for x in d["por_classe"]], [x["acerto_tela"] for x in v3["por_classe"]])
+        self.assertEqual(sum(x["tela_v3"] for x in d["rotulos"]), r3["casos"])
+        for trecho in ('id="g-tela-corridas"', 'id="g-tela-verbete"', "corrida 18c", "tela_v3.json", f'{r3["concordam"]} de {r3["casos"]}', "Rótulo na tela (18c)"):
+            self.assertIn(trecho, h)
+        # ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a aba diz a regra R2 pelos casos que a tela perde, com os que ela ganha ao lado.
+        # ! Motivo: o Eric fixou essa leitura antes da corrida 18d, e o cartão que dizia "só um lado acerta" contaria a tela melhor como defeito.
+        self.assertIn(f'a tela perde {r3["c"]} e ganha {r3["b"]}', h)
+        self.assertIn("decisão 98", h)
+        # ! Alteração de IA - Revisar: (05/11/2026) o caso a caso e as tabelas recolhidas também mostram a leitura vigente, e o gráfico das causas não esconde nomes.
+        # ! Motivo: na página publicada, "Caso a caso" ainda listava a corrida 18, e o gráfico das causas pulava metade dos nomes do eixo, com tipo_divergente entre os visíveis por acaso.
+        for trecho in (f'Caso a caso, na corrida 18c ({r3["casos"]} casos)', "Acerto na tela (18c)", "Dado na tela (18c)", 'class="chart alto"><canvas id="g-tela-rotulos"', "Prompts da tela acima do limite, na corrida 18 ("):
+            self.assertIn(trecho, h)
+        primeiro = v3["casos"][0]
+        bloco = h[h.index(f'Caso a caso, na corrida 18c ({r3["casos"]} casos)'):]
+        self.assertIn(f'<code>{primeiro["rotulo_tela"]}</code>', bloco[:bloco.index("</tr>", bloco.index("<tbody>"))], "a primeira linha do caso a caso é a da 18c")
+        self.assertIn("autoSkip:false", tp.JS_TOPICOS[tp.JS_TOPICOS.index("function telaRotulos("):tp.JS_TOPICOS.index("function telaCorridas(")])
+        d0, h0 = tp.secao_tela(tela, v2, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIsNone(d0["v3"], "sem a 18c, a aba fica como era")
+        self.assertNotIn('id="g-tela-verbete"', h0)
+        self.assertIn("function telaVerbete(", tp.JS_TOPICOS)
+        self.assertIn("function telaCorridas(", tp.JS_TOPICOS)
+        secao = self.html[self.html.index('<section id="tela"'):].split("</section>")[0]
+        self.assertIn('id="g-tela-verbete"', secao, "a página real traz a 18c")
+
+    def teste_tela_mostra_a_18d_e_os_ineditos_como_leitura_vigente(self):
+        # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 e 98) a aba da tela lê tela_v4.json e tela_ineditos.json: a regra pelos casos que a tela perde, nas cinco corridas, e os inéditos como a conferência limpa; a 18c fica recolhida.
+        # ! Motivo: a regra fechou na corrida 18d pela leitura fixada antes dela, e a aba é onde o Eric lê isso; a 18c continua à vista como registro, sem disputar os cartões.
+        tela, v2, v3, v4, ine = self.ctx.get("tela"), self.ctx.get("tela_v2"), self.ctx.get("tela_v3"), self.ctx.get("tela_v4"), self.ctx.get("tela_ineditos")
+        if not v4:
+            return
+        d, h = tp.secao_tela(tela, v2, self.ctx["road"], gd.cartoes_corridas, tela_v3=v3, tela_v4=v4, tela_ineditos=ine)
+        r4, ri = v4["resumo"], ine["resumo"]
+        self.assertEqual(d["v4"]["resumo"]["concordam"], r4["concordam"])
+        self.assertEqual(d["v4"]["verbete"], v4["verbete_certo"])
+        self.assertEqual(d["ineditos"]["verbete"], ine["verbete_certo"])
+        self.assertEqual([x["nome"] for x in d["corridas"]], ["18", "18b", "18c", "18d"])
+        self.assertEqual([(x["nome"], x["perde"], x["ganha"]) for x in d["regra"]][-2:], [("18d", r4["c"], r4["b"]), ("18e", ri["c"], ri["b"])])
+        self.assertEqual(d["limite_r2"], r4["limite_r2"])
+        self.assertEqual([x["acerto_tela_v4"] for x in d["por_classe"]], [x["acerto_tela"] for x in v4["por_classe"]])
+        self.assertEqual(sum(x["tela_v4"] for x in d["rotulos"]), r4["casos"])
+        for trecho in ('id="g-tela-corridas"', 'id="g-tela-verbete"', 'id="g-tela-regra"', "corrida 18d", "corrida 18e", "tela_v4.json", "tela_ineditos.json",
+                       f'a tela perde {r4["c"]} e ganha {r4["b"]}', f'a tela perde {ri["c"]} e ganha {ri["b"]}', f'Caso a caso, na corrida 18d ({r4["casos"]} casos)',
+                       f'Caso a caso, nos inéditos, corrida 18e ({ri["casos"]} casos)', "Corrida 18c contra a 18d", "A leitura da corrida 18c", "Rótulo na tela (18d)"):
+            self.assertIn(trecho, h)
+        for canvas in ('id="g-tela-corridas"', 'id="g-tela-verbete"'):
+            self.assertEqual(h.count(canvas), 1, "um gráfico só, com a leitura vigente")
+        self.assertIn("function telaRegra(", tp.JS_TOPICOS)
+        d0, _ = tp.secao_tela(tela, v2, self.ctx["road"], gd.cartoes_corridas, tela_v3=v3)
+        self.assertIsNone(d0["v4"], "sem a 18d, a aba fica como era")
+        secao = self.html[self.html.index('<section id="tela"'):].split("</section>")[0]
+        self.assertIn('id="g-tela-regra"', secao, "a página real traz a 18d")
+
+    def teste_cenarios_mostra_a_21d_como_leitura_vigente(self):
+        # ! Alteração de IA - Revisar: (06/11/2026, decisão 97) a aba dos cenários lê cenarios_v4.json e compara a 21d com a 21c.
+        # ! Motivo: da 21c para a 21d só mudou a busca, e é essa comparação que diz se os sinais novos mexeram nos dez cenários da Fase 5.
+        c, c2, c3, c4 = self.ctx.get("cenarios"), self.ctx.get("cenarios_v2"), self.ctx.get("cenarios_v3"), self.ctx.get("cenarios_v4")
+        if not c4:
+            return
+        d, h = tp.secao_cenarios(c, c2, self.ctx["road"], gd.cartoes_corridas, cen_v3=c3, cen_v4=c4)
+        self.assertEqual(d["geral"]["mttr_media_s"], c4["geral"]["mttr_media_s"])
+        self.assertEqual(d["por_cenario"][0]["mttr_anterior"], c3["por_cenario"][0]["mttr_media_s"])
+        self.assertIn("21c", d["rotulo_anterior"])
+        self.assertIn("21d", d["rotulo_vigente"])
+        for trecho in ("cenarios_v4.md", "MTTR 21d (s)", "MTTR 21c (s)", "corrida 21d", "Os sinais novos da busca"):
+            self.assertIn(trecho, h)
+        secao = self.html[self.html.index('<section id="cenarios"'):].split("</section>")[0]
+        self.assertIn("cenarios_v4.md", secao, "a página real traz a 21d")
+
+    def teste_cenarios_mostra_a_21c_como_leitura_vigente(self):
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 90) a aba dos cenários lê cenarios_v3.json e compara a 21c com a 21b.
+        # ! Motivo: o que a repetição mudou foi o tamanho do prompt, e a comparação que importa agora é contra a corrida de antes do corte, não contra a 21.
+        c, c2, c3 = self.ctx.get("cenarios"), self.ctx.get("cenarios_v2"), self.ctx.get("cenarios_v3")
+        if not c3:
+            return
+        d, h = tp.secao_cenarios(c, c2, self.ctx["road"], gd.cartoes_corridas, cen_v3=c3)
+        self.assertEqual(d["geral"]["mttr_media_s"], c3["geral"]["mttr_media_s"])
+        self.assertEqual(d["por_cenario"][0]["mttr_anterior"], c2["por_cenario"][0]["mttr_media_s"])
+        self.assertIn("21b", d["rotulo_anterior"])
+        self.assertIn("21c", d["rotulo_vigente"])
+        for trecho in ("cenarios_v3.md", "MTTR 21c (s)", "MTTR 21b (s)", "corrida 21c"):
+            self.assertIn(trecho, h)
+        self.assertIn("C.rotulo_anterior", tp.JS_TOPICOS)
+        d0, h0 = tp.secao_cenarios(c, c2, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn("21b", d0["rotulo_vigente"], "sem a 21c, a aba compara a 21b com a 21")
+        self.assertIn("MTTR 21 (s)", h0)
+        secao = self.html[self.html.index('<section id="cenarios"'):].split("</section>")[0]
+        self.assertIn("cenarios_v3.md", secao, "a página real traz a 21c")
+
+    def teste_ineditos_da_corrida_24_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (06/11/2026) a aba da corrida 24 lê ineditos.json: o acerto, por classe, com e sem o verbete certo, e a comparação com a corrida 18e.
+        # ! Motivo: pela regra do painel, toda análise nova vira uma aba lida dos JSON, e o número vai para o TCC.
+        ined = self.ctx.get("ineditos_f4")
+        self.assertTrue(ined, "a leitura da corrida 24 existe")
+        d, h = tp.secao_ineditos_f4(ined, self.ctx["road"], gd.cartoes_corridas, self.ctx.get("analise3b"))
+        r = ined["resumo"]
+        self.assertEqual(d["resumo"]["acertos"], r["acertos"])
+        self.assertEqual([x["acertos"] for x in d["por_classe"]], [x["acertos"] for x in ined["por_classe"]])
+        self.assertEqual(d["verbete"], ined["verbete_certo"])
+        for trecho in ('id="g-ined-classe"', 'id="g-ined-verbete"', f'{r["acertos"]} de {r["casos"]}', "ineditos.json", "corrida 24", f'{ined["lado_escrito_18e"]["mesmo_rotulo"]} de {ined["lado_escrito_18e"]["casos"]}'):
+            self.assertIn(trecho, h)
+        _, vazia = tp.secao_ineditos_f4(None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn("ainda não foi rodada", vazia)
+        self.assertIn("function inedClasse(", tp.JS_TOPICOS)
+        self.assertIn("function inedVerbete(", tp.JS_TOPICOS)
+        self.assertIn('<section id="ineditosf4"', self.html)
+        self.assertIn("ineditosf4", [i for _, itens in tp.NAV for i, *_ in itens])
+
+    def teste_conferencia_mostra_as_respostas_do_eric(self):
+        # ! Alteração de IA - Revisar: (06/11/2026, decisão 100) com as respostas gravadas, a aba diz que os casos foram conferidos, por quem, como e o que mudou.
+        # ! Motivo: a ficha 44 nasceu de a conferência não estar registrada, e a aba não pode continuar dizendo que nenhuma pessoa conferiu.
+        real, resp = self.ctx.get("conferencia_ineditos"), self.ctx.get("conferencia_respostas")
+        self.assertTrue(real and resp, "o documento e as respostas existem")
+        _, sem = tp.secao_conferencia(real)
+        self.assertIn("nenhuma pessoa os conferiu ainda", sem)
+        _, h = tp.secao_conferencia(real, resp)
+        self.assertNotIn("nenhuma pessoa", h)
+        for trecho in ("decisão 100", f'{len(resp["respostas"])} apontados', "conferencia_ineditos_respostas.json", "Resposta do Eric", "resultados da corrida 18e"):
+            self.assertIn(trecho, h)
+        self.assertEqual(set(resp["respostas"]), {x["caso"] for x in real["casos"] if x["veredito"] == "ver"})
+        self.assertEqual(resp["mudancas"], [])
+        secao = self.html[self.html.index('<section id="conferencia"'):].split("</section>")[0]
+        self.assertIn("decisão 100", secao, "a página real traz a conferência")
+
+    def teste_experimento_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (05/11/2026, decisão 91) a aba da corrida 23 lê experimento_prompt.json: o acerto de cada condição contra a corrida 16, caso a caso, sem número digitado à mão.
+        # ! Motivo: a regra do painel é uma aba por análise, e o número dos dois itens vai para o TCC.
+        self.assertIn("experimento", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        self.assertIn("function expAcerto(", tp.JS_TOPICOS)
+        self.assertIn("function expTrocas(", tp.JS_TOPICOS)
+        d, vazia = tp.secao_experimento(None, self.ctx["road"], gd.cartoes_corridas)
+        self.assertIn('<section id="experimento"', vazia)
+        self.assertIn("ainda não foi rodada", vazia)
+        self.assertEqual(d["condicoes"], [])
+        exp = self.ctx.get("experimento_prompt")
+        if not exp:
+            return
+        d, h = tp.secao_experimento(exp, self.ctx["road"], gd.cartoes_corridas)
+        self.assertEqual(d["base"]["acerto_pct"], exp["base"]["acerto_pct"])
+        self.assertEqual([(x["b"], x["c"]) for x in d["condicoes"]], [(x["b"], x["c"]) for x in exp["por_condicao"]])
+        for x in exp["por_condicao"]:
+            self.assertIn(f'{x["acertos"]} de {x["n"]}', h)
+        for trecho in ('id="g-exp-acerto"', 'id="g-exp-trocas"', "tb_f4_exp_resumo", "decisão 91"):
+            self.assertIn(trecho, h)
+        self.assertNotIn("—", h.split('<p class="lead">')[1].split("</p>")[0], "a frase de abertura não leva travessão")
+
     def teste_conferencia_dos_ineditos_usa_o_json_e_mostra_cada_caso(self):
         # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a aba da conferência lê conferencia_ineditos.json: os casos para olhar primeiro, e cada caso com o gabarito, o que a corrida 17 viu e a pré-análise.
         # ! Motivo: o Eric decide pelo painel, e a ficha 46 pede a conferência dele antes da corrida 24; a pré-análise é do Claude e a aba precisa dizer isso.
@@ -730,7 +888,7 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertEqual([x["mttr_anterior"] for x in d2["por_cenario"]], [64.0])
         self.assertIn("corrida 21b", h2.split('<p class="lead">')[1].split("</p>")[0])
         self.assertIn("10 de 10", h2)
-        self.assertIn("As duas corridas, cenário a cenário", h2)
+        self.assertIn("As duas últimas corridas, cenário a cenário", h2)
         self.assertIn("candidato_invalido", h2)
         self.assertIn("cenarios_v2.json", h2)
         self.assertIn("66,2", h2)
@@ -744,7 +902,7 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("tb_f4_cenarios_por_cenario", h)
         self.assertIn("1,26", h)
         self.assertNotIn("—", h.split('<p class="lead">')[1].split("</p>")[0], "a frase de abertura não leva travessão")
-        cen_ = self.ctx.get("cenarios_v2") or self.ctx.get("cenarios")
+        cen_ = self.ctx.get("cenarios_v3") or self.ctx.get("cenarios_v2") or self.ctx.get("cenarios")
         secao = self.html[self.html.index('<section id="cenarios"'):].split("</section>")[0]
         if not cen_ or not cen_.get("geral", {}).get("n"):
             self.assertIn("ainda não foi rodada", secao)
@@ -895,7 +1053,7 @@ class TestesAbasPorTopico(unittest.TestCase):
         md = ("# Relatório\n\n## 1. Perguntas\n\ntexto da seção um\n\n## 10. As regras\n\n| Regra | O que ela pede | Corrida | Resultado | Estado |\n|---|---|---|---|---|\n"
               "| R1 | pede a | 17 | 37 de 37 | Cumprida |\n| R2 | pede b | 18b | b + c = 9 | Não cumprida: limitação declarada |\n| R3 | pede c | 19 | 160 de 160 | Cumprida, com ressalva: desenho |\n"
               "| R4 | pede d | 20 | 100,0% | Medida: sem limite |\n\n## 11. Entrega\n\ntexto da seção onze\n\n## 12. Limitações\n\ntexto da seção doze\n\n## 13. O que não saiu\n\ntexto da seção treze\n\n## 15. O que o TCC carrega\n\ntexto da seção quinze\n")
-        tela = {"resumo": {"concordam": 26, "casos": 37, "discordantes": 9, "limite_r2": 3}}
+        tela = {"resumo": {"concordam": 26, "casos": 37, "discordantes": 9, "limite_r2": 3, "b": 2, "c": 7}}
         cura = {"resumo": {"curadas": 160, "execucoes": 160, "mttr_mediana_s": 0.639}}
         cen = {"geral": {"sucessos": 10, "n": 10, "mttr_media_s": 105.18}}
         rev = {"resumo": {"respostas_do_revisor": 1, "pareceres_aprovados": 10}}
@@ -929,9 +1087,16 @@ class TestesAbasPorTopico(unittest.TestCase):
         # com os arquivos reais, a aba lê as leituras vigentes, não as corridas 18 e 21
         d_real = self.dados_t["fechamentof4"]
         self.assertTrue(d_real["contagem"], "o relatório da fase existe e a tabela da seção 10 foi lida")
-        r2 = self.ctx["tela_v2"]["resumo"]
-        self.assertIn(f'{r2["concordam"]} de {r2["casos"]}', self.html)
+        r2 = (self.ctx.get("tela_v4") or self.ctx.get("tela_v3") or self.ctx["tela_v2"])["resumo"]
+        secao_f4 = self.html[self.html.index('<section id="fechamentof4"'):].split("</section>")[0]
+        self.assertIn(f'{r2["concordam"]} de {r2["casos"]}', secao_f4)
         self.assertNotEqual(self.ctx["tela"]["resumo"]["concordam"], r2["concordam"])
+        if self.ctx.get("tela_v4"):
+            self.assertIn("corrida 18d;", secao_f4)
+            self.assertNotIn("corrida 18c;", secao_f4, "o cartão diz a corrida vigente")
+        elif self.ctx.get("tela_v3"):
+            self.assertIn("corrida 18c", secao_f4)
+            self.assertNotIn("corrida 18b;", secao_f4, "o cartão diz a corrida vigente")
         faltam = tp._corridas_que_faltam_f4(self.ctx["road"])
         if faltam:
             self.assertIn("Corridas que faltam antes da Fase 5", self.html)
