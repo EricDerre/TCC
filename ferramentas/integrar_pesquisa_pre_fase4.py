@@ -58,6 +58,10 @@ TITULO_REFS = f"### Levantamento da Pré-Fase 4 ({ROTULO})"
 MARCA_DO_INDICE = "- [Levantamento: Pré-Fase 4 (01/10/2026)]"
 TAG_DO_INDICE = "<!-- ! Alteração de IA - Revisar: linha do índice para o levantamento da Pré-Fase 4"
 TETO = 16
+# ! Alteração de IA - Revisar: (07/11/2026) a lista de datas da frase do total de referências virou uma constante, com a rodada 6 (Pós-Fase 4) no fim.
+# ! Motivo: integrar_pesquisa_pos_fase4.py grava o bloco dele antes do bloco desta rodada e reconta o mesmo total; os dois scripts
+# precisam escrever a mesma frase, senão o --check de um deles acusa diferença depois de o outro rodar.
+DATAS_DOS_LEVANTAMENTOS = "11/09, 21/09, 22/09, 29/09, 01/10 e 07/11/2026"
 
 # Parte da rodada e título curto de cada tópico, na ordem (fixa) das subseções §6.14.1 a §6.14.14: os três últimos
 # foram acrescentados em 23/10/2026 e ficam no fim para não mudar o número de nenhum tópico já citado.
@@ -430,7 +434,7 @@ def referencias_com_bloco(atual: str, dados: dict) -> tuple[str, int, int]:
     total = sum(1 for l in novo[novo.index("## 9. Referências levantadas"):].splitlines() if l.startswith("- "))
     m = re.search(r"os levantamentos de [^*\n]*? produziram as \*\*(\d+)\*\* referências abaixo", novo)
     assert m, "frase do total de referências não encontrada"
-    novo = novo[:m.start()] + f"os levantamentos de 11/09, 21/09, 22/09, 29/09 e 01/10/2026 produziram as **{total}** referências abaixo" + novo[m.end():]
+    novo = novo[:m.start()] + f"os levantamentos de {DATAS_DOS_LEVANTAMENTOS} produziram as **{total}** referências abaixo" + novo[m.end():]
     return novo, len(novas), total  # `novas` já vem sem as repetidas pela chave e pelo endereço
 
 

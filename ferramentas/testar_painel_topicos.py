@@ -45,6 +45,7 @@ def _ctx() -> dict:
         "pend": pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"),
         **gd.contexto_pre_fase4(),
         **gd.contexto_fase4(),
+        **gd.contexto_pos_fase4(),
     }
 
 
@@ -80,10 +81,12 @@ class TestesAbasPorTopico(unittest.TestCase):
         # ! Alteração de IA - Revisar: (27/10/2026) o grupo "Fase 4" entra depois da Pré-Fase 4, com a aba "Reprodução na tela".
         # ! Motivo: a Fase 4 abriu em 26/10 e a corrida 17 é a primeira análise dela; o grupo fica na ordem cronológica, logo
         # depois da pesquisa que a preparou, sem mexer na ordem por importância que o Eric pediu para os grupos anteriores.
-        self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Fase 4", "Pesquisa e método", "Fases anteriores"])
+        # ! Alteração de IA - Revisar: (07/11/2026) o grupo "Pós-Fase 4" entra depois do "Fase 4".
+        # ! Motivo: a Pós-Fase 4 foi especificada e pesquisada nesta data e ganhou a sua aba; a ordem dos grupos segue a ordem das fases.
+        self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Fase 4", "Pós-Fase 4", "Pesquisa e método", "Fases anteriores"])
         # ! Alteração de IA - Revisar: (05/11/2026, P8) o grupo "Fase 4" passa a abrir pela aba "Fechamento da fase".
         # ! Motivo: a regra do mapa é a aba mais importante de cada grupo em primeiro, e com a fase fechada essa é a do fechamento.
-        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "fechamentof4", "pesquisa", "fases2"])
+        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "fechamentof4", "posfase4", "pesquisa", "fases2"])
         # em tela estreita a lateral vira gaveta aberta por um botão
         self.assertIn('<button class="menu" aria-controls="lateral" aria-expanded="false">', html)
         self.assertRegex(html, r"@media \(max-width:\s*900px\)\{[^}]*\.lateral\{")
@@ -773,6 +776,38 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn("function inedVerbete(", tp.JS_TOPICOS)
         self.assertIn('<section id="ineditosf4"', self.html)
         self.assertIn("ineditosf4", [i for _, itens in tp.NAV for i, *_ in itens])
+
+    def teste_pos_fase4_le_o_levantamento_o_plano_e_as_fichas(self):
+        # ! Alteração de IA - Revisar: (07/11/2026) a aba da Pós-Fase 4 lê o levantamento §6.15 (a tabela do cabeçalho e o mapa), o plano em rascunho (os pacotes) e as fichas 49 a 54; sem o levantamento, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, e o Eric decide pelo painel: as fichas 53 e 54 estão abertas e a aba precisa mostrá-las com os vereditos que as sustentam.
+        self.assertIn("posfase4", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        self.assertIn("function posFontes(", tp.JS_TOPICOS)
+        self.assertIn("posFontes", tp.DESENHAR_TOPICOS["posfase4"])
+        _, vazia = tp.secao_pos_fase4(None, None, [])
+        self.assertIn('<section id="posfase4"', vazia)
+        self.assertIn("integrar_pesquisa_pos_fase4.py", vazia)
+        lev = ("### 6.15 Levantamento da Pós-Fase 4\n\n| Subseção | Parte | Leitura | Fontes com endereço |\n|---|---|---|---|\n| §6.15.1 | 1 | `pos4-revisao-estilo-pr` | 9 |\n| §6.15.2 | 3 | `pos4-repo-gepa` | 2 |\n\n"
+               "#### 6.15.1 O hub (`pos4-revisao-estilo-pr`; 9 fontes com endereço)\n\ntexto\n\n#### 6.15.2 Repositório gepa-ai/gepa (`pos4-repo-gepa`; 2 fontes com endereço)\n\ntexto\n\n"
+               "| Dimensão do syllabus | O projeto | Seção e página |\n|---|---|---|\n| Nível de teste | sistema | 2.2.1, p. 26 |\n\n"
+               "#### 6.15.3 Mapa adotado, ideia, adiado, descartado\n\nintro\n\n| Leitura | Para o Claude Code | Para o agente | O que fica | Veredito |\n|---|---|---|---|---|\n"
+               "| O hub (`pos4-revisao-estilo-pr`) | n/a | base do hub | o desenho | **adotado** |\n| Repositório gepa-ai/gepa (`pos4-repo-gepa`) | opcional | não é filtro | candidato futuro | **adiado** |\n")
+        plano = "## 7. Ordem\n\n### Q0. Registro e pesquisa (sessão de 07/11/2026; feito)\nTexto.\n\n### Q1. Relatório v3 (sessões 2 e 3; sem máquina)\nTexto.\n"
+        d, h = tp.secao_pos_fase4(lev, plano, self.ctx["pend"])
+        self.assertEqual([x["fontes"] for x in d["leituras"]], [9, 2])
+        self.assertEqual([x["rotulo"] for x in d["leituras"]], ["Hub estilo PR", "gepa"])
+        self.assertEqual([x["veredito"] for x in d["mapa"]], ["adotado", "adiado"])
+        self.assertEqual(d["vereditos"], {"adiado": 1})
+        for trecho in ("g-pos4-fontes", "base do hub", "candidato futuro", "Q1", "Relatório v3", "ficha 53", "ficha 54", "decisão 101", "2.2.1, p. 26"):
+            self.assertIn(trecho, h)
+        real = self.ctx.get("levantamento_pos4")
+        if real:
+            secao = self.html[self.html.index('<section id="posfase4"'):].split("</section>")[0]
+            import integrar_pesquisa_pos_fase4 as ipp
+            dados_reais = self.dados_t["posfase4"]
+            self.assertEqual([x["chave"] for x in dados_reais["leituras"]], [t[0] for t in ipp.TOPICOS], "uma linha do cabeçalho por leitura, na ordem fixa")
+            self.assertEqual([m["chave"] for m in dados_reais["mapa"]], [m[0] for m in ipp.MAPA], "uma linha do mapa por leitura")
+            self.assertEqual(sum(x["fontes"] for x in dados_reais["leituras"]), sum(len(v["fontes"]) for v in ipp.carregar().values()), "as fontes contadas batem com o integrador")
+            self.assertIn("ficha 54", secao)
 
     def teste_conferencia_mostra_as_respostas_do_eric(self):
         # ! Alteração de IA - Revisar: (06/11/2026, decisão 100) com as respostas gravadas, a aba diz que os casos foram conferidos, por quem, como e o que mudou.

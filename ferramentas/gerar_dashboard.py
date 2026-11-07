@@ -1146,6 +1146,18 @@ def contexto_fase4() -> dict:
                              if (MEMORIAL / "3-resultados-e-analises" / "fase-4-relatorio.md").exists() else None)}
 
 
+# ! Alteração de IA - Revisar: (07/11/2026) o contexto da Pós-Fase 4: o levantamento §6.15 e o plano em rascunho, lidos por painel_topicos.secao_pos_fase4.
+# ! Motivo: a Pós-Fase 4 foi especificada e pesquisada em 07/11/2026 e, pela regra do painel, vira uma aba lida dos arquivos versionados; os dois podem faltar
+# numa máquina sem a integração, e então a aba mostra o estado vazio. O teste das abas usa esta mesma função.
+def contexto_pos_fase4() -> dict:
+    lev = MEMORIAL / "2-pesquisa-e-literatura" / "levantamento-2026-11-07-pos-fase-4.md"
+    plano = RAIZ / "claude-memoria" / "plano-aprovado-pos-fase-4.md"
+    if not plano.exists():  # enquanto não aprovado, o plano vive como rascunho com o nome sem "aprovado"
+        plano = RAIZ / "claude-memoria" / "plano-pos-fase-4.md"
+    return {"levantamento_pos4": lev.read_text(encoding="utf-8") if lev.exists() else None,
+            "plano_pos4": plano.read_text(encoding="utf-8") if plano.exists() else None}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", default=str(SAIDA_PADRAO))
@@ -1183,6 +1195,7 @@ def main() -> None:
         "pend": pend,
         **contexto_pre_fase4(),
         **contexto_fase4(),
+        **contexto_pos_fase4(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     # ! Alteração de IA - Revisar: (05/11/2026) a página montada passa por painel_leituras.aplicar: "Como ler" em cada gráfico e dados em "Mais informações".

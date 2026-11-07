@@ -109,6 +109,11 @@ NAV = [
         # ! Motivo: a medida da biblioteca final em casos que ela nunca viu é uma análise nova da Fase 4 e, pela regra do painel, vira uma aba.
         ("ineditosf4", "Inéditos em texto", "A biblioteca final acerta em casos que nunca viu? A corrida 24 nos 36 inéditos da ficha 27, conferidos pelo Eric: o acerto por classe e por nível, o verbete certo no contexto, o selo e a comparação com a corrida 18e."),
     ]),
+    # ! Alteração de IA - Revisar: (07/11/2026) grupo da Pós-Fase 4, com a aba do que o Eric pediu em três partes; o id entra junto com a seção (secao_pos_fase4).
+    # ! Motivo: a Pós-Fase 4 foi especificada e pesquisada em 07/11/2026 (levantamento §6.15), e as fichas 53 e 54 estão abertas: o Eric decide pelo painel.
+    ("Pós-Fase 4", [
+        ("posfase4", "Pós-Fase 4", "O que o Eric pediu em três partes, o que a pesquisa sustenta, os vereditos dos oito repositórios e das cinco bases, as decisões do quadro e o plano aprovado, com os pacotes antes e depois da Fase 5."),
+    ]),
     ("Pesquisa e método", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
         ("metodo", "Método e limites", "Como a Fase 3 foi medida, as limitações declaradas e a Fase 3-B."),
@@ -1866,6 +1871,13 @@ function inedVerbete(){
     {label:'erros', data: lados.map(x => x[1].casos - x[1].acertos), backgroundColor: css('--ruim')}]},
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, title:{display:true,text:'casos'}}, y:{stacked:true}}}});
 }
+// aba Pós-Fase 4 (07/11/2026): fontes com endereço por leitura da rodada 6, coloridas pela parte do pedido
+function posFontes(){
+  const L = (T.posfase4||{}).leituras||[]; if(!L.length) return;
+  grafico('g-pos4-fontes', {type:'bar', data:{labels: L.map(x => x.rotulo), datasets:[
+    {label:'fontes com endereço', data: L.map(x => x.fontes), backgroundColor: L.map(x => css(x.cor))}]},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, ticks:{stepSize:2}, title:{display:true,text:'fontes com endereço'}}}}});
+}
 // aba Tela e fixture (01/11/2026, corrida 18): acerto na tela e no fixture por classe; rótulos dados em cada lado
 function telaClasses(){
   const D = T.tela||{}; const C = D.por_classe||[]; if(!C.length) return;
@@ -2040,7 +2052,7 @@ function triMutacoes(){
 DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pesquisa": ["peRodadas"], "comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
                     "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"],
-                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaRegra", "telaCorridas", "telaVerbete", "telaClasses", "telaRotulos"], "ineditosf4": ["inedClasse", "inedVerbete"], "cura": ["curaModos", "curaRoteiros"],
+                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaRegra", "telaCorridas", "telaVerbete", "telaClasses", "telaRotulos"], "ineditosf4": ["inedClasse", "inedVerbete"], "posfase4": ["posFontes"], "cura": ["curaModos", "curaRoteiros"],
                     "biblioteca": ["bibFiltros", "bibReavaliacao"], "cenarios": ["cenMttr", "cenSucesso"], "trilha": ["triSinais", "triMutacoes"], "experimento": ["expAcerto", "expTrocas"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
@@ -3344,6 +3356,128 @@ def secao_conferencia(conf: dict | None, respostas: dict | None = None) -> tuple
     return {}, html_
 
 
+# ! Alteração de IA - Revisar: (07/11/2026) a aba "Pós-Fase 4": o que o Eric pediu em três partes, o que a pesquisa da rodada 6 sustenta (levantamento §6.15: a tabela do cabeçalho e o mapa), as quatro decisões do quadro e as fichas abertas (pendencias.md, fichas 49 a 54) e os pacotes do plano (títulos "### Qn." de claude-memoria/plano-aprovado-pos-fase-4.md, ou do rascunho plano-pos-fase-4.md enquanto não aprovado).
+# ! Motivo: a regra do painel é uma aba por análise, e o Eric decide pelo painel: as fichas 53 e 54 estão abertas, e a aba mostra o que cada uma pergunta com os vereditos que a sustentam. Nenhum número é digitado aqui: tudo é lido por expressão regular dos três arquivos.
+_POS4_CABECALHO = re.compile(r"^\| §6\.15\.(\d+) \| (\d) \| `([^`]+)` \| (\d+) \|$", re.MULTILINE)
+_POS4_TITULO = re.compile(r"^#### 6\.15\.(\d+) (.+?) \(`([^`]+)`; (\d+) fontes? com endereço\)$", re.MULTILINE)
+_POS4_PACOTE = re.compile(r"^### (Q\d)\. (.+?) \((.+?)\)$", re.MULTILINE)
+POS4_ROTULOS = {"pos4-revisao-estilo-pr": "Hub estilo PR", "pos4-indicador-de-progresso": "Barra de progresso", "pos4-arvore-de-decisao": "Árvore de decisão",
+                "pos4-metricas-de-prolixidade": "Métricas de prolixidade", "pos4-impacto-git-e-vm": "Impacto pelo Git e VM", "pos4-syllabus-ctfl": "Syllabus CTFL 4.0"}
+POS4_COR_DA_PARTE = {"1": "--s1", "2": "--s2", "3": "--s3"}
+POS4_CHIP = {"adotado": "adotado", "ideia": "andamento", "adiado": "outro", "descartado": "nao_cumprida"}
+
+
+def _pos4_leituras(lev: str) -> list[dict]:
+    """As linhas da tabela do cabeçalho do §6.15, com o título lido da subseção de cada chave."""
+    titulos = {m.group(3): m.group(2) for m in _POS4_TITULO.finditer(lev)}
+    saida = []
+    for m in _POS4_CABECALHO.finditer(lev):
+        n, parte, chave, fontes = m.groups()
+        saida.append({"n": int(n), "parte": parte, "chave": chave, "titulo": titulos.get(chave, chave), "fontes": int(fontes),
+                      "rotulo": POS4_ROTULOS.get(chave, chave.replace("pos4-repo-", "").replace("pos4-", "")), "cor": POS4_COR_DA_PARTE.get(parte, "--s8")})
+    return saida
+
+
+def _pos4_mapa(lev: str) -> list[dict]:
+    """As linhas da tabela do mapa do levantamento: leitura, chave, o que vale para o Claude Code e para o agente, o que fica, veredito."""
+    ini = lev.find("Mapa adotado, ideia, adiado, descartado")
+    if ini < 0:
+        return []
+    saida = []
+    for l in lev[ini:].splitlines():
+        if not l.startswith("| ") or l.startswith(("| Leitura", "|---")):
+            continue
+        cel = [c.strip() for c in l.strip().strip("|").split(" | ")]
+        if len(cel) != 5:
+            continue
+        m = re.match(r"^(.*) \(`([^`]+)`\)$", cel[0])
+        saida.append({"leitura": m.group(1) if m else cel[0], "chave": m.group(2) if m else "", "claude": cel[1], "agente": cel[2], "fica": cel[3], "veredito": cel[4].strip("*")})
+    return saida
+
+
+def _pos4_tabela_do_syllabus(lev: str) -> tuple[list[str], list[list[str]]]:
+    """A tabela "Onde o projeto cabe" da leitura do syllabus (§6.15.6): cabeçalho e linhas, como texto."""
+    ini = lev.find("| Dimensão do syllabus |")
+    if ini < 0:
+        return [], []
+    linhas = []
+    for l in lev[ini:].splitlines():
+        if not l.startswith("|"):
+            break
+        if l.startswith("|---"):
+            continue
+        linhas.append([c.strip() for c in l.strip().strip("|").split(" | ")])
+    return linhas[0], linhas[1:]
+
+
+def secao_pos_fase4(levantamento: str | None, plano: str | None, pend: list) -> tuple[dict, str]:
+    titulo = "Pós-Fase 4: o que chega ao analista. O que o Eric pediu, o que a pesquisa sustenta e o que entra antes e depois da Fase 5?"
+    if not levantamento:
+        return {}, (f'<section id="posfase4" hidden>\n<h1>{titulo}</h1>\n<p class="lead">O levantamento ainda não foi integrado: falta '
+                    '<code>Documentacao/memorial/2-pesquisa-e-literatura/levantamento-2026-11-07-pos-fase-4.md</code>, que sai de <code>integrar_pesquisa_pos_fase4.py</code>.</p>\n</section>')
+    leituras, mapa = _pos4_leituras(levantamento), _pos4_mapa(levantamento)
+    por_parte = Counter(x["parte"] for x in leituras)
+    vereditos = Counter(m["veredito"] for m in mapa if m["chave"].startswith("pos4-repo-"))
+    fichas = {f.numero: f for b in pend for f in b.fichas if 49 <= f.numero <= 54}
+    fechadas = [f for n, f in sorted(fichas.items()) if not f.aberta]
+    abertas = [f for n, f in sorted(fichas.items()) if f.aberta]
+    pacotes = _POS4_PACOTE.findall(plano or "")
+    total_fontes = sum(x["fontes"] for x in leituras)
+    repos = [m for m in mapa if m["chave"].startswith("pos4-repo-")]
+    itens_kpi = [("Leituras", str(len(leituras)), f'{por_parte.get("1", 0)} bases, {por_parte.get("2", 0)} syllabus, {por_parte.get("3", 0)} repositórios; sem verificação cética'),
+                 ("Fontes com endereço", str(total_fontes), "contadas pelo integrador; valem com a marca de confiança de cada leitura"),
+                 ("Repositórios que entram", f'{vereditos.get("adotado", 0)} de {len(repos)}', f'ideia: {vereditos.get("ideia", 0)}; adiado: {vereditos.get("adiado", 0)}; descartado: {vereditos.get("descartado", 0)}'),
+                 ("Decisões do Eric", str(len(fechadas)), "no quadro da sessão de 07/11/2026" if fechadas else "nenhuma ainda"),
+                 ("Fichas abertas", str(len(abertas)), ", ".join(f"ficha {f.numero}" for f in abertas) or "nenhuma")]
+    pendentes = (f'{len(abertas)} fichas esperam resposta: ' + "; ".join(f"ficha {f.numero}, {esc(f.titulo)}" for f in abertas) + "." if abertas
+                 else "nenhuma ficha espera resposta.")
+    lead_ = (f'Em 07/11/2026 o Eric especificou a fase em três partes e a pesquisa foi feita no mesmo dia: {len(leituras)} leituras com {total_fontes} fontes com endereço. '
+             f'Dos {len(repos)} repositórios, {vereditos.get("adotado", 0)} entram como peça do agente; {vereditos.get("ideia", 0)} deixam uma ideia e {vereditos.get("adiado", 0)} ficam como candidatos futuros. '
+             f'{len(fechadas)} decisões foram tomadas no quadro e {pendentes}')
+    tab_decisoes = tabela(["Ficha", "Pergunta", "Decisão"], [[str(f.numero), esc(f.titulo), pt.inline(f.campos.get("Decisão", ""))] for f in fechadas], raw=True) if fechadas else "<p>Nenhuma ficha fechada ainda.</p>"
+    tab_leituras = tabela(["Subseção", "Parte", "Leitura", "Fontes com endereço"], [[f'§6.15.{x["n"]}', x["parte"], f'{esc(x["titulo"])} (<code>{esc(x["chave"])}</code>)', str(x["fontes"])] for x in leituras], raw=True)
+    tab_mapa = tabela(["Leitura", "Para o Claude Code", "Para o agente", "O que fica", "Veredito"],
+                      [[esc(m["leitura"]), pt.inline(m["claude"]), pt.inline(m["agente"]), pt.inline(m["fica"]), chip(POS4_CHIP.get(m["veredito"], "outro"), m["veredito"])] for m in mapa], raw=True)
+    cab_s, linhas_s = _pos4_tabela_do_syllabus(levantamento)
+    tab_syllabus = tabela(cab_s, [[pt.inline(c) for c in l] for l in linhas_s], raw=True) if linhas_s else "<p>A leitura do syllabus ainda não está no levantamento.</p>"
+    tab_pacotes = tabela(["Pacote", "O que entrega", "Sessões e máquina"], [[p, esc(t), esc(c)] for p, t, c in pacotes], raw=True) if pacotes else "<p>O plano em rascunho ainda não existe.</p>"
+
+    def bloco_ficha(f) -> str:
+        opcoes = "".join(f"<li>{pt.inline(o)}</li>" for o in f.listas.get("Opções", []))
+        return (f'<details open><summary>ficha {f.numero}: {esc(f.titulo)}</summary><p>{pt.inline(f.campos.get("O que é", ""))}</p><ul>{opcoes}</ul>'
+                f'<p><strong>Recomendação:</strong> {pt.inline(f.campos.get("Recomendação", ""))}</p></details>')
+
+    html_ = f"""<section id="posfase4" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>O que o Eric pediu</h2>
+<p>Três partes: (1) o visual e a usabilidade do agente, com um hub central à imagem de uma pull request, a integração com o Git, a barra de progresso, a árvore de decisão e a normalização das respostas por filtros determinísticos, tudo local na máquina do dev de QA; (2) o projeto contra o syllabus CTFL 4.0 do ISTQB, na tradução do BSTQB; (3) oito repositórios do GitHub, com a viabilidade para o Claude Code e para o agente.</p>
+<h2>As decisões do quadro</h2>
+{tab_decisoes}
+<h2>O que depende do Eric</h2>
+{"".join(bloco_ficha(f) for f in abertas) or "<p>Nenhuma ficha aberta: as fichas 49 a 54 foram respondidas no quadro da sessão de 07/11/2026.</p>"}
+<h2>Fontes por leitura</h2>
+<p>Quantas fontes com endereço cada leitura cita; a cor é a parte do pedido. Nenhuma passou por verificação cética: o número vale com a marca de confiança da leitura.</p>
+<div class="chart"><canvas id="g-pos4-fontes"></canvas></div>
+{detalhes("As leituras, uma a uma", tab_leituras)}
+<h2>O mapa: o que entra, o que fica como ideia, o que sai</h2>
+{tab_mapa}
+<h2>O projeto contra o syllabus</h2>
+{tab_syllabus}
+<h2>Os pacotes do plano aprovado</h2>
+{tab_pacotes}
+{leitura([
+    "<strong>A divisão</strong> (decisão 101): o que muda o que o analista lê entra antes da Fase 5; o hub e a integração com o Git, depois dela, como a decisão 93 previa.",
+    "<strong>O mapa</strong> foi escrito pelo Claude; o plano que o incorpora foi aprovado como está (ficha 54, decisão 105), e nenhum dos dois repositórios opcionais ganha sessão de teste (ficha 53, decisão 106).",
+    "<strong>Pelo syllabus</strong>, o agente faz teste funcional, caixa-preta e automatizado, de regressão e de confirmação, nos níveis de sistema e de integração de sistema, sobre tarefas de ponta a ponta; o que faltava era o relatório de defeitos da seção 5.5 (decisão 104).",
+])}
+{fontes(["<code>Documentacao/memorial/2-pesquisa-e-literatura/levantamento-2026-11-07-pos-fase-4.md</code> (<code>integrar_pesquisa_pos_fase4.py</code>, com <code>--check</code>; leituras em <code>5-metodo-e-ferramental/dados/pesquisa-pos-fase-4/</code>)",
+         "<code>claude-memoria/plano-aprovado-pos-fase-4.md</code> (aprovado pela decisão 105)", "<code>pendencias.md</code>, fichas 49 a 54; decisões 101 a 106; roadmap §4.8"])}
+</section>"""
+    return {"leituras": leituras, "mapa": mapa, "vereditos": dict(vereditos)}, html_
+
+
 # ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) a aba "Fechamento da fase": a tabela das regras (seção 10) e as seções 1, 11, 12 e 15 lidas do relatório da fase, os cartões lidos dos JSON das leituras vigentes (tela_v2, cura, cenarios_v2, leitura_revisao_trilha) e as fichas abertas.
 # ! Motivo: o plano previa uma aba da fase (seção 3.8), e as sete abas por análise não dizem o que fechou, o que ficou como limitação e o que depende do Eric. Ele decide pelo painel, não pelo Markdown. Nenhum número é digitado aqui.
 ESTADOS_REGRA = {"cumprida": ("Cumprida", "concluida"), "ressalva": ("Cumprida com ressalva", "andamento"), "medida": ("Medida", "outro"), "nao": ("Não cumprida", "nao_cumprida")}
@@ -3706,4 +3840,7 @@ def montar(ctx: dict) -> tuple[dict, str]:
     partes.append(("ineditosf4", d, h))
     d, h = secao_fechamento_f4(ctx.get("relatorio_f4"), ctx.get("pend", []), ctx["md_doc_para_html"], tela=ctx.get("tela_v4") or ctx.get("tela_v3") or ctx.get("tela_v2"), cura=ctx.get("cura"), cenarios=ctx.get("cenarios_v4") or ctx.get("cenarios_v3") or ctx.get("cenarios_v2"), revisao=ctx.get("revisao_trilha"), road=road, cartoes_corridas=ctx["cartoes_corridas"], corrida_tela="18d" if ctx.get("tela_v4") else "18c" if ctx.get("tela_v3") else "18b", corrida_cenarios="21d" if ctx.get("cenarios_v4") else "21c" if ctx.get("cenarios_v3") else "21b")
     partes.append(("fechamentof4", d, h))
+    # a aba da Pós-Fase 4 existe sempre (o mapa de navegação a lista); sem o levantamento §6.15 ela mostra o estado vazio
+    d, h = secao_pos_fase4(ctx.get("levantamento_pos4"), ctx.get("plano_pos4"), ctx.get("pend", []))
+    partes.append(("posfase4", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

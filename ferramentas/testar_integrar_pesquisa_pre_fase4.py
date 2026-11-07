@@ -125,7 +125,9 @@ class TestesDoIntegrador(unittest.TestCase):
         r1, novas1, total1 = ip.referencias_com_bloco(REFERENCIAS, so_a)
         self.assertEqual((novas1, total1), (1, 3))  # REF_A já constava no bloco antigo
         self.assertEqual(r1.count(ip.TITULO_REFS), 1)
-        self.assertIn("29/09 e 01/10/2026 produziram as **3** referências abaixo", r1)
+        # ! Alteração de IA - Revisar: (07/11/2026) a frase esperada ganhou a data da rodada 6 (Pós-Fase 4).
+        # ! Motivo: a lista de datas virou a constante DATAS_DOS_LEVANTAMENTOS, que os dois integradores escrevem igual.
+        self.assertIn("01/10 e 07/11/2026 produziram as **3** referências abaixo", r1)
         self.assertEqual(r1.count(REF_A), 1)
         r2, novas2, total2 = ip.referencias_com_bloco(r1, so_a)
         self.assertEqual((r2, novas2, total2), (r1, 1, 3))  # a segunda integração não muda nada

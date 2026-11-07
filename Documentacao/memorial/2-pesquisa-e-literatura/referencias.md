@@ -26,7 +26,7 @@ Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md)
 
 <!-- ! Alteração de IA - Revisar: total de referências e lista de levantamentos acertados em 01/10/2026, contando as entradas do arquivo.
      ! Motivo: a frase dizia 278 referências e citava só os levantamentos de 11/09 e 21/09; as rodadas de 22/09 e de 29/09 acrescentaram blocos sem atualizar o total. -->
-Além das 7 do projeto de pesquisa, os levantamentos de 11/09, 21/09, 22/09, 29/09 e 01/10/2026 produziram as **617** referências abaixo, organizadas por tema. Nem todas precisam entrar no relatório; estão aqui para consulta.
+Além das 7 do projeto de pesquisa, os levantamentos de 11/09, 21/09, 22/09, 29/09, 01/10 e 07/11/2026 produziram as **688** referências abaixo, organizadas por tema. Nem todas precisam entrar no relatório; estão aqui para consulta.
 
 Duas convenções de leitura. A marca *(suporte parcial — conferir)* indica fonte em que a rodada de verificação de 11/09/2026 confirmou a afirmação mas corrigiu o número, a condição de medição ou a atribuição de autoria — a correção está escrita no parágrafo correspondente do [levantamento](levantamento-2026-09-11-fase-3.md), e a referência não deve ir ao relatório final sem essa leitura. As entradas seguem o formato de trabalho deste arquivo (sobrenome, iniciais, título em negrito, veículo, ano e URL), não o ABNT completo; a versão ABNT de cada uma das referências de 11/09/2026 está no levantamento.
 
@@ -504,6 +504,83 @@ Duas convenções de leitura. A marca *(suporte parcial — conferir)* indica fo
 - ZHANG, Y.; ZHANG, J.; ZHAO, H.; MA, Y.; ZHAO, C. An Interpretable Memory Decision Controller for LLM Agents Based on Three-Signal Complementarity: Decoupling Confidence and Consistency. arXiv preprint arXiv:2609.22043, 2026. Disponível em: https://arxiv.org/abs/2609.22043. Acesso em: 29 set. 2026.
 - ZHANG, Z.; WANG, Y.; WANG, C.; CHEN, J.; ZHENG, Z. LLM Hallucinations in Practical Code Generation: Phenomena, Mechanism, and Mitigation. In: ISSTA 2025 (ACM SIGSOFT International Symposium on Software Testing and Analysis), 2025. Disponível em: https://arxiv.org/abs/2409.20550. Acesso em: 29 set. 2026.
 - ZIZZO, G.; CORNACCHIA, G.; FRASER, K.; HAMEED, M. Z.; RAWAT, A.; BUESSER, B.; PURCELL, M.; CHEN, P.-Y.; SATTIGERI, P.; VARSHNEY, K. Adversarial Prompt Evaluation: Systematic Benchmarking of Guardrails Against Prompt Input Attacks on LLMs. In: NeurIPS 2024 Safe Generative AI Workshop; arXiv preprint arXiv:2502.15427, 2025. Disponível em: https://arxiv.org/abs/2502.15427. Acesso em: 29 set. 2026.
+
+### Levantamento da Pós-Fase 4 (levantamento de 07/11/2026)
+
+<!-- ! Alteração de IA - Revisar: bloco gerado por ferramentas/integrar_pesquisa_pos_fase4.py a partir das leituras da rodada 6 (Pós-Fase 4); referências já presentes no arquivo foram omitidas (mesma chave das outras rodadas, sobrenome, ano e início do título, ou o mesmo endereço). O bloco fica antes do bloco da Pré-Fase 4, que o integrador dela trata como o último do arquivo.
+     ! Motivo: cada leitura traz as suas fontes na norma; sem a conferência as mesmas fontes entrariam duas vezes e o total do arquivo ficaria errado. -->
+
+- ACTIVEING123. mcptoon: one zero-dependency MCP gateway CLI for every server and agent skill. [S. l.]: GitHub, [20--?]. Disponível em: https://github.com/activeing123/mcptoon. Acesso em: 7 nov. 2026.
+- ACTIVEING123. README do mcptoon. [S. l.]: GitHub, [20--?]. Disponível em: https://raw.githubusercontent.com/activeing123/mcptoon/HEAD/README.md. Acesso em: 7 nov. 2026.
+- ADAMS, Griffin et al. From sparse to dense: GPT-4 summarization with Chain of Density prompting. arXiv:2309.04269, 2023. Disponível em: https://arxiv.org/abs/2309.04269. Acesso em: 7 nov. 2026.
+- AGRAWAL, Lakshya A. et al. GEPA: reflective prompt evolution can outperform reinforcement learning. arXiv:2507.19457, 2025. Disponível em: https://arxiv.org/abs/2507.19457. Acesso em: 7 nov. 2026.
+- AGRICIDANIEL. claude-obsidian: self-organizing AI second brain for Obsidian + Claude Code. Disponível em: https://github.com/AgriciDaniel/claude-obsidian. Acesso em: 7 nov. 2026.
+- AGRICIDANIEL. Windows e WSL. In: claude-obsidian, docs/windows-wsl.md. Disponível em: https://github.com/AgriciDaniel/claude-obsidian/blob/main/docs/windows-wsl.md. Acesso em: 7 nov. 2026.
+- AMERSHI, Saleema et al. Guidelines for human-AI interaction. In: CHI CONFERENCE ON HUMAN FACTORS IN COMPUTING SYSTEMS, 2019. Anais [...]. ACM, 2019. Disponível em: https://www.microsoft.com/en-us/research/publication/guidelines-for-human-ai-interaction/. Acesso em: 7 nov. 2026.
+- APPLE. Accessories: dimensional drawings. Disponível em: https://developer.apple.com/accessories/dimensional-drawings/. Acesso em: 7 nov. 2026.
+- APPLE. Human Interface Guidelines: Progress indicators. Cupertino: Apple, 2023 (alterado em 12 set. 2023). Disponível em: https://developer.apple.com/design/human-interface-guidelines/progress-indicators. Acesso em: 7 nov. 2026.
+- BACCHELLI, A.; BIRD, C. Expectations, outcomes, and challenges of modern code review. In: INTERNATIONAL CONFERENCE ON SOFTWARE ENGINEERING (ICSE), 35., 2013, São Francisco. Anais [...]. IEEE, 2013. p. 712-721. DOI 10.1109/ICSE.2013.6606617. Disponível em: https://2013.icse-conferences.org/content/expectations-outcomes-and-challenges-modern-code-review.html. Acesso em: 7 nov. 2026.
+- BRASIL. Lei n. 15.263, de 14 de novembro de 2025. Institui a Política Nacional de Linguagem Simples nos órgãos e entidades da administração pública. Disponível em: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2025/lei/L15263.htm. Acesso em: 7 nov. 2026.
+- BUELL, Ryan W.; NORTON, Michael I. The labor illusion: how operational transparency increases perceived value. Management Science, v. 57, n. 9, p. 1564-1579, 2011. DOI 10.1287/mnsc.1110.1376. Disponível em: https://ideas.repec.org/a/inm/ormnsc/v57y2011i9p1564-1579.html. Acesso em: 7 nov. 2026.
+- CONVENTIONAL COMMENTS. Conventional Comments. Disponível em: https://conventionalcomments.org/. Acesso em: 7 nov. 2026.
+- CYNTHIA, S. T. et al. "Go Home Copilot, You're Drunk": understanding developer responses to agent-generated code review comments. arXiv:2607.21997, 24 jul. 2026 (v2, 29 jul. 2026), preprint. Disponível em: https://arxiv.org/abs/2607.21997. Acesso em: 7 nov. 2026.
+- DOCKER. Install Docker Desktop on Windows. Docker Docs. Disponível em: https://docs.docker.com/desktop/setup/install/windows-install/. Acesso em: 7 nov. 2026.
+- DUBOIS, Yann; GALAMBOSI, Balázs; LIANG, Percy; HASHIMOTO, Tatsunori B. Length-Controlled AlpacaEval: a simple way to debias automatic evaluators. arXiv:2404.04475, 2024. Disponível em: https://arxiv.org/abs/2404.04475. Acesso em: 7 nov. 2026.
+- EAGLE-4 TEAM. EAGLE-4: official inference code of EAGLE-4. Disponível em: https://github.com/eagle-hq/eagle-4. Acesso em: 7 nov. 2026.
+- FIRECRAWL. MCP vs CLI. Disponível em: https://www.firecrawl.dev/blog/mcp-vs-cli. Acesso em: 7 nov. 2026.
+- GEPA-AI. GEPA: optimize prompts, code, and more with AI-powered reflective optimization. Disponível em: https://github.com/gepa-ai/gepa. Acesso em: 7 nov. 2026.
+- GITHUB. About pull request reviews. GitHub Docs. Disponível em: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews. Acesso em: 7 nov. 2026.
+- GITHUB. Incorporating feedback in your pull request. GitHub Docs. Disponível em: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/incorporating-feedback-in-your-pull-request. Acesso em: 7 nov. 2026.
+- GITHUB. Reviewing proposed changes in a pull request. GitHub Docs. Disponível em: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request. Acesso em: 7 nov. 2026.
+- GLIGORIC, M.; ELOUSSI, L.; MARINOV, D. Practical regression test selection with dynamic file dependencies. In: INTERNATIONAL SYMPOSIUM ON SOFTWARE TESTING AND ANALYSIS (ISSTA), 2015, Baltimore. Proceedings [...]. New York: ACM, 2015. DOI 10.1145/2771783.2771784. Disponível em: https://users.ece.utexas.edu/~gligoric/papers/abstracts/GligoricETAL15Ekstazi.txt. Acesso em: 7 nov. 2026.
+- GOOGLE. Google developer documentation style guide: tone and content. Disponível em: https://developers.google.com/style/tone. Acesso em: 7 nov. 2026.
+- GOOGLE. Google Python Style Guide: block and inline comments. Disponível em: https://google.github.io/styleguide/pyguide.html. Acesso em: 7 nov. 2026.
+- GOOGLE. The standard of code review. Google Engineering Practices. Disponível em: https://google.github.io/eng-practices/review/reviewer/standard.html. Acesso em: 7 nov. 2026.
+- GUO, Zirui et al. RAG-Anything: All-in-One RAG Framework. Disponível em: https://github.com/HKUDS/RAG-Anything. Acesso em: 7 nov. 2026.
+- GUO, Zirui; REN, Xubin; XU, Lingrui; ZHANG, Jiahao; HUANG, Chao. RAG-Anything: All-in-One RAG Framework. arXiv:2510.12323, 2025. Disponível em: https://arxiv.org/abs/2510.12323. Acesso em: 7 nov. 2026.
+- HARRISON, Chris; AMENTO, Brian; KUZNETSOV, Stacey; BELL, Robert. Rethinking the progress bar. In: ACM SYMPOSIUM ON USER INTERFACE SOFTWARE AND TECHNOLOGY (UIST), 20., 2007, Newport. Proceedings [...]. New York: ACM, 2007. p. 115-118. Disponível em: https://chrisharrison.net/projects/progressbars/ProgBarHarrison.pdf. Acesso em: 7 nov. 2026.
+- ISO. ISO 24495-1:2023: Plain language, part 1: governing principles and guidelines. Genebra: ISO, 2023. Disponível em: https://www.iso.org/standard/78907.html (a página da ISO devolveu 403; li a ficha em https://accessible-eu-centre.ec.europa.eu/content-corner/digital-library/iso-24495-12023-plain-language-part-1-governing-principles-and-guidelines_en). Acesso em: 7 nov. 2026.
+- ISTQB. Certified Tester Foundation Level (CTFL) Syllabus: versão 4.0. Tradução: BSTQB. [S. l.]: International Software Testing Qualifications Board, 2023. 66 p. Versão de lançamento de 21 abr. 2023; tradução revisada em 6 jan. 2025. Disponível em: https://bstqb.qa/. Acesso em: 7 nov. 2026.
+- KARPATHY, Andrej. LLM Wiki. 4 abr. 2026. Disponível em: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f. Acesso em: 7 nov. 2026.
+- KEPANO. obsidian-skills. Disponível em: https://github.com/kepano/obsidian-skills. Acesso em: 7 nov. 2026.
+- LANGCHAIN. LangSmith: observability concepts. Disponível em: https://docs.langchain.com/langsmith/observability-concepts. Acesso em: 7 nov. 2026.
+- LEAL, Sidney Evaldo et al. NILC-Metrix: assessing the complexity of written and spoken language in Brazilian Portuguese. Language Resources and Evaluation, v. 58, 2023. DOI 10.1007/s10579-023-09693-w. Disponível em: https://arxiv.org/abs/2201.03445. Acesso em: 7 nov. 2026.
+- LIM, B. Y.; DEY, A. K.; AVRAHAMI, D. Why and why not explanations improve the intelligibility of context-aware intelligent systems. In: CHI, 27., 2009. Proceedings [...]. ACM, 2009. p. 2119-2128. DOI 10.1145/1518701.1519023. Disponível em: https://bibtex.github.io/CHI-2009-LimDA.html. Acesso em: 7 nov. 2026.
+- LIM, Brian Y.; DEY, Anind K. Assessing demand for intelligibility in context-aware applications. In: INTERNATIONAL CONFERENCE ON UBIQUITOUS COMPUTING (UbiComp), 11., 2009. Anais [...]. ACM, 2009. p. 195-204. Disponível em: https://dblp.uni-trier.de/rec/conf/huc/LimD09.html. Acesso em: 7 nov. 2026.
+- LIN, Yuxiang; INFINITE UNIVERSE, INC. (Egonex-AI). Understand-Anything. Disponível em: https://github.com/Egonex-AI/Understand-Anything. Acesso em: 7 nov. 2026.
+- MACHALICA, M. et al. Predictive test selection. In: INTERNATIONAL CONFERENCE ON SOFTWARE ENGINEERING: SOFTWARE ENGINEERING IN PRACTICE (ICSE-SEIP), 41., 2019, Montreal. Proceedings [...]. IEEE, 2019. arXiv:1810.05286. Disponível em: https://arxiv.org/abs/1810.05286. Acesso em: 7 nov. 2026.
+- MARTINS, Teresa B. F.; GHIRALDELO, Claudete M.; NUNES, M. das Graças V.; OLIVEIRA JR., Osvaldo N. Readability formulas applied to textbooks in Brazilian Portuguese. São Carlos: ICMSC-USP, 1996. (Notas do ICMSC, n. 28). Disponível em: https://repositorio.usp.br/item/000906089. Acesso em: 7 nov. 2026.
+- MATERIAL COMPONENTS ANDROID. Progress indicator. GitHub: material-components-android, docs/components/ProgressIndicator.md. Disponível em: https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md. Acesso em: 7 nov. 2026.
+- MCP-ZERO. arXiv:2506.01056. Disponível em: https://arxiv.org/abs/2506.01056. Acesso em: 7 nov. 2026.
+- MEMON, A. et al. Taming Google-scale continuous testing. In: INTERNATIONAL CONFERENCE ON SOFTWARE ENGINEERING: SOFTWARE ENGINEERING IN PRACTICE TRACK (ICSE-SEIP), 39., 2017, Buenos Aires. Proceedings [...]. Piscataway: IEEE, 2017. p. 233-242. DOI 10.1109/ICSE-SEIP.2017.16. Disponível em: https://huang.isis.vanderbilt.edu/cs4278/readings/googletest.pdf. Acesso em: 7 nov. 2026.
+- MICROSOFT. Advanced settings configuration in WSL. Microsoft Learn, 16 out. 2026. Disponível em: https://learn.microsoft.com/en-us/windows/wsl/wsl-config. Acesso em: 7 nov. 2026.
+- MICROSOFT. Comparing WSL versions. Microsoft Learn. Disponível em: https://learn.microsoft.com/en-us/windows/wsl/compare-versions. Acesso em: 7 nov. 2026.
+- MICROSOFT. FAQ's about Windows Subsystem for Linux. Microsoft Learn. Disponível em: https://learn.microsoft.com/en-us/windows/wsl/faq. Acesso em: 7 nov. 2026.
+- MICROSOFT. Install WSL. Microsoft Learn. Disponível em: https://learn.microsoft.com/en-us/windows/wsl/install. Acesso em: 7 nov. 2026.
+- MICROSOFT. Review and comment on pull requests (Azure Repos). Microsoft Learn, atualizada em 8 set. 2026. Disponível em: https://learn.microsoft.com/en-us/azure/devops/repos/git/review-pull-requests?view=azure-devops. Acesso em: 7 nov. 2026.
+- MICROSOFT. System requirements for Hyper-V on Windows and Windows Server. Microsoft Learn. Disponível em: https://learn.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/hyper-v-requirements. Acesso em: 7 nov. 2026.
+- MICROSOFT. Use Test Impact Analysis. Microsoft Learn, Azure Pipelines. Disponível em: https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-impact-analysis. Acesso em: 7 nov. 2026.
+- MILLER, Tim. Explanation in artificial intelligence: insights from the social sciences. Artificial Intelligence, v. 267, p. 1-38, 2019. Preprint: arXiv:1706.07269. Disponível em: https://arxiv.org/abs/1706.07269. Acesso em: 7 nov. 2026.
+- MYERS, Brad A. Using percent-done progress indicators to enhance user interfaces. In: GRAPHICS INTERFACE '85, 1985, Montréal. Proceedings [...]. 1985. p. 167-170. DOI 10.20380/GI1985.24. Disponível em: https://graphicsinterface.org/wp-content/uploads/2015/03/gi1985-24.pdf. Acesso em: 7 nov. 2026.
+- NIELSEN NORMAN GROUP. Progress indicators make a slow system less insufferable. Disponível em: https://www.nngroup.com/articles/progress-indicators/. Acesso em: 7 nov. 2026.
+- NIELSEN, Jakob. Response times: the 3 important limits. Nielsen Norman Group, 1 jan. 1993 (trecho de Usability Engineering; atualizado em 2014). Disponível em: https://www.nngroup.com/articles/response-times-3-important-limits/. Acesso em: 7 nov. 2026.
+- OLLAMA. API reference: generate a completion. GitHub: ollama/ollama, docs/api.md. Disponível em: https://github.com/ollama/ollama/blob/main/docs/api.md. Acesso em: 7 nov. 2026.
+- OLLAMA. Docker. Ollama Docs. Disponível em: https://docs.ollama.com/docker. Acesso em: 7 nov. 2026.
+- OLLAMA. Windows. Ollama Docs. Disponível em: https://docs.ollama.com/windows. Acesso em: 7 nov. 2026.
+- OZTURK, Enes. dimensional-drawing: agent skills para criar desenhos dimensionais de componentes de interface. Disponível em: https://github.com/enesozturk/dimensional-drawing. Acesso em: 7 nov. 2026.
+- ROTHERMEL, G.; HARROLD, M. J. A safe, efficient regression test selection technique. ACM Transactions on Software Engineering and Methodology, v. 6, n. 2, p. 173-210, abr. 1997. DOI 10.1145/248233.248262. Disponível em: https://www.cs.purdue.edu/homes/xyzhang/spring07/Papers/p173-rothermel.pdf. Acesso em: 7 nov. 2026.
+- SADOWSKI, C. et al. Modern code review: a case study at Google. In: ICSE-SEIP, 2018. Disponível em: https://research.google/pubs/modern-code-review-a-case-study-at-google/. Acesso em: 7 nov. 2026.
+- SCALEKIT. MCP vs CLI use. Disponível em: https://www.scalekit.com/blog/mcp-vs-cli-use. Acesso em: 7 nov. 2026.
+- SISOFTWARE. Performance impact of Hyper-V virtualisation (Windows 10 Pro) - Compute. Disponível em: https://www.sisoftware.co.uk/?p=2773. Acesso em: 7 nov. 2026.
+- SODIUMSUN. agenttrail: docs/INGEST.md. Disponível em: https://raw.githubusercontent.com/sodiumsun/agenttrail/HEAD/docs/INGEST.md. Acesso em: 7 nov. 2026.
+- SODIUMSUN. agenttrail: docs/OBSERVABILITY.md. Disponível em: https://raw.githubusercontent.com/sodiumsun/agenttrail/HEAD/docs/OBSERVABILITY.md. Acesso em: 7 nov. 2026.
+- SODIUMSUN. agenttrail: local observability for AI coding agents. Disponível em: https://github.com/sodiumsun/agenttrail. Acesso em: 7 nov. 2026.
+- SODIUMSUN. agenttrail: README.md. Disponível em: https://raw.githubusercontent.com/sodiumsun/agenttrail/HEAD/README.md. Acesso em: 7 nov. 2026.
+- STORM, Andreas. Publicação no X. Disponível em: https://x.com/avstorm. Acesso em: 7 nov. 2026.
+- TOON FORMAT. TOON: Token-Oriented Object Notation, especificação v4.1. [S. l.]: GitHub, [20--?]. Disponível em: https://github.com/toon-format/toon. Acesso em: 7 nov. 2026.
+- YOO, S.; HARMAN, M. Regression testing minimization, selection and prioritization: a survey. Software Testing, Verification and Reliability, v. 22, n. 2, p. 67-120, mar. 2012. DOI 10.1002/stvr.430. Disponível em: https://acawiki.org/Regression_testing_minimization,_selection_and_prioritization:_a_survey. Acesso em: 7 nov. 2026.
+- ZHANG, Yusen; DAS, Sarkar Snigdha Sarathi; ZHANG, Rui. Verbosity does not equal veracity: demystify verbosity compensation behavior of large language models. arXiv:2411.07858, 2024 (v2). Disponível em: https://arxiv.org/abs/2411.07858. Acesso em: 7 nov. 2026.
+- ZHENG, Lianmin et al. Judging LLM-as-a-judge with MT-Bench and Chatbot Arena. arXiv:2306.05685, 2023. Disponível em: https://arxiv.org/abs/2306.05685. Acesso em: 7 nov. 2026.
 
 ### Levantamento da Pré-Fase 4 (levantamento de 01/10/2026)
 

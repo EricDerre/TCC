@@ -54,6 +54,7 @@ COMO_LER_GRAFICO = {
     # ! Motivo: gráfico novo entra com o texto aqui, e o teste acusa se faltar.
     "g-ined-classe": "cada linha é uma classe de defeito, com seis casos que a biblioteca nunca viu. A parte verde são os acertos, e a vermelha, os erros. Mais verde é melhor, e a linha com mais vermelho é onde o agente mais erra.",
     "g-ined-verbete": "cada barra junta os casos em que o verbete da causa certa chegou ou não ao modelo. Verde são os acertos, e vermelho, os erros. Muito verde com o verbete e bem menos sem ele quer dizer que o acerto depende de a busca entregar o verbete certo.",
+    "g-pos4-fontes": "cada linha é uma leitura da rodada, e o comprimento da barra é quantas fontes com endereço ela cita. A cor é a parte do pedido: as bases do visual, o syllabus e os repositórios. Barra comprida não quer dizer leitura melhor: nenhuma fonte foi verificada por um segundo agente.",
     "g-tela-classe": "cada grupo é uma classe de defeito. A primeira barra é o total de casos, e as outras, os acertos lendo da tela, antes e depois dos sinais novos da busca, e lendo o caso escrito. Quanto mais perto do total, melhor.",
     "g-exp-acerto": "cada grupo é uma condição: a corrida 16, sem mudança, e as duas variações do prompt. As barras são o acerto nos 90 casos e nos casos de avaliação. Alturas parecidas entre os grupos querem dizer que a variação não mudou o acerto.",
     "g-exp-trocas": "cada linha é uma condição, comparada caso a caso com a corrida 16. A barra verde conta os casos que só a condição acerta, e a vermelha, os que só a corrida 16 acerta. Barras de tamanhos parecidos querem dizer empate: o saldo é o que importa.",
@@ -100,6 +101,9 @@ TABELAS_A_VISTA = {
     # ! Alteração de IA - Revisar: (05/11/2026, decisão 92) a tabela dos casos para olhar fica à vista na aba da conferência.
     # ! Motivo: no painel publicado ela saiu recolhida em "Mais informações", e é por ela que o Eric começa a conferência da ficha 46.
     ("conferencia", "Caso"),
+    # ! Alteração de IA - Revisar: (07/11/2026) o mapa dos vereditos e as decisões do quadro ficam à vista na aba da Pós-Fase 4.
+    # ! Motivo: são o conteúdo da aba, não os dados de um gráfico; é por eles que o Eric responde as fichas 53 e 54.
+    ("posfase4", "Leitura"), ("posfase4", "Ficha"),
 }
 
 # ! Alteração de IA - Revisar: (05/11/2026) a resposta de cada aba em linguagem direta, sem número; os cartões e os gráficos trazem os números, e o parágrafo antigo, com todos eles, fica em "Mais informações".
@@ -128,6 +132,9 @@ RESPOSTA_SIMPLES = {
     "experimento": "Não dá para dizer que mudam. Tanto o exemplar resolvido quanto os rótulos em palavras trocam a resposta em alguns casos, para os dois lados, e o saldo fica dentro do que corridas iguais já variam. O prompt do agente continua como está (decisão 91), e o número vai para o TCC.",
     "trilha": "Em parte. Com as intervenções em todos os casos, o sinal principal quase não separa erro de acerto; contado só onde um gatilho dispararia, separa melhor, mas essa conta sai de uma corrida que não rodou assim. A trilha registra a mudança no passo certo, como esperado. A corrida teve poucos erros, e a medida com revisor humano não foi feita.",
     "fechamentof4": "Nas regras, sim. Todas as regras do plano foram cumpridas, algumas com ressalva, inclusive a que compara a tela com o caso escrito, que fechou com a busca nova e no limite exato. O limite do prompt passou a ser cumprido com o caso encurtado. Falta a medida com revisor humano, que está em aberto e será feita depois da Pós-Fase 4. A corrida dos inéditos rodou, com os casos conferidos, e a biblioteca final acerta menos neles do que nos casos de avaliação. Antes da Fase 5 vem a Pós-Fase 4.",
+    # ! Alteração de IA - Revisar: (07/11/2026) a resposta da aba da Pós-Fase 4, sem número.
+    # ! Motivo: a regra das abas é a resposta em linguagem direta; os números ficam nos cartões e no parágrafo gerado, em "Mais informações".
+    "posfase4": "Dividida. O que muda o que o analista lê (o relatório no molde do relatório de defeitos do syllabus, a camada de leitura dos verbetes, os filtros, a árvore de decisão e a barra de progresso) entra antes da Fase 5; o hub à imagem de uma pull request e a integração com o Git ficam para depois dela. Tudo roda na máquina do dev, sem VM. Dos oito repositórios, nenhum entra como peça do agente: ficam três ideias e dois candidatos futuros. O plano foi aprovado em 07/11/2026, e o primeiro pacote começa na próxima sessão.",
 }
 
 # ! Alteração de IA - Revisar: (05/11/2026) os cartões de corrida ficam à vista só no Roadmap e no fechamento da Fase 4; nas outras abas, em "Mais informações".

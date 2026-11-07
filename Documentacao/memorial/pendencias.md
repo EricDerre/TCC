@@ -694,6 +694,91 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). A regra existe para a tela não piorar: acima do limite, ela manda rever o molde e a poda, e isso não faz sentido quando a tela acerta mais. Os dois números saem sempre juntos, e quem ler o TCC vê as duas contas.
 - **Decisão:** (a), pelo Eric em 06/11/2026, no quadro da sessão (decisão 98): "Sim, ler assim (a)". A leitura foi fixada antes da corrida 18d, sem conhecer o resultado dela: a regra conta os casos que a tela perde para o caso escrito (c até 3), e `avaliar_fase4.py --tela` grava as duas contas, `dentro_do_limite_r2` e `dentro_pela_soma`. Nas corridas 18, 18b e 18c o estado é o mesmo: c foi 16, 7 e 5, e a regra fica fora nas duas contas. Resultado, em 06/11/2026: na corrida 18d, c = 3 e b = 5, e na 18e, c = 0 e b = 4; a regra fecha pela leitura fixada, no limite exato, e pela soma dos dois lados (8 e 4) ficaria fora.
 
+## Abertas pela especificação da Pós-Fase 4 (07/11/2026)
+<!-- ! Alteração de IA - Revisar: bloco novo (07/11/2026) com as fichas 49 a 54, abertas quando o Eric especificou a Pós-Fase 4 em três partes; todas respondidas por ele no quadro da sessão no mesmo dia (decisões 101 a 106), as seis fechadas.
+     ! Motivo: a decisão 94 deixou a fase "a especificar pelo Eric"; a especificação chegou nesta data e trouxe quatro pontos que conflitavam com decisões anteriores (a 93 sobre a interface, a arquitetura local, a 69 e a 95 sobre o que o modelo lê, e o relatório de defeitos da seção 5.5 do syllabus), que precisavam de decisão dele antes de qualquer plano. O plano em rascunho está em `claude-memoria/plano-pos-fase-4.md`, e a pesquisa, no levantamento §6.15. -->
+
+**Decidido pelo Eric em 07/11/2026, no quadro da sessão:** fichas 49 a 54, todas pela opção (a), a recomendada (decisões 101 a 106); o plano da Pós-Fase 4 foi aprovado como está (`claude-memoria/plano-aprovado-pos-fase-4.md`).
+
+### 49. Pós-Fase 4: o hub central é a interface que a decisão 93 deixou para depois da Fase 5. Em que ordem entra cada parte?
+- **Estado:** fechada em 07/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 07/11/2026
+- **O que é:** A parte 1 da especificação pede um hub central à imagem de uma pull request (GitHub e Azure DevOps): a região em revisão à vista, comentários no trecho e na revisão, ativar e rodar os testes, ler respostas e relatórios; e pede a integração com o Git, para o agente ler o que mudou e preparar os testes pelos contratos. A decisão 93 (ficha 45) tinha deixado a interface para o analista (trace na falha, "Cérebro ao vivo", explorador com a trilha v2) para depois da Fase 5. O mesmo pedido traz coisas que mudam o que o analista lê hoje, sem precisar do hub: a barra de progresso, a árvore de decisão, os filtros e a normalização das respostas e a revisão dos verbetes.
+- **Por que importa:** A Fase 5 é a medida de valor do TCC e depende de três integrantes; o hub é a maior peça de código do pedido (cerca de quatro sessões). Fazer tudo antes da Fase 5 empurra a medida; fazer tudo depois deixa a medida com revisor humano (decisão 95) à espera de um formato que o hub não precisa para existir.
+- **Opções:**
+  - (a) Dividir: antes da Fase 5 entram a barra de progresso, a árvore de decisão gerada da trilha, os filtros e a normalização das respostas e a camada de leitura dos verbetes, com a revisão humana da decisão 95; o hub e a integração com o Git são desenhados, pesquisados e têm a viabilidade provada agora, e são construídos depois da Fase 5, como a decisão 93 previa.
+  - (b) Tudo antes da Fase 5.
+  - (c) Tudo depois da Fase 5, inclusive a normalização das respostas.
+- **Recomendação:** (a).
+- **Decisão:** (a), pelo Eric em 07/11/2026, no quadro da sessão (decisão 101): "Dividir". No plano (`claude-memoria/plano-aprovado-pos-fase-4.md`, aprovado pela decisão 105; seção 7), os pacotes Q1 a Q5 vêm antes da Fase 5 e Q6 a Q8 depois.
+
+### 50. VM ou servidor para rodar o agente, como o orientador sugeriu, ou tudo local na máquina do dev de QA?
+- **Estado:** fechada em 07/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 07/11/2026
+- **O que é:** O orientador sugeriu rodar o agente numa VM ou num servidor; o Eric acha o custo alto e pediu o contraponto, "tudo roda localmente na máquina do dev de QA", com a ressalva de que "vale a pesquisa e os testes". A pesquisa (levantamento §6.15.5, base E) diz: WSL 2 e Docker Desktop exigem administrador na primeira habilitação; o Hyper-V só existe nas edições Pro e Enterprise; o WSL 2 fica por padrão com metade da RAM (8 GB numa máquina de 16) e retém o cache do modelo até ser desligado; a sobrecarga de CPU medida por terceiros fica entre 5% e 15%. A máquina-alvo é um Windows 11 corporativo sem administrador, com 16 GB e sem GPU, e o Ollama nativo não pede administrador.
+- **Por que importa:** A decisão de arquitetura do TCC é o agente na máquina do dev. Uma VM nesta máquina não tem como ser habilitada e tomaria metade da RAM que o modelo usa; num servidor a sugestão é viável, mas muda a arquitetura e o custo de quem adota o agente.
+- **Opções:**
+  - (a) Fica local: a VM é registrada como "viável só num servidor", com as fontes, e o TCC responde ao orientador com a pesquisa, sem teste de VM nesta máquina.
+  - (b) Pedir administrador à empresa e medir o WSL 2 nesta máquina.
+  - (c) Mover o agente para um servidor.
+- **Recomendação:** (a).
+- **Decisão:** (a), pelo Eric em 07/11/2026, no quadro da sessão (decisão 102): "Fica local". Registrado no plano (seção 3.8) e no levantamento §6.15.5.
+
+### 51. Normalizar os verbetes muda o que o modelo lê: mexer na biblioteca de produção ou numa camada de leitura?
+- **Estado:** fechada em 07/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 07/11/2026
+- **O que é:** O Eric disse que os verbetes estão confusos, e a parte 1 pede normalizar e formatar as respostas junto da revisão dos verbetes. Os 40 verbetes de `biblioteca_producao/` (hash `95af35290860`) são o que a busca entrega ao modelo; a decisão 69 diz que trocar o que o modelo lê obriga a medir de novo, e a 95 deixou a revisão humana para depois da normalização. Reescrever os verbetes mudaria o prompt que as corridas 18d, 21d e 24 mediram.
+- **Por que importa:** As leituras vigentes (`tela_v4`, `cenarios_v4`, `ineditos`) e os limiares do selo valem para a biblioteca de hoje; uma reescrita obrigaria a repetir as corridas da Fase 4 antes da Fase 5.
+- **Opções:**
+  - (a) Camada de leitura fora da biblioteca: um arquivo por verbete, gerado por código do frontmatter e das seções e curado à mão, na linguagem da regra do Eric; é o que o relatório, o hub e a revisão humana mostram. A biblioteca e o hash ficam intactos e nenhuma corrida repete.
+  - (b) Reescrever os verbetes da biblioteca e repetir as corridas 18d, 21d e 24.
+  - (c) Deixar os verbetes como estão e normalizar só o relatório.
+- **Recomendação:** (a).
+- **Decisão:** (a), pelo Eric em 07/11/2026, no quadro da sessão (decisão 103): "Camada de leitura". Pacote Q1 do plano (seção 3.2); um teste garante que nenhuma leitura entra no prompt.
+
+### 52. O syllabus CTFL 4.0 pede o relatório de defeitos da seção 5.5: adotar como esqueleto do relatório por caso?
+- **Estado:** fechada em 07/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 07/11/2026
+- **O que é:** A parte 2 pede validar o projeto contra o syllabus do ISTQB (tradução do BSTQB, PDF que o professor subiu em 06/11/2026 ao repositório da disciplina) e trazer o que faltar. A leitura (levantamento §6.15.6) mostra que o projeto cabe como teste funcional, caixa-preta e automatizado, de regressão e de confirmação, nos níveis de sistema e de integração de sistema, sobre "tarefas de ponta a ponta" (seção 2.2.1, p. 26). O que o projeto não tinha é o relatório de defeitos da seção 5.5 (p. 50): identificador, título, data, organização e autor, objeto e ambiente de teste, contexto, descrição para reproduzir, esperado e real, severidade, prioridade, estado e referências. O relatório v2 por caso tem seis seções fixas (veredito, evidência, contraste, FONTE, linha de ação, árvore) e não tem metade desses campos.
+- **Por que importa:** É a referência de mercado que o professor subiu; adotar o molde dá ao relatório um formato que qualquer analista reconhece e dá ao TCC a citação. Mas o agente não sabe severidade, prioridade nem estado, e pedi-los ao modelo abriria o prompt congelado (decisões 79 e 91).
+- **Opções:**
+  - (a) Adotar a 5.5 como esqueleto do relatório v3: o código preenche o que sabe (identificador, título, data e autor, objeto e ambiente, contexto, passos para reproduzir, esperado contra real, referências), e severidade, prioridade e estado ficam para o analista, no hub.
+  - (b) Manter as seis seções do v2 e só citar a 5.5 no TCC.
+  - (c) Pedir ao modelo os campos que faltam.
+- **Recomendação:** (a).
+- **Decisão:** (a), pelo Eric em 07/11/2026, no quadro da sessão (decisão 104): "Adotar a 5.5". Pacote Q1 do plano (seção 3.1); o v2 continua para as corridas gravadas e o v3 é regerado das trilhas, sem corrida nova.
+
+### 53. Dos oito repositórios, algum vale uma sessão de teste com o Claude Code?
+- **Estado:** fechada em 07/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 07/11/2026
+- **O que é:** Os oito repositórios da parte 3 foram lidos (levantamento §6.15.7 a §6.15.14) e nenhum entra como componente do agente. Dois ficaram como "opcional" para o Claude Code: o Understand-Anything (plugin que monta um grafo do código com Tree-sitter e um modelo de linguagem; `/understand-diff` dá o impacto das mudanças não commitadas; exige Node e uma chave de modelo na nuvem, e o README traz um comentário dirigido a agentes de IA, tratado como dado), uma vez nas cobaias, só para comparar com o mapa por frontmatter do pacote Q7; e o agenttrail (observador local de agentes de programação; só passivo, com Node 20 portátil, sem `init`), para ver a trilha das sessões do Claude Code. O GEPA fica como candidato futuro para o prompt de cura, nunca para o prompt congelado; o mcptoon, como trabalho futuro se os servidores MCP crescerem; eagle-4, rag-anything, dimensional-drawing e claude-obsidian são descartados (o lint de notas órfãs do claude-obsidian vira script).
+- **Por que importa:** Cada teste custa uma sessão curta e instala Node e dependências fora da venv; o que fica dele é um parágrafo no TCC ("provado em código" em vez de "lido"). Sem o teste, o veredito de cada um fica como leitura, com as fontes.
+- **Opções:**
+  - (a) Nenhum: os vereditos ficam como leitura, e o esforço vai para os pacotes Q1 a Q5.
+  - (b) Understand-Anything uma vez nas cobaias (uma sessão curta, com chave de modelo na nuvem).
+  - (c) agenttrail passivo numa sessão de trabalho (meia sessão).
+  - (d) Os dois.
+- **Recomendação:** (a). O mapa por frontmatter faz em Python, sem modelo, o que o Understand-Anything faria com um modelo na nuvem, e o TCC já tem o que precisa dos oito: o que são, por que não entram e o que fica de ideia.
+- **Decisão:** (a), pelo Eric em 07/11/2026, no quadro da sessão (decisão 106): "Nenhum". Os vereditos dos oito ficam como leitura, com as fontes (levantamento §6.15.7 a §6.15.14 e o mapa §6.15.15), nenhuma sessão de teste é marcada, e o esforço vai para os pacotes Q1 a Q5.
+
+### 54. Aprovar o plano da Pós-Fase 4 como está
+- **Estado:** fechada em 07/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 07/11/2026
+- **O que é:** O rascunho em `claude-memoria/plano-pos-fase-4.md`: as três partes do pedido, os pacotes Q0 a Q8 (Q1 a Q5 antes da Fase 5: relatório v3 no molde da 5.5 e camada de leitura dos verbetes, filtros determinísticos de prolixidade e objetividade, árvore de decisão, barra de progresso, sessão com revisor humano; Q6 a Q8 depois: hub central, integração com o Git, documentação e TCC), as decisões 101 a 104 incorporadas, cerca de 14 sessões de trabalho, máquina só por minutos, nenhuma corrida repetida, prompt e biblioteca intactos.
+- **Por que importa:** Pelo acordo do projeto, nenhum código da fase começa antes do plano aprovado, como nas Fases 3 e 4; a Fase 5 fica depois do pacote Q5.
+- **Opções:**
+  - (a) Aprovar como está: o arquivo vira `plano-aprovado-pos-fase-4.md` e o Q1 começa na próxima sessão.
+  - (b) Aprovar com mudanças (dizer quais).
+  - (c) Não aprovar: a Pós-Fase 4 fica só com o registro e a pesquisa (Q0), e a Fase 5 vem antes.
+- **Recomendação:** (a).
+- **Decisão:** (a), pelo Eric em 07/11/2026, no quadro da sessão (decisão 105): "Aprovar como está". O arquivo passou a `claude-memoria/plano-aprovado-pos-fase-4.md`, sem mudança de texto; o pacote Q1 (relatório v3 no molde da seção 5.5 e camada de leitura dos verbetes) começa na próxima sessão, com os testes antes do código.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.
