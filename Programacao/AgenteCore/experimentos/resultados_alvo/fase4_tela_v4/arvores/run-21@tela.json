@@ -1,0 +1,450 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/run-21@tela",
+ "nome": "run-21@tela",
+ "caso": "run-21",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 5,
+ "nivel": 3,
+ "eventos": {
+  "primeiro": 2138,
+  "ultimo": 2169,
+  "hash": "137e9d93f8b047b9"
+ },
+ "relatorio_v3": "../relatorios_v3/run-21@tela.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "mandar ao modelo a árvore de acessibilidade podada (39 linhas) e a diferença do corpo da resposta (301 caracteres), não a página inteira",
+   "alternativas": [
+    {
+     "opcao": "a árvore de acessibilidade inteira",
+     "detalhe": "203 nós",
+     "escolhida": false
+    },
+    {
+     "opcao": "a árvore podada",
+     "detalhe": "39 linhas",
+     "escolhida": true
+    },
+    {
+     "opcao": "o corpo da resposta inteiro",
+     "detalhe": "2230 caracteres",
+     "escolhida": false
+    },
+    {
+     "opcao": "a diferença do corpo contra o contrato esperado pela interface e a resposta da mesma rota em modo normal (a referência)",
+     "detalhe": "301 caracteres",
+     "escolhida": true
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A página chamou `GET /api/produtos` (status 200 (a API respondeu sem código de erro), 2230 caracteres de corpo).",
+     "origem": "observado",
+     "eventos": [
+      2143
+     ]
+    },
+    {
+     "texto": "A poda da árvore de acessibilidade da tela levou 203 nós a 39 linhas.",
+     "origem": "observado",
+     "eventos": [
+      2146
+     ]
+    },
+    {
+     "texto": "O que saiu, pelas regras em código: 12 cartões iguais omitidos (ficam os primeiros e os que contêm o alvo), 1 elemento de decoração removido (separador, moldura ou figura), 1 título abaixo do nível 4 removido fora dos cartões, 17 imagens removidas, 8 botões e campos sem nome acessível removidos, 14 listas e grupos achatados (fica só o conteúdo) e 3 textos sem letra nem número removidos.",
+     "origem": "observado",
+     "eventos": [
+      2146
+     ]
+    },
+    {
+     "texto": "O que ficou: os elementos tocados pelo roteiro, os controles com nome acessível, os textos com letra, os títulos até o nível 4 e os marcos da página, na forma textual dos casos escritos.",
+     "origem": "observado",
+     "eventos": [
+      2146
+     ]
+    },
+    {
+     "texto": "A tela comparada com a referência (a mesma página sem falha injetada): esperado `6 linha(s) da referência`, recebido `6 linha(s) novas`.",
+     "origem": "observado",
+     "eventos": [
+      2146
+     ]
+    },
+    {
+     "texto": "A poda do corpo da resposta levou 2230 caracteres a 301 caracteres: só a diferença contra o contrato esperado pela interface e a resposta da mesma rota em modo normal (a referência) vai ao modelo.",
+     "origem": "observado",
+     "eventos": [
+      2148
+     ]
+    },
+    {
+     "texto": "A comparação do corpo achou 1 diferença, a primeira no campo `itens` (a tabela das diferenças está abaixo).",
+     "origem": "observado",
+     "eventos": [
+      2148
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3773 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      2151
+     ]
+    }
+   ],
+   "eventos": [
+    2143,
+    2146,
+    2148,
+    2151
+   ],
+   "diferencas": [
+    {
+     "alvo": "tela",
+     "onde": "árvore de acessibilidade, contra a referência",
+     "esperado": "6 linha(s) da referência",
+     "recebido": "6 linha(s) novas",
+     "tipo": null
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo itens",
+     "esperado": "14 itens (referência em modo normal)",
+     "recebido": "o id 1 (\"Picanha ao Alho\") aparece 2 vezes",
+     "tipo": "itens_repetidos"
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 1, pontuação 107,54: 104,54 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 107.54,
+     "posicao": 1
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 2, pontuação 56,20: 53,20 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 56.1999,
+     "posicao": 2
+    },
+    {
+     "opcao": "registro_duplicado",
+     "detalhe": "posição 3, pontuação 47,02: 47,02 pelas palavras do caso, sem reforço",
+     "escolhida": true,
+     "pontuacao": 47.0151,
+     "posicao": 3
+    },
+    {
+     "opcao": "contagem_inconsistente",
+     "detalhe": "posição 4, pontuação 39,92: 36,92 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 39.9214,
+     "posicao": 4
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "detalhe": "posição 5, pontuação 39,31: 36,31 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 39.311,
+     "posicao": 5
+    },
+    {
+     "opcao": "tipo_divergente",
+     "detalhe": "posição 6, pontuação 34,67: 31,67 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 34.6678,
+     "posicao": 6
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 7, pontuação 32,93: 29,93 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 32.9313,
+     "posicao": 7
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 8, pontuação 29,26: 27,26 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 29.2609,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `entidade-produto` (107,54), `contrato-produto` (56,20) e `registro_duplicado` (47,02).",
+     "origem": "observado",
+     "eventos": [
+      2149
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `entidade-produto` e `contrato-produto`; o da entidade, em `entidade-produto` e `contrato-produto`; `registro_duplicado` pontuou só pelas palavras.",
+     "origem": "observado",
+     "eventos": [
+      2149
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `contagem_inconsistente` (39,92), `estrutura_aninhada_divergente` (39,31), `tipo_divergente` (34,67), `colecao_no_lugar_de_objeto` (32,93) e `valor_fora_do_dominio` (29,26).",
+     "origem": "observado",
+     "eventos": [
+      2149
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 200 e 104 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato e com a referência.",
+     "origem": "observado",
+     "eventos": [
+      2149
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `registro_duplicado`, e o primeiro de fora, `contagem_inconsistente`, só o texto do caso já punha o primeiro à frente (47,02 contra 36,92); a diferença final foi 7,09.",
+     "origem": "observado",
+     "eventos": [
+      2149
+     ]
+    }
+   ],
+   "eventos": [
+    2149
+   ],
+   "entregues": [
+    "entidade-produto",
+    "contrato-produto",
+    "registro_duplicado"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 104
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "registro_duplicado",
+   "alternativas": [
+    {
+     "opcao": "registro_duplicado",
+     "probabilidade": 0.9994793534457247,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,999; verbetes entregues que a tratam: `registro_duplicado`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 5.744895977988291e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 5.744895977988291e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "probabilidade": 3.0015548527059582e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `registro_duplicado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `campo_ausente` (Campo ausente), ficou com probabilidade 0,000 contra 0,999 da escolhida; verbetes entregues que a sustentam: `contrato-produto`.",
+     "origem": "observado",
+     "eventos": [
+      2169
+     ]
+    },
+    {
+     "texto": "As outras 2 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `campo_renomeado` (0,000) e `valor_fora_do_dominio` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      2169
+     ]
+    },
+    {
+     "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      2169
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      2169
+     ]
+    },
+    {
+     "texto": "O sinal medido em código está presente na resposta HTTP: `itens: esperado 14 itens (referência em modo normal), recebido o id 1 (\"Picanha ao Alho\") aparece 2 vezes`.",
+     "origem": "observado",
+     "eventos": [
+      2148,
+      2146,
+      2143
+     ]
+    },
+    {
+     "texto": "A linha FONTE cita `registro_duplicado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `registro_duplicado`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `registro_duplicado`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `registro_duplicado` (Registro duplicado; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/registro_duplicado.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/registro_duplicado.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      2169
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 7 de 8 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      2169
+     ]
+    }
+   ],
+   "eventos": [
+    2169
+   ],
+   "segunda": "campo_ausente",
+   "campo": null,
+   "confianca": {
+    "selo": "alto",
+    "palavra": "alta",
+    "p_rotulo": 0.9994793534457247,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 37,
+     "certos": 34,
+     "acerto_pct": 91.9
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Registro duplicado",
+   "probabilidade": 0.9994793534457247,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "A interface exibe 10 cartões a mais, com a Picanha ao Alho duplicada, causando confusão no usuário.",
+  "fonte": "[registro_duplicado]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: registro_duplicado\nCAMPO: nenhum\nIMPACTO: A interface exibe 10 cartões a mais, com a Picanha ao Alho duplicada, causando confusão no usuário.\nFONTE: [registro_duplicado]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 29,
+  "rotulos": {
+   "observado": 21,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "alto",
+  "confianca": "alta",
+  "falha": null,
+  "escolha": "registro_duplicado",
+  "causa_em_palavras": "Registro duplicado",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

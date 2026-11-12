@@ -1,0 +1,10 @@
+{
+  "caminho": "aprendidos/atualizacao-da-tela.md",
+  "corpo_sha": "bb509d643c1fb126",
+  "editado": true,
+  "editado_em": "2026-11-10T12:25:44.487Z",
+  "estado": "editada",
+  "id": "atualizacao-da-tela",
+  "salvo_em": "2026-11-10T12:15:55.079Z",
+  "texto": "\n# Atualização da Tela após a API\n\nCamada de leitura do verbete `atualizacao-da-tela` (`biblioteca_producao/aprendidos/atualizacao-da-tela.md`). Tipo: aprendido (escrito pelo modelo a partir de um caso, nas Fases 3 e 4, e aceito pela validação em código e pela revisão); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Interface.\n\n## O que é\n\nProcesso de sincronização e renderização do estado da interface web (frontend) no recebimento de respostas de requisições assíncronas à API (via Promises ou async/await).\n\n## Como aparece na tela\n\n- carregando...\n- lista vazia.\n- botao inativo.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `carregando...`, `lista vazia`, `botao inativo`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `estado_da_tela_divergente` (Estado da tela divergente da resposta).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaFront/cliente/cliente_cancelar.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `fetch`, `innerhtml`, `redirect`, `promise`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. A descrição inicial foi substituída para descrever conceitualmente o ciclo de renderização assíncrono (Promise/await), removendo artefatos gerados pelo agente (\"Adicionar verbete sobre...\")."
+}

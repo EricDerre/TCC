@@ -1,0 +1,353 @@
+[
+ {
+  "id": "ancora-saiba-mais",
+  "caminho": "defeitos_conhecidos/ancora-saiba-mais.md",
+  "estado": "aprovada",
+  "corpo_sha": "731fd869c08e0d8f",
+  "texto": null,
+  "salvo_em": "2026-11-10T12:14:02.381Z",
+  "editado_em": "2026-11-10T12:24:38.805Z"
+ },
+ {
+  "id": "atualizacao-da-tela",
+  "caminho": "aprendidos/atualizacao-da-tela.md",
+  "estado": "editada",
+  "corpo_sha": "bb509d643c1fb126",
+  "texto": "\n# Atualização da Tela após a API\n\nCamada de leitura do verbete `atualizacao-da-tela` (`biblioteca_producao/aprendidos/atualizacao-da-tela.md`). Tipo: aprendido (escrito pelo modelo a partir de um caso, nas Fases 3 e 4, e aceito pela validação em código e pela revisão); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Interface.\n\n## O que é\n\nProcesso de sincronização e renderização do estado da interface web (frontend) no recebimento de respostas de requisições assíncronas à API (via Promises ou async/await).\n\n## Como aparece na tela\n\n- carregando...\n- lista vazia.\n- botao inativo.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `carregando...`, `lista vazia`, `botao inativo`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `estado_da_tela_divergente` (Estado da tela divergente da resposta).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaFront/cliente/cliente_cancelar.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `fetch`, `innerhtml`, `redirect`, `promise`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. A descrição inicial foi substituída para descrever conceitualmente o ciclo de renderização assíncrono (Promise/await), removendo artefatos gerados pelo agente (\"Adicionar verbete sobre...\").",
+  "salvo_em": "2026-11-10T12:15:55.079Z",
+  "editado_em": "2026-11-10T12:25:44.487Z"
+ },
+ {
+  "id": "campo_ausente",
+  "caminho": "erros/campo_ausente.md",
+  "estado": "aprovada",
+  "corpo_sha": "a74098bdd0c77beb",
+  "texto": null,
+  "salvo_em": "2026-11-10T12:16:53.292Z",
+  "editado_em": "2026-11-10T12:25:54.934Z"
+ },
+ {
+  "id": "campo_preco_ausente",
+  "caminho": "aprendidos/campo_preco_ausente.md",
+  "estado": "editada",
+  "corpo_sha": "b8483e68a59d5e9c",
+  "texto": "\n# Campo preço ausente\n\nCamada de leitura do verbete `campo_preco_ausente` (`biblioteca_producao/aprendidos/campo_preco_ausente.md`). Tipo: aprendido (escrito pelo modelo a partir de um caso, nas Fases 3 e 4, e aceito pela validação em código e pela revisão); estado: ativo (em vigor); sistema: CobaiaFront (o site PHP); entidade principal: Produto.\n\n## O que é\n\nA omissão da chave preco no objeto da API faz com que a renderização do botão de compra/detalhes no frontend exiba o literal undefined (ou R$ undefined), em vez do valor numérico formatado.\n\n## Como aparece na tela\n\n- botao com valor undefined.\n- precos ausentes na interface.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `botao com valor undefined`, `precos ausentes na interface`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `campo_ausente` (Campo ausente).\n\n## Onde está no código\n\n- Arquivos: Programacao/CobaiaFront/produtos_api.php.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `campo ausente`, `preco`, `interface web`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. A definição do sintoma foi refinada para detalhar a exibição do literal undefined no frontend e o mapeamento do arquivo produtos_api.php foi preenchido.\n",
+  "salvo_em": "2026-11-10T12:18:34.466Z",
+  "editado_em": "2026-11-10T12:26:54.533Z"
+ },
+ {
+  "id": "campo_renomeado",
+  "caminho": "erros/campo_renomeado.md",
+  "estado": "editada",
+  "corpo_sha": "aecc433085b2d37e",
+  "texto": "\n# Campo renomeado\n\nCamada de leitura do verbete `campo_renomeado` (`biblioteca_producao/erros/campo_renomeado.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto. Trata da causa `campo_renomeado` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nO valor existe sob outra chave: falta a esperada e aparece uma desconhecida com o mesmo tipo e conteúdo (preco leva a preco_v2, nome leva a descricao, status leva a situacao).\n\n## Como aparece na tela\n\n- o resto do objeto confere; uma chave sumiu e outra sobrou.\n- vazio ou undefined só naquele campo.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `chave desconhecida no lugar da esperada`, `_v2`, `campo com outro nome`, `titulo vazio`, `nome correto`, `categoria e preco corretos`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: O modo field_renamed troca o campo-alvo por <campo>_v2 (fault_injection.py). Fora dele: contrato mudou no servidor sem atualizar o cliente.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `campo_ausente` (Campo ausente), `estrutura_aninhada_divergente` (Estrutura aninhada divergente).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/fault_injection.py`, `Programacao/CobaiaAPI/app/schemas.py`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/pedidos`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `renomead`, `outro nome`, `_v2`, `descricao`, `situacao`, `imagem_url`, `field_renamed`, `chave inesperada`, `campo-renomeado`, `contrato`, `cliente`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. A redação original de \"O que conferir\" (\"contrato mudou no servidor sem atualizar o cliente\") se mantém, pois é tecnicamente mais precisa. A nota confusa gerada pelo modelo foi descartada.\n",
+  "salvo_em": "2026-11-10T12:29:28.215Z",
+  "editado_em": null
+ },
+ {
+  "id": "chave_de_juncao_errada",
+  "caminho": "erros/chave_de_juncao_errada.md",
+  "estado": "editada",
+  "corpo_sha": "a12861015bca5d2a",
+  "texto": "\n# Chave de junção errada\n\nCamada de leitura do verbete `chave_de_juncao_errada` (`biblioteca_producao/erros/chave_de_juncao_errada.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Pedido. Trata da causa `chave_de_juncao_errada` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nTipo e formato certos, mas o valor é de OUTRO registro: categoria ou imagem alheia no produto, nome ou cpf de outro usuário na reserva.\n\n## Como aparece na tela\n\n- afeta campo derivado de junção (tipo, nome, cpf, imagem), não os próprios.\n- o dado existe no banco, ligado ao registro errado.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `nome de outra pessoa na reserva`, `categoria errada`, `imagem de outro produto`, `nome da categoria no titulo`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Junções: id_tipo_produto e id_clientes (models.py). No site, cliente/index.php:4 usa LIKE '%login%': CPF substring de outro casa mais de um cliente.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `nulo_inesperado` (Nulo inesperado), `escala_ou_unidade_errada` (Escala ou unidade errada), `valor_fora_do_dominio` (Valor fora do domínio).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/models.py`, `Programacao/CobaiaAPI/app/routers/pedidos.py`, `Programacao/CobaiaFront/cliente/index.php`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/pedidos`.\n- Tabelas do banco: `tbprodutos`, `tbtipos`, `tbusuarios`, `tbpedido_reserva`.\n- Palavras que a busca usa para achar este verbete: `juncao`, `join`, `chave`, `id`, `fk`, `cliente errado`, `categoria errada`, `troca`, `admin`, `like`, `substring`, `registro errado`, `campo derivado`.\n\n## Notas do modelo\n\n## Curadoria\n\nVerbete revisado e aprovado. Nota do modelo removida para evitar poluição semântica no mecanismo de busca do RAG e manter o foco estrito na taxonomia do defeito.",
+  "salvo_em": "2026-11-10T12:35:09.267Z",
+  "editado_em": null
+ },
+ {
+  "id": "codificacao_incorreta",
+  "caminho": "erros/codificacao_incorreta.md",
+  "estado": "aprovada",
+  "corpo_sha": "616c48a184114e13",
+  "texto": null,
+  "salvo_em": "2026-11-10T13:32:39.958Z",
+  "editado_em": null
+ },
+ {
+  "id": "colecao_no_lugar_de_objeto",
+  "caminho": "erros/colecao_no_lugar_de_objeto.md",
+  "estado": "editada",
+  "corpo_sha": "af70baab495ed35d",
+  "texto": "\n# Coleção no lugar de objeto (ou o inverso)\n\nCamada de leitura do verbete `colecao_no_lugar_de_objeto` (`biblioteca_producao/erros/colecao_no_lugar_de_objeto.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto. Trata da causa `colecao_no_lugar_de_objeto` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nForma trocada: lista onde se esperava objeto único (GET /api/produtos/{id} devolvendo [{...}]), objeto onde se esperava lista, ou escalar como lista ([\"Carnes\"]).\n\n## Como aparece na tela\n\n- modal \"Produto #1\"/\"(sem descrição)\": p é lista.\n- categoria com colchetes: campo veio como lista.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `detalhe sem preencher campos`, `colchetes ao redor do valor`, `nenhum produto retornado`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: GET /api/produtos devolve lista, GET /api/produtos/{id} objeto (produtos.py); a página não confere a forma antes de ler os campos.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `estrutura_aninhada_divergente` (Estrutura aninhada divergente), `campo_ausente` (Campo ausente).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaFront/produtos_api.php`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/produtos/{id}`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `lista`, `array`, `colecao`, `objeto`, `unico`, `recurso`, `colchetes`, `detalhe`, `modal`, `formato_de_resposta`, `estrutura_json`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrições estruturais mantidas. As duas anotações do modelo das rodadas de treinamento (épocas 1 e 101) sobre o tratamento do array \"tipo\" foram apagadas para resguardar a integridade da semântica de busca do RAG e manter a finalidade de taxonomia pura.\n",
+  "salvo_em": "2026-11-10T13:33:36.248Z",
+  "editado_em": null
+ },
+ {
+  "id": "consultas-sem-checagem",
+  "caminho": "defeitos_conhecidos/consultas-sem-checagem.md",
+  "estado": "aprovada",
+  "corpo_sha": "a662140a73ababc7",
+  "texto": null,
+  "salvo_em": "2026-11-10T13:34:49.329Z",
+  "editado_em": null
+ },
+ {
+  "id": "contagem_inconsistente",
+  "caminho": "erros/contagem_inconsistente.md",
+  "estado": "editada",
+  "corpo_sha": "a5b5584092545b20",
+  "texto": "\n# Contagem inconsistente\n\nCamada de leitura do verbete `contagem_inconsistente` (`biblioteca_producao/erros/contagem_inconsistente.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Produto. Trata da causa `contagem_inconsistente` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nDois números que deveriam bater não batem: total 14 e lista com 1; total 0 com itens; página 2 vazia com total 14; contador de destaques diferente dos cartões.\n\n## Como aparece na tela\n\n- total e lista vêm de consultas diferentes.\n- rótulo numérico que não corresponde ao renderizado.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `total diferente dos itens`, `pagina vazia com total positivo`, `quatro destaques mas cinco cartoes`, `menos itens na interface`, `lista crua sem total`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: GET /api/produtos devolve a lista crua, sem total nem paginação (produtos.py:34-43); o seed tem 14 produtos, 5 em destaque. Envelope com total indica outra versão.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `estrutura_aninhada_divergente` (Estrutura aninhada divergente), `dado_desatualizado` (Dado desatualizado (cache)), `estado_da_tela_divergente` (Estado da tela divergente da resposta).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaFront/produtos_destaque.php`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`.\n- Tabelas do banco: `tbprodutos`.\n- Palavras que a busca usa para achar este verbete: `contagem`, `total`, `itens`, `pagina`, `paginacao`, `quantidade`, `destaques`, `inconsistente`, `zero`, `lista`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrição base clara e sintomática, diferenciando metadados de listas não envelopadas. A anotação do modelo (época 101) prescrevendo a reengenharia do envelope da API foi excluída para preservar o mapeamento neutro e a semântica correta do RAG\n",
+  "salvo_em": "2026-11-10T13:35:54.900Z",
+  "editado_em": null
+ },
+ {
+  "id": "contrato-pedido",
+  "caminho": "contratos/contrato-pedido.md",
+  "estado": "editada",
+  "corpo_sha": "8abd0c6fb56f87f7",
+  "texto": "\n# Contrato de /api/pedidos\n\nCamada de leitura do verbete `contrato-pedido` (`biblioteca_producao/contratos/contrato-pedido.md`). Tipo: contrato (o contrato de uma rota da API, campo a campo); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Pedido.\n\n## O que é\n\nGET /api/pedidos?login=<cpf>; POST /api/pedidos {id_clientes, pessoas, data_pedido} leva a 201; POST /api/pedidos/{id}/cancelar. Campos: id_pedido, pessoas, data_pedido AAAA-MM-DD, status 'Em Análise'|'Cancelado', nome, cpf.\n\n## Como aparece na tela\n\n- data noutro formato ou como número.\n- status fora dos dois valores.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `data em outro formato`, `status desconhecido`, `422 sem login`, `cliente nao encontrado`, `duas reservas iguais apos um unico post`, `registros com id consecutivo`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: cpf vem de login_usuario (pedidos.py). Busca exata na API; o site usa LIKE '%login%' (cliente/index.php:4).\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `formato_de_data_divergente` (Formato de data divergente), `valor_fora_do_dominio` (Valor fora do domínio), `recurso_inexistente` (Recurso inexistente (404 e vizinhos)), `campo_ausente` (Campo ausente).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/pedidos.py`, `Programacao/CobaiaAPI/app/schemas.py`, `Programacao/CobaiaFront/cliente/index.php`.\n- Rotas da API (campo `endpoints`): `GET /api/pedidos`, `POST /api/pedidos`, `POST /api/pedidos/{id}/cancelar`.\n- Tabelas do banco: `tbpedido_reserva`, `tbusuarios`.\n- Palavras que a busca usa para achar este verbete: `contrato`, `pedidos`, `reservas`, `login`, `cpf`, `id_pedido`, `pessoas`, `data_pedido`, `status`, `nome`, `201`, `404`, `422`, `cancelar`, `post duplo`, `registros duplicados`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Especificação do contrato mantida integralmente. A nota de treinamento referente à idempotência em POST foi removida para evitar sobreposição semântica com a taxonomia registro_duplicado e manter o foco estrito nas regras da rota.\n",
+  "salvo_em": "2026-11-10T13:36:58.704Z",
+  "editado_em": null
+ },
+ {
+  "id": "contrato-produto",
+  "caminho": "contratos/contrato-produto.md",
+  "estado": "editada",
+  "corpo_sha": "6c9ffa585998c519",
+  "texto": "\n# Contrato de /api/produtos\n\nCamada de leitura do verbete `contrato-produto` (`biblioteca_producao/contratos/contrato-produto.md`). Tipo: contrato (o contrato de uma rota da API, campo a campo); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto.\n\n## O que é\n\nGET /api/produtos devolve lista; GET /api/produtos/{id} devolve objeto (404 \"produto não encontrado\"). Campos: id inteiro, nome texto, resumo texto|nulo, tipo texto, preco número, imagem texto|nulo, destaque booleano.\n\n## Como aparece na tela\n\n- chave a mais ou a menos: campo ausente ou renomeado.\n- lista onde se espera objeto, ou o inverso.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `chave a mais ou a menos`, `lista no lugar de objeto`, `preco como texto`, `lista incompleta`, `ultimo item cortado`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Origem tbprodutos + rótulo de tbtipos (produtos.py _to_dict). preco sai 89.9 (número), embora o esquema de validação do código (schema Pydantic) declare Decimal.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `campo_ausente` (Campo ausente), `campo_renomeado` (Campo renomeado), `colecao_no_lugar_de_objeto` (Coleção no lugar de objeto (ou o inverso)), `tipo_divergente` (Tipo divergente), `recurso_inexistente` (Recurso inexistente (404 e vizinhos)).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/schemas.py`, `Programacao/CobaiaAPI/app/routers/produtos.py`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/produtos/{id}`.\n- Tabelas do banco: `tbprodutos`, `tbtipos`.\n- Palavras que a busca usa para achar este verbete: `contrato`, `produtos`, `id`, `nome`, `resumo`, `tipo`, `preco`, `imagem`, `destaque`, `lista`, `objeto`, `404`, `produto nao encontrado`, `schema`, `json`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo \"schema\" foi contextualizado na primeira menção para satisfazer os critérios do filtro Q2. A nota do modelo referente ao truncamento de resposta foi removida para manter o documento restrito às regras puras do contrato.\n",
+  "salvo_em": "2026-11-10T13:38:38.397Z",
+  "editado_em": null
+ },
+ {
+  "id": "corpo_nao_e_json",
+  "caminho": "erros/corpo_nao_e_json.md",
+  "estado": "editada",
+  "corpo_sha": "6dcb66994107ce53",
+  "texto": "\n# Corpo não é JSON\n\nCamada de leitura do verbete `corpo_nao_e_json` (`biblioteca_producao/erros/corpo_nao_e_json.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Infraestrutura. Trata da causa `corpo_nao_e_json` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nA resposta chega (às vezes 200 e Content-Type application/json), mas o corpo é HTML, XML ou aviso em texto: o parse falha no primeiro caractere.\n\n## Como aparece na tela\n\n- erro no console do navegador acusando caractere inválido (ex: \"Unexpected token <\", referindo-se a um token ou símbolo não esperado na leitura do JSON).\n- texto legível antes ou no lugar do JSON: Warning do PHP, página de gateway, \"Atenção ERRO\".\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `token inesperado no inicio da resposta`, `html no lugar de json`, `warning do php antes do json`, `parse_falho`, `listagem_nao_carrega`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Falha de conexão no site imprime \"Atenção ERRO\" em HTML (connect.php:16); Warning/Fatal do PHP saem antes da saída; gateway fora devolve a própria página.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `resposta_truncada` (Resposta truncada), `corpo_vazio` (Corpo vazio), `erro_interno_do_servidor` (Erro interno do servidor (500)).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/conn/connect.php`, `Programacao/CobaiaFront/produtos_api.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `json`, `html`, `xml`, `parse`, `token inesperado`, `warning`, `fatal`, `gateway`, `proxy`, `atencao erro`, `content-type`, `erro de sintaxe`, `parse_falho`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo \"token\" foi contextualizado para adequação à métrica Q2 de termos técnicos. Ambas as anotações do modelo (referentes a exemplos em HTML e XML) foram apagadas para resguardar a pureza semântica do RAG\n",
+  "salvo_em": "2026-11-10T13:41:11.886Z",
+  "editado_em": null
+ },
+ {
+  "id": "corpo_vazio",
+  "caminho": "erros/corpo_vazio.md",
+  "estado": "editada",
+  "corpo_sha": "a3967609d7a86c8c",
+  "texto": "\n# Corpo vazio\n\nCamada de leitura do verbete `corpo_vazio` (`biblioteca_producao/erros/corpo_vazio.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Infraestrutura. Trata da causa `corpo_vazio` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nStatus de sucesso e nenhum byte útil no corpo (vazio, só espaços, ou 204). Diferente de \"[]\", lista vazia, que é JSON válido.\n\n## Como aparece na tela\n\n- resp.json() falha em zero caracteres: \"Erro ao carregar produtos\" ou \"Carregando...\" parado.\n- \"[]\" mostra \"Nenhum produto retornado pela API.\".\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `carregando indefinidamente`, `tela em branco sem erro`, `fim inesperado da entrada em corpo vazio`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Nenhuma rota da CobaiaAPI devolve 204 nem corpo vazio; se chega vazio, foi cortado antes de sair (servidor, proxy) ou a rota errada respondeu.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `resposta_truncada` (Resposta truncada), `corpo_nao_e_json` (Corpo não é JSON), `estado_da_tela_divergente` (Estado da tela divergente da resposta).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `vazio`, `sem corpo`, `branco`, `204`, `espacos`, `nenhum byte`, `carregando`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Excelente conceituação da diferença entre corpo nulo e lista JSON vazia. As notas metalinguísticas injetadas pelo agente em épocas de treino foram removidas para garantir aderência estrita à taxonomia e limpar a indexação semântica.\n",
+  "salvo_em": "2026-11-10T13:42:47.369Z",
+  "editado_em": null
+ },
+ {
+  "id": "dado_desatualizado",
+  "caminho": "erros/dado_desatualizado.md",
+  "estado": "aprovada",
+  "corpo_sha": "ed24bd684165bc45",
+  "texto": null,
+  "salvo_em": "2026-11-10T13:44:23.416Z",
+  "editado_em": null
+ },
+ {
+  "id": "entidade-produto",
+  "caminho": "negocio/entidade-produto.md",
+  "estado": "editada",
+  "corpo_sha": "82a37cf1be6b07fa",
+  "texto": "\n# Produto e sua categoria\n\nCamada de leitura do verbete `entidade-produto` (`biblioteca_producao/negocio/entidade-produto.md`). Tipo: funcionamento (descreve como uma parte do sistema funciona); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Produto.\n\n## O que é\n\nItem do cardápio em tbprodutos, ligado a uma categoria de tbtipos (Carnes, Bebidas, Acompanhamentos, Sobremesas). 14 produtos; o id 1 é Picanha ao Alho, Carnes, 89,90.\n\n## Como aparece na tela\n\n- título com nome de categoria: junção trocada.\n- preço com grandeza estranha: conversão de valor_produto.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `nome da categoria no titulo do cartao`, `preco com grandeza estranha`, `preco cru`, `separador decimal como virgula`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: valor_produto é DECIMAL(9,2) e destaque_produto é um enumerador de valores fixos (ENUM('Sim','Não')); produtos.py (_to_dict) converte em número e booleano.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `chave_de_juncao_errada` (Chave de junção errada), `escala_ou_unidade_errada` (Escala ou unidade errada), `tipo_divergente` (Tipo divergente).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/models.py`, `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaFront/banco/seed.sql`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/produtos/{id}`.\n- Tabelas do banco: `tbprodutos`, `tbtipos`.\n- Palavras que a busca usa para achar este verbete: `produto`, `categoria`, `tipo`, `preco`, `destaque`, `imagem`, `resumo`, `cardapio`, `picanha`, `formatacao`, `decimal`, `separador`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nNada ainda. Escreva aqui o que corrigir ou acrescentar e troque `curado: nao` por `curado: sim` no cabeçalho: a partir daí o gerador deixa de regravar este arquivo, e `--check` só avisa se o verbete de origem mudar.\n",
+  "salvo_em": "2026-11-10T13:48:19.012Z",
+  "editado_em": null
+ },
+ {
+  "id": "erro_interno_do_servidor",
+  "caminho": "erros/erro_interno_do_servidor.md",
+  "estado": "editada",
+  "corpo_sha": "137aaea3b97e9a52",
+  "texto": "\n# Erro interno do servidor (500)\n\nCamada de leitura do verbete `erro_interno_do_servidor` (`biblioteca_producao/erros/erro_interno_do_servidor.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Infraestrutura. Trata da causa `erro_interno_do_servidor` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\n500 com {\"detail\": ...}: falha própria da API. detail \"fault injection: error_500 em produto\" é o injetor; \"Internal Server Error\" é exceção não tratada.\n\n## Como aparece na tela\n\n- intermitente sem padrão: injetor com probability < 1.\n- em toda requisição: banco inacessível ou defeito na rota.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `HTTP 500`, `Internal Server Error`, `fault injection error_500`, `falha intermitente`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Rotas convertem ErrorFault em 500 (produtos.py:42). No site PHP, banco fora NÃO dá 500: imprime \"Atenção ERRO\" em HTML (connect.php:16).\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `corpo_nao_e_json` (Corpo não é JSON), `tempo_de_resposta_excedido` (Tempo de resposta excedido), `limite_de_requisicoes` (Limite de requisições (429)).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaAPI/app/fault_injection.py`, `Programacao/CobaiaFront/conn/connect.php`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `POST /api/pedidos`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `500`, `erro interno`, `internal server error`, `exception`, `excecao`, `fault injection`, `intermitente`, `banco fora`, `falha_interna`, `injetor`, `excecao_nao_tratada`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Excelente diferenciação entre o erro 500 originado na API e o comportamento do PHP (que não emite 500). As duas notas redundantes do modelo das rodadas de treinamento (época 1) foram excluídas para manter a coesão documental.\n",
+  "salvo_em": "2026-11-10T13:51:20.685Z",
+  "editado_em": null
+ },
+ {
+  "id": "escala_ou_unidade_errada",
+  "caminho": "erros/escala_ou_unidade_errada.md",
+  "estado": "editada",
+  "corpo_sha": "1e803c0f69436783",
+  "texto": "\n# Escala ou unidade errada\n\nCamada de leitura do verbete `escala_ou_unidade_errada` (`biblioteca_producao/erros/escala_ou_unidade_errada.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto. Trata da causa `escala_ou_unidade_errada` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nTipo e formato certos, mas o número está noutra escala ou unidade: centavos por reais (8990), fração (0.899), arredondado (90), data deslocada um dia, quantidade dobrada.\n\n## Como aparece na tela\n\n- todos os valores errados pelo mesmo fator: conversão de unidade.\n- só o arredondamento errado.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `precos cem vezes maiores`, `precos cem vezes menores`, `preco arredondado`, `data um dia antes`, `dobro de pessoas`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: A API não aplica fator nenhum: float(valor_produto) direto do DECIMAL (produtos.py:28), DATE em isoformat sem fuso (pedidos.py:23); o fator veio de fora dela.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `tipo_divergente` (Tipo divergente), `formato_de_data_divergente` (Formato de data divergente), `chave_de_juncao_errada` (Chave de junção errada).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaAPI/app/routers/pedidos.py`, `Programacao/CobaiaAPI/app/models.py`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/pedidos`.\n- Tabelas do banco: `tbprodutos`, `tbpedido_reserva`.\n- Palavras que a busca usa para achar este verbete: `escala`, `unidade`, `centavos`, `reais`, `fator`, `cem`, `arredond`, `fuso`, `dia`, `dobro`, `multiplic`, `divid`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrições claras sobre conversão unitária e floating point errors (arredondamento e fusos). A anotação metalinguística de retificação da época 1 foi descartada para evitar repetição de sintomas e assegurar a fidelidade da taxonomia.\n",
+  "salvo_em": "2026-11-10T13:55:21.566Z",
+  "editado_em": null
+ },
+ {
+  "id": "estado_da_tela_divergente",
+  "caminho": "erros/estado_da_tela_divergente.md",
+  "estado": "editada",
+  "corpo_sha": "5344306531ef55d9",
+  "texto": "\n# Estado da tela divergente da resposta\n\nCamada de leitura do verbete `estado_da_tela_divergente` (`biblioteca_producao/erros/estado_da_tela_divergente.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaFront (o site PHP); entidade principal: Interface. Trata da causa `estado_da_tela_divergente` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nA rede está certa: status e corpo conferem: e o usuário vê outra coisa: \"Carregando\" parado, lista vazia, botão que não muda.\n\n## Como aparece na tela\n\n- nenhum erro de console nem status de erro.\n- recarregar corrige: o estado não foi atualizado.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `api respondeu certo mas a tela nao`, `carregando parado`, `lista vazia com resposta cheia`, `botao continua habilitado apos cancelar`, `carregando...`, `lista vazia`, `botao inativo`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: produtos_api.php só limpa \"Carregando...\" no then() do fetch e substitui o grid por innerHTML; na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `localizador_quebrado` (Localizador (seletor) quebrado), `dado_desatualizado` (Dado desatualizado (cache)), `corpo_vazio` (Corpo vazio).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaFront/cliente/reserva_cli.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `tela`, `estado`, `divergente`, `render`, `renderiza`, `atualiza`, `recarregar`, `filtro`, `ordem aleatoria`, `carregando`, `innerHTML`, `fetch`, `redirect`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrição conceitual precisa sobre falhas de atualização de interface após respostas assíncronas em rede bem-sucedidas. A nota prescritiva remanescente do ciclo de treinamento (época 101) foi removida, mantendo o escopo documental limpo.\n",
+  "salvo_em": "2026-11-10T13:56:45.461Z",
+  "editado_em": null
+ },
+ {
+  "id": "estrutura_aninhada_divergente",
+  "caminho": "erros/estrutura_aninhada_divergente.md",
+  "estado": "editada",
+  "corpo_sha": "5a809041f88f956a",
+  "texto": "\n# Estrutura aninhada divergente\n\nCamada de leitura do verbete `estrutura_aninhada_divergente` (`biblioteca_producao/erros/estrutura_aninhada_divergente.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto. Trata da causa `estrutura_aninhada_divergente` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nChaves existem, mas noutro nível: lista num envelope ({\"data\": {\"itens\": [...]}}) ou campo simples como objeto ({\"id\": 1, \"nome\": \"Carnes\"}).\n\n## Como aparece na tela\n\n- envelope na raiz: Array.isArray falha, \"Nenhum produto retornado\".\n- campo como objeto: cartão imprime [object Object].\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `object Object`, `envelope data`, `lista dentro de objeto`, `campo virou objeto`, `envelope na raiz`, `campo como objeto`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Contrato real: lista crua na raiz e tipo como texto (produtos.py _to_dict); envelope ou aninhamento veio de outra versão ou intermediário.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `colecao_no_lugar_de_objeto` (Coleção no lugar de objeto (ou o inverso)), `campo_renomeado` (Campo renomeado), `contagem_inconsistente` (Contagem inconsistente).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaAPI/app/schemas.py`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `aninhad`, `envelope`, `data`, `itens`, `objeto`, `nivel`, `profundidade`, `object Object`, `stringify`, `estrutura`, `aninhamento`, `divergencia`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrição conceitual focada nas anomalias geradas por serialização JSON inesperada, como envelopamento (data) e parse defeituoso ([object Object]). A nota redundante de treinamento foi descartada para garantir o matching preciso e limpo do RAG.\n",
+  "salvo_em": "2026-11-10T14:21:39.869Z",
+  "editado_em": null
+ },
+ {
+  "id": "fluxo-reserva-e-cancelamento",
+  "caminho": "negocio/fluxo-reserva-e-cancelamento.md",
+  "estado": "aprovada",
+  "corpo_sha": "bdb4b43fc2c987fa",
+  "texto": null,
+  "salvo_em": "2026-11-10T14:30:05.707Z",
+  "editado_em": null
+ },
+ {
+  "id": "formato_de_data_divergente",
+  "caminho": "erros/formato_de_data_divergente.md",
+  "estado": "aprovada",
+  "corpo_sha": "5aa3dfcd6e9301cc",
+  "texto": null,
+  "salvo_em": "2026-11-10T14:32:07.560Z",
+  "editado_em": null
+ },
+ {
+  "id": "limite_de_requisicoes",
+  "caminho": "erros/limite_de_requisicoes.md",
+  "estado": "editada",
+  "corpo_sha": "67b54be6329095c4",
+  "texto": "\n# Limite de requisições (429)\n\nCamada de leitura do verbete `limite_de_requisicoes` (`biblioteca_producao/erros/limite_de_requisicoes.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Infraestrutura (servidor, banco e rede); entidade principal: Infraestrutura. Trata da causa `limite_de_requisicoes` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nStatus 429: o servidor ou um intermediário recusou por excesso de requisições num intervalo. Resposta rápida e com corpo: não é lentidão nem erro interno.\n\n## Como aparece na tela\n\n- funciona, depois falha após recarregar muitas vezes.\n- \"Erro ao carregar produtos da CobaiaAPI: HTTP 429\"; pode vir retry_after.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `HTTP 429`, `too many requests`, `rate limit`, `para de funcionar apos varias tentativas`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: A CobaiaAPI não tem limitador (main.py só registra CORS e routers); um 429 vem de proxy, gateway ou servidor diferente do esperado.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `tempo_de_resposta_excedido` (Tempo de resposta excedido), `erro_interno_do_servidor` (Erro interno do servidor (500)).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/main.py`, `Programacao/CobaiaFront/produtos_api.php`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `429`, `limite`, `rate limit`, `too many requests`, `retry_after`, `cota`, `excesso`, `recarregar`, `status de erro`, `limitador de requisicoes`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Conceituação clara sobre a natureza do código HTTP 429 e sua atribuição a intermediários de infraestrutura (proxies/gateways). A anotação redundante da época 101 foi descartada para resguardar a qualidade da busca vetorial no RAG.\n",
+  "salvo_em": "2026-11-10T14:36:26.753Z",
+  "editado_em": null
+ },
+ {
+  "id": "limites-do-sistema",
+  "caminho": "negocio/limites-do-sistema.md",
+  "estado": "editada",
+  "corpo_sha": "1a980c82324383a9",
+  "texto": "\n# O que o sistema não faz\n\nCamada de leitura do verbete `limites-do-sistema` (`biblioteca_producao/negocio/limites-do-sistema.md`). Tipo: limite (o que o sistema não faz); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Infraestrutura.\n\n## O que é\n\nNão valida data nem pessoas no servidor; não confere o retorno de $conn->query() em página nenhuma; não checa se a reserva cancelada é do cliente; não aplica função de hash (transformação criptográfica unidirecional) na senha no login.\n\n## Como aparece na tela\n\n- dado inválido gravado sem mensagem.\n- redireciona como se tivesse gravado e nada mudou: SQL falhou em silêncio.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `dado invalido gravado`, `falha silenciosa`, `contrato do docs diferente da resposta`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: A API não revalida a resposta: rotas devolvem JSONResponse cru (produtos.py:1-7); o /docs mostra o esperado, não o que sai pela rede.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `valor_fora_do_dominio` (Valor fora do domínio), `campo_ausente` (Campo ausente), `tipo_divergente` (Tipo divergente), `dado_desatualizado` (Dado desatualizado (cache)).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/conn/connect.php`, `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaAPI/app/schemas.py`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `validacao`, `servidor`, `silencioso`, `checagem`, `hash`, `response_model`, `docs`, `declarado`, `real`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo \"hash\" foi contextualizado em sua primeira menção para satisfazer os critérios do filtro Q2. Documento limpo, neutro e sem resíduos de treinamento.\n",
+  "salvo_em": "2026-11-10T14:38:22.508Z",
+  "editado_em": null
+ },
+ {
+  "id": "localizador_quebrado",
+  "caminho": "erros/localizador_quebrado.md",
+  "estado": "editada",
+  "corpo_sha": "83eef45a9073c02c",
+  "texto": "\n# Localizador (seletor) quebrado\n\nCamada de leitura do verbete `localizador_quebrado` (`biblioteca_producao/erros/localizador_quebrado.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaFront (o site PHP); entidade principal: Interface. Trata da causa `localizador_quebrado` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nNenhuma requisição falhou: o roteiro não acha o elemento (seletor não casa) ou acha mais de um (ambíguo). O problema é o localizador, não o dado.\n\n## Como aparece na tela\n\n- \"Ver mais\" vs \"Saiba Mais...\", data-produto vs data-id: texto ou atributo inexistente.\n- nth-child que funciona às vezes: ordem não garantida.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `elemento nao encontrado`, `tempo esgotado procurando elemento`, `seletor casou dois elementos`, `texto do botao diferente`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Elementos reais de produtos_api.php: #produtos-api-grid, .thumbnail, button.saiba-mais[data-id], #modalDetalhe; a lista da API não tem ORDER BY (produtos.py:38).\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `estado_da_tela_divergente` (Estado da tela divergente da resposta), `recurso_inexistente` (Recurso inexistente (404 e vizinhos)).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaFront/produtos_geral.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `seletor`, `localizador`, `css`, `xpath`, `id`, `classe`, `data-id`, `texto`, `ambiguo`, `unico`, `nth-child`, `ordem`, `roteiro`, `timeout`, `elemento`, `ambiguidade`, `order by`, `consulta`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Conceituação clara sobre falhas de seleção no DOM e instabilidade por ordenação não determinística. As duas notas redundantes do modelo (épocas 1 e 101) foram excluídas para manter a integridade da semântica de busca do RAG.\n",
+  "salvo_em": "2026-11-10T14:39:08.491Z",
+  "editado_em": null
+ },
+ {
+  "id": "mensagens-de-erro-do-codigo",
+  "caminho": "erros/mensagens-de-erro-do-codigo.md",
+  "estado": "editada",
+  "corpo_sha": "7c78fad2d960dcee",
+  "texto": "\n# Índice de mensagens literais do código\n\nCamada de leitura do verbete `mensagens-de-erro-do-codigo` (`biblioteca_producao/erros/mensagens-de-erro-do-codigo.md`). Tipo: funcionamento (descreve como uma parte do sistema funciona); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Infraestrutura.\n\n## O que é\n\nPágina: \"Carregando produtos da CobaiaAPI...\"; \"Nenhum produto retornado pela API.\" (não é lista, ou vazia); \"Erro ao carregar produtos da CobaiaAPI: <msg>\" (\"HTTP <n>\" se resp.ok falso). API: \"produto/cliente/pedido não encontrado\" (404), \"token (chave de acesso ou credencial) inválido\" (403), \"modo inválido\" (400), \"fault injection: error_500 em <ent>\" (500). PHP: \"Atenção ERRO: ...\" (connect.php:16), \"falha no email\" (rodape_contato_envia.php:33).\n\n## Como aparece na tela\n\n- O verbete não lista sinais; valem os sintomas do cabeçalho, abaixo.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `mensagem de erro na tela`, `detail no json de erro`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `recurso_inexistente` (Recurso inexistente (404 e vizinhos)), `erro_interno_do_servidor` (Erro interno do servidor (500)), `corpo_nao_e_json` (Corpo não é JSON), `corpo_vazio` (Corpo vazio), `estado_da_tela_divergente` (Estado da tela divergente da resposta).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaFront/conn/connect.php`, `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaAPI/app/routers/pedidos.py`, `Programacao/CobaiaAPI/app/routers/admin_fault.py`, `Programacao/CobaiaFront/rodape_contato_envia.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `mensagem`, `literal`, `detail`, `erro ao carregar`, `nenhum produto retornado`, `atencao erro`, `token invalido`, `modo invalido`, `falha no email`, `indice`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo \"token\" foi contextualizado para satisfazer o filtro Q2 de termos técnicos. O documento funciona como um excelente dicionário de hardcoded strings, livre de notas ou poluição semântica residual.\n",
+  "salvo_em": "2026-11-10T14:40:46.607Z",
+  "editado_em": null
+ },
+ {
+  "id": "modos-de-injecao",
+  "caminho": "falhas_injetadas/modos-de-injecao.md",
+  "estado": "editada",
+  "corpo_sha": "52330c05c77dc7f6",
+  "texto": "\n# Injeção de falhas da CobaiaAPI\n\nCamada de leitura do verbete `modos-de-injecao` (`biblioteca_producao/falhas_injetadas/modos-de-injecao.md`). Tipo: funcionamento (descreve como uma parte do sistema funciona); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Infraestrutura.\n\n## O que é\n\nInjetor com 7 modos: error_500, latency (2 s), type_drift (campo-alvo vira texto), field_missing (remove), field_renamed (vira <campo>_v2), malformed_json (corpo cortado) e normal.\n\n## Como aparece na tela\n\n- só um campo alterado, resto íntegro: modo com campo-alvo.\n- detail \"fault injection: error_500 em produto\".\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `um campo alterado e o resto integro`, `500 com fault injection`, `atraso fixo de 2 s`, `corpo cortado`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Ligado por FAULT_MODE/FAULT_TARGET_FIELD no .env ou POST /api/admin/fault-mode com X-Admin-Token (chave de acesso/autorização); probability < 1 dá intermitência.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `erro_interno_do_servidor` (Erro interno do servidor (500)), `tempo_de_resposta_excedido` (Tempo de resposta excedido), `tipo_divergente` (Tipo divergente), `campo_ausente` (Campo ausente), `campo_renomeado` (Campo renomeado), `resposta_truncada` (Resposta truncada).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/fault_injection.py`, `Programacao/CobaiaAPI/app/routers/admin_fault.py`, `Programacao/CobaiaAPI/.env.example`.\n- Rotas da API (campo `endpoints`): `GET /api/admin/fault-mode`, `POST /api/admin/fault-mode`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `fault`, `injecao`, `falha`, `modo`, `error_500`, `latency`, `type_drift`, `field_missing`, `field_renamed`, `malformed_json`, `target_field`, `probability`, `X-Admin-Token`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo \"token\" presente na especificação do cabeçalho de administração foi contextualizado para satisfazer o filtro Q2. O arquivo não apresentou resíduos de notas de treinamento e descreve com exatidão o mecanismo do injetor de falhas.\n",
+  "salvo_em": "2026-11-10T14:42:18.161Z",
+  "editado_em": null
+ },
+ {
+  "id": "novo_verbete",
+  "caminho": "aprendidos/novo_verbete.md",
+  "estado": "editada",
+  "corpo_sha": "ab1efb0f06d85c43",
+  "texto": "\n# Junção de tabelas incorreta\n\nCamada de leitura do verbete `novo_verbete` (`biblioteca_producao/aprendidos/novo_verbete.md`). Tipo: aprendido (escrito pelo modelo a partir de um caso, nas Fases 3 e 4, e aceito pela validação em código e pela revisão); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto.\n\n## O que é\n\nA instrução de junção (JOIN) ou o mapeamento ORM vincula colunas incorretas entre tabelas (ex: falha ao ligar id_tipo_produto), resultando em associações indevidas de dados.\n\n## Como aparece na tela\n\n- atributos da entidade relacionada aparecem trocados ou vazios na interface.Sintomas que a busca reconhece (campo sintomas do cabeçalho): entidade trocada, dados relacionados nulos, cruzamento indevido.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `tipo_divergente`, `chave_de_juncao_errada`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `chave_de_juncao_errada` (Chave de junção errada).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/models.py`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `juncao`, `juncao incorreta`, `juncao de tabelas`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado. O texto original consistia em uma alucinação de treinamento, contendo instruções operacionais (\"Corrigir a junção\") e listando tags de outras taxonomias como sintomas visuais. O conteúdo foi reescrito para um formato descritivo. Nota: Este verbete é um artefato redundante que sobrepõe a causa original chave_de_juncao_errada.",
+  "salvo_em": "2026-11-10T15:36:48.218Z",
+  "editado_em": null
+ },
+ {
+  "id": "nulo_inesperado",
+  "caminho": "erros/nulo_inesperado.md",
+  "estado": "aprovada",
+  "corpo_sha": "26a9e2444c2544ea",
+  "texto": null,
+  "salvo_em": "2026-11-10T15:38:57.239Z",
+  "editado_em": null
+ },
+ {
+  "id": "pagina-produtos-api",
+  "caminho": "negocio/pagina-produtos-api.md",
+  "estado": "aprovada",
+  "corpo_sha": "19e0fe3e2ce1f92d",
+  "texto": null,
+  "salvo_em": "2026-11-10T15:39:25.641Z",
+  "editado_em": null
+ },
+ {
+  "id": "pedido-reserva",
+  "caminho": "negocio/pedido-reserva.md",
+  "estado": "aprovada",
+  "corpo_sha": "eacf3c0260cfbcea",
+  "texto": null,
+  "salvo_em": "2026-11-10T15:40:32.524Z",
+  "editado_em": null
+ },
+ {
+  "id": "recurso_inexistente",
+  "caminho": "erros/recurso_inexistente.md",
+  "estado": "editada",
+  "corpo_sha": "ce58618097e21514",
+  "texto": "\n# Recurso inexistente (404 e vizinhos)\n\nCamada de leitura do verbete `recurso_inexistente` (`biblioteca_producao/erros/recurso_inexistente.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Infraestrutura. Trata da causa `recurso_inexistente` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\n404: id ou rota inexistente. O detail diz qual: \"produto não encontrado\" (produtos.py:52), \"cliente não encontrado\" (pedidos.py:37,52), \"pedido não encontrado\" (pedidos.py:74); \"Not Found\" genérico é rota inexistente (ex.: /api/produto).\n\n## Como aparece na tela\n\n- id válido e ainda 404: campo de busca errado (login × id).\n- vizinhos: 403 no admin sem token (chave de acesso/autorização); 422 sem login.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `HTTP 404`, `Not Found`, `produto nao encontrado`, `cliente nao encontrado`, `pedido nao encontrado`, `rota errada`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Cada 404 com mensagem vem de db.get/filter vazio na rota.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `erro_interno_do_servidor` (Erro interno do servidor (500)), `localizador_quebrado` (Localizador (seletor) quebrado).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaAPI/app/routers/pedidos.py`, `Programacao/CobaiaAPI/app/routers/admin_fault.py`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos/{id}`, `GET /api/pedidos`, `POST /api/pedidos`, `POST /api/pedidos/{id}/cancelar`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `404`, `not found`, `nao encontrado`, `inexistente`, `rota`, `endpoint`, `singular`, `plural`, `403`, `422`, `detail`, `campo de busca errado`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Excelente distinção entre falhas de roteamento genéricas e falhas de query no banco (Not Found vs detail específico). O termo \"token\" foi contextualizado para adequação à métrica Q2. A nota do modelo, que sugeria uma adição já existente no corpo do texto, foi apagada para evitar redundância.",
+  "salvo_em": "2026-11-10T15:42:12.319Z",
+  "editado_em": null
+ },
+ {
+  "id": "registro_duplicado",
+  "caminho": "erros/registro_duplicado.md",
+  "estado": "aprovada",
+  "corpo_sha": "4f846d7810065e7f",
+  "texto": null,
+  "salvo_em": "2026-11-10T15:42:58.854Z",
+  "editado_em": null
+ },
+ {
+  "id": "resposta_truncada",
+  "caminho": "erros/resposta_truncada.md",
+  "estado": "editada",
+  "corpo_sha": "2f57ee4ecff2a808",
+  "texto": "\n# Resposta truncada\n\nCamada de leitura do verbete `resposta_truncada` (`biblioteca_producao/erros/resposta_truncada.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Infraestrutura. Trata da causa `resposta_truncada` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nO corpo começa como JSON válido e termina no meio de um valor ou chave: faltam bytes; o parse falha com \"Unexpected end of JSON input\".\n\n## Como aparece na tela\n\n- primeiros itens íntegros, o último cortado ou sem o colchete final.\n- Content-Length menor que o esperado.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `fim inesperado da entrada`, `json cortado`, `content-length menor que o corpo`, `lista incompleta`, `ultimo item cortado`, `corpo cortado`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: O modo malformed_json devolve corpo cortado de propósito (produtos.py:19). Fora dele: limite num proxy, conexão encerrada durante o envio.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `corpo_nao_e_json` (Corpo não é JSON), `corpo_vazio` (Corpo vazio), `tempo_de_resposta_excedido` (Tempo de resposta excedido).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/routers/produtos.py`, `Programacao/CobaiaAPI/app/fault_injection.py`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `truncad`, `cortad`, `incomplet`, `unexpected end`, `content-length`, `tamanho`, `parcial`, `malformed_json`, `truncamento`, `conexao`, `proxy`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrição conceitual precisa sobre truncamento de JSON na camada de rede/proxy e no injetor malformed_json. As duas notas redundantes do modelo da época 1 foram excluídas para manter a síntese e otimizar o ranqueamento no RAG.\n",
+  "salvo_em": "2026-11-10T15:43:39.789Z",
+  "editado_em": null
+ },
+ {
+  "id": "senha-sem-hash",
+  "caminho": "defeitos_conhecidos/senha-sem-hash.md",
+  "estado": "editada",
+  "corpo_sha": "a936b34d2755a404",
+  "texto": "\n# Senha em texto puro, MD5 na edição, sem hash no login\n\nCamada de leitura do verbete `senha-sem-hash` (`biblioteca_producao/defeitos_conhecidos/senha-sem-hash.md`). Tipo: defeito_conhecido (um defeito real do código cedido, mantido de propósito); estado: nao_corrigido (defeito sem correção no código cedido); sistema: CobaiaFront (o site PHP); entidade principal: Usuario.\n\n## O que é\n\nCadastro grava senha em texto puro (usuario_insere.php), edição grava MD5 (usuario_atualiza.php), login compara sem hash (função de criptografia irreversível) (login.php:7). Mantido de propósito.\n\n## Como aparece na tela\n\n- usuário deixa de entrar depois de editado no painel.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `usuario nao consegue entrar apos edicao`, `redirecionado para invasor`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: Após edição a senha guardada é MD5 e o login compara com o texto digitado: nunca bate; cai em invasor.php. As contas do seed estão em texto puro e funcionam.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `estado_da_tela_divergente` (Estado da tela divergente da resposta), `valor_fora_do_dominio` (Valor fora do domínio).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/admin/usuario_insere.php`, `Programacao/CobaiaFront/admin/usuario_atualiza.php`, `Programacao/CobaiaFront/admin/login.php`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: `tbusuarios`.\n- Palavras que a busca usa para achar este verbete: `senha`, `md5`, `hash`, `texto puro`, `login`, `invasor`, `usuario_insere`, `usuario_atualiza`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo \"hash\" foi contextualizado para satisfazer os critérios do filtro estático Q2. O documento aborda com precisão o defeito intencional de desalinhamento de senhas no sistema legado PHP. Sem notas ou ruídos de treinamento identificados.",
+  "salvo_em": "2026-11-10T15:45:13.616Z",
+  "editado_em": null
+ },
+ {
+  "id": "tempo_de_resposta_excedido",
+  "caminho": "erros/tempo_de_resposta_excedido.md",
+  "estado": "aprovada",
+  "corpo_sha": "2ae80657f8e19b09",
+  "texto": null,
+  "salvo_em": "2026-11-10T15:45:45.341Z",
+  "editado_em": null
+ },
+ {
+  "id": "tipo_divergente",
+  "caminho": "erros/tipo_divergente.md",
+  "estado": "editada",
+  "corpo_sha": "dff1bb5f725db03e",
+  "texto": "\n# Tipo divergente\n\nCamada de leitura do verbete `tipo_divergente` (`biblioteca_producao/erros/tipo_divergente.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto. Trata da causa `tipo_divergente` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nChave certa com o tipo JSON errado: número entre aspas (\"89.90\"), booleano como texto (\"Sim\") ou número (1), inteiro como texto (\"4\").\n\n## Como aparece na tela\n\n- texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar.\n- \"89,90\" com vírgula não converte; destaque fora de true/false sai literal.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `numero como texto`, `booleano como Sim`, `destaque 1`, `ordenacao errada`, `soma errada`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `valor_fora_do_dominio` (Valor fora do domínio), `formato_de_data_divergente` (Formato de data divergente), `escala_ou_unidade_errada` (Escala ou unidade errada).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/fault_injection.py`, `Programacao/CobaiaFront/produtos_api.php`, `Programacao/CobaiaAPI/app/routers/produtos.py`.\n- Rotas da API (campo `endpoints`): `GET /api/produtos`, `GET /api/pedidos`.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `tipo`, `texto`, `string`, `numero`, `booleano`, `Sim`, `aspas`, `type_drift`, `str`, `virgula decimal`, `convercao`, `json`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. Descrição conceitual exata sobre divergências de tipos de dados em cargas JSON (string vs number vs boolean) e seu mapeamento para o injetor type_drift. A nota redundante da época 101 foi apagada para manter o verbete focado e otimizado para recuperação vetorial.\n",
+  "salvo_em": "2026-11-10T15:46:19.993Z",
+  "editado_em": null
+ },
+ {
+  "id": "usuario-e-login",
+  "caminho": "negocio/usuario-e-login.md",
+  "estado": "aprovada",
+  "corpo_sha": "c34d8a7e9c76319e",
+  "texto": null,
+  "salvo_em": "2026-11-10T15:46:36.333Z",
+  "editado_em": null
+ },
+ {
+  "id": "valor_fora_do_dominio",
+  "caminho": "erros/valor_fora_do_dominio.md",
+  "estado": "editada",
+  "corpo_sha": "384a2cd588afc759",
+  "texto": "\n# Valor fora do domínio\n\nCamada de leitura do verbete `valor_fora_do_dominio` (`biblioteca_producao/erros/valor_fora_do_dominio.md`). Tipo: erro (uma causa da taxonomia, com os sinais dela na tela e no corpo da resposta); estado: ativo (em vigor); sistema: Ambos (o site PHP e a API); entidade principal: Pedido. Trata da causa `valor_fora_do_dominio` da taxonomia: é o verbete que o agente cita quando responde essa causa.\n\n## O que é\n\nTipo certo, valor fora do conjunto permitido: status diferente de 'Em Análise'/'Cancelado', destaque diferente de true/false, pessoas menor que 1.\n\n## Como aparece na tela\n\n- reserva nem ativa nem cancelada na tela: status inesperado.\n- 0 ou negativo em pessoas: o mínimo só existe no HTML.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `status desconhecido`, `pessoas zero`, `destaque 2`, `reserva sem botao de cancelar`, `botao de cancelar some`, `status inesperado`.\n\n## O que conferir\n\nCausa, como o verbete a descreve: status e destaque são ENUM (tipo de dado enumerado com valores fixos permitidos) no banco (schema_completo.sql:37); pessoas ≥ 1 é só min= do HTML (registrar_reserva.php:55); a API não valida o que devolve.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `tipo_divergente` (Tipo divergente), `formato_de_data_divergente` (Formato de data divergente), `nulo_inesperado` (Nulo inesperado).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaFront/banco/schema_completo.sql`, `Programacao/CobaiaAPI/app/models.py`, `Programacao/CobaiaFront/cliente/registrar_reserva.php`.\n- Rotas da API (campo `endpoints`): `GET /api/pedidos`, `GET /api/produtos`.\n- Tabelas do banco: `tbpedido_reserva`, `tbprodutos`.\n- Palavras que a busca usa para achar este verbete: `dominio`, `enum`, `permitido`, `conjunto`, `status`, `Pendente`, `Concluido`, `pessoas`, `zero`, `negativo`, `destaque`, `validacao`.\n\n## Notas do modelo\n\n\n## Curadoria\n\nVerbete revisado e aprovado. O termo técnico \"ENUM\" foi contextualizado para satisfazer o critério do filtro estático Q2. A nota prescritiva da época 1 foi expurgada por violar o caráter descritivo da base de verbetes. Com este arquivo, encerra-se com sucesso a curadoria do lote completo de 39 verbetes da biblioteca_producao.\n",
+  "salvo_em": "2026-11-10T15:47:36.250Z",
+  "editado_em": null
+ }
+]

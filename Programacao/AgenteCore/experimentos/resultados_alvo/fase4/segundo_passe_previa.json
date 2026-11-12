@@ -1,0 +1,907 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-10T20:26:02",
+    "numero": 26
+  },
+  "desenho": {
+    "verbetes_seguintes": 3,
+    "posicoes": [
+      4,
+      5,
+      6
+    ],
+    "k_do_primeiro_pedido": 3,
+    "limite_de_tokens": 1409,
+    "origem_do_limite": "maior tokens_entrada de fase4_calibracao/k3/qwen2.5_7b/diagnosticos__L100.jsonl mais 10% (plano, seção 3.3)",
+    "biblioteca": "95af35290860",
+    "versao_ollama_das_referencias": [
+      "0.40.14"
+    ],
+    "selo_baixo_ate": 0.8317943867608124,
+    "selo_alto_a_partir_de": 0.9898271080008889,
+    "grupos_de_sinal": [
+      "só o selo baixo",
+      "só a FONTE divergente",
+      "os dois sinais"
+    ],
+    "alcances": [
+      "entre os três do primeiro pedido",
+      "entre os seguintes",
+      "fora dos dois pedidos"
+    ],
+    "tokens_estimados_como": "caracteres do prompt do segundo pedido vezes a razão de tokens por caractere do primeiro pedido do mesmo caso"
+  },
+  "resumo": {
+    "casos": 72,
+    "com_sinal": 24,
+    "so_selo_baixo": 12,
+    "so_fonte_divergente": 9,
+    "os_dois_sinais": 3,
+    "erros": 16,
+    "erros_com_sinal": 10,
+    "erros_sem_sinal": 6,
+    "acertos_com_sinal": 14,
+    "busca_refeita_igual": 24,
+    "contexto_do_primeiro_pedido_refeito_igual": 24,
+    "erros_ao_alcance": 3,
+    "erros_com_o_verbete_certo_ja_entregue": 3,
+    "erros_fora_do_alcance": 4,
+    "acertos_que_perdem_o_verbete_certo": 6,
+    "acertos_com_o_verbete_certo_entre_os_seguintes": 2,
+    "acertos_sem_o_verbete_certo_nos_dois": 6,
+    "p_do_melhor_cenario": 0.25,
+    "consertos_para_sair_do_ruido": 6,
+    "tokens_mediana_do_primeiro_pedido": 1185.0,
+    "acima_do_limite_no_primeiro_pedido": 1,
+    "tokens_estimados_mediana": 1277.0,
+    "tokens_estimados_maximo": 1513,
+    "acima_do_limite": 6,
+    "inferencias": 24,
+    "minutos_estimados": 25
+  },
+  "por_sinal": [
+    {
+      "sinal": "só o selo baixo",
+      "casos": 12,
+      "erros": 5,
+      "acertos": 7,
+      "erros_ao_alcance": 1,
+      "acertos_que_perdem_o_verbete_certo": 6
+    },
+    {
+      "sinal": "só a FONTE divergente",
+      "casos": 9,
+      "erros": 3,
+      "acertos": 6,
+      "erros_ao_alcance": 1,
+      "acertos_que_perdem_o_verbete_certo": 0
+    },
+    {
+      "sinal": "os dois sinais",
+      "casos": 3,
+      "erros": 2,
+      "acertos": 1,
+      "erros_ao_alcance": 1,
+      "acertos_que_perdem_o_verbete_certo": 0
+    }
+  ],
+  "por_banco": [
+    {
+      "banco": "avaliacao",
+      "referencia": "corrida 22",
+      "casos": 36,
+      "com_sinal": 8,
+      "erros_com_sinal": 3,
+      "acertos_com_sinal": 5,
+      "erros_ao_alcance": 1
+    },
+    {
+      "banco": "ineditos",
+      "referencia": "corrida 24",
+      "casos": 36,
+      "com_sinal": 16,
+      "erros_com_sinal": 7,
+      "acertos_com_sinal": 9,
+      "erros_ao_alcance": 2
+    }
+  ],
+  "alternativas": [
+    {
+      "desenho": "2 seguintes (posições 4 e 5), no lugar dos três primeiros",
+      "escolhido": false,
+      "verbetes_no_pedido": 2,
+      "erros_ao_alcance": 3,
+      "tokens_estimados_mediana": 1046.5,
+      "tokens_estimados_maximo": 1284,
+      "acima_do_limite": 0,
+      "motivo": "descartado: alcança os mesmos erros com um prompt menor, mas o pedido sai do k = 3 em que o selo foi calibrado"
+    },
+    {
+      "desenho": "3 seguintes (posições 4 a 6), no lugar dos três primeiros",
+      "escolhido": true,
+      "verbetes_no_pedido": 3,
+      "erros_ao_alcance": 3,
+      "tokens_estimados_mediana": 1277.0,
+      "tokens_estimados_maximo": 1513,
+      "acima_do_limite": 6,
+      "motivo": "escolhido: contexto novo, com o mesmo k = 3 do primeiro pedido e da calibração do selo"
+    },
+    {
+      "desenho": "os três primeiros mais 2 seguintes (5 verbetes)",
+      "escolhido": false,
+      "verbetes_no_pedido": 5,
+      "erros_ao_alcance": 3,
+      "tokens_estimados_mediana": 1602.5,
+      "tokens_estimados_maximo": 1897,
+      "acima_do_limite": 23,
+      "motivo": "descartado: repete o contexto da primeira resposta e passa do limite de tokens; a corrida 16 já mediu 5 verbetes para todos os casos (5 ganhos, 8 perdas)"
+    },
+    {
+      "desenho": "os três primeiros mais 3 seguintes (6 verbetes)",
+      "escolhido": false,
+      "verbetes_no_pedido": 6,
+      "erros_ao_alcance": 3,
+      "tokens_estimados_mediana": 1844.5,
+      "tokens_estimados_maximo": 2135,
+      "acima_do_limite": 24,
+      "motivo": "descartado: repete o contexto da primeira resposta e passa do limite de tokens em todos os casos"
+    },
+    {
+      "desenho": "7 seguintes (posições 4 a 10), no lugar dos três primeiros",
+      "escolhido": false,
+      "verbetes_no_pedido": 7,
+      "erros_ao_alcance": 5,
+      "tokens_estimados_mediana": 2069.5,
+      "tokens_estimados_maximo": 2299,
+      "acima_do_limite": 24,
+      "motivo": "descartado: alcança mais erros, mas o prompt quase dobra e fica fora do tamanho em que o selo foi calibrado"
+    }
+  ],
+  "casos": [
+    {
+      "caso": "lex-4",
+      "banco": "avaliacao",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "codificacao_incorreta",
+      "rotulo_primeira": "codificacao_incorreta",
+      "acerto_primeira": true,
+      "p_primeira": 0.9995273351785549,
+      "selo_primeira": "alto",
+      "posicao_do_verbete_certo": 13,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "estado_da_tela_divergente"
+      ],
+      "seguintes": [
+        "nulo_inesperado",
+        "tipo_divergente",
+        "pagina-produtos-api"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1110,
+      "tokens_estimados": 1042,
+      "acima_do_limite": false,
+      "segundos_estimados": 45.0
+    },
+    {
+      "caso": "sin-5",
+      "banco": "avaliacao",
+      "sinal": "só o selo baixo",
+      "gabarito": "campo_ausente",
+      "rotulo_primeira": "colecao_no_lugar_de_objeto",
+      "acerto_primeira": false,
+      "p_primeira": 0.624550459924769,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 4,
+      "alcance": "entre os seguintes",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "tipo_divergente"
+      ],
+      "seguintes": [
+        "campo_ausente",
+        "campo_renomeado",
+        "valor_fora_do_dominio"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1188,
+      "tokens_estimados": 1176,
+      "acima_do_limite": false,
+      "segundos_estimados": 57.2
+    },
+    {
+      "caso": "efe-2",
+      "banco": "avaliacao",
+      "sinal": "só o selo baixo",
+      "gabarito": "estado_da_tela_divergente",
+      "rotulo_primeira": "estado_da_tela_divergente",
+      "acerto_primeira": true,
+      "p_primeira": 0.7177074587264132,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 2,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "contrato-pedido",
+        "estado_da_tela_divergente",
+        "pedido-reserva"
+      ],
+      "seguintes": [
+        "fluxo-reserva-e-cancelamento",
+        "valor_fora_do_dominio",
+        "consultas-sem-checagem"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1055,
+      "tokens_estimados": 1010,
+      "acima_do_limite": false,
+      "segundos_estimados": 45.9
+    },
+    {
+      "caso": "efe-3",
+      "banco": "avaliacao",
+      "sinal": "só o selo baixo",
+      "gabarito": "campo_ausente",
+      "rotulo_primeira": "campo_ausente",
+      "acerto_primeira": true,
+      "p_primeira": 0.5657357519892259,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 3,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_ausente"
+      ],
+      "seguintes": [
+        "chave_de_juncao_errada",
+        "campo_renomeado",
+        "nulo_inesperado"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1091,
+      "tokens_estimados": 1247,
+      "acima_do_limite": false,
+      "segundos_estimados": 56.0
+    },
+    {
+      "caso": "lex-8",
+      "banco": "avaliacao",
+      "sinal": "só o selo baixo",
+      "gabarito": "codificacao_incorreta",
+      "rotulo_primeira": "codificacao_incorreta",
+      "acerto_primeira": true,
+      "p_primeira": 0.7490766046227897,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 1,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "codificacao_incorreta",
+        "contrato-produto",
+        "entidade-produto"
+      ],
+      "seguintes": [
+        "estado_da_tela_divergente",
+        "tipo_divergente",
+        "campo_renomeado"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1116,
+      "tokens_estimados": 1185,
+      "acima_do_limite": false,
+      "segundos_estimados": 72.8
+    },
+    {
+      "caso": "sin-14",
+      "banco": "avaliacao",
+      "sinal": "só o selo baixo",
+      "gabarito": "campo_renomeado",
+      "rotulo_primeira": "colecao_no_lugar_de_objeto",
+      "acerto_primeira": false,
+      "p_primeira": 0.3007152809091236,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 3,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_renomeado"
+      ],
+      "seguintes": [
+        "chave_de_juncao_errada",
+        "campo_ausente",
+        "tipo_divergente"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1137,
+      "tokens_estimados": 1252,
+      "acima_do_limite": false,
+      "segundos_estimados": 57.5
+    },
+    {
+      "caso": "semt-14",
+      "banco": "avaliacao",
+      "sinal": "só o selo baixo",
+      "gabarito": "nulo_inesperado",
+      "rotulo_primeira": "nulo_inesperado",
+      "acerto_primeira": true,
+      "p_primeira": 0.74046021362367,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 3,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "nulo_inesperado"
+      ],
+      "seguintes": [
+        "chave_de_juncao_errada",
+        "tipo_divergente",
+        "valor_fora_do_dominio"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1135,
+      "tokens_estimados": 1360,
+      "acima_do_limite": false,
+      "segundos_estimados": 61.1
+    },
+    {
+      "caso": "tra-15",
+      "banco": "avaliacao",
+      "sinal": "os dois sinais",
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo_primeira": "registro_duplicado",
+      "acerto_primeira": false,
+      "p_primeira": 0.6388301346448427,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 7,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "contrato-pedido",
+        "pedido-reserva",
+        "fluxo-reserva-e-cancelamento"
+      ],
+      "seguintes": [
+        "valor_fora_do_dominio",
+        "formato_de_data_divergente",
+        "chave_de_juncao_errada"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1096,
+      "tokens_estimados": 1289,
+      "acima_do_limite": false,
+      "segundos_estimados": 56.1
+    },
+    {
+      "caso": "lex-24",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "codificacao_incorreta",
+      "rotulo_primeira": "codificacao_incorreta",
+      "acerto_primeira": true,
+      "p_primeira": 0.9993702769150999,
+      "selo_primeira": "alto",
+      "posicao_do_verbete_certo": 22,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "estado_da_tela_divergente"
+      ],
+      "seguintes": [
+        "tipo_divergente",
+        "estrutura_aninhada_divergente",
+        "colecao_no_lugar_de_objeto"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1149,
+      "tokens_estimados": 1295,
+      "acima_do_limite": false,
+      "segundos_estimados": 71.8
+    },
+    {
+      "caso": "lex-25",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "codificacao_incorreta",
+      "rotulo_primeira": "codificacao_incorreta",
+      "acerto_primeira": true,
+      "p_primeira": 0.9980434178759562,
+      "selo_primeira": "alto",
+      "posicao_do_verbete_certo": 7,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_renomeado"
+      ],
+      "seguintes": [
+        "campo_ausente",
+        "chave_de_juncao_errada",
+        "nulo_inesperado"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1341,
+      "tokens_estimados": 1397,
+      "acima_do_limite": false,
+      "segundos_estimados": 61.3
+    },
+    {
+      "caso": "lex-26",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "codificacao_incorreta",
+      "rotulo_primeira": "codificacao_incorreta",
+      "acerto_primeira": true,
+      "p_primeira": 0.9995741248070354,
+      "selo_primeira": "alto",
+      "posicao_do_verbete_certo": 5,
+      "alcance": "entre os seguintes",
+      "primeiros": [
+        "entidade-produto",
+        "campo_ausente",
+        "pagina-produtos-api"
+      ],
+      "seguintes": [
+        "contrato-produto",
+        "codificacao_incorreta",
+        "colecao_no_lugar_de_objeto"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1176,
+      "tokens_estimados": 1307,
+      "acima_do_limite": false,
+      "segundos_estimados": 65.7
+    },
+    {
+      "caso": "lex-27",
+      "banco": "ineditos",
+      "sinal": "os dois sinais",
+      "gabarito": "codificacao_incorreta",
+      "rotulo_primeira": "codificacao_incorreta",
+      "acerto_primeira": true,
+      "p_primeira": 0.7415031702903712,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 22,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "contrato-pedido",
+        "pedido-reserva",
+        "formato_de_data_divergente"
+      ],
+      "seguintes": [
+        "estado_da_tela_divergente",
+        "valor_fora_do_dominio",
+        "fluxo-reserva-e-cancelamento"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1179,
+      "tokens_estimados": 1190,
+      "acima_do_limite": false,
+      "segundos_estimados": 67.2
+    },
+    {
+      "caso": "sin-24",
+      "banco": "ineditos",
+      "sinal": "só o selo baixo",
+      "gabarito": "estrutura_aninhada_divergente",
+      "rotulo_primeira": "estrutura_aninhada_divergente",
+      "acerto_primeira": true,
+      "p_primeira": 0.7967365993988412,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 3,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "contrato-produto",
+        "entidade-produto",
+        "estrutura_aninhada_divergente"
+      ],
+      "seguintes": [
+        "colecao_no_lugar_de_objeto",
+        "chave_de_juncao_errada",
+        "campo_renomeado"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1276,
+      "tokens_estimados": 1496,
+      "acima_do_limite": true,
+      "segundos_estimados": 85.3
+    },
+    {
+      "caso": "sin-26",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "campo_ausente",
+      "rotulo_primeira": "resposta_truncada",
+      "acerto_primeira": false,
+      "p_primeira": 0.9503417008268268,
+      "selo_primeira": "medio",
+      "posicao_do_verbete_certo": 3,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_ausente"
+      ],
+      "seguintes": [
+        "nulo_inesperado",
+        "campo_renomeado",
+        "chave_de_juncao_errada"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1275,
+      "tokens_estimados": 1434,
+      "acima_do_limite": true,
+      "segundos_estimados": 52.4
+    },
+    {
+      "caso": "sin-27",
+      "banco": "ineditos",
+      "sinal": "só o selo baixo",
+      "gabarito": "campo_renomeado",
+      "rotulo_primeira": "campo_renomeado",
+      "acerto_primeira": true,
+      "p_primeira": 0.41297742853449687,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 5,
+      "alcance": "entre os seguintes",
+      "primeiros": [
+        "contrato-produto",
+        "entidade-produto",
+        "chave_de_juncao_errada"
+      ],
+      "seguintes": [
+        "campo_ausente",
+        "campo_renomeado",
+        "nulo_inesperado"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1469,
+      "tokens_estimados": 1265,
+      "acima_do_limite": false,
+      "segundos_estimados": 63.3
+    },
+    {
+      "caso": "semt-27",
+      "banco": "ineditos",
+      "sinal": "só o selo baixo",
+      "gabarito": "valor_fora_do_dominio",
+      "rotulo_primeira": "colecao_no_lugar_de_objeto",
+      "acerto_primeira": false,
+      "p_primeira": 0.6447744429692802,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 7,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "estrutura_aninhada_divergente"
+      ],
+      "seguintes": [
+        "pagina-produtos-api",
+        "estado_da_tela_divergente",
+        "contagem_inconsistente"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1338,
+      "tokens_estimados": 1260,
+      "acima_do_limite": false,
+      "segundos_estimados": 65.1
+    },
+    {
+      "caso": "tra-22",
+      "banco": "ineditos",
+      "sinal": "só o selo baixo",
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo_primeira": "tipo_divergente",
+      "acerto_primeira": false,
+      "p_primeira": 0.8107724826078103,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 12,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "nulo_inesperado",
+        "contrato-produto"
+      ],
+      "seguintes": [
+        "pagina-produtos-api",
+        "tipo_divergente",
+        "chave_de_juncao_errada"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1246,
+      "tokens_estimados": 1426,
+      "acima_do_limite": true,
+      "segundos_estimados": 79.2
+    },
+    {
+      "caso": "tra-23",
+      "banco": "ineditos",
+      "sinal": "só o selo baixo",
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo_primeira": "valor_fora_do_dominio",
+      "acerto_primeira": false,
+      "p_primeira": 0.6494060130223378,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 16,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "contrato-pedido",
+        "pedido-reserva",
+        "valor_fora_do_dominio"
+      ],
+      "seguintes": [
+        "estado_da_tela_divergente",
+        "fluxo-reserva-e-cancelamento",
+        "formato_de_data_divergente"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1182,
+      "tokens_estimados": 1110,
+      "acima_do_limite": false,
+      "segundos_estimados": 53.7
+    },
+    {
+      "caso": "tra-25",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "contagem_inconsistente",
+      "rotulo_primeira": "resposta_truncada",
+      "acerto_primeira": false,
+      "p_primeira": 0.9974324106236034,
+      "selo_primeira": "alto",
+      "posicao_do_verbete_certo": 3,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "contagem_inconsistente"
+      ],
+      "seguintes": [
+        "estrutura_aninhada_divergente",
+        "chave_de_juncao_errada",
+        "pagina-produtos-api"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1267,
+      "tokens_estimados": 1413,
+      "acima_do_limite": true,
+      "segundos_estimados": 68.0
+    },
+    {
+      "caso": "run-22",
+      "banco": "ineditos",
+      "sinal": "só o selo baixo",
+      "gabarito": "limite_de_requisicoes",
+      "rotulo_primeira": "limite_de_requisicoes",
+      "acerto_primeira": true,
+      "p_primeira": 0.639723956292674,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 1,
+      "alcance": "entre os três do primeiro pedido",
+      "primeiros": [
+        "limite_de_requisicoes",
+        "contagem_inconsistente",
+        "estrutura_aninhada_divergente"
+      ],
+      "seguintes": [
+        "tempo_de_resposta_excedido",
+        "mensagens-de-erro-do-codigo",
+        "pagina-produtos-api"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1207,
+      "tokens_estimados": 1004,
+      "acima_do_limite": false,
+      "segundos_estimados": 63.9
+    },
+    {
+      "caso": "run-24",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "registro_duplicado",
+      "rotulo_primeira": "registro_duplicado",
+      "acerto_primeira": true,
+      "p_primeira": 0.9701996437733472,
+      "selo_primeira": "medio",
+      "posicao_do_verbete_certo": 15,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "estrutura_aninhada_divergente"
+      ],
+      "seguintes": [
+        "contagem_inconsistente",
+        "tipo_divergente",
+        "chave_de_juncao_errada"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1376,
+      "tokens_estimados": 1513,
+      "acima_do_limite": true,
+      "segundos_estimados": 74.1
+    },
+    {
+      "caso": "run-25",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "tempo_de_resposta_excedido",
+      "rotulo_primeira": "tempo_de_resposta_excedido",
+      "acerto_primeira": true,
+      "p_primeira": 0.8323317154358872,
+      "selo_primeira": "medio",
+      "posicao_do_verbete_certo": 7,
+      "alcance": "fora dos dois pedidos",
+      "primeiros": [
+        "entidade-produto",
+        "ancora-saiba-mais",
+        "contrato-produto"
+      ],
+      "seguintes": [
+        "estado_da_tela_divergente",
+        "pagina-produtos-api",
+        "colecao_no_lugar_de_objeto"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1160,
+      "tokens_estimados": 1241,
+      "acima_do_limite": false,
+      "segundos_estimados": 68.0
+    },
+    {
+      "caso": "run-26",
+      "banco": "ineditos",
+      "sinal": "os dois sinais",
+      "gabarito": "dado_desatualizado",
+      "rotulo_primeira": "registro_duplicado",
+      "acerto_primeira": false,
+      "p_primeira": 0.7565002340626116,
+      "selo_primeira": "baixo",
+      "posicao_do_verbete_certo": 5,
+      "alcance": "entre os seguintes",
+      "primeiros": [
+        "contrato-pedido",
+        "pedido-reserva",
+        "valor_fora_do_dominio"
+      ],
+      "seguintes": [
+        "fluxo-reserva-e-cancelamento",
+        "dado_desatualizado",
+        "chave_de_juncao_errada"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1292,
+      "tokens_estimados": 1372,
+      "acima_do_limite": false,
+      "segundos_estimados": 52.3
+    },
+    {
+      "caso": "efe-27",
+      "banco": "ineditos",
+      "sinal": "só a FONTE divergente",
+      "gabarito": "estado_da_tela_divergente",
+      "rotulo_primeira": "dado_desatualizado",
+      "acerto_primeira": false,
+      "p_primeira": 0.8746700321923563,
+      "selo_primeira": "medio",
+      "posicao_do_verbete_certo": 5,
+      "alcance": "entre os seguintes",
+      "primeiros": [
+        "entidade-produto",
+        "contrato-produto",
+        "nulo_inesperado"
+      ],
+      "seguintes": [
+        "pagina-produtos-api",
+        "estado_da_tela_divergente",
+        "tipo_divergente"
+      ],
+      "posicoes": [
+        4,
+        5,
+        6
+      ],
+      "tokens_primeira": 1409,
+      "tokens_estimados": 1427,
+      "acima_do_limite": true,
+      "segundos_estimados": 68.5
+    }
+  ],
+  "regra": "Regra fixada antes da corrida (decisão 120). A resposta final de cada caso é escolhida por regra em código: fica a primeira resposta, salvo quando a segunda dá outra causa da lista, não acende nenhum dos dois sinais (não cai no selo baixo, e algum verbete entregue no segundo pedido trata da causa respondida, com a FONTE dentro dos entregues) e tem probabilidade maior que a da primeira; só então fica a segunda. A diferença entre a resposta final e a primeira sai do ruído quando o teste pareado exato (McNemar, bilateral) dá p abaixo de 0,05, com a corrida completa e a ponte da versão do Ollama pareável com a Fase 3 (b + c até 2, decisão 47). Fora disso a diferença fica dentro do ruído e o agente não muda; se sair do ruído, mudar o agente é outra decisão."
+}

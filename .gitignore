@@ -22,6 +22,13 @@
 # ! Motivo: é rascunho de sessão do Claude Code, igual a .claude/; versionar poluiria o
 # histórico com arquivos que só fazem sentido durante a sessão em que foram gerados.
 .superpowers/
+# ! Alteração de IA - Revisar: pasta de dados do MariaDB portátil (`.mariadb/data`, com o my.ini) fora do
+# versionamento (07/11/2026, ficha 55).
+# ! Motivo: é o banco vivo da cobaia (ibdata1, redo log de 96 MB, undo, tabelas), que install.py recria com
+# `mariadb-install-db.exe` e restaurar_banco.py enche com o seed em qualquer máquina. Ficou dentro do projeto porque
+# o app Claude é um pacote MSIX: em AppData\Local a pasta virava duas (a real e a privada do pacote), e o servidor
+# subido de dentro do app misturava as duas camadas (erro 1932 em todas as tabelas). A pasta do projeto não é virtualizada.
+.mariadb/
 # ! Alteração de IA - Revisar: resultados do piloto da Fase 3 (1 modelo, 10 casos, 1 época)
 # fora do versionamento.
 # ! Motivo: o piloto existe só para calibrar tempo e conferir o encanamento antes das

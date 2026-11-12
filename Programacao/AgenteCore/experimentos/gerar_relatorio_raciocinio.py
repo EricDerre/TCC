@@ -27,9 +27,14 @@ from pathlib import Path
 
 import analisar_fase3b as a3b
 import avaliar
+
+# ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, Q1) a camada de leitura dos verbetes e a taxonomia entram para o relatório v3.
+# ! Motivo: o v3 cita os verbetes pela camada de leitura (decisão 103) e escreve classe e nível do caso com o significado ao lado.
+import biblioteca_leitura as bl
 import caminhos
 import executar_fase3
 import pre_fase4 as pf
+import taxonomia
 import trilha as tr
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
@@ -765,8 +770,8 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
                     + (", que resolve o mesmo elemento da referência." if cura.get("mesmo_elemento") else
                        (" e conferir à mão: o roteiro passou, mas com outro elemento, não o alvo da referência." if cura.get("mesmo_elemento") is False else ".")), ""]
         else:
-            acao = [f"Sugestão (o agente não altera a aplicação): nenhum candidato levou o roteiro ao fim no passo {cura.get('passo')} "
-                    f"(localizador `{_cel(cura.get('localizador'))}`); o roteiro precisa de um localizador novo escrito à mão. Falha registrada: `{_cel(cura.get('falha'))}`.", ""]
+            acao = [(f"Sugestão (o agente não altera a aplicação): nenhum candidato levou o roteiro ao fim no passo {cura.get('passo')} "
+                     f"(localizador `{_cel(cura.get('localizador'))}`); o roteiro precisa de um localizador novo escrito à mão. Falha registrada: `{_cel(cura.get('falha'))}`."), ""]
         acao += [f"Comando para reexecutar o caso: `{comando_reexecucao}`" if comando_reexecucao else "Comando de reexecução: não registrado nesta trilha.", ""]
     else:
         acao = [("Confira o campo `" + _cel(campo_decl) + "`" if campo_decl else "Confira a resposta") + (f" em {onde}" if onde else " no caso de entrada")
@@ -815,6 +820,855 @@ def relatorio_do_caso_v2(eventos: list[dict], tid: str, comando_reexecucao: str 
         "Origem de cada evento: `ao_vivo` (emitido pelo agente na hora), `registro`, `recalculado` ou `humano`.", "",
     ]
     return "\n".join(partes)
+
+
+# ------------------------------------------------------------------ versão 3: o relatório de defeito no molde da seção 5.5 do CTFL 4.0
+
+# ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q1) o relatório v3 por caso, no molde do relatório de defeitos da
+# seção 5.5 do syllabus CTFL 4.0 (decisão 104): os onze campos da 5.5 primeiro, preenchidos da trilha v2 (identificador, título,
+# data e autor, objeto e ambiente, contexto, descrição para reproduzir, esperado contra real, referências), com severidade,
+# prioridade e estado em branco para o analista; depois os seis blocos do v2 (veredito, evidência, contraste, FONTE, ação, árvore),
+# reescritos com cada código de situação acompanhado do significado e sem os nomes internos da trilha. Os verbetes são citados
+# pela camada de leitura (`biblioteca_leitura.py`); nada aqui chama modelo; `relatorio_do_caso_v2` continua byte a byte igual, para
+# as corridas gravadas. `gerar_v3_da_pasta` regera os relatórios de uma pasta de corrida inteira (`--v3 --saida`, com `--check`).
+# ! Motivo: plano aprovado da Pós-Fase 4, seção 3.1: o relatório v2 tem seis seções fixas e não tem metade dos campos que a 5.5
+# lista (identificador, data e autor, objeto e ambiente, contexto, passos para reproduzir, severidade, prioridade, estado); o que o
+# código sabe vem da trilha, e o que é do analista fica em branco com a classe e o nível do caso ao lado. A linguagem segue a
+# regra de escrita do Eric (seção 1.4 do plano); os filtros do pacote Q2 medem cada frase gerada aqui.
+CAMPOS_55 = ("Identificador", "Título", "Data, organização e autor", "Objeto de teste e ambiente", "Contexto", "Descrição para reproduzir",
+             "Resultado esperado e resultado real", "Severidade", "Prioridade", "Estado", "Referências")
+SECOES_MANTIDAS_V3 = ("Veredito do agente", "Evidência", "Contraste com a segunda causa", "FONTE declarada e conferida", "Linha de ação", "Árvore completa")
+EM_BRANCO = "em branco: preenche o analista"
+SEM_SELO = "sem selo: a resposta não trouxe a linha CAUSA_RAIZ, e não há probabilidade a ler"
+SELO_EM_PALAVRAS = {"alto": "o agente está seguro desta causa",
+                    "medio": "o agente tem dúvida entre causas vizinhas; confira antes de agir",
+                    "baixo": "o agente não está seguro desta causa; trate como hipótese e confira antes de agir"}
+STATUS_EM_PALAVRAS = {200: "a API respondeu sem código de erro", 201: "a API criou o registro", 204: "a API respondeu sem corpo",
+                      400: "a API recusou a requisição como mal formada", 403: "a API recusou o acesso", 404: "a API não achou o recurso",
+                      422: "a API recusou os dados enviados", 429: "a API barrou por excesso de requisições", 500: "a API falhou por erro interno",
+                      502: "o servidor da frente não conseguiu falar com a API", 503: "a API estava indisponível"}
+# O que cada modo de injeção da CobaiaAPI faz (conferido em CobaiaAPI/app/fault_injection.py) e o que cada modo de quebra de
+# localizador faz (as quatro frases de cenarios_fase4.DESCRICAO_DO_MODO, copiadas porque aquele módulo importa o navegador).
+MODO_EM_PALAVRAS = {
+    "normal": "sem falha injetada",
+    "error_500": "a CobaiaAPI responde com erro interno, status 500",
+    "latency": "a CobaiaAPI demora de propósito antes de responder",
+    "type_drift": "um campo da resposta vem com outro tipo: número vira texto, e texto vira o inteiro 1",
+    "field_missing": "um campo do contrato é apagado da resposta",
+    "field_renamed": "um campo da resposta vem com o nome trocado, com o sufixo _v2",
+    "malformed_json": "a CobaiaAPI devolve o JSON cortado no meio, de propósito",
+    "escala_ou_unidade_errada": "um valor numérico vem multiplicado por 100",
+    "formato_de_data_divergente": "a data vem como dia/mês/ano em vez de ano-mês-dia",
+    "chave_de_juncao_errada": "o rótulo de junção (o tipo) vem trocado entre os itens da lista",
+    "contagem_inconsistente": "a lista vem sem o último item",
+    "nulo_inesperado": "um campo obrigatório vem nulo",
+    "valor_fora_do_dominio": "um valor vem fora do domínio permitido (número negativo, status desconhecido, booleano como texto)",
+    "corpo_vazio": "a resposta vem sem corpo",
+    "corpo_nao_e_json": "a resposta vem em HTML, não em JSON",
+    "codificacao_incorreta": "os acentos vêm trocados: texto gravado em UTF-8 e lido como latin-1",
+    "limite_de_requisicoes": "a CobaiaAPI responde 429, limite de requisições",
+    "recurso_inexistente": "a CobaiaAPI responde 404, recurso não encontrado",
+    "registro_duplicado": "o primeiro item da lista vem repetido",
+    "estrutura_aninhada_divergente": "um campo vem aninhado dentro de um objeto com valor e moeda",
+    "colecao_no_lugar_de_objeto": "vem uma lista onde se espera um objeto, ou o inverso",
+    "id_renomeado": "o id (ou o atributo identificador) do alvo é renomeado",
+    "classe_trocada": "a classe que o localizador usa é trocada por outra",
+    "texto_alterado": "o texto do alvo (ou o seu valor ou placeholder) ganha uma palavra",
+    "estrutura_alterada": "o alvo é envolvido num contêiner novo e trocado de posição entre os irmãos",
+}
+ESTRATEGIA_EM_PALAVRAS = {"papel_e_nome": "o elemento é achado pelo papel e pelo nome acessíveis, iguais aos do alvo",
+                          "papel_e_nome_parecido": "o elemento é achado pelo papel igual e pelo nome parecido com o do alvo",
+                          "texto_contido": "o elemento é achado pelo texto, que contém o texto do alvo",
+                          "data_id": "o elemento é achado pelo mesmo data-id do alvo",
+                          "caminho_do_ancestral_com_id": "o elemento é achado pelo caminho a partir do ancestral com id mais próximo",
+                          "posicao_entre_irmaos": "o elemento é achado pela posição entre os irmãos, dentro do pai do alvo"}
+ACAO_EM_PALAVRAS = {"abrir": "Abrir", "esperar": "Esperar aparecer", "clicar": "Clicar em", "preencher": "Preencher", "conferir": "Conferir"}
+ROTULO_DA_REGRA_V3 = {**ROTULO_DA_REGRA, "fonte_formato_valido": "A linha FONTE só tem identificadores, no formato pedido",
+                      "fonte_contem_termo_da_causa": "O verbete citado fala da causa respondida", "conferencia_do_roteiro": "Conferência do roteiro"}
+RESULTADO_EM_PALAVRAS = {"confere": "confere", "nao_confere": "não confere", "nao_se_aplica": "não se aplica", "nao_verificavel": "não dá para conferir por código",
+                         "informativo": "só informa"}
+# ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) o molde do relatório v3 ajustado pelos filtros de texto (filtros_de_texto.py): a classe e o nível
+# do caso saem em palavras do molde (CLASSE_EM_PALAVRAS, NIVEL_EM_PALAVRAS), e não no texto copiado de taxonomia.py; a prioridade cita a classe e o nível na forma
+# curta, em vez de repetir a frase inteira da severidade; os termos que a lista fechada pede explicados ganham o significado na primeira menção (Ollama, Playwright,
+# CTFL e ISTQB no parágrafo de abertura; hash no identificador; harness no autor; quantização, num_ctx, tokens, temperatura e prompt no ambiente); o que veio de fora
+# (o sintoma do caso, a observação adicional, a mensagem de erro do navegador, a descrição da quebra) vai em citação do Markdown (`_citacao`); as conferências do
+# roteiro que passaram viram uma frase só (a tabela do bloco 7 traz cada uma); a poda diz o tamanho antes e depois em palavras; os nós de decisão da árvore saem em
+# subitens. Nada muda no v2 nem nos campos da 5.5.
+# ! Motivo: a leitura exploratória do Q2 sobre os 120 relatórios v3 das corridas 18d, 21d e 24 reprovou todos: nove termos da lista fechada sem o significado em cada
+# relatório (ctfl, istqb, hash, harness, ollama, prompt, quantização, num_ctx, temperatura), "enum" em 22, os preenchimentos "claramente" e "de fato" trazidos da
+# taxonomia, e a repetição de trigramas acima do percentil 95 do corpus (0,031) em 71 dos 74 da tela, por causa da frase da classe e do nível repetida em três blocos
+# vizinhos e das conferências escritas uma a uma. O plano (seção 9) manda ajustar o molde até passar e registrar a leitura antes e depois.
+CLASSE_EM_PALAVRAS = {1: "léxica: o corpo da resposta nem dá para ler", 2: "sintática: a forma da resposta não é a esperada",
+                      3: "semântica: os tipos ou os domínios dos valores não fazem sentido", 4: "tradução: o mapeamento entre as camadas está errado",
+                      5: "tempo e estado: o comportamento no tempo ou no estado está errado", 6: "efeito: o que o usuário vê na tela está errado"}
+NIVEL_EM_PALAVRAS = {"facil": "fácil: o sinal é local e explícito, como status de erro, corpo que não é JSON ou campo que sumiu",
+                     "medio": "médio: status 200 e corpo válido, mas o contrato divergiu no tipo, no valor permitido ou no formato",
+                     "dificil": "difícil: status 200, corpo válido e tipos certos; a falha é de lógica ou de estado e só aparece cruzando duas requisições, ou a requisição com a tela"}
+BANCO_EM_PALAVRAS = {"tela": "`banco_casos.py` ou `banco_casos_extra.py` (os 72 casos de avaliação)",
+                     "ineditos": "`banco_casos_ineditos_fase4.py` (os 36 inéditos da ficha 27)",
+                     "cenarios": "`cenarios_fase4.py` (catálogo dos dez cenários do ensaio da Fase 5, ficha 36)",
+                     "calibracao": "`banco_casos.py` ou `banco_casos_extra.py` (os 90 casos da calibração)"}
+PREFIXO_DA_LEITURA = bl.PASTA_LEITURA.relative_to(bl.RAIZ_DO_REPOSITORIO).as_posix()
+PREFIXO_DA_BIBLIOTECA = bl.PASTA_BIBLIOTECA.relative_to(bl.RAIZ_DO_REPOSITORIO).as_posix()
+_ROTULOS_DO_CASO = (("REQUISIÇÃO", "requisicao"), ("STATUS HTTP", "status"), ("CONTRATO ESPERADO PELA INTERFACE", "contrato"),
+                    ("CORPO DA RESPOSTA", "corpo"), ("ÁRVORE DE ACESSIBILIDADE DA PÁGINA", "arvore"), ("SELETOR QUE FALHOU", "seletor_quebrado"),
+                    ("SINTOMA OBSERVADO", "sintoma"), ("OBSERVAÇÃO ADICIONAL", "observacao"))
+
+
+def _prosa(texto) -> str:
+    """Texto vindo dos dados (sintoma, descrição da quebra, erro) posto em frase corrida: sem travessão nem seta, numa linha."""
+    return " ".join(bl._sem_travessao(str("" if texto is None else texto)).split()).replace(" .", ".")
+
+
+def _contrato_do_caso(dados: dict) -> str | None:
+    """O contrato esperado pela interface, quando o caso traz um: `n/a` e o aviso entre parênteses das páginas do front legado
+    (que não têm contrato de API) contam como ausência."""
+    contrato = str(dados.get("contrato") or "").strip()
+    return contrato if contrato and contrato != "n/a" and not contrato.startswith("(") else None
+
+
+def _data_hora(ts) -> str:
+    if not ts:
+        return "não registrada"
+    try:
+        return datetime.fromisoformat(str(ts)).strftime("%d/%m/%Y %H:%M:%S")
+    except ValueError:
+        return str(ts)
+
+
+def _classe_em_palavras(classe, curta: bool = False) -> str | None:
+    """A classe do caso (taxonomia.CLASSES) nas palavras do molde; `curta` dá só o nome (léxica, sintática, ...)."""
+    try:
+        taxonomia.CLASSES[int(classe)]
+        texto = CLASSE_EM_PALAVRAS[int(classe)]
+    except (KeyError, TypeError, ValueError):
+        return None
+    return f"classe {classe} ({texto.split(':')[0] if curta else texto})"
+
+
+def _nivel_em_palavras(nivel, curta: bool = False) -> str | None:
+    """O nível do caso (taxonomia.NIVEIS) nas palavras do molde; `curta` dá só o nome (fácil, médio, difícil)."""
+    try:
+        n = taxonomia.NIVEIS[int(nivel)]
+    except (KeyError, TypeError, ValueError):
+        return None
+    texto = NIVEL_EM_PALAVRAS.get(n["id"], n["id"])
+    return f"nível {nivel} ({texto.split(':')[0] if curta else texto})"
+
+
+def _citacao(texto) -> list[str]:
+    """Texto trazido de fora (o sintoma do caso, a mensagem do navegador, a descrição da quebra) em citação do Markdown: o analista o lê como
+    veio, e os filtros de texto não o medem como escrita do molde."""
+    return ["> " + _prosa(texto)]
+
+
+def _tamanho_em_palavras(d) -> str:
+    """O tamanho que a poda registra ({"nos": 179}, {"linhas": 39}, {"chars": 1718}) em palavras."""
+    if not isinstance(d, dict) or not d:
+        return _cel(json.dumps(d, ensure_ascii=False))
+    nomes = {"nos": "nós", "linhas": "linhas", "chars": "caracteres", "itens": "itens", "campos": "campos"}
+    return ", ".join(f"{v} {nomes.get(k, k)}" for k, v in d.items())
+
+
+def _status_em_palavras(status) -> str:
+    if status is None or status == "":
+        return "status não registrado"
+    try:
+        codigo = int(status)
+    except (TypeError, ValueError):
+        return f"status {status}"
+    return f"status {codigo} ({STATUS_EM_PALAVRAS.get(codigo, 'código fora da lista deste relatório')})"
+
+
+def _modo_em_palavras(modo) -> str:
+    return f"`{modo}` ({MODO_EM_PALAVRAS.get(modo, 'modo fora da lista deste relatório')})" if modo else "sem modo registrado"
+
+
+def _campos_do_caso_escrito(texto: str) -> dict:
+    """Os campos de um caso lido em texto (o formato de estrategias._dados_do_caso): requisição, status, contrato, corpo, árvore, seletor,
+    sintoma e observação; o status vira inteiro quando é só dígitos."""
+    saida: dict = {}
+    atual = None
+    for linha in texto.splitlines():
+        for rotulo, chave in _ROTULOS_DO_CASO:
+            if linha.startswith(rotulo + ":"):
+                atual = chave
+                saida[chave] = linha[len(rotulo) + 1:].strip()
+                break
+        else:
+            if atual is not None:
+                saida[atual] = (saida[atual] + "\n" + linha) if saida[atual] else linha
+    saida = {k: v.strip() for k, v in saida.items()}
+    if str(saida.get("status", "")).isdigit():
+        saida["status"] = int(saida["status"])
+    return saida
+
+
+def _causa_em_palavras(escolha, leituras: dict | None) -> str:
+    """O título do verbete de erro da causa, pela camada de leitura; sem leitura, o rótulo com espaços no lugar dos sublinhados."""
+    if escolha is None:
+        return "sem causa respondida"
+    for l in (leituras or {}).values():
+        if l.get("causa_raiz") == escolha and l.get("tipo") == "erro":
+            return l["titulo"]
+    return str(escolha).replace("_", " ").capitalize()
+
+
+def _referencia_do_verbete(i: str, leituras: dict | None) -> str:
+    l = (leituras or {}).get(i)
+    if l is None:
+        return f"`{i}` (sem leitura gerada na camada de leitura)"
+    return (f"`{i}` ({l['titulo']}; leitura: `{PREFIXO_DA_LEITURA}/{l['caminho']}`; verbete: "
+            f"`{PREFIXO_DA_BIBLIOTECA}/{l.get('verbete') or l['caminho']}`)")
+
+
+def nome_do_relatorio(tid: str) -> str:
+    """O nome do arquivo do relatório de uma trilha: o último trecho do id, com `#` (repetição de um cenário) escrito como `__r`."""
+    return tid.rsplit("/", 1)[-1].replace("#", "__r")
+
+
+def comando_de_reexecucao(modo: str | None, saida: str, tid: str, k: int = 3) -> str:
+    """O comando que reexecuta só este caso numa saída própria, como o executor grava nos relatórios v2 de cada modo."""
+    nome = tid.rsplit("/", 1)[-1]
+    caso = nome.split("@")[0].split("#")[0]
+    base = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo {modo or 'tela'} --saida {saida}_reexec"
+    if modo == "tela":
+        return f"{base} --ids {caso} --k {k}"
+    if modo == "cenarios":
+        return f"{base} --repeticoes 1"
+    if modo == "ineditos":
+        return f"{base} --ids {caso}"
+    return base
+
+
+def _contexto_v3(eventos: list[dict], tid: str, pasta_blobs: Path | None = None, leituras: dict | None = None) -> dict:
+    """Tudo o que o relatório v3 e o índice precisam de uma trilha, lido uma vez: os eventos por tipo, o caso (ao vivo ou escrito), o
+    nó de diagnóstico, a cura, o título e a causa em palavras."""
+    blobs = tr.blobs_de(eventos, pasta_blobs)
+    seq = [e for e in eventos if e["trilha"] == tid]
+    if not seq:
+        raise KeyError(f"trilha {tid!r} não está no arquivo")
+    cab = next((e["dados"] for e in eventos if e["tipo"] == "corrida"), {})
+    por_tipo: dict[str, list[dict]] = {}
+    for e in seq:
+        por_tipo.setdefault(e["tipo"], []).append(e)
+    ev_entrada = (por_tipo.get("entrada") or [{"dados": {}, "ts": None}])[0]
+    entrada = ev_entrada["dados"]
+    decl = {e["dados"]["campo"]: e["dados"] for e in por_tipo.get("declaracao", []) if e["dados"].get("campo") in NOME_DO_CAMPO}
+    citadas = [e["dados"] for e in por_tipo.get("declaracao", []) if e["dados"].get("campo") == "fonte_citada"]
+    ver = [e["dados"] for e in por_tipo.get("verificacao", [])]
+    nos = por_tipo.get("decisao", [])
+    diag = next((e["dados"] for e in reversed(nos) if e["dados"].get("decisao") == "diagnostico"), None)
+    no_cura = next((e["dados"] for e in reversed(nos) if e["dados"].get("decisao") == "cura"), None)
+    cura = (por_tipo.get("cura") or [{"dados": None}])[-1]["dados"]
+    acoes = [e["dados"] for e in por_tipo.get("acao", [])]
+    acoes_originais = [a for a in acoes if not a.get("reexecucao")]
+    passo_falho = next((a for a in acoes_originais if a.get("falhou")), None)
+    conferencias = [v for v in ver if v.get("regra") == "conferencia_do_roteiro" and not (v.get("evidencia") or {}).get("reexecucao")]
+    interceptacoes = por_tipo.get("interceptacao", [])
+    inter = interceptacoes[0]["dados"] if interceptacoes else None
+    caso_vivo = None
+    if entrada.get("caso_ao_vivo") and blobs.get(entrada["caso_ao_vivo"]):
+        try:
+            caso_vivo = json.loads(blobs[entrada["caso_ao_vivo"]])
+        except ValueError:
+            caso_vivo = None
+    texto_caso = blobs.get(entrada["texto"]) if entrada.get("texto") else None
+    caso_escrito = _campos_do_caso_escrito(texto_caso) if texto_caso else {}
+    dados_do_caso = (caso_vivo or {}).get("entrada") or caso_escrito
+    requisicao = dados_do_caso.get("requisicao") or (f"{inter['metodo']} {inter['caminho']}" if inter else None)
+    campo_decl = (decl.get("campo") or {}).get("lido")
+    if str(campo_decl or "").strip().lower() == "nenhum":
+        campo_decl = None
+    escolha = diag.get("escolha") if diag else None
+    classe, nivel = entrada.get("classe"), entrada.get("nivel")
+    if classe is None and caso_vivo:
+        classe, nivel = caso_vivo.get("classe"), caso_vivo.get("nivel")
+    c = {"blobs": blobs, "seq": seq, "cab": cab, "por_tipo": por_tipo, "entrada": entrada, "ts_entrada": ev_entrada.get("ts"), "decl": decl,
+         "citadas": citadas, "ver": ver, "sem_gabarito": [v for v in ver if not v.get("usa_gabarito")], "com_gabarito": [v for v in ver if v.get("usa_gabarito")],
+         "nos": nos, "diag": diag, "no_cura": no_cura, "cura": cura, "nos_bib": [e["dados"] for e in nos if e["dados"].get("decisao") == "edicao_biblioteca"],
+         "edicoes": [e["dados"] for e in por_tipo.get("edicao_biblioteca", [])], "intervencoes": [e["dados"] for e in por_tipo.get("intervencao", [])],
+         "podas": por_tipo.get("poda", []), "interceptacoes": interceptacoes, "inter": inter, "acoes": acoes, "acoes_originais": acoes_originais,
+         "passo_falho": passo_falho, "conferencias": conferencias, "nome": tid.rsplit("/", 1)[-1], "caso_id": entrada.get("caso") or tid.rsplit("/", 1)[-1],
+         "leituras": leituras or {}, "caso_vivo": caso_vivo, "texto_caso": texto_caso, "caso_escrito": caso_escrito, "dados_do_caso": dados_do_caso,
+         "requisicao": requisicao, "pagina": next((a.get("url") for a in acoes_originais if a.get("acao") == "abrir" and a.get("url")), None),
+         "eh_localizador": entrada.get("localizador") is not None or cura is not None, "eh_texto": texto_caso is not None and not acoes and not interceptacoes,
+         "escolha": escolha, "campo": (diag or {}).get("campo") or campo_decl, "confianca": (diag or {}).get("confianca") or {},
+         "modo": entrada.get("modo"), "roteiro": entrada.get("roteiro") or entrada.get("cenario"), "classe": classe, "nivel": nivel,
+         "modo_da_corrida": cab.get("modo"), "entregues": [], "titulo": ""}
+    c["eventos"] = eventos
+    c["selo"] = c["confianca"].get("selo")
+    c["causa_em_palavras"] = _causa_em_palavras(escolha, leituras)
+    cand = (por_tipo.get("candidatos") or [{"dados": {}}])[0]["dados"]
+    entregues = [i["id"] for i in cand.get("itens") or [] if i.get("escolhido")]
+    if not entregues:
+        entregues = next((p["dados"]["verbetes_ids"] for p in por_tipo.get("prompt", [])
+                          if p["dados"].get("etapa") == "diagnostico" and p["dados"].get("verbetes_ids")), [])
+    c["entregues"] = list(entregues)
+    c["titulo"] = _titulo_v3(c)
+    return c
+
+
+def _titulo_v3(c: dict) -> str:
+    inicio = c["causa_em_palavras"] if c["escolha"] is not None else "Sem causa respondida (a linha CAUSA_RAIZ não veio)"
+    cura = c["cura"] or {}
+    if c["eh_localizador"]:
+        passo = (c["passo_falho"] or {}).get("passo") or cura.get("passo")
+        loc = c["entrada"].get("localizador") or cura.get("localizador")
+        titulo = f"{inicio} no passo {passo} do roteiro `{c['roteiro']}` (localizador `{_cel(loc)}`)"
+        return titulo + (", curado pelo agente" if cura.get("curado") else "")
+    titulo = f"{inicio} em `{c['requisicao']}`" if c["requisicao"] else f"{inicio} no caso `{c['caso_id']}`"
+    return titulo + (f", campo `{_cel(c['campo'])}`" if c["campo"] else "")
+
+
+def _objeto_e_ambiente(c: dict) -> list[str]:
+    cab, inter = c["cab"], c["inter"]
+    if c["eh_texto"]:
+        objeto = (f"A requisição `{c['requisicao']}` da CobaiaAPI, lida de um caso escrito (sem navegador neste diagnóstico: o agente recebeu em texto a "
+                  "requisição, o status, o contrato, o corpo e o sintoma).")
+    elif c["eh_localizador"]:
+        alvo = c["entrada"].get("alvo") or (c["cura"] or {}).get("alvo") or {}
+        objeto = (f"O roteiro `{c['roteiro']}` do site PHP (CobaiaFront), a partir da página `{c['pagina'] or 'não registrada'}`; o alvo do passo que falhou é "
+                  f"{_cel(alvo.get('papel') or 'um elemento')} \"{_cel(alvo.get('nome'))}\" (localizador `{_cel(c['entrada'].get('localizador') or (c['cura'] or {}).get('localizador'))}`).")
+    elif inter:
+        objeto = (f"A página `{c['pagina'] or 'não registrada'}` do site PHP (CobaiaFront), que chama a CobaiaAPI em `{inter.get('metodo')} {inter.get('caminho')}` "
+                  f"(host {inter.get('host') or 'não registrado'}).")
+    else:
+        objeto = f"A página `{c['pagina']}` do site PHP (CobaiaFront)." if c["pagina"] else f"O caso `{c['caso_id']}`, sem página nem requisição registradas na trilha."
+    ambiente = (f"Modelo `{cab.get('modelo')}`" + (f" (quantização {cab['quantizacao']}: os pesos do modelo guardados com menos bits, para caber na memória)" if cab.get("quantizacao") else "")
+                + f" no Ollama {cab.get('versao_ollama')}, só CPU. Janela de contexto num_ctx {cab.get('num_ctx')} tokens (os pedaços de texto que o modelo lê de uma vez) e "
+                f"temperatura {_num(cab.get('temperatura'), 1)} (quase nenhuma aleatoriedade na resposta).")
+    if cab.get("playwright"):
+        ambiente += f" Playwright {cab['playwright']} com o navegador {cab.get('navegador')} (canal {cab.get('canal') or 'não registrado'}, sem janela)."
+    else:
+        ambiente += " Esta corrida rodou sem navegador."
+    ambiente += (f" Biblioteca de produção `{cab.get('hash_biblioteca')}`, índice da busca `{cab.get('hash_indice')}` e prompt fixo `{cab.get('hash_prompt_fixo')}` "
+                 f"(o prompt é o texto que o modelo recebe; o fixo é a parte igual em todos os casos); {cab.get('k', 3)} verbetes por consulta. "
+                 "As versões da máquina estão em `resultados_alvo/fase4/ambiente.json`.")
+    return [objeto, "", ambiente, ""]
+
+
+def _contexto_em_texto(c: dict) -> list[str]:
+    e = c["entrada"]
+    classe_nivel = "; ".join(x for x in (_classe_em_palavras(c["classe"]), _nivel_em_palavras(c["nivel"])) if x)
+    if c["eh_texto"]:
+        banco = BANCO_EM_PALAVRAS.get(c["modo_da_corrida"], "o banco da corrida")
+        return [f"Caso escrito `{c['caso_id']}`, de {banco}" + (f"; {classe_nivel}" if classe_nivel else "")
+                + ". Sem roteiro nem falha injetada: o agente leu a requisição, o status, o contrato, o corpo e o sintoma em texto.", ""]
+    if c["eh_localizador"]:
+        cura = c["cura"] or {}
+        passo = (c["passo_falho"] or {}).get("passo") or cura.get("passo")
+        acao = (c["passo_falho"] or {}).get("acao")
+        armado = e.get("armado") or {}
+        texto = (f"Roteiro `{c['roteiro']}` do site PHP"
+                 + (f" (cenário `{e['cenario_da_fase_5']}` do ensaio da Fase 5, execução {e.get('repeticao', 1)})" if e.get("cenario_da_fase_5") else "")
+                 + f"; quebra de localizador {_modo_em_palavras(e.get('modo'))}, forma `{e.get('forma') or 'não registrada'}`"
+                 + (f" ({_prosa(armado.get('como'))})" if armado.get("como") else "")
+                 + f". O passo {passo}" + (f" ({ACAO_EM_PALAVRAS.get(acao, acao).lower()} `{_cel((c['passo_falho'] or {}).get('seletor'))}`)" if acao else "") + " falhou.")
+        return [texto + (f" {classe_nivel[0].upper() + classe_nivel[1:]}." if classe_nivel else ""), ""]
+    texto = f"Roteiro `{c['roteiro'] or 'não registrado'}` da tela, com a falha injetada {_modo_em_palavras(c['modo'])}"
+    if e.get("campo"):
+        texto += f" no campo `{_cel(e['campo'])}`"
+    if c["passo_falho"]:
+        pf_ = c["passo_falho"]
+        texto += f". O roteiro parou no passo {pf_.get('passo')} ({ACAO_EM_PALAVRAS.get(pf_.get('acao'), pf_.get('acao')).lower()} `{_cel(pf_.get('seletor') or pf_.get('url'))}`)"
+    texto += f". Caso `{c['caso_id']}`"
+    if c["modo_da_corrida"] in BANCO_EM_PALAVRAS:
+        texto += f", de {BANCO_EM_PALAVRAS[c['modo_da_corrida']]}"
+    return [texto + (f"; {classe_nivel}." if classe_nivel else "."), ""]
+
+
+def _passos_do_roteiro(c: dict) -> list[str]:
+    linhas = []
+    for n, a in enumerate(c["acoes_originais"], start=1):
+        alvo = a.get("url") if a.get("acao") == "abrir" else a.get("seletor")
+        linha = f"{n}. {ACAO_EM_PALAVRAS.get(a.get('acao'), a.get('acao'))} `{_cel(alvo)}`"
+        if a.get("tempo_ms") is not None:
+            linha += f" ({_num(float(a['tempo_ms']) / 1000, 1)} s)"
+        linhas.append(linha + (": falhou aqui." if a.get("falhou") else "."))
+    return linhas
+
+
+def _descricao_para_reproduzir(c: dict, comando_reexecucao: str | None) -> list[str]:
+    blobs, inter, dados = c["blobs"], c["inter"], c["dados_do_caso"]
+    partes: list[str] = []
+    if c["eh_texto"]:
+        partes += ["O caso entrou em texto, como foi posto no prompt (sem roteiro na tela):", "",
+                   f"1. Requisição `{dados.get('requisicao') or 'não informada'}`, {_status_em_palavras(dados.get('status'))}."]
+        if _contrato_do_caso(dados):
+            partes.append(f"2. Contrato da interface: `{_contrato_do_caso(dados)}`.")
+        if dados.get("corpo") is not None:
+            partes += ["3. Corpo da resposta:", "", _bloco(dados["corpo"]), ""]
+        if dados.get("arvore"):
+            partes += ["Árvore de acessibilidade da página, como o caso a trouxe:", "", _bloco(dados["arvore"]), ""]
+        if dados.get("seletor_quebrado"):
+            partes.append(f"Seletor que falhou: `{_cel(dados['seletor_quebrado'])}`.")
+        partes += ["4. Sintoma observado (texto do caso):", "", *_citacao(dados.get("sintoma") or "não informado"), ""]
+        if dados.get("observacao"):
+            partes += ["5. Observação adicional (texto do caso):", "", *_citacao(dados["observacao"]), ""]
+    else:
+        passos = _passos_do_roteiro(c)
+        if passos:
+            partes += ["Passos do roteiro, na ordem em que o agente os executou (os tempos são os medidos):", "", *passos, ""]
+        if c["eh_localizador"]:
+            e, cura = c["entrada"], c["cura"] or {}
+            passo = (c["passo_falho"] or {}).get("passo") or cura.get("passo")
+            loc = e.get("localizador") or cura.get("localizador")
+            partes += [f"O passo {passo} (localizador `{_cel(loc)}`) falhou com a mensagem abaixo (do navegador, como veio):", "",
+                       *_citacao(cura.get("erro") or "o localizador não resolveu nenhum elemento"), ""]
+            if e.get("descricao"):
+                como = (f" (forma `{e.get('forma')}`" + (f", armada por {_prosa((e.get('armado') or {}).get('como'))}" if (e.get("armado") or {}).get("como") else "") + ")"
+                        if e.get("forma") else "")
+                partes += [f"Como provocar a mesma quebra{como}:", "", *_citacao(e["descricao"]), ""]
+            mutacoes = [f"- Mutação `{_cel(m.get('op'))}` no seletor `{_cel(m.get('seletor'))}`" + (f", novo valor `{_cel(m['para'])}`" if m.get("para") else "") + "."
+                        for m in e.get("mutacoes") or []]
+            if mutacoes:
+                partes += mutacoes + [""]
+        if inter:
+            partes.append(f"A página chamou `{inter.get('metodo')} {inter.get('caminho')}`" + (f" em {inter['host']}" if inter.get("host") else "")
+                          + f" e recebeu {_status_em_palavras(inter.get('status'))}"
+                          + (f", `{inter['content_type']}`" if inter.get("content_type") else "")
+                          + (f", {inter['corpo_chars']} caracteres" if inter.get("corpo_chars") is not None else "")
+                          + (f", em {_num(inter.get('tempo_ms'), 1)} ms" if inter.get("tempo_ms") is not None else "") + ".")
+            partes.append("")
+        falharam = [v for v in c["conferencias"] if v.get("resultado") != "confere"]
+        for v in falharam:
+            ev = v.get("evidencia") or {}
+            partes.append(f"A conferência do roteiro `{_cel(v.get('alvo'))}` {RESULTADO_EM_PALAVRAS.get(v.get('resultado'), v.get('resultado'))}: "
+                          f"esperava {_prosa(ev.get('esperado'))} e observou {_prosa(ev.get('observado'))}.")
+        passaram = len(c["conferencias"]) - len(falharam)
+        if passaram == 1:
+            partes.append(("A outra conferência" if falharam else "A conferência") + " do roteiro confere (a tabela do bloco 7 a traz).")
+        elif passaram > 1:
+            partes.append((f"As outras {passaram} conferências" if falharam else f"As {passaram} conferências") + " do roteiro conferem (a tabela do bloco 7 traz cada uma).")
+        if c["conferencias"]:
+            partes.append("")
+        if dados.get("sintoma"):
+            partes += ["Sintoma, como o código o descreveu para o agente:", "", *_citacao(dados["sintoma"]), ""]
+        trecho = None
+        for e in c["podas"]:
+            d = e["dados"]
+            if d.get("alvo") == "corpo_http" and d.get("sha") in blobs and blobs[d["sha"]] is not None:
+                trecho = (d["sha"], blobs[d["sha"]])
+                break
+        if trecho is None and inter and inter.get("corpo") in blobs and blobs[inter["corpo"]] is not None:
+            trecho = (inter["corpo"], blobs[inter["corpo"]])
+        if trecho:
+            partes += [f"Trecho da resposta, como a poda em código deixou para o agente (hash `{trecho[0]}`):", "", _bloco(trecho[1]), ""]
+    partes.append(f"Comando para reexecutar o caso: `{comando_reexecucao}`" if comando_reexecucao else "Comando de reexecução: não registrado nesta trilha.")
+    return partes + [""]
+
+
+def _esperado_e_real(c: dict) -> list[str]:
+    dados = c["dados_do_caso"]
+    partes: list[str] = []
+    contrato = _contrato_do_caso(dados)
+    if contrato:
+        partes += [f"Contrato esperado pela interface: `{contrato}`.", ""]
+    linhas: list[list[str]] = []
+    onde_corpo = f"corpo de `{c['requisicao']}`" if c["requisicao"] else "corpo da resposta"
+    for e in c["podas"]:
+        d = e["dados"]
+        for x in d.get("diff") or []:
+            if d.get("alvo") == "arvore":
+                linhas.append(["tela (árvore de acessibilidade, contra a referência em modo normal)", _cel(x.get("esperado")), _cel(x.get("recebido"))])
+            else:
+                onde = onde_corpo + (f", campo `{_cel(x['campo'])}`" if x.get("campo") else " (corpo inteiro)") + (f" (item {x['item']})" if x.get("item") else "")
+                linhas.append([onde, _cel(x.get("esperado")), _cel(x.get("recebido") if x.get("recebido") is not None else "ausente")])
+    for v in c["conferencias"]:
+        ev = v.get("evidencia") or {}
+        linhas.append([f"conferência do roteiro `{_cel(v.get('alvo'))}`", _cel(ev.get("esperado")), _cel(ev.get("observado"))])
+    if c["eh_localizador"]:
+        e, cura = c["entrada"], c["cura"] or {}
+        alvo = e.get("alvo") or cura.get("alvo") or {}
+        passo = (c["passo_falho"] or {}).get("passo") or cura.get("passo")
+        tempo = (c["passo_falho"] or {}).get("tempo_ms")
+        linhas.append([f"passo {passo}, localizador `{_cel(e.get('localizador') or cura.get('localizador'))}`",
+                       f"um elemento {_cel(alvo.get('papel') or '')} \"{_cel(alvo.get('nome'))}\" visível, como na referência",
+                       (f"nenhum elemento em {_num(float(tempo) / 1000, 1)} s" if tempo is not None else "nenhum elemento") + (f": {_cel(cura.get('erro'))}" if cura.get("erro") else "")])
+    if c["eh_texto"]:
+        linhas.append([onde_corpo, "um JSON com os campos do contrato acima" if contrato else "a resposta que a interface espera",
+                       "o corpo abaixo" if dados.get("corpo") is not None else "não informado"])
+        if dados.get("sintoma"):
+            linhas.append(["o que a interface mostrou", "a página com os dados da resposta", _cel(_prosa(dados["sintoma"]))])
+    if linhas:
+        partes += ["O diff que a poda e o caso ao vivo calculam em código (o que o contrato e a referência em modo normal esperam, contra o que veio):", "",
+                   _tabela(["Onde", "Esperado", "Recebido"], linhas), ""]
+    else:
+        partes += ["A trilha não guardou diferença medida em código entre o esperado e o recebido para este caso.", ""]
+    if c["eh_texto"] and dados.get("corpo") is not None:
+        partes += ["Corpo recebido, como veio no caso:", "", _bloco(dados["corpo"]), ""]
+    ref = f"{c['cab'].get('corrida')}/referencia/{c['roteiro']}@normal" if c["roteiro"] else None
+    if ref and any(e.get("trilha") == ref for e in c["eventos"]):
+        partes += [f"A referência em modo normal desta corrida é a trilha `{ref}`: é contra ela que a poda comparou a tela e o corpo.", ""]
+    return partes
+
+
+def _referencias(c: dict, arquivo_trilha: str | None, relatorio_v2: str | None, comando_reexecucao: str | None, eventos: list[dict], tid: str) -> list[str]:
+    citados = []
+    for d in c["citadas"]:
+        if d.get("valor") and d["valor"] not in citados:
+            citados.append(d["valor"])
+    entregues = [i for i in c["entregues"] if i not in citados]
+    partes = ["- Verbetes citados pelo agente na linha FONTE: " + ("; ".join(_referencia_do_verbete(i, c["leituras"]) for i in citados) if citados else "nenhum") + ".",
+              "- Verbetes entregues pela busca e não citados: " + ("; ".join(_referencia_do_verbete(i, c["leituras"]) for i in entregues) if entregues else "nenhum") + "."]
+    if c["modo_da_corrida"] in BANCO_EM_PALAVRAS:
+        partes.append(f"- Caso escrito: `{c['caso_id']}` em {BANCO_EM_PALAVRAS[c['modo_da_corrida']]}.")
+    partes.append(f"- Trilha: `{tid}`" + (f" em `{arquivo_trilha}`" if arquivo_trilha else "")
+                  + f", eventos {c['seq'][0]['seq']} a {c['seq'][-1]['seq']}, hash dos eventos `{hash_da_trilha(eventos, tid)}`.")
+    if relatorio_v2:
+        partes.append(f"- Relatório v2 do mesmo caso (seis seções, formato da Fase 4): `{relatorio_v2}`.")
+    if comando_reexecucao:
+        partes.append(f"- Comando de reexecução: `{comando_reexecucao}`.")
+    partes.append("- Molde: relatório de defeitos da seção 5.5 do syllabus CTFL 4.0 (ISTQB, 2023, p. 50), adotado pela decisão 104.")
+    return partes + [""]
+
+
+def _veredito_v3(c: dict) -> list[str]:
+    diag, cura, no_cura, conf = c["diag"], c["cura"], c["no_cura"], c["confianca"]
+    partes: list[str] = []
+    if diag is not None:
+        causa = f"`{_cel(c['escolha'])}` ({c['causa_em_palavras']})" if c["escolha"] is not None else "nenhuma: a resposta não trouxe a linha CAUSA_RAIZ"
+        campo = f"`{_cel(c['campo'])}`" if c["campo"] else "nenhum apontado"
+        confianca = SELO_EM_PALAVRAS.get(c["selo"], SEM_SELO)
+        if conf.get("p_rotulo") is not None:
+            confianca += f" (probabilidade {_prob(conf.get('p_rotulo'))} no rótulo; selo `{c['selo']}` pelos limiares da calibração)"
+        partes += [f"Causa respondida: {causa}. Campo: {campo}. Confiança: {confianca}.", ""]
+        impacto = c["decl"].get("impacto")
+        partes += ["Impacto, nas palavras do modelo (texto do modelo, não conferido por código): "
+                   + (_cod(impacto.get("valor")) if impacto and not impacto.get("ausente") else "a linha IMPACTO não veio na resposta") + ".", ""]
+        partes += [f"Justificativa ({MARCA_DO_MOLDE} na corrida, como está na trilha):", "",
+                   *_citacao(diag.get("justificativa") or justificativa_por_molde(diag, c["seq"], c["sem_gabarito"], c["intervencoes"])), ""]
+        d = diag.get("divergencia") or {}
+        if d.get("ha"):
+            partes += ["Conflito: o que o modelo declarou diverge do que o código mediu"
+                       + (f" (entre {' e '.join(d['entre'])})" if d.get("entre") else "") + (f": {_prosa(d['detalhe'])}." if d.get("detalhe") else ".") + "", ""]
+        if diag.get("falha"):
+            partes += [f"Falha registrada no nó: `{diag['falha']}` (origem: {tr.origem_da_falha(diag['falha'])}).", ""]
+    if cura is not None:
+        ap = cura.get("aplicado") or {}
+        mesmo = cura.get("mesmo_elemento")
+        if cura.get("curado"):
+            texto = (f"Cura do localizador: aplicada `{_cel(ap.get('seletor'))}` (estratégia `{ap.get('estrategia')}`: "
+                     f"{ESTRATEGIA_EM_PALAVRAS.get(ap.get('estrategia'), 'estratégia fora da lista deste relatório')}); reexecução validada; "
+                     + ("é o mesmo elemento da referência." if mesmo else ("é outro elemento, não o alvo da referência (regra R3): o roteiro passou, mas confira à mão." if mesmo is False
+                                                                          else "a impressão do elemento não foi comparada com a da referência.")))
+        else:
+            texto = (f"Cura do localizador: não curado; falha `{_cel(cura.get('falha'))}`; {cura.get('reexecucoes', 0)} reexecução(ões) sem levar o roteiro ao fim.")
+        partes += [texto, ""]
+        if cura.get("mttr_s") is not None:
+            partes += [f"Da detecção à reexecução validada: {_num(cura.get('mttr_s'), 1)} s (detecção {_data_hora(cura.get('deteccao'))}; validação {_data_hora(cura.get('validacao'))}).", ""]
+        partes += [f"Justificativa da cura ({MARCA_DO_MOLDE}, copiada da trilha):", "",
+                   *_citacao((no_cura or {}).get("justificativa") or cura.get("justificativa") or justificativa_da_cura(cura)), ""]
+    for no_bib in c["nos_bib"]:
+        if no_bib.get("operacao") == "correcao":
+            partes += [f"Biblioteca (ciclo de correção): {'corrigido' if no_bib.get('escolha') == 'corrigido' else 'não corrigido'}.", ""]
+        else:
+            partes += [(f"Biblioteca: {len(no_bib.get('aplicadas') or [])} edição(ões) aplicada(s), {len(no_bib.get('para_revisao') or [])} para revisão humana, "
+                        f"{len(no_bib.get('recusadas') or [])} recusada(s)."), ""]
+    if diag is None and cura is None and not c["nos_bib"]:
+        partes += ["Nenhum nó de decisão nesta trilha.", ""]
+    return partes
+
+
+def _evidencia_v3(c: dict) -> list[str]:
+    blobs = c["blobs"]
+    partes: list[str] = []
+    texto_caso = c["texto_caso"]
+    if c["podas"] or c["interceptacoes"] or c["cura"] is not None:
+        if texto_caso is not None:
+            partes += ["O caso, como foi posto no prompt:", "", _bloco(texto_caso), ""]
+    else:
+        partes += ["Não houve interceptação nem poda nesta trilha: o caso entrou em texto." + ("" if texto_caso is None else " Como foi posto no prompt:"), ""]
+        if texto_caso is not None:
+            partes += [_bloco(texto_caso), ""]
+    propostas = [d for d in c["edicoes"] if d.get("etapa") == "proposta"]
+    if propostas:
+        partes += ["Propostas de edição da biblioteca, na ordem em que o modelo as escreveu:", "",
+                   _tabela(["Proposta", "Operação", "Verbete", "Resultado"],
+                           [[str(d.get("numero")), _cel(d.get("operacao")), f"`{_cel(d.get('verbete'))}`",
+                             "aplicada" if d.get("aplicada") else ("para revisão humana" if d.get("para_revisao") else f"recusada: `{_cel(d.get('codigo'))}`")] for d in propostas]), ""]
+    cura = c["cura"]
+    if cura is not None:
+        alvo = cura.get("alvo") or {}
+        partes += [(f"Alvo registrado na corrida de referência: {_cel(alvo.get('papel'))} \"{_cel(alvo.get('nome'))}\" (ocorrência {alvo.get('ocorrencia')}; "
+                    f"tag `{_cel(alvo.get('tag'))}`; caminho `{_cel(alvo.get('caminho'))}`)."), "",
+                   f"Candidatos de localizador, na ordem fixa em que o código os tenta (limiar do nome parecido {cura.get('limiar_nome')}), e o resultado de cada verificação:", ""]
+        linhas_c = []
+        for cand in cura.get("candidatos") or []:
+            v = cand.get("verificacoes") or {}
+            if not cand.get("gerado"):
+                linhas_c.append([f"`{cand['estrategia']}`", f"não gerado: {_cel(cand.get('motivo'))}"] + ["não se aplica"] * 5 + [""])
+                continue
+            celulas = []
+            for chave in ROTULO_DA_VERIFICACAO_DA_CURA:
+                r = (v.get(chave) or {}).get("resultado")
+                rot = {"confere": "confere", "nao_confere": "não confere", "nao_se_aplica": "não se aplica", "nao_tentado": "não tentado"}.get(r, _cel(r))
+                det = (v.get(chave) or {}).get("detalhe")
+                celulas.append(rot + (f" ({_cel(det)})" if det and r in ("nao_confere", "confere") and chave in ("nome_parecido", "efeito_na_reexecucao") else ""))
+            linhas_c.append([f"`{cand['estrategia']}`", f"`{_cel(cand.get('seletor'))}`"] + celulas + ["sim" if cand.get("aplicado") else ""])
+        partes += [_tabela(["Estratégia", "Seletor"] + list(ROTULO_DA_VERIFICACAO_DA_CURA.values()) + ["Aplicado"], linhas_c), ""]
+    # a segunda poda e a segunda interceptação saem mais curtas: a primeira já disse o que é a poda e o que o status quer dizer
+    for n, e in enumerate(c["podas"]):
+        d = e["dados"]
+        regras = d.get("regras") or []
+        regras_txt = ", ".join(f"`{r}`" for r in regras) if isinstance(regras, list) else ", ".join(f"`{k}` {v}" for k, v in regras.items())
+        if n == 0:
+            partes += [(f"Poda de `{d.get('alvo')}` (evento {e['seq']}), feita em código antes de montar o prompt: {_tamanho_em_palavras(d.get('antes'))} antes, "
+                        f"{_tamanho_em_palavras(d.get('depois'))} depois. Regras aplicadas: {regras_txt or 'nenhuma'}."), ""]
+        else:
+            partes += [(f"Também podado em código o `{d.get('alvo')}` (evento {e['seq']}): de {_tamanho_em_palavras(d.get('antes'))} para {_tamanho_em_palavras(d.get('depois'))}, "
+                        f"pelas regras {regras_txt or 'nenhuma'}."), ""]
+        linhas = [[_cel((x.get("campo") or "(corpo inteiro)") + (f" (item {x['item']})" if x.get("item") else "")), _cel(x.get("esperado")), _cel(x.get("recebido"))]
+                  for x in d.get("diff") or []]
+        if linhas:
+            partes += [_tabela(["Campo do contrato", "Esperado", "Recebido"], linhas), ""]
+        if d.get("sha") in blobs:
+            texto = blobs[d["sha"]]
+            partes += [(f"Trecho podado (hash `{d['sha']}`):" if n == 0 else f"O que sobrou desta poda (hash `{d['sha']}`):"), "",
+                       _bloco(texto if texto is not None else f"(gravado fora da linha: {d['sha']})"), ""]
+    for n, e in enumerate(c["interceptacoes"]):
+        d = e["dados"]
+        status = _status_em_palavras(d.get("status")) if n == 0 else f"status {d.get('status')}"
+        partes += [f"Interceptação (evento {e['seq']}): `{d.get('metodo')} {d.get('caminho')}`, {status}; corpo guardado com o hash `{d.get('corpo')}`"
+                   + (f"; árvore `{d.get('arvore')}`" if d.get("arvore") else "") + ".", ""]
+    return partes or ["Nenhuma evidência registrada nesta trilha.", ""]
+
+
+def _contraste_v3(c: dict) -> list[str]:
+    diag, no_cura = c["diag"], c["no_cura"]
+    no = diag if diag is not None else no_cura
+    if no is None:
+        return ["Sem nó de diagnóstico, não há contraste.", ""]
+    contraste = no.get("contraste") or (contraste_por_molde(diag) if diag is not None else "")
+    partes = ["O contraste registrado na trilha (molde da corrida):", "", *_citacao(contraste), ""] if contraste else []
+    alternativas = sorted(no.get("alternativas") or [], key=lambda a: -(a.get("escore") if isinstance(a.get("escore"), (int, float)) else -1))
+    if alternativas:
+        linhas = []
+        for a in alternativas:
+            if diag is not None:
+                escore = _prob(a.get("escore"))
+                nome = f"`{_cel(a.get('opcao'))}` ({_causa_em_palavras(a.get('opcao'), c['leituras'])})"
+            else:
+                escore = f"{a.get('escore')} de 5 verificações"
+                nome = f"`{_cel(a.get('opcao'))}`"
+            linhas.append([nome, escore, "sim" if a.get("opcao") == no.get("escolha") else ""])
+        partes += [_tabela(["Alternativa", "Probabilidade lida no rótulo" if diag is not None else "Verificações que passou", "Escolhida"], linhas), ""]
+    return partes
+
+
+def _fonte_v3(c: dict) -> list[str]:
+    diag, cura = c["diag"], c["cura"]
+    if cura is not None and diag is None:
+        return ["Não se aplica: a cura de seletor roda sem modelo; nenhum verbete foi citado.", ""]
+    fonte = c["decl"].get("fonte")
+    valor = _cod(fonte.get("valor")) if fonte and not fonte.get("ausente") else "**a linha não está na resposta**"
+    citados = []
+    for d in c["citadas"]:
+        if d.get("valor") and d["valor"] not in citados:
+            citados.append(d["valor"])
+    partes = [f"Linha FONTE como veio: {valor}; verbetes citados: " + ("; ".join(_referencia_do_verbete(i, c["leituras"]) for i in citados) or "nenhum") + ".", ""]
+    conf_fonte = [v for v in c["sem_gabarito"] if str(v.get("regra", "")).startswith("fonte_") or v.get("regra") == "rotulo_sustentado_por_verbete_do_contexto"]
+    if conf_fonte:
+        partes += [_tabela(["Conferência em código", "Sobre", "Resultado", "Evidência"],
+                           [[ROTULO_DA_REGRA_V3.get(v["regra"], v["regra"]), f"`{_cel(v['alvo'])}`" if v.get("alvo") else "",
+                             RESULTADO_EM_PALAVRAS.get(v["resultado"], v["resultado"]), _evidencia(v)] for v in conf_fonte]), ""]
+    if c["intervencoes"]:
+        partes += [_tabela(["Intervenção", "Verbete", "Rótulo antes", "Rótulo depois", "p antes", "p depois", "Efeito"],
+                           [[_cel(i.get("tipo")), f"`{_cel(i.get('verbete'))}`" if i.get("verbete") else "não se aplica", _cel(i.get("rotulo_antes")), _cel(i.get("rotulo_depois")),
+                             _prob(i.get("p_antes")), _prob(i.get("p_depois")), _efeito_da_intervencao(i)
+                             + (" (só um limite inferior da queda: o rótulo saiu das alternativas devolvidas)" if i.get("limite_inferior") else "")]
+                            for i in c["intervencoes"]]), ""]
+    else:
+        partes += ["Nenhuma intervenção rodou neste caso: a FONTE fica como declarada, conferida só pelas regras em código acima.", ""]
+    return partes
+
+
+def _acao_v3(c: dict, comando_reexecucao: str | None) -> list[str]:
+    cura, inter = c["cura"], c["inter"]
+    campo = c["campo"]
+    onde = f"`{inter.get('metodo')} {inter.get('caminho')}`" if inter else None
+    if cura is not None:
+        ap = cura.get("aplicado") or {}
+        if cura.get("curado"):
+            acao = [f"Sugestão (o agente não altera a aplicação): no passo {cura.get('passo')} do roteiro, trocar o localizador `{_cel(cura.get('localizador'))}` por "
+                    f"`{_cel(ap.get('seletor'))}` (estratégia `{ap.get('estrategia')}`)"
+                    + (", que resolve o mesmo elemento da referência." if cura.get("mesmo_elemento") else
+                       (" e conferir à mão: o roteiro passou, mas com outro elemento, não o alvo da referência." if cura.get("mesmo_elemento") is False else ".")), ""]
+        else:
+            acao = [(f"Sugestão (o agente não altera a aplicação): nenhum candidato levou o roteiro ao fim no passo {cura.get('passo')} "
+                     f"(localizador `{_cel(cura.get('localizador'))}`); o roteiro precisa de um localizador novo escrito à mão. Falha registrada: `{_cel(cura.get('falha'))}`."), ""]
+    else:
+        acao = [("Confira o campo `" + _cel(campo) + "`" if campo else "Confira a resposta") + (f" em {onde}" if onde else " no caso de entrada")
+                + " e compare com o contrato esperado pela interface.", ""]
+    acao += [f"Comando para reexecutar o caso: `{comando_reexecucao}`" if comando_reexecucao else "Comando de reexecução: não registrado nesta trilha.", ""]
+    return acao
+
+
+def _resumo_v3(e: dict, blobs: dict) -> str:
+    d, tipo = e["dados"], e["tipo"]
+    if tipo == "entrada" and not d.get("caso"):
+        return f"roteiro {d.get('roteiro')}, passo {d.get('passo')}, localizador {_cel(d.get('localizador'))}" if d.get("roteiro") else "entrada"
+    if tipo == "decisao":
+        return f"{d.get('decisao')}: escolha {d.get('escolha')}; divergência entre o declarado e o medido: {'sim' if (d.get('divergencia') or {}).get('ha') else 'não'}"
+    if tipo == "acao":
+        alvo = d.get("url") if d.get("acao") == "abrir" else d.get("seletor")
+        return (f"passo {d.get('passo')}: {ACAO_EM_PALAVRAS.get(d.get('acao'), d.get('acao')).lower()} {_cel(alvo)}" + (" (falhou)" if d.get("falhou") else "")
+                + (f"; reexecução {d['reexecucao']}" if d.get("reexecucao") else ""))
+    if tipo == "prompt":
+        return f"{d.get('etapa')}: {d.get('chars')} caracteres; verbetes {', '.join(d.get('verbetes_ids') or [])}"
+    return _resumo_do_evento(e, blobs)
+
+
+def _arvore_v3(c: dict) -> list[str]:
+    seq, blobs = c["seq"], c["blobs"]
+    linhas = [[str(e["seq"]), str(e.get("passo")), e["tipo"], e["camada"], e["origem"], _cel(e.get("ts")), _resumo_v3(e, blobs)] for e in seq]
+    partes = [f"<details><summary>{len(seq)} eventos da trilha, na ordem em que aconteceram (o que o programa fez, o que o modelo declarou e o que o código conferiu, em camadas separadas)</summary>", "",
+              _tabela(["seq", "passo", "Tipo", "Camada", "Origem", "Quando", "Resumo"], linhas), "", "</details>", ""]
+    if c["nos"]:
+        partes += ["Nós de decisão, na ordem:", ""]
+        limpos = True
+        for e in c["nos"]:
+            d = e["dados"]
+            por_evento: dict[tuple, list[str]] = {}
+            for x in d.get("evidencia") or []:
+                ids = por_evento.setdefault((x["seq"], x.get("papel")), [])
+                if x.get("id"):
+                    ids.append(f"`{_cel(x['id'])}`")
+            ev = "; ".join(f"evento {s} ({p}" + (f": {', '.join(ids)}" if ids else "") + ")" for (s, p), ids in por_evento.items()) or "nenhuma"
+            usados = ", ".join(f"`{_cel(u)}`" for u in d.get("prov", {}).get("used") or []) or "nenhum"
+            partes += [f"- evento {e['seq']}, decisão `{d.get('decisao')}`: escolha `{_cel(d.get('escolha'))}`; resultado {_cel(d.get('resultado'))}.",
+                       f"  - Evidência: {ev}.", f"  - Usou: {usados}."]
+            ha, falha = (d.get("divergencia") or {}).get("ha"), d.get("falha")
+            if ha or falha:
+                limpos = False
+                partes.append(f"  - Divergência entre o declarado e o medido: {'sim' if ha else 'não'}; falha: {_cel(falha or 'nenhuma')}.")
+        if limpos:
+            partes.append("Nenhum nó registrou divergência entre o declarado e o medido, nem falha.")
+        partes.append("")
+    if c["com_gabarito"]:
+        partes += ["### Avaliação contra o gabarito", "", "Esta é a única parte que usa o gabarito do caso; nada acima depende dele.", "",
+                   _tabela(["Pergunta", "Respondido", "Esperado", "Resultado"],
+                           [[ROTULO_DA_REGRA_V3.get(v["regra"], v["regra"]), f"`{_cel(v['alvo'])}`" if v.get("alvo") else "nada",
+                             f"`{_cel((v.get('evidencia') or {}).get('gabarito'))}`" if isinstance(v.get("evidencia"), dict) and v["evidencia"].get("gabarito") else "",
+                             RESULTADO_EM_PALAVRAS.get(v["resultado"], v["resultado"])] for v in c["com_gabarito"]]), ""]
+    elif c["cura"] is not None and c["diag"] is None:
+        partes += ["Sem gabarito nem modelo: a cura de seletor é toda em código; a regra R3 separa o mesmo elemento da referência de outro que fez o roteiro passar.", ""]
+    else:
+        partes += ["Sem gabarito: o agente não teve a resposta certa deste caso; tudo acima é o que ele pôde mostrar sozinho.", ""]
+    return partes
+
+
+def relatorio_do_caso_v3(eventos: list[dict], tid: str, comando_reexecucao: str | None = None, pasta_blobs: Path | None = None, leituras: dict | None = None,
+                         arquivo_trilha: str | None = None, relatorio_v2: str | None = None) -> str:
+    """O relatório de defeito de um caso da trilha v2, no molde da seção 5.5 do CTFL 4.0: os onze campos da 5.5 (severidade, prioridade e
+    estado para o analista) e, depois, os seis blocos do v2 em linguagem direta. `leituras` é a camada de leitura (biblioteca_leitura.carregar),
+    usada para dizer a causa em palavras e para apontar o arquivo de leitura de cada verbete."""
+    c = _contexto_v3(eventos, tid, pasta_blobs, leituras)
+    cab, e = c["cab"], c["entrada"]
+    classe_nivel = "; ".join(x for x in (_classe_em_palavras(c["classe"]), _nivel_em_palavras(c["nivel"])) if x) or "o caso não tem classe nem nível declarados"
+    repeticao = f" (execução {e.get('repeticao')} do cenário `{e.get('cenario_da_fase_5')}`)" if e.get("cenario_da_fase_5") else ""
+    identificador = (f"`{tid}`: o caso `{c['caso_id']}` na corrida `{cab.get('corrida')}`{repeticao}; eventos {c['seq'][0]['seq']} a {c['seq'][-1]['seq']} da trilha"
+                     + (f" `{arquivo_trilha}`" if arquivo_trilha else "") + f", hash dos eventos `{hash_da_trilha(eventos, tid)}` (a impressão digital destes eventos: "
+                     "muda se um byte deles mudar).")
+    revisoes = c["por_tipo"].get("revisao", [])
+    autor = (f"Observado em {_data_hora(c['ts_entrada'])} (hora do primeiro evento do caso na trilha; a corrida foi de {_data_hora(cab.get('inicio'))} a "
+             f"{_data_hora(cab.get('fim'))}). Organização emissora: o projeto do TCC (agente de QA de ponta a ponta local; o programa que roda os casos é o harness "
+             f"`executar_fase4.py`, no modo `{c['modo_da_corrida'] or 'não registrado'}`). Autor: o agente (modelo `{cab.get('modelo')}`, "
+             f"biblioteca de produção `{cab.get('hash_biblioteca')}`; o resto do ambiente está no bloco 4); "
+             + (f"{len(revisoes)} evento(s) de revisão humana nesta trilha." if revisoes else "nenhuma revisão humana registrada nesta trilha: o veredito final é do analista."))
+    classe_nivel_curto = "; ".join(x for x in (_classe_em_palavras(c["classe"], curta=True), _nivel_em_palavras(c["nivel"], curta=True)) if x) or classe_nivel
+    severidade = (f"{EM_BRANCO}. Para ajudar a decidir, o que o código sabe: {classe_nivel}"
+                  + (f"; o roteiro parou no passo {c['passo_falho'].get('passo')}." if c["passo_falho"] else "."))
+    prioridade = f"{EM_BRANCO}. A classe e o nível estão na severidade: {classe_nivel_curto}. Confiança do agente: {SELO_EM_PALAVRAS.get(c['selo'], SEM_SELO)}."
+    secoes = [
+        ("Identificador", [identificador, ""]),
+        ("Título", [c["titulo"], ""]),
+        ("Data, organização e autor", [autor, ""]),
+        ("Objeto de teste e ambiente", _objeto_e_ambiente(c)),
+        ("Contexto", _contexto_em_texto(c)),
+        ("Descrição para reproduzir", _descricao_para_reproduzir(c, comando_reexecucao)),
+        ("Resultado esperado e resultado real", _esperado_e_real(c)),
+        ("Severidade", [severidade, ""]),
+        ("Prioridade", [prioridade, ""]),
+        ("Estado", ["aberto (estado inicial, dado pelo código; o analista muda no hub).", ""]),
+        ("Referências", _referencias(c, arquivo_trilha, relatorio_v2, comando_reexecucao, eventos, tid)),
+        ("Veredito do agente", _veredito_v3(c)),
+        ("Evidência", _evidencia_v3(c)),
+        ("Contraste com a segunda causa", _contraste_v3(c)),
+        ("FONTE declarada e conferida", _fonte_v3(c)),
+        ("Linha de ação", _acao_v3(c, comando_reexecucao)),
+        ("Árvore completa", _arvore_v3(c)),
+    ]
+    assert tuple(n for n, _ in secoes) == CAMPOS_55 + SECOES_MANTIDAS_V3
+    partes = [
+        ("<!-- ! Alteração de IA - Revisar: relatório DERIVADO (versão 3, Pós-Fase 4, pacote Q1), gerado por gerar_relatorio_raciocinio.relatorio_do_caso_v3 a partir da trilha v2 do caso, "
+         "no molde do relatório de defeitos da seção 5.5 do syllabus CTFL 4.0 (decisão 104); não editar à mão."),
+        ("     ! Motivo: o que o código sabe vem preenchido da trilha, sem segunda chamada a modelo; severidade, prioridade e estado ficam para o analista (plano da Pós-Fase 4, "
+         "seção 3.1); o hash no fim prova de que eventos ele saiu. -->"),
+        f"# Relatório de defeito: {c['titulo']}",
+        "",
+        f"Caso `{c['caso_id']}` da corrida `{cab.get('corrida')}`; modelo `{cab.get('modelo')}` no Ollama {cab.get('versao_ollama')} (o programa que roda o modelo nesta máquina)"
+        + (f"; Playwright {cab.get('playwright')} com o navegador {cab.get('navegador')} (o Playwright controla o navegador, sem janela)" if cab.get("playwright") else "")
+        + f"; trilha no esquema v{cab.get('versao_do_esquema', 2)}. Os onze primeiros blocos são os campos do relatório de defeitos do syllabus CTFL 4.0 do ISTQB (Certified Tester "
+        "Foundation Level, a certificação de base em teste de software do International Software Testing Qualifications Board; seção 5.5); os seis seguintes são o que o agente "
+        "fez, declarou e conferiu. Tudo o que está aqui saiu da trilha gravada; o que o modelo escreveu vem marcado como texto do modelo.",
+        "",
+    ]
+    for n, (nome, corpo) in enumerate(secoes, start=1):
+        partes += [f"## {n}. {nome}", "", *corpo]
+    partes += ["## Rastro", "",
+               (f"Gerado dos eventos {c['seq'][0]['seq']} a {c['seq'][-1]['seq']} da trilha; hash dos eventos deste caso: `{hash_da_trilha(eventos, tid)}`. "
+                "Origem de cada evento: `ao_vivo` (emitido pelo agente na hora), `registro`, `recalculado` ou `humano`."), ""]
+    return "\n".join(partes)
+
+
+def _indice_v3(pasta: Path, modo: str | None, arquivo_trilha: str, linhas: list[list[str]]) -> str:
+    return "\n".join([
+        "<!-- ! Alteração de IA - Revisar: índice DERIVADO, gerado por gerar_relatorio_raciocinio.gerar_v3_da_pasta; não editar à mão.",
+        "     ! Motivo: um relatório por caso é ilegível sem uma lista que diga a causa, a confiança e o campo de cada um; os relatórios v2 da corrida ficam como estavam. -->",
+        f"# Relatórios de defeito (v3) da corrida `{pasta.name}`", "",
+        f"{len(linhas)} relatórios no molde da seção 5.5 do CTFL 4.0, gerados da trilha `{arquivo_trilha}`" + (f" (modo `{modo}`)" if modo else "") + ". "
+        "Severidade, prioridade e estado estão em branco em todos: são do analista.", "",
+        _tabela(["Relatório", "Título", "Causa respondida", "Confiança", "Campo", "Classe e nível"], linhas), ""])
+
+
+def gerar_v3_da_pasta(pasta: Path, leituras: dict | None = None, check: bool = False) -> dict:
+    """Grava (ou, com check, confere) o relatório v3 de cada trilha com nó de decisão da pasta de uma corrida, em `<pasta>/relatorios_v3/`, mais o índice.
+    Devolve {pasta, gravados: [nomes], diferentes: [nomes que não batem, só com check]}."""
+    pasta = Path(pasta)
+    condicoes = json.loads((pasta / "condicoes_fase4.json").read_text(encoding="utf-8")) if (pasta / "condicoes_fase4.json").exists() else {}
+    modo = condicoes.get("modo")
+    saida = condicoes.get("saida") or pasta.name
+    k = condicoes.get("k") or 3
+    arquivo_trilha = pasta / f"trilha_{modo}.jsonl" if modo else next(iter(sorted(pasta.glob("trilha_*.jsonl"))), None)
+    if arquivo_trilha is None or not arquivo_trilha.exists():
+        raise FileNotFoundError(f"trilha da corrida não encontrada em {pasta}")
+    eventos = tr.ler(arquivo_trilha)
+    destino = pasta / "relatorios_v3"
+    arquivos: dict[str, str] = {}
+    linhas = []
+    for tid, seq in tr.por_trilha(eventos).items():
+        if not any(e["tipo"] == "decisao" for e in seq):
+            continue
+        nome = nome_do_relatorio(tid)
+        comando = comando_de_reexecucao(modo, saida, tid, k if isinstance(k, int) else 3)
+        v2 = f"../relatorios/{nome}.md" if (pasta / "relatorios" / f"{nome}.md").exists() else None
+        arquivos[f"{nome}.md"] = relatorio_do_caso_v3(eventos, tid, comando_reexecucao=comando, pasta_blobs=pasta / "blobs", leituras=leituras,
+                                                       arquivo_trilha=arquivo_trilha.name, relatorio_v2=v2)
+        c = _contexto_v3(eventos, tid, pasta / "blobs", leituras)
+        classe_nivel = ", ".join(x for x in (f"classe {c['classe']}" if c["classe"] is not None else None, f"nível {c['nivel']}" if c["nivel"] is not None else None) if x)
+        linhas.append([f"[`{nome}`]({nome}.md)", _cel(c["titulo"]), f"`{_cel(c['escolha'])}`" if c["escolha"] is not None else "nenhuma",
+                       _cel(SELO_EM_PALAVRAS.get(c["selo"], "sem selo")), f"`{_cel(c['campo'])}`" if c["campo"] else "nenhum", classe_nivel or "não declarados"])
+    arquivos["INDICE.md"] = _indice_v3(pasta, modo, arquivo_trilha.name, linhas)
+    diferentes = []
+    if check:
+        diferentes = [n for n, t in arquivos.items() if not (destino / n).exists() or (destino / n).read_text(encoding="utf-8") != t]
+    else:
+        destino.mkdir(parents=True, exist_ok=True)
+        for n, t in arquivos.items():
+            (destino / n).write_text(t, encoding="utf-8", newline="\n")
+    return {"pasta": destino, "gravados": list(arquivos), "diferentes": diferentes}
 
 
 # ------------------------------------------------------------------ indicadores de uma ou mais trilhas
@@ -964,14 +1818,35 @@ def gerar_vitrine(gravar: bool) -> tuple[list[tuple[str, str, int, list[dict]]],
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--vitrine", action="store_true", help="gera as trilhas, os relatórios e os indicadores da vitrine")
-    ap.add_argument("--check", action="store_true", help="com --vitrine: regera e compara com o que está gravado")
+    ap.add_argument("--check", action="store_true", help="com --vitrine ou --v3: regera e compara com o que está gravado")
     ap.add_argument("--colar", action="store_true", help="com --vitrine: cola os blocos tb_rac_* no relatório da Pré-Fase 4")
+    # ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, Q1) `--v3 --saida <corrida>` grava os relatórios v3 de uma pasta de corrida da Fase 4
+    # (`relatorios_v3/`), lendo a camada de leitura se ela existir; com `--check` só confere.
+    # ! Motivo: os relatórios das corridas 18d, 21d e 24 são regerados das trilhas gravadas, sem corrida nova (plano da Pós-Fase 4, seção 3.1).
+    ap.add_argument("--v3", action="store_true", help="grava os relatórios v3 (molde da seção 5.5 do CTFL 4.0) de uma pasta de corrida da Fase 4")
+    ap.add_argument("--saida", help="com --v3: a pasta da corrida em RESULTADOS_DIR (ex.: fase4_tela_v4)")
     ap.add_argument("--corrida")
     ap.add_argument("--modelo", default="qwen2.5:7b")
     ap.add_argument("--versao", type=int, default=1)
     ap.add_argument("--caso")
     args = ap.parse_args()
     print(caminhos.descricao())
+    if args.v3:
+        if not args.saida:
+            ap.error("--v3 pede --saida")
+        pasta = caminhos.fase3(args.saida)["raiz"]
+        leituras = bl.carregar(bl.PASTA_LEITURA)
+        if not leituras:
+            print(f"aviso: camada de leitura ausente em {bl.PASTA_LEITURA}; os verbetes saem sem o arquivo de leitura")
+        r = gerar_v3_da_pasta(pasta, leituras=leituras or None, check=args.check)
+        if args.check:
+            if r["diferentes"]:
+                print(f"--check: DIFERE ({len(r['diferentes'])} relatório(s) v3 fora de dia em {r['pasta']}: {r['diferentes'][:5]})")
+                return 1
+            print(f"--check: {len(r['gravados'])} arquivos de {r['pasta']} batem com a trilha")
+        else:
+            print(f"gravado: {len(r['gravados'])} arquivos em {r['pasta']}")
+        return 0
     if args.vitrine:
         trilhas, arquivos = gerar_vitrine(gravar=not (args.check or args.colar))
         dado = montar(trilhas)

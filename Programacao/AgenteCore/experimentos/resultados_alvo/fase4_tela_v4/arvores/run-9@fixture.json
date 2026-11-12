@@ -1,0 +1,406 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/run-9@fixture",
+ "nome": "run-9@fixture",
+ "caso": "run-9",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 5,
+ "nivel": 2,
+ "eventos": {
+  "primeiro": 1275,
+  "ultimo": 1296,
+  "hash": "8f7d1d69ffbacdff"
+ },
+ "relatorio_v3": "../relatorios_v3/run-9@fixture.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (543 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (543 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      1275
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3750 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      1278
+     ]
+    }
+   ],
+   "eventos": [
+    1278
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 1, pontuação 42,25: 39,25 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 42.2451,
+     "posicao": 1
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 2, pontuação 28,75: 25,75 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 28.753,
+     "posicao": 2
+    },
+    {
+     "opcao": "resposta_truncada",
+     "detalhe": "posição 3, pontuação 19,32: 19,32 pelas palavras do caso, sem reforço",
+     "escolhida": true,
+     "pontuacao": 19.3212,
+     "posicao": 3
+    },
+    {
+     "opcao": "tipo_divergente",
+     "detalhe": "posição 4, pontuação 18,97: 15,97 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 18.9654,
+     "posicao": 4
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "detalhe": "posição 5, pontuação 16,80: 13,80 pelas palavras do caso, mais 2,0 por rota e 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 16.8005,
+     "posicao": 5
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "detalhe": "posição 6, pontuação 15,94: 13,94 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 15.9355,
+     "posicao": 6
+    },
+    {
+     "opcao": "escala_ou_unidade_errada",
+     "detalhe": "posição 7, pontuação 13,28: 10,28 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 13.2798,
+     "posicao": 7
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "detalhe": "posição 8, pontuação 13,10: 10,10 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 13.0968,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `entidade-produto` (42,25), `contrato-produto` (28,75) e `resposta_truncada` (19,32).",
+     "origem": "observado",
+     "eventos": [
+      1276
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `entidade-produto` e `contrato-produto`; o da entidade, em `entidade-produto` e `contrato-produto`; `resposta_truncada` pontuou só pelas palavras.",
+     "origem": "observado",
+     "eventos": [
+      1276
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `tipo_divergente` (18,97), `tempo_de_resposta_excedido` (16,80), `chave_de_juncao_errada` (15,94), `escala_ou_unidade_errada` (13,28) e `estrutura_aninhada_divergente` (13,10).",
+     "origem": "observado",
+     "eventos": [
+      1276
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 200 e 46 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      1276
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `resposta_truncada`, e o primeiro de fora, `tipo_divergente`, só o texto do caso já punha o primeiro à frente (19,32 contra 15,97); a diferença final foi 0,36.",
+     "origem": "observado",
+     "eventos": [
+      1276
+     ]
+    }
+   ],
+   "eventos": [
+    1276
+   ],
+   "entregues": [
+    "entidade-produto",
+    "contrato-produto",
+    "resposta_truncada"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 46
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "tempo_de_resposta_excedido",
+   "alternativas": [
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "probabilidade": 0.9991654157920894,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,999; verbetes entregues que a tratam: `resposta_truncada`"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 0.0003903002712927531,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto` e `contrato-produto`"
+    },
+    {
+     "opcao": "formato_de_data_divergente",
+     "probabilidade": 6.936156952677866e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "resposta_truncada",
+     "probabilidade": 3.295178623908792e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `resposta_truncada`"
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "probabilidade": 3.09099089850937e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 6.46350438392557e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 6.46350438392557e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 5.4163823939587815e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `resposta_truncada`"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 5.4163823939587815e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `resposta_truncada`"
+    },
+    {
+     "opcao": "escala_ou_unidade_errada",
+     "probabilidade": 2.5865324198410297e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto`"
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "probabilidade": 2.4377068364932465e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `tempo_de_resposta_excedido`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `tipo_divergente` (Tipo divergente), ficou com probabilidade 0,000 contra 0,999 da escolhida; verbetes entregues que a sustentam: `entidade-produto` e `contrato-produto`.",
+     "origem": "observado",
+     "eventos": [
+      1296
+     ]
+    },
+    {
+     "texto": "As outras 9 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `formato_de_data_divergente` (0,000), `resposta_truncada` (0,000) e `colecao_no_lugar_de_objeto` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      1296
+     ]
+    },
+    {
+     "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      1296
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      1296
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `resposta_truncada`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `resposta_truncada`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), não traz o termo da causa no texto (não confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `resposta_truncada`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `resposta_truncada` (Resposta truncada; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/resposta_truncada.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/resposta_truncada.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      1296
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 6 de 7 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      1296
+     ]
+    }
+   ],
+   "eventos": [
+    1296
+   ],
+   "segunda": "tipo_divergente",
+   "campo": null,
+   "confianca": {
+    "selo": "alto",
+    "palavra": "alta",
+    "p_rotulo": 0.9991654157920894,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 37,
+     "certos": 34,
+     "acerto_pct": 91.9
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "probabilidade": 0.9991654157920894,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário percebeu uma demora significativa na resposta da API, impactando a experiência de uso.",
+  "fonte": "[resposta_truncada]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: tempo_de_resposta_excedido\nCAMPO: nenhum\nIMPACTO: O usuário percebeu uma demora significativa na resposta da API, impactando a experiência de uso.\nFONTE: [resposta_truncada]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 23,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "alto",
+  "confianca": "alta",
+  "falha": null,
+  "escolha": "tempo_de_resposta_excedido",
+  "causa_em_palavras": "Tempo de resposta excedido",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

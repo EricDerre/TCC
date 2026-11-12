@@ -1,0 +1,64 @@
+{
+  "modo": "analista",
+  "corrida": 27,
+  "medida": "M2",
+  "criado_em": "2026-11-12T00:10:41",
+  "saida": "fase4_analista",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.15",
+  "casos": 54,
+  "casos_da_corrida_20": 54,
+  "parcial": false,
+  "teto_tokens": 700,
+  "epoca": 127,
+  "hash_das_instrucoes": "cbc4505b3c2052f1",
+  "instrucoes": "Você cuida da documentação de um sistema: uma interface web e a API que ela chama. Um agente de testes usou essa documentação para apontar a causa de uma falha, e uma pessoa conferiu o diagnóstico. Depois destas instruções vêm o verbete da causa certa e a ficha do caso. Diga se o verbete precisa de um acréscimo para que um PRÓXIMO caso parecido, e não este, seja diagnosticado certo.\n\nEscolha UMA saída:\n- sinal_de_busca: o verbete já explica a causa, mas a busca não o entregou ao agente. Dê palavras-chave ou sintomas que um caso parecido traria, para a busca achar o verbete.\n- nota: falta no verbete um fato sobre o sistema. Escreva a frase como ela vai ficar no verbete.\n- retificacao: um trecho do verbete está errado. Copie o trecho igual e escreva a frase certa.\n- nenhuma: o verbete já bastava, ou a ficha não mostra o que falta.\n\nRegras:\n- O TEXTO é a frase que entra no verbete, escrita como afirmação sobre o sistema. Exemplo de forma, de outro sistema: \"O serviço de e-mail responde 202 antes de entregar a mensagem.\" Não escreva pedido nem instrução: nada de \"Adicionar\", \"Corrigir\", \"Incluir\" ou \"Verificar\".\n- Fale do sistema e do tipo de falha, em termos gerais. Não copie o sintoma da ficha e não cite o identificador do caso.\n- Só cite arquivos, rotas e tabelas que apareçam no verbete.\n- TEXTO com 60 a 280 caracteres, uma ou duas frases, sem lista. MOTIVO com 20 a 240 caracteres: diga qual dado da ficha mostrou a lacuna.\n- Uma proposta só.\n\nFormato, exatamente assim:\n\nPROPOSTA\nOPERACAO: sinal_de_busca | nota | retificacao | nenhuma\nPALAVRAS_CHAVE: <ate 5 termos novos separados por virgula, ou \"nenhuma\">\nSINTOMAS: <ate 3 sintomas novos separados por virgula, ou \"nenhum\">\nTRECHO: <so em retificacao: o trecho do verbete que esta errado, copiado igual>\nTEXTO: <so em nota e retificacao: a frase como vai ficar no verbete>\nMOTIVO: <qual dado da ficha mostrou a lacuna>\nFIM",
+  "lembrete_final": "Responda só com o bloco PROPOSTA, no formato acima.",
+  "orcamento_da_ficha": 400,
+  "operacoes": [
+    "sinal_de_busca",
+    "nota",
+    "retificacao",
+    "nenhuma"
+  ],
+  "portoes": [
+    "validador",
+    "filtros",
+    "forma",
+    "texto",
+    "busca"
+  ],
+  "biblioteca": {
+    "hash": "1fca10f1a6f6",
+    "origem": "fase4_biblioteca/bibliotecas/qwen2.5_7b/epoca-100 (a biblioteca de antes do lote da corrida 20, só lida)"
+  },
+  "versao_ollama_da_corrida_20": [
+    "0.40.14"
+  ],
+  "decisao_da_pessoa": "o gabarito do caso, no lugar da decisão de uma pessoa sobre o relatório (medida M2 da proposta de desenho)",
+  "o_que_o_analista_recebe": "as instruções fixas, o verbete da causa certa e a ficha curta do caso, montada por código a partir da trilha da corrida 20",
+  "portoes_contra": "cada proposta é conferida contra a biblioteca de antes do lote, sem acumular as edições dos outros casos",
+  "ponte": {
+    "versao": "0.40.15",
+    "corrida": "fase3b_ponte_04015",
+    "data": "2026-11-11",
+    "modelo": "qwen2.5:7b",
+    "completa": true,
+    "n": 35,
+    "b": 1,
+    "c": 0,
+    "discordantes": 1,
+    "ganhos": [
+      "sin-14"
+    ],
+    "perdas": [],
+    "pareavel": true,
+    "limite": 2,
+    "casos_de_texto_alterado": [
+      "efe-3"
+    ],
+    "acerto_nova_pct": 82.9,
+    "acerto_base_pct": 80.0
+  },
+  "regra": "Regra fixada antes da corrida (decisão 121). Três leituras contra a corrida 20, cada uma com um teste exato bilateral e o corte de 0,05. A abstenção: os casos em que o modelo responde que não há o que acrescentar, pareados caso a caso com a corrida 20 (McNemar). A forma do texto: a parcela das propostas com texto que afirmam um fato, isto é, que passam no portão da forma de instrução, contra a mesma conta nas propostas da corrida 20 (Fisher). A parcela correta: entre as propostas que passam nos filtros de hoje, as que a revisão humana às cegas julga corretas, contra as edições da corrida 20 (Fisher); essa leitura só tem veredito depois da revisão. Vale com a corrida completa e a ponte da versão do Ollama pareável com a Fase 3 (b + c até 2, decisão 47). Nenhum resultado muda o agente: a proposta do analista de documentação é base de desenho para depois da Fase 5."
+}

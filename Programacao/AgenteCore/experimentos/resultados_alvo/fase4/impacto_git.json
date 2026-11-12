@@ -1,0 +1,1307 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-08T12:40:20",
+    "gerado_por": "impacto_git.py --prova",
+    "repositorio": "TCC",
+    "commits_lidos_por": "git log --reverse -- Programacao/CobaiaAPI Programacao/CobaiaFront",
+    "diff_lido_por": "git diff --name-only <testado> <atual>",
+    "fontes": [
+      "Rothermel e Harrold (1997): seleção segura inclui todo teste capaz de expor falha no programa modificado",
+      "Gligoric, Eloussi e Marinov (2015), Ekstazi: dependência em nível de arquivo cortou o tempo de teste em 32% a 54%",
+      "Memon et al. (2017), Google TAP: os alvos que dependem dos arquivos modificados são a base da seleção",
+      "Azure DevOps, Test Impact Analysis: mapa à mão e aproximado (TIA.UserMapFile), arquivo desconhecido roda tudo, rodada completa periódica, T1 contra T2"
+    ]
+  },
+  "regras": {
+    "fora_do_mapa_roda_tudo": "arquivo da aplicação que nenhum cenário nem verbete declara dispara a rodada completa, nunca nada (Azure DevOps TIA: arquivo que o mapa não entende roda tudo; Rothermel e Harrold, 1997: na dúvida, selecionar a mais)",
+    "rodada_completa_periodica": "a seleção não substitui a rodada completa: ela continua em periodicidade fixa, e também quando nenhum arquivo da aplicação mudou (Azure DevOps TIA: rodada completa configurada, recomendada)",
+    "conferencia_contra_a_rodada_completa": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+  },
+  "mapa": {
+    "cenarios": 6,
+    "ensaio": 10,
+    "verbetes": 39,
+    "verbetes_com_endpoints": 24,
+    "verbetes_com_arquivos": 38,
+    "arquivos_no_mapa": 33,
+    "por_cenario": {
+      "api-catalogo": {
+        "cobaia": "api",
+        "pagina": "produtos_api.php",
+        "endpoints": [
+          "GET /api/produtos"
+        ],
+        "verbetes": [
+          "campo_ausente",
+          "campo_renomeado",
+          "chave_de_juncao_errada",
+          "colecao_no_lugar_de_objeto",
+          "contagem_inconsistente",
+          "contrato-produto",
+          "dado_desatualizado",
+          "entidade-produto",
+          "erro_interno_do_servidor",
+          "escala_ou_unidade_errada",
+          "estrutura_aninhada_divergente",
+          "limite_de_requisicoes",
+          "nulo_inesperado",
+          "pagina-produtos-api",
+          "tempo_de_resposta_excedido",
+          "tipo_divergente",
+          "valor_fora_do_dominio"
+        ],
+        "arquivos": 17
+      },
+      "api-detalhe": {
+        "cobaia": "api",
+        "pagina": "produtos_api.php",
+        "endpoints": [
+          "GET /api/produtos/{id}"
+        ],
+        "verbetes": [
+          "colecao_no_lugar_de_objeto",
+          "contrato-produto",
+          "entidade-produto",
+          "pagina-produtos-api",
+          "recurso_inexistente"
+        ],
+        "arquivos": 11
+      },
+      "front-busca": {
+        "cobaia": "front",
+        "pagina": "index.php",
+        "endpoints": [],
+        "verbetes": [],
+        "arquivos": 8
+      },
+      "front-admin-login": {
+        "cobaia": "front",
+        "pagina": "admin/login.php",
+        "endpoints": [],
+        "verbetes": [],
+        "arquivos": 3
+      },
+      "front-admin-produtos": {
+        "cobaia": "front",
+        "pagina": "admin/produtos_lista.php",
+        "endpoints": [],
+        "verbetes": [],
+        "arquivos": 6
+      },
+      "front-cliente-reserva": {
+        "cobaia": "front",
+        "pagina": "cliente/index.php",
+        "endpoints": [],
+        "verbetes": [],
+        "arquivos": 7
+      }
+    }
+  },
+  "commits": [
+    {
+      "commit": "e854a0eb4cb254d06cc926088e611d2975c199cb",
+      "data": "2026-08-31",
+      "assunto": "Commit Inicial - Apenas Clonagem do Repositório do Site"
+    },
+    {
+      "commit": "ab4da6a1e2c87fbb5f0bfd3cbb0a8e9d27908074",
+      "data": "2026-08-31",
+      "assunto": "Estrutura Base Auxiliada por IA - Claude - PT1"
+    },
+    {
+      "commit": "26432d2c16ee18b3d3317c046dd109641975e242",
+      "data": "2026-08-31",
+      "assunto": "Parte 2"
+    },
+    {
+      "commit": "084fce090c244b4d8734f138a9fcb3d355653323",
+      "data": "2026-09-01",
+      "assunto": "Correção comentários e nomenclatura normalizada"
+    },
+    {
+      "commit": "603c423ebfdc575c8f198cf4c5e77ea0777a4038",
+      "data": "2026-09-03",
+      "assunto": "Teste 1 Concluído, resultados, relatórios e refatoração geral + refatoração da documentação + inicio da preparaçãod a fase 2 de testes"
+    },
+    {
+      "commit": "3e8cfc148e8a3e67f4df84bfedce35964159aeb9",
+      "data": "2026-10-23",
+      "assunto": "Ajuste de gitignore com retirada de informações da venv e continuações das pesquisas pré fase 4"
+    },
+    {
+      "commit": "4f3b3e26a1d0552425574399a3f9cc3f7fe5a072",
+      "data": "2026-10-27",
+      "assunto": "Fase 4 - Inicialização"
+    },
+    {
+      "commit": "633ebb2746e459bf77c6f6d102fd06e63b612480",
+      "data": "2026-11-03",
+      "assunto": "Fase 4 - Inicio das rodadas + ajustes de parâmetros"
+    }
+  ],
+  "pares": [
+    {
+      "testado": "e854a0eb4cb254d06cc926088e611d2975c199cb",
+      "atual": "ab4da6a1e2c87fbb5f0bfd3cbb0a8e9d27908074",
+      "data": "2026-08-31",
+      "assunto": "Estrutura Base Auxiliada por IA - Claude - PT1",
+      "veredito": "roda tudo",
+      "resumo": {
+        "alterados": 3873,
+        "fora_da_aplicacao": 10,
+        "ignorados": 3844,
+        "no_mapa": 14,
+        "fora_do_mapa": 5,
+        "na_aplicacao": 3863
+      },
+      "selecao": {
+        "arquivos": [
+          {
+            "arquivo": "Programacao/CobaiaAPI/.env.example",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários nenhum; verbetes modos-de-injecao"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/__init__.py",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/config.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários nenhum; verbetes codificacao_incorreta"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/database.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes dado_desatualizado"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/fault_injection.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes campo_ausente, campo_renomeado, erro_interno_do_servidor, modos-de-injecao, resposta_truncada, tempo_de_resposta_excedido, tipo_divergente"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/main.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes limite_de_requisicoes"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/models.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes chave_de_juncao_errada, entidade-produto, escala_ou_unidade_errada, novo_verbete, nulo_inesperado, usuario-e-login, valor_fora_do_dominio"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/__init__.py",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/admin_fault.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-detalhe; verbetes mensagens-de-erro-do-codigo, modos-de-injecao, recurso_inexistente"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/pedidos.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes chave_de_juncao_errada, contrato-pedido, dado_desatualizado, escala_ou_unidade_errada, fluxo-reserva-e-cancelamento, formato_de_data_divergente, mensagens-de-erro-do-codigo, pedido-reserva, recurso_inexistente, registro_duplicado"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/produtos.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes colecao_no_lugar_de_objeto, contagem_inconsistente, contrato-produto, entidade-produto, erro_interno_do_servidor, escala_ou_unidade_errada, limites-do-sistema, localizador_quebrado, mensagens-de-erro-do-codigo, nulo_inesperado, recurso_inexistente, resposta_truncada, tipo_divergente"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/schemas.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes campo_renomeado, contrato-pedido, contrato-produto, estrutura_aninhada_divergente, formato_de_data_divergente, limites-do-sistema"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/pyproject.toml",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/requirements-dev.txt",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/requirements.txt",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/banco/schema_completo.sql",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes codificacao_incorreta, nulo_inesperado, pedido-reserva, valor_fora_do_dominio"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/banco/seed.sql",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes entidade-produto"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/menu_publico.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe, front-busca; verbetes nenhum"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/produtos_api.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes atualizacao-da-tela, campo_ausente, colecao_no_lugar_de_objeto, corpo_nao_e_json, corpo_vazio, estado_da_tela_divergente, estrutura_aninhada_divergente, limite_de_requisicoes, localizador_quebrado, mensagens-de-erro-do-codigo, pagina-produtos-api, tempo_de_resposta_excedido, tipo_divergente"
+          }
+        ],
+        "cenarios": {
+          "api-catalogo": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2)",
+            "Programacao/CobaiaAPI/app/database.py: arquivo do verbete dado_desatualizado (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/fault_injection.py: arquivo dos verbetes campo_ausente, campo_renomeado, erro_interno_do_servidor, tempo_de_resposta_excedido, tipo_divergente (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/main.py: arquivo do verbete limite_de_requisicoes (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/models.py: arquivo dos verbetes chave_de_juncao_errada, entidade-produto, escala_ou_unidade_errada, nulo_inesperado, valor_fora_do_dominio (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py: arquivo dos verbetes chave_de_juncao_errada, dado_desatualizado, escala_ou_unidade_errada (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/routers/produtos.py: arquivo dos verbetes colecao_no_lugar_de_objeto, contagem_inconsistente, contrato-produto, entidade-produto, erro_interno_do_servidor, escala_ou_unidade_errada, nulo_inesperado, tipo_divergente (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/schemas.py: arquivo dos verbetes campo_renomeado, contrato-produto, estrutura_aninhada_divergente (endpoint GET /api/produtos)",
+            "Programacao/CobaiaFront/banco/schema_completo.sql: arquivo dos verbetes nulo_inesperado, valor_fora_do_dominio (endpoint GET /api/produtos)",
+            "Programacao/CobaiaFront/banco/seed.sql: arquivo do verbete entidade-produto (endpoint GET /api/produtos)",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/produtos_api.php",
+            "Programacao/CobaiaFront/produtos_api.php: página do cenário; arquivo dos verbetes campo_ausente, colecao_no_lugar_de_objeto, estrutura_aninhada_divergente, limite_de_requisicoes, pagina-produtos-api, tempo_de_resposta_excedido, tipo_divergente (endpoint GET /api/produtos)"
+          ],
+          "api-detalhe": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2)",
+            "Programacao/CobaiaAPI/app/models.py: arquivo do verbete entidade-produto (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py: arquivo do verbete recurso_inexistente (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py: arquivo do verbete recurso_inexistente (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaAPI/app/routers/produtos.py: arquivo dos verbetes colecao_no_lugar_de_objeto, contrato-produto, entidade-produto, recurso_inexistente (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaAPI/app/schemas.py: arquivo do verbete contrato-produto (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaFront/banco/seed.sql: arquivo do verbete entidade-produto (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/produtos_api.php",
+            "Programacao/CobaiaFront/produtos_api.php: página do cenário; arquivo dos verbetes colecao_no_lugar_de_objeto, pagina-produtos-api (endpoint GET /api/produtos/{id})"
+          ],
+          "front-admin-login": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2)"
+          ],
+          "front-admin-produtos": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2)"
+          ],
+          "front-busca": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2)",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/index.php"
+          ],
+          "front-cliente-reserva": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2)"
+          ]
+        },
+        "verbetes": {
+          "atualizacao-da-tela": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "campo_ausente": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "campo_renomeado": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/schemas.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "chave_de_juncao_errada": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "codificacao_incorreta": [
+            "Programacao/CobaiaAPI/app/config.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/banco/schema_completo.sql está em arquivos: do cabeçalho do verbete"
+          ],
+          "colecao_no_lugar_de_objeto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "contagem_inconsistente": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "contrato-pedido": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/schemas.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "contrato-produto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/schemas.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "corpo_nao_e_json": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "corpo_vazio": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "dado_desatualizado": [
+            "Programacao/CobaiaAPI/app/database.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "entidade-produto": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/banco/seed.sql está em arquivos: do cabeçalho do verbete"
+          ],
+          "erro_interno_do_servidor": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "escala_ou_unidade_errada": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "estado_da_tela_divergente": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "estrutura_aninhada_divergente": [
+            "Programacao/CobaiaAPI/app/schemas.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "fluxo-reserva-e-cancelamento": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "formato_de_data_divergente": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/schemas.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "limite_de_requisicoes": [
+            "Programacao/CobaiaAPI/app/main.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "limites-do-sistema": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/schemas.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "localizador_quebrado": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "mensagens-de-erro-do-codigo": [
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "modos-de-injecao": [
+            "Programacao/CobaiaAPI/.env.example está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "novo_verbete": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "nulo_inesperado": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/banco/schema_completo.sql está em arquivos: do cabeçalho do verbete"
+          ],
+          "pagina-produtos-api": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "pedido-reserva": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/banco/schema_completo.sql está em arquivos: do cabeçalho do verbete"
+          ],
+          "recurso_inexistente": [
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "registro_duplicado": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "resposta_truncada": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "tempo_de_resposta_excedido": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "tipo_divergente": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "usuario-e-login": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "valor_fora_do_dominio": [
+            "Programacao/CobaiaAPI/app/models.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/banco/schema_completo.sql está em arquivos: do cabeçalho do verbete"
+          ]
+        },
+        "ensaio": [
+          "contrato-error_500",
+          "contrato-escala_ou_unidade_errada",
+          "contrato-field_missing",
+          "contrato-field_renamed",
+          "contrato-malformed_json",
+          "contrato-type_drift",
+          "localizador-front-admin-login",
+          "localizador-front-admin-produtos",
+          "localizador-front-busca",
+          "localizador-front-cliente-reserva"
+        ],
+        "rodar_tudo": true,
+        "motivo": "roda tudo: 5 arquivo(s) da aplicação fora do mapa (Programacao/CobaiaAPI/app/__init__.py, Programacao/CobaiaAPI/app/routers/__init__.py, Programacao/CobaiaAPI/pyproject.toml e mais 2); regra 1, arquivo fora do mapa roda tudo, nunca nada",
+        "deixados_de_fora": {
+          "cenarios": [],
+          "ensaio": []
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "deixados_de_fora": [],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 3873,
+          "fora_da_aplicacao": 10,
+          "ignorados": 3844,
+          "no_mapa": 14,
+          "fora_do_mapa": 5,
+          "na_aplicacao": 3863
+        }
+      }
+    },
+    {
+      "testado": "ab4da6a1e2c87fbb5f0bfd3cbb0a8e9d27908074",
+      "atual": "26432d2c16ee18b3d3317c046dd109641975e242",
+      "data": "2026-08-31",
+      "assunto": "Parte 2",
+      "veredito": "nada a rodar",
+      "resumo": {
+        "alterados": 1762,
+        "fora_da_aplicacao": 10,
+        "ignorados": 1752,
+        "no_mapa": 0,
+        "fora_do_mapa": 0,
+        "na_aplicacao": 1752
+      },
+      "selecao": {
+        "arquivos": [],
+        "cenarios": {},
+        "verbetes": {},
+        "ensaio": [],
+        "rodar_tudo": false,
+        "motivo": "nenhum arquivo da aplicação no mapa mudou (10 fora da aplicação, 1752 ignorados): nada a rodar pela seleção; vale a rodada completa periódica (regra 2)",
+        "deixados_de_fora": {
+          "cenarios": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "ensaio": [
+            "contrato-error_500",
+            "contrato-escala_ou_unidade_errada",
+            "contrato-field_missing",
+            "contrato-field_renamed",
+            "contrato-malformed_json",
+            "contrato-type_drift",
+            "localizador-front-admin-login",
+            "localizador-front-admin-produtos",
+            "localizador-front-busca",
+            "localizador-front-cliente-reserva"
+          ]
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [],
+          "deixados_de_fora": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 1762,
+          "fora_da_aplicacao": 10,
+          "ignorados": 1752,
+          "no_mapa": 0,
+          "fora_do_mapa": 0,
+          "na_aplicacao": 1752
+        }
+      }
+    },
+    {
+      "testado": "26432d2c16ee18b3d3317c046dd109641975e242",
+      "atual": "084fce090c244b4d8734f138a9fcb3d355653323",
+      "data": "2026-09-01",
+      "assunto": "Correção comentários e nomenclatura normalizada",
+      "veredito": "roda tudo",
+      "resumo": {
+        "alterados": 21,
+        "fora_da_aplicacao": 8,
+        "ignorados": 1,
+        "no_mapa": 9,
+        "fora_do_mapa": 3,
+        "na_aplicacao": 13
+      },
+      "selecao": {
+        "arquivos": [
+          {
+            "arquivo": "Programacao/CobaiaAPI/.env.example",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários nenhum; verbetes modos-de-injecao"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/config.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários nenhum; verbetes codificacao_incorreta"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/database.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes dado_desatualizado"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/main.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes limite_de_requisicoes"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/admin_fault.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-detalhe; verbetes mensagens-de-erro-do-codigo, modos-de-injecao, recurso_inexistente"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/pedidos.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes chave_de_juncao_errada, contrato-pedido, dado_desatualizado, escala_ou_unidade_errada, fluxo-reserva-e-cancelamento, formato_de_data_divergente, mensagens-de-erro-do-codigo, pedido-reserva, recurso_inexistente, registro_duplicado"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/produtos.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes colecao_no_lugar_de_objeto, contagem_inconsistente, contrato-produto, entidade-produto, erro_interno_do_servidor, escala_ou_unidade_errada, limites-do-sistema, localizador_quebrado, mensagens-de-erro-do-codigo, nulo_inesperado, recurso_inexistente, resposta_truncada, tipo_divergente"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/pyproject.toml",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/requirements-dev.txt",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/requirements.txt",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/menu_publico.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe, front-busca; verbetes nenhum"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/produtos_api.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes atualizacao-da-tela, campo_ausente, colecao_no_lugar_de_objeto, corpo_nao_e_json, corpo_vazio, estado_da_tela_divergente, estrutura_aninhada_divergente, limite_de_requisicoes, localizador_quebrado, mensagens-de-erro-do-codigo, pagina-produtos-api, tempo_de_resposta_excedido, tipo_divergente"
+          }
+        ],
+        "cenarios": {
+          "api-catalogo": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt)",
+            "Programacao/CobaiaAPI/app/database.py: arquivo do verbete dado_desatualizado (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/main.py: arquivo do verbete limite_de_requisicoes (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py: arquivo dos verbetes chave_de_juncao_errada, dado_desatualizado, escala_ou_unidade_errada (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/routers/produtos.py: arquivo dos verbetes colecao_no_lugar_de_objeto, contagem_inconsistente, contrato-produto, entidade-produto, erro_interno_do_servidor, escala_ou_unidade_errada, nulo_inesperado, tipo_divergente (endpoint GET /api/produtos)",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/produtos_api.php",
+            "Programacao/CobaiaFront/produtos_api.php: página do cenário; arquivo dos verbetes campo_ausente, colecao_no_lugar_de_objeto, estrutura_aninhada_divergente, limite_de_requisicoes, pagina-produtos-api, tempo_de_resposta_excedido, tipo_divergente (endpoint GET /api/produtos)"
+          ],
+          "api-detalhe": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt)",
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py: arquivo do verbete recurso_inexistente (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py: arquivo do verbete recurso_inexistente (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaAPI/app/routers/produtos.py: arquivo dos verbetes colecao_no_lugar_de_objeto, contrato-produto, entidade-produto, recurso_inexistente (endpoint GET /api/produtos/{id})",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/produtos_api.php",
+            "Programacao/CobaiaFront/produtos_api.php: página do cenário; arquivo dos verbetes colecao_no_lugar_de_objeto, pagina-produtos-api (endpoint GET /api/produtos/{id})"
+          ],
+          "front-admin-login": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt)"
+          ],
+          "front-admin-produtos": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt)"
+          ],
+          "front-busca": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt)",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/index.php"
+          ],
+          "front-cliente-reserva": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt)"
+          ]
+        },
+        "verbetes": {
+          "atualizacao-da-tela": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "campo_ausente": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "chave_de_juncao_errada": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "codificacao_incorreta": [
+            "Programacao/CobaiaAPI/app/config.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "colecao_no_lugar_de_objeto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "contagem_inconsistente": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "contrato-pedido": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "contrato-produto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "corpo_nao_e_json": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "corpo_vazio": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "dado_desatualizado": [
+            "Programacao/CobaiaAPI/app/database.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "entidade-produto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "erro_interno_do_servidor": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "escala_ou_unidade_errada": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "estado_da_tela_divergente": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "estrutura_aninhada_divergente": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "fluxo-reserva-e-cancelamento": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "formato_de_data_divergente": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "limite_de_requisicoes": [
+            "Programacao/CobaiaAPI/app/main.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "limites-do-sistema": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "localizador_quebrado": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "mensagens-de-erro-do-codigo": [
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "modos-de-injecao": [
+            "Programacao/CobaiaAPI/.env.example está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "nulo_inesperado": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "pagina-produtos-api": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "pedido-reserva": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "recurso_inexistente": [
+            "Programacao/CobaiaAPI/app/routers/admin_fault.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "registro_duplicado": [
+            "Programacao/CobaiaAPI/app/routers/pedidos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "resposta_truncada": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "tempo_de_resposta_excedido": [
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "tipo_divergente": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaFront/produtos_api.php está em arquivos: do cabeçalho do verbete"
+          ]
+        },
+        "ensaio": [
+          "contrato-error_500",
+          "contrato-escala_ou_unidade_errada",
+          "contrato-field_missing",
+          "contrato-field_renamed",
+          "contrato-malformed_json",
+          "contrato-type_drift",
+          "localizador-front-admin-login",
+          "localizador-front-admin-produtos",
+          "localizador-front-busca",
+          "localizador-front-cliente-reserva"
+        ],
+        "rodar_tudo": true,
+        "motivo": "roda tudo: 3 arquivo(s) da aplicação fora do mapa (Programacao/CobaiaAPI/pyproject.toml, Programacao/CobaiaAPI/requirements-dev.txt, Programacao/CobaiaAPI/requirements.txt); regra 1, arquivo fora do mapa roda tudo, nunca nada",
+        "deixados_de_fora": {
+          "cenarios": [],
+          "ensaio": []
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "deixados_de_fora": [],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 21,
+          "fora_da_aplicacao": 8,
+          "ignorados": 1,
+          "no_mapa": 9,
+          "fora_do_mapa": 3,
+          "na_aplicacao": 13
+        }
+      }
+    },
+    {
+      "testado": "084fce090c244b4d8734f138a9fcb3d355653323",
+      "atual": "603c423ebfdc575c8f198cf4c5e77ea0777a4038",
+      "data": "2026-09-03",
+      "assunto": "Teste 1 Concluído, resultados, relatórios e refatoração geral + refatoração da documentação + inicio da preparaçãod a fase 2 de testes",
+      "veredito": "seleção parcial",
+      "resumo": {
+        "alterados": 106,
+        "fora_da_aplicacao": 102,
+        "ignorados": 1,
+        "no_mapa": 3,
+        "fora_do_mapa": 0,
+        "na_aplicacao": 4
+      },
+      "selecao": {
+        "arquivos": [
+          {
+            "arquivo": "Programacao/CobaiaAPI/.env.example",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários nenhum; verbetes modos-de-injecao"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/config.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários nenhum; verbetes codificacao_incorreta"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/fault_injection.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes campo_ausente, campo_renomeado, erro_interno_do_servidor, modos-de-injecao, resposta_truncada, tempo_de_resposta_excedido, tipo_divergente"
+          }
+        ],
+        "cenarios": {
+          "api-catalogo": [
+            "Programacao/CobaiaAPI/app/fault_injection.py: arquivo dos verbetes campo_ausente, campo_renomeado, erro_interno_do_servidor, tempo_de_resposta_excedido, tipo_divergente (endpoint GET /api/produtos)"
+          ]
+        },
+        "verbetes": {
+          "campo_ausente": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "campo_renomeado": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "codificacao_incorreta": [
+            "Programacao/CobaiaAPI/app/config.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "erro_interno_do_servidor": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "modos-de-injecao": [
+            "Programacao/CobaiaAPI/.env.example está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "resposta_truncada": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "tempo_de_resposta_excedido": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "tipo_divergente": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ]
+        },
+        "ensaio": [
+          "contrato-error_500",
+          "contrato-escala_ou_unidade_errada",
+          "contrato-field_missing",
+          "contrato-field_renamed",
+          "contrato-malformed_json",
+          "contrato-type_drift"
+        ],
+        "rodar_tudo": false,
+        "motivo": "seleção parcial: 1 de 6 cenários, pelos arquivos no mapa; os 5 deixados de fora ficam registrados para a conferência contra a rodada completa (regra 3)",
+        "deixados_de_fora": {
+          "cenarios": [
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "ensaio": [
+            "localizador-front-admin-login",
+            "localizador-front-admin-produtos",
+            "localizador-front-busca",
+            "localizador-front-cliente-reserva"
+          ]
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [
+            "api-catalogo"
+          ],
+          "deixados_de_fora": [
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 106,
+          "fora_da_aplicacao": 102,
+          "ignorados": 1,
+          "no_mapa": 3,
+          "fora_do_mapa": 0,
+          "na_aplicacao": 4
+        }
+      }
+    },
+    {
+      "testado": "603c423ebfdc575c8f198cf4c5e77ea0777a4038",
+      "atual": "3e8cfc148e8a3e67f4df84bfedce35964159aeb9",
+      "data": "2026-10-23",
+      "assunto": "Ajuste de gitignore com retirada de informações da venv e continuações das pesquisas pré fase 4",
+      "veredito": "nada a rodar",
+      "resumo": {
+        "alterados": 4381,
+        "fora_da_aplicacao": 2269,
+        "ignorados": 2112,
+        "no_mapa": 0,
+        "fora_do_mapa": 0,
+        "na_aplicacao": 2112
+      },
+      "selecao": {
+        "arquivos": [],
+        "cenarios": {},
+        "verbetes": {},
+        "ensaio": [],
+        "rodar_tudo": false,
+        "motivo": "nenhum arquivo da aplicação no mapa mudou (2269 fora da aplicação, 2112 ignorados): nada a rodar pela seleção; vale a rodada completa periódica (regra 2)",
+        "deixados_de_fora": {
+          "cenarios": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "ensaio": [
+            "contrato-error_500",
+            "contrato-escala_ou_unidade_errada",
+            "contrato-field_missing",
+            "contrato-field_renamed",
+            "contrato-malformed_json",
+            "contrato-type_drift",
+            "localizador-front-admin-login",
+            "localizador-front-admin-produtos",
+            "localizador-front-busca",
+            "localizador-front-cliente-reserva"
+          ]
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [],
+          "deixados_de_fora": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 4381,
+          "fora_da_aplicacao": 2269,
+          "ignorados": 2112,
+          "no_mapa": 0,
+          "fora_do_mapa": 0,
+          "na_aplicacao": 2112
+        }
+      }
+    },
+    {
+      "testado": "3e8cfc148e8a3e67f4df84bfedce35964159aeb9",
+      "atual": "4f3b3e26a1d0552425574399a3f9cc3f7fe5a072",
+      "data": "2026-10-27",
+      "assunto": "Fase 4 - Inicialização",
+      "veredito": "seleção parcial",
+      "resumo": {
+        "alterados": 240,
+        "fora_da_aplicacao": 237,
+        "ignorados": 1,
+        "no_mapa": 2,
+        "fora_do_mapa": 0,
+        "na_aplicacao": 3
+      },
+      "selecao": {
+        "arquivos": [
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/fault_injection.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo; verbetes campo_ausente, campo_renomeado, erro_interno_do_servidor, modos-de-injecao, resposta_truncada, tempo_de_resposta_excedido, tipo_divergente"
+          },
+          {
+            "arquivo": "Programacao/CobaiaAPI/app/routers/produtos.py",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe; verbetes colecao_no_lugar_de_objeto, contagem_inconsistente, contrato-produto, entidade-produto, erro_interno_do_servidor, escala_ou_unidade_errada, limites-do-sistema, localizador_quebrado, mensagens-de-erro-do-codigo, nulo_inesperado, recurso_inexistente, resposta_truncada, tipo_divergente"
+          }
+        ],
+        "cenarios": {
+          "api-catalogo": [
+            "Programacao/CobaiaAPI/app/fault_injection.py: arquivo dos verbetes campo_ausente, campo_renomeado, erro_interno_do_servidor, tempo_de_resposta_excedido, tipo_divergente (endpoint GET /api/produtos)",
+            "Programacao/CobaiaAPI/app/routers/produtos.py: arquivo dos verbetes colecao_no_lugar_de_objeto, contagem_inconsistente, contrato-produto, entidade-produto, erro_interno_do_servidor, escala_ou_unidade_errada, nulo_inesperado, tipo_divergente (endpoint GET /api/produtos)"
+          ],
+          "api-detalhe": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py: arquivo dos verbetes colecao_no_lugar_de_objeto, contrato-produto, entidade-produto, recurso_inexistente (endpoint GET /api/produtos/{id})"
+          ]
+        },
+        "verbetes": {
+          "campo_ausente": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "campo_renomeado": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "colecao_no_lugar_de_objeto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "contagem_inconsistente": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "contrato-produto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "entidade-produto": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "erro_interno_do_servidor": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "escala_ou_unidade_errada": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "limites-do-sistema": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "localizador_quebrado": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "mensagens-de-erro-do-codigo": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "modos-de-injecao": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "nulo_inesperado": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "recurso_inexistente": [
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "resposta_truncada": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "tempo_de_resposta_excedido": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete"
+          ],
+          "tipo_divergente": [
+            "Programacao/CobaiaAPI/app/fault_injection.py está em arquivos: do cabeçalho do verbete",
+            "Programacao/CobaiaAPI/app/routers/produtos.py está em arquivos: do cabeçalho do verbete"
+          ]
+        },
+        "ensaio": [
+          "contrato-error_500",
+          "contrato-escala_ou_unidade_errada",
+          "contrato-field_missing",
+          "contrato-field_renamed",
+          "contrato-malformed_json",
+          "contrato-type_drift"
+        ],
+        "rodar_tudo": false,
+        "motivo": "seleção parcial: 2 de 6 cenários, pelos arquivos no mapa; os 4 deixados de fora ficam registrados para a conferência contra a rodada completa (regra 3)",
+        "deixados_de_fora": {
+          "cenarios": [
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "ensaio": [
+            "localizador-front-admin-login",
+            "localizador-front-admin-produtos",
+            "localizador-front-busca",
+            "localizador-front-cliente-reserva"
+          ]
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [
+            "api-catalogo",
+            "api-detalhe"
+          ],
+          "deixados_de_fora": [
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 240,
+          "fora_da_aplicacao": 237,
+          "ignorados": 1,
+          "no_mapa": 2,
+          "fora_do_mapa": 0,
+          "na_aplicacao": 3
+        }
+      }
+    },
+    {
+      "testado": "4f3b3e26a1d0552425574399a3f9cc3f7fe5a072",
+      "atual": "633ebb2746e459bf77c6f6d102fd06e63b612480",
+      "data": "2026-11-03",
+      "assunto": "Fase 4 - Inicio das rodadas + ajustes de parâmetros",
+      "veredito": "seleção parcial",
+      "resumo": {
+        "alterados": 555,
+        "fora_da_aplicacao": 550,
+        "ignorados": 0,
+        "no_mapa": 5,
+        "fora_do_mapa": 0,
+        "na_aplicacao": 5
+      },
+      "selecao": {
+        "arquivos": [
+          {
+            "arquivo": "Programacao/CobaiaFront/admin/login.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários front-admin-login, front-admin-produtos, front-cliente-reserva; verbetes senha-sem-hash, usuario-e-login"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/admin/produtos_lista.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários front-admin-produtos; verbetes nenhum"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/cliente/registrar_reserva.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, front-cliente-reserva; verbetes consultas-sem-checagem, fluxo-reserva-e-cancelamento, registro_duplicado, valor_fora_do_dominio"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/menu_publico.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe, front-busca; verbetes nenhum"
+          },
+          {
+            "arquivo": "Programacao/CobaiaFront/quebra.php",
+            "classe": "no_mapa",
+            "motivo": "no mapa: cenários api-catalogo, api-detalhe, front-admin-login, front-admin-produtos, front-busca, front-cliente-reserva; verbetes nenhum"
+          }
+        ],
+        "cenarios": {
+          "api-catalogo": [
+            "Programacao/CobaiaFront/cliente/registrar_reserva.php: arquivo do verbete valor_fora_do_dominio (endpoint GET /api/produtos)",
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/produtos_api.php",
+            "Programacao/CobaiaFront/quebra.php: include em Programacao/CobaiaFront/menu_publico.php"
+          ],
+          "api-detalhe": [
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/produtos_api.php",
+            "Programacao/CobaiaFront/quebra.php: include em Programacao/CobaiaFront/menu_publico.php"
+          ],
+          "front-admin-login": [
+            "Programacao/CobaiaFront/admin/login.php: página do cenário",
+            "Programacao/CobaiaFront/quebra.php: include em Programacao/CobaiaFront/admin/login.php"
+          ],
+          "front-admin-produtos": [
+            "Programacao/CobaiaFront/admin/login.php: página aberta por um passo do cenário",
+            "Programacao/CobaiaFront/admin/produtos_lista.php: página do cenário",
+            "Programacao/CobaiaFront/quebra.php: include em Programacao/CobaiaFront/admin/produtos_lista.php; include em Programacao/CobaiaFront/admin/login.php"
+          ],
+          "front-busca": [
+            "Programacao/CobaiaFront/menu_publico.php: include em Programacao/CobaiaFront/index.php",
+            "Programacao/CobaiaFront/quebra.php: include em Programacao/CobaiaFront/menu_publico.php"
+          ],
+          "front-cliente-reserva": [
+            "Programacao/CobaiaFront/admin/login.php: página aberta por um passo do cenário",
+            "Programacao/CobaiaFront/cliente/registrar_reserva.php: include em Programacao/CobaiaFront/cliente/index.php",
+            "Programacao/CobaiaFront/quebra.php: include em Programacao/CobaiaFront/cliente/registrar_reserva.php; include em Programacao/CobaiaFront/admin/login.php"
+          ]
+        },
+        "verbetes": {
+          "consultas-sem-checagem": [
+            "Programacao/CobaiaFront/cliente/registrar_reserva.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "fluxo-reserva-e-cancelamento": [
+            "Programacao/CobaiaFront/cliente/registrar_reserva.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "registro_duplicado": [
+            "Programacao/CobaiaFront/cliente/registrar_reserva.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "senha-sem-hash": [
+            "Programacao/CobaiaFront/admin/login.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "usuario-e-login": [
+            "Programacao/CobaiaFront/admin/login.php está em arquivos: do cabeçalho do verbete"
+          ],
+          "valor_fora_do_dominio": [
+            "Programacao/CobaiaFront/cliente/registrar_reserva.php está em arquivos: do cabeçalho do verbete"
+          ]
+        },
+        "ensaio": [
+          "contrato-error_500",
+          "contrato-escala_ou_unidade_errada",
+          "contrato-field_missing",
+          "contrato-field_renamed",
+          "contrato-malformed_json",
+          "contrato-type_drift",
+          "localizador-front-admin-login",
+          "localizador-front-admin-produtos",
+          "localizador-front-busca",
+          "localizador-front-cliente-reserva"
+        ],
+        "rodar_tudo": false,
+        "motivo": "seleção parcial: 6 de 6 cenários, pelos arquivos no mapa; os 0 deixados de fora ficam registrados para a conferência contra a rodada completa (regra 3)",
+        "deixados_de_fora": {
+          "cenarios": [],
+          "ensaio": []
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "deixados_de_fora": [],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 555,
+          "fora_da_aplicacao": 550,
+          "ignorados": 0,
+          "no_mapa": 5,
+          "fora_do_mapa": 0,
+          "na_aplicacao": 5
+        }
+      }
+    }
+  ],
+  "resumo": {
+    "pares": 7,
+    "rodar_tudo": 2,
+    "selecao_parcial": 3,
+    "nada_a_rodar": 2,
+    "cenarios_deixados_de_fora_no_total": 21
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:32:54.354Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-34",
+  "comentario": "Estamos exatamente diante da mesma falha estrutural vista nos relatórios 1, 9, 19 e 20. Do ponto de vista estrito do software, o diagnóstico registro_duplicado no campo id está perfeito, pois a API devolve o produto de id: 1 duplicado no array (15 cartões na resposta contra 14 linhas no banco). No entanto, o agente violou a regra do RAG: a busca entregou os verbetes entidade-produto, contrato-produto e estrutura_aninhada_divergente, nenhum dos quais aborda a causa registro_duplicado. O modelo forçou a resposta correta sem ter a fonte adequada no contexto e citou fontes que não cobrem o termo ([contrato-produto] e [estrutura_aninhada_divergente]), acionando o gatilho de auditoria causa_sem_verbete_que_a_trate. A utilidade recebe nota 4 pois descreve com exatidão o problema no payload.",
+  "decidido_em": "2026-11-10T11:33:26.366Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 34,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:33:42.133Z",
+  "segundos": 32,
+  "segundos_relogio": 32,
+  "utilidade": 4
+}

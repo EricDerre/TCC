@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:58:39.936Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-16",
+  "comentario": "O modelo acertou o diagnóstico em cheio ao identificar a causa raiz como colecao_no_lugar_de_objeto no campo id. O endpoint de detalhe (GET /api/produtos/4) esperava retornar um único objeto JSON estruturado, mas a API respondeu encapsulando os dados dentro de uma lista/coleção ([...]). Isso causou o erro no front-end ao tentar ler as propriedades, resultando no sintoma de \"(sem descrição)\". O motor de busca funcionou perfeitamente, entregando o verbete correto na primeira posição, e a altíssima confiança (0,994) foi plenamente justificada pela clareza da evidência e ausência de divergências na auditoria do código.",
+  "decidido_em": "2026-11-09T19:58:57.986Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 16,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:59:16.520Z",
+  "segundos": 18,
+  "segundos_relogio": 18,
+  "utilidade": 5
+}

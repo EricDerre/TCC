@@ -1,0 +1,364 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_ineditos/qwen2.5_7b/efe-25",
+ "nome": "efe-25",
+ "caso": "efe-25",
+ "corrida": "fase4_ineditos",
+ "modo": "ineditos",
+ "modelo": "qwen2.5:7b",
+ "classe": 6,
+ "nivel": 2,
+ "eventos": {
+  "primeiro": 810,
+  "ultimo": 831,
+  "hash": "26088ac9bd4c3c76"
+ },
+ "relatorio_v3": "../relatorios_v3/efe-25.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (1427 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (1427 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      810
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 4610 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      813
+     ]
+    }
+   ],
+   "eventos": [
+    813
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "localizador_quebrado",
+     "detalhe": "posição 1, pontuação 43,18: 42,18 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 43.1808,
+     "posicao": 1
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 2, pontuação 27,62: 25,62 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": true,
+     "pontuacao": 27.6191,
+     "posicao": 2
+    },
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 3, pontuação 27,19: 25,19 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": true,
+     "pontuacao": 27.193,
+     "posicao": 3
+    },
+    {
+     "opcao": "estado_da_tela_divergente",
+     "detalhe": "posição 4, pontuação 26,90: 25,90 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 26.9044,
+     "posicao": 4
+    },
+    {
+     "opcao": "ancora-saiba-mais",
+     "detalhe": "posição 5, pontuação 25,99: 24,99 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 25.9926,
+     "posicao": 5
+    },
+    {
+     "opcao": "pagina-produtos-api",
+     "detalhe": "posição 6, pontuação 21,85: 18,85 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 21.8549,
+     "posicao": 6
+    },
+    {
+     "opcao": "campo_ausente",
+     "detalhe": "posição 7, pontuação 19,83: 19,83 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 19.8301,
+     "posicao": 7
+    },
+    {
+     "opcao": "dado_desatualizado",
+     "detalhe": "posição 8, pontuação 18,06: 17,06 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 18.0556,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `localizador_quebrado` (43,18), `contrato-produto` (27,62) e `entidade-produto` (27,19).",
+     "origem": "observado",
+     "eventos": [
+      811
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `contrato-produto` e `entidade-produto`; o da entidade, em `localizador_quebrado`.",
+     "origem": "observado",
+     "eventos": [
+      811
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `estado_da_tela_divergente` (26,90), `ancora-saiba-mais` (25,99), `pagina-produtos-api` (21,85), `campo_ausente` (19,83) e `dado_desatualizado` (18,06).",
+     "origem": "observado",
+     "eventos": [
+      811
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos/{id}`, entidade `Interface`, status 200 e 67 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      811
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `entidade-produto`, e o primeiro de fora, `estado_da_tela_divergente`, só pelo texto do caso o segundo estaria à frente (25,90 contra 25,19); os reforços em código viraram a ordem, com diferença final de 0,29.",
+     "origem": "observado",
+     "eventos": [
+      811
+     ]
+    }
+   ],
+   "eventos": [
+    811
+   ],
+   "entregues": [
+    "localizador_quebrado",
+    "contrato-produto",
+    "entidade-produto"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos/{id}",
+    "entidade": "Interface",
+    "status": 200,
+    "termos": 67
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "localizador_quebrado",
+   "alternativas": [
+    {
+     "opcao": "localizador_quebrado",
+     "probabilidade": 0.9589058168174992,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,959; verbetes entregues que a tratam: `localizador_quebrado`"
+    },
+    {
+     "opcao": "estado_da_tela_divergente",
+     "probabilidade": 8.997942932692648e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `localizador_quebrado`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 7.812420665913364e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 7.812420665913364e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `localizador_quebrado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `estado_da_tela_divergente` (Estado da tela divergente da resposta), ficou com probabilidade 0,000 contra 0,959 da escolhida; verbetes entregues que a sustentam: `localizador_quebrado`.",
+     "origem": "observado",
+     "eventos": [
+      831
+     ]
+    },
+    {
+     "texto": "As outras 2 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `campo_ausente` (0,000) e `campo_renomeado` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      831
+     ]
+    },
+    {
+     "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,959, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      831
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      831
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos/3`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `localizador_quebrado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `localizador_quebrado`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `localizador_quebrado`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `localizador_quebrado` (Localizador (seletor) quebrado; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/localizador_quebrado.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/localizador_quebrado.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      831
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 7 de 7 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      831
+     ]
+    }
+   ],
+   "eventos": [
+    831
+   ],
+   "segunda": "estado_da_tela_divergente",
+   "campo": null,
+   "confianca": {
+    "selo": "medio",
+    "palavra": "média",
+    "p_rotulo": 0.9589058168174992,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 26,
+     "certos": 22,
+     "acerto_pct": 84.6
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,959, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Localizador (seletor) quebrado",
+   "probabilidade": 0.9589058168174992,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário não consegue visualizar o detalhe do produto corretamente, pois o modal não carrega o título esperado.",
+  "fonte": "[localizador_quebrado]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: localizador_quebrado\nCAMPO: nenhum\nIMPACTO: O usuário não consegue visualizar o detalhe do produto corretamente, pois o modal não carrega o título esperado.\nFONTE: [localizador_quebrado]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 23,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "medio",
+  "confianca": "média",
+  "falha": null,
+  "escolha": "localizador_quebrado",
+  "causa_em_palavras": "Localizador (seletor) quebrado",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

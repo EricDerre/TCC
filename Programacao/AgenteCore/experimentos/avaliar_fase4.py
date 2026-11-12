@@ -41,10 +41,12 @@
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --cenarios --saida fase4_ensaio_v2 --nome cenarios_v2 [--check] [--colar]  (a leitura vigente; --cenarios --saida fase4_ensaio grava cenarios.*, e o --colar recusa)
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --calibracao --saida fase4_calibracao [--check] [--colar] [--pasta ...]
   RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --tela --saida fase4_tela [--check] [--colar] [--pasta ...]
-  RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --pontes [--check]"""
+  RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --pontes [--check]
+  RESULTADOS_DIR=resultados_alvo python avaliar_fase4.py --texto [--check]  (Pós-Fase 4, Q2: relatórios v2 contra v3 e verbetes contra a camada de leitura; grava texto.{json,md})"""
 from __future__ import annotations
 
 import argparse
+import itertools
 import json
 import re
 import statistics
@@ -1409,12 +1411,27 @@ def relatorios_da_amostra(dado: dict, eventos: list[dict], saida: str, pasta: Pa
 
 # ------------------------------------------------------------------ pontes de versão (regra R6)
 
+# ! Alteração de IA - Revisar: (10/11/2026, decisão 116) `pastas_de_ponte_no_disco` e `nomes_das_pontes`: `pontes_conhecidas` passa a ler também as pastas
+# `fase3b_ponte_*` de resultados_alvo que a lista `analisar_fase3b.PONTES` não traz.
+# ! Motivo: o Ollama se atualiza sozinho (hoje está em 0.40.15, sem ponte), e o lançador da corrida 25 roda a ponte da versão que estiver no ar pelo
+# `rodar_fase3b.ps1`, numa pasta com o nome da versão. Com a lista fixa, a ponte de uma versão que ninguém previu rodava e não entrava em pontes.json, e a regra
+# R6 seguia barrando a corrida. As listadas continuam vindo primeiro, na ordem da lista; uma pasta sem a ponte completa continua de fora.
+def pastas_de_ponte_no_disco() -> list[str]:
+    """Os nomes das pastas `fase3b_ponte_*` de resultados_alvo (a ponte de cada versão do Ollama rodada pelo rodar_fase3b.ps1)."""
+    return sorted(p.name for p in caminhos.RESULTADOS.glob("fase3b_ponte_*") if p.is_dir())
+
+
+def nomes_das_pontes(listadas: list[str], no_disco: list[str]) -> list[str]:
+    """As pontes a ler: as da lista, na ordem dela, e depois as pastas `fase3b_ponte_*` que a lista não traz."""
+    return list(listadas) + sorted(n for n in no_disco if n.startswith("fase3b_ponte_") and n not in listadas)
+
+
 def pontes_conhecidas(modelo: str = ex.MODELO_PADRAO) -> dict:
     """pontes.json refeito das pontes já rodadas: as da Fase 3-B (analisar_fase3b.PONTES) e as das corridas da Fase 4
     (`fase4_*/ponte`), cada uma pareada com a Fase 3 pela mesma conta de executar_fase4.ponte_contra_fase3."""
     slug = executar_fase3._slug(modelo)
     base = executar_bateria.ler_jsonl(caminhos.fase3("fase3")["raiz"] / slug / "diagnosticos__L0.jsonl")
-    pastas = [(nome, caminhos.fase3(nome)["raiz"]) for nome in a3b.PONTES]
+    pastas = [(nome, caminhos.fase3(nome)["raiz"]) for nome in nomes_das_pontes(a3b.PONTES, pastas_de_ponte_no_disco())]
     pastas += sorted((f"{p.parent.name}/ponte", p) for p in caminhos.RESULTADOS.glob("fase4_*/ponte") if p.is_dir())
     entradas = []
     for nome, raiz in pastas:
@@ -1450,10 +1467,122 @@ TITULO_REVISAO = "Sessão de revisão dos relatórios da trilha (corrida 22)"
 TEMPO_NAO_MEDIDO = "não medido"
 ARQ_PRE_ANALISE = "pre_analise_revisao_trilha.md"
 ROTULO_ORIGEM = {"revisor": "resposta do revisor", "parecer_aprovado": "parecer do Claude aprovado"}
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q5) a leitura `--revisao_v3`: a planilha revisao_v3.md da sessão de revisão dos relatórios v3 e das árvores
+# da corrida 24, lida contra o acerto de cada caso em ineditos.json, com os blocos `tb_f4_revisao_v3_*` em leitura_revisao_v3.{json,md}: a mesma conta da sessão de 05/11,
+# com o título, a planilha, a fonte, o prefixo dos blocos e a nota passados como parâmetro a resumir_revisao, render_revisao e fechar_revisao.
+# ! Motivo: a medida com revisor humano da especificação da trilha (seção 12 c) ficou em aberto na Fase 4 (decisões 87 e 95) e foi refeita na Pós-Fase 4 com os relatórios
+# no formato novo; a conta não muda, só a origem dos dados.
+# ! Alteração de IA - Revisar: (10/11/2026) a leitura passou a separar quem respondeu: ORIGEM_ANALISTA (a linha sem tempo medido é a resposta de um analista, colada pelo
+# Eric), ROTULO_ORIGEM_V3, `resumo_da_pagina` (o que o registro da página diz de como as respostas entraram) e `nota_da_revisao_v3` (montada do dado, no lugar da
+# constante que dizia "um revisor só, o autor do trabalho").
+# ! Motivo: a leitura de 10/11/2026 registrou as 36 respostas como do Eric, com 31 s de mediana até a decisão; no mesmo dia ele declarou que passou os relatórios a um
+# analista e colou o que ele respondeu, e o registro da página confirma (comentário de centenas de caracteres salvo segundos depois da decisão): o tempo medido era o da
+# troca entre os dois, e a leitura dava como medida de um revisor o que não era de quem dizia nem do que dizia.
+NOME_REVISAO_V3, PREFIXO_REVISAO_V3 = "leitura_revisao_v3", "tb_f4_revisao_v3_"
+TITULO_REVISAO_V3 = "Sessão de revisão dos relatórios v3 e das árvores de decisão (corrida 24, Pós-Fase 4)"
+ORIGEM_ANALISTA = "analista"
+ROTULO_ORIGEM_V3 = {"revisor": "resposta do Eric, lendo na página", ORIGEM_ANALISTA: "resposta de um analista, digitada ou colada pelo Eric"}
+ARQ_RESPOSTAS_V3 = "sessao_revisao_v3/respostas.json"   # o registro da página: uma resposta por relatório, com as horas e o tempo que ela mediu
+# ! Alteração de IA - Revisar: (10/11/2026, decisão 117) ARQ_QUEM_LEU_V3, `_o_que_foi_declarado` e o caso de um leitor só em `nota_da_revisao_v3`; o rótulo da
+# origem "analista" passou a dizer "digitada ou colada".
+# ! Motivo: o Eric declarou no quadro (ficha 62) que quem leu é um analista de QA da empresa, que não participou do projeto nem conhecia o agente, e que as 36
+# respostas são dele, inclusive a do relatório 2, que foi digitada na página e por isso tinha ficado como do Eric. A nota dizia "dois leitores" e que quem leu
+# não estava registrado. A declaração fica num arquivo ao lado do registro da página, e a leitura a carrega: o que não foi declarado (ferramenta usada, o que ele
+# recebeu para ler) sai escrito como não declarado.
+ARQ_QUEM_LEU_V3 = "sessao_revisao_v3/quem_leu.json"     # a declaração do Eric sobre quem leu: quem é, a relação com o projeto e o que ficou sem declarar
 
 
-def ler_planilha_de_revisao(texto: str) -> dict:
-    """As linhas preenchidas da planilha, com os números já convertidos, e os casos ainda em branco; uma célula fora do que a planilha aceita levanta ValueError."""
+def resumo_da_pagina(respostas: list[dict]) -> dict | None:
+    """O que o registro da página diz de como as respostas entraram: o intervalo entre abrir um relatório e abrir o seguinte, quanto tempo passou da decisão ao
+    salvamento, o tamanho do comentário, quantos comentários entraram mais depressa do que se digita (acima de 10 caracteres por segundo), as respostas trocadas
+    depois de salvas e o tempo que a página mediu em cada relatório. None quando o registro não traz as horas."""
+    com_hora = sorted((x for x in respostas if x.get("aberto_em") and x.get("decidido_em") and x.get("salvo_em")), key=lambda x: x["aberto_em"])
+    if not com_hora:
+        return None
+
+    def hora(iso: str) -> datetime:
+        return datetime.fromisoformat(iso)
+
+    intervalos = [(hora(b["aberto_em"]) - hora(a["aberto_em"])).total_seconds() for a, b in itertools.pairwise(com_hora)]
+    fichas = [(hora(x["salvo_em"]) - hora(x["decidido_em"])).total_seconds() for x in com_hora]
+    chars = [len(x.get("comentario") or "") for x in com_hora]
+    # a resposta trocada depois de salva tem o comentário de outra hora: a velocidade só é medida nas que ficaram como foram salvas
+    medidos = [(c, f) for x, c, f in zip(com_hora, chars, fichas) if not x.get("editado_em")]
+    return {"respostas": len(com_hora), "primeira_abertura": com_hora[0]["aberto_em"], "ultimo_salvamento": max(x["salvo_em"] for x in com_hora),
+            "intervalo_entre_relatorios_mediana_s": round(statistics.median(intervalos)) if intervalos else None,
+            "decisao_ao_salvamento_mediana_s": round(statistics.median(fichas)), "comentario_mediana_chars": round(statistics.median(chars)),
+            "comentarios_medidos": len(medidos), "comentarios_acima_de_10_chars_por_s": sum(1 for c, f in medidos if f > 0 and c / f > 10),
+            "editadas_depois": sorted(x["posicao"] for x in com_hora if x.get("editado_em")),
+            "segundos_na_pagina": {str(x["posicao"]): x.get("segundos") for x in sorted(com_hora, key=lambda x: x["posicao"])}}
+
+
+def _o_que_foi_declarado(quem_leu: dict | None, nomeado: bool = False) -> str:
+    """A frase sobre quem é o analista: a declaração gravada em quem_leu.json ou, sem ela, o que falta declarar. Com `nomeado`, a frase anterior já disse quem ele é."""
+    if not quem_leu:
+        return ("Pela declaração do Eric em 10/11/2026, o analista é uma pessoa; quem é, o que conhecia do agente, o que recebeu para ler e se usou alguma ferramenta para ler ou "
+                "redigir não está registrado.")
+    data = "/".join(reversed(quem_leu["declarado_em"][:10].split("-")))
+    ferramenta, recebeu = quem_leu.get("ferramenta_de_ia"), quem_leu.get("o_que_recebeu")
+    return (f"Pela declaração do Eric em {data}, " + ("ele " if nomeado else f"o analista é {quem_leu['quem']} e ") + f"{quem_leu['relacao_com_o_projeto']}; "
+            + (f"sobre ferramenta para ler ou redigir, o declarado é: {ferramenta}" if ferramenta else "se usou alguma ferramenta para ler ou redigir não foi declarado") + "; "
+            + (f"para ler, recebeu {recebeu}" if recebeu else "o que recebeu para ler não foi declarado") + ".")
+
+
+def nota_da_revisao_v3(dado: dict) -> str:
+    """A nota de quem leu, montada do dado: quantos relatórios o Eric respondeu na página e quantos vieram de um analista, quem é o analista pela declaração gravada
+    (`quem_leu`) ou o que falta declarar, o que vale e o que não vale do tempo, o que o registro da página mostra e a composição da amostra."""
+    r = dado["resumo"]
+    n = r["relatorios"]
+    do_eric = sorted(c["posicao"] for c in dado["casos"] if c["origem"] == "revisor")
+    do_analista = sorted(c["posicao"] for c in dado["casos"] if c["origem"] == ORIGEM_ANALISTA)
+    quem_leu = dado.get("quem_leu")
+    so_o_analista = bool(do_analista) and not do_eric
+    partes = []
+    if do_analista:
+        if so_o_analista:
+            partes.append(f"Um leitor só, que não é o autor do trabalho: os {n} relatórios foram respondidos por {quem_leu['quem'] if quem_leu else 'um analista'}. O Eric passou cada "
+                          "relatório a ele, ele devolveu a decisão, a avaliação, o erro localizado, a utilidade e o comentário, e o Eric digitou ou colou a resposta na página. "
+                          + _o_que_foi_declarado(quem_leu, nomeado=bool(quem_leu)))
+        else:
+            quais = (", na posição " if len(do_eric) == 1 else ", nas posições ") + ", ".join(str(p) for p in do_eric) + " da planilha,"
+            partes.append(f"Dois leitores. {len(do_eric)} dos {n} relatórios{quais} {'foi respondido' if len(do_eric) == 1 else 'foram respondidos'} pelo Eric, o autor do trabalho, "
+                          f"lendo na página da sessão, com o tempo medido por ela. Nos outros {len(do_analista)}, o Eric passou o relatório a um analista, que devolveu a decisão, a "
+                          "avaliação, o erro localizado, a utilidade e o comentário, e o Eric colou a resposta na página. " + _o_que_foi_declarado(quem_leu))
+        tempo = (f"Nesses {len(do_analista)} relatórios o tempo entra como não medido: o que a página mediu foi a troca entre os dois, não uma leitura com o relatório à vista.")
+        pg = dado.get("pagina")
+        if pg:
+            tempo += (f" Pelo registro da página (`{ARQ_RESPOSTAS_V3}`), entre abrir um relatório e abrir o seguinte passaram {pg['intervalo_entre_relatorios_mediana_s']} s na mediana, "
+                      f"e o comentário, com {pg['comentario_mediana_chars']} caracteres na mediana, foi salvo {pg['decisao_ao_salvamento_mediana_s']} s depois da decisão: em "
+                      f"{pg['comentarios_acima_de_10_chars_por_s']} dos {pg['comentarios_medidos']} relatórios cuja resposta não foi trocada depois, ele entrou a mais de 10 caracteres por "
+                      "segundo, isto é, chegou pronto e foi colado.")
+            devagar = pg["comentarios_medidos"] - pg["comentarios_acima_de_10_chars_por_s"]
+            if so_o_analista and quem_leu and devagar:
+                tempo += (" No outro, o comentário entrou mais devagar que isso, no ritmo de quem digita; pela declaração do Eric, essa resposta também é do analista."
+                          if devagar == 1 else
+                          f" Nos outros {devagar}, o comentário entrou mais devagar que isso, no ritmo de quem digita; pela declaração do Eric, essas respostas também são do analista.")
+            for p in pg["editadas_depois"]:
+                if p in do_analista:
+                    antes = "antes da troca" if so_o_analista else "numa primeira leitura do Eric"
+                    tempo += (f" A resposta do relatório {p} foi trocada depois de salva: a página tinha medido {pg['segundos_na_pagina'].get(str(p))} s {antes}, e a resposta que "
+                              "ficou é a do analista.")
+        partes.append(tempo)
+        partes.append("A separação por quem respondeu entrou nesta leitura em 10/11/2026, depois de as respostas estarem na planilha; a conta da adesão, da localização e da "
+                      "utilidade não mudou.")
+    else:
+        partes.append(f"Os {n} relatórios foram respondidos na página da sessão (um relatório por vez, com cronômetro) por quem os leu, e o tempo até a decisão é o que a página "
+                      "mediu, do relatório aberto à decisão, descontadas as pausas.")
+    o_que_leu = ("A página da sessão mostra, a cada relatório, o relatório v3 e a árvore de decisão do caso" if so_o_analista else
+                 "Cada leitor recebeu o relatório v3 e a árvore de decisão do caso")
+    partes.append(f"A amostra traz {r['erros_na_amostra']} dos {r['erros_na_corrida']} erros da corrida e {r['acertos_na_amostra']} dos {r['acertos_na_corrida']} acertos. {o_que_leu}"
+                  ", com o nome do caso trocado por relatorio-N e a classe e o nível omitidos (dizem a família do defeito). "
+                  "Erro localizado é o que o leitor declarou: num diagnóstico errado, achar um erro é ter encontrado o erro do agente no relatório; num diagnóstico certo, é ter "
+                  "apontado um erro onde não há.")
+    return " ".join(partes)
+
+
+def ler_planilha_de_revisao(texto: str, origem_sem_tempo: str = "parecer_aprovado") -> dict:
+    """As linhas preenchidas da planilha, com os números já convertidos, e os casos ainda em branco; uma célula fora do que a planilha aceita levanta ValueError.
+    A linha com o tempo "não medido" leva a origem `origem_sem_tempo`: o parecer do Claude aprovado, na sessão de 05/11, ou a resposta de um analista, na de 09 e 10/11."""
     import biblioteca_fase4 as bf
     linhas, em_branco = [], []
     for linha in texto.splitlines():
@@ -1467,7 +1596,7 @@ def ler_planilha_de_revisao(texto: str) -> dict:
         if ((not tempo.isdigit() and tempo != TEMPO_NAO_MEDIDO) or not utilidade.isdigit() or not 1 <= int(utilidade) <= 5 or erro not in ("sim", "não", "n.a.")
                 or decisao not in ("aceitar", "recusar") or avaliacao not in ("certo", "errado")):
             raise ValueError(f"linha de {caso} com valor que a planilha não aceita: {c[4:9]}")
-        linhas.append({"posicao": int(c[0]), "caso": caso, "origem": "revisor" if tempo.isdigit() else "parecer_aprovado", "segundos": int(tempo) if tempo.isdigit() else None, "erro_localizado": erro, "decisao": decisao, "utilidade": int(utilidade), "avaliacao": avaliacao,
+        linhas.append({"posicao": int(c[0]), "caso": caso, "origem": "revisor" if tempo.isdigit() else origem_sem_tempo, "segundos": int(tempo) if tempo.isdigit() else None, "erro_localizado": erro, "decisao": decisao, "utilidade": int(utilidade), "avaliacao": avaliacao,
                        "comentario": c[9] if len(c) > 9 else ""})
     return {"linhas": linhas, "em_branco": em_branco}
 
@@ -1483,7 +1612,8 @@ def ler_pre_analise(texto: str) -> dict[int, dict]:
     return parecer
 
 
-def resumir_revisao(trilha_: dict, linhas: list[dict], gerado_em: str | None = None, corrida: str | None = None, parecer: dict[int, dict] | None = None) -> dict:
+def resumir_revisao(trilha_: dict, linhas: list[dict], gerado_em: str | None = None, corrida: str | None = None, parecer: dict[int, dict] | None = None,
+                    planilha_nome: str = "revisao_trilha.md", contar_analista: bool = False) -> dict:
     """Junta as respostas da planilha ao acerto de cada caso em trilha.json. Apropriada é aceitar o diagnóstico certo ou recusar o errado; num diagnóstico errado, erro localizado
     "sim" é ter achado o erro do agente no relatório, e num diagnóstico certo é ter apontado um erro onde não há. `origem` separa a resposta do revisor do parecer do Claude aprovado,
     e `parecer`, quando há, é conferido sozinho contra o gabarito nos relatórios todos."""
@@ -1545,11 +1675,12 @@ def resumir_revisao(trilha_: dict, linhas: list[dict], gerado_em: str | None = N
     bate = sum(1 for c in casos if c["avaliacao_bate"])
     todos_adesao = adesao("todos", casos)
     erros_corrida = sum(1 for c in trilha_["casos"] if not c["acerto"])
-    return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida, "gerado_por": "avaliar_fase4.py --revisao", "planilha": "revisao_trilha.md"},
-            "resumo": {"relatorios": len(casos), "respostas_do_revisor": sum(1 for c in casos if c["origem"] == "revisor"), "pareceres_aprovados": sum(1 for c in casos if c["origem"] == "parecer_aprovado"), "acertos_na_amostra": len(certos), "erros_na_amostra": len(errados), "acertos_na_corrida": len(trilha_["casos"]) - erros_corrida, "erros_na_corrida": erros_corrida,
+    do_analista = {"respostas_do_analista": sum(1 for c in casos if c["origem"] == ORIGEM_ANALISTA)} if contar_analista else {}
+    return {"metadados": {"gerado_em": gerado_em or datetime.now().isoformat(timespec="seconds"), "corrida": corrida, "gerado_por": "avaliar_fase4.py --revisao", "planilha": planilha_nome},
+            "resumo": {"relatorios": len(casos), "respostas_do_revisor": sum(1 for c in casos if c["origem"] == "revisor"), "pareceres_aprovados": sum(1 for c in casos if c["origem"] == "parecer_aprovado"), **do_analista, "acertos_na_amostra": len(certos), "erros_na_amostra": len(errados), "acertos_na_corrida": len(trilha_["casos"]) - erros_corrida, "erros_na_corrida": erros_corrida,
                        "adesao_apropriada": todos_adesao["apropriadas"], "adesao_pct": todos_adesao["pct"], "adesao_ic": todos_adesao["ic"], "tempo_mediana_s": tempo("todos", casos)["mediana"],
                        "erros_localizados": sum(1 for c in errados if c["erro_localizado"] == "sim"), "utilidade_mediana": utilidade("todos", casos)["mediana"]},
-            "por_origem": [por_origem(o) for o in ROTULO_ORIGEM if any(c["origem"] == o for c in casos)], "parecer": bloco_parecer,
+            "por_origem": [por_origem(o) for o in (*ROTULO_ORIGEM, ORIGEM_ANALISTA) if any(c["origem"] == o for c in casos)], "parecer": bloco_parecer,
             "duvidas_de_leitura": [c["caso"] for c in casos if c["erro_localizado"] == "sim" and c["avaliacao"] == "certo"],
             "adesao": [adesao("diagnóstico certo", certos), adesao("diagnóstico errado", errados), todos_adesao],
             "localizacao": [localizacao("diagnóstico errado", errados), localizacao("diagnóstico certo", certos)],
@@ -1561,8 +1692,11 @@ def resumir_revisao(trilha_: dict, linhas: list[dict], gerado_em: str | None = N
             "casos": casos}
 
 
-def render_revisao(dado: dict) -> str:
+def render_revisao(dado: dict, titulo: str = TITULO_REVISAO, origem: str = "revisao_trilha.md preenchida e trilha.json", prefixo: str = PREFIXO_REVISAO,
+                   nota=None, rotulos: dict[str, str] | None = None) -> str:
     r, a = dado["resumo"], dado["avaliacao"]
+    rot = rotulos or ROTULO_ORIGEM
+    por_origem_n = {x["origem"]: x["n"] for x in dado["por_origem"]}
 
     def wilson_(ic) -> str:
         return "n/d" if not ic else f"{_n(float(ic[0]))} a {_n(float(ic[1]))}"
@@ -1571,36 +1705,40 @@ def render_revisao(dado: dict) -> str:
         return "n/d" if v is None else _n(float(v))
 
     blocos = [
-        a3b.tab("tb_f4_revisao_resumo", ["Relatórios", "Com resposta do revisor", "Com parecer aprovado", "Diagnósticos certos", "Diagnósticos errados", "Adesão apropriada", "Adesão (%)", "Wilson 95%", "Tempo mediano (s)", "Erros achados", "Utilidade mediana"],
-                [[str(r["relatorios"]), str(r["respostas_do_revisor"]), str(r["pareceres_aprovados"]), str(r["acertos_na_amostra"]), str(r["erros_na_amostra"]), str(r["adesao_apropriada"]), pct(r["adesao_pct"]), wilson_(r["adesao_ic"]), _n(r["tempo_mediana_s"]),
+        a3b.tab(f"{prefixo}resumo", ["Relatórios"] + ([f"Com {rot[o]}" for o in rot] if rotulos else ["Com resposta do revisor", "Com parecer aprovado"])
+                + ["Diagnósticos certos", "Diagnósticos errados", "Adesão apropriada", "Adesão (%)", "Wilson 95%", "Tempo mediano (s)", "Erros achados", "Utilidade mediana"],
+                [[str(r["relatorios"])] + ([str(por_origem_n.get(o, 0)) for o in rot] if rotulos else [str(r["respostas_do_revisor"]), str(r["pareceres_aprovados"])]) + [str(r["acertos_na_amostra"]), str(r["erros_na_amostra"]), str(r["adesao_apropriada"]), pct(r["adesao_pct"]), wilson_(r["adesao_ic"]), _n(r["tempo_mediana_s"]),
                   f"{r['erros_localizados']} de {r['erros_na_amostra']}", _n(r["utilidade_mediana"])]]),
-        a3b.tab("tb_f4_revisao_origem", ["Quem decidiu", "Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Avaliação igual ao gabarito"],
-                [[ROTULO_ORIGEM[x["origem"]], str(x["n"]), str(x["apropriadas"]), pct(x["pct"]), wilson_(x["ic"]), str(x["avaliacao_bate"])] for x in dado["por_origem"]]),
-        a3b.tab("tb_f4_revisao_adesao", ["Grupo", "Relatórios", "Aceitou", "Recusou", "Apropriadas", "Apropriadas (%)", "Wilson 95%"],
+        a3b.tab(f"{prefixo}origem", ["Quem decidiu", "Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Avaliação igual ao gabarito"],
+                [[rot[x["origem"]], str(x["n"]), str(x["apropriadas"]), pct(x["pct"]), wilson_(x["ic"]), str(x["avaliacao_bate"])] for x in dado["por_origem"]]),
+        a3b.tab(f"{prefixo}adesao", ["Grupo", "Relatórios", "Aceitou", "Recusou", "Apropriadas", "Apropriadas (%)", "Wilson 95%"],
                 [[x["grupo"], str(x["n"]), str(x["aceitou"]), str(x["recusou"]), str(x["apropriadas"]), pct(x["pct"]), wilson_(x["ic"])] for x in dado["adesao"]]),
-        a3b.tab("tb_f4_revisao_localizacao", ["Grupo", "Relatórios", "Achou um erro", "Não achou", "Não viu erro", "Achou (%)", "Wilson 95%"],
+        a3b.tab(f"{prefixo}localizacao", ["Grupo", "Relatórios", "Achou um erro", "Não achou", "Não viu erro", "Achou (%)", "Wilson 95%"],
                 [[x["grupo"], str(x["n"]), str(x["sim"]), str(x["nao"]), str(x["na"]), pct(x["pct_sim"]), wilson_(x["ic"])] for x in dado["localizacao"]]),
-        a3b.tab("tb_f4_revisao_tempo", ["Grupo", "Relatórios", "Mediana (s)", "Mínimo (s)", "Máximo (s)"],
+        a3b.tab(f"{prefixo}tempo", ["Grupo", "Relatórios", "Mediana (s)", "Mínimo (s)", "Máximo (s)"],
                 [[x["grupo"], str(x["n"]), _n(x["mediana"]), _n(x["minimo"]), _n(x["maximo"])] for x in dado["tempo"]]),
-        a3b.tab("tb_f4_revisao_utilidade", ["Grupo", "Relatórios", "Mediana", "1", "2", "3", "4", "5"],
+        a3b.tab(f"{prefixo}utilidade", ["Grupo", "Relatórios", "Mediana", "1", "2", "3", "4", "5"],
                 [[x["grupo"], str(x["n"]), _n(x["mediana"])] + [str(x["contagem"][str(v)]) for v in range(1, 6)] for x in dado["utilidade"]]),
-        a3b.tab("tb_f4_revisao_avaliacao", ["Diagnóstico", "Revisor disse certo", "Revisor disse errado"],
+        a3b.tab(f"{prefixo}avaliacao", ["Diagnóstico", "Revisor disse certo", "Revisor disse errado"],
                 [["certo", str(a["certo_disse_certo"]), str(a["certo_disse_errado"])], ["errado", str(a["errado_disse_certo"]), str(a["errado_disse_errado"])]]),
-        a3b.tab("tb_f4_revisao_casos", ["#", "Caso", "Gabarito", "Rótulo", "Resultado", "Selo", "Quem decidiu", "Tempo (s)", "Erro localizado", "Decisão", "Apropriada", "Utilidade", "Avaliação", "Causa no parecer do Claude", "Comentário"],
-                [[str(c["posicao"]), f"`{c['caso']}`", f"`{c['gabarito']}`", f"`{c['rotulo']}`", "certo" if c["acerto"] else "errado", _n(c["selo"]), ROTULO_ORIGEM[c["origem"]], _n(c["segundos"]), c["erro_localizado"], c["decisao"],
-                  _sim(c["apropriada"]), str(c["utilidade"]), c["avaliacao"], f"`{c['parecer']['causa_dada']}`" if c.get("parecer") else "n/d", c["comentario"]] for c in dado["casos"]] or [["nenhum"] + [""] * 14]),
+        # a coluna da causa no parecer do Claude só existe na sessão de 05/11; na leitura com rótulos próprios (a de 09 e 10/11) ela sai
+        a3b.tab(f"{prefixo}casos", ["#", "Caso", "Gabarito", "Rótulo", "Resultado", "Selo", "Quem decidiu", "Tempo (s)", "Erro localizado", "Decisão", "Apropriada", "Utilidade", "Avaliação"]
+                + ([] if rotulos else ["Causa no parecer do Claude"]) + ["Comentário"],
+                [[str(c["posicao"]), f"`{c['caso']}`", f"`{c['gabarito']}`", f"`{c['rotulo']}`", "certo" if c["acerto"] else "errado", _n(c["selo"]), rot[c["origem"]], _n(c["segundos"]), c["erro_localizado"], c["decisao"],
+                  _sim(c["apropriada"]), str(c["utilidade"]), c["avaliacao"]] + ([] if rotulos else [f"`{c['parecer']['causa_dada']}`" if c.get("parecer") else "n/d"]) + [c["comentario"]]
+                 for c in dado["casos"]] or [["nenhum"] + [""] * (13 if rotulos else 14)]),
     ]
     pa = dado.get("parecer")
     if pa:
-        blocos.insert(2, a3b.tab("tb_f4_revisao_parecer", ["Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Causa certa", "Causa certa (%)", "Avaliação igual ao gabarito", "Errou a decisão", "Errou a causa"],
+        blocos.insert(2, a3b.tab(f"{prefixo}parecer", ["Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Causa certa", "Causa certa (%)", "Avaliação igual ao gabarito", "Errou a decisão", "Errou a causa"],
                                  [[str(pa["n"]), str(pa["apropriadas"]), pct(pa["pct"]), wilson_(pa["ic"]), str(pa["causa_certa"]), pct(pa["pct_causa"]), str(pa["avaliacao_bate"]),
                                    ", ".join(f"`{x}`" for x in pa["errou_a_decisao"]) or "nenhum", ", ".join(f"`{x}`" for x in pa["errou_a_causa"]) or "nenhum"]]))
-    cab = pf.cabecalho(TITULO_REVISAO, "avaliar_fase4.py", "revisao_trilha.md preenchida e trilha.json", dado["metadados"]["gerado_em"][:10])
+    cab = pf.cabecalho(titulo, "avaliar_fase4.py", origem, dado["metadados"]["gerado_em"][:10])
     cab += ["", ("Especificação da trilha, seção 12 c: com um revisor humano, o acerto da localização do erro, o tempo até a decisão e a adesão apropriada (aceitar o diagnóstico quando está certo e "
                  "recusar quando está errado), com a utilidade percebida como medida secundária. A conta foi escrita e testada antes de abrir o gabarito, e a planilha foi preenchida sem ver o resultado de cada caso."), "",
-            (f"Um revisor só, o autor do trabalho, que conhece o banco de casos. A amostra traz {r['erros_na_amostra']} dos {r['erros_na_corrida']} erros da corrida e {r['acertos_na_amostra']} dos "
+            ((nota(dado) if callable(nota) else nota.format(**r)) if nota else (f"Um revisor só, o autor do trabalho, que conhece o banco de casos. A amostra traz {r['erros_na_amostra']} dos {r['erros_na_corrida']} erros da corrida e {r['acertos_na_amostra']} dos "
              f"{r['acertos_na_corrida']} acertos, e o revisor sabia disso, então a proporção de errados nela não é a da corrida. Erro localizado é o que o revisor declarou: num diagnóstico errado, achar um "
-             "erro é ter encontrado o erro do agente no relatório; num diagnóstico certo, é ter apontado um erro onde não há. O tempo conta só com o relatório à vista."), ""]
+             "erro é ter encontrado o erro do agente no relatório; num diagnóstico certo, é ter apontado um erro onde não há. O tempo conta só com o relatório à vista.")), ""]
     if r["pareceres_aprovados"]:
         verbo = "tem" if r["respostas_do_revisor"] == 1 else "têm"
         cab += [(f"Só {r['respostas_do_revisor']} dos {r['relatorios']} relatórios {verbo} resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros {r['pareceres_aprovados']} são o parecer do Claude, "
@@ -1611,26 +1749,38 @@ def render_revisao(dado: dict) -> str:
         cab += [("Em " + ", ".join(f"`{x}`" for x in dado["duvidas_de_leitura"]) + ", o revisor marcou que achou o erro num diagnóstico que avaliou como certo. Ele pode ter lido \"erro\" como o defeito do sistema, e não como o erro do agente; "
                  "a conta de localização trata isso como apontar um erro onde não há, e a resposta fica como ele deu."), ""]
     cab += [
-            (("Somando a resposta do revisor e o parecer aprovado, a planilha avalia " if r["pareceres_aprovados"] else "O revisor avaliou ") + f"{a['acertos']} de {a['n']} diagnósticos como o gabarito ({pct(a['pct'])}%, Wilson 95% {wilson_(a['ic'])}). Decisão e avaliação discordam em "
+            (("Somando a resposta do revisor e o parecer aprovado, a planilha avalia " if r["pareceres_aprovados"] else
+              "Somando as respostas do Eric e as do analista, a planilha avalia " if r.get("respostas_do_analista") else "O revisor avaliou ") + f"{a['acertos']} de {a['n']} diagnósticos como o gabarito ({pct(a['pct'])}%, Wilson 95% {wilson_(a['ic'])}). Decisão e avaliação discordam em "
              f"{len(a['decisao_e_avaliacao_discordam'])} relatório(s)" + (": " + ", ".join(f"`{x}`" for x in a["decisao_e_avaliacao_discordam"]) + "." if a["decisao_e_avaliacao_discordam"] else ".")), ""]
     return "\n".join(cab) + "\n\n" + "\n\n".join(blocos) + "\n"
 
 
-def fechar_revisao(pasta: Path, nome: str = NOME_REVISAO, check: bool = False, colar: bool = False, doc: Path = RELATORIO) -> int:
-    """Lê a planilha e trilha.json da pasta e grava (ou confere) a leitura; devolve 2, sem gravar e sem mostrar resultado nenhum, enquanto houver relatório em branco."""
-    planilha, arq_trilha = pasta / f"revisao_{NOME_TRILHA}.md", pasta / f"{NOME_TRILHA}.json"
-    if not planilha.exists() or not arq_trilha.exists():
-        print(f"falta {planilha.name} ou {arq_trilha.name} em {pasta}")
+def fechar_revisao(pasta: Path, nome: str = NOME_REVISAO, check: bool = False, colar: bool = False, doc: Path = RELATORIO, planilha: str | None = None,
+                   fonte: str | None = None, titulo: str = TITULO_REVISAO, prefixo: str = PREFIXO_REVISAO, nota=None, origem_sem_tempo: str = "parecer_aprovado",
+                   rotulos: dict[str, str] | None = None, respostas_da_pagina: str | None = None, quem_leu: str | None = None) -> int:
+    """Lê a planilha e a fonte do acerto de cada caso (trilha.json na sessão de 05/11; ineditos.json na sessão por cartões) e grava (ou confere) a leitura;
+    devolve 2, sem gravar e sem mostrar resultado nenhum, enquanto houver relatório em branco. A pré-análise do Claude só entra na sessão de 05/11."""
+    planilha_, arq_fonte = pasta / (planilha or f"revisao_{NOME_TRILHA}.md"), pasta / (fonte or f"{NOME_TRILHA}.json")
+    if not planilha_.exists() or not arq_fonte.exists():
+        print(f"falta {planilha_.name} ou {arq_fonte.name} em {pasta}")
         return 2
-    lida = ler_planilha_de_revisao(planilha.read_text(encoding="utf-8"))
+    lida = ler_planilha_de_revisao(planilha_.read_text(encoding="utf-8"), origem_sem_tempo=origem_sem_tempo)
     if lida["em_branco"]:
-        print(f"{planilha.name} tem {len(lida['em_branco'])} de {len(lida['em_branco']) + len(lida['linhas'])} relatórios em branco; a leitura só sai com ela inteira, porque mostra o resultado de cada caso")
+        print(f"{planilha_.name} tem {len(lida['em_branco'])} de {len(lida['em_branco']) + len(lida['linhas'])} relatórios em branco; a leitura só sai com ela inteira, porque mostra o resultado de cada caso")
         return 2
-    trilha_ = json.loads(arq_trilha.read_text(encoding="utf-8"))
+    trilha_ = json.loads(arq_fonte.read_text(encoding="utf-8"))
     arq_parecer = pasta / ARQ_PRE_ANALISE
-    parecer = ler_pre_analise(arq_parecer.read_text(encoding="utf-8")) if arq_parecer.exists() else None
-    dado = resumir_revisao(trilha_, lida["linhas"], corrida=(trilha_.get("metadados") or {}).get("corrida"), parecer=parecer)
-    return pf.fechar(nome, dado, render_revisao(dado), PREFIXO_REVISAO, check=check, colar=colar, pasta=pasta, doc=doc)
+    parecer = ler_pre_analise(arq_parecer.read_text(encoding="utf-8")) if planilha is None and arq_parecer.exists() else None
+    dado = resumir_revisao(trilha_, lida["linhas"], corrida=(trilha_.get("metadados") or {}).get("corrida"), parecer=parecer, planilha_nome=planilha_.name,
+                           contar_analista=origem_sem_tempo == ORIGEM_ANALISTA)
+    if respostas_da_pagina and (pasta / respostas_da_pagina).exists():
+        pagina_ = resumo_da_pagina(json.loads((pasta / respostas_da_pagina).read_text(encoding="utf-8")))
+        if pagina_:
+            dado["pagina"] = pagina_
+    if quem_leu and (pasta / quem_leu).exists():
+        dado["quem_leu"] = json.loads((pasta / quem_leu).read_text(encoding="utf-8"))
+    md = render_revisao(dado, titulo=titulo, origem=f"{planilha_.name} preenchida e {arq_fonte.name}", prefixo=prefixo, nota=nota, rotulos=rotulos)
+    return pf.fechar(nome, dado, md, prefixo, check=check, colar=colar, pasta=pasta, doc=doc)
 
 
 # ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) `LEITURA_NO_RELATORIO` diz de qual leitura são os blocos de cada prefixo que tem mais de uma, e `fechar_no_relatorio` aplica isso no --check e no --colar.
@@ -1659,7 +1809,7 @@ def nome_dos_arquivos(pedido: str | None, modo: str) -> str:
     """O nome dos arquivos da leitura em resultados_alvo/fase4: o pedido por --nome ou o padrão do modo
     (reproducibilidade, calibracao, tela)."""
     padrao = {"reproducao": NOME, "calibracao": NOME_CALIBRACAO, "tela": NOME_TELA, "cura": NOME_CURA, "biblioteca": NOME_BIBLIOTECA,
-              "cenarios": NOME_CENARIOS, "trilha": NOME_TRILHA, "revisao": NOME_REVISAO}[modo]
+              "cenarios": NOME_CENARIOS, "trilha": NOME_TRILHA, "revisao": NOME_REVISAO, "revisao_v3": NOME_REVISAO_V3, "texto": "texto"}[modo]
     return pedido or padrao
 
 
@@ -1693,8 +1843,23 @@ def montar_parser() -> argparse.ArgumentParser:
     # ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) `--revisao` lê a planilha preenchida da sessão contra trilha.json.
     # ! Motivo: é a última medida da especificação da trilha (seção 12 c) e não sai de uma corrida, sai das respostas do revisor.
     ap.add_argument("--revisao", action="store_true", help="lê a sessão de revisão: a planilha revisao_trilha.md preenchida contra o acerto de cada caso em trilha.json")
+    # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q5) `--revisao_v3` lê a planilha da sessão por cartões (revisao_v3.md) contra ineditos.json.
+    # ! Motivo: ficha 40, opção (b): a sessão com revisor humano foi feita com os relatórios v3 e as árvores da corrida 24; a leitura é a mesma conta da de 05/11.
+    ap.add_argument("--revisao_v3", action="store_true", help="lê a sessão de revisão por cartões (Pós-Fase 4, Q5): a planilha revisao_v3.md preenchida contra o acerto de cada caso em ineditos.json")
     ap.add_argument("--experimento_prompt", action="store_true", help="avalia a corrida 23 (os itens da decisão 55, em texto, contra a corrida 16)")
     ap.add_argument("--ineditos", action="store_true", help="avalia a corrida 24 (os 36 inéditos da ficha 27 lidos pelo modelo)")
+    ap.add_argument("--sem_notas", action="store_true", help="avalia a corrida 25 (a biblioteca de produção sem as notas do modelo, contra as corridas 22 e 24)")
+    # ! Alteração de IA - Revisar: (10/11/2026, ficha 66 opção b, decisão 120) `--segundo_passe`: a leitura da corrida 26, escrita em experimento_segundo_passe.py.
+    # ! Motivo: o `rodar_fase4.ps1` chama a leitura pelo nome do modo; sem a opção, a corrida terminaria sem gravar `segundo_passe.{json,md}`.
+    ap.add_argument("--segundo_passe", action="store_true", help="avalia a corrida 26 (o segundo passe do diagnóstico nos casos com sinal das corridas 22 e 24)")
+    # ! Alteração de IA - Revisar: (11/11/2026, ficha 67 opção b, decisão 121) `--analista`: a leitura da corrida 27, escrita em experimento_analista.py.
+    # ! Motivo: o `rodar_fase4.ps1` chama a leitura pelo nome do modo; sem a opção, a corrida terminaria sem gravar `analista.{json,md}`.
+    ap.add_argument("--analista", action="store_true", help="avalia a corrida 27 (o analista de documentação com a ficha curta do caso, contra a corrida 20)")
+    # ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) `--texto`: a leitura antes e depois dos textos que chegam ao analista, escrita em filtros_de_texto.py.
+    # ! Motivo: o plano aprovado (seção 3.3) pede a leitura gravada por `avaliar_fase4.py --texto` em texto.{json,md}, com --check, como as outras leituras da fase; os
+    # limiares vêm de limiares_texto.json (filtros_de_texto.py --calibrar), e ainda não há relatório da Pós-Fase 4 para colar os blocos (é o pacote Q8).
+    ap.add_argument("--texto", action="store_true", help="lê os textos que chegam ao analista (Pós-Fase 4, Q2): relatórios v2 contra v3 das corridas vigentes e verbetes contra "
+                                                         "a camada de leitura, pelos filtros de filtros_de_texto.py e os limiares de limiares_texto.json")
     ap.add_argument("--saida", default="fase4_reproducao")
     # ! Alteração de IA - Revisar: (01/11/2026, ficha 37) `--nome` sem padrão fixo: cada modo tem o seu (reproducibilidade,
     # tela) e `--tela --nome tela_v2` grava a leitura da repetição da corrida 18 sem regravar `tela.{json,md}`.
@@ -1712,9 +1877,15 @@ def main() -> int:
     ap = montar_parser()
     args = ap.parse_args()
     print(caminhos.descricao())
-    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca", "cenarios", "trilha", "revisao", "experimento_prompt", "ineditos") if getattr(args, m)]
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) `segundo_passe` entra na lista das leituras e na mensagem de uso.
+    # ! Motivo: a leitura da corrida 26 é uma opção nova do avaliador, e a lista é o que garante que só uma leitura é pedida por vez.
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) `analista` entra na lista das leituras e na mensagem de uso.
+    # ! Motivo: a leitura da corrida 27 é uma opção nova do avaliador, e a lista é o que garante que só uma leitura é pedida por vez.
+    modos = [m for m in ("reproducao", "calibracao", "tela", "pontes", "cura", "biblioteca", "cenarios", "trilha", "revisao", "revisao_v3", "experimento_prompt", "ineditos", "sem_notas",
+                         "segundo_passe", "analista", "texto") if getattr(args, m)]
     if len(modos) != 1:
-        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca, --cenarios, --trilha, --revisao, --experimento_prompt, --ineditos ou --pontes")
+        ap.error("informe um de --reproducao, --calibracao, --tela, --cura, --biblioteca, --cenarios, --trilha, --revisao, --revisao_v3, --experimento_prompt, --ineditos, --sem_notas, "
+                 "--segundo_passe, --analista, --texto ou --pontes")
     pasta = Path(args.pasta) if args.pasta else pasta_fase4()
     oficial = pasta.resolve() == pasta_fase4().resolve()
 
@@ -1742,6 +1913,70 @@ def main() -> int:
             return pf.fechar(args.nome or ct.NOME_EXPERIMENTO, dado, ct.render_experimento(dado), ct.PREFIXO_EXPERIMENTO, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
         dado = ct.resumir_ineditos(bruto["registros"], bruto["linhas"], bruto["casos"], bruto["condicoes"], referencia=bruto["referencia"], corrida=args.saida, lado_escrito=bruto["lado_escrito"])
         return pf.fechar(args.nome or ct.NOME_INEDITOS, dado, ct.render_ineditos(dado), ct.PREFIXO_INEDITOS, check=args.check, colar=args.colar, pasta=pasta, doc=RELATORIO)
+    # ! Alteração de IA - Revisar: (10/11/2026, ficha 63 opção b, decisão 116) a leitura da corrida 25, escrita em experimento_sem_notas.py.
+    # ! Motivo: o .ps1 chama a leitura do modo pelo nome dele; a leitura pareia cada caso com a corrida 22 (oficiais) ou a 24 (inéditos) e aplica a regra do ruído
+    # fixada antes da corrida. O relatório da Pós-Fase 4 ainda não existe (pacote Q8), então os blocos ficam em sem_notas.md.
+    if args.sem_notas:
+        import experimento_sem_notas as esn
+        if args.colar:
+            ap.error("--colar: o relatório da Pós-Fase 4 ainda não existe (pacote Q8); os blocos tb_f4_semnotas_* ficam em sem_notas.md")
+        bruto = esn.ler(args.saida)
+        if not bruto["registros"]:
+            print(f"sem registros da corrida em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        dado = esn.resumir(bruto["registros"], bruto["linhas"], bruto["casos_por_banco"], bruto["referencias"], bruto["condicoes"], ponte=bruto["ponte"], corrida16=bruto["corrida16"],
+                           corrida=args.saida)
+        return pf.fechar(args.nome or esn.NOME, dado, esn.render(dado), esn.PREFIXO, check=args.check, pasta=pasta, doc=RELATORIO)
+    # ! Alteração de IA - Revisar: (10/11/2026, ficha 66 opção b, decisão 120) a leitura da corrida 26, escrita em experimento_segundo_passe.py.
+    # ! Motivo: a leitura compara a segunda resposta de cada caso com sinal com a primeira, que as corridas 22 e 24 gravaram, aplica a regra de escolha e a regra do ruído
+    # fixadas antes da corrida e grava `segundo_passe.{json,md}`. O relatório da Pós-Fase 4 ainda não existe (pacote Q8), então os blocos ficam no arquivo da leitura.
+    if args.segundo_passe:
+        import experimento_segundo_passe as sp
+        if args.colar:
+            ap.error("--colar: o relatório da Pós-Fase 4 ainda não existe (pacote Q8); os blocos tb_f4_segpasse_* ficam em segundo_passe.md")
+        bruto = sp.ler(args.saida)
+        if not bruto["registros"]:
+            print(f"sem registros da corrida em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        dado = sp.resumir(bruto["registros"], bruto["linhas"], bruto["casos_por_banco"], bruto["primeiras"], bruto["condicoes"], ponte=bruto["ponte"], corrida=args.saida)
+        return pf.fechar(args.nome or sp.NOME, dado, sp.render(dado), sp.PREFIXO, check=args.check, pasta=pasta, doc=RELATORIO)
+    # ! Alteração de IA - Revisar: (11/11/2026, ficha 67 opção b, decisão 121) a leitura da corrida 27, escrita em experimento_analista.py.
+    # ! Motivo: a leitura compara o que o analista de documentação respondeu nos 54 casos com as propostas da corrida 20 nos mesmos casos (a abstenção, a forma do texto e,
+    # quando a revisão humana às cegas estiver gravada na pasta da corrida, a parcela correta), pela regra fixada antes, e grava `analista.{json,md}`. É a mesma opção
+    # que se roda de novo depois da revisão. O relatório da Pós-Fase 4 ainda não existe (pacote Q8), então os blocos ficam no arquivo da leitura.
+    if args.analista:
+        import experimento_analista as ea
+        if args.colar:
+            ap.error("--colar: o relatório da Pós-Fase 4 ainda não existe (pacote Q8); os blocos tb_f4_analista_* ficam em analista.md")
+        bruto = ea.ler(args.saida)
+        if not bruto["registros"]:
+            print(f"sem registros da corrida em {caminhos.fase3(args.saida)['raiz']}")
+            return 2
+        if parcial_na_pasta_oficial(bruto["condicoes"]):
+            return 2
+        dado = ea.resumir(bruto["registros"], bruto["corrida20"], bruto["condicoes"], ponte=bruto["ponte"], corrida=args.saida, revisao=bruto["revisao"])
+        return pf.fechar(args.nome or ea.NOME, dado, ea.render(dado), ea.PREFIXO, check=args.check, pasta=pasta, doc=RELATORIO)
+    if args.texto:
+        import filtros_de_texto as ft
+        arq_lim = pasta / "limiares_texto.json"
+        if not arq_lim.exists():
+            print(f"sem {arq_lim.name} em {pasta}: calibre com python filtros_de_texto.py --calibrar")
+            return 2
+        if args.colar:
+            ap.error("--colar: o relatório da Pós-Fase 4 ainda não existe (pacote Q8); os blocos tb_f4_texto_* ficam em texto.md")
+        dado = ft.resumir_texto(ft.ler_textos(raiz=caminhos.RESULTADOS), ft.carregar_limiares(arq_lim))
+        return pf.fechar(nome_dos_arquivos(args.nome, "texto"), dado, ft.render_texto(dado), ft.PREFIXO, check=args.check, pasta=pasta, doc=RELATORIO)
+    if args.revisao_v3:
+        import revisao_v3 as rv
+        if args.colar:
+            ap.error("--colar: o relatório da Pós-Fase 4 ainda não existe (pacote Q8); os blocos tb_f4_revisao_v3_* ficam em leitura_revisao_v3.md")
+        return fechar_revisao(pasta, nome_dos_arquivos(args.nome, "revisao_v3"), check=args.check, planilha=rv.NOME_PLANILHA, fonte=rv.FONTE,
+                              titulo=TITULO_REVISAO_V3, prefixo=PREFIXO_REVISAO_V3, nota=nota_da_revisao_v3, origem_sem_tempo=ORIGEM_ANALISTA,
+                              rotulos=ROTULO_ORIGEM_V3, respostas_da_pagina=ARQ_RESPOSTAS_V3, quem_leu=ARQ_QUEM_LEU_V3)
     if args.revisao:
         return fechar_revisao(pasta, nome_dos_arquivos(args.nome, "revisao"), check=args.check, colar=args.colar)
     if args.trilha:

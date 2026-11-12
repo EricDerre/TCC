@@ -1,0 +1,469 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/sin-16@tela",
+ "nome": "sin-16@tela",
+ "caso": "sin-16",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 2,
+ "nivel": 1,
+ "eventos": {
+  "primeiro": 1414,
+  "ultimo": 1453,
+  "hash": "9c6de28ef5afb3cf"
+ },
+ "relatorio_v3": "../relatorios_v3/sin-16@tela.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "mandar ao modelo a árvore de acessibilidade podada (42 linhas) e a diferença do corpo da resposta (25 caracteres), não a página inteira",
+   "alternativas": [
+    {
+     "opcao": "a árvore de acessibilidade inteira",
+     "detalhe": "197 nós",
+     "escolhida": false
+    },
+    {
+     "opcao": "a árvore podada",
+     "detalhe": "42 linhas",
+     "escolhida": true
+    },
+    {
+     "opcao": "o corpo da resposta inteiro",
+     "detalhe": "145 caracteres",
+     "escolhida": false
+    },
+    {
+     "opcao": "a diferença do corpo contra o contrato esperado pela interface e a resposta da mesma rota em modo normal (a referência)",
+     "detalhe": "25 caracteres",
+     "escolhida": true
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A página fez 2 chamadas à API: `GET /api/produtos` (status 200 (a API respondeu sem código de erro), 1835 caracteres de corpo) e `GET /api/produtos/1` (status 200, 145 caracteres de corpo).",
+     "origem": "observado",
+     "eventos": [
+      1423,
+      1425
+     ]
+    },
+    {
+     "texto": "A poda da árvore de acessibilidade da tela levou 197 nós a 42 linhas.",
+     "origem": "observado",
+     "eventos": [
+      1430
+     ]
+    },
+    {
+     "texto": "O que saiu, pelas regras em código: 11 cartões iguais omitidos (ficam os primeiros e os que contêm o alvo), 1 elemento de decoração removido (separador, moldura ou figura), 1 título abaixo do nível 4 removido fora dos cartões, 16 imagens removidas, 9 botões e campos sem nome acessível removidos, 14 listas e grupos achatados (fica só o conteúdo) e 3 textos sem letra nem número removidos.",
+     "origem": "observado",
+     "eventos": [
+      1430
+     ]
+    },
+    {
+     "texto": "O que ficou: os elementos tocados pelo roteiro, os controles com nome acessível, os textos com letra, os títulos até o nível 4 e os marcos da página, na forma textual dos casos escritos.",
+     "origem": "observado",
+     "eventos": [
+      1430
+     ]
+    },
+    {
+     "texto": "A tela comparada com a referência (a mesma página sem falha injetada): esperado `3 linha(s) da referência`, recebido `3 linha(s) novas`.",
+     "origem": "observado",
+     "eventos": [
+      1430
+     ]
+    },
+    {
+     "texto": "A poda do corpo da resposta levou 145 caracteres a 25 caracteres: só a diferença contra o contrato esperado pela interface e a resposta da mesma rota em modo normal (a referência) vai ao modelo.",
+     "origem": "observado",
+     "eventos": [
+      1432
+     ]
+    },
+    {
+     "texto": "A comparação do corpo achou 1 diferença, a primeira no campo `destaque` (a tabela das diferenças está abaixo).",
+     "origem": "observado",
+     "eventos": [
+      1432
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3485 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      1435
+     ]
+    }
+   ],
+   "eventos": [
+    1423,
+    1425,
+    1430,
+    1432,
+    1435
+   ],
+   "diferencas": [
+    {
+     "alvo": "tela",
+     "onde": "árvore de acessibilidade, contra a referência",
+     "esperado": "3 linha(s) da referência",
+     "recebido": "3 linha(s) novas",
+     "tipo": null
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo destaque",
+     "esperado": "booleano",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 1, pontuação 51,38: 48,38 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 51.3805,
+     "posicao": 1
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 2, pontuação 38,84: 35,84 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 38.8402,
+     "posicao": 2
+    },
+    {
+     "opcao": "campo_ausente",
+     "detalhe": "posição 3, pontuação 27,47: 26,47 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 27.4724,
+     "posicao": 3
+    },
+    {
+     "opcao": "tipo_divergente",
+     "detalhe": "posição 4, pontuação 24,13: 23,13 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 24.1309,
+     "posicao": 4
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 5, pontuação 18,96: 18,96 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 18.9613,
+     "posicao": 5
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 6, pontuação 18,86: 15,86 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 18.8642,
+     "posicao": 6
+    },
+    {
+     "opcao": "modos-de-injecao",
+     "detalhe": "posição 7, pontuação 18,14: 18,14 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 18.1352,
+     "posicao": 7
+    },
+    {
+     "opcao": "campo_renomeado",
+     "detalhe": "posição 8, pontuação 17,69: 16,69 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 17.6937,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `entidade-produto` (51,38), `contrato-produto` (38,84) e `campo_ausente` (27,47).",
+     "origem": "observado",
+     "eventos": [
+      1433
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `entidade-produto` e `contrato-produto`; o da entidade, em `entidade-produto`, `contrato-produto` e `campo_ausente`.",
+     "origem": "observado",
+     "eventos": [
+      1433
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `tipo_divergente` (24,13), `valor_fora_do_dominio` (18,96), `colecao_no_lugar_de_objeto` (18,86), `modos-de-injecao` (18,14) e `campo_renomeado` (17,69).",
+     "origem": "observado",
+     "eventos": [
+      1433
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos/{id}`, entidade `Produto`, status 200 e 41 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato e com a referência.",
+     "origem": "observado",
+     "eventos": [
+      1433
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `campo_ausente`, e o primeiro de fora, `tipo_divergente`, só o texto do caso já punha o primeiro à frente (26,47 contra 23,13), e os reforços em código levaram a diferença a 3,34.",
+     "origem": "observado",
+     "eventos": [
+      1433
+     ]
+    }
+   ],
+   "eventos": [
+    1433
+   ],
+   "entregues": [
+    "entidade-produto",
+    "contrato-produto",
+    "campo_ausente"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos/{id}",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 41
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "campo_ausente",
+   "alternativas": [
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 0.9920314552810618,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,992; verbetes entregues que a tratam: `contrato-produto` e `campo_ausente`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 3.248244218158962e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto` e `campo_ausente`"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 1.6103386482306953e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 1.6103386482306953e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 1.2846491849286743e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto` e `contrato-produto`"
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "probabilidade": 1.0370647554380507e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `campo_ausente`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo apontou o campo `destaque`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "`destaque` aparece no caso (procurado no contrato, no corpo, na requisição, na árvore e no seletor): confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `campo_renomeado` (Campo renomeado), ficou com probabilidade 0,000 contra 0,992 da escolhida; verbetes entregues que a sustentam: `contrato-produto` e `campo_ausente`.",
+     "origem": "observado",
+     "eventos": [
+      1453
+     ]
+    },
+    {
+     "texto": "As outras 4 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `corpo_nao_e_json` (0,000), `corpo_vazio` (0,000) e `tipo_divergente` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      1453
+     ]
+    },
+    {
+     "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,992, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      1453
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      1453
+     ]
+    },
+    {
+     "texto": "O sinal medido em código está presente na resposta HTTP: `destaque: esperado booleano, recebido None`.",
+     "origem": "observado",
+     "eventos": [
+      1432,
+      1430,
+      1425
+     ]
+    },
+    {
+     "texto": "A linha FONTE cita `campo_ausente`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `campo_ausente`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `contrato-produto` e `campo_ausente`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `campo_ausente` (Campo ausente; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/campo_ausente.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/campo_ausente.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      1453
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 11 de 11 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      1453
+     ]
+    }
+   ],
+   "eventos": [
+    1453
+   ],
+   "segunda": "campo_renomeado",
+   "campo": "destaque",
+   "confianca": {
+    "selo": "alto",
+    "palavra": "alta",
+    "p_rotulo": 0.9920314552810618,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 37,
+     "certos": 34,
+     "acerto_pct": 91.9
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,992, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Campo ausente",
+   "probabilidade": 0.9920314552810618,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O campo destaque não foi incluído na resposta, resultando em uma exibição incompleta da página com 14 linhas a menos.",
+  "fonte": "[campo_ausente]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: campo_ausente\nCAMPO: destaque\nIMPACTO: O campo destaque não foi incluído na resposta, resultando em uma exibição incompleta da página com 14 linhas a menos.\nFONTE: [campo_ausente]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 30,
+  "rotulos": {
+   "observado": 21,
+   "conferido": 6,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "alto",
+  "confianca": "alta",
+  "falha": null,
+  "escolha": "campo_ausente",
+  "causa_em_palavras": "Campo ausente",
+  "campo": "destaque",
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

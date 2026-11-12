@@ -1,0 +1,42 @@
+{
+ "etapa": "efe-27 · diagnóstico",
+ "modelo": "qwen2.5:7b",
+ "estado": "concluido",
+ "fase": "geracao",
+ "tokens_prompt": 1365,
+ "chars_prompt": 4260,
+ "teto_tokens": 600,
+ "tokens_gerados": 62,
+ "decorrido_s": 64.122,
+ "estimativa_s": 67.142,
+ "estimativa_refeita_s": 67.142,
+ "fracao": 1.0,
+ "estimativa": {
+  "tokens_prompt": 1365,
+  "prefill_s": 52.433,
+  "geracao_s": 14.709,
+  "geracao_maxima_s": 140.089,
+  "total_s": 67.142,
+  "maximo_s": 192.522,
+  "origem": {
+   "tokens_prompt": "4260 caracteres do prompt / 3.12 caracteres por token (mediana das corridas gravadas)",
+   "prefill_s": "1365 tokens / 26.033 tokens por segundo (mediana do prefill das corridas gravadas)",
+   "geracao_s": "63.0 tokens (mediana dos gerados nas corridas gravadas) / 4.283 tokens por segundo (mediana da geração)",
+   "geracao_maxima_s": "teto de 600 tokens / 4.283 tokens por segundo"
+  }
+ },
+ "medido": {
+  "prefill_s": 47.745,
+  "geracao_s": 14.215,
+  "carga_s": 0.032,
+  "total_s": 62.077,
+  "tokens_entrada": 1403,
+  "tokens_saida": 62,
+  "tokens_em_cache": 354,
+  "decorrido_s": 64.122
+ },
+ "inferencias_concluidas": 24,
+ "iniciado_em": "2026-11-12T00:08:43",
+ "gravado_em": "2026-11-12T00:09:47",
+ "versao": 1
+}

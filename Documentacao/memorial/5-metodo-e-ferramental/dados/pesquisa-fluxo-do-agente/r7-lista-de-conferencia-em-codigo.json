@@ -1,0 +1,244 @@
+{
+  "_tag": "! Alteração de IA - Revisar: leitura da rodada 7 da pesquisa (10/11/2026), tópico r7-lista-de-conferencia-em-codigo, escrita por um subagente leitor: as fontes abertas, o que cada uma afirma e o que não afirma.",
+  "_motivo": "! Motivo: a ficha 64 pede pesquisa antes de qualquer mudança no fluxo do agente; a leitura fica em JSON para o integrador gerar o levantamento e para a segunda leitura conferir fonte a fonte.",
+  "key": "r7-lista-de-conferencia-em-codigo",
+  "frente": 1,
+  "titulo": "A lista de conferência calculada em código e entregue ao modelo como fato",
+  "pesquisado_em": "10/11/2026",
+  "pergunta": "Calcular em código os itens de uma lista de conferência (o que difere do contrato, que campo mudou, que verbete trata de que causa) e entregá-los prontos no prompt melhora o diagnóstico de um modelo pequeno, e que riscos isso traz (o modelo seguir o fato entregue mesmo quando ele está errado)?",
+  "ja_levantado": [
+    {"secao": "§6.9.9", "o_que_ja_dizia": "O modelo pequeno copia o que está no contexto: em ConFiQA-MC a fidelidade de partida é baixa (Qwen2-7B 10,0%), e a coerência do texto, não a veracidade, faz o modelo obedecer (Xie et al.). Conclusão de desenho já tirada: manter o diff de contrato calculado em código como sinal obrigatório do prompt (Ashik et al.)."},
+    {"secao": "§6.9.10", "o_que_ja_dizia": "Sem sinal externo a autocorreção piora (Huang et al.); o ganho aparece quando um verificador externo correto localiza o erro (Stechly et al.: 3% para 38% no Game of 24). Dividir o trabalho: código localiza a violação, o modelo redige (Tyen et al.)."},
+    {"secao": "§6.9.15", "o_que_ja_dizia": "RCACopilot (Chen et al., 2024) já levantado: Micro-F1 0,766, Macro-F1 0,533, GPT-4 com prompt puro 0,026/0,004, e o ganho atribuído à recuperação de vizinhos e à coleta prévia de diagnóstico. Também o 'viés de ancoragem' como modo de falha de agentes de RCA (Riddell et al.) e o Flow-of-Action (procedimento fixo, 35,5% para 64,0%)."},
+    {"secao": "§6.12.8", "o_que_ja_dizia": "O conteúdo da lista entregue pelo código, não o formato, é o que multiplica o reparo (Ray e Goyal: alternativas admissíveis calculadas fora do modelo levam o Llama-3.1-8B de 16% para 58%). Confiança verbalizada de modelo pequeno é quase independente da acurácia."},
+    {"secao": "§6.13.5", "o_que_ja_dizia": "Validador determinístico vence juiz-LLM em precisão e custo; forma não garante conteúdo; reordenar campos (evidência antes da solução) pode evitar dano ao raciocínio."}
+  ],
+  "fontes": [
+    {
+      "id": "F01",
+      "referencia_abnt": "GAO, L.; MADAAN, A.; ZHOU, S.; ALON, U.; LIU, P.; YANG, Y.; CALLAN, J.; NEUBIG, G. PAL: Program-aided Language Models. arXiv preprint arXiv:2211.10435, 2022 (v2, jan. 2023). Disponível em: https://arxiv.org/abs/2211.10435. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2211.10435",
+      "url": "https://arxiv.org/abs/2211.10435",
+      "ano": 2022,
+      "veiculo": "arXiv (a página não indica periódico; a versão 2 é de 27 jan. 2023)",
+      "revisao_por_pares": false,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página primária",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F01.a", "afirmacao_pt": "O modelo lê o problema e escreve um programa como passos de raciocínio; um interpretador Python executa o programa e calcula a resposta, de modo que a parte aritmética e lógica sai do modelo.", "numero": "", "condicao": "13 tarefas de raciocínio matemático, simbólico e algorítmico, com Codex", "onde_na_fonte": "resumo"},
+        {"id": "F01.b", "afirmacao_pt": "Com Codex, o PAL supera por 15 pontos absolutos de acerto no GSM8K o PaLM-540B com cadeia de pensamento em texto.", "numero": "15 pontos absolutos (top-1)", "condicao": "GSM8K, poucos exemplos, modelo grande (Codex contra PaLM-540B)", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["Não testa modelos de 7B; o ganho é medido com modelo grande de código.", "É tarefa de aritmética e lógica, não de classificação de causa nem de diagnóstico.", "Não mede o que acontece quando o resultado calculado está errado."],
+      "aplicacao_ao_agente": "É a origem da ideia de tirar do modelo o que um programa calcula melhor, mas aqui o programa não é escrito pelo modelo: o código do agente já calcula os itens, e o modelo só decide a causa."
+    },
+    {
+      "id": "F02",
+      "referencia_abnt": "LI, R. et al. StarCoder: may the source be with you! Transactions on Machine Learning Research, dez. 2023. arXiv:2305.06161. Disponível em: https://arxiv.org/abs/2305.06161. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2305.06161",
+      "url": "https://arxiv.org/abs/2305.06161",
+      "ano": 2023,
+      "veiculo": "Transactions on Machine Learning Research (12/2023)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seção 7.1 e Tabela 22 (GSM8K, cadeia de pensamento contra PAL), no PDF da fonte primária",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F02.a", "afirmacao_pt": "Nos LLaMA de 7B e 13B, o PAL não ganhou da cadeia de pensamento em texto: 10,5% contra 11,0% no 7B e 16,9% contra 17,8% no 13B, com decodificação gananciosa.", "numero": "7B: 10,5 (PAL) contra 11,0 (CoT); 13B: 16,9 contra 17,8", "condicao": "GSM8K, 8 exemplos, LLaMA 7B e 13B, sem quantização", "onde_na_fonte": "Tabela 22 e seção 7.1"},
+        {"id": "F02.b", "afirmacao_pt": "O PAL só rendeu ganho grande no StarCoderBase (15,5B, treinado em código): 21,5% contra 8,4% de CoT; no LLaMA de 33B o PAL deu 38,7% contra 35,6%.", "numero": "21,5 contra 8,4; 38,7 contra 35,6", "condicao": "GSM8K, 8 exemplos, modelos de 15,5B e 33B", "onde_na_fonte": "Tabela 22"}
+      ],
+      "nao_afirma": ["Não é um estudo sobre PAL: é um apêndice de avaliação de um modelo de código.", "Não usa modelos Qwen nem quantização.", "Não trata de classificação nem de fatos entregues no prompt."],
+      "aplicacao_ao_agente": "Mostra que passar o raciocínio a um programa escrito pelo modelo não ajuda aos 7B; reforça entregar o cálculo já pronto (feito pelo código do agente) em vez de pedir ao modelo que escreva o programa."
+    },
+    {
+      "id": "F03",
+      "referencia_abnt": "LYU, Q.; HAVALDAR, S.; STEIN, A.; ZHANG, L.; RAO, D.; WONG, E.; APIDIANAKI, M.; CALLISON-BURCH, C. Faithful Chain-of-Thought Reasoning. In: INTERNATIONAL JOINT CONFERENCE ON NATURAL LANGUAGE PROCESSING AND ASIA-PACIFIC CHAPTER OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS (IJCNLP-AACL), 2023. Anais [...]. arXiv:2301.13379. Disponível em: https://arxiv.org/abs/2301.13379. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2301.13379",
+      "url": "https://arxiv.org/abs/2301.13379",
+      "ano": 2023,
+      "veiculo": "IJCNLP-AACL 2023",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página primária",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F03.a", "afirmacao_pt": "Em duas etapas, o modelo traduz a pergunta numa cadeia simbólica e um solucionador determinístico calcula a resposta, de modo que o raciocínio mostrado é o que de fato produziu a resposta.", "numero": "", "condicao": "10 conjuntos de 4 domínios", "onde_na_fonte": "resumo"},
+        {"id": "F03.b", "afirmacao_pt": "O método supera a cadeia de pensamento comum em 9 de 10 conjuntos; o ganho relativo médio vai de 3,4% (planejamento) a 21,4% (inferência relacional).", "numero": "3,4% a 21,4% relativos; 9 de 10 conjuntos", "condicao": "GPT-4 e Codex, poucos exemplos", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["Só modelos grandes de API; nenhum modelo pequeno aberto.", "A página não traz os números por conjunto.", "Não trata de dado errado entregue pelo solucionador."],
+      "aplicacao_ao_agente": "Reforça o desenho em que um programa determinístico calcula e o modelo só traduz ou escolhe, mas o ganho medido é modesto (poucos pontos relativos) e só em modelo grande."
+    },
+    {
+      "id": "F04",
+      "referencia_abnt": "THATIKONDA, R. K.; HAN, J.; BUNTINE, W.; SHAREGHI, E. Improving Symbolic Translation of Language Models for Logical Reasoning. arXiv preprint arXiv:2601.09446, 2026. Disponível em: https://arxiv.org/abs/2601.09446. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2601.09446",
+      "url": "https://arxiv.org/abs/2601.09446",
+      "ano": 2026,
+      "veiculo": "arXiv (preprint)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e texto em HTML (tabela 2 resumida pela ferramenta de leitura; os números vêm do texto)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F04.a", "afirmacao_pt": "Quando o modelo pequeno deve traduzir o problema para lógica de primeira ordem para um solucionador externo, ele erra com frequência a forma e a tradução; no Qwen3-4B em FOLIO, a acurácia era de 3,45% com exemplos no prompt e foi a 40,39% só depois de ajuste fino.", "numero": "3,45% para 40,39%", "condicao": "modelos de 3 a 4B (Gemma-3-4B, Phi-4-mini, Qwen2.5-3B, Qwen3-4B), FOLIO, ajuste fino com dados sintéticos", "onde_na_fonte": "resumo e texto de resultados"},
+        {"id": "F04.b", "afirmacao_pt": "Dividir a inferência em duas etapas (primeiro os predicados, depois a tradução) reduz em cerca de 10% o erro, e o ajuste fino reduziu o erro em 57,4% (Qwen3-4B em FOLIO), mas em um caso (Phi-4-mini em ProverQA) o erro subiu 12%.", "numero": "cerca de 10%; 57,4%; +12%", "condicao": "mesmos modelos de 3 a 4B", "onde_na_fonte": "texto de resultados"}
+      ],
+      "nao_afirma": ["Não compara com entregar ao modelo o resultado já calculado: o modelo é quem traduz.", "Não usa 7B nem quantização GGUF.", "Não é tarefa de diagnóstico de falha."],
+      "aplicacao_ao_agente": "Contra a alternativa de pedir ao modelo pequeno que formalize para um programa calcular: nessa faixa a tradução é o elo que quebra, o que favorece o código calcular direto sobre o dado do caso."
+    },
+    {
+      "id": "F05",
+      "referencia_abnt": "CHEN, Y. et al. Automatic Root Cause Analysis via Large Language Models for Cloud Incidents. In: EUROPEAN CONFERENCE ON COMPUTER SYSTEMS (EUROSYS), 19., 2024, Atenas. Anais [...]. ACM, 2024. arXiv:2305.15778. Disponível em: https://arxiv.org/abs/2305.15778. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2305.15778",
+      "url": "https://arxiv.org/abs/2305.15778",
+      "ano": 2024,
+      "veiculo": "EuroSys 2024",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo, seções 5.1 a 5.4 (Tabelas 2 e 3), no PDF da fonte primária",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F05.a", "afirmacao_pt": "Só com o diagnóstico coletado por código (sem juntar alerta nem saída das ações), o Micro-F1 foi 0,689 e o Macro-F1 0,510, e o texto resume o diagnóstico com o modelo antes de entregá-lo, o que leva a 0,766 e 0,533; o texto dos autores diz que misturar o diagnóstico com outras informações não melhora, e que informação em excesso pode atrapalhar.", "numero": "0,689/0,510 (diagnóstico coletado) para 0,766/0,533 (resumido); GPT-4 com prompt puro: 0,026/0,004", "condicao": "GPT-4 de 8K e GPT-3.5-turbo, 653 incidentes de um serviço, 75% treino e 25% teste, só API", "onde_na_fonte": "seção 5.4, Tabelas 2 e 3"},
+        {"id": "F05.b", "afirmacao_pt": "Com GPT-3.5-turbo no lugar do GPT-4 o resultado cai pouco (Micro-F1 0,761 e Macro-F1 0,505 contra 0,766 e 0,533), o que sugere que o ganho vem do diagnóstico coletado, não do porte do modelo; mas o par são dois modelos grandes de API, não um 7B.", "numero": "0,761/0,505 contra 0,766/0,533", "condicao": "mesmas condições do F05.a", "onde_na_fonte": "Tabela 2"}
+      ],
+      "nao_afirma": ["Nenhum modelo pequeno aberto ou quantizado.", "A tabela 3 foi lida em texto extraído de PDF; a ordem das linhas foi conferida só nos valores citados no texto.", "Não mede o risco de o diagnóstico coletado estar errado."],
+      "aplicacao_ao_agente": "É a melhor analogia do agente: coletor determinístico seguido de classificação pelo modelo; o ganho aparece contra o modelo sozinho, mas só foi medido em modelo grande e o excesso de informação piora, o que pede entregar poucos itens."
+    },
+    {
+      "id": "F06",
+      "referencia_abnt": "XU, W. et al. LogSage: An LLM-Based Framework for CI/CD Failure Detection and Remediation with Industrial Validation. arXiv preprint arXiv:2506.03691, 2025 (v2, out. 2025). Disponível em: https://arxiv.org/abs/2506.03691. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2506.03691",
+      "url": "https://arxiv.org/abs/2506.03691",
+      "ano": 2025,
+      "veiculo": "arXiv (preprint)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo, etapa de pré-processamento, tabela de resultados e custo, em HTML",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F06.a", "afirmacao_pt": "Um pré-processamento em código seleciona as linhas de log que importam (linhas novas contra os modelos de logs de sucesso, palavras de falha e a cauda do log, com 4 linhas antes e 6 depois) e entrega ao modelo só esse trecho; o F1 chegou a cerca de 0,99 em 250 casos de falha de CI/CD, contra 0,51 a 0,60 dos melhores baselines.", "numero": "F1 0,9878 a 0,9898 contra 0,5091 a 0,6035", "condicao": "GPT-4o, Claude-3.7-Sonnet e DeepSeek V3, temperatura 0,1, 250 casos de teste", "onde_na_fonte": "seção de método e tabela de resultados"},
+        {"id": "F06.b", "afirmacao_pt": "O custo médio por análise foi de cerca de 17,9 mil tokens e uma consulta, contra 122 a 153 mil tokens e 32 a 89 consultas dos baselines.", "numero": "17.853 tokens, 1,0 consulta", "condicao": "mesmas condições", "onde_na_fonte": "tabela de custo"}
+      ],
+      "nao_afirma": ["Não há ablação sem o pré-processamento: os baselines são outros métodos, então o ganho não é só do pré-processamento.", "Só modelos grandes de API.", "Não mede erro de seleção das linhas pelo código."],
+      "aplicacao_ao_agente": "Exemplo industrial de código reduzindo o log antes do modelo, com menos tokens; serve de precedente para a economia de prompt, mas não isola o efeito de entregar o fato calculado."
+    },
+    {
+      "id": "F07",
+      "referencia_abnt": "COOK, J.; ROCKTÄSCHEL, T.; FOERSTER, J.; AUMILLER, D.; WANG, A. TICKing All the Boxes: Generated Checklists Improve LLM Evaluation and Generation. arXiv preprint arXiv:2410.03608, 2024. Disponível em: https://arxiv.org/abs/2410.03608. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2410.03608",
+      "url": "https://arxiv.org/abs/2410.03608",
+      "ano": 2024,
+      "veiculo": "arXiv (preprint)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo, seção de modelos, resultados do STICK e comparação dos métodos de avaliação (primeiros 100 mil caracteres do HTML)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F07.a", "afirmacao_pt": "Listas de conferência de sim ou não, geradas pelo modelo para cada instrução e respondidas item a item, elevaram a concordância exata entre o juiz-LLM e as preferências humanas de 46,4% para 52,2%.", "numero": "46,4% para 52,2%", "condicao": "juiz GPT-4o; geradores de lista GPT-4o, Command-R+ e Llama3.1-70B", "onde_na_fonte": "resumo e Tabela 4"},
+        {"id": "F07.b", "afirmacao_pt": "Usar a lista para refinar a própria resposta (STICK) deu +3,8 pontos no Command-R+ no LiveBench (+7,8 só em raciocínio) e +0,8 no GPT-4o, enquanto o refinamento sem lista piorou o resultado nos dois; escolher o melhor de 8 por lista deu +5,1 no InFoBench e +6,3 no WildBench.", "numero": "+3,8; +0,8; +5,1; +6,3", "condicao": "Command-R+ (principal) e GPT-4o, uma etapa de refinamento; modelos grandes", "onde_na_fonte": "tabelas de resultados do STICK"},
+        {"id": "F07.c", "afirmacao_pt": "Responder e agregar os itens ganhou de apenas mostrar a lista no prompt, e a própria fonte diz que a lista não ajuda em pergunta factual simples, que o refinamento estagna ou piora na quarta rodada e que o custo de inferência sobe.", "numero": "", "condicao": "modelos grandes", "onde_na_fonte": "Tabela 4 e seção de limitações"}
+      ],
+      "nao_afirma": ["Os itens são gerados e respondidos pelo modelo, não calculados em código.", "Nenhum modelo menor que 70B nos geradores; o único de 8B é um modelo de recompensa usado como baseline.", "Não é tarefa de classificação de causa."],
+      "aplicacao_ao_agente": "Lista de conferência ajuda quando o modelo responde item a item; no agente os itens já vêm respondidos por código, e a fonte avisa que só mostrar a lista rende menos que exigir resposta por item."
+    },
+    {
+      "id": "F08",
+      "referencia_abnt": "ZHOU, P. et al. Self-Discover: Large Language Models Self-Compose Reasoning Structures. arXiv preprint arXiv:2402.03620, 2024. Disponível em: https://arxiv.org/abs/2402.03620. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2402.03620",
+      "url": "https://arxiv.org/abs/2402.03620",
+      "ano": 2024,
+      "veiculo": "arXiv (a página lida não indica periódico nem evento)",
+      "revisao_por_pares": false,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página primária",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F08.a", "afirmacao_pt": "O modelo escolhe módulos de raciocínio atômicos e os compõe numa estrutura explícita que segue na decodificação; a estrutura sobe até 32% sobre a cadeia de pensamento no BigBench-Hard, em raciocínio de agente e no MATH.", "numero": "até 32% sobre CoT", "condicao": "GPT-4 e PaLM 2, tarefas de raciocínio", "onde_na_fonte": "resumo"},
+        {"id": "F08.b", "afirmacao_pt": "O método supera a autoconsistência com cadeia de pensamento em mais de 20% usando de 10 a 40 vezes menos inferência.", "numero": "mais de 20%; 10 a 40 vezes menos computação", "condicao": "GPT-4 e PaLM 2", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["A página não traz tamanho nem teste em modelo pequeno; Llama2 aparece só como destino de transferência.", "A estrutura é escolhida pelo próprio modelo antes de raciocinar, não calculada em código sobre o caso.", "Não é classificação."],
+      "aplicacao_ao_agente": "Estruturas de raciocínio dadas ou escolhidas antes rendem em modelo grande; o projeto já mediu que passos no prompt empatam em 1,5B a 7B, então esta fonte não muda a leitura."
+    },
+    {
+      "id": "F09",
+      "referencia_abnt": "LOU, J.; SUN, Y. Anchoring Bias in Large Language Models: An Experimental Study. arXiv preprint arXiv:2412.06593, 2024 (v2, dez. 2024). Disponível em: https://arxiv.org/abs/2412.06593. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2412.06593",
+      "url": "https://arxiv.org/abs/2412.06593",
+      "ano": 2024,
+      "veiculo": "arXiv (preprint; os autores dizem que foi submetido ao IEEE)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo, resultados e limitações no HTML (v2)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F09.a", "afirmacao_pt": "As respostas dos modelos se deslocam na direção da dica de valor que vem no prompt: de 162 diferenças de distribuição, só 11 foram contrárias à dica, 9 delas no GPT-3.5; com dicas de especialista não houve exceção.", "numero": "11 de 162 contrárias; 9 delas do GPT-3.5", "condicao": "GPT-4o, GPT-4 e GPT-3.5 Turbo, 62 perguntas de previsão, 30 repetições, temperatura 0,8", "onde_na_fonte": "seção de resultados"},
+        {"id": "F09.b", "afirmacao_pt": "Cadeia de pensamento, 'ignore a dica', reflexão e princípios não reduziram o efeito de forma relevante no GPT-4 e no GPT-4o; mostrar duas âncoras que cercam o valor certo ajudou nas perguntas em que as âncoras o cercavam (só no GPT-4).", "numero": "", "condicao": "GPT-4 e GPT-4o, perguntas com dica de especialista; resultado qualitativo, sem tamanho de efeito", "onde_na_fonte": "seção de mitigação"}
+      ],
+      "nao_afirma": ["Só modelos OpenAI, sem tamanhos e sem modelo aberto; 62 perguntas e um só modelo de prompt.", "A tarefa é estimar um número, não escolher um rótulo; os autores admitem contagens internamente inconsistentes.", "Não mede dica correta contra dica errada."],
+      "aplicacao_ao_agente": "Dá base para esperar que o modelo siga um fato afirmado no prompt e que pedir 'desconfie' não resolva; a mitigação que ajudou foi entregar mais de um ponto de vista, o que casa com entregar 3 verbetes e não 1."
+    },
+    {
+      "id": "F10",
+      "referencia_abnt": "VALENCIA-CLAVIJO, F. Anchors in the Machine: Behavioral and Attributional Evidence of Anchoring Bias in LLMs. arXiv preprint arXiv:2511.05766, 2025 (v2). Disponível em: https://arxiv.org/abs/2511.05766. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2511.05766",
+      "url": "https://arxiv.org/abs/2511.05766",
+      "ano": 2025,
+      "veiculo": "arXiv (preprint)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo, resultados, escala e limitações no HTML",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F10.a", "afirmacao_pt": "Em seis modelos abertos pequenos (de 125M a 7B), a âncora desloca a probabilidade da resposta: a mediana do deslocamento foi de 7,17 pontos percentuais contra 20 pontos nos humanos, com casos de +28,7 pontos no Gemma-2B e +46,2 no Llama-2-7B.", "numero": "mediana 7,17 pp; Gemma-2B +28,70 pp; Llama-2-7B +46,15 pp", "condicao": "GPT-2, GPT-Neo-125M, Falcon-RW-1B, Gemma-2B, Phi-2, Llama-2-7B, resposta numérica de 0 a 100%, sem quantização", "onde_na_fonte": "resultados e tabelas de comportamento"},
+        {"id": "F10.b", "afirmacao_pt": "A sensibilidade à âncora não cresce com o tamanho: o menor modelo (125M) é o menos sensível, e o de 2B é o mais sensível pela atribuição.", "numero": "ABSS Gemma-2B 9,83 contra GPT-Neo-125M -1,95", "condicao": "os mesmos seis modelos", "onde_na_fonte": "discussão do efeito de escala"}
+      ],
+      "nao_afirma": ["Não testa nenhuma mitigação (deixa para trabalho futuro).", "Não testa Qwen nem quantização; tarefa de estimativa numérica, não de classificação com rótulos.", "Autor único; não consta revisão por pares."],
+      "aplicacao_ao_agente": "Confirma, em modelos abertos pequenos, que o que está no prompt desloca a saída; nada diz sobre fato calculado em código nem sobre como reduzir o efeito."
+    },
+    {
+      "id": "F11",
+      "referencia_abnt": "SUN, J.; MIN, S. Y.; CHANG, Y.; BISK, Y. Tools Fail: Detecting Silent Errors in Faulty Tools. arXiv preprint arXiv:2406.19228, 2024. Disponível em: https://arxiv.org/abs/2406.19228. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2406.19228",
+      "url": "https://arxiv.org/abs/2406.19228",
+      "ano": 2024,
+      "veiculo": "arXiv (preprint; a página não indica evento)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "Tabela 5, intervenções no contexto e experimentos de detecção, no HTML",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F11.a", "afirmacao_pt": "Quando a calculadora entregue como ferramenta dá resposta errada sem aviso, a acurácia cai muito: o GPT-3.5 vai de 85,3% (melhor sem ferramenta) para 22,7%, o Command-R de 63,3% para 16,0%, o GPT-4 de 89,7% para 76,0%; os modelos costumam copiar a saída errada com uma justificativa inventada.", "numero": "GPT-3.5: 85,3% para 22,7%; Command-R: 63,3% para 16,0%; GPT-4: 89,7% para 76,0%", "condicao": "calculadora defeituosa, GPT-3.5, GPT-4, Command-R, Command-R+, Gemini-1.5; tamanhos não informados", "onde_na_fonte": "Tabela 5"},
+        {"id": "F11.b", "afirmacao_pt": "Dizer no prompt que 'a ferramenta pode dar respostas erradas' recuperou parte: GPT-3.5 de 23% para 53% e Command-R+ de 57% para 76%; uma lista de critérios de falha subiu o Command-R com cadeia de pensamento de 29% para 47%.", "numero": "+30 (GPT-3.5); +19 (Command-R+); +18 (lista, Command-R)", "condicao": "zero-shot nos dois primeiros; Command-R com CoT na lista", "onde_na_fonte": "seção de intervenções"},
+        {"id": "F11.c", "afirmacao_pt": "Os modelos detectam a saída defeituosa melhor do que resolvem o problema: o GPT-4 com aviso chegou a 95% de acerto em aceitar ou rejeitar a saída da calculadora.", "numero": "95%", "condicao": "GPT-4, zero-shot, com aviso", "onde_na_fonte": "experimento de detecção"}
+      ],
+      "nao_afirma": ["Nenhum modelo de 7B; tamanhos não informados.", "Não é diagnóstico nem classificação; a ferramenta é uma calculadora ou um planejador de ações.", "O texto diz 'até 47%' e a Tabela 5 mostra queda maior no GPT-3.5: a própria fonte é inconsistente."],
+      "aplicacao_ao_agente": "Mostra o risco de ponta a ponta (o modelo segue o fato errado da ferramenta) e a mitigação barata de avisar no prompt que o fato pode estar errado; não foi medida em 7B."
+    },
+    {
+      "id": "F12",
+      "referencia_abnt": "YANG, H.; SONG, W.; KIM, T.; SONG, J.; PARK, S.; JO, Y. Agents' Overreliance on Unreliable Tools. arXiv preprint arXiv:2609.05587, 2026 (v2, 26 set. 2026). Disponível em: https://arxiv.org/abs/2609.05587. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2609.05587",
+      "url": "https://arxiv.org/abs/2609.05587",
+      "ano": 2026,
+      "veiculo": "arXiv (preprint)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e resultados no HTML (primeiros 100 mil caracteres de cerca de 197 mil; o restante não foi lido)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F12.a", "afirmacao_pt": "Quando o retorno da ferramenta é corrompido de forma plausível, os agentes o adotam em média em 68,0% (busca na web), 40,1% (subagente LLM) e 35,5% (executor de código) dos casos; modelos maiores adotam menos, mas não em todas as ferramentas.", "numero": "68,0%; 40,1%; 35,5%", "condicao": "14 modelos, o menor com tamanho declarado de 12B (Gemma-4-12B; também GPT-OSS-20B, Qwen3-30B e 235B, entre outros), três ferramentas, corrupção do tipo P1", "onde_na_fonte": "resumo e tabela de adoção por ferramenta"},
+        {"id": "F12.b", "afirmacao_pt": "Um prompt de verificação reduziu a adoção do retorno errado do executor de código de 40,2% para 30,4% sem perder acerto quando o retorno estava certo (99,9% contra 99,8%); marcar a confiabilidade da fonte ajudou só na busca (de 75,4% para 70,3% com rótulo de baixa).", "numero": "40,2% para 30,4%; 75,4% para 70,3%", "condicao": "mesma bateria; média de seis modelos no caso da etiqueta", "onde_na_fonte": "seções de mitigação"}
+      ],
+      "nao_afirma": ["Nenhum modelo de 7B quantizado; o menor tem 12B.", "A ferramenta é busca, subagente ou código, não um coletor de fatos sobre o caso.", "Preprint recente; a parte final do texto não foi lida."],
+      "aplicacao_ao_agente": "Mesmo com marcação de origem e pedido de verificação, a adoção do fato errado cai pouco (de cerca de 40% para 30%); o risco de seguir o fato calculado não some só com prompt, o que pede medir o erro do próprio código."
+    }
+  ],
+  "nao_achei": [
+    "Nenhum trabalho que meça, em modelo de 7B ou menor, entregar no prompt itens de lista de conferência calculados em código contra deixar o modelo achá-los sozinho, em classificação de causa de falha de teste.",
+    "Não abri o texto completo de PAL, Faithful CoT e Self-Discover (só o resumo); o resumo não dá tamanho de modelo nem números por conjunto.",
+    "Não li Logic-LM (Pan et al., EMNLP Findings 2023) além do resumo da página (melhora média de 39,2% sobre prompt direto e 18,4% sobre CoT; os modelos não aparecem na página), por isso ficou fora das fontes; NL2LOGIC (arXiv:2602.13237, Findings of EACL 2026) só teve o resumo, sem tabela por tamanho.",
+    "ToolSword (ACL 2024) só teve o resumo, que não dá números sobre aceitar resultado errado de ferramenta nem nomeia os 11 modelos; não usado. Chain-of-Verification já consta em referencias.md e não foi relido.",
+    "Não achei comparação de modelo pequeno com e sem pré-processamento simbólico em triagem de falhas de teste; o mais próximo (LogSage) usa só modelos grandes e não tem ablação."
+  ],
+  "rascunho_de_sintese_pt": "O que apoia a ideia: quando um coletor em código reúne o diagnóstico e o modelo só classifica, o ganho contra o modelo sozinho pode ser grande (F05: GPT-4 com prompt puro 0,026 de Micro-F1; com diagnóstico coletado 0,689 e, resumido, 0,766; GPT-3.5 fica perto do GPT-4, 0,761). Em falhas de CI/CD, o pré-processamento de log em código com modelos de API chega a F1 próximo de 0,99 gastando 17,9 mil tokens por análise (F06), embora sem ablação isolada. A divisão em que o programa calcula e o modelo só traduz (F01, F03) rende de poucos pontos a dezenas de pontos, mas em modelo grande.\n\nO que contraria ou limita: em 7B e 13B o PAL não ganhou da cadeia de pensamento (F02: 10,5 contra 11,0 e 16,9 contra 17,8), e em 3B a 4B a tradução para um solucionador é o elo que quebra (F04: 3,45% de acerto no Qwen3-4B em FOLIO sem ajuste fino). Isso favorece o desenho do agente, em que o código calcula o item e o modelo recebe o fato pronto, em vez de o modelo escrever o programa. Listas de conferência (F07) e estruturas de raciocínio (F08) mostram ganho, mas em modelos de 70B para cima, e a lista só rende quando o modelo responde item a item; só mostrá-la ganhou menos. F05 ainda alerta que informação em excesso piora a predição: convém poucos itens.\n\nO risco: o que o prompt afirma desloca a saída, inclusive em modelos abertos pequenos (F10), e 'ignore a dica' não resolve em GPT-4 (F09). Com ferramenta errada, a acurácia cai de 85,3% para 22,7% no GPT-3.5 (F11), e agentes de 14 modelos (de 12B a 235B nos que declaram tamanho) adotam o retorno corrompido em 35% a 68% dos casos (F12). Os avisos funcionam em parte: aviso de que a ferramenta pode errar recuperou 19 a 30 pontos (F11), e um prompt de verificação baixou a adoção de 40,2% para 30,4% no executor de código (F12); marcar a origem ajudou só na busca. O que não deixa de ser medido por ninguém: seguir um fato calculado errado em modelo de 7B quantizado, em classificação com lista fechada de rótulos, e o efeito de entregar só o que foi medido. Para o agente, a mitigação respaldada é validar o código que calcula o fato (pois o modelo o seguirá), marcar a origem e deixar a decisão com o modelo, com a dica de que o item pode estar errado."
+}

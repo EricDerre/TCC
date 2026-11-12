@@ -118,7 +118,24 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 # ! Motivo: plano aprovado, seção 5 (P7): `executar_fase4.py --modo avaliacao_trilha`; a lógica fica em avaliacao_trilha.py.
 # ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) os modos das corridas 23 e 24, em corridas_em_texto.py.
 # ! Motivo: as duas corridas rodam em texto, sem navegador, mas pelo mesmo comando e com as mesmas guardas de versão das outras.
-MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 63 opção b, decisão 116) o modo `sem_notas` (corrida 25), em experimento_sem_notas.py, entra em MODOS e em
+# MODOS_COM_MODELO.
+# ! Motivo: a corrida 25 lê em texto os 36 oficiais e os 36 inéditos com a biblioteca de produção sem as notas do modelo; roda pelo mesmo comando das outras
+# (`rodar_fase4.ps1 -Modo sem_notas`), com as mesmas conferências de Ollama, RAM e versão e a barra de progresso. O código da corrida fica no módulo novo.
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 66 opção b, decisão 120) o modo `segundo_passe` (corrida 26), em experimento_segundo_passe.py, entra em MODOS e em
+# MODOS_COM_MODELO.
+# ! Motivo: a corrida 26 faz um segundo pedido de diagnóstico, em texto, só nos casos das corridas 22 e 24 em que o selo baixo ou a FONTE divergente acendeu; roda pelo
+# mesmo comando das outras (`rodar_fase4.ps1 -Modo segundo_passe`), com as mesmas conferências de Ollama, RAM e versão e a barra de progresso. O código fica no módulo novo.
+# ! Alteração de IA - Revisar: (11/11/2026, ficha 67 opção b, decisão 121) o modo `analista` (corrida 27, a medida M2), em experimento_analista.py, entra em MODOS e em
+# MODOS_COM_MODELO.
+# ! Motivo: a corrida 27 chama o modelo no papel de analista de documentação, com a ficha curta do caso, nos 54 casos de aprendizado da corrida 20; roda pelo mesmo comando
+# das outras (`rodar_fase4.ps1 -Modo analista`), com as mesmas conferências de Ollama, RAM e versão e a barra de progresso. O código fica no módulo novo.
+MODOS = ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) MODOS_COM_MODELO: os modos que chamam o modelo e, por isso, ganham a barra de
+# progresso (progresso.observando) em `com_progresso`; é a mesma lista do `$ComModelo` de rodar_fase4.ps1 (o teste confere as duas).
+# ! Motivo: plano aprovado da Pós-Fase 4, seção 3.5: a barra entra no terminal por este executor em todos os modos que chamam o modelo, e o estado
+# vai para <saida>/progresso.json, que o hub do pacote Q6 vai ler.
+MODOS_COM_MODELO = ("calibracao", "tela", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")
 REPETICOES_PADRAO = 5                     # corrida 19: cinco repetições por célula (plano, seção 6)
 BASES_DOS_INEDITOS = ("corrida12", "propria")
 CORRIDA12 = "pre_fase4_confianca"         # corrida 12 (06/10/2026): a cópia curada nos 72 casos, k = 3, Ollama 0.34.4 (ponte 0.40.2 pareável)
@@ -2688,30 +2705,48 @@ def montar_parser() -> argparse.ArgumentParser:
     return ap
 
 
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) `com_progresso` roda a função do modo dentro de `progresso.observando` quando o
+# modo chama o modelo: o estado da barra em <saida>/progresso.json e as medidas em <saida>/progresso_medidas.jsonl, com as taxas de
+# resultados_alvo/fase4/taxas_progresso.json (sem o arquivo, a barra fica indeterminada); nos modos sem modelo roda a função como antes.
+# ! Motivo: plano aprovado da Pós-Fase 4, seção 3.5 e pacote Q4; a chamada ao modelo e o que ela registra não mudam (a barra só observa `_post`), e
+# o `.ps1` manda a saída do executor ao console (a barra redesenhada) ou a um log (só os marcos de cada inferência).
+def com_progresso(args: argparse.Namespace, funcao, saida=None) -> int:
+    if args.modo not in MODOS_COM_MODELO:
+        return funcao(args)
+    import progresso as pg
+    pasta = caminhos.fase3(args.saida)["raiz"]
+    pasta.mkdir(parents=True, exist_ok=True)
+    with pg.observando(arquivo_estado=pasta / pg.NOME_DO_ESTADO, modelo=args.modelo, taxas=pg.carregar_taxas(), saida=saida, medidas=pasta / pg.NOME_DAS_MEDIDAS):
+        return funcao(args)
+
+
 def main() -> int:
     args = montar_parser().parse_args()
     print(caminhos.descricao())
-    if args.modo == "reproducao":
-        return rodar_reproducao(args)
-    if args.modo == "calibracao":
-        return rodar_calibracao(args)
-    if args.modo == "tela":
-        return rodar_tela(args)
-    if args.modo == "cura":
-        return rodar_cura(args)
-    if args.modo == "biblioteca":
-        return rodar_biblioteca(args)
-    if args.modo == "cenarios":
-        return rodar_cenarios(args)
-    if args.modo == "avaliacao_trilha":
-        return rodar_avaliacao_trilha(args)
-    if args.modo == "experimento_prompt":
+    # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) a função de cada modo passa por `com_progresso`, que liga a barra nos modos com modelo.
+    # ! Motivo: plano aprovado da Pós-Fase 4, seção 3.5; o que cada modo faz não mudou, só o embrulho em volta da chamada.
+    funcoes = {"reproducao": rodar_reproducao, "calibracao": rodar_calibracao, "tela": rodar_tela, "cura": rodar_cura, "biblioteca": rodar_biblioteca,
+               "cenarios": rodar_cenarios, "avaliacao_trilha": rodar_avaliacao_trilha}
+    if args.modo in ("experimento_prompt", "ineditos"):
         import corridas_em_texto as ct
-        return ct.rodar_experimento(args)
-    if args.modo == "ineditos":
-        import corridas_em_texto as ct
-        return ct.rodar_ineditos(args)
-    return 1
+        funcoes.update({"experimento_prompt": ct.rodar_experimento, "ineditos": ct.rodar_ineditos})
+    if args.modo == "sem_notas":
+        import experimento_sem_notas as esn
+        funcoes["sem_notas"] = esn.rodar
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) o modo `segundo_passe` chama `experimento_segundo_passe.rodar` (corrida 26).
+    # ! Motivo: o módulo só é importado quando o modo é pedido, como os das corridas 23 a 25, para os outros modos não dependerem dele.
+    if args.modo == "segundo_passe":
+        import experimento_segundo_passe as sp
+        funcoes["segundo_passe"] = sp.rodar
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) o modo `analista` chama `experimento_analista.rodar` (corrida 27).
+    # ! Motivo: o módulo só é importado quando o modo é pedido, como os das corridas 23 a 26, para os outros modos não dependerem dele.
+    if args.modo == "analista":
+        import experimento_analista as ea
+        funcoes["analista"] = ea.rodar
+    funcao = funcoes.get(args.modo)
+    if funcao is None:
+        return 1
+    return com_progresso(args, funcao)
 
 
 if __name__ == "__main__":

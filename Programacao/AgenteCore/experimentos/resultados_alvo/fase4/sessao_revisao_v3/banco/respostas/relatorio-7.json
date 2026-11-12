@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:47:06.453Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-7",
+  "comentario": "O diagnóstico é perfeito. O modelo identificou corretamente que a causa raiz é um localizador_quebrado, já que o payload da API retornou os dados normais (com id, nome e preço corretos), a árvore de acessibilidade mostrou que o cartão foi renderizado (\"Cupim\" em um heading level 3), mas o teste automatizado falhou porque buscou por h2:has-text(\"Cupim\"). O verbete adequado foi recuperado pelo RAG, a confiança foi máxima (1,0) e a justificativa redigida captura exatamente a falha no teste, e não na aplicação.",
+  "decidido_em": "2026-11-09T19:47:24.379Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 7,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:47:46.216Z",
+  "segundos": 18,
+  "segundos_relogio": 18,
+  "utilidade": 5
+}

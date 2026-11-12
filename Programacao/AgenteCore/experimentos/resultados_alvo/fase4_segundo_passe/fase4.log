@@ -1,0 +1,34 @@
+﻿[2026-11-11 23:39:45] rodar_fase4.ps1: modo segundo_passe, saida fase4_segundo_passe, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-11 23:39:48] Ollama 0.40.15; modelo qwen2.5:7b; RAM livre 8 GB
+[2026-11-11 23:39:48] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_segundo_passe\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-11 23:39:48] testar_fase4.py
+[2026-11-11 23:40:25] executar_fase4.py --modo segundo_passe --saida fase4_segundo_passe --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20
+[2026-11-11 23:40:27] a ponte da versão 0.40.15 é pareável com a Fase 3 (b + c = 1, limite 2)
+[2026-11-11 23:40:27] INÍCIO segundo_passe: Ollama 0.40.15, qwen2.5:7b, biblioteca de produção (95af35290860), verbetes das posições 4 a 6 da busca; 24 casos com sinal; 0 já feito(s)
+[2026-11-11 23:41:45] [1/24] avaliacao lex-4: codificacao_incorreta (p 0.9996088147061918, selo alto, FONTE divergente sim; 65.17 s)
+[2026-11-11 23:42:54] [2/24] avaliacao sin-5: campo_renomeado (p 0.9979476332771702, selo alto, FONTE divergente não; 64.67 s)
+[2026-11-11 23:44:02] [3/24] avaliacao efe-2: valor_fora_do_dominio (p 0.9058870055982413, selo medio, FONTE divergente não; 63.77 s)
+[2026-11-11 23:45:13] [4/24] avaliacao efe-3: nulo_inesperado (p 0.4995528066851704, selo baixo, FONTE divergente não; 66.87 s)
+[2026-11-11 23:46:20] [5/24] avaliacao lex-8: codificacao_incorreta (p 0.9968445300038504, selo alto, FONTE divergente sim; 63.51 s)
+[2026-11-11 23:47:21] [6/24] avaliacao sin-14: tipo_divergente (p 0.5055320363222842, selo baixo, FONTE divergente não; 56.47 s)
+[2026-11-11 23:48:25] [7/24] avaliacao semt-14: chave_de_juncao_errada (p 0.9996951818343013, selo alto, FONTE divergente não; 60.32 s)
+[2026-11-11 23:49:38] [8/24] avaliacao tra-15: valor_fora_do_dominio (p 0.9799285529231437, selo medio, FONTE divergente não; 68.2 s)
+[2026-11-11 23:50:51] [9/24] ineditos lex-24: codificacao_incorreta (p 0.9986238479910805, selo alto, FONTE divergente sim; 69.33 s)
+[2026-11-11 23:52:12] [10/24] ineditos lex-25: codificacao_incorreta (p 0.9998738765659868, selo alto, FONTE divergente sim; 76.54 s)
+[2026-11-11 23:53:28] [11/24] ineditos lex-26: codificacao_incorreta (p 0.993249654617949, selo alto, FONTE divergente não; 72.35 s)
+[2026-11-11 23:54:38] [12/24] ineditos lex-27: codificacao_incorreta (p 0.977632284357733, selo medio, FONTE divergente sim; 66.01 s)
+[2026-11-11 23:56:03] [13/24] ineditos sin-24: colecao_no_lugar_de_objeto (p 0.9675103416233618, selo medio, FONTE divergente não; 80.15 s)
+[2026-11-11 23:57:22] [14/24] ineditos sin-26: nulo_inesperado (p 0.9992720484810313, selo alto, FONTE divergente não; 75.33 s)
+[2026-11-11 23:58:21] [15/24] ineditos sin-27: campo_renomeado (p 0.765303320932424, selo baixo, FONTE divergente não; 54.29 s)
+[2026-11-11 23:59:43] [16/24] ineditos semt-27: valor_fora_do_dominio (p 0.609614614865184, selo baixo, FONTE divergente sim; 78.24 s)
+[2026-11-12 00:01:03] [17/24] ineditos tra-22: tipo_divergente (p 0.9991210102844065, selo alto, FONTE divergente não; 75.8 s)
+[2026-11-12 00:02:12] [18/24] ineditos tra-23: tipo_divergente (p 0.9074569347701041, selo medio, FONTE divergente não; 65.14 s)
+[2026-11-12 00:03:34] [19/24] ineditos tra-25: resposta_truncada (p 0.9973566531134822, selo alto, FONTE divergente sim; 78.25 s)
+[2026-11-12 00:04:43] [20/24] ineditos run-22: limite_de_requisicoes (p 0.9986298084086987, selo alto, FONTE divergente não; 63.95 s)
+[2026-11-12 00:06:10] [21/24] ineditos run-24: contagem_inconsistente (p 0.9517541532313334, selo medio, FONTE divergente não; 83.37 s)
+[2026-11-12 00:07:23] [22/24] ineditos run-25: estado_da_tela_divergente (p 0.5530043865741742, selo baixo, FONTE divergente não; 68.89 s)
+[2026-11-12 00:08:43] [23/24] ineditos run-26: dado_desatualizado (p 0.9993593096464527, selo alto, FONTE divergente não; 76.3 s)
+[2026-11-12 00:09:52] [24/24] ineditos efe-27: dado_desatualizado (p 0.542534532362154, selo baixo, FONTE divergente não; 64.13 s)
+[2026-11-12 00:09:58] FIM segundo_passe: 24 casos com sinal; duração 1773 s; trilha 580612 bytes
+[2026-11-12 00:10:00] avaliar_fase4.py --segundo_passe --saida fase4_segundo_passe
+[2026-11-12 00:10:00] FIM rodar_fase4.ps1 (modo segundo_passe) - duracao total 00h30

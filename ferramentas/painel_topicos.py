@@ -50,31 +50,82 @@ SLOTS = {"qwen2.5:7b": 1, "granite4.2:8b": 2, "qwen2.5-coder:7b": 3, "qwen2.5-co
 # de cada grupo em primeiro (Decisão antes de Resultados; Pesquisa antes de Ferramental).
 # ! Motivo: pedido do Eric em 06/10: com 23 abas a faixa horizontal ficou ilegível, e a ordem antiga era a de
 # construção (Resultados antes da Decisão, Fases anteriores antes da Pesquisa), não a de leitura.
+# ! Alteração de IA - Revisar: (11/11/2026) o mapa passa a ser por fase: "Visão geral", um grupo por fase do roadmap (que abre pela aba de visão da fase, vinda de
+# painel_fases.py) e "Pesquisa e documentação". As abas dos tópicos só mudaram de grupo, cada uma com os comentários que tinha; quatro ganharam nome novo, porque o
+# nome antigo repetia o do grupo, e a aba "Fases 2-A e 2-B" virou duas.
+# ! Motivo: o Eric pediu, em 11/11/2026, abas que detalhem cada fase, com as abas dos tópicos de cada uma embaixo, na lógica do documento do TCC: a ordem por
+# importância de 06/10/2026 não dizia de que fase era cada aba. Dentro de cada fase a ordem é a do documento do TCC (seções 6.1 a 6.7), com o fechamento no fim.
+# Toda aba nova de tópico entra no grupo da fase dela; painel_fases.abas_fora_de_lugar e os testes acusam fase sem grupo ou atalho para aba que não existe.
 NAV = [
-    ("Projeto", [
-        ("inicio", "Início", "Onde o projeto está, o que depende do Eric e o mapa deste painel."),
+    ("Visão geral", [
+        # ! Alteração de IA - Revisar: (11/11/2026) a descrição do Início passa a dizer o que a aba virou: o resumo do projeto inteiro.
+        # ! Motivo: o Eric pediu que o Início seja um resumo visual do projeto como um todo; a descrição antiga falava da lista de pendências e do mapa do painel.
+        ("inicio", "Início", "O projeto em uma página: o problema, como o agente trabalha, o caminho das fases e o que já se descobriu."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a descrição do Roadmap passa a dizer o formato novo, com uma linha por fase.
+        # ! Motivo: os cartões estreitos e altos das fases viraram cartões em linha, com a pergunta que a fase responde e o "Saiba mais".
+        ("roadmap", "Roadmap", "Uma linha por fase, com a pergunta que ela responde e o estado, e as corridas de cada fase com o comando pronto."),
         ("pendencias", "Pendências", "Uma ficha por decisão: o que é, por que importa, opções, recomendação e decisão."),
-        ("roadmap", "Roadmap", "Estado por fase, corridas com o comando pronto e o esqueleto das Fases 4 e 5."),
-        ("fechamento", "Fechamento", "As Fases 3 e 3-B podem ser dadas por concluídas? O estado de cada tópico e o que depende do Eric."),
+        # ! Alteração de IA - Revisar: (11/11/2026) aba nova do glossário; a seção vem de painel_glossario.secao_glossario.
+        # ! Motivo: o Eric pediu que o painel explique os métodos e os termos técnicos para quem não acompanhou o projeto.
+        ("glossario", "Glossário e métodos", "As palavras do projeto e os métodos de medida em linguagem direta, cada método com o que o projeto faz com ele e a fonte."),
     ]),
-    ("Decisão e resultados", [
-        ("decisao", "Decisão", "A regra pré-registrada, o bootstrap, a fronteira de Pareto e a frase da decisão."),
+    ("Fase 1", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 1; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-1", "Visão da Fase 1", "A fase em uma página: o instalador, os dois sistemas de teste, as falhas ligadas de propósito e o banco de casos."),
+    ]),
+    ("Fase 2-A", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 2-A; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-2a", "Visão da Fase 2-A", "A fase em uma página: o que um modelo local diagnostica sem documentação nenhuma."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba "Fases 2-A e 2-B" virou duas; esta é a da Fase 2-A.
+        # ! Motivo: cada fase passou a ter o seu grupo, e uma aba só para as duas ficaria fora de ambos.
+        ("fase2a", "Prompts sem documentação", "Os modelos sem documentação nenhuma, em mais de uma forma de pergunta: o acerto por modelo e por forma."),
+    ]),
+    ("Fase 2-B", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 2-B; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-2b", "Visão da Fase 2-B", "A fase em uma página: quanto a documentação escrita por pessoas ajuda, e quanto a errada atrapalha."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba "Fases 2-A e 2-B" virou duas; esta é a da Fase 2-B.
+        # ! Motivo: cada fase passou a ter o seu grupo, e uma aba só para as duas ficaria fora de ambos.
+        ("fase2b", "Biblioteca em seis condições", "A biblioteca escrita à mão em seis condições, de nenhuma documentação até o verbete errado de propósito."),
+    ]),
+    ("Fase 3", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 3; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-3", "Visão da Fase 3", "A fase em uma página: o modelo editando a própria documentação, e a escolha do modelo pela regra fixada antes."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba "Fase 3" passa a se chamar "Edições da biblioteca".
+        # ! Motivo: com a navegação por fase, o nome antigo repetia o do cabeçalho do grupo, e a aba não se distinguia dele.
+        ("fase3", "Edições da biblioteca", "A biblioteca gerida pelo modelo: edições, rejeições, recuperação, custo e revisão humana."),
         ("visao", "Resultados", "O que os testes decidiram: acurácia por versão da biblioteca e as três fases lado a lado."),
-        ("hipoteses", "Hipóteses", "As seis hipóteses pré-registradas, o veredito de cada uma e os achados novos."),
         ("modelos", "Modelos", "Veredito e números de cada modelo, acerto por classe de defeito e por nível."),
-        ("comparativo", "qwen × Coder", "Em que cenários o qwen2.5-coder:7b seria melhor que o qwen2.5:7b, e por que a decisão ficou."),
+        ("decisao", "Decisão", "A regra pré-registrada, o bootstrap, a fronteira de Pareto e a frase da decisão."),
+        ("hipoteses", "Hipóteses", "As seis hipóteses pré-registradas, o veredito de cada uma e os achados novos."),
+        ("comparacao", "Entre fases", "O que cada etapa acrescentou, nos 90 e nos 36, com custo e riscos."),
+        ("metodo", "Método e limites", "Como a Fase 3 foi medida, as limitações declaradas e a Fase 3-B."),
     ]),
-    ("Biblioteca gerida pelo modelo", [
-        ("fase3", "Fase 3", "A biblioteca gerida pelo modelo: edições, rejeições, recuperação, custo e revisão humana."),
-        ("tresb", "Fase 3-B", "Casos inéditos, ponte de versão, sonda de correção e as corridas complementares."),
+    ("Fase 3-B", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 3-B; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-3b", "Visão da Fase 3-B", "A fase em uma página: as dúvidas que a Fase 3 deixou, uma por teste."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba "Fase 3-B" passa a se chamar "Inéditos, pontes e sonda".
+        # ! Motivo: com a navegação por fase, o nome antigo repetia o do cabeçalho do grupo, e a aba não se distinguia dele.
+        ("tresb", "Inéditos, pontes e sonda", "Casos inéditos, ponte de versão, sonda de correção e as corridas complementares."),
         ("cruzada", "Troca cruzada", "A biblioteca escrita por um modelo, lida por outros dois: o ganho é dela ou de quem a lê?"),
+        ("comparativo", "qwen × Coder", "Em que cenários o qwen2.5-coder:7b seria melhor que o qwen2.5:7b, e por que a decisão ficou."),
         ("curadoria", "Curadoria da L1", "O que a cópia de produção herdou da biblioteca escrita pelo modelo."),
         ("recuperador", "Recuperador", "A busca por palavras contra a busca por significado e a mistura das duas: vale trocar?"),
         ("ablacao", "Ablação", "Sem ajuste por instrução, o modelo faz a tarefa? O piso da família."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba "Fechamento" passa a se chamar "Fechamento das Fases 3 e 3-B".
+        # ! Motivo: dentro do grupo da Fase 3-B o nome precisa dizer de que fases é o fechamento, porque a Fase 4 tem o dela.
+        ("fechamento", "Fechamento das Fases 3 e 3-B", "As Fases 3 e 3-B podem ser dadas por concluídas? O estado de cada tópico e o que depende do Eric."),
     ]),
     # grupo da Pré-Fase 4 (01/10/2026): um id só entra neste mapa junto com a seção dele, porque
     # teste_toda_aba_do_mapa_existe_na_pagina exige que todo botão da navegação tenha a sua seção
     ("Pré-Fase 4", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Pré-Fase 4; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-pre4", "Visão da Pré-Fase 4", "A fase em uma página: as três frentes de pesquisa antes de levar o agente à tela."),
         ("colibri", "Modelos grandes pelo disco", "Dá para rodar nesta máquina um modelo gigante lendo os pesos do SSD? O que o colibri pede, o que foi medido aqui e o que se aproveita."),
         ("atlas", "Atlas", "Que verbetes a busca entrega para cada tipo de defeito e o que o modelo faz com eles: o mapa, a rota de cada caso e as trocas entre causas."),
         ("raciocinio", "Raciocínio aberto", "Dá para ver por que o modelo respondeu o que respondeu? A trilha bruta, o relatório por caso, o que o código consegue conferir e o que a literatura sustenta para a arquitetura da trilha."),
@@ -82,9 +133,9 @@ NAV = [
     ]),
     # grupo da Fase 4 (27/10/2026): a corrida 17 é a primeira análise da fase; o id entra junto com a seção (secao_reproducao)
     ("Fase 4", [
-        # ! Alteração de IA - Revisar: (05/11/2026, P8) a aba do fechamento abre o grupo; o id entra junto com a seção (secao_fechamento_f4).
-        # ! Motivo: é a aba da fase que o plano previa (seção 3.8): quem abre o grupo vê primeiro o que fechou e o que ficou como limitação.
-        ("fechamentof4", "Fechamento da fase", "A Fase 4 fez o que o plano pediu? As regras uma a uma, o que fica como limitação declarada, o que depende do Eric e o que o documento do TCC precisa carregar, lidos do relatório da fase."),
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 4; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-4", "Visão da Fase 4", "A fase em uma página: o agente trabalhando na tela, passo a passo, com o que cada passo mediu."),
         ("reproducao", "Reprodução na tela", "Quantos casos de avaliação a tela consegue reproduzir, com que custo por cenário e o que fica fora: a corrida 17 nos 72 casos e a mesma corrida nos 36 inéditos da ficha 27."),
         # aba da corrida 16 (27/10/2026, P3): o id entra junto com a seção (secao_calibracao)
         ("calibracao", "Calibração", "Quantos verbetes entregar ao modelo, onde ficam os cortes do selo de confiança e quanto a probabilidade da resposta separa acerto de erro: a corrida 16 nos 90 casos."),
@@ -108,20 +159,56 @@ NAV = [
         # ! Alteração de IA - Revisar: (06/11/2026) aba da corrida 24; o id entra junto com a seção (secao_ineditos_f4).
         # ! Motivo: a medida da biblioteca final em casos que ela nunca viu é uma análise nova da Fase 4 e, pela regra do painel, vira uma aba.
         ("ineditosf4", "Inéditos em texto", "A biblioteca final acerta em casos que nunca viu? A corrida 24 nos 36 inéditos da ficha 27, conferidos pelo Eric: o acerto por classe e por nível, o verbete certo no contexto, o selo e a comparação com a corrida 18e."),
+        # ! Alteração de IA - Revisar: (05/11/2026, P8) a aba do fechamento abre o grupo; o id entra junto com a seção (secao_fechamento_f4).
+        # ! Motivo: é a aba da fase que o plano previa (seção 3.8): quem abre o grupo vê primeiro o que fechou e o que ficou como limitação.
+        ("fechamentof4", "Fechamento da fase", "A Fase 4 fez o que o plano pediu? As regras uma a uma, o que fica como limitação declarada, o que depende do Eric e o que o documento do TCC precisa carregar, lidos do relatório da fase."),
     ]),
     # ! Alteração de IA - Revisar: (07/11/2026) grupo da Pós-Fase 4, com a aba do que o Eric pediu em três partes; o id entra junto com a seção (secao_pos_fase4).
     # ! Motivo: a Pós-Fase 4 foi especificada e pesquisada em 07/11/2026 (levantamento §6.15), e as fichas 53 e 54 estão abertas: o Eric decide pelo painel.
     ("Pós-Fase 4", [
-        ("posfase4", "Pós-Fase 4", "O que o Eric pediu em três partes, o que a pesquisa sustenta, os vereditos dos oito repositórios e das cinco bases, as decisões do quadro e o plano aprovado, com os pacotes antes e depois da Fase 5."),
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Pós-Fase 4; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-pos4", "Visão da Pós-Fase 4", "A fase em uma página: o que chega a quem lê os relatórios do agente."),
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba "Pós-Fase 4" passa a se chamar "O pedido e a pesquisa".
+        # ! Motivo: com a navegação por fase, o nome antigo repetia o do cabeçalho do grupo, e a aba não se distinguia dele.
+        ("posfase4", "O pedido e a pesquisa", "O que o Eric pediu em três partes, o que a pesquisa sustenta, os vereditos dos oito repositórios e das cinco bases, as decisões do quadro e o plano aprovado, com os pacotes antes e depois da Fase 5."),
+        # ! Alteração de IA - Revisar: (07/11/2026, pacote Q2) aba dos filtros de texto; o id entra junto com a seção (secao_texto).
+        # ! Motivo: a leitura antes e depois dos textos que chegam ao analista é uma análise nova da Pós-Fase 4 e, pela regra do painel, vira uma aba lida do JSON.
+        ("texto", "O que chega ao analista", "Os relatórios e os verbetes ficaram mais curtos e diretos? Os oito filtros de prolixidade e objetividade, calibrados no corpus dos comentários deste repositório, aplicados aos relatórios v2 e v3 das três corridas vigentes e aos verbetes contra a camada de leitura."),
+        # ! Alteração de IA - Revisar: (08/11/2026, pacote Q3) aba da árvore de decisão; o id entra junto com a seção (secao_arvore).
+        # ! Motivo: a árvore por caso é uma análise nova da Pós-Fase 4 (plano, seção 3.4) e, pela regra do painel, vira uma aba lida dos JSON gravados.
+        ("arvore", "Árvore de decisão", "Dá para ver por que o agente decidiu o que decidiu, passo a passo? Uma árvore por trilha das corridas vigentes: o que o modelo leu depois da poda, que verbetes entraram, a causa contra a segunda com a confiança em palavras, a cura quando houve, e a origem de cada afirmação (observado, conferido, declarado, desconhecido)."),
+        # ! Alteração de IA - Revisar: (08/11/2026, pacote Q4) aba da barra de progresso e do protótipo do Git; o id entra junto com a seção (secao_progresso).
+        # ! Motivo: as duas análises do Q4 (plano, seções 3.5 e 3.7) viram uma aba lida dos JSON gravados, como manda a regra do painel.
+        ("progresso", "Barra e Git", "Dá para saber quanto falta enquanto o modelo pensa, e o que rodar quando o código das cobaias muda? As taxas do modelo nesta máquina, o erro da estimativa da barra por fase, medido nos registros gravados, e a seleção de cenários pelo diff do Git, provada no histórico do repositório."),
+        # ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) aba da sessão com revisor humano; o id entra junto com a seção (secao_revisao_v3).
+        # ! Motivo: a medida com revisor humano (ficha 40, opção b) é uma análise nova da Pós-Fase 4 e, pela regra do painel, vira uma aba lida do JSON gravado.
+        ("revisaov3", "Revisão humana", "O relatório v3 com a árvore de decisão ajuda uma pessoa a decidir? A sessão de revisão da corrida 24: os 36 relatórios lidos um a um, às cegas, todos por um analista de QA da empresa a quem o Eric passou os relatórios, com a adesão apropriada (aceitar o diagnóstico certo e recusar o errado), o erro localizado e a utilidade."),
+        # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) aba da corrida 25; o id entra junto com a seção (secao_sem_notas).
+        # ! Motivo: o experimento da ficha 63 (opção b) é uma análise nova e, pela regra do painel, vira uma aba lida do JSON gravado, antes e depois da corrida.
+        ("semnotas", "Notas do modelo", ("As notas que o modelo escreveu na biblioteca ajudam ou atrapalham o diagnóstico? A corrida 25: a biblioteca de produção sem as notas do modelo e sem os "
+                                        "verbetes aprendidos, nos 36 casos oficiais e nos 36 inéditos, contra as corridas 22 e 24, com a prévia sem modelo e a regra fixada antes.")),
+        # ! Alteração de IA - Revisar: (10/11/2026, decisão 118) aba da pesquisa das três ideias do Eric para o fluxo do agente; o id entra junto com a seção (secao_fluxo).
+        # ! Motivo: a rodada 7 da pesquisa (levantamento §6.16) é uma análise nova e, pela regra do painel, vira uma aba lida dos JSON gravados; as fichas 65 a 67 estão abertas, e o Eric decide por ela.
+        ("fluxo", "Fluxo do agente", ("As três ideias do Eric para o fluxo do agente entram? O que a literatura e os dados do projeto sustentam para o raciocínio em passos, o ciclo de "
+                                      "reavaliação e o analista de documentação, o veredito por ideia, a proposta de desenho e as fichas 65 a 67.")),
+        # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) aba da corrida 26; o id entra junto com a seção (secao_segundo_passe).
+        # ! Motivo: o experimento da ficha 66 (opção b) é uma análise nova e, pela regra do painel, vira uma aba lida do JSON gravado, antes e depois da corrida.
+        ("segpasse", "Segundo passe", ("Um segundo pedido de diagnóstico, só quando um sinal acende e com outros verbetes, conserta mais do que estraga? A corrida 26: os casos com o selo "
+                                       "baixo ou a FONTE divergente, os verbetes seguintes da mesma busca, a regra de escolha fixada antes e a prévia sem modelo.")),
+        # ! Alteração de IA - Revisar: (10/11/2026, decisão 121) aba das duas medidas da proposta do analista de documentação; o id entra junto com a seção (secao_analista).
+        # ! Motivo: a medida M1 (sem modelo, já rodada) e a corrida 27 (a medida M2) são análises novas e, pela regra do painel, viram uma aba lida dos JSON gravados.
+        ("analista", "Analista de documentação", ("Os portões novos barram o que a pessoa barrou, e a entrada própria muda o que o modelo escreve na biblioteca? A medida M1 (os portões 3, "
+                                                  "4 e 5 nas 92 propostas da corrida 20, contra a revisão humana) e a corrida 27 (o analista com a ficha curta do caso).")),
     ]),
-    ("Pesquisa e método", [
+    ("Fase 5", [
+        # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 5; a seção vem de painel_fases.secao_fase.
+        # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
+        ("f-5", "Visão da Fase 5", "A fase em uma página: o agente contra a linha de base manual."),
+    ]),
+    ("Pesquisa e documentação", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
-        ("metodo", "Método e limites", "Como a Fase 3 foi medida, as limitações declaradas e a Fase 3-B."),
         ("ferramental", "Ferramental", "As ferramentas locais, a economia de tokens e a medição do servidor de memória do código."),
-    ]),
-    ("Fases anteriores", [
-        ("fases2", "Fases 2-A e 2-B", "Prompts sem documentação e a biblioteca escrita à mão em seis condições."),
-        ("comparacao", "Entre fases", "O que cada etapa acrescentou, nos 90 e nos 36, com custo e riscos."),
     ]),
 ]
 
@@ -663,11 +750,15 @@ _TOPICO = re.compile(r"^#### (\d+\.\d+\.\d+) (.+?) \(`([^`]+)` — (\d+) aprovad
 # ela que o Eric lê a análise que pediu em 01/10.
 LEVANTAMENTO_FILTROS = "levantamento-2026-09-29-documentacao-autogerida.md"
 LEVANTAMENTO_PRE_FASE4 = "levantamento-2026-10-01-pre-fase-4.md"
+LEVANTAMENTO_FLUXO = "levantamento-2026-11-10-fluxo-do-agente.md"
 RODADAS = [
     ("levantamento-2026-09-11-fase-3.md", "Rodadas 1 e 2 (11 e 23/09): Fase 3", "Fase 3"),
     ("levantamento-2026-09-22-llms-locais.md", "Rodada 3 (22/09): LLMs locais", "LLMs locais"),
     (LEVANTAMENTO_FILTROS, "Rodada 4 (29/09): documentação autogerida", "documentação autogerida"),
     (LEVANTAMENTO_PRE_FASE4, "Rodada 5 (01/10): Pré-Fase 4", "Pré-Fase 4"),
+    # ! Alteração de IA - Revisar: (10/11/2026) a rodada 7 (as três ideias para o fluxo do agente, §6.16) entra na lista das rodadas com afirmações verificadas.
+    # ! Motivo: ela teve segunda leitura de cada fonte e o cabeçalho das subseções segue o formato que esta aba lê; a rodada 6 (Pós-Fase 4, §6.15) continua fora, porque não teve verificação.
+    (LEVANTAMENTO_FLUXO, "Rodada 7 (10/11): fluxo do agente", "fluxo do agente"),
 ]
 _POR_EXTENSO = {4: "Quatro", 5: "Cinco", 6: "Seis", 7: "Sete"}
 
@@ -771,6 +862,12 @@ def secao_pesquisa() -> tuple[dict, str]:
     frase_r5 = (f' A rodada 5 (01/10) é a da Pré-Fase 4: {len(do_r5)} tópicos integrados, com {sum(t["aprovadas"] for t in do_r5)} afirmações aprovadas'
                 + (f', e {falta_r5} tópicos da parte B (raciocínio aberto, memória e visualização) ainda por rodar' if falta_r5 else '')
                 + '; o mapa de viabilidade e as sínteses dela estão na aba <a href="#colibri" data-ir="colibri|">Modelos grandes pelo disco</a>.') if do_r5 else ""
+    # ! Alteração de IA - Revisar: (10/11/2026) frase da rodada 7 (as três ideias para o fluxo do agente, §6.16) e o aviso de que a rodada 6 não entra nesta conta.
+    # ! Motivo: a aba dizia "§6.9 a §6.14" e contava cinco rodadas; a rodada 7 teve segunda leitura de cada fonte e entra na conta, e a rodada 6 (Pós-Fase 4) não teve verificação.
+    do_r7 = [t for t in topicos if t["curto"] == "fluxo do agente"]
+    frase_r7 = (f' A rodada 7 (10/11) pesquisou as três ideias do Eric para o fluxo do agente: {len(do_r7)} tópicos, com {sum(t["aprovadas"] for t in do_r7)} afirmações aprovadas por uma segunda '
+                'leitura de cada fonte; os vereditos e as fichas estão na aba <a href="#fluxo" data-ir="fluxo|">Fluxo do agente</a>. A rodada 6 (07/11, Pós-Fase 4) não teve verificação '
+                'e por isso não entra nesta conta: está na aba <a href="#posfase4" data-ir="posfase4|">Pós-Fase 4</a>.') if do_r7 else ""
     # tabela dos tópicos com barra
     trs = []
     for t in topicos:
@@ -790,7 +887,7 @@ def secao_pesquisa() -> tuple[dict, str]:
     n_rodadas = len(RODADAS) + 1  # o primeiro arquivo guarda as rodadas 1 e 2
     html_ = f'''<section id="pesquisa" hidden>
 <h1>Pesquisa bibliográfica: o que a literatura diz e o que entrou no projeto</h1>
-<p class="lead">{_POR_EXTENSO.get(n_rodadas, str(n_rodadas))} rodadas de levantamento, cada tópico pesquisado por um agente, cada afirmação verificada por outro agente cético contra a fonte, e a síntese integrada ao Memorial (§6.9 a §6.14) com as referências no padrão ABNT. A rodada 4 (29/09) respondeu ao pedido do Eric sobre como melhorar a documentação autogerida e evitar alucinação: {len([t for t in topicos if t["rodada"].startswith("Rodada 4")])} tópicos, {sum(t["aprovadas"] for t in topicos if t["rodada"].startswith("Rodada 4"))} afirmações aprovadas e um mapa de {n_filtros} filtros, dos quais {cont["adotado"]} entram como candidatos ao plano da Fase 4 (ficha 16).{frase_r5}</p>
+<p class="lead">{_POR_EXTENSO.get(n_rodadas, str(n_rodadas))} rodadas de levantamento, cada tópico pesquisado por um agente, cada afirmação verificada por outro agente cético contra a fonte, e a síntese integrada ao Memorial (§6.9 a §6.14 e §6.16) com as referências no padrão ABNT. A rodada 4 (29/09) respondeu ao pedido do Eric sobre como melhorar a documentação autogerida e evitar alucinação: {len([t for t in topicos if t["rodada"].startswith("Rodada 4")])} tópicos, {sum(t["aprovadas"] for t in topicos if t["rodada"].startswith("Rodada 4"))} afirmações aprovadas e um mapa de {n_filtros} filtros, dos quais {cont["adotado"]} entram como candidatos ao plano da Fase 4 (ficha 16).{frase_r5}{frase_r7}</p>
 {kpis(itens_kpi)}
 <h2>As afirmações, rodada a rodada</h2>
 <div class="chart baixo"><canvas id="g-pe-rodadas"></canvas></div>
@@ -806,8 +903,10 @@ def secao_pesquisa() -> tuple[dict, str]:
     "Rodada 4 é o insumo direto da ficha 16 (filtros na geração e na gestão da documentação).",
     "Rodada 5 abriu a Pré-Fase 4: rodar modelo grande lendo os pesos do disco, as pesquisas em que o colibri se apoia, modelos MoE pequenos em CPU e o atlas de especialistas."
     + (f" Os {falta_r5} tópicos sobre o raciocínio aberto ainda não rodaram." if falta_r5 else " Os tópicos sobre o raciocínio aberto também estão integrados."),
+    *([("Rodada 7 respondeu à decisão 118: o raciocínio em passos, o ciclo de reavaliação e a separação de um analista de documentação, com um leitor e um verificador por tópico; "
+        "nada mudou no agente, e as decisões de implementar são as fichas 65 a 67.")] if do_r7 else []),
 ])}
-{fontes(["<code>2-pesquisa-e-literatura/levantamento-2026-09-11-fase-3.md</code>, <code>-22-llms-locais.md</code>, <code>-29-documentacao-autogerida.md</code>, <code>levantamento-2026-10-01-pre-fase-4.md</code>", "<code>mapa-de-decisoes-fase-3.md</code>, <code>fichamento-referencias-projeto.md</code>, <code>referencias.md</code>"])}
+{fontes(["<code>2-pesquisa-e-literatura/levantamento-2026-09-11-fase-3.md</code>, <code>-22-llms-locais.md</code>, <code>-29-documentacao-autogerida.md</code>, <code>levantamento-2026-10-01-pre-fase-4.md</code>, <code>levantamento-2026-11-10-fluxo-do-agente.md</code>", "<code>mapa-de-decisoes-fase-3.md</code>, <code>fichamento-referencias-projeto.md</code>, <code>referencias.md</code>"])}
 </section>'''
     por_afirmacoes: dict[str, dict] = {}
     for t_ in topicos:
@@ -1872,6 +1971,18 @@ function inedVerbete(){
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, title:{display:true,text:'casos'}}, y:{stacked:true}}}});
 }
 // aba Pós-Fase 4 (07/11/2026): fontes com endereço por leitura da rodada 6, coloridas pela parte do pedido
+// ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) os dois gráficos da aba "O que chega ao analista": a parcela de textos dentro de cada limiar, por grupo e versão, e os termos sem o significado antes e depois.
+// ! Motivo: a aba nova segue a regra do painel (um ou dois gráficos lidos do JSON); as cores vêm da paleta validada (--s1, --s2, --s4, --s6), e a legenda nomeia cada série.
+function txtCriterios(){
+  const C = (T.texto||{}).criterios; if(!C) return;
+  grafico('g-texto-criterios', {type:'bar', data:{labels: C.rotulos, datasets: C.series.map(s => ({label: s.nome, data: s.pct, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{min:0, max:100, title:{display:true, text:'textos dentro do limiar (%)'}}}, plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+'%'}}}}});
+}
+function txtTermos(){
+  const R = (T.texto||{}).termos; if(!R || !R.rotulos.length) return;
+  grafico('g-texto-termos', {type:'bar', data:{labels: R.rotulos, datasets:[{label:'antes (v2 e verbetes)', data: R.antes, backgroundColor: css('--s4')}, {label:'depois (v3 e camada de leitura)', data: R.depois, backgroundColor: css('--s1')}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{beginAtZero:true, title:{display:true, text:'textos em que o termo aparece sem o significado'}}}}});
+}
 function posFontes(){
   const L = (T.posfase4||{}).leituras||[]; if(!L.length) return;
   grafico('g-pos4-fontes', {type:'bar', data:{labels: L.map(x => x.rotulo), datasets:[
@@ -2047,12 +2158,178 @@ function triMutacoes(){
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:4}, title:{display:true, text:'casos (roteiros, no seletor)'}},
       y:{stacked:true, afterFit: s => { s.width = Math.max(s.width, 200); }}}}});
 }
+// ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) os dois gráficos e o explorador da aba "Árvore de decisão": as afirmações por rótulo de origem e os
+// casos por faixa de confiança, por corrida, e a árvore de um caso montada dos JSON gravados (decisões, afirmações com o chip da origem, alternativas, texto do modelo).
+// ! Motivo: a aba nova segue a regra do painel (um ou dois gráficos lidos do JSON); as cores dos rótulos vêm da paleta validada (--s1, --s2, --s4, --s6) e as da confiança
+// são as semânticas do painel (--bom, --meio, --ruim). O explorador não copia os arquivos Markdown: monta a árvore dos dados compactados em Python.
+function progErro(){
+  const E = (T.progresso||{}).erro; if(!E) return;
+  grafico('g-prog-erro', {type:'bar', data:{labels: E.fases, datasets: E.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, title:{display:true, text:'segundos'}}}, plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+' s'}}}}});
+}
+function progGit(){
+  const G = (T.progresso||{}).git; if(!G || !G.pares.length) return;
+  grafico('g-git-pares', {type:'bar', data:{labels: G.pares, datasets:[{label:'cenários base a rodar (de '+G.total+')', data: G.selecionados, backgroundColor: G.cores.map(c => css(c))}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, max: G.total, ticks:{stepSize:1}, title:{display:true, text:'cenários a rodar'}}}, plugins:{tooltip:{callbacks:{label: c => G.vereditos[c.dataIndex]+': '+c.formattedValue+' de '+G.total}}}}});
+}
+function revV3Adesao(){
+  const A = (T.revisaov3||{}).adesao; if(!A) return;
+  grafico('g-revv3-adesao', {type:'bar', data:{labels: A.grupos, datasets: A.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{stepSize:5}, title:{display:true, text:'relatórios'}}}}});
+}
+function revV3Utilidade(){
+  const U = (T.revisaov3||{}).utilidade; if(!U) return;
+  grafico('g-revv3-utilidade', {type:'bar', data:{labels: U.notas.map(n => 'nota ' + n), datasets: U.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{stepSize:5}, title:{display:true, text:'relatórios'}}}}});
+}
+function semNotasContexto(){
+  const P = (T.semnotas||{}).previa; if(!P) return;
+  grafico('g-semnotas-contexto', {type:'bar', data:{labels: P.grupos, datasets: P.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{stepSize:6}, title:{display:true, text:'casos'}}}}});
+}
+function semNotasPares(){
+  const L = (T.semnotas||{}).pares; if(!L) return;
+  grafico('g-semnotas-pares', {type:'bar', data:{labels: L.grupos, datasets: L.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, ticks:{stepSize:6}, title:{display:true, text:'acertos'}}}}});
+}
+// ! Alteração de IA - Revisar: (10/11/2026, decisão 120) os dois gráficos da aba "Segundo passe" (corrida 26): por sinal, onde está o verbete da causa certa nos casos com sinal
+// (barras empilhadas) e os erros e acertos da primeira resposta com, depois da corrida, o que a segunda consertaria, estragaria e o que a regra trocou (barras lado a lado).
+// ! Motivo: a aba nova segue a regra do painel (um ou dois gráficos lidos do JSON); os dois existem antes e depois da corrida, porque todo gráfico tem a sua leitura em painel_leituras.
+function segPasseAlcance(){
+  const A = (T.segpasse||{}).alcance; if(!A) return;
+  grafico('g-segpasse-alcance', {type:'bar', data:{labels: A.grupos, datasets: A.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, ticks:{stepSize:2}, title:{display:true, text:'casos com sinal'}}}}});
+}
+function segPasseResultado(){
+  const R = (T.segpasse||{}).resultado; if(!R) return;
+  grafico('g-segpasse-resultado', {type:'bar', data:{labels: R.grupos, datasets: R.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'casos'}}}}});
+}
+// ! Alteração de IA - Revisar: (10/11/2026, decisão 121) os gráficos da aba "Analista de documentação": na medida M1, o que cada portão recusaria entre as edições revisadas por
+// uma pessoa (barras lado a lado: erradas, parciais e corretas) e o que sobra depois de cada portão, pelo veredito da revisão humana (barras empilhadas).
+// ! Motivo: a aba nova segue a regra do painel (gráficos lidos do JSON); as cores dos vereditos são as semânticas do painel (--bom, --meio, --ruim).
+function analistaPortoes(){
+  const P = (T.analista||{}).portoes; if(!P) return;
+  grafico('g-analista-portoes', {type:'bar', data:{labels: P.grupos, datasets: P.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'edições revisadas'}}}}});
+}
+function analistaSequencia(){
+  const S = (T.analista||{}).sequencia; if(!S) return;
+  grafico('g-analista-sequencia', {type:'bar', data:{labels: S.grupos, datasets: S.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:2}, title:{display:true, text:'edições que sobram'}},
+      y:{stacked:true, afterFit: s => { s.width = Math.max(s.width, 260); }}}}});
+}
+// ! Alteração de IA - Revisar: (11/11/2026, decisão 121) os dois gráficos da corrida 27 (medida M2) na aba "Analista de documentação": as três leituras da regra, em
+// percentual do total de cada uma, na corrida 20 e, depois da corrida, na 27 (a dica mostra a contagem, "x de y"); e os casos com lacuna e sem lacuna na documentação,
+// com quem o desenho chamaria e, depois da corrida, as abstenções, as propostas e as que passam nos cinco portões.
+// ! Motivo: os dois existem antes e depois da corrida, porque todo gráfico da página tem a sua leitura em painel_leituras; as três leituras têm totais diferentes
+// (casos, propostas com texto, edições revisadas), e só o percentual as põe no mesmo eixo.
+function analistaLeituras(){
+  const L = (T.analista||{}).leituras; if(!L) return;
+  grafico('g-analista-leituras', {type:'bar', data:{labels: L.grupos, datasets: L.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, max:100, title:{display:true, text:'% do total de cada leitura'}}},
+      plugins:{tooltip:{callbacks:{label: c => c.dataset.label+': '+L.series[c.datasetIndex].rotulos[c.dataIndex]}}}}});
+}
+function analistaCasos(){
+  const C = (T.analista||{}).casos; if(!C) return;
+  grafico('g-analista-casos', {type:'bar', data:{labels: C.grupos, datasets: C.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, ticks:{stepSize:5}, title:{display:true, text:'casos'}}}}});
+}
+// aba Fluxo do agente (10/11/2026, decisão 118): a conferência depois da resposta, a posição do verbete certo, o custo do analista de documentação e as afirmações por tópico
+function fluxoConferencia(){
+  const C = (T.fluxo||{}).conferencia; if(!C) return;
+  grafico('g-fluxo-conferencia', {type:'bar', data:{labels: C.corridas, datasets: C.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:2}, title:{display:true, text:'erros da corrida'}}, y:{stacked:true}}}});
+}
+function fluxoPosicao(){
+  const P = (T.fluxo||{}).posicao; if(!P) return;
+  grafico('g-fluxo-posicao', {type:'bar', data:{labels: P.faixas, datasets: P.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{title:{display:true, text:'posição do verbete da causa certa na lista da busca'}}, y:{beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'erros'}}}}});
+}
+function fluxoCusto(){
+  const C = (T.fluxo||{}).custo; if(!C) return;
+  grafico('g-fluxo-custo', {type:'bar', data:{labels: C.cenarios, datasets:[{label:'segundos por chamada', data: C.segundos, backgroundColor: C.cores.map(c => css(c))}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, title:{display:true, text:'segundos por chamada do analista de documentação'}}}}});
+}
+function fluxoAfirmacoes(){
+  const A = (T.fluxo||{}).afirmacoes; if(!A) return;
+  grafico('g-fluxo-afirmacoes', {type:'bar', data:{labels: A.topicos, datasets: A.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true, beginAtZero:true, title:{display:true, text:'afirmações tiradas das fontes'}}, y:{stacked:true}}}});
+}
+function arvRotulos(){
+  const R = (T.arvore||{}).rotulos; if(!R) return;
+  grafico('g-arvore-rotulos', {type:'bar', data:{labels: R.corridas, datasets: R.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true, beginAtZero:true, title:{display:true, text:'afirmações das árvores'}}, y:{stacked:true}}}});
+}
+function arvConfianca(){
+  const C = (T.arvore||{}).confianca; if(!C) return;
+  grafico('g-arvore-confianca', {type:'bar', data:{labels: C.corridas, datasets: C.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true, beginAtZero:true, title:{display:true, text:'casos por faixa de confiança'}}, y:{stacked:true}}}});
+}
+function arvExplorar(){
+  const E = (T.arvore||{}).explorador, raiz = document.querySelector('#arvore .arv-explorador');
+  if(!E || !E.corridas || !E.corridas.length || !raiz || raiz.dataset.pronto) return; raiz.dataset.pronto = '1';
+  const selC = raiz.querySelector('.arv-sel-corrida'), selK = raiz.querySelector('.arv-sel-caso'), alvo = raiz.querySelector('.arv-arvore');
+  const el = (tag, attrs, texto) => { const e = document.createElement(tag); Object.entries(attrs || {}).forEach(([k, v]) => e.setAttribute(k, v)); if(texto != null) e.textContent = texto; return e; };
+  // o texto das afirmações vem em Markdown simples: o que está entre crases vira <code>
+  const comCodigo = (texto) => { const s = el('span'); String(texto || '').split('`').forEach((parte, i) => { if(!parte) return; s.append(i % 2 ? el('code', {}, parte) : document.createTextNode(parte)); }); return s; };
+  const chip = (origem) => el('span', {class: 'chip origem-' + origem}, origem);
+  E.corridas.forEach((c, k) => selC.append(el('option', {value: String(k)}, `${c.nome} (${c.casos.length} casos)`)));
+  function casos(){
+    const c = E.corridas[Number(selC.value)]; selK.replaceChildren();
+    [['com divergência', x => x.resumo.divergencia], ['sem divergência', x => !x.resumo.divergencia]].forEach(([nome, f]) => { const itens = c.casos.filter(f); if(!itens.length) return;
+      const g = el('optgroup', {label: `${nome} (${itens.length})`}); itens.forEach(x => g.append(el('option', {value: x.nome}, x.nome))); selK.append(g); });
+  }
+  function decisao(d){
+    const bloco = el('div', {class: 'arv-decisao'});
+    bloco.append(el('h4', {}, `Decisão ${d.numero}: ${d.titulo}`));
+    let escolha = d.escolha == null ? 'nada registrado' : String(d.escolha);
+    if(d.chave === 'causa') escolha = d.escolha == null ? 'nenhuma causa respondida' : '`' + d.escolha + '`' + (d.causa_em_palavras ? ' (' + d.causa_em_palavras + ')' : '') + (d.segunda ? '; segunda: `' + d.segunda + '`' : '') + (d.confianca ? '; confiança ' + d.confianca : '');
+    if(d.chave === 'cura') escolha = d.escolha && d.escolha !== 'nenhuma' ? '`' + d.escolha + '`' + (d.seletor ? ' (`' + d.seletor + '`)' : '') : 'nenhum candidato aplicado';
+    const p = el('p', {class: 'arv-escolha'}); p.append(el('strong', {}, 'Escolha: '), comCodigo(escolha)); bloco.append(p);
+    const ul = el('ul', {class: 'arv-afirmacoes'});
+    d.afirmacoes.forEach(a => { const li = el('li'); li.append(comCodigo(a[0]), chip(a[1])); ul.append(li); });
+    bloco.append(ul);
+    if(d.erro){ const q = el('blockquote', {class: 'arv-erro'}, d.erro); bloco.append(el('p', {class: 'nota'}, 'Mensagem do navegador, como veio:'), q); }
+    if(d.alternativas && d.alternativas.length){
+      const det = el('details'); det.append(el('summary', {}, `Alternativas (${d.alternativas_total})`));
+      const caixa = el('div', {class: 'tabela'}), tab = el('table'), thead = el('thead'), cab = el('tr'); ['Alternativa', 'Detalhe', 'Escolhida'].forEach(h => cab.append(el('th', {}, h))); thead.append(cab);
+      const corpo = el('tbody'); d.alternativas.forEach(a => { const tr = el('tr'); const c1 = el('td'); c1.append(comCodigo(a[0])); const c2 = el('td'); c2.append(comCodigo(a[1] || '')); tr.append(c1, c2, el('td', {}, a[2] ? 'sim' : '')); corpo.append(tr); });
+      tab.append(thead, corpo); caixa.append(tab); det.append(caixa); bloco.append(det);
+    }
+    return bloco;
+  }
+  function mostrar(){
+    const c = E.corridas[Number(selC.value)], x = c.casos.find(k => k.nome === selK.value) || c.casos[0]; if(!x) return;
+    const r = x.resumo, cab = el('p', {class: 'nota'});
+    cab.textContent = `Trilha ${x.trilha}: ${r.decisoes} decisões e ${r.afirmacoes} afirmações (${Object.entries(r.rotulos).filter(([, n]) => n).map(([k, n]) => `${n} ${k}`).join(', ')}); ` +
+      (r.divergencia ? 'há divergência entre o declarado e o conferido' : 'nenhuma divergência entre o declarado e o conferido') + (r.cura ? '; houve cura de localizador' : '') + (r.confianca ? `; confiança ${r.confianca}` : '') + `. Arquivo: arvores/${x.arquivo}` + (x.relatorio_v3 ? `; relatório de defeito: ${x.relatorio_v3.replace('../', '')}` : '') + '.';
+    const blocos = [cab, ...x.decisoes.map(decisao)];
+    const tm = el('div', {class: 'arv-decisao arv-modelo'}); tm.append(el('h4', {}, 'Texto do modelo'));
+    tm.append(el('p', {class: 'nota'}, 'As linhas escritas pelo modelo, como vieram e sem garantia:'));
+    const bq = el('blockquote'); bq.append(el('div', {}, 'IMPACTO: ' + (x.texto_do_modelo.impacto || '(a linha não veio na resposta)')), el('div', {}, 'FONTE: ' + (x.texto_do_modelo.fonte || '(a linha não veio na resposta)'))); tm.append(bq);
+    blocos.push(tm);
+    alvo.replaceChildren(...blocos);
+  }
+  selC.addEventListener('change', () => { casos(); mostrar(); });
+  selK.addEventListener('change', mostrar);
+  selC.value = String(E.padrao.corrida); casos();
+  if(E.padrao.caso && E.corridas[E.padrao.corrida].casos.some(k => k.nome === E.padrao.caso)) selK.value = E.padrao.caso;
+  mostrar();
+}
 """ + pa.JS_ATLAS + pe.JS_EXPLORADOR
 
 DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pesquisa": ["peRodadas"], "comparativo": ["cqTrajetoria", "cqConfronto", "cqRevisao"], "tresb": ["tbGeneraliza", "tbRecuperacao"],
                     "cruzada": ["czLeitores", "czTrocas"], "colibri": ["coMinutos"], "raciocinio": ["raSustentacao", "raConfianca", "raExplorar"], "atlas": ["atlasIniciar"], "cerebro": ["ceTemas"],
                     "curadoria": ["curOperacoes"], "recuperador": ["recMetodos"], "ablacao": ["ablBarras"], "ferramental": ["ferMcp"],
-                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaRegra", "telaCorridas", "telaVerbete", "telaClasses", "telaRotulos"], "ineditosf4": ["inedClasse", "inedVerbete"], "posfase4": ["posFontes"], "cura": ["curaModos", "curaRoteiros"],
+                    "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaRegra", "telaCorridas", "telaVerbete", "telaClasses", "telaRotulos"], "ineditosf4": ["inedClasse", "inedVerbete"], "posfase4": ["posFontes"], "texto": ["txtCriterios", "txtTermos"], "cura": ["curaModos", "curaRoteiros"],
+                    "arvore": ["arvRotulos", "arvConfianca", "arvExplorar"],
+                    "progresso": ["progErro", "progGit"],
+                    "revisaov3": ["revV3Adesao", "revV3Utilidade"],
+                    "semnotas": ["semNotasContexto", "semNotasPares"],
+                    "fluxo": ["fluxoConferencia", "fluxoPosicao", "fluxoCusto", "fluxoAfirmacoes"],
+                    "segpasse": ["segPasseAlcance", "segPasseResultado"],
+                    "analista": ["analistaPortoes", "analistaSequencia", "analistaLeituras", "analistaCasos"],
                     "biblioteca": ["bibFiltros", "bibReavaliacao"], "cenarios": ["cenMttr", "cenSucesso"], "trilha": ["triSinais", "triMutacoes"], "experimento": ["expAcerto", "expTrocas"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
@@ -2078,6 +2355,14 @@ pre.bruto{margin:8px 0;background:var(--acento2);border-radius:6px;padding:10px 
 pre.bruto code{background:none;padding:0;font:inherit}
 .relatorio{border-left:3px solid var(--linha);padding:2px 0 8px 16px;margin:8px 0}.relatorio h3{margin-top:10px}.relatorio h5{font:600 13px var(--fb);margin:14px 0 6px}
 .chip.adotado{background:color-mix(in srgb,var(--bom) 18%,transparent);color:var(--bom)}.chip.adiado{background:color-mix(in srgb,var(--meio) 18%,transparent);color:var(--meio)}.chip.descartado{background:color-mix(in srgb,var(--ruim) 16%,transparent);color:var(--ruim)}
+.chip.origem-observado{background:color-mix(in srgb,var(--s1) 18%,transparent);color:var(--s1)}.chip.origem-conferido{background:color-mix(in srgb,var(--s2) 18%,transparent);color:var(--s2)}
+.chip.origem-declarado{background:color-mix(in srgb,var(--s4) 18%,transparent);color:var(--s4)}.chip.origem-desconhecido{background:color-mix(in srgb,var(--s6) 18%,transparent);color:var(--s6)}
+.arv-controles{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13px;color:var(--ink2);margin:10px 0}.arv-controles select{max-width:100%;margin-left:4px}
+.arv-arvore{display:grid;gap:14px;align-items:start}
+.arv-decisao{background:var(--bg2);border:1px solid var(--linha);border-radius:10px;padding:14px 16px;min-width:0}.arv-decisao h4{margin:0 0 6px}
+.arv-escolha{margin:4px 0 8px;font-size:13px}.arv-afirmacoes{list-style:none;padding:0;margin:6px 0;font-size:13px}.arv-afirmacoes li{margin:7px 0;display:flex;flex-wrap:wrap;gap:3px 8px;align-items:baseline}
+.arv-afirmacoes code,.arv-escolha code,.arv-decisao td code{overflow-wrap:anywhere}.arv-decisao details{margin:8px 0 0}.arv-decisao table{font-size:12px}.arv-decisao td,.arv-decisao th{padding:4px 7px}
+.arv-decisao blockquote{margin:6px 0;padding:6px 12px;border-left:3px solid var(--linha);font:12px/1.5 var(--fm);white-space:pre-wrap;overflow-wrap:anywhere}
 """ + pa.CSS_ATLAS + pe.CSS_EXPLORADOR
 
 
@@ -3478,6 +3763,1239 @@ def secao_pos_fase4(levantamento: str | None, plano: str | None, pend: list) -> 
     return {"leituras": leituras, "mapa": mapa, "vereditos": dict(vereditos)}, html_
 
 
+# ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) a aba "O que chega ao analista": lê resultados_alvo/fase4/texto.json (avaliar_fase4.py --texto) e
+# mostra quantos relatórios e leituras passam nos oito filtros de prolixidade e objetividade antes e depois, a parcela por critério, os termos sem o significado, as
+# médias, os limiares com a fonte, o que o plano antecipou para as frases e o corpus da calibração; o id entra no NAV e os dois gráficos em DESENHAR_TOPICOS.
+# ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o plano da Pós-Fase 4 (seção 3.3) pede a aba com a leitura antes e depois; nenhum
+# número é digitado aqui.
+NOME_CURTO_DO_CRITERIO = {"palavras_por_frase_media": "palavras por frase (média)", "palavras_por_frase_max": "palavras por frase (máximo)", "preenchimento_razao": "preenchimento",
+                          "repeticao_razao": "repetição", "compressao": "compressão", "termos_sem_expansao_n": "termo sem o significado"}
+REGRA_EM_PALAVRAS = {"ate": "até o limiar", "alarme_abaixo": "alarme abaixo do valor", "zero": "nenhuma ocorrência", "comparacao": "só para comparar", "covariavel": "covariável, nunca critério"}
+CASAS_DO_LIMIAR = {"palavras_por_frase_media": 1, "palavras_por_frase_max": 1, "flesch": 0, "preenchimento_razao": 4, "repeticao_razao": 4, "compressao": 3, "termos_sem_expansao_n": 0}
+
+
+def _txt_num(v, casas: int = 2) -> str:
+    if v is None:
+        return "sem valor"
+    if isinstance(v, bool):
+        return "sim" if v else "não"
+    if isinstance(v, int) or casas == 0:
+        return str(round(v))
+    return f"{v:.{casas}f}".replace(".", ",")
+
+
+def _txt_pct(v) -> str:
+    return "sem valor" if v is None else f"{v:.1f}%".replace(".", ",")
+
+
+# ! Alteração de IA - Revisar: (10/11/2026) `secao_texto` ganhou o parâmetro `curadoria` (as respostas e os consertos da curadoria das leituras) e passou a mostrar
+# quantas leituras estão curadas, quantas o analista aprovou como estavam e quantas reescreveu, os consertos do Claude e a tabela leitura a leitura.
+# ! Motivo: a regra do painel pede que toda curadoria apareça numa aba lida dos arquivos; a aba dizia que o que ainda reprovava ficava "para a curadoria do Eric", e as
+# 39 leituras foram curadas em 10/11/2026 por um analista, a quem o Eric passou as leituras, com consertos do Claude (decisão 115).
+def secao_texto(texto: dict | None, curadoria: dict | None = None) -> tuple[dict, str]:
+    titulo = "O que chega ao analista ficou mais curto e direto? Os filtros de prolixidade e objetividade nos relatórios v2 e v3 das três corridas vigentes e nos verbetes contra a camada de leitura."
+    if not texto:
+        return {}, (f'<section id="texto" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A leitura ainda não foi gravada: falta <code>resultados_alvo/fase4/texto.json</code>, '
+                    'que sai de <code>avaliar_fase4.py --texto</code> depois de <code>filtros_de_texto.py --calibrar</code>.</p>\n</section>')
+    rel, ver, mo = texto["resumo"]["relatorios"], texto["resumo"]["verbetes"], texto["modelo"]
+    ra, rd, va, vd = rel["antes"], rel["depois"], ver["antes"], ver["depois"]
+    lim = texto["limiares"]
+    valores, corpus = lim["valores"], lim.get("corpus") or {}
+    por_metrica = lim.get("corpus_por_metrica") or {}
+    chaves = [m["chave"] for m in texto["metricas"] if m["regra"] in ("ate", "zero")]
+    series = [("relatórios v2", "--s4", ra), ("relatórios v3", "--s1", rd), ("verbetes", "--s6", va), ("camada de leitura", "--s2", vd)]
+    criterios = {"rotulos": [NOME_CURTO_DO_CRITERIO.get(ch, ch) for ch in chaves], "chaves": chaves,
+                 "series": [{"nome": n, "cor": cor, "pct": [ag["criterios"][ch]["passam_pct"] for ch in chaves]} for n, cor, ag in series]}
+    termos_antes = Counter(ra["termos_sem_expansao"]) + Counter(va["termos_sem_expansao"])
+    termos_depois = Counter(rd["termos_sem_expansao"]) + Counter(vd["termos_sem_expansao"])
+    rotulos_t = sorted(set(termos_antes) | set(termos_depois), key=lambda t: (-(termos_antes.get(t, 0) + termos_depois.get(t, 0)), t))
+    termos = {"rotulos": rotulos_t, "antes": [termos_antes.get(t, 0) for t in rotulos_t], "depois": [termos_depois.get(t, 0) for t in rotulos_t]}
+    oc_ra, oc_rd = sum(ra["termos_sem_expansao"].values()), sum(rd["termos_sem_expansao"].values())
+    oc_va, oc_vd = sum(va["termos_sem_expansao"].values()), sum(vd["termos_sem_expansao"].values())
+    por_fonte = corpus.get("por_fonte") or {}
+    frases_c = por_metrica.get("palavras_por_frase_media") or {}
+    flesch_c = por_metrica.get("flesch") or {}
+    prov_rd = rd.get("provisorios_do_plano") or {}
+    itens_kpi = [("Relatórios v3 que passam em tudo", f'{rd["aprovados"]} de {rd["n"]}', f'relatórios v2: {ra["aprovados"]} de {ra["n"]}'),
+                 ("Leituras que passam em tudo", f'{vd["aprovados"]} de {vd["n"]}', f'verbetes como estão: {va["aprovados"]} de {va["n"]}'),
+                 ("Leituras curadas", f'{sum(1 for p in next((g for g in texto["grupos"] if g["id"] == "camada_de_leitura"), {"pares": []})["pares"] if p.get("curado"))} de {vd["n"]}',
+                  "curadoria por um analista na página, com consertos do Claude (decisão 115)" if (curadoria or {}).get("respostas") else "a camada é gerada por código e curada à mão"),
+                 ("Termos sem o significado nos relatórios", f"de {oc_ra} para {oc_rd}", "ocorrências nos textos, v2 e v3"),
+                 ("Alarme do Flesch nos relatórios", f'de {ra["alarme_flesch"]} para {rd["alarme_flesch"]}', "textos abaixo de 50; o alarme não reprova"),
+                 ("Frases do modelo que passam", f'{mo["aprovados"]} de {mo["n"]}', "a linha IMPACTO, medida como o modelo a escreveu"),
+                 ("Corpus da calibração", f'{corpus.get("itens", 0)} textos', ", ".join(f"{n} {'comentários' if f == 'motivo' else 'itens do exemplo canônico'}" for f, n in por_fonte.items()) or "sem corpus")]
+    lead_ = (f'Nos relatórios, {rd["aprovados"]} de {rd["n"]} passam em todos os filtros depois (v3), contra {ra["aprovados"]} de {ra["n"]} antes (v2); nos verbetes, '
+             f'{vd["aprovados"]} de {vd["n"]} leituras passam, contra {va["aprovados"]} de {va["n"]} verbetes como estão. Os termos da lista fechada sem o significado na primeira '
+             f'menção caíram de {oc_ra} ocorrências para {oc_rd} nos relatórios e de {oc_va} para {oc_vd} nos verbetes; o alarme do Flesch acendia em {ra["alarme_flesch"]} relatórios v2 '
+             f'e acende em {rd["alarme_flesch"]} v3. Os limiares calibrados são o percentil 95 do corpus de referência ({corpus.get("itens", 0)} textos); os de fonte são o alarme '
+             f'do Flesch em 50 e nenhum termo sem o significado.')
+    tab_metricas = tabela(["Métrica", "Regra", "Limiar", "De onde vem o limiar", "Fonte"],
+                          [[esc(m["nome"]), REGRA_EM_PALAVRAS.get(m["regra"], m["regra"]), _txt_num(m["limiar"], CASAS_DO_LIMIAR.get(m["chave"], 2)),
+                            {"calibracao": "calibração (percentil 95 do corpus)", "fonte": "valor da fonte", "fixo": "fixado", "comparacao": "sem limiar: só para comparar", None: "sem limiar"}.get(m.get("tipo"), m.get("tipo") or "sem limiar")
+                            + (f'; o plano antecipou {m["provisorio_do_plano"]}' if m.get("provisorio_do_plano") is not None else ""), esc(m["fonte"])] for m in texto["metricas"]]
+                          + [[esc(texto["covariavel"]["nome"]), REGRA_EM_PALAVRAS["covariavel"], "não há", "sem limiar", esc(texto["covariavel"]["fonte"])]], raw=True)
+
+    def linha_media(rotulo: str, versao: str, ag: dict) -> list[str]:
+        md = ag["medias"]
+        return [rotulo, versao, str(ag["n"]), f'{ag["aprovados"]} ({_txt_pct(ag["aprovados_pct"])})', f'{ag["alarme_flesch"]} ({_txt_pct(ag["alarme_flesch_pct"])})',
+                _txt_num(md["palavras_por_frase_media"]), _txt_num(md["palavras_por_frase_max"], 1), _txt_num(md["flesch"], 1), _txt_num(md["preenchimento_razao"], 4),
+                _txt_num(md["repeticao_razao"], 4), _txt_num(md["compressao"], 3), _txt_num(md["termos_sem_expansao_n"], 2), _txt_num(md["densidade_dominio"], 3), _txt_num(ag["palavras_mediana"], 0)]
+
+    linhas_medias, linhas_termos, linhas_prov, linhas_casos = [], [], [], []
+    for g in texto["grupos"]:
+        a, d = g["antes"], g["depois"]
+        versoes = ("relatório v2", "relatório v3") if g["tipo"] == "relatorios" else ("verbete", "leitura")
+        linhas_medias += [linha_media(g["rotulo"], versoes[0], a), linha_media(g["rotulo"], versoes[1], d)]
+        for t in sorted(set(a["termos_sem_expansao"]) | set(d["termos_sem_expansao"]), key=lambda x: (-(a["termos_sem_expansao"].get(x, 0) + d["termos_sem_expansao"].get(x, 0)), x)):
+            linhas_termos.append([g["rotulo"], t, str(a["termos_sem_expansao"].get(t, 0)), str(d["termos_sem_expansao"].get(t, 0))])
+        for versao, ag in ((versoes[0], a), (versoes[1], d)):
+            pr = ag.get("provisorios_do_plano") or {}
+            linhas_prov.append([g["rotulo"], versao, str(ag["n"])] + [f'{pr[ch]["passam"]} ({_txt_pct(pr[ch]["passam_pct"])})' if ch in pr else "sem valor" for ch in ("palavras_por_frase_media", "palavras_por_frase_max")])
+        for par in g["pares"]:
+            pa, pd = par["antes"], par["depois"]
+            linhas_casos.append([g["rotulo"], par.get("nome") or par.get("id"), _txt_num(pa["aprovado"]), _txt_num(pd["aprovado"]), _txt_num(pa["palavras_por_frase_max"]), _txt_num(pd["palavras_por_frase_max"]),
+                                 _txt_num(pa["flesch"], 1), _txt_num(pd["flesch"], 1), ", ".join(pa["termos_sem_expansao"]) or "nenhum", ", ".join(pd["termos_sem_expansao"]) or "nenhum",
+                                 str(pa["palavras"]), str(pd["palavras"])])
+    tab_medias = tabela(["Grupo", "Versão", "Textos", "Passam em tudo", "Alarme do Flesch", "Palavras por frase (média)", "Palavras por frase (máximo)", "Flesch", "Preenchimento", "Repetição",
+                         "Compressão", "Termos sem o significado", "Densidade do domínio", "Palavras (mediana)"], linhas_medias)
+    tab_termos = tabela(["Grupo", "Termo", "Textos antes", "Textos depois"], linhas_termos or [["nenhum", "nenhum", "0", "0"]])
+    tab_prov = tabela(["Grupo", "Versão", "Textos", "Passam com média até 20", "Passam com máximo até 30"], linhas_prov)
+    tab_casos = tabela(["Grupo", "Texto", "Passa antes", "Passa depois", "Maior frase antes", "Maior frase depois", "Flesch antes", "Flesch depois", "Termos antes", "Termos depois", "Palavras antes", "Palavras depois"], linhas_casos)
+    tab_corpus = tabela(["Métrica", "Mediana no corpus", "Percentil 75", "Percentil 90", "Percentil 95", "Limiar"],
+                        [[esc(m["nome"]), _txt_num((por_metrica.get(m["chave"]) or {}).get("mediana"), CASAS_DO_LIMIAR.get(m["chave"], 2) or 1), _txt_num((por_metrica.get(m["chave"]) or {}).get("percentil_75"), CASAS_DO_LIMIAR.get(m["chave"], 2) or 1),
+                          _txt_num((por_metrica.get(m["chave"]) or {}).get("percentil_90"), CASAS_DO_LIMIAR.get(m["chave"], 2) or 1), _txt_num((por_metrica.get(m["chave"]) or {}).get("percentil_95"), CASAS_DO_LIMIAR.get(m["chave"], 2) or 1),
+                          _txt_num(m["limiar"], CASAS_DO_LIMIAR.get(m["chave"], 2))] for m in texto["metricas"] if por_metrica.get(m["chave"])], raw=True)
+    sobra = ", ".join(f"<code>{esc(t)}</code> ({n})" for t, n in vd["termos_sem_expansao"].items()) or "nenhum"
+    camada = next((g for g in texto["grupos"] if g["id"] == "camada_de_leitura"), {"pares": []})
+    curadas = sum(1 for p in camada["pares"] if p.get("curado"))
+    respostas_c, consertos_c = (curadoria or {}).get("respostas") or [], (curadoria or {}).get("consertos") or {}
+    aprovadas_c = sum(1 for x in respostas_c if x["estado"] == "aprovada")
+    reescritas_c = sum(1 for x in respostas_c if x["estado"] == "editada")
+    n_consertos = sum(len(v) for v in consertos_c.values())
+    dados_curadoria = {"curadas": curadas, "aprovadas": aprovadas_c, "reescritas": reescritas_c, "consertos": n_consertos, "leituras_consertadas": len(consertos_c)}
+    if curadas and respostas_c:
+        dia = max(x["salvo_em"] for x in respostas_c if x.get("salvo_em"))[:10]
+        item_camada = (f'<strong>Na camada de leitura</strong> passam {vd["aprovados"]} de {vd["n"]} leituras, contra {va["aprovados"]} verbetes como estão. As {curadas} de {vd["n"]} leituras foram '
+                       f'curadas em {dia[8:10]}/{dia[5:7]}/{dia[0:4]} na página da curadoria por um analista, a quem o Eric passou cada leitura e de quem colou a resposta: {aprovadas_c} aprovadas como estavam e '
+                       f'{reescritas_c} reescritas. Depois vieram {n_consertos} consertos do Claude em {len(consertos_c)} delas, a pedido do Eric, no que era fato errado ou formato quebrado: notas que '
+                       'diziam que a busca é vetorial e que as épocas são treinamento, uma linha colada na seguinte, uma mensagem literal da API alterada e termos ainda sem o significado '
+                       '(decisão 115). As notas que o modelo acrescentou aos verbetes saíram das leituras e continuam nos verbetes que o modelo lê.')
+    elif curadas:
+        item_camada = (f'<strong>Na camada de leitura</strong> passam {vd["aprovados"]} de {vd["n"]} leituras, contra {va["aprovados"]} verbetes como estão; {curadas} de {vd["n"]} leituras estão curadas.')
+    else:
+        item_camada = (f'<strong>Na camada de leitura</strong> passam {vd["aprovados"]} de {vd["n"]} leituras, contra {va["aprovados"]} verbetes como estão; o que sobra é texto do próprio verbete ({sobra}), '
+                       'que a curadoria reescreve.')
+    por_id = {p["id"]: p for p in camada["pares"]}
+    tab_curadoria = tabela(["Leitura", "Resposta do analista", "Consertos do Claude", "Passa nos filtros depois da curadoria"],
+                           [[f"<code>{esc(x['id'])}</code>", "aprovada como estava" if x["estado"] == "aprovada" else "reescrita" if x["estado"] == "editada" else esc(x["estado"]),
+                             str(len(consertos_c.get(x["id"]) or [])), _txt_num((por_id.get(x["id"]) or {}).get("depois", {}).get("aprovado"))]
+                            for x in sorted(respostas_c, key=lambda x: x["id"])], raw=True) if respostas_c else ""
+    # ! Alteração de IA - Revisar: (08/11/2026) a leitura das frases longas e a nota da tabela do que o plano antecipou citam o fechamento da ficha 56 (decisão 108, opção a).
+    # ! Motivo: o Eric respondeu a ficha no quadro da sessão em 08/11/2026; sem a citação, a aba diria que o limiar de frase ainda espera decisão.
+    itens_leitura = [
+        (f'<strong>O molde do relatório v3 foi ajustado até passar</strong>, como o plano manda (seção 9): os termos da lista fechada ganharam o significado na primeira menção, o que veio '
+         f'do caso e do navegador virou citação, a classe e o nível saem em palavras do molde e as frases repetidas em blocos vizinhos foram encurtadas. Os relatórios v2 reprovam todos '
+         f'({ra["aprovados"]} de {ra["n"]}), por termos da trilha sem o significado ({", ".join(list(ra["termos_sem_expansao"])[:5])}); os v3 passam {rd["aprovados"]} de {rd["n"]}.'),
+        (f'<strong>As frases do corpus de referência são longas</strong>: mediana de {_txt_num(frases_c.get("mediana"), 1)} palavras por frase, e {frases_c.get("itens_de_uma_frase", "?")} dos '
+         f'{corpus.get("itens", 0)} textos têm uma frase só, encadeada por ponto e vírgula e dois-pontos. Por isso o percentil 95 ficou em {_txt_num(valores["palavras_por_frase_media"]["valor"], 1)} '
+         f'palavras na média e {_txt_num(valores["palavras_por_frase_max"]["valor"], 1)} na frase mais longa, bem acima dos 20 e 30 que o plano antecipou. Vale o calibrado, por decisão do Eric (ficha 56, fechada em 08/11/2026, decisão 108); com os antecipados, '
+         f'passariam {prov_rd.get("palavras_por_frase_media", {}).get("passam", "?")} de {rd["n"]} relatórios v3 na média e {prov_rd.get("palavras_por_frase_max", {}).get("passam", "?")} na frase mais longa.'),
+        item_camada,
+        (f'<strong>O Flesch é alarme, não critério</strong>: a mediana do corpus de referência é {_txt_num(flesch_c.get("mediana"), 1)} (o alarme acende abaixo de 50); os relatórios v2 acendiam em '
+         f'{ra["alarme_flesch"]} de {ra["n"]} e os v3 em {rd["alarme_flesch"]}. O índice só olha frase e sílaba, e a literatura o chama de superficial.'),
+        (f'<strong>As frases de impacto do modelo</strong> ({mo["n"]}, medidas como vieram) passam em {mo["aprovados"]}; {mo["alarme_flesch"]} acendem o alarme do Flesch; preenchimentos achados: '
+         f'{", ".join(f"{t} ({n})" for t, n in mo["preenchimentos"].items()) or "nenhum"}. O tamanho em palavras entra só como covariável.'),
+    ]
+    html_ = f"""<section id="texto" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>Os oito filtros e os limiares</h2>
+<p class="nota">Cada métrica sai com o limiar e a fonte declarados (levantamento §6.15.4, base D). Os limiares calibrados são o percentil 95 do corpus de referência: os textos "! Motivo:" dos comentários de IA deste repositório e o exemplo canônico do resumo técnico do Eric, lido da memória do repositório TargetERP sem copiar texto nenhum para cá.</p>
+{tab_metricas}
+<h2>Quantos textos ficam dentro de cada limiar, antes e depois</h2>
+<div class="chart"><canvas id="g-texto-criterios"></canvas></div>
+{detalhes("As médias por grupo e versão", tab_medias)}
+<h2>Os termos sem o significado na primeira menção</h2>
+<div class="chart"><canvas id="g-texto-termos"></canvas></div>
+{detalhes("Os termos por grupo", tab_termos)}
+<h2>O que o plano antecipou para as frases</h2>
+<p class="nota">Segunda conta, só para comparar: o limiar que vale é o calibrado (ficha 56, fechada pelo Eric em 08/11/2026 pela decisão 108).</p>
+{tab_prov}
+{detalhes("O corpus da calibração, métrica a métrica", tab_corpus)}
+{detalhes("Texto a texto", tab_casos)}
+{detalhes("A curadoria, leitura a leitura", tab_curadoria) if tab_curadoria else ""}
+{leitura(itens_leitura)}
+{fontes(["<code>resultados_alvo/fase4/texto.json</code> e <code>texto.md</code> (<code>avaliar_fase4.py --texto</code>, com <code>--check</code>)",
+         "<code>resultados_alvo/fase4/limiares_texto.json</code> (<code>filtros_de_texto.py --calibrar</code>)", "<code>experimentos/filtros_de_texto.py</code> (as oito métricas, as listas fechadas e a calibração)",
+         "levantamento §6.15.4 e <code>5-metodo-e-ferramental/dados/pesquisa-pos-fase-4/base-D-metricas-de-prolixidade.md</code>", "plano aprovado da Pós-Fase 4, seções 3.3 e 7 (pacote Q2)",
+         "<code>resultados_alvo/fase4/curadoria_leituras/</code>: <code>respostas.json</code> (o que a página da curadoria gravou), <code>consertos.json</code> e <code>consertos.md</code> (cada troca do Claude, com o motivo)"])}
+</section>"""
+    return {"criterios": criterios, "termos": termos, "resumo": texto["resumo"], "curadoria": dados_curadoria}, html_
+
+
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) a aba "Árvore de decisão": os números lidos dos `arvores/INDICE.json` das três corridas vigentes
+# (árvores, nós da trilha que viraram decisões, afirmações por rótulo de origem, casos com divergência e com cura, confiança em palavras, filtros do Q2), dois
+# gráficos, o explorador que mostra a árvore de cada caso (lida do JSON de cada trilha, compactada por _caso_compacto) e os índices recolhidos.
+# ! Motivo: o plano da Pós-Fase 4 (seção 3.4 e pacote Q3) pede a árvore no explorador do painel; pela regra do painel, a análise nova vira uma aba lida dos JSON
+# gravados por `arvore_de_decisao.py --saida`, e o Eric decide por ela. Nenhum número é digitado aqui.
+ROTULO_CORRIDA_ARVORE = {"fase4_tela_v4": "corrida 18d (tela e caso escrito)", "fase4_ensaio_v4": "corrida 21d (ensaio dos cenários)", "fase4_ineditos": "corrida 24 (inéditos em texto)"}
+ROTULOS_DE_ORIGEM = (("observado", "--s1"), ("conferido", "--s2"), ("declarado", "--s4"), ("desconhecido", "--s6"))
+CONFIANCAS_ARVORE = (("alta", "--bom"), ("média", "--meio"), ("baixa", "--ruim"), ("desconhecida", "--s6"))
+NOME_DO_NO = {"diagnostico": "diagnóstico", "cura": "cura", "reexecucao": "reexecução"}
+ALTERNATIVAS_MOSTRADAS = 6
+CASO_PADRAO_DA_ARVORE = ("fase4_ensaio_v4", "localizador-front-busca__r1")
+
+
+def _caso_compacto(arv: dict) -> dict:
+    """O que o explorador precisa de uma árvore: as decisões com a escolha, as afirmações rotuladas (pares [texto, origem]), as alternativas (até
+    ALTERNATIVAS_MOSTRADAS, como [opção, detalhe, escolhida]), a divergência e a mensagem do navegador; o texto do modelo; o resumo. O resto (eventos,
+    rastro) fica no arquivo da árvore. Os pares em vez de dicionários poupam cerca de um terço do tamanho da página."""
+    decisoes = []
+    for d in arv["decisoes"]:
+        decisoes.append({"numero": d["numero"], "chave": d["chave"], "titulo": d["titulo"], "escolha": d.get("escolha"), "seletor": d.get("seletor"),
+                         "causa_em_palavras": d.get("causa_em_palavras"), "segunda": d.get("segunda"), "confianca": (d.get("confianca") or {}).get("palavra"),
+                         "afirmacoes": [[a["texto"], a["origem"]] for a in d["afirmacoes"]],
+                         "alternativas": [[a.get("opcao"), a.get("detalhe"), bool(a.get("escolhida"))] for a in (d.get("alternativas") or [])[:ALTERNATIVAS_MOSTRADAS]],
+                         "alternativas_total": len(d.get("alternativas") or []), "divergencia": (d.get("divergencia") or {}).get("detalhe") if d.get("divergencia") else None,
+                         "erro": d.get("erro")})
+    tm = arv.get("texto_do_modelo") or {}
+    return {"nome": arv["nome"], "caso": arv["caso"], "trilha": arv["trilha"], "resumo": arv["resumo"], "decisoes": decisoes,
+            "texto_do_modelo": {"impacto": tm.get("impacto"), "fonte": tm.get("fonte")}, "arquivo": f"{arv['nome']}.md", "relatorio_v3": arv.get("relatorio_v3")}
+
+
+def secao_arvore(arvores: list[dict] | None) -> tuple[dict, str]:
+    titulo = "Dá para ver por que o agente decidiu o que decidiu, passo a passo? A árvore de decisão de cada caso das corridas vigentes, com a origem de cada afirmação."
+    if not arvores:
+        return {}, (f'<section id="arvore" hidden>\n<h1>{titulo}</h1>\n<p class="lead">As árvores ainda não foram gravadas: falta <code>arvores/INDICE.json</code> nas pastas das '
+                    'corridas vigentes, que sai de <code>arvore_de_decisao.py --saida &lt;corrida&gt;</code>.</p>\n</section>')
+    resumos = [(c["corrida"], c["indice"]["resumo"]) for c in arvores]
+    total = sum(r["trilhas"] for _, r in resumos)
+    nos = Counter()
+    decisoes = Counter()
+    rotulos = Counter()
+    confiancas = Counter()
+    filtros_n = filtros_ap = 0
+    for _, r in resumos:
+        nos.update(r.get("nos_por_decisao") or {})
+        decisoes.update(r.get("decisoes_por_chave") or {})
+        rotulos.update(r.get("rotulos") or {})
+        confiancas.update(r.get("por_confianca") or {})
+        if r.get("filtros"):
+            filtros_n += r["filtros"]["n"]
+            filtros_ap += r["filtros"]["aprovados"]
+    com_div = sum(r["com_divergencia"] for _, r in resumos)
+    com_cura = sum(r["com_cura"] for _, r in resumos)
+    afirmacoes = sum(rotulos.values())
+    # os motivos da divergência, lidos de cada árvore: a falha do nó de diagnóstico, ou a ordem fixa da cura
+    motivos: Counter = Counter()
+    casos_compactos = []
+    for c in arvores:
+        casos = []
+        for arv in c["casos"].values():
+            casos.append(_caso_compacto(arv))
+            for d in arv["decisoes"]:
+                if d.get("divergencia"):
+                    motivos[("cura: dois candidatos passaram as checagens, e a ordem fixa decidiu" if d["chave"] == "cura" else
+                             (f"diagnóstico: falha `{d.get('falha')}`" if d.get("falha") else "diagnóstico: divergência sem falha registrada"))] += 1
+        casos_compactos.append({"corrida": c["corrida"], "nome": ROTULO_CORRIDA_ARVORE.get(c["corrida"], c["corrida"]), "casos": casos})
+    padrao = next((k for k, c in enumerate(casos_compactos) if c["corrida"] == CASO_PADRAO_DA_ARVORE[0]), 0)
+    explorador = {"corridas": casos_compactos, "padrao": {"corrida": padrao, "caso": CASO_PADRAO_DA_ARVORE[1]},
+                  "rotulos": {k: v for k, v in (arvores[0]["casos"][next(iter(arvores[0]["casos"]))].get("rotulos") or {}).items()} if arvores[0]["casos"] else {}}
+    dados_js = {"explorador": explorador,
+                "rotulos": {"corridas": [ROTULO_CORRIDA_ARVORE.get(c, c) for c, _ in resumos],
+                            "series": [{"nome": rot, "cor": cor, "n": [(r.get("rotulos") or {}).get(rot, 0) for _, r in resumos]} for rot, cor in ROTULOS_DE_ORIGEM]},
+                "confianca": {"corridas": [ROTULO_CORRIDA_ARVORE.get(c, c) for c, _ in resumos],
+                              "series": [{"nome": conf, "cor": cor, "n": [(r.get("por_confianca") or {}).get(conf, 0) for _, r in resumos]} for conf, cor in CONFIANCAS_ARVORE
+                                         if any((r.get("por_confianca") or {}).get(conf) for _, r in resumos)]},
+                "resumo": {"arvores": total, "nos": sum(nos.values()), "decisoes": sum(decisoes.values()), "afirmacoes": afirmacoes, "rotulos": dict(rotulos),
+                           "com_divergencia": com_div, "com_cura": com_cura, "filtros": {"n": filtros_n, "aprovados": filtros_ap}}}
+    por_corrida = ", ".join(f"{r['trilhas']} da {ROTULO_CORRIDA_ARVORE.get(c, c).split(' (')[0]}" for c, r in resumos)
+    nos_txt = ", ".join(f"{n} de {NOME_DO_NO.get(k, k)}" for k, n in sorted(nos.items(), key=lambda x: -x[1]))
+    conf_txt = ", ".join(f"{confiancas.get(conf, 0)} {conf}" for conf, _ in CONFIANCAS_ARVORE if confiancas.get(conf))
+    lead_ = (f"{total} árvores, uma por trilha com nó de decisão ({por_corrida}); os {sum(nos.values())} nós de decisão da trilha ({nos_txt}) viraram {sum(decisoes.values())} decisões "
+             f"da árvore, em quatro tipos (o que o modelo lê, que verbetes entram, a causa e a cura). Das {afirmacoes} afirmações, {rotulos.get('observado', 0)} são o que o código mediu, "
+             f"{rotulos.get('conferido', 0)} o que ele conferiu do que o modelo disse, {rotulos.get('declarado', 0)} o que o modelo só declarou e {rotulos.get('desconhecido', 0)} o que faltou na trilha. "
+             f"{com_div} casos têm divergência entre o declarado e o conferido, e {com_cura} têm cura de localizador; a confiança do agente ficou {conf_txt}. "
+             f"Os filtros de texto do pacote Q2 aprovam {filtros_ap} das {filtros_n} árvores.")
+    itens_kpi = [("Árvores geradas", f"{total}", f"uma por trilha com nó de decisão: {por_corrida}"),
+                 ("Nós da trilha que viraram decisões", f"{sum(nos.values())} em {sum(decisoes.values())}", nos_txt),
+                 ("Afirmações medidas pelo código", f"{rotulos.get('observado', 0)} de {afirmacoes}", f"{rotulos.get('conferido', 0)} conferidas, {rotulos.get('declarado', 0)} declaradas pelo modelo, {rotulos.get('desconhecido', 0)} desconhecidas"),
+                 ("Casos com divergência", f"{com_div} de {total}", "o declarado pelo modelo não bate com o conferido pelo código"),
+                 ("Casos com cura de localizador", f"{com_cura} de {total}", "a decisão 4 só existe neles"),
+                 ("Árvores que passam nos filtros do Q2", f"{filtros_ap} de {filtros_n}", "repetição, preenchimento, jargão sem o significado e frases longas")]
+    linhas_indice = []
+    for c in arvores:
+        for a in c["indice"]["arvores"]:
+            f = a.get("filtros") or {}
+            linhas_indice.append([ROTULO_CORRIDA_ARVORE.get(c["corrida"], c["corrida"]), a["nome"], a.get("escolha") or "nenhuma", a.get("confianca") or "desconhecida",
+                                  "sim" if a["divergencia"] else "não", "sim" if a["cura"] else "não", str(a["decisoes"]),
+                                  "/".join(str(a["rotulos"].get(rot, 0)) for rot, _ in ROTULOS_DE_ORIGEM), "passa" if f.get("aprovado") else ("não passa" if f else "não medido")])
+    tab_indice = tabela(["Corrida", "Árvore", "Causa escolhida", "Confiança", "Divergência", "Cura", "Decisões", "Afirmações (observado/conferido/declarado/desconhecido)", "Filtros do Q2"], linhas_indice)
+    tab_motivos = tabela(["Motivo da divergência", "Casos"], [[pt.inline(m), str(n)] for m, n in motivos.most_common()] or [["nenhuma divergência", "0"]], raw=True)
+    tab_resumo = tabela(["Corrida", "Árvores", "Nós da trilha", "Decisões", "Afirmações", "Observado", "Conferido", "Declarado", "Desconhecido", "Com divergência", "Com cura", "Passam nos filtros"],
+                        [[ROTULO_CORRIDA_ARVORE.get(c, c), str(r["trilhas"]), str(sum((r.get("nos_por_decisao") or {}).values())), str(sum((r.get("decisoes_por_chave") or {}).values())),
+                          str(r["afirmacoes"])] + [str((r.get("rotulos") or {}).get(rot, 0)) for rot, _ in ROTULOS_DE_ORIGEM]
+                         + [str(r["com_divergencia"]), str(r["com_cura"]), f'{r["filtros"]["aprovados"]} de {r["filtros"]["n"]}' if r.get("filtros") else "não medido"] for c, r in resumos])
+    desconhecidas = rotulos.get("desconhecido", 0)
+    itens_leitura = [
+        ("<strong>A árvore mostra o que o relatório não mostra: as alternativas.</strong> Em cada caso, os verbetes que ficaram de fora com a pontuação, a segunda causa com a probabilidade lida "
+         "e, na cura, os candidatos descartados com o motivo em código. Tudo sai da trilha gravada, sem chamar o modelo de novo."),
+        (f"<strong>A maior parte das afirmações é medida, não declarada.</strong> {rotulos.get('observado', 0)} das {afirmacoes} afirmações são o que o código mediu, e {rotulos.get('conferido', 0)} são o que ele "
+         f"conferiu do que o modelo disse; o modelo só declara {rotulos.get('declarado', 0)} (a causa, o campo e a FONTE), e o que ele escreveu fica num bloco à parte, rotulado como texto do modelo."
+         + (f" As {desconhecidas} afirmações desconhecidas são casos em que a trilha não guarda um sinal medido em código para a causa (as execuções de localizador do ensaio), e nenhuma delas vira percentual."
+            if desconhecidas else "")),
+        (f"<strong>A divergência aparece em {com_div} casos.</strong> A tabela dos motivos diz de onde ela vem: quase sempre a causa respondida não é tratada por nenhum verbete entregue; uma vez a resposta "
+         f"veio sem a linha FONTE; e nas {com_cura} curas dois candidatos passaram as checagens em código e a ordem fixa decidiu, o que a árvore registra como divergência entre o programa e a verificação."),
+        ("<strong>A confiança sai em palavras, com a taxa de acerto da faixa.</strong> Alta, média ou baixa pelos cortes da calibração, e em cada árvore a frase diz quantos casos daquela faixa o agente "
+         "acertou na corrida de calibração; sem a leitura da calibração, a faixa fica sem taxa e a afirmação é marcada como desconhecida."),
+        (f"<strong>O molde da árvore foi ajustado até passar nos filtros do pacote Q2</strong>, como o plano manda (seção 9): a primeira versão repetia a mesma frase para cada verbete citado e para cada "
+         f"candidato da cura e reprovava na repetição de trigramas; as frases viraram uma só, e os valores medidos (o que o código esperava e recebeu) saíram da prosa para os trechos de código e para as "
+         f"tabelas. Depois do ajuste, {filtros_ap} das {filtros_n} árvores passam."),
+    ]
+    html_ = f"""<section id="arvore" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>De onde vem cada afirmação da árvore</h2>
+<div class="chart"><canvas id="g-arvore-rotulos"></canvas></div>
+{detalhes("O resumo por corrida", tab_resumo)}
+<h2>A confiança do agente em palavras, por corrida</h2>
+<div class="chart"><canvas id="g-arvore-confianca"></canvas></div>
+<h2>Explorar a árvore de um caso</h2>
+<p>Escolha a corrida e o caso. Cada bloco é uma decisão do agente, na ordem em que aconteceu; cada frase traz a origem: <span class="chip origem-observado">observado</span> é o que o código mediu, <span class="chip origem-conferido">conferido</span> é o que ele checou do que o modelo disse, <span class="chip origem-declarado">declarado</span> é o que o modelo escreveu sem garantia, e <span class="chip origem-desconhecido">desconhecido</span> é o que faltou na trilha. O arquivo Markdown de cada árvore está em <code>arvores/</code> na pasta da corrida.</p>
+<div class="arv-explorador">
+<div class="arv-controles"><label>Corrida <select class="arv-sel-corrida"></select></label><label>Caso <select class="arv-sel-caso"></select></label></div>
+<div class="arv-arvore"><p class="nota">Sem o script da página, as mesmas árvores estão em <code>arvores/&lt;caso&gt;.md</code> na pasta de cada corrida.</p></div>
+</div>
+<h2>Por que há divergência</h2>
+{tab_motivos}
+{detalhes("Todas as árvores, uma linha por caso", tab_indice)}
+{leitura(itens_leitura)}
+{fontes(["<code>arvores/INDICE.json</code> e <code>arvores/INDICE.md</code> nas pastas <code>fase4_tela_v4</code>, <code>fase4_ensaio_v4</code> e <code>fase4_ineditos</code> (<code>arvore_de_decisao.py --saida &lt;corrida&gt;</code>, com <code>--check</code>)",
+         "um <code>.md</code> e um <code>.json</code> por trilha em <code>arvores/</code>", "<code>experimentos/arvore_de_decisao.py</code> (as quatro decisões, os rótulos de origem e a confiança em palavras)",
+         "<code>resultados_alvo/fase4/calibracao.json</code> e <code>limiares.json</code> (a taxa de acerto por faixa e os cortes do selo)", "plano aprovado da Pós-Fase 4, seções 3.4 e 7 (pacote Q3)"])}
+</section>"""
+    return dados_js, html_
+
+
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) a aba "Barra e Git": as taxas do modelo nesta máquina (taxas_progresso.json), o erro da
+# estimativa da barra por fase (erro_progresso.json), a fumaça real quando houver (fumaca_progresso.json) e a prova da seleção pelo diff do Git no histórico
+# do repositório (impacto_git.json); dois gráficos pela paleta, cartões, "Como ler" e as tabelas recolhidas. Nenhum número digitado: tudo vem dos JSON.
+# ! Motivo: a barra de progresso e o protótipo do Git são as análises novas do pacote Q4 (plano, seções 3.5 e 3.7) e, pela regra do painel, viram uma aba
+# lida dos JSON gravados por script; o Eric decide pelo painel.
+VEREDITO_GIT = {"roda tudo": "--s4", "seleção parcial": "--s1", "nada a rodar": "--s6"}
+FASES_DO_ERRO = (("prefill_s", "prefill"), ("geracao_s", "geração"), ("total_s", "prefill mais geração"))
+MEDIDAS_DAS_TAXAS = (("prefill_tokens_por_s", "prefill (tokens por segundo)", 1), ("geracao_tokens_por_s", "geração (tokens por segundo)", 2), ("tokens_entrada", "tokens do prompt", 0),
+                     ("tokens_saida", "tokens gerados", 0), ("chars_por_token", "caracteres por token do prompt", 2), ("carga_ms", "carga do modelo (ms)", 0))
+
+
+def _num_q4(v, casas: int = 1) -> str:
+    if v is None:
+        return "n/d"
+    return f"{v:.{casas}f}".replace(".", ",")
+
+
+def _pct_q4(v) -> str:
+    return "n/d" if v is None else f"{v * 100:.0f}%"
+
+
+def _data_curta(iso: str) -> str:
+    return f"{iso[8:10]}/{iso[5:7]}" if iso and len(iso) >= 10 else (iso or "")
+
+
+def secao_progresso(taxas: dict | None, erro: dict | None, impacto: dict | None, fumaca: dict | None = None) -> tuple[dict, str]:
+    titulo = ("Dá para saber quanto falta enquanto o modelo pensa, e o que rodar quando o código das cobaias muda? A barra de progresso em duas fases, com o erro da "
+              "estimativa medido nos registros gravados, e o protótipo da seleção de cenários pelo diff do Git, provado no histórico do repositório.")
+    if not (taxas and erro and impacto):
+        return {}, (f'<section id="progresso" hidden>\n<h1>{titulo}</h1>\n<p class="lead">Os derivados do pacote Q4 ainda não foram gravados: faltam <code>taxas_progresso.json</code>, '
+                    '<code>erro_progresso.json</code> ou <code>impacto_git.json</code> em <code>resultados_alvo/fase4/</code>, que saem de <code>progresso.py --taxas</code>, '
+                    '<code>progresso.py --erro</code> e <code>impacto_git.py --prova</code>.</p>\n</section>')
+    modelo = next(iter(taxas["por_modelo"]))
+    m = taxas["por_modelo"][modelo]
+    b = erro["por_modelo"][modelo]
+    fora = b["fora_da_corrida"]
+    pre, ger, saida_t = m["prefill_tokens_por_s"], m["geracao_tokens_por_s"], m["tokens_saida"]
+    teto = ", ".join(str(x) for x in m.get("teto_tokens") or []) or "n/d"
+    r, pares, total_cen = impacto["resumo"], impacto["pares"], impacto["mapa"]["cenarios"]
+    ft, fp, fg = fora["total_s"], fora["prefill_s"], fora["geracao_s"]
+    erro_js = {"fases": [nome for _, nome in FASES_DO_ERRO],
+               "series": [{"nome": "erro absoluto mediano (taxas das outras corridas)", "cor": "--s1", "n": [fora[ch]["erro_abs_mediana_s"] for ch, _ in FASES_DO_ERRO]},
+                          {"nome": "erro absoluto no percentil 90", "cor": "--s4", "n": [fora[ch]["erro_abs_p90_s"] for ch, _ in FASES_DO_ERRO]}]}
+    git_js = {"pares": [f"{p['atual'][:8]} ({_data_curta(p['data'])})" for p in pares], "selecionados": [len(p["selecao"]["cenarios"]) for p in pares],
+              "vereditos": [p["veredito"] for p in pares], "cores": [VEREDITO_GIT.get(p["veredito"], "--s6") for p in pares], "total": total_cen}
+    fum = None
+    if fumaca and fumaca.get("por_fase"):
+        pf_ = fumaca["por_fase"]
+        fum = {"corrida": fumaca["metadados"].get("corrida"), "inferencias": fumaca.get("inferencias"), "por_fase": pf_}
+    dados_js = {"erro": erro_js, "git": git_js, "fumaca": fum,
+                "resumo": {"modelo": modelo, "registros": m["n"], "prefill_mediana": pre["mediana"], "geracao_mediana": ger["mediana"], "erro_total_mediano_s": ft["erro_abs_mediana_s"],
+                           "pares": r["pares"], "rodar_tudo": r["rodar_tudo"], "selecao_parcial": r["selecao_parcial"], "nada_a_rodar": r["nada_a_rodar"]}}
+    deixados = r.get("cenarios_deixados_de_fora_no_total", 0)
+    lead_ = (f"Nesta máquina o {modelo} lê o prompt a {_num_q4(pre['mediana'], 1)} tokens por segundo na mediana de {pre['n']} respostas (de {_num_q4(pre['p10'], 1)} a {_num_q4(pre['p90'], 1)} em oito de cada dez) "
+             f"e escreve a resposta a {_num_q4(ger['mediana'], 2)} tokens por segundo ({_num_q4(ger['p10'], 2)} a {_num_q4(ger['p90'], 2)}), com {_num_q4(saida_t['mediana'], 0)} tokens gerados na mediana e teto de {teto}. "
+             f"Estimada pelas taxas das outras corridas, como a barra vê numa corrida nova, a soma do prefill com a geração erra {_num_q4(ft['erro_abs_mediana_s'], 1)} s na mediana "
+             f"({_pct_q4(ft['erro_relativo_mediana'])} do tempo medido; {_num_q4(ft['erro_abs_p90_s'], 1)} s no percentil 90), quase tudo no prefill ({_num_q4(fp['erro_abs_mediana_s'], 1)} s) e pouco na geração "
+             f"({_num_q4(fg['erro_abs_mediana_s'], 1)} s); {ft['subestimados']} das {ft['n']} inferências ficaram subestimadas, as outras superestimadas. "
+             f"No protótipo do Git, dos {r['pares']} pares de commits consecutivos que mexeram nas cobaias, a seleção rodaria parte dos {total_cen} cenários em {r['selecao_parcial']} de {r['pares']}, "
+             f"tudo em {r['rodar_tudo']} (regra 1: arquivo fora do mapa) e nada em {r['nada_a_rodar']} (só arquivos ignorados mudaram); {deixados} cenários ficaram registrados como deixados de fora.")
+    if fum:
+        ftot = fum["por_fase"].get("total_s") or fum["por_fase"].get("parede_s") or {}
+        fumaca_kpi = ("Fumaça real com o modelo", f"{_num_q4(ftot.get('erro_abs_mediana_s'), 1)} s de erro", f"{fum['inferencias']} inferência(s) na corrida {fum['corrida']}, prefill mais geração")
+    else:
+        fumaca_kpi = ("Fumaça real com o modelo", "pendente", "o comando está pronto; roda com o sim do Eric e a máquina livre")
+    itens_kpi = [("Taxa de prefill nesta máquina", f"{_num_q4(pre['mediana'], 1)} tokens/s", f"mediana de {pre['n']} respostas; de {_num_q4(pre['p10'], 1)} a {_num_q4(pre['p90'], 1)} em oito de cada dez"),
+                 ("Taxa de geração", f"{_num_q4(ger['mediana'], 2)} tokens/s", f"de {_num_q4(ger['p10'], 2)} a {_num_q4(ger['p90'], 2)}; {_num_q4(saida_t['mediana'], 0)} tokens gerados na mediana (teto {teto})"),
+                 ("Erro da estimativa: prefill mais geração", f"{_num_q4(ft['erro_abs_mediana_s'], 1)} s", f"mediano, com as taxas das outras corridas; {_pct_q4(ft['erro_relativo_mediana'])} do medido; {_num_q4(ft['erro_abs_p90_s'], 1)} s no percentil 90"),
+                 ("Erro só do prefill", f"{_num_q4(fp['erro_abs_mediana_s'], 1)} s", f"{_pct_q4(fp['erro_relativo_mediana'])} do medido: é onde a estimativa erra, pelo cache do prefixo do Ollama"),
+                 ("Erro só da geração", f"{_num_q4(fg['erro_abs_mediana_s'], 1)} s", f"{_pct_q4(fg['erro_relativo_mediana'])} do medido: a taxa de geração quase não varia"),
+                 ("Pares de commits com seleção parcial", f"{r['selecao_parcial']} de {r['pares']}", f"{r['rodar_tudo']} rodam tudo pela regra 1 e {r['nada_a_rodar']} não rodam nada; {deixados} cenários deixados de fora, registrados"),
+                 fumaca_kpi]
+    tab_taxas = tabela(["Medida", "Mediana", "P10", "P90", "Mínimo", "Máximo", "n", "De onde vem"],
+                       [[nome, _num_q4(m[ch]["mediana"], casas), _num_q4(m[ch]["p10"], casas), _num_q4(m[ch]["p90"], casas), _num_q4(m[ch]["min"], casas), _num_q4(m[ch]["max"], casas), str(m[ch]["n"]), m[ch]["origem"]]
+                        for ch, nome, casas in MEDIDAS_DAS_TAXAS if m.get(ch)])
+    linhas_erro = []
+    for modo, rotulo in (("fora_da_corrida", "taxas das outras corridas"), ("na_amostra", "taxas de todas as corridas")):
+        for ch, nome in FASES_DO_ERRO + (("parede_s", "tempo de relógio da chamada"),):
+            e = b[modo].get(ch)
+            if e:
+                linhas_erro.append([rotulo, nome, str(e["n"]), _num_q4(e["erro_mediana_s"], 1), _num_q4(e["erro_abs_mediana_s"], 1), _num_q4(e["erro_abs_p90_s"], 1), _pct_q4(e["erro_relativo_mediana"]), f'{e["subestimados"]} de {e["n"]}'])
+    tab_erro = tabela(["Como as taxas foram tiradas", "Fase", "n", "Erro mediano (s)", "Erro absoluto mediano (s)", "Erro absoluto P90 (s)", "Erro relativo mediano", "Subestimadas"], linhas_erro)
+    tab_pares = tabela(["Commit testado", "Commit atual", "Data", "Assunto", "Alterados", "Fora da aplicação", "Ignorados", "No mapa", "Fora do mapa", "Veredito", "Cenários a rodar", "Deixados de fora"],
+                       [[f"<code>{esc(p['testado'][:8])}</code>", f"<code>{esc(p['atual'][:8])}</code>", esc(p["data"]), esc(p["assunto"]), str(p["resumo"]["alterados"]), str(p["resumo"]["fora_da_aplicacao"]),
+                         str(p["resumo"]["ignorados"]), str(p["resumo"]["no_mapa"]), str(p["resumo"]["fora_do_mapa"]), esc(p["veredito"]),
+                         esc(", ".join(p["selecao"]["cenarios"]) or "nenhum"), esc(", ".join(p["selecao"]["deixados_de_fora"]["cenarios"]) or "nenhum")] for p in pares], raw=True)
+    linhas_motivos = []
+    for p in pares:
+        for a in p["selecao"]["arquivos"]:
+            linhas_motivos.append([f"<code>{esc(p['atual'][:8])}</code>", f"<code>{esc(a['arquivo'])}</code>", esc(a["classe"].replace("_", " ")), esc(a["motivo"])])
+    tab_motivos = tabela(["Commit atual", "Arquivo da aplicação", "Classe", "Motivo"], linhas_motivos, raw=True)
+    por_cenario = impacto["mapa"].get("por_cenario") or {}
+    tab_mapa = tabela(["Cenário", "Cobaia", "Página", "Endpoint", "Verbetes ligados pelo endpoint", "Arquivos no mapa"],
+                      [[cid, c["cobaia"], f"<code>{esc(c['pagina'])}</code>", esc(", ".join(c["endpoints"]) or "nenhum"), esc(", ".join(c["verbetes"]) or "nenhum"), str(c["arquivos"])] for cid, c in por_cenario.items()], raw=True)
+    tab_regras = tabela(["Regra", "O que diz"], [[esc(k.replace("_", " ")), esc(v)] for k, v in impacto["regras"].items()])
+    if fum:
+        linhas_f = [[nome, str(e["n"]), _num_q4(e["erro_mediana_s"], 1), _num_q4(e["erro_abs_mediana_s"], 1), _pct_q4(e["erro_relativo_mediana"])]
+                    for ch, nome in FASES_DO_ERRO + (("parede_s", "tempo de relógio da chamada"),) for e in [fum["por_fase"].get(ch)] if e]
+        bloco_fumaca = (f'<p>A fumaça real rodou na corrida <code>{esc(str(fum["corrida"]))}</code>, com {fum["inferencias"]} inferência(s) do modelo: a tabela compara, por fase, o que a barra estimou antes de enviar '
+                        'com o que o Ollama mediu.</p>' + tabela(["Fase", "n", "Erro mediano (s)", "Erro absoluto mediano (s)", "Erro relativo mediano"], linhas_f))
+    else:
+        bloco_fumaca = ('<p>A fumaça real com o modelo ainda não rodou: ela mede o erro da barra numa inferência de verdade, de ponta a ponta, e só roda com o sim do Eric, com a máquina livre '
+                        '(<code>ollama ps</code> vazio e a RAM que o <code>.ps1</code> exige), lançada pelo <code>rodar_fase4.ps1</code>. Enquanto isso, o erro acima é o medido sobre as '
+                        f'{m["n"]} inferências já gravadas das corridas vigentes, sem o modelo.</p>')
+    vereditos_txt = {v: [f"<code>{p['atual'][:8]}</code>" for p in pares if p["veredito"] == v] for v in VEREDITO_GIT}
+    itens_leitura = [
+        (f"<strong>A estimativa acerta na média e erra cerca de um quinto em cada inferência.</strong> O erro mediano com sinal fica perto de zero ({_num_q4(ft['erro_mediana_s'], 1)} s), mas o erro "
+         f"absoluto é de {_num_q4(ft['erro_abs_mediana_s'], 1)} s ({_pct_q4(ft['erro_relativo_mediana'])}), quase todo no prefill: a taxa de leitura do prompt varia de {_num_q4(pre['p10'], 1)} a "
+         f"{_num_q4(pre['p90'], 1)} tokens por segundo porque o Ollama reaproveita a parte do prompt que já estava em memória (o cache do prefixo), e quanto disso vai ser reaproveitado só se sabe depois da resposta."),
+        (f"<strong>A geração é previsível.</strong> A taxa fica entre {_num_q4(ger['p10'], 2)} e {_num_q4(ger['p90'], 2)} tokens por segundo e o modelo escreve de {_num_q4(saida_t['min'], 0)} a {_num_q4(saida_t['max'], 0)} tokens, "
+         f"bem abaixo do teto de {teto}; por isso a barra usa a mediana de tokens gerados para a estimativa e o teto só como máximo, e o erro dessa fase fica em {_num_q4(fg['erro_abs_mediana_s'], 1)} s."),
+        ("<strong>A barra nunca para antes do fim.</strong> Começa indeterminada com a etapa nomeada, vira determinada assim que a estimativa existe, sem trocar de forma, chega a 90% quando o tempo decorrido "
+         "iguala a estimativa e depois segue devagar, com a estimativa refeita; Ctrl+C grava o estado como cancelado. Como a chamada ao modelo não é em fluxo, a fase mostrada é inferida pelo relógio, "
+         "não observada: a correção token a token é a ficha 59."),
+        (f"<strong>No histórico real, as três regras fizeram o que devem.</strong> A regra 1 rodou tudo em {', '.join(vereditos_txt['roda tudo']) or 'nenhum par'} (arquivos da aplicação que o mapa não conhece, "
+         f"como estilos, scripts e configuração do projeto); a seleção foi parcial em {', '.join(vereditos_txt['seleção parcial']) or 'nenhum par'}, apontando o verbete e o endpoint de cada cenário; "
+         f"e não rodou nada em {', '.join(vereditos_txt['nada a rodar']) or 'nenhum par'}, quando só a venv entrou ou saiu do git. O mapa dos includes do PHP liga <code>menu_publico.php</code> às páginas "
+         "que o incluem, o que a lista de páginas sozinha não faria."),
+        ("<strong>O que o protótipo não prova.</strong> O mapa é declarado à mão e aproximado (como o mapa do Azure DevOps): a conferência contra a rodada completa registra o que ficou de fora, mas medir o "
+         "que a seleção perdeu exige rodar os cenários, o que fica para o pacote Q7, depois da Fase 5. A fumaça real da barra mede o erro de ponta a ponta numa inferência de verdade e depende do Eric."),
+    ]
+    html_ = f"""<section id="progresso" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>Quanto a estimativa da barra erra, por fase</h2>
+<div class="chart"><canvas id="g-prog-erro"></canvas></div>
+{detalhes("As taxas do modelo, medida a medida", tab_taxas)}
+{detalhes("O erro por fase, nos dois jeitos de tirar as taxas", tab_erro)}
+<h2>A fumaça real com o modelo</h2>
+{bloco_fumaca}
+<h2>O que a seleção pelo diff do Git rodaria em cada commit das cobaias</h2>
+<div class="chart"><canvas id="g-git-pares"></canvas></div>
+{detalhes("A seleção par a par no histórico", tab_pares)}
+{detalhes("Por que cada arquivo da aplicação contou", tab_motivos)}
+{detalhes("O mapa dos cenários", tab_mapa)}
+{detalhes("As três regras da base E", tab_regras)}
+{leitura(itens_leitura)}
+{fontes(["<code>resultados_alvo/fase4/taxas_progresso.json</code> (<code>progresso.py --taxas</code>, com <code>--check</code>)", "<code>erro_progresso.json</code> (<code>progresso.py --erro</code>)",
+         "<code>impacto_git.json</code> (<code>impacto_git.py --prova</code>)", "<code>fumaca_progresso.json</code> (<code>progresso.py --fumaca</code>, depois da fumaça real)",
+         "<code>experimentos/progresso.py</code> e <code>experimentos/impacto_git.py</code>", "plano aprovado da Pós-Fase 4, seções 3.5 e 3.7 (pacote Q4)", "levantamento §6.15.2 (indicador de progresso) e §6.15.5 (seleção pelo diff)"])}
+</section>"""
+    return dados_js, html_
+
+
+# ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a aba "Revisão humana": a sessão com revisor humano dos relatórios v3 e das árvores de decisão da
+# corrida 24 (leitura_revisao_v3.json, de avaliar_fase4.py --revisao_v3): a adesão apropriada por grupo, o erro localizado, o tempo até a decisão, a utilidade, a
+# avaliação do revisor contra o gabarito e a tabela caso a caso com o comentário dele; dois gráficos pela paleta, cartões, "Como ler" e as tabelas recolhidas.
+# Nenhum número digitado: tudo vem do JSON (o tempo da sessão de 05/11 vem de leitura_revisao_trilha.json, quando existe).
+# ! Motivo: a ficha 40 foi fechada em 08/11/2026 pela opção (b) e a sessão rodou em 09 e 10/11/2026 na página com cronômetro; é a medida da especificação da
+# trilha (seção 12 c) que a Fase 4 deixou como limitação declarada (decisões 87 e 95), e o Eric decide pelo painel.
+# ! Alteração de IA - Revisar: (10/11/2026) a aba passou a dizer quem respondeu cada relatório (a tabela e o cartão "Quem respondeu") e a dar o tempo só onde a
+# página mediu uma leitura; o parágrafo, os cartões e a leitura foram reescritos a partir de `por_origem`, `tempo` e `pagina` do JSON.
+# ! Motivo: a versão publicada em 10/11/2026 dizia que o Eric tinha lido os 36 relatórios, com 31 s de mediana; no mesmo dia ele declarou que passou os relatórios
+# a um analista e colou as respostas dele (decisão 114), e o registro da página mostra que o tempo medido era o da troca entre os dois.
+def _n_q5(v, casas: int = 1) -> str:
+    if v is None:
+        return "n/d"
+    return f"{v:.{casas}f}".replace(".", ",") if isinstance(v, float) else str(v)
+
+
+def _wilson_q5(ic) -> str:
+    return "n/d" if not ic else f"{_n_q5(float(ic[0]))} a {_n_q5(float(ic[1]))}"
+
+
+def secao_revisao_v3(rev: dict | None, rev_trilha: dict | None = None) -> tuple[dict, str]:
+    titulo = ("O relatório v3 com a árvore de decisão ajuda uma pessoa a decidir? A sessão de revisão da corrida 24: os 36 relatórios lidos um a um, às cegas, com a adesão "
+              "apropriada, o erro localizado e a utilidade, e quem respondeu cada um.")
+    if not rev:
+        return {}, (f'<section id="revisaov3" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A leitura da sessão ainda não foi gravada: falta <code>leitura_revisao_v3.json</code> em '
+                    '<code>resultados_alvo/fase4/</code>, que sai de <code>avaliar_fase4.py --revisao_v3</code> depois de a planilha <code>revisao_v3.md</code> estar inteira.</p>\n</section>')
+    r, a = rev["resumo"], rev["avaliacao"]
+    ades = {x["grupo"]: x for x in rev["adesao"]}
+    loc = {x["grupo"]: x for x in rev["localizacao"]}
+    tempo = {x["grupo"]: x for x in rev["tempo"]}
+    util = {x["grupo"]: x for x in rev["utilidade"]}
+    origem = {x["origem"]: x for x in rev["por_origem"]}
+    casos = rev["casos"]
+    n = r["relatorios"]
+    certos, errados = ades["diagnóstico certo"], ades["diagnóstico errado"]
+    certos_recusados = [c for c in casos if c["acerto"] and c["decisao"] == "recusar"]
+    errados_aceitos = [c for c in casos if not c["acerto"] and c["decisao"] == "aceitar"]
+    notas = [str(v) for v in range(1, 6)]
+    t_all = tempo["todos"]
+    u_all, u_e = util["todos"], util["diagnóstico errado"]
+    n_analista = (origem.get("analista") or {}).get("n", 0)
+    n_eric = (origem.get("revisor") or {}).get("n", 0)
+    pg = rev.get("pagina") or {}
+    dados_js = {"adesao": {"grupos": [certos["grupo"], errados["grupo"]],
+                           "series": [{"nome": "decisão apropriada", "cor": "--s1", "n": [certos["apropriadas"], errados["apropriadas"]]},
+                                      {"nome": "decisão inapropriada", "cor": "--s4", "n": [certos["n"] - certos["apropriadas"], errados["n"] - errados["apropriadas"]]}]},
+                "utilidade": {"notas": notas, "series": [{"nome": "diagnóstico certo", "cor": "--s1", "n": [util["diagnóstico certo"]["contagem"][v] for v in notas]},
+                                                           {"nome": "diagnóstico errado", "cor": "--s4", "n": [u_e["contagem"][v] for v in notas]}]},
+                "resumo": {"relatorios": n, "adesao_apropriada": r["adesao_apropriada"], "adesao_pct": r["adesao_pct"], "tempo_mediana_s": r["tempo_mediana_s"],
+                           "utilidade_mediana": r["utilidade_mediana"], "erros_localizados": r["erros_localizados"], "erros_na_amostra": r["erros_na_amostra"],
+                           "respostas_do_analista": n_analista, "respostas_do_eric": n_eric, "tempo_medido_em": t_all["n"]}}
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 117) o caso de um leitor só: as respostas todas do analista, descrito pela declaração de `quem_leu`, e o tempo
+    # sem número nenhum.
+    # ! Motivo: o Eric declarou no quadro (ficha 62) que as 36 respostas são de um analista de QA da empresa, inclusive a do relatório 2, que a aba dava como dele, com
+    # 214 s; a aba dizia "medido em 1 de 36" e que quem leu não estava registrado.
+    quem_leu = rev.get("quem_leu") or {}
+    o_analista = quem_leu.get("quem") or "um analista"
+    so_o_analista = bool(n_analista) and not n_eric
+    if so_o_analista:
+        relacao = f", que {quem_leu['relacao_com_o_projeto']}" if quem_leu else ""
+        quem = (f"Os {n} relatórios da corrida 24 foram lidos por {o_analista}{relacao}: o Eric passou cada relatório, ele devolveu a resposta e o Eric a digitou ou colou "
+                "na página da sessão. ")
+        frase_tempo = (f"O tempo até a decisão não foi medido em nenhum dos {n}: o que a página mediu foi a troca entre os dois"
+                       + (f", com {pg['intervalo_entre_relatorios_mediana_s']} s na mediana entre abrir um relatório e abrir o seguinte" if pg else "") + ", não uma leitura. ")
+    elif n_analista:
+        quem = (f"Dos {n} relatórios da corrida 24, {n_analista} de {n} foram lidos por um analista: o Eric passou o relatório, ele devolveu a resposta e o Eric a colou na página da sessão; "
+                f"{'o outro foi lido' if n_eric == 1 else f'os outros {n_eric} foram lidos'} pelo próprio Eric na página. ")
+        frase_tempo = (f"O tempo até a decisão só foi medido em {t_all['n']} de {n} ({_n_q5(t_all['mediana'])} s): nos do analista, o que a página mediu foi a troca entre os dois"
+                       + (f", com {pg['intervalo_entre_relatorios_mediana_s']} s na mediana entre abrir um relatório e abrir o seguinte" if pg else "") + ", não uma leitura. ")
+    else:
+        quem = f"O leitor leu os {n} relatórios da corrida 24 na página da sessão, um por vez. "
+        frase_tempo = f"A decisão levou {_n_q5(t_all['mediana'])} s na mediana (de {t_all['minimo']} a {t_all['maximo']} s). "
+    lead_ = (quem + "Todos sem o nome do caso, a classe nem o nível. "
+             f"A decisão foi apropriada em {r['adesao_apropriada']} de {n} ({_n_q5(r['adesao_pct'])}%; Wilson 95% de {_wilson_q5(r['adesao_ic'])}): {certos['aceitou']} dos {certos['n']} diagnósticos "
+             f"certos aceitos e {errados['recusou']} dos {errados['n']} errados recusados. Nos errados, o leitor achou onde está o erro do agente em {loc['diagnóstico errado']['sim']} de "
+             f"{loc['diagnóstico errado']['n']}. A utilidade do relatório ficou em {_n_q5(r['utilidade_mediana'])} na mediana, com nota 5 em {u_all['contagem']['5']} dos {u_all['n']}. "
+             + frase_tempo + f"A avaliação bateu com o gabarito em {a['acertos']} de {a['n']} ({_n_q5(a['pct'])}%).")
+    kpi_quem = (("Quem respondeu", f"{n_analista} de {n}", f"respostas de um analista, coladas pelo Eric; {'a outra é' if n_eric == 1 else f'as outras {n_eric} são'} do Eric, lendo na página")
+                if n_analista else ("Quem respondeu", f"{n_eric} de {n}", "respostas dadas na página por quem leu"))
+    kpi_tempo = (("Tempo até a decisão", f"medido em {t_all['n']} de {n}", f"{_n_q5(t_all['mediana'])} s no relatório que o Eric leu na página; nos do analista a página mediu a troca entre os dois")
+                 if n_analista else ("Tempo até a decisão", f"{_n_q5(t_all['mediana'])} s", f"mediana; de {t_all['minimo']} a {t_all['maximo']} s, medido pela página, descontadas as pausas"))
+    if so_o_analista:
+        kpi_quem = ("Quem respondeu", f"{n_analista} de {n}", f"respostas de {o_analista}, digitadas ou coladas pelo Eric na página")
+        kpi_tempo = ("Tempo até a decisão", "não medido", f"não foi medido em nenhum dos {n}: a página mediu a troca entre os dois, não a leitura")
+    itens_kpi = [("Decisões apropriadas", f"{r['adesao_apropriada']} de {n}", f"{_n_q5(r['adesao_pct'])}%; Wilson 95% de {_wilson_q5(r['adesao_ic'])}"),
+                 ("Diagnósticos certos aceitos", f"{certos['aceitou']} de {certos['n']}", f"{_n_q5(certos['pct'])}%; os {certos['recusou']} recusados estão na leitura abaixo"),
+                 ("Diagnósticos errados recusados", f"{errados['recusou']} de {errados['n']}", f"{_n_q5(errados['pct'])}%; {errados['aceitou']} aceito(s)"),
+                 ("Erro do agente localizado", f"{loc['diagnóstico errado']['sim']} de {loc['diagnóstico errado']['n']}", "nos diagnósticos errados, o leitor disse onde o relatório mostra o erro"),
+                 kpi_quem, kpi_tempo,
+                 ("Utilidade do relatório", f"{_n_q5(r['utilidade_mediana'])} de 5", f"mediana; nota 5 em {u_all['contagem']['5']}, 4 em {u_all['contagem']['4']} e 3 em {u_all['contagem']['3']} dos {u_all['n']}")]
+    rotulo = {"revisor": "resposta do Eric, lendo na página", "analista": "resposta de um analista, digitada ou colada pelo Eric", "parecer_aprovado": "parecer aprovado"}
+    tab_origem = tabela(["Quem respondeu", "Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95%", "Avaliação igual ao gabarito"],
+                        [[rotulo.get(x["origem"], x["origem"]), str(x["n"]), str(x["apropriadas"]), _n_q5(x["pct"]), _wilson_q5(x["ic"]), str(x["avaliacao_bate"])] for x in rev["por_origem"]])
+    tab_adesao = tabela(["Grupo", "Relatórios", "Aceitou", "Recusou", "Apropriadas", "Apropriadas (%)", "Wilson 95%"],
+                        [[x["grupo"], str(x["n"]), str(x["aceitou"]), str(x["recusou"]), str(x["apropriadas"]), _n_q5(x["pct"]), _wilson_q5(x["ic"])] for x in rev["adesao"]])
+    tab_loc = tabela(["Grupo", "Relatórios", "Achou um erro", "Não achou", "Não viu erro", "Achou (%)", "Wilson 95%"],
+                     [[x["grupo"], str(x["n"]), str(x["sim"]), str(x["nao"]), str(x["na"]), _n_q5(x["pct_sim"]), _wilson_q5(x["ic"])] for x in rev["localizacao"]])
+    tab_tempo = tabela(["Grupo", "Relatórios com tempo medido", "Mediana (s)", "Mínimo (s)", "Máximo (s)"],
+                       [[x["grupo"], str(x["n"]), _n_q5(x["mediana"]), _n_q5(x["minimo"]), _n_q5(x["maximo"])] for x in rev["tempo"]])
+    tab_util = tabela(["Grupo", "Relatórios", "Mediana", "1", "2", "3", "4", "5"],
+                      [[x["grupo"], str(x["n"]), _n_q5(x["mediana"])] + [str(x["contagem"][v]) for v in notas] for x in rev["utilidade"]])
+    tab_aval = tabela(["Diagnóstico", "O leitor disse certo", "O leitor disse errado"],
+                      [["certo", str(a["certo_disse_certo"]), str(a["certo_disse_errado"])], ["errado", str(a["errado_disse_certo"]), str(a["errado_disse_errado"])]])
+    tab_casos = tabela(["#", "Caso", "Gabarito", "Rótulo do agente", "Resultado", "Selo", "Quem respondeu", "Tempo (s)", "Erro localizado", "Decisão", "Apropriada", "Utilidade", "Avaliação", "Comentário de quem leu"],
+                       [[str(c["posicao"]), f"<code>{esc(c['caso'])}</code>", f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(c['rotulo'])}</code>", "certo" if c["acerto"] else "errado",
+                         esc(str(c["selo"])), "analista" if c["origem"] == "analista" else "Eric", "não medido" if c["segundos"] is None else str(c["segundos"]), esc(c["erro_localizado"]), esc(c["decisao"]),
+                         "sim" if c["apropriada"] else "não", str(c["utilidade"]), esc(c["avaliacao"]), esc(c["comentario"])] for c in casos], raw=True)
+
+    def lista(cs: list[dict]) -> str:
+        return ", ".join(f"<code>relatorio-{c['posicao']}</code> (<code>{esc(c['caso'])}</code>, <code>{esc(c['rotulo'])}</code>)" for c in cs) or "nenhum"
+
+    if so_o_analista:
+        item_tempo = ("<strong>O tempo de leitura não foi medido.</strong> "
+                      + (f"Pelo registro da página, entre abrir um relatório e abrir o seguinte passaram {pg['intervalo_entre_relatorios_mediana_s']} s na mediana, e o comentário, com "
+                         f"{pg['comentario_mediana_chars']} caracteres na mediana, foi salvo {pg['decisao_ao_salvamento_mediana_s']} s depois da decisão: em {pg['comentarios_acima_de_10_chars_por_s']} "
+                         f"dos {pg['comentarios_medidos']} relatórios não trocados depois, ele entrou mais depressa do que se digita, isto é, chegou pronto e foi colado. " if pg else "")
+                      + "O que a página mediu foi a troca entre os dois, não a leitura. As versões desta aba publicadas em 10/11/2026 davam primeiro 31 s de mediana como tempo de "
+                      "leitura dos 36 e depois o tempo medido em um relatório, o segundo, cuja resposta o Eric digitou na página: eram tempos da troca, e saíram.")
+        data_decl = "/".join(reversed(quem_leu["declarado_em"][:10].split("-"))) if quem_leu else ""
+        sem_declarar = [x for x, k in (("o que ele recebeu para ler", "o_que_recebeu"), ("se usou alguma ferramenta para ler ou redigir", "ferramenta_de_ia")) if not quem_leu.get(k)]
+        item_limite = ("<strong>O que esta medida é e o que ela não é.</strong> Quem leu os relatórios foi uma pessoa que não é o autor do trabalho, como a ficha 40 pedia"
+                       + (f": {esc(o_analista)}, que {esc(quem_leu['relacao_com_o_projeto'])}, pela declaração do Eric em {data_decl}" if quem_leu else "")
+                       + ". Ela decidiu sem o nome do caso, a classe nem o nível. "
+                       + (f"Não foi declarado {' nem '.join(sem_declarar)}, e o tempo não foi medido. " if sem_declarar else "O tempo não foi medido. ")
+                       + "É um leitor só. A medida fica feita na adesão, na localização e na utilidade, e em aberto no tempo (decisão 114, que revê a 113, e decisão 117, que "
+                       "fecha a ficha 62).")
+    elif n_analista:
+        item_tempo = ("<strong>O tempo de leitura não foi medido.</strong> "
+                      + (f"Pelo registro da página, entre abrir um relatório e abrir o seguinte passaram {pg['intervalo_entre_relatorios_mediana_s']} s na mediana, e o comentário, com "
+                         f"{pg['comentario_mediana_chars']} caracteres na mediana, foi salvo {pg['decisao_ao_salvamento_mediana_s']} s depois da decisão: em {pg['comentarios_acima_de_10_chars_por_s']} "
+                         f"dos {pg['comentarios_medidos']} relatórios não trocados depois, ele entrou mais depressa do que se digita, isto é, chegou pronto e foi colado. " if pg else "")
+                      + f"O que a página mediu nesses relatórios foi a troca entre os dois, não a leitura; o tempo só vale no relatório que o Eric leu na página ({_n_q5(t_all['mediana'])} s). "
+                      "A versão desta aba publicada em 10/11/2026 dava 31 s de mediana como tempo de leitura dos 36: era o tempo da troca, e saiu.")
+        item_limite = ("<strong>O que esta medida é e o que ela não é.</strong> Quem leu quase todos os relatórios foi uma pessoa que não é o autor do trabalho, como a ficha 40 pedia, e ela decidiu sem "
+                       "o nome do caso, a classe nem o nível. Mas não está registrado quem é o analista, o que ele conhecia do agente, o que recebeu para ler nem se usou alguma ferramenta para ler ou "
+                       "redigir, e o tempo não foi medido. A medida fica feita na adesão, na localização e na utilidade, e em aberto no tempo e na descrição de quem leu (decisão 114, que revê a 113; "
+                       "ficha 62).")
+    else:
+        t05 = next((x for x in (rev_trilha or {}).get("tempo", []) if x["grupo"] == "todos" and x.get("mediana") is not None), None)
+        contra_05 = f" (contra {_n_q5(t05['mediana'])} s no único relatório respondido com tempo na sessão de 05/11/2026, no formato antigo)" if t05 else ""
+        item_tempo = (f"<strong>O tempo até a decisão.</strong> A mediana foi de {_n_q5(t_all['mediana'])} s por relatório{contra_05}, medida pela página só com o relatório à vista.")
+        item_limite = ("<strong>O que esta medida não é.</strong> Um leitor só; a medida com mais de um revisor continua como limitação declarada (ficha 40).")
+    itens_leitura = [
+        (f"<strong>O relatório deixa o leitor decidir certo na maior parte das vezes, e recusar o errado quase sempre.</strong> Das {n} decisões, {r['adesao_apropriada']} foram "
+         f"apropriadas; nos {errados['n']} diagnósticos errados o leitor recusou {errados['recusou']} e localizou o erro do agente em {loc['diagnóstico errado']['sim']}, e nos {certos['n']} certos "
+         f"aceitou {certos['aceitou']}. A nota 5 de utilidade em {u_all['contagem']['5']} dos {u_all['n']} diz que o relatório bastou para decidir; ela cai um pouco nos diagnósticos errados "
+         f"(mediana {_n_q5(u_e['mediana'])}, com nota 3 em {u_e['contagem']['3']} deles)."),
+        (f"<strong>Onde o leitor divergiu do gabarito.</strong> Foram recusados {len(certos_recusados)} diagnóstico(s) certo(s): {lista(certos_recusados)}. Nos comentários, o motivo é o mesmo em todos: "
+         "a causa respondida não estava em nenhum dos verbetes entregues pela busca (a divergência que a árvore marca como causa sem verbete que a trate), e o leitor tratou a resposta fora do "
+         f"contexto como erro do agente, embora a causa estivesse certa. Foi aceito {len(errados_aceitos)} diagnóstico(s) errado(s): {lista(errados_aceitos)}, em que a causa respondida parecia "
+         "sustentada pelo sintoma."),
+        item_tempo,
+        item_limite,
+    ]
+    bloco_tempo = detalhes("Tempo até a decisão, só onde a página mediu uma leitura", tab_tempo) + "\n" if t_all["n"] else ""
+    html_ = f"""<section id="revisaov3" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>Adesão apropriada por grupo: aceitar o certo, recusar o errado</h2>
+<div class="chart"><canvas id="g-revv3-adesao"></canvas></div>
+<h2>Utilidade do relatório, de 1 a 5, por grupo</h2>
+<div class="chart"><canvas id="g-revv3-utilidade"></canvas></div>
+{detalhes("Quem respondeu", tab_origem)}
+{detalhes("Adesão apropriada", tab_adesao)}
+{detalhes("Erro localizado", tab_loc)}
+{bloco_tempo}{detalhes("Utilidade percebida", tab_util)}
+{detalhes("Avaliação de quem leu contra o gabarito", tab_aval)}
+{detalhes("Os 36 relatórios, um a um, com o comentário de quem leu", tab_casos)}
+{leitura(itens_leitura)}
+{fontes(["<code>resultados_alvo/fase4/leitura_revisao_v3.json</code> (<code>avaliar_fase4.py --revisao_v3</code>, com <code>--check</code>)",
+         "<code>resultados_alvo/fase4/revisao_v3.md</code> (a planilha da sessão) e <code>sessao_revisao_v3/</code> (as cópias lidas, o registro da página em <code>respostas.json</code>, o que foi para a planilha em <code>respostas_planilha.json</code> e a declaração de quem leu em <code>quem_leu.json</code>)",
+         "<code>experimentos/revisao_v3.py</code> e <code>ferramentas/sessao_revisao.py --perfil v3</code>", "especificação da trilha, seção 12 c; fichas 40 e 62 e decisões 113, 114 e 117",
+         "<code>resultados_alvo/fase4/leitura_revisao_trilha.json</code> (a sessão de 05/11/2026)"])}
+</section>"""
+    return dados_js, html_
+
+
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 63 opção b, decisão 116) a aba "Notas do modelo": a prévia sem modelo da corrida 25 (sem_notas_previa.json) e, quando
+# a corrida tiver rodado, os pares contra as corridas 22 e 24 e o veredito (sem_notas.json). Nenhum número é digitado aqui.
+# ! Motivo: o Eric escolheu no quadro medir quanto pesam as notas que o modelo escreveu na biblioteca; a corrida roda na janela dele, e a aba diz o que já se sabe
+# sem o modelo, qual é a regra fixada antes e, depois, o resultado. Pela regra do painel, toda análise vira uma aba lida do JSON gravado.
+NOME_DO_BANCO_SEM_NOTAS = {"avaliacao": "os 36 oficiais de avaliação", "ineditos": "os 36 inéditos da ficha 27"}
+CORES_DA_MUDANCA = {"contexto idêntico": "--s3", "mesmos verbetes, sem as notas": "--s1", "mesmos verbetes, outra ordem": "--s4", "verbetes diferentes": "--s2"}
+
+
+def _p_q5(v) -> str:
+    return "n/d" if v is None else f"{v:.3f}".replace(".", ",")
+
+
+def secao_sem_notas(previa: dict | None, lei: dict | None = None) -> tuple[dict, str]:
+    titulo = ("As notas que o modelo escreveu na biblioteca ajudam ou atrapalham o diagnóstico? A corrida 25: a biblioteca de produção sem as notas do modelo e sem os verbetes "
+              "aprendidos, nos 36 casos oficiais e nos 36 inéditos, contra as corridas 22 e 24.")
+    if not previa:
+        return {}, (f'<section id="semnotas" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A prévia sem modelo ainda não foi gravada: falta <code>sem_notas_previa.json</code> em '
+                    '<code>resultados_alvo/fase4/</code>, que sai de <code>python experimento_sem_notas.py --previa</code>.</p>\n</section>')
+    b, r, bancos = previa["biblioteca"], previa["resumo"], previa["por_banco"]
+    n = r["casos"]
+    lote = "/".join(reversed(str(b.get("lote_promovido_em") or "")[:10].split("-")))
+
+    def codigos(ids) -> str:
+        return ", ".join(f"<code>{esc(i)}</code>" for i in ids) or "nenhum"
+
+    dados_js = {"previa": {"casos": n, "grupos": [NOME_DO_BANCO_SEM_NOTAS.get(x["banco"], x["banco"]) for x in bancos],
+                           "series": [{"nome": m, "cor": CORES_DA_MUDANCA[m], "n": [next(y["casos"] for y in x["mudancas"] if y["mudanca"] == m) for x in bancos]} for m in CORES_DA_MUDANCA]}}
+    # o gráfico dos pares existe sempre: antes da corrida só com os acertos das referências; depois, com os acertos sem as notas ao lado
+    serie_ref = {"nome": "acertos com a biblioteca inteira (corridas 22 e 24)", "cor": "--s4", "n": [x["acertos_referencia"] for x in bancos]}
+    dados_js["pares"] = {"grupos": dados_js["previa"]["grupos"], "series": [serie_ref]}
+    o_que_se_sabe = (f"A biblioteca de produção tem {b['notas_retiradas']} notas do modelo em {b['verbetes_com_notas']} dos {b['verbetes_producao']} verbetes, "
+                     f"{b['notas_em_forma_de_instrucao']} de {b['notas_retiradas']} escritas como instrução. Nas corridas de referência, {r['com_nota_na_referencia']} de {n} contextos traziam "
+                     f"ao menos uma nota e {r['com_aprendido_na_referencia']} de {n} traziam um verbete aprendido. Sem as notas, o contexto entregue ao modelo muda em "
+                     f"{r['contextos_que_mudam']} de {n}: em {r['mesmos_verbetes_sem_as_notas']} os verbetes são os mesmos, na mesma ordem, só sem as notas; em "
+                     f"{r['mesmos_verbetes_outra_ordem']} mudam de ordem; em {r['verbetes_diferentes']} a busca troca um verbete. O verbete da causa certa estava entre os entregues em "
+                     f"{r['verbete_certo_antes']} casos e continua em {r['verbete_certo_depois']}.")
+    itens_kpi = [("Notas do modelo na biblioteca", f"{b['notas_retiradas']} notas", (f"em {b['verbetes_com_notas']} dos {b['verbetes_producao']} verbetes; {b['notas_em_forma_de_instrucao']} de "
+                                                                                    f"{b['notas_retiradas']} escritas como instrução")),
+                 ("Contextos que mudam sem as notas", f"{r['contextos_que_mudam']} de {n}", (f"{r['mesmos_verbetes_sem_as_notas']} só perdem as notas; {r['mesmos_verbetes_outra_ordem']} mudam de ordem; "
+                                                                                    f"{r['verbetes_diferentes']} trocam um verbete")),
+                 ("Verbetes aprendidos nos contextos", f"{r['com_aprendido_na_referencia']} de {n}", "nenhum contexto de referência trazia verbete aprendido: nestes casos a corrida mede as notas"),
+                 ("Verbete da causa certa entre os entregues", f"{r['verbete_certo_depois']} de {n}", f"eram {r['verbete_certo_antes']} com as notas; a presença muda em {r['verbete_certo_mudou']} casos"),
+                 ("Acertos das corridas de referência", f"{r['acertos_referencia']} de {n}", "com a biblioteca de produção inteira: "
+                  + " e ".join(f"{x['acertos_referencia']} de {x['casos']} na {x['referencia']}" for x in bancos)),
+                 ("Tamanho da biblioteca", f"{b['tokens_estimados_sem_notas']} tokens", f"contra {b['tokens_estimados_producao']} com as notas e os aprendidos (estimativa da biblioteca inteira)")]
+    tab_bib = tabela(["Biblioteca", "Hash", "Verbetes", "Notas do modelo", "Verbetes com nota", "Notas em forma de instrução", "Tokens estimados"],
+                     [["produção", f"<code>{esc(b['origem_hash'])}</code>", str(b["verbetes_producao"]), str(b["notas_retiradas"]), str(b["verbetes_com_notas"]), str(b["notas_em_forma_de_instrucao"]),
+                       str(b["tokens_estimados_producao"])],
+                      ["sem as notas e sem os aprendidos", f"<code>{esc(b['hash'])}</code>", str(b["verbetes_sem_notas"]), "0", "0", "0", str(b["tokens_estimados_sem_notas"])]], raw=True)
+    tab_bancos = tabela(["Banco", "Referência", "Casos", "Com nota na referência", "Com verbete aprendido na referência"] + [m[0].upper() + m[1:] for m in CORES_DA_MUDANCA]
+                        + ["Caracteres do contexto (mediana) na referência", "Caracteres do contexto (mediana) sem as notas"],
+                        [[NOME_DO_BANCO_SEM_NOTAS.get(x["banco"], x["banco"]), x["referencia"], str(x["casos"]), str(x["com_nota_na_referencia"]), str(x["com_aprendido_na_referencia"])]
+                         + [str(next(y["casos"] for y in x["mudancas"] if y["mudanca"] == m)) for m in CORES_DA_MUDANCA]
+                         + [_n_q5(x["chars_do_contexto_mediana_referencia"]), _n_q5(x["chars_do_contexto_mediana_sem_notas"])] for x in bancos])
+    tab_trocas = tabela(["Caso", "Banco", "Saiu", "Entrou", "Verbetes na referência", "Verbetes sem as notas"],
+                        [[f"<code>{esc(x['caso'])}</code>", esc(x["banco"]), codigos(x["saiu"]), codigos(x["entrou"]), codigos(x["antes"]), codigos(x["depois"])]
+                         for x in previa["casos_com_verbetes_diferentes"]] or [["nenhum", "", "", "", "", ""]], raw=True)
+    item_mede = (f"<strong>O que a corrida mede.</strong> Tirar as notas muda o texto de {r['contextos_que_mudam']} dos {n} prompts e, em "
+                 f"{r['mesmos_verbetes_outra_ordem'] + r['verbetes_diferentes']}, também o que a busca entrega, porque o texto das notas entra no índice da busca. Como "
+                 f"{r['com_aprendido_na_referencia']} de {n} contextos traziam verbete aprendido, a retirada deles não pesa nestes casos: a corrida mede as notas.")
+    item_regra = f"<strong>A regra foi fixada antes da corrida.</strong> {esc(previa['regra'])}"
+    item_16 = ("<strong>Por que as corridas 22 e 24, e não a 16.</strong> A ficha 63 citava a corrida 16 para os casos oficiais. Ela leu a biblioteca de antes do lote"
+               + (f" de {lote}" if lote else "") + ", em outra versão do Ollama; a corrida 22 leu os mesmos 36 casos com a biblioteca de hoje. Cada caso é pareado com a corrida 22 (oficiais) ou a "
+               "corrida 24 (inéditos), e a corrida 16 entra como segunda comparação.")
+    item_ponte = ("<strong>A ponte da versão do Ollama.</strong> As referências rodaram numa versão, e o Ollama se atualiza sozinho. Se a versão no ar não tiver ponte, o lançador roda a ponte "
+                  "antes (a biblioteca original nos 36 casos de avaliação, regra R6); sem ponte pareável a leitura sai sem veredito.")
+    fontes_ = ["<code>resultados_alvo/fase4/sem_notas_previa.json</code> (<code>experimento_sem_notas.py --previa</code>, com <code>--check</code>)",
+               "<code>resultados_alvo/fase4/sem_notas.json</code>, quando a corrida tiver rodado (<code>avaliar_fase4.py --sem_notas</code>)",
+               "<code>experimentos/experimento_sem_notas.py</code> e o lançador <code>experimentos/rodar_experimento_sem_notas.ps1</code>",
+               "as referências: <code>resultados_alvo/fase4_trilha/</code> (corrida 22), <code>fase4_ineditos/</code> (corrida 24) e <code>fase4_calibracao/k3/</code> (corrida 16)",
+               "ficha 63 e decisão 116; <code>3-resultados-e-analises/parecer-do-analista-2026-11-10.md</code>"]
+    if not lei:
+        lead_ = ("A corrida 25 ainda não rodou: está pronta para o Eric lançar da janela dele, com <code>rodar_experimento_sem_notas.ps1</code> (ficha 63, decisão 116). O que já se sabe sem "
+                 "o modelo: " + o_que_se_sabe + f" Pela mediana das corridas de referência, as {r['inferencias']} inferências levam cerca de "
+                 f"{r['minutos_estimados_pela_mediana_das_referencias']} minutos, mais a ponte da versão do Ollama, se faltar.")
+        itens_kpi.append(("Corrida 25", "pronta para rodar", f"cerca de {r['minutos_estimados_pela_mediana_das_referencias']} minutos de modelo para {r['inferencias']} inferências, mais a ponte"))
+        blocos_resultado, itens_resultado = "", []
+    else:
+        s, regra = lei["resumo"], lei["regra"]
+        ponte = regra.get("ponte") or {}
+        if regra.get("mesma_versao_das_referencias"):
+            sobre_a_ponte = "A corrida rodou na mesma versão do Ollama das referências."
+        elif ponte:
+            sobre_a_ponte = (f"A ponte da versão do Ollama da corrida (<code>{esc(str(ponte.get('corrida')))}</code>) deu b = {ponte.get('b')} e c = {ponte.get('c')} em {ponte.get('n')} casos, "
+                             f"{'pareável' if ponte.get('pareavel') else 'não pareável'} com a Fase 3.")
+        else:
+            sobre_a_ponte = "A versão do Ollama da corrida não tem ponte registrada."
+        lead_ = (f"Veredito pela regra fixada antes: {esc(s['veredito'])}. Sem as notas do modelo, o agente acertou {s['acertos_sem_notas']} de {s['casos']} ({_n_q5(s['acerto_sem_notas_pct'])}%); "
+                 f"com a biblioteca de produção inteira, {s['acertos_referencia']} de {s['casos']} ({_n_q5(s['acerto_referencia_pct'])}%). Passaram a acertar {s['b']} casos e passaram a errar "
+                 f"{s['c']} (p do teste pareado = {_p_q5(s['p'])}); o rótulo ficou igual em {s['mesmo_rotulo']}. {sobre_a_ponte} " + o_que_se_sabe)
+        itens_kpi = [("Veredito", esc(s["veredito"]), f"teste pareado dos {s['casos']} casos: p = {_p_q5(s['p'])}; o corte é 0,05"),
+                     ("Acertos sem as notas", f"{s['acertos_sem_notas']} de {s['casos']}", f"{_n_q5(s['acerto_sem_notas_pct'])}%; Wilson 95% de {_n_q5(s.get('wilson_lo_pct'))} a {_n_q5(s.get('wilson_hi_pct'))}"),
+                     ("Acertos com a biblioteca inteira", f"{s['acertos_referencia']} de {s['casos']}", f"{_n_q5(s['acerto_referencia_pct'])}%, nas corridas 22 e 24"),
+                     ("Passaram a acertar e a errar", f"{s['b']} e {s['c']}", f"saldo de {s['saldo']}; o rótulo ficou igual em {s['mesmo_rotulo']} casos")] + itens_kpi
+        dados_js["pares"] = {"grupos": [NOME_DO_BANCO_SEM_NOTAS.get(x["banco"], x["banco"]) for x in lei["por_banco"]],
+                             "series": [{"nome": "acertos sem as notas", "cor": "--s1", "n": [x["acertos_sem_notas"] for x in lei["por_banco"]]},
+                                        {**serie_ref, "n": [x["acertos_referencia"] for x in lei["por_banco"]]}]}
+        tab_res = tabela(["Banco", "Referência", "Casos", "Acertos sem as notas", "Acertos na referência", "Passaram a acertar (b)", "Passaram a errar (c)", "p do teste pareado", "Mesmo rótulo",
+                          "Quais passaram a acertar", "Quais passaram a errar"],
+                         [[NOME_DO_BANCO_SEM_NOTAS.get(x["banco"], x["banco"]), esc(x["referencia"]), str(x["casos"]), str(x["acertos_sem_notas"]), str(x["acertos_referencia"]), str(x["b"]), str(x["c"]),
+                           _p_q5(x["p"]), str(x["mesmo_rotulo"]), codigos(x["ganhos"]), codigos(x["perdas"])] for x in lei["por_banco"]], raw=True)
+        tab_mud = tabela(["O que mudou no contexto", "Casos", "Acertos sem as notas", "Acertos na referência", "Passaram a acertar (b)", "Passaram a errar (c)", "Mesmo rótulo"],
+                         [[x["mudanca"], str(x["casos"]), str(x["acertos_sem_notas"]), str(x["acertos_referencia"]), str(x["b"]), str(x["c"]), str(x["mesmo_rotulo"])] for x in lei["por_mudanca_do_contexto"]])
+        c16 = lei.get("contra_a_corrida_16")
+        tab_16 = tabela(["Casos oficiais também lidos na corrida 16", "Acertos sem as notas", "Acertos na corrida 16", "Passaram a acertar (b)", "Passaram a errar (c)", "p do teste pareado",
+                         "Biblioteca da corrida 16", "Ollama da corrida 16"],
+                        [[str(c16["casos"]), str(c16["acertos_sem_notas"]), str(c16["acertos_referencia"]), str(c16["b"]), str(c16["c"]), _p_q5(c16["p"]), f"<code>{esc(c16['biblioteca'])}</code>",
+                          esc(c16["versao_ollama"])]] if c16 else [["sem os registros da corrida 16", "", "", "", "", "", "", ""]], raw=True)
+        mudaram = [c for c in lei["casos"] if c.get("mudou")]
+        tab_casos = tabela(["Caso", "Banco", "Gabarito", "Rótulo sem as notas", "Rótulo na referência", "Mudou", "O que mudou no contexto", "Verbetes sem as notas", "Verbetes na referência"],
+                           [[f"<code>{esc(c['caso'])}</code>", esc(c["banco"]), f"<code>{esc(str(c['gabarito']))}</code>", f"<code>{esc(str(c['rotulo']))}</code>",
+                             f"<code>{esc(str(c['rotulo_referencia']))}</code>", esc(c["mudou"]), esc(c["mudanca_do_contexto"]), codigos(c["verbetes_ids"]), codigos(c["verbetes_ids_referencia"])]
+                            for c in mudaram] or [["nenhum caso mudou de acerto", "", "", "", "", "", "", "", ""]], raw=True)
+        blocos_resultado = "\n".join([detalhes("Os pares por banco", tab_res), detalhes("Os pares pelo que mudou no contexto", tab_mud),
+                                      detalhes("Segunda comparação: os casos oficiais contra a corrida 16", tab_16), detalhes("Os casos que mudaram de acerto", tab_casos)]) + "\n"
+        itens_resultado = [(f"<strong>O resultado.</strong> {esc(s['veredito'][0].upper() + s['veredito'][1:])}: {s['b']} casos passaram a acertar sem as notas e {s['c']} passaram a errar, "
+                            f"com p = {_p_q5(s['p'])} no teste pareado dos {s['casos']} casos. Pela decisão 116, o agente só muda se a diferença sair do ruído, e mudar é outra decisão.")]
+    html_ = f"""<section id="semnotas" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>Acertos por banco: com a biblioteca inteira e, depois da corrida, sem as notas</h2>
+<div class="chart"><canvas id="g-semnotas-pares"></canvas></div>
+<h2>O que muda no contexto de cada caso quando as notas saem</h2>
+<div class="chart"><canvas id="g-semnotas-contexto"></canvas></div>
+{blocos_resultado}{detalhes("A biblioteca com e sem as notas", tab_bib)}
+{detalhes("A prévia por banco", tab_bancos)}
+{detalhes("Os casos em que a busca troca um verbete", tab_trocas)}
+{leitura(itens_resultado + [item_mede, item_regra, item_16, item_ponte])}
+{fontes(fontes_)}
+</section>"""
+    return dados_js, html_
+
+
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 66 opção b, decisão 120) a aba "Segundo passe": a prévia sem modelo da corrida 26 (segundo_passe_previa.json) e, quando a
+# corrida tiver rodado, o que a segunda resposta consertaria e estragaria, o que a regra de escolha trocou e o veredito (segundo_passe.json). Nenhum número é digitado aqui.
+# ! Motivo: o Eric escolheu no quadro medir o segundo passe do diagnóstico antes da Fase 5; a corrida roda na janela dele, e a aba diz o que a conta sem modelo já mostra (o
+# teto do ganho e por que o resultado não tem como sair do ruído), qual é a regra fixada antes, que desenhos foram descartados e, depois, o resultado. Pela regra do painel,
+# toda análise vira uma aba lida do JSON gravado.
+def secao_segundo_passe(previa: dict | None, lei: dict | None = None) -> tuple[dict, str]:
+    titulo = ("Um segundo pedido de diagnóstico, só quando um sinal acende e com outros verbetes, conserta mais do que estraga? A corrida 26: os casos das corridas 22 e 24 "
+              "com o selo baixo ou a FONTE divergente, com os verbetes seguintes da mesma busca e a escolha entre as duas respostas por regra em código.")
+    if not previa:
+        return {}, (f'<section id="segpasse" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A prévia sem modelo ainda não foi gravada: falta <code>segundo_passe_previa.json</code> em '
+                    '<code>resultados_alvo/fase4/</code>, que sai de <code>python experimento_segundo_passe.py --previa</code>.</p>\n</section>')
+    r, des, sinais = previa["resumo"], previa["desenho"], previa["por_sinal"]
+    primeiro, entre_os_seguintes, fora = des["alcances"]
+    grupos = [x["sinal"] for x in sinais]
+    posicoes = f"posições {des['posicoes'][0]} a {des['posicoes'][-1]}"
+
+    def codigos(ids) -> str:
+        return ", ".join(f"<code>{esc(i)}</code>" for i in ids) or "nenhum"
+
+    def conta(grupo: str, acerto: bool, alcances: tuple) -> int:
+        return sum(1 for c in previa["casos"] if c["sinal"] == grupo and c["acerto_primeira"] is acerto and c["alcance"] in alcances)
+
+    series_alcance = [("erros com o verbete da causa certa entre os seguintes", "--bom", False, (entre_os_seguintes,)),
+                      ("erros com o verbete da causa certa já entregue no primeiro pedido", "--s4", False, (primeiro,)),
+                      ("erros com o verbete da causa certa fora dos dois pedidos", "--s7", False, (fora,)),
+                      ("acertos que perdem o verbete da causa certa", "--ruim", True, (primeiro,)),
+                      ("acertos que não tinham o verbete da causa certa", "--s1", True, (entre_os_seguintes, fora))]
+    dados_js = {"alcance": {"grupos": grupos, "series": [{"nome": nome, "cor": cor, "n": [conta(g, acerto, alc) for g in grupos]} for nome, cor, acerto, alc in series_alcance]}}
+    # o gráfico do resultado existe sempre: antes da corrida só com os erros e os acertos da primeira resposta; depois, com o que a segunda faria e o que a regra trocou
+    series_primeira = [{"nome": "erros na primeira resposta", "cor": "--s2", "n": [x["erros"] for x in sinais]}, {"nome": "acertos na primeira resposta", "cor": "--s1", "n": [x["acertos"] for x in sinais]}]
+    dados_js["resultado"] = {"grupos": grupos, "series": series_primeira}
+    o_que_se_sabe = (f"Um sinal em código acendeu na primeira resposta de {r['com_sinal']} de {r['casos']} casos das corridas 22 e 24: {r['so_selo_baixo']} só com o selo baixo, "
+                     f"{r['so_fonte_divergente']} só com a FONTE divergente e {r['os_dois_sinais']} com os dois. Neles estão {r['erros_com_sinal']} dos {r['erros']} erros das duas corridas e "
+                     f"{r['acertos_com_sinal']} acertos. O verbete da causa certa fica entre os que o segundo pedido entrega em {r['erros_ao_alcance']} dos {r['erros_com_sinal']} erros com sinal; "
+                     f"em {r['erros_com_o_verbete_certo_ja_entregue']} ele já estava no primeiro pedido, e em {r['erros_fora_do_alcance']} fica fora dos dois. Dos {r['acertos_com_sinal']} "
+                     f"acertos com sinal, {r['acertos_que_perdem_o_verbete_certo']} tinham o verbete da causa certa no primeiro pedido e deixam de recebê-lo no segundo.")
+    itens_kpi = [("Casos com sinal", f"{r['com_sinal']} de {r['casos']}", f"{r['so_selo_baixo']} só com o selo baixo, {r['so_fonte_divergente']} só com a FONTE divergente, {r['os_dois_sinais']} com os dois"),
+                 ("Erros que os sinais pegam", f"{r['erros_com_sinal']} dos {r['erros']}", f"e {r['acertos_com_sinal']} acertos também recebem o segundo pedido; {r['erros_sem_sinal']} erros ficam sem sinal"),
+                 ("Erros com o verbete certo ao alcance", f"{r['erros_ao_alcance']} dos {r['erros_com_sinal']}", (f"{r['erros_com_o_verbete_certo_ja_entregue']} já o tinham no primeiro pedido e "
+                                                                                                     f"{r['erros_fora_do_alcance']} ficam fora dos dois")),
+                 ("Acertos que perdem o verbete certo", f"{r['acertos_que_perdem_o_verbete_certo']} dos {r['acertos_com_sinal']}", "tinham o verbete da causa certa entre os três primeiros"),
+                 ("Melhor cenário do teste pareado", f"p = {_p_q5(r['p_do_melhor_cenario'])}", (f"com os {r['erros_ao_alcance']} erros ao alcance consertados e nenhum acerto perdido; para passar do "
+                                                                                           f"corte de 0,05 seriam {r['consertos_para_sair_do_ruido']} consertos sem perda")),
+                 ("Tamanho do segundo pedido", f"{_n_q5(r['tokens_estimados_mediana'], 0)} tokens", (f"mediana estimada, contra {_n_q5(r['tokens_mediana_do_primeiro_pedido'], 0)} do primeiro; "
+                                                                                                f"{r['acima_do_limite']} de {r['com_sinal']} acima do limite de {des['limite_de_tokens']} da tela"))]
+    tab_sinal = tabela(["Sinal aceso na primeira resposta", "Casos", "Erros", "Acertos", "Erros com o verbete certo entre os seguintes", "Acertos que perdem o verbete certo"],
+                       [[x["sinal"], str(x["casos"]), str(x["erros"]), str(x["acertos"]), str(x["erros_ao_alcance"]), str(x["acertos_que_perdem_o_verbete_certo"])] for x in sinais])
+    tab_banco = tabela(["Banco", "Primeira resposta", "Casos do banco", "Com sinal", "Erros com sinal", "Acertos com sinal", "Erros com o verbete certo entre os seguintes"],
+                       [[NOME_DO_BANCO_SEM_NOTAS.get(x["banco"], x["banco"]), x["referencia"], str(x["casos"]), str(x["com_sinal"]), str(x["erros_com_sinal"]), str(x["acertos_com_sinal"]),
+                         str(x["erros_ao_alcance"])] for x in previa["por_banco"]])
+    tab_alt = tabela(["Desenho do segundo pedido", "Verbetes no pedido", "Erros com o verbete certo ao alcance", "Tokens estimados (mediana)", "Tokens estimados (máximo)",
+                      "Acima do limite de tokens", "O que ficou"],
+                     [[x["desenho"], str(x["verbetes_no_pedido"]), str(x["erros_ao_alcance"]), _n_q5(x["tokens_estimados_mediana"]), str(x["tokens_estimados_maximo"]), str(x["acima_do_limite"]), x["motivo"]]
+                      for x in previa["alternativas"]])
+    tab_casos_previa = tabela(["Caso", "Banco", "Sinal", "Gabarito", "Primeira resposta", "Certa", "Probabilidade", "Posição do verbete certo na busca", "Verbete da causa certa",
+                               "Verbetes do segundo pedido", "Tokens estimados"],
+                              [[f"<code>{esc(c['caso'])}</code>", esc(c["banco"]), esc(c["sinal"]), f"<code>{esc(c['gabarito'])}</code>", f"<code>{esc(str(c['rotulo_primeira']))}</code>",
+                                "sim" if c["acerto_primeira"] else "não", _p_q5(c["p_primeira"]), "n/d" if c["posicao_do_verbete_certo"] is None else str(c["posicao_do_verbete_certo"]),
+                                esc(c["alcance"]), codigos(c["seguintes"]), str(c["tokens_estimados"])] for c in previa["casos"]], raw=True)
+    item_mede = (f"<strong>O que a corrida mede.</strong> Só nos {r['com_sinal']} casos com sinal, o agente recebe um segundo pedido de diagnóstico, uma única vez: o mesmo prompt congelado, o "
+                 f"mesmo modelo e os {des['verbetes_seguintes']} verbetes seguintes da mesma busca ({posicoes}) no lugar dos três primeiros. A primeira resposta é a que a corrida de referência "
+                 "gravou e não é repetida, e o segundo pedido não fala dela. A leitura conta quantos erros a segunda resposta conserta e quantas respostas certas ela estraga, por sinal.")
+    item_teto = (f"<strong>O resultado não tem como sair do ruído.</strong> O verbete da causa certa só fica ao alcance do segundo pedido em {r['erros_ao_alcance']} dos "
+                 f"{r['erros_com_sinal']} erros com sinal. Com os {r['erros_ao_alcance']} consertados e nenhum acerto perdido, o teste pareado dá p = {_p_q5(r['p_do_melhor_cenario'])}; para "
+                 f"passar do corte seriam precisos {r['consertos_para_sair_do_ruido']} consertos sem nenhuma perda. A corrida serve para contar o que o segundo passe conserta e o que estraga.")
+    item_regra = f"<strong>A regra foi fixada antes da corrida.</strong> {esc(previa['regra'])}"
+    item_desenho = (f"<strong>Por que só os verbetes seguintes, e por que {des['verbetes_seguintes']}.</strong> Juntar os três primeiros aos seguintes repete o contexto da primeira resposta, que "
+                    "é o desenho que a pesquisa diz que troca resposta certa por errada, e passa do limite de tokens em quase todos os casos. Com três verbetes o pedido tem o mesmo tamanho do "
+                    "primeiro e do que calibrou o selo; com dois o alcance é o mesmo, mas o pedido sai do que foi calibrado; com sete o alcance cresce e o prompt quase dobra. A tabela dos "
+                    "desenhos traz os números de cada um.")
+    item_ponte = ("<strong>A ponte da versão do Ollama.</strong> As primeiras respostas vieram de uma versão, e o Ollama se atualiza sozinho. A fila roda antes a ponte da versão que estiver "
+                  "no ar (regra R6); sem ponte pareável a leitura sai sem veredito.")
+    fontes_ = ["<code>resultados_alvo/fase4/segundo_passe_previa.json</code> (<code>experimento_segundo_passe.py --previa</code>, com <code>--check</code>)",
+               "<code>resultados_alvo/fase4/segundo_passe.json</code>, quando a corrida tiver rodado (<code>avaliar_fase4.py --segundo_passe</code>)",
+               "<code>experimentos/experimento_segundo_passe.py</code>, o modo <code>segundo_passe</code> de <code>rodar_fase4.ps1</code> e a fila <code>experimentos/rodar_fila_pre_fase5.ps1</code>",
+               "as primeiras respostas: <code>resultados_alvo/fase4_trilha/</code> (corrida 22) e <code>fase4_ineditos/</code> (corrida 24)",
+               "ficha 66 e decisão 120; levantamento §6.16.4 e §6.16.5; <code>dados/pesquisa-fluxo-do-agente/medidas_do_repositorio.json</code>"]
+    if not lei:
+        lead_ = ("A corrida 26 ainda não rodou: está pronta para o Eric lançar da janela dele, pela fila <code>rodar_fila_pre_fase5.ps1</code> ou sozinha (ficha 66, decisão 120). O que já se "
+                 "sabe sem o modelo: " + o_que_se_sabe + f" No melhor cenário o teste pareado dá p = {_p_q5(r['p_do_melhor_cenario'])}, acima do corte de 0,05. Pelo tempo das corridas de "
+                 f"referência, as {r['inferencias']} inferências levam cerca de {r['minutos_estimados']} minutos.")
+        itens_kpi.append(("Corrida 26", "pronta para rodar", f"cerca de {r['minutos_estimados']} minutos de modelo para {r['inferencias']} inferências, depois da ponte"))
+        blocos_resultado, itens_resultado = "", []
+    else:
+        s, regra = lei["resumo"], lei["regra"]
+        ponte = regra.get("ponte") or {}
+        if regra.get("mesma_versao_das_referencias"):
+            sobre_a_ponte = "A corrida rodou na mesma versão do Ollama das corridas de referência."
+        elif ponte:
+            sobre_a_ponte = (f"A ponte da versão do Ollama da corrida (<code>{esc(str(ponte.get('corrida')))}</code>) deu b = {ponte.get('b')} e c = {ponte.get('c')} em {ponte.get('n')} casos, "
+                             f"{'pareável' if ponte.get('pareavel') else 'não pareável'} com a Fase 3.")
+        else:
+            sobre_a_ponte = "A versão do Ollama da corrida não tem ponte registrada."
+        lead_ = (f"Veredito pela regra fixada antes: {esc(s['veredito'])}. Se a segunda resposta valesse sempre, ela consertaria {s['consertaria']} dos {s['erros_primeira_com_sinal']} erros com "
+                 f"sinal e estragaria {s['estragaria']} dos {s['acertos_primeira_com_sinal']} acertos com sinal. Pela regra de escolha, a resposta trocou em {s['trocas']} casos: {s['b']} passaram "
+                 f"a acertar e {s['c']} passaram a errar (p do teste pareado = {_p_q5(s['p'])}), e o agente iria de {s['acertos_primeira']} a {s['acertos_final']} acertos em {s['casos']}. "
+                 f"{sobre_a_ponte} " + o_que_se_sabe)
+        itens_kpi = [("Veredito", esc(s["veredito"]), f"teste pareado: p = {_p_q5(s['p'])}; o corte é 0,05"),
+                     ("A segunda resposta consertaria", f"{s['consertaria']} dos {s['erros_primeira_com_sinal']}", "erros com sinal, se ela valesse sempre"),
+                     ("A segunda resposta estragaria", f"{s['estragaria']} dos {s['acertos_primeira_com_sinal']}", f"acertos com sinal, se ela valesse sempre; a causa foi a mesma em {s['mesmo_rotulo']} casos"),
+                     ("Pela regra de escolha", f"{s['b']} ganhos e {s['c']} perdas", f"{s['trocas']} trocas; o agente iria de {s['acertos_primeira']} a {s['acertos_final']} acertos em {s['casos']}"),
+                     ("Tamanho medido do segundo pedido", f"{_n_q5(s['tokens_entrada_mediana'], 0)} tokens", (f"mediana, contra {_n_q5(s['tokens_entrada_mediana_primeira'], 0)} do primeiro; "
+                                                                                                         f"{s['acima_do_limite']} acima do limite de {s['limite_de_tokens']}; {_n_q5(s['segundos_mediana'])} s por caso"))] + itens_kpi
+        por_sinal = {x["sinal"]: x for x in lei["por_sinal"]}
+        # depois da corrida os erros e os acertos da primeira resposta são os dos casos que tiveram o segundo pedido (numa corrida completa, os mesmos da prévia)
+        series_da_leitura = [{**series_primeira[0], "n": [por_sinal.get(g, {}).get("erros_primeira", 0) for g in grupos]},
+                             {**series_primeira[1], "n": [por_sinal.get(g, {}).get("acertos_primeira", 0) for g in grupos]}]
+        dados_js["resultado"] = {"grupos": grupos, "series": series_da_leitura + [
+            {"nome": "a segunda resposta consertaria", "cor": "--bom", "n": [por_sinal.get(g, {}).get("consertaria", 0) for g in grupos]},
+            {"nome": "a segunda resposta estragaria", "cor": "--ruim", "n": [por_sinal.get(g, {}).get("estragaria", 0) for g in grupos]},
+            {"nome": "passaram a acertar pela regra", "cor": "--s3", "n": [por_sinal.get(g, {}).get("b", 0) for g in grupos]},
+            {"nome": "passaram a errar pela regra", "cor": "--s8", "n": [por_sinal.get(g, {}).get("c", 0) for g in grupos]}]}
+        cab_grupo = ["Casos com segundo passe", "Erros na primeira resposta", "Acertos na primeira resposta", "A segunda consertaria", "A segunda estragaria", "Mesma causa nas duas",
+                     "Trocas pela regra", "Passaram a acertar (b)", "Passaram a errar (c)"]
+
+        def linha(x: dict, casos: int | None = None) -> list[str]:
+            return [str(x["casos"] if casos is None else casos), str(x["erros_primeira"]), str(x["acertos_primeira"]), str(x["consertaria"]), str(x["estragaria"]), str(x["mesmo_rotulo"]),
+                    str(x["trocas"]), str(x["b"]), str(x["c"])]
+
+        tab_res_sinal = tabela(["Sinal aceso na primeira resposta", *cab_grupo], [[x["sinal"], *linha(x)] for x in lei["por_sinal"]])
+        tab_res_banco = tabela(["Banco", "Primeira resposta", "Casos do banco", "Com sinal", *cab_grupo],
+                               [[NOME_DO_BANCO_SEM_NOTAS.get(x["banco"], x["banco"]), x["referencia"], str(x["casos"]), str(x["com_sinal"]), *linha(x, x["segundos_passes"])] for x in lei["por_banco"]])
+        tab_res_alcance = tabela(["Onde está o verbete da causa certa", *cab_grupo], [[x["alcance"], *linha(x)] for x in lei["por_alcance"]])
+        tab_regras = tabela(["Se a escolha fosse", "Trocas de causa", "Passariam a acertar (b)", "Passariam a errar (c)", "Acertos nos casos todos", "p do teste pareado"],
+                            [[x["regra"], str(x["trocas"]), str(x["b"]), str(x["c"]), str(x["acertos"]), _p_q5(x["p"])] for x in lei["por_regra"]])
+        tab_motivos = tabela(["O que a regra de escolha achou", "Casos", "Fica"], [[x["motivo"], str(x["casos"]), "a segunda" if x["troca"] else "a primeira"] for x in lei["motivos"]])
+        tab_casos = tabela(["Caso", "Banco", "Sinal", "Gabarito", "Primeira resposta", "Probabilidade", "Segunda resposta", "Probabilidade", "A segunda sozinha", "Fica", "Motivo", "Mudou",
+                            "Verbetes do segundo pedido", "Tokens de entrada"],
+                           [[f"<code>{esc(c['caso'])}</code>", esc(c["banco"]), esc(str(c["sinal"])), f"<code>{esc(str(c['gabarito']))}</code>", f"<code>{esc(str(c['rotulo_primeira']))}</code>",
+                             _p_q5(c["p_primeira"]), f"<code>{esc(str(c['rotulo_segunda']))}</code>", _p_q5(c["p_segunda"]), esc(c["efeito_da_segunda"]), f"a {esc(c['fica'])}", esc(c["motivo"]),
+                             esc(c["mudou"]), codigos(c["verbetes_segunda"]), str(c["tokens_entrada"])] for c in lei["casos"]] or [["nenhum"] + [""] * 13], raw=True)
+        blocos_resultado = "\n".join([detalhes("O resultado por sinal", tab_res_sinal), detalhes("O resultado por banco", tab_res_banco),
+                                      detalhes("O resultado pelo lugar do verbete da causa certa", tab_res_alcance), detalhes("O que cada regra de escolha daria", tab_regras),
+                                      detalhes("Os motivos da regra de escolha", tab_motivos), detalhes("Os casos com segundo passe, um a um", tab_casos)]) + "\n"
+        itens_resultado = [(f"<strong>O resultado.</strong> {esc(s['veredito'][0].upper() + s['veredito'][1:])}: a segunda resposta sozinha consertaria {s['consertaria']} erros e estragaria "
+                            f"{s['estragaria']} acertos; pela regra de escolha, {s['b']} casos passaram a acertar e {s['c']} passaram a errar, com p = {_p_q5(s['p'])} no teste pareado. Pela "
+                            "decisão 120, o agente só muda se a diferença sair do ruído, e mudar é outra decisão.")]
+    html_ = f"""<section id="segpasse" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>Erros e acertos da primeira resposta por sinal e, depois da corrida, o que o segundo passe conserta e estraga</h2>
+<div class="chart"><canvas id="g-segpasse-resultado"></canvas></div>
+<h2>O que o segundo pedido alcança: onde está o verbete da causa certa nos casos com sinal</h2>
+<div class="chart"><canvas id="g-segpasse-alcance"></canvas></div>
+{blocos_resultado}{detalhes("A prévia por sinal", tab_sinal)}
+{detalhes("A prévia por banco", tab_banco)}
+{detalhes("Os desenhos do segundo pedido: o escolhido e os descartados", tab_alt)}
+{detalhes("Os casos com sinal, um a um, antes da corrida", tab_casos_previa)}
+{leitura(itens_resultado + [item_mede, item_teto, item_regra, item_desenho, item_ponte])}
+{fontes(fontes_)}
+</section>"""
+    return dados_js, html_
+
+
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 67 opção b, decisão 121) a aba "Analista de documentação": a medida M1 (portoes_m1.json: os portões 3, 4 e 5 da proposta de
+# desenho aplicados às 92 propostas da corrida 20, contra a revisão humana do lote) e a corrida 27, que é a medida M2 (a prévia sem modelo e, depois, a leitura). Nenhum
+# número é digitado aqui.
+# ! Motivo: o Eric aprovou a proposta do analista de documentação como base de desenho e pediu as duas medidas antes da Fase 5; a M1 já rodou, sem modelo, e a corrida 27
+# roda na janela dele. Pela regra do painel, toda análise vira uma aba lida do JSON gravado, e é por ela que o Eric decide.
+CORES_DO_VEREDITO = {"Correta": "--bom", "Parcial": "--meio", "Errada": "--ruim"}
+PLURAL_DO_VEREDITO = {"Correta": ("correta", "corretas"), "Parcial": ("parcial", "parciais"), "Errada": ("errada", "erradas")}
+
+
+def _vereditos_por_extenso(x: dict) -> str:
+    """Os vereditos de um grupo de edições com o plural certo: "1 correta, 8 parciais e 6 erradas"."""
+    partes = [f"{x[v]} {um if x[v] == 1 else varios}" for v, (um, varios) in PLURAL_DO_VEREDITO.items()]
+    return f"{partes[0]}, {partes[1]} e {partes[2]}"
+
+
+def _bloco_m1(m1: dict) -> tuple[dict, list, str, list, list]:
+    """Os dados dos dois gráficos, os cartões, as tabelas recolhidas, os itens de leitura e as fontes da medida M1."""
+    r, portoes, vered = m1["resumo"], m1["por_portao"], m1["resumo"]["por_veredito"]
+    etapas = m1["em_sequencia"] + m1["outras_sequencias"]
+
+    def recusa(p: dict, veredito: str) -> int:
+        return next(x["recusa"] for x in p["nas_revisadas"]["por_veredito"] if x["veredito"] == veredito)
+
+    def de(p: dict, veredito: str) -> str:
+        return f"{recusa(p, veredito)} de {vered[veredito]}"
+
+    dados_js = {"portoes": {"grupos": [p["nome"] for p in portoes],
+                            "series": [{"nome": "edições erradas que recusaria", "cor": "--bom", "n": [recusa(p, "Errada") for p in portoes]},
+                                       {"nome": "edições parciais que recusaria", "cor": "--meio", "n": [recusa(p, "Parcial") for p in portoes]},
+                                       {"nome": "edições corretas que perderia", "cor": "--ruim", "n": [recusa(p, "Correta") for p in portoes]}]},
+                "sequencia": {"grupos": [x["etapa"] for x in etapas],
+                              "series": [{"nome": PLURAL_DO_VEREDITO[v][1], "cor": CORES_DO_VEREDITO[v], "n": [x[v] for x in etapas]} for v in CORES_DO_VEREDITO]}}
+    forma, texto, busca = portoes
+    final, sem_forma = m1["em_sequencia"][-1], m1["outras_sequencias"][0]
+    itens_kpi = [("Propostas da corrida 20", str(r["propostas"]), f"em {r['casos']} casos; {r['revisadas']} passaram nos filtros de hoje e foram revisadas por uma pessoa"),
+                 ("Revisão humana do lote", f"{vered['Correta']} corretas", f"{vered['Parcial']} parciais e {vered['Errada']} erradas, em {r['revisadas']}"),
+                 ("Portão 3, a forma de instrução", f"{r['forma_recusa']} das {r['propostas']}", (f"recusaria; nas revisadas, {de(forma, 'Errada')} erradas, {de(forma, 'Parcial')} parciais e "
+                                                                                             f"{de(forma, 'Correta')} corretas")),
+                 ("Portão 4, os filtros de texto", f"{r['texto_recusa']} das {r['propostas']}", (f"recusaria; nas revisadas, {de(texto, 'Errada')} erradas, {de(texto, 'Parcial')} parciais e "
+                                                                                            f"{de(texto, 'Correta')} corretas")),
+                 ("Portão 5, a busca", f"{r['busca_recusa']} das {r['revisadas']}", (f"edições recusadas: {de(busca, 'Errada')} erradas, {de(busca, 'Parcial')} parciais e "
+                                                                                 f"{de(busca, 'Correta')} corretas; o verbete certo sai {m1['busca']['verbete_certo_sai']} vezes e entra "
+                                                                                 f"{m1['busca']['verbete_certo_entra']}")),
+                 ("Os três portões em sequência", f"{r['sobram_depois_dos_tres']} de {r['revisadas']}", (f"edições sobram: {_vereditos_por_extenso(final)}; sem o portão da forma sobram "
+                                                                                                     f"{sem_forma['sobram']} ({_vereditos_por_extenso(sem_forma)})"))]
+    tab_portoes = tabela(["Portão", "Regra", "Recusa nas propostas", "Passa nas propostas", "Não se aplica", "Recusa nas revisadas", "Erradas recusadas", "Parciais recusadas",
+                          "Corretas perdidas"],
+                         [[p["nome"], p["regra"], str(p["nas_propostas"]["recusa"]), str(p["nas_propostas"]["passa"]), str(p["nas_propostas"]["nao_se_aplica"]),
+                           str(p["nas_revisadas"]["recusa"]), de(p, "Errada"), de(p, "Parcial"), de(p, "Correta")] for p in portoes])
+    tab_seq = tabela(["Etapa", "Edições que sobram", "Corretas", "Parciais", "Erradas"], [[x["etapa"], str(x["sobram"]), str(x["Correta"]), str(x["Parcial"]), str(x["Errada"])] for x in etapas])
+    tab_destino = tabela(["O que os filtros de hoje fizeram", "Propostas", "O portão 3 recusaria", "O portão 4 recusaria"],
+                         [[x["destino"], str(x["propostas"]), str(x["forma_recusa"]), str(x["texto_recusa"])] for x in m1["por_destino"]])
+    tab_criterios = tabela(["Medida do portão 4", "Propostas reprovadas", "Reprovadas entre as revisadas"],
+                           [[x["nome"], str(x["reprovadas"]), str(x["reprovadas_nas_revisadas"])] for x in m1["criterios_do_texto"]])
+    tab_palavras = tabela(["Primeira palavra do texto", "Propostas", "O portão 3"],
+                          [[f"<code>{esc(x['palavra'])}</code>", str(x["propostas"]), "recusa" if x["recusada_pela_forma"] else "passa"] for x in m1["primeiras_palavras"]], raw=True)
+
+    def passa(v) -> str:
+        return "n/a" if v is None else ("passa" if v else "recusa")
+
+    tab_revisadas = tabela(["Caso", "Verbete", "Operação", "Revisão humana", "Portão 3", "Portão 4", "Portão 5", "Verbete certo entra", "Verbete certo sai", "Passa nos três", "Texto"],
+                           [[f"<code>{esc(i['caso'])}</code>", f"<code>{esc(str(i['verbete']))}</code>", esc(str(i["operacao"])), esc(i["veredito"]), passa(i["forma"]["passa"]),
+                             passa(i["texto_passa"]), passa(i["busca"]["passa"]), str(i["busca"]["verbete_certo_entra"]), str(i["busca"]["verbete_certo_sai"]),
+                             "sim" if i["passa_nos_tres"] else "não", esc(i["texto"])] for i in m1["revisadas"]], raw=True)
+    blocos = "\n".join([detalhes("M1: cada portão contra a revisão humana", tab_portoes), detalhes("M1: os portões em sequência", tab_seq),
+                        detalhes("M1: os portões 3 e 4 pelo que os filtros de hoje fizeram com a proposta", tab_destino), detalhes("M1: as medidas do portão 4 que reprovam", tab_criterios),
+                        detalhes("M1: a primeira palavra de cada proposta", tab_palavras), detalhes("M1: as 20 edições revisadas, uma a uma", tab_revisadas)])
+    itens = [(f"<strong>M1: o que cada portão barraria.</strong> O portão 3 (a forma de instrução) recusaria {r['forma_recusa']} das {r['propostas']} propostas da corrida 20. Entre as "
+              f"{r['revisadas']} revisadas, recusaria {de(forma, 'Errada')} erradas e {de(forma, 'Parcial')} parciais, e perderia {de(forma, 'Correta')} corretas: aplicado ao que o modelo "
+              "escreve hoje, ele esvazia o lote. Só faz sentido com um prompt que peça a frase como ela vai ficar no verbete, e é isso que a corrida 27 mede."),
+             (f"<strong>M1: o portão da busca e o dos filtros de texto.</strong> O portão 5 recusaria {de(busca, 'Errada')} erradas e {de(busca, 'Parcial')} parciais, e perderia "
+              f"{de(busca, 'Correta')} corretas, olhando só o efeito da edição na busca dos {m1['busca']['casos_com_gabarito']} casos com gabarito. O portão 4 recusaria {de(texto, 'Errada')} "
+              f"erradas e {de(texto, 'Parcial')} parciais, e perderia {de(texto, 'Correta')} corretas."),
+             (f"<strong>M1: os portões não substituem a pessoa.</strong> Em sequência, os três deixariam {r['sobram_depois_dos_tres']} de {r['revisadas']} edições "
+              f"({_vereditos_por_extenso(final)}, pela revisão humana). Sem o portão da forma sobrariam {sem_forma['sobram']} ({_vereditos_por_extenso(sem_forma)}). Nenhum portão em código "
+              "diz se a afirmação é verdadeira: a aprovação de uma pessoa continua sendo a porta final."),
+             (f"<strong>M1: a contagem da forma mudou.</strong> A pesquisa da ficha 64 contou {r['forma_pela_lista_da_pesquisa']} propostas em forma de instrução, com cinco radicais; a lista "
+              f"fechada do portão pega também \"Retificar\", \"Adicionado\", \"Cria\" e os rótulos seguidos de dois-pontos, e chega a {r['forma_recusa']}.")]
+    fontes_ = ["<code>resultados_alvo/fase4/portoes_m1.json</code> (<code>experimentos/portoes_de_edicao.py --m1</code>, com <code>--check</code>)",
+               "<code>resultados_alvo/fase4_biblioteca/</code> (as propostas, o lote e a revisão do lote da corrida 20) e <code>limiares_texto.json</code>",
+               "<code>5-metodo-e-ferramental/proposta-analista-de-documentacao.md</code>, seções 4.5 e 6; ficha 67 e decisão 121"]
+    return dados_js, itens_kpi, blocos, itens, fontes_
+
+
+# ! Alteração de IA - Revisar: (11/11/2026, decisão 121) a parte da corrida 27 (medida M2) na aba "Analista de documentação": lê `analista_previa.json` (os 54 casos, a
+# ficha curta, o tamanho do pedido, as instruções congeladas com o hash e quanto cada leitura precisa mostrar) e, depois da corrida, `analista.json` (as três leituras
+# contra a corrida 20, os cinco portões, o que aconteceu com cada resposta e a revisão humana às cegas, quando já foi gravada). Nenhum número é digitado aqui.
+# ! Motivo: a corrida 27 roda na janela do Eric, e o prompt do analista é a peça que ele aprova antes; a aba mostra o texto inteiro do prompt, o que a conta sem modelo
+# já diz e, depois, o resultado. Os dois gráficos existem antes e depois da corrida, porque todo gráfico da página tem a sua leitura em `painel_leituras`.
+_FRACAO = re.compile(r"(\d+) de (\d+)")
+GRUPOS_DAS_LEITURAS_M2 = ["abstenção", "afirmam um fato", "corretas na revisão humana"]
+GRUPOS_DE_LACUNA_M2 = [("com lacuna na documentação", True), ("sem lacuna", False)]
+
+
+def _fracao(texto: str) -> float | None:
+    """'5 de 6' vira 83,3 (percentual, uma casa); o que não é uma contagem, como 'sem revisão', fica sem barra."""
+    m = _FRACAO.fullmatch(str(texto).strip())
+    if not m or int(m.group(2)) == 0:
+        return None
+    return round(100 * int(m.group(1)) / int(m.group(2)), 1)
+
+
+def _bloco_m2(previa: dict, lei: dict | None) -> tuple[dict, str, list, str, list, list]:
+    """Os dados dos dois gráficos, o parágrafo do estado, os cartões, as tabelas recolhidas, os itens de leitura e as fontes da corrida 27 (medida M2)."""
+    p, c20, prompt, poder = previa["resumo"], previa["corrida_20"], previa["prompt"], previa["poder"]
+    casos_previa = previa["casos"]
+    erros_com_lacuna = sum(1 for c in casos_previa if c["lacuna"] and not c["acertou"])
+
+    def bruto(texto: str) -> str:
+        return '<pre class="bruto"><code>' + html.escape(str(texto), quote=False) + "</code></pre>"
+
+    def sim(v) -> str:
+        return "sim" if v else "não"
+
+    rotulos_20 = [f"{c20['abstencoes']} de {c20['casos']}", f"{c20['afirmacoes']} de {c20['com_texto']}", f"{c20['por_veredito']['Correta']} de {c20['passaram_nos_filtros']}"]
+    series_leituras = [{"nome": "corrida 20", "cor": "--s1", "n": [_fracao(x) for x in rotulos_20], "rotulos": rotulos_20}]
+    chamaria = [sum(1 for c in casos_previa if c["seria_chamado"] and bool(c["lacuna"]) is valor) for _, valor in GRUPOS_DE_LACUNA_M2]
+    series_casos = [{"nome": "casos do grupo", "cor": "--s1", "n": [p["com_lacuna"], p["sem_lacuna"]]}, {"nome": "o desenho chamaria o analista", "cor": "--s4", "n": chamaria}]
+    tab_casos_previa = tabela(["Caso", "De onde o diagnóstico leu", "Diagnóstico certo", "Causa respondida", "Causa certa", "Selo", "Posição do verbete certo na busca", "Com lacuna",
+                               "O verbete já registra o caso", "O desenho chamaria o analista", "Tokens da ficha", "Tokens do pedido"],
+                              [[f"<code>{esc(c['caso'])}</code>", esc(c["origem"]), sim(c["acertou"]), f"<code>{esc(str(c['causa_respondida']))}</code>", f"<code>{esc(str(c['gabarito']))}</code>",
+                                esc(str(c["selo"])), "n/d" if c["posicao_do_ouro"] is None else str(c["posicao_do_ouro"]), sim(c["lacuna"]), sim(c["verbete_ja_registra_o_caso"]),
+                                sim(c["seria_chamado"]), str(c["ficha_tokens"]), str(c["prompt_tokens"])] for c in casos_previa], raw=True)
+    blocos_previa = [detalhes(f"M2: as instruções do analista, a parte fixa do prompt (hash {prompt['hash_das_instrucoes']})", bruto(prompt["instrucoes"])),
+                     detalhes(f"M2: o prompt inteiro de um caso ({prompt['caso_do_exemplo']}): as instruções, o verbete da causa certa e a ficha curta", bruto(prompt["exemplo"])),
+                     detalhes(f"M2: os {p['casos']} casos antes da corrida", tab_casos_previa)]
+    item_mede = (f"<strong>M2: o que a corrida 27 mede.</strong> Nos {p['casos']} casos de aprendizado da corrida 20, o mesmo modelo é chamado no papel de analista de documentação: recebe "
+                 "instruções próprias, o verbete da causa certa e uma ficha curta do caso, montada por código a partir da trilha da corrida 20, com o gabarito no lugar da decisão da pessoa. "
+                 "Devolve uma proposta só (um sinal de busca, uma nota ou uma retificação) ou responde que não há o que acrescentar. A biblioteca é a de antes do lote da corrida 20 "
+                 f"(<code>{esc(p['biblioteca'])}</code>) e só é lida; nada do agente muda.")
+    item_regra = f"<strong>M2: a regra foi fixada antes da corrida.</strong> {esc(previa['regra'])}"
+    item_poder = (f"<strong>M2: quanto cada leitura precisa mostrar.</strong> Contra a corrida 20, a abstenção sai do ruído com {poder['abstencoes_para_sair_do_ruido']} casos ou mais (lá foram "
+                  f"{rotulos_20[0]}); a forma do texto, com {poder['afirmacoes_em_54_para_sair_do_ruido']} afirmações ou mais se as {p['casos']} respostas forem propostas com texto (lá foram "
+                  f"{rotulos_20[1]}); a parcela correta, com {poder['corretas_em_20_para_sair_do_ruido']} corretas ou mais em {c20['passaram_nos_filtros']} revisadas (lá foram {rotulos_20[2]}).")
+    item_lacuna = (f"<strong>M2: onde há o que escrever.</strong> A proposta de desenho só chama o analista quando há lacuna na documentação: o diagnóstico errou, ou nenhum verbete entregue "
+                   f"tratava da causa respondida. Isso acontece em {p['com_lacuna']} de {p['casos']} casos ({erros_com_lacuna} erros do diagnóstico e {p['acertos_com_lacuna']} acertos), e em "
+                   f"{p['verbete_ja_registra_o_caso']} casos o verbete da causa certa já registra o caso. A corrida chama o analista nos {p['casos']}, para medir também se ele se abstém onde "
+                   "não há o que acrescentar.")
+    item_portoes = ("<strong>M2: os cinco portões, sem modelo.</strong> Cada proposta passa pelo validador da Fase 3 e pelos filtros da Fase 4 (os dois são os filtros de hoje), pelo portão "
+                    "da forma de instrução, pelos filtros de texto e pelo portão da busca. As que passam nos filtros de hoje vão para a revisão humana, como na corrida 20.")
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 123) o item da revisão e a lista de fontes passaram a dizer que quem revisa as propostas é o Eric.
+    # ! Motivo: o texto dizia que quem revisa era resposta dele, ainda por vir; ele respondeu a ficha 69 no quadro ("Eu reviso"). O campo de quem respondeu continua
+    # sendo gravado só na hora da revisão, por `revisao_propostas.py --gravar --quem`.
+    item_revisao = ("<strong>M2: a revisão humana é às cegas.</strong> Depois da corrida, <code>ferramentas/revisao_propostas.py --gerar</code> monta a página e a planilha com as propostas da "
+                    f"corrida 27 e, por padrão, as {c20['passaram_nos_filtros']} edições da corrida 20 que já foram revisadas, em ordem embaralhada e sem dizer a origem, para a mesma pessoa "
+                    "julgar as duas. A cegueira tem um limite: o tipo verbete novo só existe na corrida 20, e o jeito de escrever pode denunciar a origem. Quem revisa é o Eric "
+                    "(ficha 69, decisão 123); o registro de quem respondeu é gravado na hora da revisão.")
+    fontes_ = ["<code>resultados_alvo/fase4/analista_previa.json</code> (<code>experimentos/experimento_analista.py --previa</code>, com <code>--check</code>)",
+               "<code>resultados_alvo/fase4/analista.json</code>, quando a corrida 27 tiver rodado (<code>avaliar_fase4.py --analista</code>)",
+               ("<code>experimentos/experimento_analista.py</code>, o modo <code>analista</code> de <code>rodar_fase4.ps1</code>, a fila <code>experimentos/rodar_fila_pre_fase5.ps1</code> e "
+                "<code>ferramentas/revisao_propostas.py</code>"),
+               "ficha 68 e decisão 122 (o prompt do analista); ficha 69 e decisão 123 (o Eric revisa as propostas às cegas)"]
+    if not lei:
+        # ! Alteração de IA - Revisar: (11/11/2026, decisão 122) a frase do estado passou a dizer que o Eric aprovou o prompt como está.
+        # ! Motivo: ela dizia que o prompt era a peça que o Eric aprova antes de rodar; ele respondeu a ficha 68 no quadro ("Sim, como está"), e a corrida só espera o lançamento.
+        estado = (f"A corrida 27 (a medida M2) ainda não rodou. O código, os testes e a prévia sem modelo estão prontos, e o prompt do analista (hash "
+                  f"<code>{esc(prompt['hash_das_instrucoes'])}</code>) foi aprovado pelo Eric como está (ficha 68, decisão 122). Ela roda pela fila <code>rodar_fila_pre_fase5.ps1</code> ou "
+                  f"sozinha: {p['inferencias']} inferências, cerca de {p['minutos_estimados']} minutos de modelo, depois da ponte da versão do Ollama.")
+        itens_kpi = [("Corrida 27 (medida M2)", "ainda não rodou", f"{p['inferencias']} inferências, cerca de {p['minutos_estimados']} minutos de modelo, depois da ponte da versão do Ollama"),
+                     ("Casos de aprendizado da corrida 20", str(p["casos"]), (f"{p['origem_tela']} lidos da tela e {p['origem_fixture']} do fixture; o diagnóstico acertou "
+                                                                            f"{p['acertos_do_diagnostico']} e errou {p['erros_do_diagnostico']}")),
+                     ("Casos com lacuna na documentação", f"{p['com_lacuna']} de {p['casos']}", (f"{erros_com_lacuna} erros do diagnóstico e {p['acertos_com_lacuna']} acertos sem verbete que "
+                                                                                             f"trate da causa; o desenho chamaria o analista em {p['seriam_chamados']}")),
+                     ("Ficha curta do caso", f"{_n_q5(p['ficha_tokens_mediana'])} tokens", (f"mediana estimada; a maior tem {p['ficha_tokens_maximo']}, e o orçamento é de "
+                                                                                          f"{p['orcamento_da_ficha']} ({p['fichas_acima_do_orcamento']} acima)")),
+                     ("Tamanho do pedido", f"{_n_q5(p['prompt_tokens_mediana'])} tokens", (f"mediana estimada (máximo {p['prompt_tokens_maximo']}), contra "
+                                                                                         f"{_n_q5(p['prompt_tokens_da_proposta_de_hoje'], 0)} da proposta de edição de hoje; cerca de "
+                                                                                         f"{_n_q5(p['segundos_estimados_mediana'])} s por chamada, contra {_n_q5(p['segundos_da_proposta_de_hoje'])}")),
+                     ("Instruções do analista", str(prompt["hash_das_instrucoes"]), (f"hash da parte fixa do prompt, com cerca de {prompt['instrucoes_tokens']} tokens; o texto inteiro está "
+                                                                                    "recolhido abaixo"))]
+        blocos, itens = blocos_previa, [item_mede, item_regra, item_poder, item_lacuna, item_portoes, item_revisao]
+    else:
+        s, regra, rev = lei["resumo"], lei["regra"], lei.get("revisao")
+        le = {x["leitura"]: x for x in lei["leituras"]}
+        ab, fo, pc = le["abstencao"], le["forma"], le["parcela_correta"]
+        ponte = regra.get("ponte") or {}
+        if regra.get("mesma_versao_da_corrida_20"):
+            sobre_a_ponte = "A corrida rodou na mesma versão do Ollama da corrida 20."
+        elif ponte:
+            sobre_a_ponte = (f"A ponte da versão do Ollama da corrida (<code>{esc(str(ponte.get('corrida')))}</code>) deu b = {ponte.get('b')} e c = {ponte.get('c')} em {ponte.get('n')} casos, "
+                             f"{'pareável' if ponte.get('pareavel') else 'não pareável'} com a Fase 3.")
+        else:
+            sobre_a_ponte = "A versão do Ollama da corrida não tem ponte registrada."
+        estado = (f"A corrida 27 (a medida M2) rodou em {s['casos']} casos: {s['abstencoes']} abstenções, {s['sem_bloco']} respostas sem proposta válida e {s['propostas']} propostas. "
+                  f"Abstenção: {esc(ab['corrida_27'])}, contra {esc(ab['corrida_20'])} na corrida 20 ({esc(ab['veredito'])}). Forma do texto: {esc(fo['corrida_27'])} propostas com texto afirmam "
+                  f"um fato, contra {esc(fo['corrida_20'])} ({esc(fo['veredito'])}). Parcela correta na revisão humana: {esc(pc['corrida_27'])}, contra {esc(pc['corrida_20'])} "
+                  f"({esc(pc['veredito'])}). {sobre_a_ponte}")
+        itens_kpi = [("Abstenção", ab["corrida_27"], f"casos em que o analista respondeu que não há o que acrescentar; na corrida 20, {ab['corrida_20']}; p = {_p_q5(ab['p'])}: {ab['veredito']}"),
+                     ("Forma do texto", fo["corrida_27"], f"propostas com texto que afirmam um fato; na corrida 20, {fo['corrida_20']}; p = {_p_q5(fo['p'])}: {fo['veredito']}"),
+                     ("Parcela correta", pc["corrida_27"], f"propostas julgadas corretas na revisão humana às cegas; na corrida 20, {pc['corrida_20']}; p = {_p_q5(pc['p'])}: {pc['veredito']}"),
+                     ("Passam nos cinco portões", f"{s['passam_nos_cinco']} de {s['propostas']}", (f"propostas; nos filtros de hoje passam {s['passam_nos_filtros_de_hoje']}, que são as que vão "
+                                                                                               "para a revisão humana")),
+                     ("Custo de cada chamada", f"{_n_q5(s['tokens_entrada_mediana'], 0)} tokens", (f"lidos na mediana, e {_n_q5(s['tokens_saida_mediana'], 0)} escritos, em "
+                                                                                                 f"{_n_q5(s['segundos_mediana'])} s; na corrida 20 eram "
+                                                                                                 f"{_n_q5(lei['corrida_20']['tokens_entrada_mediana'], 0)}, "
+                                                                                                 f"{_n_q5(lei['corrida_20']['tokens_saida_mediana'], 0)} e "
+                                                                                                 f"{_n_q5(lei['corrida_20']['segundos_mediana'])} s")),
+                     ("Casos com lacuna na documentação", f"{p['com_lacuna']} de {p['casos']}", (f"{erros_com_lacuna} erros do diagnóstico e {p['acertos_com_lacuna']} acertos sem verbete que "
+                                                                                             "trate da causa"))]
+        rotulos_27 = [ab["corrida_27"], fo["corrida_27"], pc["corrida_27"]]
+        rotulos_20_lidos = [ab["corrida_20"], fo["corrida_20"], pc["corrida_20"]]
+        series_leituras = [{"nome": "corrida 20", "cor": "--s1", "n": [_fracao(x) for x in rotulos_20_lidos], "rotulos": rotulos_20_lidos},
+                           {"nome": "corrida 27", "cor": "--s3", "n": [_fracao(x) for x in rotulos_27], "rotulos": rotulos_27}]
+        por_lacuna = {x["grupo"]: x for x in lei["por_lacuna"]}
+        rodaram = {c["caso"] for c in lei["casos"]}
+        grupos_lidos = [por_lacuna.get(nome, {}) for nome in ("com lacuna", "sem lacuna")]
+        series_casos = [{"nome": "casos do grupo", "cor": "--s1", "n": [g.get("casos", 0) for g in grupos_lidos]},
+                        {"nome": "o desenho chamaria o analista", "cor": "--s4",
+                         "n": [sum(1 for c in casos_previa if c["caso"] in rodaram and c["seria_chamado"] and bool(c["lacuna"]) is valor) for _, valor in GRUPOS_DE_LACUNA_M2]},
+                        {"nome": "abstenções", "cor": "--s6", "n": [g.get("abstencoes", 0) for g in grupos_lidos]},
+                        {"nome": "propostas", "cor": "--s2", "n": [g.get("propostas", 0) for g in grupos_lidos]},
+                        {"nome": "passam nos cinco portões", "cor": "--bom", "n": [g.get("passam_nos_cinco", 0) for g in grupos_lidos]}]
+        cab_grupo = ["Casos", "Abstenções", "Sem proposta válida", "Propostas", "Passam nos filtros de hoje", "Passam nos cinco portões"]
+
+        def linha(x: dict) -> list[str]:
+            return [str(x["casos"]), str(x["abstencoes"]), str(x["sem_bloco"]), str(x["propostas"]), str(x["passam_nos_filtros_de_hoje"]), str(x["passam_nos_cinco"])]
+
+        tab_leituras = tabela(["Leitura", "Corrida 27", "Corrida 20", "Teste", "p", "Veredito"],
+                              [[x["nome"], x["corrida_27"], x["corrida_20"], x["teste"], _p_q5(x["p"]), x["veredito"]] for x in lei["leituras"]])
+        tab_portoes = tabela(["Portão", "Propostas avaliadas", "Recusa", "Passa", "Não se aplica", "Propostas que pararam aqui"],
+                             [[x["nome"], str(x["avaliadas"]), str(x["recusa"]), str(x["passa"]), str(x["nao_se_aplica"]), str(x["parou_aqui"])] for x in lei["por_portao"]])
+        tab_destino = tabela(["O que aconteceu com a resposta", "Casos"], [[x["destino"], str(x["casos"])] for x in lei["por_destino"]])
+        tab_grupos = tabela(["Grupo de casos", *cab_grupo], [[x["grupo"], *linha(x)] for x in lei["por_lacuna"] + lei["por_acerto"]]
+                            + [[f"lidos de: {x['origem']}", *linha(x)] for x in lei["por_origem"]])
+        tab_codigos = tabela(["Portão em que parou", "Código da recusa", "Casos"], [[x["portao"], x["codigo"], str(x["casos"])] for x in lei["codigos"]] or [["nenhuma recusa", "", ""]])
+        tab_casos = tabela(["Caso", "De onde o diagnóstico leu", "Diagnóstico certo", "Com lacuna", "Operação", "O que aconteceu", "Código", "Afirma um fato", "Texto ou termos",
+                            "Tokens lidos", "Segundos"],
+                           [[f"<code>{esc(c['caso'])}</code>", esc(str(c["origem"])), sim(c["acertou_diagnostico"]), sim(c["lacuna"]), esc(str(c["operacao"] or "")), esc(c["destino"] or ""),
+                             esc(c["codigo"] or ""), "" if c["forma_passa"] is None else sim(c["forma_passa"]), esc(c["texto"] or c["termos"] or ""), _n_q5(c["tokens_entrada"], 0),
+                             _n_q5(c["segundos"])] for c in lei["casos"]] or [["nenhum"] + [""] * 10], raw=True)
+        blocos = [detalhes("M2: as três leituras contra a corrida 20", tab_leituras), detalhes("M2: o que cada portão fez com as propostas", tab_portoes),
+                  detalhes("M2: o que aconteceu com cada resposta", tab_destino), detalhes("M2: o resultado por grupo de casos", tab_grupos),
+                  detalhes("M2: os códigos de recusa", tab_codigos), detalhes("M2: as respostas do analista, caso a caso", tab_casos)]
+        item_resultado = (f"<strong>M2: o resultado.</strong> Abstenção: {esc(ab['corrida_27'])} casos, contra {esc(ab['corrida_20'])} na corrida 20 (p = {_p_q5(ab['p'])}; "
+                          f"{esc(ab['veredito'])}). Forma do texto: {esc(fo['corrida_27'])} propostas com texto afirmam um fato, contra {esc(fo['corrida_20'])} (p = {_p_q5(fo['p'])}; "
+                          f"{esc(fo['veredito'])}). Parcela correta: {esc(pc['corrida_27'])}, contra {esc(pc['corrida_20'])} (p = {_p_q5(pc['p'])}; {esc(pc['veredito'])}). Nos cinco portões "
+                          f"passam {s['passam_nos_cinco']} de {s['propostas']} propostas. Nenhum resultado muda o agente: a proposta é base de desenho para depois da Fase 5.")
+        itens = [item_resultado]
+        if rev:
+            v27, v20 = rev["corrida_27"], rev.get("corrida_20_pelo_mesmo_revisor")
+            do_lote = rev["corrida_20_na_revisao_do_lote"]
+            sobre_a_20 = (f"As edições da corrida 20, julgadas de novo pelo mesmo revisor sem saber a origem, ficaram em {_vereditos_por_extenso(v20)}; na revisão do lote tinham ficado em "
+                          f"{_vereditos_por_extenso(do_lote)}." if v20 else
+                          f"As edições da corrida 20 não entraram nesta revisão; a comparação usa a revisão do lote ({_vereditos_por_extenso(do_lote)}).")
+            cinco = rev["passam_nos_cinco_por_veredito"]
+            itens.append(f"<strong>M2: a revisão humana às cegas.</strong> Quem revisou: {esc(str(rev.get('quem')))}. Das propostas da corrida 27, {rev['revisadas']} têm veredito "
+                         f"({_vereditos_por_extenso(v27)}) e faltam {rev['pendentes']}. {sobre_a_20} Entre as que passam nos cinco portões, a revisão julgou {_vereditos_por_extenso(cinco)}.")
+            tab_contra = tabela(["Portão", "Propostas revisadas e avaliadas", "Erradas recusadas", "Parciais recusadas", "Corretas perdidas", "Corretas que passam"],
+                                [[x["nome"], str(x["avaliadas"]), str(x["Errada"]["recusa"]), str(x["Parcial"]["recusa"]), str(x["Correta"]["recusa"]), str(x["Correta"]["passa"])]
+                                 for x in rev["portoes_contra_a_revisao"]])
+            blocos.append(detalhes("M2: os portões 3, 4 e 5 contra a revisão humana das propostas da corrida 27", tab_contra))
+        else:
+            itens.append(item_revisao)
+        blocos += blocos_previa
+        itens += [item_mede, item_regra, item_lacuna, item_portoes]
+    dados_js = {"leituras": {"grupos": GRUPOS_DAS_LEITURAS_M2, "series": series_leituras}, "casos": {"grupos": [nome for nome, _ in GRUPOS_DE_LACUNA_M2], "series": series_casos}}
+    return dados_js, estado, itens_kpi, "\n".join(blocos), itens, fontes_
+
+
+def secao_analista(m1: dict | None, previa: dict | None = None, lei: dict | None = None) -> tuple[dict, str]:
+    titulo = ("Os portões novos barram o que a pessoa barrou, e a entrada própria muda o que o modelo escreve na biblioteca? A medida M1 (os portões 3, 4 e 5 nas propostas da "
+              "corrida 20) e a corrida 27, a medida M2 (o analista de documentação com a ficha curta do caso).")
+    if not m1:
+        return {}, (f'<section id="analista" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A medida M1 ainda não foi gravada: falta <code>portoes_m1.json</code> em '
+                    '<code>resultados_alvo/fase4/</code>, que sai de <code>python portoes_de_edicao.py --m1</code>.</p>\n</section>')
+    r = m1["resumo"]
+    dados_js, itens_kpi, blocos_m1, itens_m1, fontes_ = _bloco_m1(m1)
+    lead_ = (f"A medida M1 rodou, sem modelo (ficha 67, decisão 121): das {r['propostas']} propostas de edição da corrida 20, o portão da forma recusaria {r['forma_recusa']} das "
+             f"{r['propostas']}, o dos filtros de texto {r['texto_recusa']} e, entre as {r['revisadas']} que viraram edição e passaram pela revisão humana, o portão da busca recusaria "
+             f"{r['busca_recusa']}. Em sequência, os três deixariam {r['sobram_depois_dos_tres']} de {r['revisadas']} edições.")
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) a aba passou a trazer, depois da M1, a corrida 27 (medida M2): o estado, os cartões, os dois gráficos e as
+    # tabelas recolhidas de `_bloco_m2`; sem a prévia gravada, só um aviso de que ela falta.
+    # ! Motivo: a aba só mostrava a M1, e os argumentos da prévia e da leitura da corrida 27 chegavam sem uso; o Eric decide pelo painel e precisa ver ali o prompt que
+    # aprova e, depois da corrida, o resultado.
+    if previa:
+        dados_m2, estado_m2, kpis_m2, blocos_m2, itens_m2, fontes_m2 = _bloco_m2(previa, lei)
+        dados_js = {**dados_js, **dados_m2}
+        parte_m2 = f"""<h2>Corrida 27 (medida M2): o analista de documentação com a ficha curta do caso</h2>
+{kpis(kpis_m2)}
+<h2>M2: as três leituras da regra, na corrida 20 e, depois da corrida, na corrida 27</h2>
+<div class="chart"><canvas id="g-analista-leituras"></canvas></div>
+<h2>M2: os casos com lacuna e sem lacuna na documentação e, depois da corrida, o que o analista respondeu em cada grupo</h2>
+<div class="chart"><canvas id="g-analista-casos"></canvas></div>
+{blocos_m2}"""
+        lead_ += " " + estado_m2
+    else:
+        itens_m2, fontes_m2 = [], []
+        parte_m2 = ('<h2>Corrida 27 (medida M2)</h2>\n<p>A prévia sem modelo da corrida 27 ainda não foi gravada: falta <code>analista_previa.json</code> em '
+                    '<code>resultados_alvo/fase4/</code>, que sai de <code>python experimento_analista.py --previa</code>.</p>')
+    html_ = f"""<section id="analista" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>M1: o que cada portão recusaria entre as edições que uma pessoa revisou</h2>
+<div class="chart"><canvas id="g-analista-portoes"></canvas></div>
+<h2>M1: o que sobra depois de cada portão, pelo veredito da revisão humana</h2>
+<div class="chart"><canvas id="g-analista-sequencia"></canvas></div>
+{parte_m2}
+{blocos_m1}
+{leitura(itens_m2 + itens_m1)}
+{fontes(fontes_m2 + fontes_)}
+</section>"""
+    return dados_js, html_
+
+
 # ! Alteração de IA - Revisar: (05/11/2026, Fase 4, pacote P8) a aba "Fechamento da fase": a tabela das regras (seção 10) e as seções 1, 11, 12 e 15 lidas do relatório da fase, os cartões lidos dos JSON das leituras vigentes (tela_v2, cura, cenarios_v2, leitura_revisao_trilha) e as fichas abertas.
 # ! Motivo: o plano previa uma aba da fase (seção 3.8), e as sete abas por análise não dizem o que fechou, o que ficou como limitação e o que depende do Eric. Ele decide pelo painel, não pelo Markdown. Nenhum número é digitado aqui.
 ESTADOS_REGRA = {"cumprida": ("Cumprida", "concluida"), "ressalva": ("Cumprida com ressalva", "andamento"), "medida": ("Medida", "outro"), "nao": ("Não cumprida", "nao_cumprida")}
@@ -3557,7 +5075,9 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
         r = revisao["resumo"]
         itens_kpi.append(("Medida com revisor humano", "em aberto", f'{r["respostas_do_revisor"]} resposta do Eric e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
     if faltam:
-        itens_kpi.append(("Corridas que faltam antes da Fase 5", str(len(faltam)), f'{_lista_em_frase(faltam)}, pedidas pelas respostas às fichas 42 a 44'))
+        # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) o cartão deixou de dizer que as corridas que faltam foram pedidas pelas fichas 42 a 44.
+        # ! Motivo: valia para as corridas 18c, 21c, 23 e 24; a corrida 25 veio da ficha 63, e o cartão de cada corrida, lido do roadmap, já diz de onde ela veio.
+        itens_kpi.append(("Corridas que faltam antes da Fase 5", str(len(faltam)), f'{_lista_em_frase(faltam)}; o comando e o pré-requisito de cada uma estão nos cartões abaixo'))
     itens_kpi.append(("Decisões do Eric em aberto", str(len(abertas)), "fichas na aba Pendências; não impedem a Fase 5" if abertas else "nenhuma ficha aberta"))
     # ! Alteração de IA - Revisar: (06/11/2026, decisão 98) a resposta deixa de dizer "em parte" e "0 não: nenhuma" quando nenhuma regra ficou de fora.
     # ! Motivo: a regra R2 fechou na corrida 18d e a tabela ficou sem regra não cumprida; o que falta é a medida com revisor humano e as corridas, que a frase diz em seguida.
@@ -3781,6 +5301,171 @@ def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preench
     return dados_js, html_
 
 
+# ! Alteração de IA - Revisar: (10/11/2026, decisão 118, sessão da pesquisa) a aba "Fluxo do agente": as três ideias do Eric para o fluxo do agente (o roteiro de raciocínio em
+# passos com lista de conferência, o ciclo de reavaliação e a separação de um analista de documentação), com o veredito de cada uma, as fichas 65 a 67, a prévia da conferência em
+# código depois da resposta, a posição do verbete da causa certa na busca, o custo e os portões do analista de documentação, o mapa e as afirmações da pesquisa por tópico. Lê
+# `resumo_para_o_painel.json` (de integrar_pesquisa_fluxo_do_agente.py), `medidas_do_repositorio.json` (de medidas_fluxo_do_agente.py), as fichas de pendencias.md e, para a tabela
+# dos portões, a proposta de desenho gerada; o id entra no NAV e os quatro gráficos em DESENHAR_TOPICOS.
+# ! Motivo: a regra do painel é uma aba por análise, lida dos arquivos versionados, e o Eric decide por ela: as três fichas novas estão abertas. Nenhum número é digitado aqui.
+FLUXO_ROTULOS = {"r7-raciocinio-em-passos-em-modelo-pequeno": "Raciocínio em passos", "r7-raciocinio-calibracao-e-primeiro-token": "Raciocínio e selo de confiança",
+                 "r7-lista-de-conferencia-em-codigo": "Lista de conferência em código", "r7-reavaliacao-quando-ajuda": "Rever a própria resposta",
+                 "r7-disparo-parada-e-evidencia-nova": "Segundo passe por sinal", "r7-curador-separado-da-base": "Papel separado para a base",
+                 "r7-degradacao-e-portoes-da-base": "Degradação e portões"}
+FLUXO_CAMPOS_DO_VEREDITO = (("literatura", "O que a literatura sustenta"), ("repositorio", "O que o repositório já mediu"), ("forma_que_escapa", "A forma que escapa do que já foi medido"),
+                            ("como_medir", "Como seria medida"), ("custo", "Quanto custa nesta máquina"), ("recomendacao", "Recomendação"))
+
+
+def _fluxo_quadro(resumo: dict, nome: str) -> str:
+    """Um quadro das medidas do repositório (cabeçalho e linhas, gravados no resumo pelo integrador) como tabela da página."""
+    q = (resumo.get("tabelas") or {}).get(nome)
+    return tabela(q["cabecalho"], [[pt.inline(c) for c in l] for l in q["linhas"]], raw=True) if q else ""
+
+
+def _fluxo_recolhido(resumo: dict, nome: str, titulo: str) -> str:
+    """O mesmo quadro, recolhido sob um título que diz o que ele mostra (a tabela solta iria para um bloco "Mais informações" sem nome próprio)."""
+    quadro = _fluxo_quadro(resumo, nome)
+    return detalhes(titulo, quadro) if quadro else ""
+
+
+def _fluxo_portoes(proposta: str | None) -> str:
+    """A tabela dos portões da proposta de desenho do analista de documentação (seção 4.5), lida do documento gerado."""
+    if not proposta or "### 4.5" not in proposta:
+        return ""
+    cab, linhas, _ = pt.primeira_tabela(proposta[proposta.index("### 4.5"):])
+    return tabela(cab, [[pt.inline(c) for c in l] for l in linhas], raw=True) if linhas else ""
+
+
+def secao_fluxo(resumo: dict | None, medidas: dict | None, pend: list, proposta: str | None = None) -> tuple[dict, str]:
+    titulo = "As três ideias para o fluxo do agente: o que a literatura e os dados do projeto sustentam, e o que fica para decidir?"
+    if not resumo or not medidas:
+        return {}, (f'<section id="fluxo" hidden>\n<h1>{titulo}</h1>\n<p class="lead">A pesquisa ainda não foi integrada: faltam <code>resumo_para_o_painel.json</code> e '
+                    '<code>medidas_do_repositorio.json</code> em <code>Documentacao/memorial/5-metodo-e-ferramental/dados/pesquisa-fluxo-do-agente/</code>, que saem de '
+                    '<code>integrar_pesquisa_fluxo_do_agente.py</code> e de <code>medidas_fluxo_do_agente.py</code>.</p>\n</section>')
+    tot, maq = resumo["totais"], medidas["maquina"]
+    i1, i2, i3 = medidas["ideia_1"], medidas["ideia_2"], medidas["ideia_3"]
+    conf = i1["conferencia_depois_da_resposta"]
+    por_corrida = conf["por_corrida"]  # na ordem do script: corrida 16 (os 90), corrida 16 (os 54 de aprendizado), corrida 22, corrida 24
+    c24, c22, os72 = i2["corrida_24"], i2["corrida_22"]["cruzamento"], i2["os_72_casos"]
+    teto = [t["erros_ao_alcance"] for t in os72["teto_de_um_segundo_passe"]]
+    forma, cen, portao = i3["forma_de_instrucao"], i3["cenarios_do_analista"], i3["portao_da_busca_no_lote"]
+    ficha_curta = cen["cenarios"][-1]
+    rodou = bool((i3.get("corrida_25") or {}).get("rodou"))
+    fichas = {f.numero: f for b in pend for f in b.fichas if 64 <= f.numero <= 67}
+    abertas = [f for n, f in sorted(fichas.items()) if f.aberta]
+    fechadas = [f for n, f in sorted(fichas.items()) if not f.aberta]
+    estado_25 = ("A corrida 25, que mede quanto pesam as notas que o modelo já escreveu na biblioteca, já rodou; o resultado dela está na aba Notas do modelo." if rodou
+                 else "A corrida 25, que mede quanto pesam as notas que o modelo já escreveu na biblioteca, ainda não rodou.")
+    pendentes = (f'{len(abertas)} fichas esperam resposta: ' + ", ".join(f"ficha {f.numero}" for f in abertas) + "." if abertas else "Nenhuma ficha desta pesquisa espera resposta.")
+    lead_ = (f'O Eric mandou pesquisar as três ideias antes de qualquer mudança (ficha 64, decisão 118), e a pesquisa foi feita em {esc(resumo["data"])}, sem máquina e sem modelo: '
+             f'{tot["topicos"]} tópicos e {tot["fontes"]} fontes, cada uma aberta por um leitor e por um verificador, com {tot["aprovadas"]} de {tot["afirmacoes"]} afirmações aprovadas '
+             f'({tot["parciais"]} delas com o texto corrigido pela segunda leitura). Nada mudou no agente. {pendentes} {estado_25}')
+    itens_kpi = [
+        ("Fontes lidas e conferidas", f'{tot["fontes"]} fontes', f'{tot["topicos"]} tópicos; cada fonte aberta por um leitor e por um verificador'),
+        ("Afirmações aprovadas", f'{tot["aprovadas"]} de {tot["afirmacoes"]}', f'{tot["parciais"]} corrigidas pela segunda leitura; {tot["rejeitadas"]} rejeitadas'),
+        ("Raciocínio em passos", f'+{_txt_num(maq["segundos_de_um_raciocinio_em_passos"], 0)} s por caso', "o que custaria o modelo escrever o raciocínio nesta máquina"),
+        ("Conferência depois da resposta", f'{por_corrida[3]["erros_contraditos"]} de {por_corrida[3]["erros"]} erros', "marcados na corrida 24, sem marcar nenhum acerto (prévia sem modelo)"),
+        ("Segundo passe por sinal", f'{teto[0]} a {teto[-1]} de {os72["erros"]} erros', f'ao alcance; os sinais acenderiam em {os72["disparos"]} de {os72["casos"]} casos'),
+        ("Propostas em forma de instrução", f'{forma["em_forma_de_instrucao"]} de {forma["propostas"]}', "corrida 20; nenhum filtro de hoje olha a forma"),
+        ("Fichas abertas", str(len(abertas)), ", ".join(f"ficha {f.numero}" for f in abertas) or "nenhuma"),
+    ]
+
+    def bloco_veredito(v: dict) -> str:
+        itens = "".join(f"<li><strong>{rotulo}:</strong> {pt.inline(v.get(campo, ''))}</li>" for campo, rotulo in FLUXO_CAMPOS_DO_VEREDITO)
+        return f'<details open><summary>Ideia {v["ideia"]}: {esc(v["nome"])}</summary><p><strong>{pt.inline(v.get("veredito", ""))}</strong></p><ul>{itens}</ul></details>'
+
+    def bloco_ficha(f) -> str:
+        opcoes = "".join(f"<li>{pt.inline(o)}</li>" for o in f.listas.get("Opções", []))
+        return (f'<details open><summary>ficha {f.numero}: {esc(f.titulo)}</summary><p>{pt.inline(f.campos.get("O que é", ""))}</p><p><strong>Por que importa:</strong> '
+                f'{pt.inline(f.campos.get("Por que importa", ""))}</p><ul>{opcoes}</ul><p><strong>Recomendação:</strong> {pt.inline(f.campos.get("Recomendação", ""))}</p></details>')
+
+    tab_fechadas = (tabela(["Ficha", "Pergunta", "Decisão"], [[str(f.numero), esc(f.titulo), pt.inline(f.campos.get("Decisão", ""))] for f in fechadas], raw=True) if fechadas else "")
+    mapa = resumo.get("mapa") or []
+    cont = Counter(l["veredito"] for l in mapa)
+    trs = "".join(f'<tr data-valor="{esc(l["veredito"])}"><td>{esc(l["tema"])}</td><td>{pt.inline(l["opcao"])}</td><td>{chip(l["veredito"], l["veredito"])}</td>'
+                  f'<td>{pt.inline(l["motivo"])}</td><td class="nota">{pt.inline(l["fonte"])}</td></tr>' for l in mapa)
+    tab_mapa = ('<div class="filtros filtro-tabela" data-alvo="tab-mapa-fluxo" role="group" aria-label="Filtro do mapa do fluxo do agente">'
+                f'<button type="button" data-valor="todos" aria-pressed="true">Todos ({len(mapa)})</button>'
+                + "".join(f'<button type="button" data-valor="{v}" aria-pressed="false">{v.capitalize()} ({cont[v]})</button>' for v in ("adotado", "adiado", "descartado") if cont[v])
+                + '</div><div class="tabela" id="tab-mapa-fluxo"><table><thead><tr><th>Tema</th><th>Opção</th><th>Veredito</th><th>Motivo</th><th>Fonte</th></tr></thead>'
+                f'<tbody>{trs}</tbody></table></div>')
+    topicos = resumo["topicos"]
+    tab_topicos = tabela(["Subseção", "Ideia", "Tópico", "Fontes", "Aprovadas", "Corrigidas", "Rejeitadas", "Não verificadas"],
+                         [[f'§{t["secao"]}', t["frente"], f'{esc(t["titulo"])} (<code>{esc(t["chave"])}</code>)', str(t["fontes"]), str(t["aprovadas"]), str(t["parciais"]), str(t["rejeitadas"]),
+                           str(t["nao_verificadas"])] for t in topicos], raw=True)
+    implicacoes = "".join(f'<details><summary>§{t["secao"]} {esc(t["titulo"])}</summary><p><em>{pt.inline(t["titulo_da_sintese"])}</em></p><ul>'
+                          + "".join(f"<li>{pt.inline(x)}</li>" for x in t["implicacoes"]) + '</ul><p class="nota"><strong>O que a literatura não cobre:</strong> '
+                          + " ".join(pt.inline(x) for x in t["lacunas"]) + "</p></details>" for t in topicos)
+    portoes = _fluxo_portoes(proposta)
+    html_ = f"""<section id="fluxo" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>O veredito por ideia</h2>
+<p>Cada veredito junta o que a literatura sustenta, o que o repositório já mediu e a forma da ideia que escapa do que já foi medido. Nenhum muda o agente: a decisão é das fichas abaixo.</p>
+{"".join(bloco_veredito(v) for v in resumo.get("vereditos") or [])}
+<h2>O que depende do Eric</h2>
+{"".join(bloco_ficha(f) for f in abertas) or "<p>Nenhuma ficha aberta: as fichas desta pesquisa já foram respondidas.</p>"}
+{tab_fechadas}
+<h2>Ideia 1: a lista de conferência que cabe é a feita em código, depois da resposta</h2>
+<p>O código mede um fato no próprio caso e marca quando ele desmente a causa que o modelo respondeu, sem mexer no prompt nem no selo de confiança. Numa prévia sem modelo, {conf["quantas"]} conferências de exemplo, escritas fora do agente, marcam {por_corrida[3]["erros_contraditos"]} de {por_corrida[3]["erros"]} erros da corrida 24, {por_corrida[2]["erros_contraditos"]} de {por_corrida[2]["erros"]} da corrida 22 e {por_corrida[0]["erros_contraditos"]} de {por_corrida[0]["erros"]} da corrida 16, sem marcar nenhum acerto. Elas foram escritas olhando os erros das corridas 22 e 24; nos casos de aprendizado da corrida 16, que não foram olhados, marcam {por_corrida[1]["erros_contraditos"]} de {por_corrida[1]["erros"]} erros.</p>
+<div class="chart"><canvas id="g-fluxo-conferencia"></canvas></div>
+{_fluxo_recolhido(resumo, "conferencia", "A prévia da conferência, corrida a corrida")}
+{_fluxo_recolhido(resumo, "ideia_1", "O que o repositório já mediu sobre a ideia 1")}
+<h2>Ideia 2: o que falta nos erros é o verbete da causa certa, e ele quase nunca está logo abaixo dos três entregues</h2>
+<p>Um segundo passe do diagnóstico só ajudaria o erro cujo verbete certo ficou um pouco abaixo dos três que chegam ao modelo. Nos {os72["casos"]} casos das corridas 22 e 24, os dois sinais que o agente já calcula acenderiam em {os72["disparos"]}, pegariam {os72["erros_pegos"]} dos {os72["erros"]} erros e acenderiam também em {os72["acertos_incomodados"]} acertos; o verbete certo estaria ao alcance em {teto[0]} erros com 5 verbetes e em {teto[-1]} com 10.</p>
+<div class="chart"><canvas id="g-fluxo-posicao"></canvas></div>
+{_fluxo_recolhido(resumo, "posicao", "A posição do verbete da causa certa, em casos e em erros")}
+{_fluxo_recolhido(resumo, "gatilhos", "O que cada sinal pegaria e em quantos acertos acenderia")}
+{_fluxo_recolhido(resumo, "teto", "O teto de um segundo passe nos casos das duas corridas")}
+{_fluxo_recolhido(resumo, "ideia_2", "O que o repositório já mediu sobre a ideia 2")}
+<h2>Ideia 3: o analista de documentação custa menos com uma ficha curta, e os portões novos já mostram o que barrariam</h2>
+<p>A proposta de desenho está em <code>Documentacao/memorial/5-metodo-e-ferramental/proposta-analista-de-documentacao.md</code>: o analista de documentação é chamado em segundo plano, só para relatórios que uma pessoa já decidiu e em que há lacuna na documentação; lê uma ficha curta do caso, de cerca de {_txt_num(ficha_curta["minutos"], 1)} minuto por chamada; propõe uma edição por caso; e cada edição passa por filtros e portões antes de uma pessoa aprovar. Das {forma["propostas"]} propostas da corrida 20, {forma["em_forma_de_instrucao"]} começam por verbo de instrução, e {forma["passaram_em_forma_de_instrucao"]} das {forma["passaram_nos_filtros"]} que passaram nos filtros de hoje também.</p>
+<div class="chart"><canvas id="g-fluxo-custo"></canvas></div>
+{_fluxo_recolhido(resumo, "cenarios", "O custo de uma chamada, conforme o que o analista de documentação lê")}
+{_fluxo_recolhido(resumo, "custo_dos_portoes", "O custo dos portões")}
+<p>O portão da busca, sem modelo, aplicado a cada uma das {portao["edicoes"]} edições do lote da corrida 20 em {portao["casos_com_gabarito"]} casos com gabarito: o verbete da causa certa sai dos três entregues {portao["verbete_certo_sai_no_total"]} vezes e entra {portao["verbete_certo_entra_no_total"]}. Como ler a tabela: uma edição boa não tira o verbete certo de nenhum caso; a última coluna diz quantos casos leriam a edição, que é quantos diagnósticos um portão do diagnóstico teria de refazer.</p>
+{_fluxo_recolhido(resumo, "portao_por_edicao", "O portão da busca, edição por edição")}
+{_fluxo_recolhido(resumo, "ideia_3", "O que o repositório já mediu sobre a ideia 3")}
+{detalhes("Os portões da proposta de desenho, na ordem", portoes) if portoes else ""}
+<h2>O mapa: o que já é assim, o que espera decisão e o que sai</h2>
+<p><em>Adotado</em> é o que o agente já faz e a pesquisa confirma; <em>adiado</em> só entra com decisão do Eric e medida própria, sem mudar o agente antes da Fase 5; <em>descartado</em> não serve, com o motivo.</p>
+{tab_mapa}
+<h2>A pesquisa: as afirmações por tópico</h2>
+<p>Cada tópico teve um leitor, que abriu as fontes e escreveu as afirmações com o número e a condição, e um verificador, que abriu de novo cada fonte e deu o veredito de cada afirmação. {tot["referencias_corrigidas"]} referências tiveram os autores, o evento ou a versão corrigidos pela segunda leitura.</p>
+<div class="chart"><canvas id="g-fluxo-afirmacoes"></canvas></div>
+{detalhes("Os tópicos, um a um", tab_topicos)}
+{detalhes("O que cada tópico diz para o agente", implicacoes)}
+{detalhes("A máquina: as taxas usadas nas contas de custo", _fluxo_quadro(resumo, "maquina"))}
+{leitura([
+    "<strong>O que não entra:</strong> o roteiro de raciocínio escrito pelo modelo e a revisão da própria resposta com o mesmo contexto. Os dois custam tempo, e a literatura mede perda neste porte de modelo.",
+    "<strong>O que sobra de cada ideia é código:</strong> a conferência depois da resposta, o segundo passe decidido por sinal e por regra, e os filtros e portões do analista de documentação.",
+    "<strong>O gargalo dos erros é a primeira busca:</strong> na maior parte deles o verbete da causa certa não chegou ao modelo, e ele costuma estar longe dos três entregues.",
+    "<strong>A terceira ideia depende de uma pessoa:</strong> o rótulo de certo ou errado vem da decisão sobre o relatório, que só existe com o hub, depois da Fase 5.",
+])}
+{fontes(["<code>Documentacao/memorial/2-pesquisa-e-literatura/levantamento-2026-11-10-fluxo-do-agente.md</code> (§6.16; <code>integrar_pesquisa_fluxo_do_agente.py</code>, com <code>--check</code>)",
+         "<code>5-metodo-e-ferramental/dados/pesquisa-fluxo-do-agente/</code>: as leituras e as segundas leituras em JSON, <code>sinteses.json</code>, <code>medidas_do_repositorio.json</code> (<code>medidas_fluxo_do_agente.py</code>, com <code>--check</code>) e <code>resumo_para_o_painel.json</code>",
+         "<code>5-metodo-e-ferramental/proposta-analista-de-documentacao.md</code>", "<code>pendencias.md</code>, fichas 64 a 67; decisão 118; roadmap §4.8"])}
+</section>"""
+    dados = {
+        "afirmacoes": {"topicos": [FLUXO_ROTULOS.get(t["chave"], t["chave"]) for t in topicos],
+                       "series": [{"nome": "confirmadas", "n": [t["aprovadas"] - t["parciais"] for t in topicos], "cor": "--s1"},
+                                  {"nome": "corrigidas pela segunda leitura", "n": [t["parciais"] for t in topicos], "cor": "--s2"},
+                                  {"nome": "rejeitadas", "n": [t["rejeitadas"] for t in topicos], "cor": "--s4"},
+                                  {"nome": "não verificadas", "n": [t["nao_verificadas"] for t in topicos], "cor": "--s8"}]},
+        "conferencia": {"corridas": [c["corrida"] for c in por_corrida],
+                        "series": [{"nome": "erros com a causa desmentida por um fato medido", "n": [c["erros_contraditos"] for c in por_corrida], "cor": "--s1"},
+                                   {"nome": "erros que as conferências não marcam", "n": [c["erros"] - c["erros_contraditos"] for c in por_corrida], "cor": "--s4"}]},
+        "posicao": {"faixas": [p["faixa"] + (" (os entregues)" if i == 0 else "") for i, p in enumerate(c24["posicao_do_verbete_certo"])],
+                    "series": [{"nome": "erros da corrida 24 (inéditos)", "n": [p["erros"] for p in c24["posicao_do_verbete_certo"]], "cor": "--s1"},
+                               {"nome": "erros da corrida 22 (oficiais)", "n": [p["erros"] for p in c22["posicao_do_verbete_certo"]], "cor": "--s3"}]},
+        "custo": {"cenarios": ["a proposta de edição de hoje (medido)"] + [c["cenario"] + " (estimado)" for c in cen["cenarios"]],
+                  "segundos": [cen["medido_hoje"]["segundos"]] + [c["segundos"] for c in cen["cenarios"]],
+                  "cores": ["--s4"] + ["--s1"] * len(cen["cenarios"])},
+        "totais": tot,
+    }
+    return dados, html_
+
+
 def montar(ctx: dict) -> tuple[dict, str]:
     """ctx: dados (montar_dados), road, cartoes_corridas, md_para_html, md_doc_para_html, cq, blocos_cq, ineditos,
     curadoria, planilha_curadoria, recuperador, ablacao, medicao_mcp, readme. Devolve (dados_topicos, html)."""
@@ -3843,4 +5528,28 @@ def montar(ctx: dict) -> tuple[dict, str]:
     # a aba da Pós-Fase 4 existe sempre (o mapa de navegação a lista); sem o levantamento §6.15 ela mostra o estado vazio
     d, h = secao_pos_fase4(ctx.get("levantamento_pos4"), ctx.get("plano_pos4"), ctx.get("pend", []))
     partes.append(("posfase4", d, h))
+    # a aba dos filtros de texto existe sempre (o mapa de navegação a lista); sem texto.json ela mostra o estado vazio
+    d, h = secao_texto(ctx.get("texto"), ctx.get("curadoria_leituras"))
+    partes.append(("texto", d, h))
+    # a aba da árvore de decisão existe sempre (o mapa de navegação a lista); sem as pastas arvores/ ela mostra o estado vazio
+    d, h = secao_arvore(ctx.get("arvores"))
+    partes.append(("arvore", d, h))
+    # a aba da barra e do Git existe sempre (o mapa de navegação a lista); sem os JSON do Q4 ela mostra o estado vazio
+    d, h = secao_progresso(ctx.get("taxas_progresso"), ctx.get("erro_progresso"), ctx.get("impacto_git"), ctx.get("fumaca_progresso"))
+    partes.append(("progresso", d, h))
+    # a aba da revisão humana existe sempre (o mapa de navegação a lista); sem leitura_revisao_v3.json ela mostra o estado vazio
+    d, h = secao_revisao_v3(ctx.get("revisao_v3"), ctx.get("revisao_trilha"))
+    partes.append(("revisaov3", d, h))
+    # a aba das notas do modelo existe sempre (o mapa de navegação a lista); sem sem_notas_previa.json ela mostra o estado vazio
+    d, h = secao_sem_notas(ctx.get("sem_notas_previa"), ctx.get("sem_notas"))
+    partes.append(("semnotas", d, h))
+    # a aba do fluxo do agente existe sempre (o mapa de navegação a lista); sem os JSON da rodada 7 da pesquisa ela mostra o estado vazio
+    d, h = secao_fluxo(ctx.get("fluxo_resumo"), ctx.get("fluxo_medidas"), ctx.get("pend", []), ctx.get("fluxo_proposta"))
+    partes.append(("fluxo", d, h))
+    # a aba do segundo passe existe sempre (o mapa de navegação a lista); sem segundo_passe_previa.json ela mostra o estado vazio
+    d, h = secao_segundo_passe(ctx.get("segundo_passe_previa"), ctx.get("segundo_passe"))
+    partes.append(("segpasse", d, h))
+    # a aba do analista de documentação existe sempre (o mapa de navegação a lista); sem portoes_m1.json ela mostra o estado vazio
+    d, h = secao_analista(ctx.get("portoes_m1"), ctx.get("analista_previa"), ctx.get("analista"))
+    partes.append(("analista", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

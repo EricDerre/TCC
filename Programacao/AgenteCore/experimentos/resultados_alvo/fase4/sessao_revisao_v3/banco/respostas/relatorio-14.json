@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:56:07.163Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-14",
+  "comentario": "O modelo cometeu um erro de diagnóstico. O sintoma aponta que a ação \"Saiba Mais\" de um produto aciona os dados do produto seguinte. Isso ocorre porque as requisições estão usando o \"id\" deslocado. A causa provável para um desalinhamento sequencial não é colecao_no_lugar_de_objeto (já que o payload retornou um array JSON correto), mas um problema de associação, ou chave_de_juncao_errada, que ficou de fora dos 3 principais resultados do RAG (em 7º lugar). O LLM forçou um encaixe com colecao_no_lugar_de_objeto (0,915), sendo que a falha técnica causa_sem_verbete_que_a_trate só não disparou porque o verbete contrato-produto cita incidentalmente o termo. O relatório evidencia a fragilidade quando o RAG não prioriza o verbete correto.",
+  "decidido_em": "2026-11-09T19:56:32.142Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 14,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:57:05.698Z",
+  "segundos": 25,
+  "segundos_relogio": 25,
+  "utilidade": 5
+}

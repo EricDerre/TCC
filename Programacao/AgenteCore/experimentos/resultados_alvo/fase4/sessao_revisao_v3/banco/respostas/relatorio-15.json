@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:57:06.830Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-15",
+  "comentario": "O agente errou o diagnóstico. O problema real relatado (\"a de id 3 chega cerca de 2 segundos depois da de id 9. O modal fica com o titulo e a descricao da Fraldinha\") é um clássico tempo_de_resposta_excedido ou erro de concorrência/race condition, já que o corpo do JSON retornou um objeto válido para o Balde de Cerveja. No entanto, o agente cravou colecao_no_lugar_de_objeto (0,906) baseando-se nos verbetes que foram entregues (o RAG não trouxe tempo_de_resposta_excedido no top 3). Como o verbete colecao_no_lugar_de_objeto estava no contexto, a falha causa_sem_verbete_que_a_trate não disparou, resultando em um falso positivo sistêmico bem documentado por este relatório.",
+  "decidido_em": "2026-11-09T19:58:15.105Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 15,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:58:32.894Z",
+  "segundos": 68,
+  "segundos_relogio": 68,
+  "utilidade": 5
+}

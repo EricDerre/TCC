@@ -1,0 +1,331 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-10T14:42:24",
+    "numero": 25
+  },
+  "biblioteca": {
+    "origem_hash": "95af35290860",
+    "hash": "ba5ff9f5f632",
+    "verbetes": 36,
+    "verbetes_retirados": [
+      "atualizacao-da-tela",
+      "campo_preco_ausente",
+      "novo_verbete"
+    ],
+    "verbetes_com_notas": 20,
+    "notas_retiradas": 26,
+    "lote_promovido_em": "2026-11-04T20:03:06",
+    "verbetes_producao": 39,
+    "verbetes_sem_notas": 36,
+    "notas_em_forma_de_instrucao": 25,
+    "tokens_estimados_producao": 8576,
+    "tokens_estimados_sem_notas": 6582
+  },
+  "resumo": {
+    "casos": 72,
+    "acertos_referencia": 56,
+    "contextos_identicos": 0,
+    "contextos_que_mudam": 72,
+    "mesmos_verbetes_sem_as_notas": 59,
+    "mesmos_verbetes_outra_ordem": 4,
+    "verbetes_diferentes": 9,
+    "com_nota_na_referencia": 72,
+    "com_aprendido_na_referencia": 0,
+    "verbete_certo_antes": 50,
+    "verbete_certo_depois": 50,
+    "verbete_certo_mudou": 0,
+    "inferencias": 72,
+    "minutos_estimados_pela_mediana_das_referencias": 80
+  },
+  "por_banco": [
+    {
+      "banco": "avaliacao",
+      "referencia": "corrida 22",
+      "casos": 36,
+      "k": 3,
+      "contexto_da_referencia_refeito_igual": 36,
+      "acertos_referencia": 31,
+      "com_nota_na_referencia": 36,
+      "com_aprendido_na_referencia": 0,
+      "mudancas": [
+        {
+          "mudanca": "contexto idêntico",
+          "casos": 0
+        },
+        {
+          "mudanca": "mesmos verbetes, sem as notas",
+          "casos": 32
+        },
+        {
+          "mudanca": "mesmos verbetes, outra ordem",
+          "casos": 1
+        },
+        {
+          "mudanca": "verbetes diferentes",
+          "casos": 3
+        }
+      ],
+      "verbete_certo": [
+        {
+          "antes": true,
+          "depois": true,
+          "casos": 30
+        },
+        {
+          "antes": true,
+          "depois": false,
+          "casos": 0
+        },
+        {
+          "antes": false,
+          "depois": true,
+          "casos": 0
+        },
+        {
+          "antes": false,
+          "depois": false,
+          "casos": 6
+        }
+      ],
+      "chars_do_contexto_mediana_referencia": 1937.0,
+      "chars_do_contexto_mediana_sem_notas": 1532.5,
+      "segundos_mediana_referencia": 64.52
+    },
+    {
+      "banco": "ineditos",
+      "referencia": "corrida 24",
+      "casos": 36,
+      "k": 3,
+      "contexto_da_referencia_refeito_igual": 36,
+      "acertos_referencia": 25,
+      "com_nota_na_referencia": 36,
+      "com_aprendido_na_referencia": 0,
+      "mudancas": [
+        {
+          "mudanca": "contexto idêntico",
+          "casos": 0
+        },
+        {
+          "mudanca": "mesmos verbetes, sem as notas",
+          "casos": 27
+        },
+        {
+          "mudanca": "mesmos verbetes, outra ordem",
+          "casos": 3
+        },
+        {
+          "mudanca": "verbetes diferentes",
+          "casos": 6
+        }
+      ],
+      "verbete_certo": [
+        {
+          "antes": true,
+          "depois": true,
+          "casos": 20
+        },
+        {
+          "antes": true,
+          "depois": false,
+          "casos": 0
+        },
+        {
+          "antes": false,
+          "depois": true,
+          "casos": 0
+        },
+        {
+          "antes": false,
+          "depois": false,
+          "casos": 16
+        }
+      ],
+      "chars_do_contexto_mediana_referencia": 1927.0,
+      "chars_do_contexto_mediana_sem_notas": 1539.0,
+      "segundos_mediana_referencia": 68.38
+    }
+  ],
+  "casos_com_verbetes_diferentes": [
+    {
+      "caso": "sin-5",
+      "banco": "avaliacao",
+      "antes": [
+        "entidade-produto",
+        "contrato-produto",
+        "tipo_divergente"
+      ],
+      "depois": [
+        "entidade-produto",
+        "contrato-produto",
+        "campo_renomeado"
+      ],
+      "saiu": [
+        "tipo_divergente"
+      ],
+      "entrou": [
+        "campo_renomeado"
+      ]
+    },
+    {
+      "caso": "efe-5",
+      "banco": "avaliacao",
+      "antes": [
+        "localizador_quebrado",
+        "ancora-saiba-mais",
+        "corpo_nao_e_json"
+      ],
+      "depois": [
+        "localizador_quebrado",
+        "ancora-saiba-mais",
+        "entidade-produto"
+      ],
+      "saiu": [
+        "corpo_nao_e_json"
+      ],
+      "entrou": [
+        "entidade-produto"
+      ]
+    },
+    {
+      "caso": "efe-14",
+      "banco": "avaliacao",
+      "antes": [
+        "localizador_quebrado",
+        "ancora-saiba-mais",
+        "estado_da_tela_divergente"
+      ],
+      "depois": [
+        "localizador_quebrado",
+        "ancora-saiba-mais",
+        "limites-do-sistema"
+      ],
+      "saiu": [
+        "estado_da_tela_divergente"
+      ],
+      "entrou": [
+        "limites-do-sistema"
+      ]
+    },
+    {
+      "caso": "lex-22",
+      "banco": "ineditos",
+      "antes": [
+        "corpo_nao_e_json",
+        "mensagens-de-erro-do-codigo",
+        "corpo_vazio"
+      ],
+      "depois": [
+        "corpo_nao_e_json",
+        "mensagens-de-erro-do-codigo",
+        "limite_de_requisicoes"
+      ],
+      "saiu": [
+        "corpo_vazio"
+      ],
+      "entrou": [
+        "limite_de_requisicoes"
+      ]
+    },
+    {
+      "caso": "lex-27",
+      "banco": "ineditos",
+      "antes": [
+        "contrato-pedido",
+        "pedido-reserva",
+        "formato_de_data_divergente"
+      ],
+      "depois": [
+        "contrato-pedido",
+        "pedido-reserva",
+        "estado_da_tela_divergente"
+      ],
+      "saiu": [
+        "formato_de_data_divergente"
+      ],
+      "entrou": [
+        "estado_da_tela_divergente"
+      ]
+    },
+    {
+      "caso": "sin-27",
+      "banco": "ineditos",
+      "antes": [
+        "contrato-produto",
+        "entidade-produto",
+        "chave_de_juncao_errada"
+      ],
+      "depois": [
+        "contrato-produto",
+        "entidade-produto",
+        "campo_ausente"
+      ],
+      "saiu": [
+        "chave_de_juncao_errada"
+      ],
+      "entrou": [
+        "campo_ausente"
+      ]
+    },
+    {
+      "caso": "run-22",
+      "banco": "ineditos",
+      "antes": [
+        "limite_de_requisicoes",
+        "contagem_inconsistente",
+        "estrutura_aninhada_divergente"
+      ],
+      "depois": [
+        "limite_de_requisicoes",
+        "estrutura_aninhada_divergente",
+        "tempo_de_resposta_excedido"
+      ],
+      "saiu": [
+        "contagem_inconsistente"
+      ],
+      "entrou": [
+        "tempo_de_resposta_excedido"
+      ]
+    },
+    {
+      "caso": "run-23",
+      "banco": "ineditos",
+      "antes": [
+        "recurso_inexistente",
+        "contrato-produto",
+        "mensagens-de-erro-do-codigo"
+      ],
+      "depois": [
+        "recurso_inexistente",
+        "contrato-produto",
+        "contagem_inconsistente"
+      ],
+      "saiu": [
+        "mensagens-de-erro-do-codigo"
+      ],
+      "entrou": [
+        "contagem_inconsistente"
+      ]
+    },
+    {
+      "caso": "efe-25",
+      "banco": "ineditos",
+      "antes": [
+        "localizador_quebrado",
+        "contrato-produto",
+        "entidade-produto"
+      ],
+      "depois": [
+        "localizador_quebrado",
+        "estado_da_tela_divergente",
+        "entidade-produto"
+      ],
+      "saiu": [
+        "contrato-produto"
+      ],
+      "entrou": [
+        "estado_da_tela_divergente"
+      ]
+    }
+  ],
+  "regra": "Regra fixada antes da corrida (decisão 116): a diferença sai do ruído quando o teste pareado exato dos casos dos dois bancos juntos (McNemar, bilateral) dá p abaixo de 0,05, com a corrida completa e a ponte da versão do Ollama pareável com a Fase 3 (b + c até 2, decisão 47). Fora disso a diferença fica dentro do ruído e o agente não muda; se sair do ruído, mudar o agente é outra decisão."
+}

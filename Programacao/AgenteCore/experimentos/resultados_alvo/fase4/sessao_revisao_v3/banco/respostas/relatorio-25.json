@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:25:21.274Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-25",
+  "comentario": "O diagnóstico de localizador_quebrado está perfeito e justificado pela evidência de que a falha ocorreu estritamente no frontend/automação. O botão \"Saiba Mais\" na árvore de acessibilidade da Alcatra possui o seletor data-id=\"5\", mas o script tentou buscar por .thumbnail:has-text(\"Alcatra na Pedra\") button >> nth=0 (um seletor frágil que falhou e esgotou o tempo de espera). O motor de busca forneceu o verbete correto, o agente identificou a falha com máxima confiança (0,998) e citou as fontes de maneira precisa. Nenhuma intervenção de auditoria foi acionada.",
+  "decidido_em": "2026-11-09T22:25:44.313Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 25,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:26:05.803Z",
+  "segundos": 23,
+  "segundos_relogio": 23,
+  "utilidade": 5
+}

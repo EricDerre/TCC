@@ -1,0 +1,2717 @@
+{
+ "gerado_por": "arvore_de_decisao.py",
+ "versao": 1,
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "trilha": "trilha_tela.jsonl",
+ "modelo": "qwen2.5:7b",
+ "hash_prompt_fixo": "2e42cf9c31826941",
+ "hash_biblioteca": "95af35290860",
+ "calibracao": {
+  "corrida": "fase4_calibracao",
+  "disponivel": true
+ },
+ "limiares_texto": {
+  "gerado_em": "2026-11-07T19:55:59"
+ },
+ "arvores": [
+  {
+   "nome": "lex-1@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-1@tela",
+   "caso": "lex-1",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 776,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-1@tela.md",
+    "json": "lex-1@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-1@tela.md",
+   "hash_eventos": "48420adcaee1b21c"
+  },
+  {
+   "nome": "lex-1@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-1@fixture",
+   "caso": "lex-1",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 638,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-1@fixture.md",
+    "json": "lex-1@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-1@fixture.md",
+   "hash_eventos": "82a342e900da623d"
+  },
+  {
+   "nome": "lex-4@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-4@tela",
+   "caso": "lex-4",
+   "classe": 1,
+   "nivel": 2,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": "nome",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 861,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-4@tela.md",
+    "json": "lex-4@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-4@tela.md",
+   "hash_eventos": "64f887099a7f6e06"
+  },
+  {
+   "nome": "lex-4@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-4@fixture",
+   "caso": "lex-4",
+   "classe": 1,
+   "nivel": 2,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": "nome",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 25,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 692,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-4@fixture.md",
+    "json": "lex-4@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-4@fixture.md",
+   "hash_eventos": "e0904000a125d1e3"
+  },
+  {
+   "nome": "sin-4@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-4@tela",
+   "caso": "sin-4",
+   "classe": 2,
+   "nivel": 1,
+   "escolha": "colecao_no_lugar_de_objeto",
+   "causa_em_palavras": "Coleção no lugar de objeto (ou o inverso)",
+   "campo": "id",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 849,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-4@tela.md",
+    "json": "sin-4@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-4@tela.md",
+   "hash_eventos": "37c4b3c7c46d2fdd"
+  },
+  {
+   "nome": "sin-4@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-4@fixture",
+   "caso": "sin-4",
+   "classe": 2,
+   "nivel": 1,
+   "escolha": "colecao_no_lugar_de_objeto",
+   "causa_em_palavras": "Coleção no lugar de objeto (ou o inverso)",
+   "campo": "id",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 672,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-4@fixture.md",
+    "json": "sin-4@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-4@fixture.md",
+   "hash_eventos": "bb1cfafbb8c92814"
+  },
+  {
+   "nome": "sin-5@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-5@tela",
+   "caso": "sin-5",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "resumo",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 832,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-5@tela.md",
+    "json": "sin-5@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-5@tela.md",
+   "hash_eventos": "cd1789e33b78ce00"
+  },
+  {
+   "nome": "sin-5@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-5@fixture",
+   "caso": "sin-5",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "colecao_no_lugar_de_objeto",
+   "causa_em_palavras": "Coleção no lugar de objeto (ou o inverso)",
+   "campo": null,
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 650,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-5@fixture.md",
+    "json": "sin-5@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-5@fixture.md",
+   "hash_eventos": "683e389296e39151"
+  },
+  {
+   "nome": "semt-1@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-1@tela",
+   "caso": "semt-1",
+   "classe": 3,
+   "nivel": 2,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "preco",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 852,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-1@tela.md",
+    "json": "semt-1@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-1@tela.md",
+   "hash_eventos": "5e8e89c9aeb9e88d"
+  },
+  {
+   "nome": "semt-1@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-1@fixture",
+   "caso": "semt-1",
+   "classe": 3,
+   "nivel": 2,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "preco",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 661,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-1@fixture.md",
+    "json": "semt-1@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-1@fixture.md",
+   "hash_eventos": "8762d1f03f51443a"
+  },
+  {
+   "nome": "tra-1@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-1@tela",
+   "caso": "tra-1",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "escala_ou_unidade_errada",
+   "causa_em_palavras": "Escala ou unidade errada",
+   "campo": "preco",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 840,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-1@tela.md",
+    "json": "tra-1@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-1@tela.md",
+   "hash_eventos": "85c7c88c583e7a1d"
+  },
+  {
+   "nome": "tra-1@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-1@fixture",
+   "caso": "tra-1",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "escala_ou_unidade_errada",
+   "causa_em_palavras": "Escala ou unidade errada",
+   "campo": "preco",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 661,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-1@fixture.md",
+    "json": "tra-1@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-1@fixture.md",
+   "hash_eventos": "d1a0cc4fb48146cc"
+  },
+  {
+   "nome": "tra-4@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-4@tela",
+   "caso": "tra-4",
+   "classe": 4,
+   "nivel": 3,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": "id",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 31,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 860,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-4@tela.md",
+    "json": "tra-4@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-4@tela.md",
+   "hash_eventos": "42b70a8d35bde815"
+  },
+  {
+   "nome": "tra-4@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-4@fixture",
+   "caso": "tra-4",
+   "classe": 4,
+   "nivel": 3,
+   "escolha": "contagem_inconsistente",
+   "causa_em_palavras": "Contagem inconsistente",
+   "campo": "total",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 661,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-4@fixture.md",
+    "json": "tra-4@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-4@fixture.md",
+   "hash_eventos": "02310be04b96a43e"
+  },
+  {
+   "nome": "run-1@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-1@tela",
+   "caso": "run-1",
+   "classe": 5,
+   "nivel": 1,
+   "escolha": "erro_interno_do_servidor",
+   "causa_em_palavras": "Erro interno do servidor (500)",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 826,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-1@tela.md",
+    "json": "run-1@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-1@tela.md",
+   "hash_eventos": "2d965b60e454e8cb"
+  },
+  {
+   "nome": "run-1@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-1@fixture",
+   "caso": "run-1",
+   "classe": 5,
+   "nivel": 1,
+   "escolha": "erro_interno_do_servidor",
+   "causa_em_palavras": "Erro interno do servidor (500)",
+   "campo": null,
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 655,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-1@fixture.md",
+    "json": "run-1@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-1@fixture.md",
+   "hash_eventos": "3b6c79022d914860"
+  },
+  {
+   "nome": "run-2@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-2@tela",
+   "caso": "run-2",
+   "classe": 5,
+   "nivel": 1,
+   "escolha": "tempo_de_resposta_excedido",
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 824,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-2@tela.md",
+    "json": "run-2@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-2@tela.md",
+   "hash_eventos": "5b921840283ad6d7"
+  },
+  {
+   "nome": "run-2@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-2@fixture",
+   "caso": "run-2",
+   "classe": 5,
+   "nivel": 1,
+   "escolha": "tempo_de_resposta_excedido",
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 633,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-2@fixture.md",
+    "json": "run-2@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-2@fixture.md",
+   "hash_eventos": "12d53307ed152093"
+  },
+  {
+   "nome": "efe-3@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/efe-3@tela",
+   "caso": "efe-3",
+   "classe": 6,
+   "nivel": 2,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "imagem",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 832,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "efe-3@tela.md",
+    "json": "efe-3@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/efe-3@tela.md",
+   "hash_eventos": "fcd201db7c721cbe"
+  },
+  {
+   "nome": "efe-3@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/efe-3@fixture",
+   "caso": "efe-3",
+   "classe": 6,
+   "nivel": 2,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "imagem",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 661,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "efe-3@fixture.md",
+    "json": "efe-3@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/efe-3@fixture.md",
+   "hash_eventos": "bca09de578611d85"
+  },
+  {
+   "nome": "lex-7@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-7@tela",
+   "caso": "lex-7",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "corpo_vazio",
+   "causa_em_palavras": "Corpo vazio",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 786,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-7@tela.md",
+    "json": "lex-7@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-7@tela.md",
+   "hash_eventos": "294c44637689d499"
+  },
+  {
+   "nome": "lex-7@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-7@fixture",
+   "caso": "lex-7",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "corpo_vazio",
+   "causa_em_palavras": "Corpo vazio",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 631,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-7@fixture.md",
+    "json": "lex-7@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-7@fixture.md",
+   "hash_eventos": "7de053b8818800b9"
+  },
+  {
+   "nome": "lex-8@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-8@tela",
+   "caso": "lex-8",
+   "classe": 1,
+   "nivel": 2,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": "resumo",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 838,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-8@tela.md",
+    "json": "lex-8@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-8@tela.md",
+   "hash_eventos": "a60f833b11302b8b"
+  },
+  {
+   "nome": "lex-8@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-8@fixture",
+   "caso": "lex-8",
+   "classe": 1,
+   "nivel": 2,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": null,
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 637,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-8@fixture.md",
+    "json": "lex-8@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-8@fixture.md",
+   "hash_eventos": "7e2887827b2ef85d"
+  },
+  {
+   "nome": "lex-10@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-10@tela",
+   "caso": "lex-10",
+   "classe": 1,
+   "nivel": 3,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": true,
+   "cura": false,
+   "falha": "formato_das_quatro_linhas",
+   "decisoes": 3,
+   "afirmacoes": 28,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 4,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 781,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-10@tela.md",
+    "json": "lex-10@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-10@tela.md",
+   "hash_eventos": "a60a5e7209729952"
+  },
+  {
+   "nome": "lex-10@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-10@fixture",
+   "caso": "lex-10",
+   "classe": 1,
+   "nivel": 3,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 666,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-10@fixture.md",
+    "json": "lex-10@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-10@fixture.md",
+   "hash_eventos": "8e4cee2e8947d393"
+  },
+  {
+   "nome": "lex-11@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-11@tela",
+   "caso": "lex-11",
+   "classe": 1,
+   "nivel": 3,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": "nome",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 861,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-11@tela.md",
+    "json": "lex-11@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-11@tela.md",
+   "hash_eventos": "ded007398b2aee60"
+  },
+  {
+   "nome": "lex-11@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-11@fixture",
+   "caso": "lex-11",
+   "classe": 1,
+   "nivel": 3,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": "nome",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 663,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-11@fixture.md",
+    "json": "lex-11@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-11@fixture.md",
+   "hash_eventos": "c8d3013cdc6fe50d"
+  },
+  {
+   "nome": "sin-11@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-11@tela",
+   "caso": "sin-11",
+   "classe": 2,
+   "nivel": 2,
+   "escolha": "estrutura_aninhada_divergente",
+   "causa_em_palavras": "Estrutura aninhada divergente",
+   "campo": "preco",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 830,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-11@tela.md",
+    "json": "sin-11@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-11@tela.md",
+   "hash_eventos": "9ba1c6113c6f4614"
+  },
+  {
+   "nome": "sin-11@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-11@fixture",
+   "caso": "sin-11",
+   "classe": 2,
+   "nivel": 2,
+   "escolha": "estrutura_aninhada_divergente",
+   "causa_em_palavras": "Estrutura aninhada divergente",
+   "campo": "itens",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 657,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-11@fixture.md",
+    "json": "sin-11@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-11@fixture.md",
+   "hash_eventos": "51c93d7e9fee7ebf"
+  },
+  {
+   "nome": "sin-14@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-14@tela",
+   "caso": "sin-14",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "campo_renomeado",
+   "causa_em_palavras": "Campo renomeado",
+   "campo": "imagem",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 832,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-14@tela.md",
+    "json": "sin-14@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-14@tela.md",
+   "hash_eventos": "70b16354c8b50a0a"
+  },
+  {
+   "nome": "sin-14@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-14@fixture",
+   "caso": "sin-14",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "colecao_no_lugar_de_objeto",
+   "causa_em_palavras": "Coleção no lugar de objeto (ou o inverso)",
+   "campo": "imagem_url",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 665,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-14@fixture.md",
+    "json": "sin-14@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-14@fixture.md",
+   "hash_eventos": "ad4d093cb10bd1af"
+  },
+  {
+   "nome": "semt-8@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-8@tela",
+   "caso": "semt-8",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "nulo_inesperado",
+   "causa_em_palavras": "Nulo inesperado",
+   "campo": "preco",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 827,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-8@tela.md",
+    "json": "semt-8@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-8@tela.md",
+   "hash_eventos": "ff69518df9ecade3"
+  },
+  {
+   "nome": "semt-8@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-8@fixture",
+   "caso": "semt-8",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "nulo_inesperado",
+   "causa_em_palavras": "Nulo inesperado",
+   "campo": "preco",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 657,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-8@fixture.md",
+    "json": "semt-8@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-8@fixture.md",
+   "hash_eventos": "ae9da1ae78e76814"
+  },
+  {
+   "nome": "semt-9@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-9@tela",
+   "caso": "semt-9",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "destaque",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 829,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-9@tela.md",
+    "json": "semt-9@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-9@tela.md",
+   "hash_eventos": "ef2a7973d9e54f41"
+  },
+  {
+   "nome": "semt-9@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-9@fixture",
+   "caso": "semt-9",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "destaque",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 657,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-9@fixture.md",
+    "json": "semt-9@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-9@fixture.md",
+   "hash_eventos": "02c86413705b462e"
+  },
+  {
+   "nome": "semt-14@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-14@tela",
+   "caso": "semt-14",
+   "classe": 3,
+   "nivel": 3,
+   "escolha": "nulo_inesperado",
+   "causa_em_palavras": "Nulo inesperado",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 827,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-14@tela.md",
+    "json": "semt-14@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-14@tela.md",
+   "hash_eventos": "240d36216c14ea89"
+  },
+  {
+   "nome": "semt-14@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-14@fixture",
+   "caso": "semt-14",
+   "classe": 3,
+   "nivel": 3,
+   "escolha": "nulo_inesperado",
+   "causa_em_palavras": "Nulo inesperado",
+   "campo": "tipo",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 677,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-14@fixture.md",
+    "json": "semt-14@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-14@fixture.md",
+   "hash_eventos": "3f5602e433b7efb2"
+  },
+  {
+   "nome": "tra-8@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-8@tela",
+   "caso": "tra-8",
+   "classe": 4,
+   "nivel": 1,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": "id",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 31,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 860,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-8@tela.md",
+    "json": "tra-8@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-8@tela.md",
+   "hash_eventos": "0e683613e89ada35"
+  },
+  {
+   "nome": "tra-8@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-8@fixture",
+   "caso": "tra-8",
+   "classe": 4,
+   "nivel": 1,
+   "escolha": "contagem_inconsistente",
+   "causa_em_palavras": "Contagem inconsistente",
+   "campo": "total",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 661,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-8@fixture.md",
+    "json": "tra-8@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-8@fixture.md",
+   "hash_eventos": "9fb23feb88950c4b"
+  },
+  {
+   "nome": "tra-11@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-11@tela",
+   "caso": "tra-11",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "contagem_inconsistente",
+   "causa_em_palavras": "Contagem inconsistente",
+   "campo": null,
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 808,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-11@tela.md",
+    "json": "tra-11@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-11@tela.md",
+   "hash_eventos": "21e9fd0adc64fbd8"
+  },
+  {
+   "nome": "tra-11@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-11@fixture",
+   "caso": "tra-11",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "contagem_inconsistente",
+   "causa_em_palavras": "Contagem inconsistente",
+   "campo": "itens",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 665,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-11@fixture.md",
+    "json": "tra-11@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-11@fixture.md",
+   "hash_eventos": "32c2b849720dbe49"
+  },
+  {
+   "nome": "run-9@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-9@tela",
+   "caso": "run-9",
+   "classe": 5,
+   "nivel": 2,
+   "escolha": "tempo_de_resposta_excedido",
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 824,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-9@tela.md",
+    "json": "run-9@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-9@tela.md",
+   "hash_eventos": "fa7bef41e7f038a5"
+  },
+  {
+   "nome": "run-9@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-9@fixture",
+   "caso": "run-9",
+   "classe": 5,
+   "nivel": 2,
+   "escolha": "tempo_de_resposta_excedido",
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 642,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-9@fixture.md",
+    "json": "run-9@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-9@fixture.md",
+   "hash_eventos": "8f7d1d69ffbacdff"
+  },
+  {
+   "nome": "lex-16@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-16@tela",
+   "caso": "lex-16",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 811,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-16@tela.md",
+    "json": "lex-16@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-16@tela.md",
+   "hash_eventos": "91bc9a91182eb16e"
+  },
+  {
+   "nome": "lex-16@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-16@fixture",
+   "caso": "lex-16",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 639,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-16@fixture.md",
+    "json": "lex-16@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-16@fixture.md",
+   "hash_eventos": "31956ebe816d5ab4"
+  },
+  {
+   "nome": "lex-18@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-18@tela",
+   "caso": "lex-18",
+   "classe": 1,
+   "nivel": 2,
+   "escolha": "codificacao_incorreta",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "campo": "resumo",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 838,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-18@tela.md",
+    "json": "lex-18@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-18@tela.md",
+   "hash_eventos": "39b4f9c6390babe6"
+  },
+  {
+   "nome": "lex-18@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/lex-18@fixture",
+   "caso": "lex-18",
+   "classe": 1,
+   "nivel": 2,
+   "escolha": "valor_fora_do_dominio",
+   "causa_em_palavras": "Valor fora do domínio",
+   "campo": "resumo",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 25,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 711,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "lex-18@fixture.md",
+    "json": "lex-18@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/lex-18@fixture.md",
+   "hash_eventos": "96654751dc17f0d0"
+  },
+  {
+   "nome": "sin-16@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-16@tela",
+   "caso": "sin-16",
+   "classe": 2,
+   "nivel": 1,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "destaque",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 841,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-16@tela.md",
+    "json": "sin-16@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-16@tela.md",
+   "hash_eventos": "9c6de28ef5afb3cf"
+  },
+  {
+   "nome": "sin-16@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-16@fixture",
+   "caso": "sin-16",
+   "classe": 2,
+   "nivel": 1,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "destaque",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 657,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-16@fixture.md",
+    "json": "sin-16@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-16@fixture.md",
+   "hash_eventos": "cd7bdd5dd4763a57"
+  },
+  {
+   "nome": "sin-20@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-20@tela",
+   "caso": "sin-20",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "id",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 852,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-20@tela.md",
+    "json": "sin-20@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-20@tela.md",
+   "hash_eventos": "f972df23cfa567e6"
+  },
+  {
+   "nome": "sin-20@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-20@fixture",
+   "caso": "sin-20",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "id",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 655,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-20@fixture.md",
+    "json": "sin-20@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-20@fixture.md",
+   "hash_eventos": "0b55631c27cc15e5"
+  },
+  {
+   "nome": "sin-21@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-21@tela",
+   "caso": "sin-21",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "estrutura_aninhada_divergente",
+   "causa_em_palavras": "Estrutura aninhada divergente",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 853,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-21@tela.md",
+    "json": "sin-21@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-21@tela.md",
+   "hash_eventos": "445a923a513bd676"
+  },
+  {
+   "nome": "sin-21@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/sin-21@fixture",
+   "caso": "sin-21",
+   "classe": 2,
+   "nivel": 3,
+   "escolha": "estrutura_aninhada_divergente",
+   "causa_em_palavras": "Estrutura aninhada divergente",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 657,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "sin-21@fixture.md",
+    "json": "sin-21@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/sin-21@fixture.md",
+   "hash_eventos": "c662158d6c4e2115"
+  },
+  {
+   "nome": "semt-16@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-16@tela",
+   "caso": "semt-16",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 829,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-16@tela.md",
+    "json": "semt-16@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-16@tela.md",
+   "hash_eventos": "84bb2aeb51189961"
+  },
+  {
+   "nome": "semt-16@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-16@fixture",
+   "caso": "semt-16",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "tipo",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 659,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-16@fixture.md",
+    "json": "semt-16@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-16@fixture.md",
+   "hash_eventos": "b5a0970be983c603"
+  },
+  {
+   "nome": "semt-17@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-17@tela",
+   "caso": "semt-17",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "nulo_inesperado",
+   "causa_em_palavras": "Nulo inesperado",
+   "campo": "id",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 829,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-17@tela.md",
+    "json": "semt-17@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-17@tela.md",
+   "hash_eventos": "bd08b62747793ae5"
+  },
+  {
+   "nome": "semt-17@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-17@fixture",
+   "caso": "semt-17",
+   "classe": 3,
+   "nivel": 1,
+   "escolha": "nulo_inesperado",
+   "causa_em_palavras": "Nulo inesperado",
+   "campo": "id",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 684,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-17@fixture.md",
+    "json": "semt-17@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-17@fixture.md",
+   "hash_eventos": "7379ab88f3ec7ef2"
+  },
+  {
+   "nome": "semt-20@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-20@tela",
+   "caso": "semt-20",
+   "classe": 3,
+   "nivel": 3,
+   "escolha": "valor_fora_do_dominio",
+   "causa_em_palavras": "Valor fora do domínio",
+   "campo": "preco",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 829,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-20@tela.md",
+    "json": "semt-20@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-20@tela.md",
+   "hash_eventos": "6e335cb32433f08a"
+  },
+  {
+   "nome": "semt-20@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-20@fixture",
+   "caso": "semt-20",
+   "classe": 3,
+   "nivel": 3,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "preco",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 679,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-20@fixture.md",
+    "json": "semt-20@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-20@fixture.md",
+   "hash_eventos": "97da02397523c287"
+  },
+  {
+   "nome": "semt-21@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-21@tela",
+   "caso": "semt-21",
+   "classe": 3,
+   "nivel": 3,
+   "escolha": "campo_renomeado",
+   "causa_em_palavras": "Campo renomeado",
+   "campo": "nome",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 31,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 863,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-21@tela.md",
+    "json": "semt-21@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-21@tela.md",
+   "hash_eventos": "a8b8ede1beb4d7e9"
+  },
+  {
+   "nome": "semt-21@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/semt-21@fixture",
+   "caso": "semt-21",
+   "classe": 3,
+   "nivel": 3,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "nome",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 660,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "semt-21@fixture.md",
+    "json": "semt-21@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/semt-21@fixture.md",
+   "hash_eventos": "b89d6b5af635bb48"
+  },
+  {
+   "nome": "tra-17@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-17@tela",
+   "caso": "tra-17",
+   "classe": 4,
+   "nivel": 1,
+   "escolha": "chave_de_juncao_errada",
+   "causa_em_palavras": "Chave de junção errada",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 833,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-17@tela.md",
+    "json": "tra-17@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-17@tela.md",
+   "hash_eventos": "693099892b4751f3"
+  },
+  {
+   "nome": "tra-17@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-17@fixture",
+   "caso": "tra-17",
+   "classe": 4,
+   "nivel": 1,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "tipo",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 659,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-17@fixture.md",
+    "json": "tra-17@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-17@fixture.md",
+   "hash_eventos": "b15a8c1f3c4a51b7"
+  },
+  {
+   "nome": "tra-19@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-19@tela",
+   "caso": "tra-19",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "escala_ou_unidade_errada",
+   "causa_em_palavras": "Escala ou unidade errada",
+   "campo": "preco",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 840,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-19@tela.md",
+    "json": "tra-19@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-19@tela.md",
+   "hash_eventos": "68d2bd355ce239b6"
+  },
+  {
+   "nome": "tra-19@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-19@fixture",
+   "caso": "tra-19",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "escala_ou_unidade_errada",
+   "causa_em_palavras": "Escala ou unidade errada",
+   "campo": "preco",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 679,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-19@fixture.md",
+    "json": "tra-19@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-19@fixture.md",
+   "hash_eventos": "1399badeeb895964"
+  },
+  {
+   "nome": "tra-20@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-20@tela",
+   "caso": "tra-20",
+   "classe": 4,
+   "nivel": 3,
+   "escolha": "chave_de_juncao_errada",
+   "causa_em_palavras": "Chave de junção errada",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 833,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-20@tela.md",
+    "json": "tra-20@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-20@tela.md",
+   "hash_eventos": "6a7740d2cbdcbc7f"
+  },
+  {
+   "nome": "tra-20@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-20@fixture",
+   "caso": "tra-20",
+   "classe": 4,
+   "nivel": 3,
+   "escolha": "chave_de_juncao_errada",
+   "causa_em_palavras": "Chave de junção errada",
+   "campo": "tipo",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 24,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 659,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-20@fixture.md",
+    "json": "tra-20@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-20@fixture.md",
+   "hash_eventos": "b38bacc68d54d8f3"
+  },
+  {
+   "nome": "tra-21@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-21@tela",
+   "caso": "tra-21",
+   "classe": 4,
+   "nivel": 3,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": "id",
+   "confianca": "baixa",
+   "selo": "baixo",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 31,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 860,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-21@tela.md",
+    "json": "tra-21@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-21@tela.md",
+   "hash_eventos": "99e95654f4f3cb52"
+  },
+  {
+   "nome": "tra-21@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/tra-21@fixture",
+   "caso": "tra-21",
+   "classe": 4,
+   "nivel": 3,
+   "escolha": "contagem_inconsistente",
+   "causa_em_palavras": "Contagem inconsistente",
+   "campo": null,
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 640,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "tra-21@fixture.md",
+    "json": "tra-21@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/tra-21@fixture.md",
+   "hash_eventos": "2f9f1603e36de699"
+  },
+  {
+   "nome": "run-19@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-19@tela",
+   "caso": "run-19",
+   "classe": 5,
+   "nivel": 2,
+   "escolha": "tempo_de_resposta_excedido",
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "campo": null,
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 833,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-19@tela.md",
+    "json": "run-19@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-19@tela.md",
+   "hash_eventos": "88c02123b0ed6352"
+  },
+  {
+   "nome": "run-19@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-19@fixture",
+   "caso": "run-19",
+   "classe": 5,
+   "nivel": 2,
+   "escolha": "tempo_de_resposta_excedido",
+   "causa_em_palavras": "Tempo de resposta excedido",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 23,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 627,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-19@fixture.md",
+    "json": "run-19@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-19@fixture.md",
+   "hash_eventos": "aadddfed408e60ec"
+  },
+  {
+   "nome": "run-21@tela",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-21@tela",
+   "caso": "run-21",
+   "classe": 5,
+   "nivel": 3,
+   "escolha": "registro_duplicado",
+   "causa_em_palavras": "Registro duplicado",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 806,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-21@tela.md",
+    "json": "run-21@tela.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-21@tela.md",
+   "hash_eventos": "137e9d93f8b047b9"
+  },
+  {
+   "nome": "run-21@fixture",
+   "trilha": "fase4_tela_v4/qwen2.5_7b/run-21@fixture",
+   "caso": "run-21",
+   "classe": 5,
+   "nivel": 3,
+   "escolha": "registro_duplicado",
+   "causa_em_palavras": "Registro duplicado",
+   "campo": "id",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": true,
+   "cura": false,
+   "falha": "causa_sem_verbete_que_a_trate",
+   "decisoes": 3,
+   "afirmacoes": 25,
+   "rotulos": {
+    "observado": 15,
+    "conferido": 7,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 718,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "run-21@fixture.md",
+    "json": "run-21@fixture.json"
+   },
+   "relatorio_v3": "../relatorios_v3/run-21@fixture.md",
+   "hash_eventos": "ecd6dbb1c7ca8a5b"
+  }
+ ],
+ "resumo": {
+  "trilhas": 74,
+  "decisoes_por_chave": {
+   "leitura": 74,
+   "verbetes": 74,
+   "causa": 74
+  },
+  "nos_por_decisao": {
+   "diagnostico": 74
+  },
+  "com_divergencia": 8,
+  "com_cura": 0,
+  "afirmacoes": 1983,
+  "rotulos": {
+   "observado": 1332,
+   "conferido": 429,
+   "declarado": 222,
+   "desconhecido": 0
+  },
+  "por_confianca": {
+   "alta": 36,
+   "baixa": 13,
+   "média": 25
+  },
+  "filtros": {
+   "n": 74,
+   "aprovados": 74
+  },
+  "filtros_detalhe": {
+   "termos_sem_expansao": {},
+   "alarme_flesch": 12,
+   "reprovaram": []
+  }
+ }
+}

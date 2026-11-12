@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:52:11.531Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-10",
+  "comentario": "O agente classificou a falha como tipo_divergente, mas o contrato exigia que o preço fosse numero e a API entregou 8490.0, que tecnicamente é um número (float/double), não havendo quebra de tipo de dado. O problema real é escala_ou_unidade_errada (o valor veio multiplicado por 100, os centavos viraram reais, já que 84.9 virou 8490.0). Mesmo sem esse verbete específico no top 3 do RAG (ficou de fora), o modelo não disparou a falha técnica causa_sem_verbete_que_a_trate porque, acidentalmente, os verbetes entregues (entidade-produto, contrato-produto, pagina-produtos-api) mencionam o termo tipo_divergente em seus textos (possivelmente como exemplos cruzados), enganando o sistema de conferência.",
+  "decidido_em": "2026-11-09T19:52:42.571Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 10,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:53:19.785Z",
+  "segundos": 31,
+  "segundos_relogio": 31,
+  "utilidade": 4
+}

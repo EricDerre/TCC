@@ -67,7 +67,7 @@
 #   -TetoProposta N biblioteca: teto de tokens de saida da proposta de edicao (padrao 700)
 #   -SemSeletor     avaliacao_trilha: nao roda a mutacao do seletor na tela (fumaca sem as cobaias; a avaliacao grava na pasta da corrida)
 param(
-    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")][string]$Modo,
+    [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")][string]$Modo,
     [Parameter(Mandatory = $true)][string]$Saida,
     [int]$Casos = 0,
     [ValidateSet("chromium", "msedge")][string]$Canal = "chromium",
@@ -100,7 +100,19 @@ Set-Location $Aqui
 $Inicio = Get-Date
 # ! Alteracao de IA - Revisar: (05/11/2026, decisoes 91 e 92) os modos experimento_prompt (corrida 23) e ineditos (corrida 24) rodam com modelo, em texto.
 # ! Motivo: as duas corridas precisam das mesmas conferencias de Ollama, RAM e versao antes e depois das outras corridas com modelo.
-$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca") -or ($Modo -eq "cenarios") -or ($Modo -eq "avaliacao_trilha") -or ($Modo -eq "experimento_prompt") -or ($Modo -eq "ineditos")
+# ! Alteracao de IA - Revisar: (10/11/2026, ficha 63 opcao b, decisao 116) o modo sem_notas (corrida 25) entra no ValidateSet e nos modos com modelo.
+# ! Motivo: a corrida 25 le em texto os 36 oficiais e os 36 ineditos com a biblioteca de producao sem as notas do modelo; sao 72 inferencias, com as mesmas
+# conferencias de Ollama, RAM e versao das outras corridas com modelo. A leitura e avaliar_fase4.py --sem_notas. A ponte da versao do Ollama, quando falta, roda
+# antes pelo lancador rodar_experimento_sem_notas.ps1.
+# ! Alteracao de IA - Revisar: (10/11/2026, ficha 66 opcao b, decisao 120) o modo segundo_passe (corrida 26) entra no ValidateSet e nos modos com modelo.
+# ! Motivo: a corrida 26 faz um segundo pedido de diagnostico, em texto, so nos casos das corridas 22 e 24 em que o selo baixo ou a FONTE divergente acendeu (24
+# inferencias), com as mesmas conferencias de Ollama, RAM e versao das outras corridas com modelo. A leitura e avaliar_fase4.py --segundo_passe. A ponte da versao
+# do Ollama roda antes, pela fila rodar_fila_pre_fase5.ps1 ou pelo lancador rodar_experimento_sem_notas.ps1.
+# ! Alteracao de IA - Revisar: (11/11/2026, ficha 67 opcao b, decisao 121) o modo analista (corrida 27, a medida M2) entra no ValidateSet e nos modos com modelo.
+# ! Motivo: a corrida 27 chama o modelo no papel de analista de documentacao, com a ficha curta do caso, nos 54 casos de aprendizado da corrida 20 (54 inferencias),
+# com as mesmas conferencias de Ollama, RAM e versao das outras corridas com modelo. A leitura e avaliar_fase4.py --analista. A ponte da versao do Ollama roda
+# antes, pela fila rodar_fila_pre_fase5.ps1 ou pelo lancador rodar_experimento_sem_notas.ps1.
+$ComModelo = ($Modo -eq "calibracao") -or ($Modo -eq "tela") -or ($Modo -eq "biblioteca") -or ($Modo -eq "cenarios") -or ($Modo -eq "avaliacao_trilha") -or ($Modo -eq "experimento_prompt") -or ($Modo -eq "ineditos") -or ($Modo -eq "sem_notas") -or ($Modo -eq "segundo_passe") -or ($Modo -eq "analista")
 $Venv = Join-Path $Aqui "..\.venv\Scripts\python.exe"
 if (-not (Test-Path $Venv)) {
     Write-Host "!! venv do AgenteCore nao encontrada em $Venv (rode install.py primeiro)"
@@ -203,6 +215,12 @@ if ($ComModelo) {
     $VersaoInicio = VersaoOllama
     if (-not $VersaoInicio) { Marco "!! o Ollama nao respondeu em /api/version"; exit 2 }
     Marco ("Ollama {0}; modelo {1}; RAM livre {2} GB" -f $VersaoInicio, $Modelo, (RamLivreGB))
+    # ! Alteracao de IA - Revisar: (08/11/2026, Pos-Fase 4, pacote Q4) o log diz onde fica o estado da barra de progresso que executar_fase4.py
+    # grava a cada inferencia (progresso.json na pasta da corrida); no console a barra se redesenha na mesma linha, e quando a saida do executor
+    # vai para um arquivo (saida_completa.log) ele imprime so os marcos de cada inferencia (comeco com a estimativa, e fim com o medido).
+    # ! Motivo: plano aprovado da Pos-Fase 4, secao 3.5: a barra entra no terminal por este script e por executar_fase4.py, e o hub do pacote Q6
+    # vai ler o mesmo arquivo; quem acompanha a corrida pelo log precisa saber onde ele esta.
+    Marco ("barra de progresso: estado em {0}; no console a barra se redesenha, no log ficam so os marcos de cada inferencia" -f (Join-Path (Join-Path (Join-Path $Aqui $Resultados) $Saida) "progresso.json"))
     if (-not (EsperarRam $Modelo)) { Marco ("!! RAM livre {0} GB abaixo do minimo de {1} GB para {2}; libere memoria e relance" -f (RamLivreGB), $RamMinima[$Modelo], $Modelo); exit 2 }
 }
 

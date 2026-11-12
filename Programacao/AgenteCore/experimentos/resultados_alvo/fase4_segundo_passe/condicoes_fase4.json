@@ -1,0 +1,85 @@
+{
+  "modo": "segundo_passe",
+  "corrida": 26,
+  "criado_em": "2026-11-11T23:40:25",
+  "saida": "fase4_segundo_passe",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.15",
+  "k": 0,
+  "verbetes_seguintes": 3,
+  "posicoes": [
+    4,
+    5,
+    6
+  ],
+  "limiares": {
+    "medida": "p_rotulo",
+    "leitura": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "baixo_ate": 0.8317943867608124,
+    "alto_a_partir_de": 0.9898271080008889,
+    "n": 90,
+    "sem_rotulo": 0,
+    "k": 3,
+    "origem": "fase4_calibracao/k3",
+    "erros": 22,
+    "revisados": 27,
+    "erros_pegos": 15,
+    "acertos_revisados": 12,
+    "risco_no_que_sobra": 0.1111,
+    "mediana_certos": 0.9898271080008889,
+    "mediana_errados": 0.7511499810137099,
+    "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+    "gravado_em": "2026-10-27T23:54:00"
+  },
+  "casos": 24,
+  "casos_por_banco": {
+    "avaliacao": 8,
+    "ineditos": 16
+  },
+  "parcial": false,
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "hash_prompt_fixo": "2e42cf9c31826941",
+  "hash_indice": "11e763ba9cb1fdf4",
+  "limite_de_tokens": 1409,
+  "origem_do_limite": "maior tokens_entrada de fase4_calibracao/k3/qwen2.5_7b/diagnosticos__L100.jsonl mais 10% (plano, seção 3.3)",
+  "biblioteca": {
+    "hash": "95af35290860",
+    "origem": "Programacao/AgenteCore/biblioteca_producao"
+  },
+  "primeiras_respostas": {
+    "avaliacao": {
+      "corrida": "22",
+      "saida": "fase4_trilha"
+    },
+    "ineditos": {
+      "corrida": "24",
+      "saida": "fase4_ineditos"
+    }
+  },
+  "como_os_verbetes_entram": "pelo parâmetro extras de diagnostico_ao_vivo.diagnosticar, com k = 0: no registro oficial o campo k fica 0 e, na trilha, o evento candidatos traz os verbetes do pedido em por_id; as posições deles na busca estão na linha de resumo de cada caso",
+  "ponte": {
+    "versao": "0.40.15",
+    "corrida": "fase3b_ponte_04015",
+    "data": "2026-11-11",
+    "modelo": "qwen2.5:7b",
+    "completa": true,
+    "n": 35,
+    "b": 1,
+    "c": 0,
+    "discordantes": 1,
+    "ganhos": [
+      "sin-14"
+    ],
+    "perdas": [],
+    "pareavel": true,
+    "limite": 2,
+    "casos_de_texto_alterado": [
+      "efe-3"
+    ],
+    "acerto_nova_pct": 82.9,
+    "acerto_base_pct": 80.0
+  },
+  "regra": "Regra fixada antes da corrida (decisão 120). A resposta final de cada caso é escolhida por regra em código: fica a primeira resposta, salvo quando a segunda dá outra causa da lista, não acende nenhum dos dois sinais (não cai no selo baixo, e algum verbete entregue no segundo pedido trata da causa respondida, com a FONTE dentro dos entregues) e tem probabilidade maior que a da primeira; só então fica a segunda. A diferença entre a resposta final e a primeira sai do ruído quando o teste pareado exato (McNemar, bilateral) dá p abaixo de 0,05, com a corrida completa e a ponte da versão do Ollama pareável com a Fase 3 (b + c até 2, decisão 47). Fora disso a diferença fica dentro do ruído e o agente não muda; se sair do ruído, mudar o agente é outra decisão."
+}

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:23:48.151Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-23",
+  "comentario": "O diagnóstico é preciso e adequado. O sintoma aponta que a requisição da lista (que carregou a grade) possuía a descrição correta para o produto, mas quando o usuário clica para abrir o detalhe do item, o backend no endpoint específico (GET /api/produtos/12) retorna o campo resumo como null, o que gera o sintoma visual de '(sem descrição)' no frontend. Essa discrepância inesperada entre a lista e o detalhe é perfeitamente classificada como nulo_inesperado. O mecanismo de busca funcionou perfeitamente e entregou o verbete certo; a fonte e o campo foram citados corretamente.",
+  "decidido_em": "2026-11-09T22:24:17.582Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 23,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:24:31.890Z",
+  "segundos": 29,
+  "segundos_relogio": 29,
+  "utilidade": 5
+}

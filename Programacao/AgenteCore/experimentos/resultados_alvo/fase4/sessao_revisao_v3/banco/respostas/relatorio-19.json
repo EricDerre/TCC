@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:20:30.020Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-19",
+  "comentario": "Estamos diante do mesmo tipo de falha já vista nos relatórios 1 e 9. Embora o problema de caracteres quebrados no payload (\"PÃ£o\", \"HambÃºrguer\") aponte para codificacao_incorreta, este verbete não foi fornecido ao agente pelo mecanismo de busca (ficou em 7º lugar). Ao cravar a causa correta do ponto de vista do software, o agente violou o contrato do RAG, já que nenhum dos verbetes do contexto (entidade-produto, contrato-produto, campo_renomeado) tratava do assunto. O sistema auditou o erro, disparou o gatilho causa_sem_verbete_que_a_trate e barrou o diagnóstico adequadamente.",
+  "decidido_em": "2026-11-09T22:20:53.178Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 19,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:21:14.908Z",
+  "segundos": 23,
+  "segundos_relogio": 23,
+  "utilidade": 4
+}

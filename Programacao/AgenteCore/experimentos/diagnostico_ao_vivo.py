@@ -39,6 +39,7 @@ import evolucao_biblioteca as evo
 import executar_bateria
 import executar_fase3
 import gerar_relatorio_raciocinio as grr
+import progresso
 import recuperacao as rec
 import sonda_confianca as sc
 import sondar_logprobs as sl
@@ -165,6 +166,11 @@ def inferir(modelo: str, prompt: str, teto: int, caso_id: str, top: int = TOP_LO
     """Uma inferência com as probabilidades por token: a chamada de sempre (cliente_ollama.gerar, repetida por
     executar_fase3.inferir_com_repeticao quando o Ollama falha) com `logprobs` e `top_logprobs` acrescentados pelo
     gancho da Pré-Fase 4. Devolve o dicionário de 8 chaves de `gerar` e a captura crua (resposta com os tokens)."""
+    # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) anuncia à barra de progresso o que esta inferência é ("lex-10 · diagnóstico");
+    # o `import progresso` no topo entrou junto. A chamada ao modelo e o registro não mudam: a barra só lê o corpo e a resposta que já passam por `_post`.
+    # ! Motivo: a barra (progresso.observando) vê a chamada por dentro de cliente_ollama, onde não há caso nem etapa; sem o rótulo ela diria só
+    # "inferência N", e quem acompanha a corrida no terminal quer saber que caso está sendo lido.
+    progresso.anunciar(f"{caso_id} · {etapa}")
     capturas: list = []
     with sl.com_logprobs(top, capturas, exigir=True):
         r = executar_fase3.inferir_com_repeticao(modelo, prompt, teto, caso_id, etapa)

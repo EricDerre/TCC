@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:24:32.985Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-24",
+  "comentario": "O modelo acertou o diagnóstico em cheio. O contrato da interface aguardava o campo resumo para exibir a descrição no modal, mas o payload da API retornou resumo_v2, o que perfeitamente caracteriza a falha campo_renomeado. O sistema de busca funcionou muito bem entregando o verbete exato entre os três primeiros, e o agente soube mapear a causa, o campo (resumo) e a fonte sem nenhuma alucinação, com confiança estatística altíssima (0,999).",
+  "decidido_em": "2026-11-09T22:25:02.642Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 24,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:25:19.828Z",
+  "segundos": 30,
+  "segundos_relogio": 30,
+  "utilidade": 5
+}

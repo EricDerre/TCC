@@ -1,0 +1,419 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/lex-4@fixture",
+ "nome": "lex-4@fixture",
+ "caso": "lex-4",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 1,
+ "nivel": 2,
+ "eventos": {
+  "primeiro": 108,
+  "ultimo": 129,
+  "hash": "e0904000a125d1e3"
+ },
+ "relatorio_v3": "../relatorios_v3/lex-4@fixture.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (467 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (467 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      108
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3501 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      111
+     ]
+    }
+   ],
+   "eventos": [
+    111
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 1, pontuação 23,80: 20,80 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 23.7989,
+     "posicao": 1
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 2, pontuação 23,68: 20,68 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 23.6811,
+     "posicao": 2
+    },
+    {
+     "opcao": "estado_da_tela_divergente",
+     "detalhe": "posição 3, pontuação 18,20: 18,20 pelas palavras do caso, sem reforço",
+     "escolhida": true,
+     "pontuacao": 18.1954,
+     "posicao": 3
+    },
+    {
+     "opcao": "nulo_inesperado",
+     "detalhe": "posição 4, pontuação 17,93: 15,93 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 17.9283,
+     "posicao": 4
+    },
+    {
+     "opcao": "tipo_divergente",
+     "detalhe": "posição 5, pontuação 15,49: 12,49 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 15.4946,
+     "posicao": 5
+    },
+    {
+     "opcao": "pagina-produtos-api",
+     "detalhe": "posição 6, pontuação 14,43: 12,43 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 14.4263,
+     "posicao": 6
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 7, pontuação 14,12: 11,12 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 14.1165,
+     "posicao": 7
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 8, pontuação 13,71: 11,71 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 13.7074,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `entidade-produto` (23,80), `contrato-produto` (23,68) e `estado_da_tela_divergente` (18,20).",
+     "origem": "observado",
+     "eventos": [
+      109
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `entidade-produto` e `contrato-produto`; o da entidade, em `entidade-produto` e `contrato-produto`; `estado_da_tela_divergente` pontuou só pelas palavras.",
+     "origem": "observado",
+     "eventos": [
+      109
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `nulo_inesperado` (17,93), `tipo_divergente` (15,49), `pagina-produtos-api` (14,43), `colecao_no_lugar_de_objeto` (14,12) e `valor_fora_do_dominio` (13,71).",
+     "origem": "observado",
+     "eventos": [
+      109
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 200 e 35 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      109
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `estado_da_tela_divergente`, e o primeiro de fora, `nulo_inesperado`, só o texto do caso já punha o primeiro à frente (18,20 contra 15,93); a diferença final foi 0,27.",
+     "origem": "observado",
+     "eventos": [
+      109
+     ]
+    }
+   ],
+   "eventos": [
+    109
+   ],
+   "entregues": [
+    "entidade-produto",
+    "contrato-produto",
+    "estado_da_tela_divergente"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 35
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "codificacao_incorreta",
+   "alternativas": [
+    {
+     "opcao": "codificacao_incorreta",
+     "probabilidade": 0.9994164705316142,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,999; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "formato_de_data_divergente",
+     "probabilidade": 0.0001960098026957711,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 0.00015450445483265756,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto` e `contrato-produto`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 0.00012597016249900155,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 0.00012597016249900155,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "probabilidade": 7.004929206428855e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 4.6868043523186e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 4.6868043523186e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `estado_da_tela_divergente`"
+    },
+    {
+     "opcao": "escala_ou_unidade_errada",
+     "probabilidade": 3.865457918551427e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto`"
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "probabilidade": 2.660034262630591e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `codificacao_incorreta`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo apontou o campo `nome`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "`nome` aparece no caso (procurado no contrato, no corpo, na requisição, na árvore e no seletor): confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `formato_de_data_divergente` (Formato de data divergente), ficou com probabilidade 0,000 contra 0,999 da escolhida; nenhum verbete entregue a sustenta.",
+     "origem": "observado",
+     "eventos": [
+      129
+     ]
+    },
+    {
+     "texto": "As outras 8 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `tipo_divergente` (0,000), `campo_ausente` (0,000) e `campo_renomeado` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      129
+     ]
+    },
+    {
+     "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      129
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      129
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `contrato-produto`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `contrato-produto`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), não traz o termo da causa no texto (não confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhum dos verbetes entregues é sobre essa causa.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `contrato-produto` (Contrato de /api/produtos; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/contratos/contrato-produto.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/contratos/contrato-produto.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "O declarado pelo modelo diverge do conferido pelo código (entre modelo e verificacao): nenhum verbete entregue trata da causa respondida codificacao_incorreta.",
+     "origem": "conferido",
+     "eventos": [
+      129
+     ]
+    },
+    {
+     "texto": "Falha registrada no nó: `causa_sem_verbete_que_a_trate` (a causa respondida não é tratada por nenhum dos verbetes entregues; origem na taxonomia da trilha: modelo).",
+     "origem": "conferido",
+     "eventos": [
+      129
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 6 de 8 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      129
+     ]
+    }
+   ],
+   "eventos": [
+    129
+   ],
+   "segunda": "formato_de_data_divergente",
+   "campo": "nome",
+   "confianca": {
+    "selo": "alto",
+    "palavra": "alta",
+    "p_rotulo": 0.9994164705316142,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 37,
+     "certos": 34,
+     "acerto_pct": 91.9
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": {
+    "detalhe": "nenhum verbete entregue trata da causa respondida codificacao_incorreta",
+    "entre": [
+     "modelo",
+     "verificacao"
+    ],
+    "ha": true
+   },
+   "falha": "causa_sem_verbete_que_a_trate",
+   "causa_em_palavras": "Codificação de caracteres incorreta",
+   "probabilidade": 0.9994164705316142,
+   "gatilhos": {
+    "algum": true,
+    "amostra": false,
+    "fonte_divergente": true,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "Os nomes dos produtos aparecem com caracteres estranhos nos cartões.",
+  "fonte": "[contrato-produto]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: codificacao_incorreta\nCAMPO: nome\nIMPACTO: Os nomes dos produtos aparecem com caracteres estranhos nos cartões.\nFONTE: [contrato-produto]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 25,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 7,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": true,
+  "cura": false,
+  "selo": "alto",
+  "confianca": "alta",
+  "falha": "causa_sem_verbete_que_a_trate",
+  "escolha": "codificacao_incorreta",
+  "causa_em_palavras": "Codificação de caracteres incorreta",
+  "campo": "nome",
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

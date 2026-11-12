@@ -1,0 +1,253 @@
+{
+  "_tag": "! Alteração de IA - Revisar: leitura da rodada 7 da pesquisa (10/11/2026), tópico r7-disparo-parada-e-evidencia-nova, escrita por um subagente leitor: as fontes abertas, o que cada uma afirma e o que não afirma.",
+  "_motivo": "! Motivo: a ficha 64 pede pesquisa antes de qualquer mudança no fluxo do agente; a leitura fica em JSON para o integrador gerar o levantamento e para a segunda leitura conferir fonte a fonte.",
+  "key": "r7-disparo-parada-e-evidencia-nova",
+  "frente": 2,
+  "titulo": "Ciclo de reavaliação disparado por sinal externo, com regra de parada e com evidência nova",
+  "pesquisado_em": "10/11/2026",
+  "pergunta": "Um segundo passe só nos casos em que um sinal externo acende (probabilidade baixa da resposta, conferência em código que falhou) e alimentado por evidência nova (outra busca, consulta reescrita, outro número de documentos) funciona melhor que reler o mesmo contexto ou que disparar sempre; e que regras de parada evitam o laço sem fim?",
+  "ja_levantado": [
+    {"secao": "§6.9.5", "o_que_ja_dizia": "Self-RAG exige ajuste fino com tokens de reflexão (inviável local); CRAG (avaliador leve correto/incorreto/ambíguo) e Adaptive-RAG (classificador de roteamento) cabem como alternativas externas; sugeriu a condição A6, recuperação condicional por limiar de BM25 com avaliador em código. Também a curva em U de posição e o ruído de Cuconasu com Llama2-7B."},
+    {"secao": "§6.9.12", "o_que_ja_dizia": "Em Huang et al. (2024) o ganho da autocorreção vinha do oráculo usado como critério de parada (GSM8K 75,9 para 84,3 no GPT-3.5); o validador determinístico é o sucedâneo praticável; o verificador externo vence a autocrítica (Stechly). Nenhuma fonte dava critério de parada para o número de épocas; colapso de contexto ao reescrever iterativamente."},
+    {"secao": "§6.12.3", "o_que_ja_dizia": "Autocorreção intrínseca, sem sinal externo, degrada (CommonSenseQA GPT-3.5 de 75,8 para 38,1 após uma rodada); a seção é de desempenho em CPU, não de laço de reavaliação."},
+    {"secao": "§6.13.6", "o_que_ja_dizia": "Nenhum sinal isolado de incerteza decide sozinho; confiança verbalizada é superconfiante; adotada a reconsulta única do Second Guess com opção explícita de evidência insuficiente; abstenção e revisão humana como porta final; entropia semântica sozinha é insuficiente sob metas de risco rígidas."},
+    {"secao": "§6.14.10", "o_que_ja_dizia": "Reflexion como memória de reflexões com sinal externo de testes; recomendação de não incluir laço do tipo 'reveja seu diagnóstico' com o mesmo modelo, porque a autocorreção intrínseca troca certo por errado e cada chamada extra custa de 47 a 78 s na máquina; taxonomia de falhas de agentes (cerca de 44,2% de desenho do sistema)."}
+  ],
+  "fontes": [
+    {
+      "id": "F01",
+      "referencia_abnt": "MOSKVORETSKII, V. et al. Adaptive Retrieval Without Self-Knowledge? Bringing Uncertainty Back Home. arXiv preprint arXiv:2501.12835v2, 2025. Disponível em: https://arxiv.org/abs/2501.12835. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2501.12835",
+      "url": "https://arxiv.org/abs/2501.12835",
+      "ano": 2025,
+      "veiculo": "arXiv (v2, fev. 2025); a página aberta não nomeia o evento, a pista do pedido indica ACL 2025",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (seções 4 a 7, tabelas 1 e 2); os últimos cerca de 15 mil caracteres não foram lidos",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F01.a", "afirmacao_pt": "Em 35 métodos (8 pipelines de recuperação adaptativa e 27 estimadores de incerteza) em 6 conjuntos de QA, os estimadores simples de incerteza igualam ou superam os pipelines completos em perguntas de um salto e ficam próximos em perguntas de vários saltos, gastando no máximo cerca de 2 chamadas ao modelo por pergunta contra 2,7 a 4,4 do IRCoT.", "numero": "NQ: melhor estimador 0,512 de acerto com 0,81 buscas por pergunta contra 0,496 com 0,98 do Adaptive-RAG e 0,480 com 2,24 do DRAGIN", "condicao": "LLaMA 3.1-8B-Instruct como único gerador aberto; 500 perguntas por conjunto", "onde_na_fonte": "tabela 1 e seção 5.1"},
+        {"id": "F01.b", "afirmacao_pt": "Em vários saltos o resultado se divide: o estimador empata no HotpotQA (0,414 nos dois, com 0,99 buscas contra 2,34), mas o DRAGIN e o Adaptive-RAG ficam à frente na 2Wiki e na MuSiQue, ao custo de 2,6 a 3,2 buscas.", "numero": "2Wiki: 0,456 (DRAGIN) contra 0,384 (melhor estimador)", "condicao": "mesmo modelo de 8B", "onde_na_fonte": "tabela 1"},
+        {"id": "F01.c", "afirmacao_pt": "A qualidade do sinal como detector de 'o modelo não sabe' varia por conjunto: o estimador por estado interno vai bem em um salto (AUC 0,77 no SQuAD) e cai a 0,37 na 2Wiki; entre os de logit, a entropia média chega a 0,74 de AUC no SQuAD.", "numero": "AUC 0,77 contra 0,37", "condicao": "LLaMA 3.1-8B; AUC de separar perguntas que o modelo sabe das que não sabe", "onde_na_fonte": "tabela 2, seção 5.3"}
+      ],
+      "nao_afirma": ["Não testou modelo menor que 8B nem quantizado em CPU.", "Não é classificação com lista fechada de rótulos: são perguntas abertas de Wikipedia.", "Os autores declaram um único modelo aberto e nenhum conjunto de domínio específico.", "Não mede probabilidade só do primeiro token de uma resposta curta."],
+      "aplicacao_ao_agente": "Sustenta que um sinal barato de probabilidade (o que o agente já tem, AUROC perto de 0,78) pode bastar como gatilho de uma segunda busca, sem pipeline complexo; o resultado vale para 8B em perguntas de Wikipedia, não para o qwen2.5:7b quantizado com verbetes técnicos."
+    },
+    {
+      "id": "F02",
+      "referencia_abnt": "JIANG, Z. et al. Active Retrieval Augmented Generation. arXiv preprint arXiv:2305.06983v2, 2023. Disponível em: https://arxiv.org/abs/2305.06983. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2305.06983",
+      "url": "https://arxiv.org/abs/2305.06983",
+      "ano": 2023,
+      "veiculo": "arXiv (v2, out. 2023); a página não nomeia o evento, a pista indica EMNLP 2023",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (método, seção 6.2 e figura 5)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F02.a", "afirmacao_pt": "O FLARE gera a próxima frase sem buscar e só busca de novo e regera a frase se algum token tiver probabilidade abaixo de um limiar; esse disparo por probabilidade supera a busca única em todas as tarefas testadas.", "numero": "2WikiMultihopQA 51,0 de EM contra 39,4 da busca única; StrategyQA 77,3 contra 68,6", "condicao": "text-davinci-003 (GPT-3.5 por API), sem treino, geração longa por frases", "onde_na_fonte": "resultados principais"},
+        {"id": "F02.b", "afirmacao_pt": "Buscar em mais passos nem sempre ajuda: na 2Wiki o ganho estabiliza acima de 60% dos passos com busca e no StrategyQA piora acima de 50%, e a faixa de 40% a 80% das frases com busca foi em geral boa.", "numero": "limiar de mascaramento 0,4 deu 0,510 de EM contra 0,488 em 0", "condicao": "mesmo modelo GPT-3.5", "onde_na_fonte": "seção 6.2, figura 5"},
+        {"id": "F02.c", "afirmacao_pt": "Usar a próxima frase (ainda não confirmada) como consulta supera usar a anterior, isto é, a consulta nova vem do que o modelo está prestes a escrever e não da pergunta repetida.", "numero": "EM 48,8 contra 39,0 na 2Wiki", "condicao": "GPT-3.5, 2Wiki", "onde_na_fonte": "ablação de consulta"},
+        {"id": "F02.d", "afirmacao_pt": "Não há comparação direta com buscar a cada passo; as bases mais próximas (busca por frase ou por janela fixa) perdem para o FLARE.", "numero": "", "condicao": "mesma configuração", "onde_na_fonte": "resultados principais"}
+      ],
+      "nao_afirma": ["Só modelo de API de grande porte; nenhum modelo aberto pequeno.", "Geração longa e perguntas abertas, não classificação com rótulo único.", "Não dá regra de parada além do limite de passos de geração.", "O gatilho exige a probabilidade de todos os tokens da frase, não de um token de rótulo."],
+      "aplicacao_ao_agente": "Origem da ideia de disparar a busca por probabilidade baixa; o resultado de que buscar demais prejudica apoia disparar só quando o sinal acender, mas não foi medido em modelo pequeno."
+    },
+    {
+      "id": "F03",
+      "referencia_abnt": "SU, W. et al. DRAGIN: Dynamic Retrieval Augmented Generation based on the Information Needs of Large Language Models. arXiv preprint arXiv:2403.10081v3, 2024. Disponível em: https://arxiv.org/abs/2403.10081. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2403.10081",
+      "url": "https://arxiv.org/abs/2403.10081",
+      "ano": 2024,
+      "veiculo": "arXiv (v3, set. 2024); a página não nomeia o evento, a pista indica ACL 2024",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML (metodologia, seção 5, tabelas 2, 3, 4 e 7)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F03.a", "afirmacao_pt": "O DRAGIN dispara a busca pela entropia do token ponderada pela atenção que ele recebe depois e anulada em palavras vazias, e com isso fica à frente do FLARE e das buscas em intervalo fixo.", "numero": "HotpotQA, LLaMA-2-13B-Chat: EM 0,314 contra 0,267 (busca por frase) e 0,180 (FLARE)", "condicao": "LLaMA-2-Chat 7B e 13B e Vicuna-13B; 2Wiki, HotpotQA, StrategyQA e IIRC", "onde_na_fonte": "tabela 2"},
+        {"id": "F03.b", "afirmacao_pt": "O gatilho condicional também gasta menos buscas que o intervalo fixo.", "numero": "2Wiki, LLaMA-2-13B: 2,63 buscas (DRAGIN) contra 3,13 (por frase) e 3,77 (por trecho de tokens)", "condicao": "LLaMA-2-13B", "onde_na_fonte": "tabela 3"},
+        {"id": "F03.c", "afirmacao_pt": "Com BM25 e com um recuperador denso, o BM25 foi melhor em todos os conjuntos testados.", "numero": "", "condicao": "mesmos modelos de 7B e 13B", "onde_na_fonte": "tabela 7"}
+      ],
+      "nao_afirma": ["Não compara com 'nunca buscar de novo' em tarefa de classificação.", "Exige atenção da última camada e entropia de todo o vocabulário em cada token, o que a API do Ollama não expõe.", "Perguntas de Wikipedia, geração longa; sem quantização em CPU."],
+      "aplicacao_ao_agente": "Mostra, em modelos de 7B a 13B, que disparo condicional vence intervalo fixo e que BM25 serve; o sinal usado (atenção) não está disponível ao agente."
+    },
+    {
+      "id": "F04",
+      "referencia_abnt": "YAN, S.-Q.; GU, J.-C.; ZHU, Y.; LING, Z.-H. Corrective Retrieval Augmented Generation. arXiv preprint arXiv:2401.15884v3, 2024. Disponível em: https://arxiv.org/abs/2401.15884. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2401.15884",
+      "url": "https://arxiv.org/abs/2401.15884",
+      "ano": 2024,
+      "veiculo": "arXiv (v3, out. 2024)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML (método, resultados, ablações, custo)",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F04.a", "afirmacao_pt": "Um avaliador T5-large de 0,77 bilhão de parâmetros dá nota de relevância a cada par pergunta-documento e, conforme dois limiares, escolhe entre refinar, descartar e buscar na web, ou combinar; isso melhora o RAG comum com gerador de 7B.", "numero": "LLaMA2-7B: PopQA 50,5 para 54,9; PubHealth 48,9 para 59,5; ARC-Challenge 43,4 para 53,7", "condicao": "LLaMA2-hf-7b; busca externa na web quando todos os documentos ficam abaixo do limiar inferior", "onde_na_fonte": "resultados principais"},
+        {"id": "F04.b", "afirmacao_pt": "O avaliador pequeno acerta muito mais que o ChatGPT usado como juiz da relevância e custa pouco.", "numero": "84,3% contra 58,0% (zero-shot) e 64,7% (poucos exemplos); tempo por exemplo de 0,363 s para 0,512 s", "condicao": "PopQA", "onde_na_fonte": "análise do avaliador e do custo"},
+        {"id": "F04.c", "afirmacao_pt": "Remover qualquer das três ações (refinar, reescrever a consulta, selecionar) reduz o acerto, e usar uma só ação é pior que o conjunto.", "numero": "", "condicao": "PopQA", "onde_na_fonte": "ablações"}
+      ],
+      "nao_afirma": ["Os limiares foram ajustados por conjunto; não mostra transferência.", "A correção depende de busca externa na web, que o agente não tem.", "Exige um avaliador ajustado à parte; não mede o caso de a biblioteca simplesmente não ter o verbete."],
+      "aplicacao_ao_agente": "Apoia disparar uma segunda busca só quando um avaliador da recuperação acusa documentos ruins; no agente o 'avaliador' seria código (sinais da busca contra a referência), e a segunda fonte teria de ser outra consulta sobre a mesma biblioteca de 39 verbetes."
+    },
+    {
+      "id": "F05",
+      "referencia_abnt": "MALLEN, A. et al. When Not to Trust Language Models: Investigating Effectiveness of Parametric and Non-Parametric Memories. In: ANNUAL MEETING OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS (ACL), 61., 2023. Anais [...]. Disponível em: https://arxiv.org/abs/2212.10511. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2212.10511",
+      "url": "https://arxiv.org/abs/2212.10511",
+      "ano": 2023,
+      "veiculo": "ACL 2023",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML (seções 4 a 6, figuras 4 a 12, tabela 1)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F05.a", "afirmacao_pt": "Buscar só quando a popularidade da entidade fica abaixo de um limiar supera as alternativas que sempre buscam ou nunca buscam, mas o ganho é bem menor em modelos abaixo de 10B, porque eles precisam buscar em quase todas as perguntas.", "numero": "melhor configuração adaptativa 46,5% no PopQA, cerca de 5,3 pontos acima da melhor não adaptativa", "condicao": "GPT-3 davinci-003 com Contriever; OPT 1,3B a 13B e GPT-Neo 1,3B a 20B nos demais testes", "onde_na_fonte": "seção 6, figuras 9 a 12"},
+        {"id": "F05.b", "afirmacao_pt": "Buscar também erra: cerca de 10% das perguntas foram respondidas certo sem busca e erradas com ela, em modelo grande e entidade popular, porque o trecho recuperado enganou.", "numero": "10% das perguntas; recall@1 de 0,14 nesses casos", "condicao": "davinci-003, PopQA", "onde_na_fonte": "tabela 1"},
+        {"id": "F05.c", "afirmacao_pt": "O modo adaptativo reduz o custo: cerca de metade do gasto de API do GPT-3 e até 9% de latência, e 15% de custo no EntityQuestions com o mesmo acerto da busca sempre.", "numero": "metade; 9%; 15%", "condicao": "GPT-3 por API", "onde_na_fonte": "introdução e seção 6"}
+      ],
+      "nao_afirma": ["O sinal é a popularidade da entidade (um fato do dado), não probabilidade do modelo.", "QA de fato curto, não classificação de causa.", "Não mede segunda volta com consulta nova."],
+      "aplicacao_ao_agente": "Lembra que a busca sempre também pode piorar uma resposta que o modelo acertaria, e que em modelo pequeno quase todo caso precisa de busca; o agente já busca sempre, então o ganho de poupar busca seria de tempo, não de acerto."
+    },
+    {
+      "id": "F06",
+      "referencia_abnt": "MA, X. et al. Query Rewriting for Retrieval-Augmented Large Language Models. arXiv preprint arXiv:2305.14283v3, 2023. Disponível em: https://arxiv.org/abs/2305.14283. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2305.14283",
+      "url": "https://arxiv.org/abs/2305.14283",
+      "ano": 2023,
+      "veiculo": "arXiv (v3, out. 2023); a página não nomeia o evento, a pista indica EMNLP 2023",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML (seções 3 a 6, tabelas 2 e 3)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F06.a", "afirmacao_pt": "Reescrever a consulta antes de buscar melhora a leitura em relação a buscar com a pergunta crua, e um reescritor T5-large treinado por reforço rende um pouco mais que o próprio ChatGPT reescrevendo.", "numero": "HotpotQA EM 30,47 (busca crua) para 32,80 (LLM) e 34,38 (T5 treinado); AmbigNQ 45,80 para 46,40 e 47,80", "condicao": "leitor ChatGPT, busca pelo Bing; reescritor T5-large de 770M", "onde_na_fonte": "tabela 2"},
+        {"id": "F06.b", "afirmacao_pt": "Os ganhos são pequenos ou ausentes em alguns casos, e no HotpotQA a busca crua ficou pior que não buscar.", "numero": "30,47 contra 32,36 de EM sem busca; em AmbigNQ o ganho do reescritor LLM foi de só 0,6", "condicao": "ChatGPT; no PopQA o reescritor treinado ficou abaixo do LLM (45,72 contra 46,00)", "onde_na_fonte": "tabelas 2 e 3"},
+        {"id": "F06.c", "afirmacao_pt": "Os ganhos foram maiores com o leitor Vicuna-13B que com o ChatGPT no MMLU.", "numero": "", "condicao": "Vicuna-13B e ChatGPT, múltipla escolha", "onde_na_fonte": "tabela 3"}
+      ],
+      "nao_afirma": ["A consulta reescrita vai a uma busca web (Bing), não a um índice de 39 verbetes por BM25.", "Reescreve sempre, não só quando um sinal acende.", "Não mede o custo em tempo de uma chamada extra em CPU."],
+      "aplicacao_ao_agente": "Dá o sentido de 'evidência nova' via consulta reescrita, mas o ganho publicado é de 0,6 a 4 pontos de EM em QA aberto com busca web; contra um índice pequeno e fechado, a diferença esperada é incerta."
+    },
+    {
+      "id": "F07",
+      "referencia_abnt": "SHAO, Z. et al. Enhancing Retrieval-Augmented Large Language Models with Iterative Retrieval-Generation Synergy. arXiv preprint arXiv:2305.15294v2, 2023. Disponível em: https://arxiv.org/abs/2305.15294. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2305.15294",
+      "url": "https://arxiv.org/abs/2305.15294",
+      "ano": 2023,
+      "veiculo": "arXiv (v2, out. 2023); a página não nomeia o evento, a pista indica Findings do EMNLP 2023",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (método, tabela 2, análise de erros, limitações, apêndice A)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F07.a", "afirmacao_pt": "No Iter-RetGen a resposta da volta anterior vira parte da consulta da volta seguinte, e a maior parte do ganho vem da volta 1 para a 2, com as seguintes pequenas e às vezes planas ou piores.", "numero": "HotpotQA 65,5, 71,2, 71,4, 73,4 nas voltas 1 a 4; 2Wiki 55,4, 58,1, 58,3, 58,5; MuSiQue 38,1, 41,0, 40,8, 40,8", "condicao": "text-davinci-003, 5 parágrafos por volta, 3 exemplos", "onde_na_fonte": "tabela 2"},
+        {"id": "F07.b", "afirmacao_pt": "Com duas voltas o método supera ReAct e Self-Ask no HotpotQA usando menos chamadas ao modelo e menos parágrafos.", "numero": "71,2 contra 64,8 (Self-Ask) e 61,1 (ReAct)", "condicao": "GPT-3.5; o apêndice repete com Llama-2-13B e 70B", "onde_na_fonte": "tabela 2 e apêndice A"},
+        {"id": "F07.c", "afirmacao_pt": "Cerca de 65% das falhas no HotpotQA vêm da recuperação, e um raciocínio errado na primeira volta pode enganar a consulta da segunda.", "numero": "cerca de 65%", "condicao": "análise de erro no HotpotQA", "onde_na_fonte": "análise de erros"}
+      ],
+      "nao_afirma": ["Não usa regra de parada: o número de voltas é fixo.", "Não dispara por sinal externo: roda todas as voltas sempre.", "Não foi mostrado o ganho do apêndice de Llama-2 nesta leitura em números.", "Geração por cadeia de raciocínio, não classificação por rótulo."],
+      "aplicacao_ao_agente": "A segunda volta rende quase tudo e a terceira pouco, o que apoia um teto de uma única reavaliação; o risco de a primeira resposta errada contaminar a segunda consulta é o mesmo de usar o rótulo do primeiro passe como consulta."
+    },
+    {
+      "id": "F08",
+      "referencia_abnt": "TRIVEDI, H. et al. Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions. arXiv preprint arXiv:2212.10509v2, 2023. Disponível em: https://arxiv.org/abs/2212.10509. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2212.10509",
+      "url": "https://arxiv.org/abs/2212.10509",
+      "ano": 2023,
+      "veiculo": "arXiv (v2, jun. 2023); a página não nomeia o evento, a pista indica ACL 2023",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (procedimento, modelos, resultados, limitações)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F08.a", "afirmacao_pt": "O IRCoT alterna uma frase de raciocínio e uma busca nova com essa frase, para quando o raciocínio chega à resposta ou bate o limite de 8 passos, e limita os parágrafos coletados a 15.", "numero": "limite de 8 passos e de 15 parágrafos", "condicao": "BM25; GPT-3 (code-davinci-002) e Flan-T5 de 0,2B, 0,7B, 3B e 11B", "onde_na_fonte": "descrição do método e dos experimentos"},
+        {"id": "F08.b", "afirmacao_pt": "Frente a uma busca única com a pergunta, a busca iterativa aumenta a recuperação e o acerto, e um Flan-T5 de 3B com IRCoT supera o GPT-3 com busca única; no menor modelo (0,2B) melhora a recuperação, mas não o acerto.", "numero": "recuperação até cerca de 21 pontos (GPT-3) e 14 (Flan-T5-XXL); F1 de resposta até cerca de 15 pontos", "condicao": "multi-hop (HotpotQA, 2Wiki e outros)", "onde_na_fonte": "resultados e análise por tamanho"},
+        {"id": "F08.c", "afirmacao_pt": "A busca iterativa corta cadeias com erro factual em cerca de 50% no HotpotQA e 40% na 2Wiki, numa anotação manual de 40 perguntas por conjunto.", "numero": "50% e 40%", "condicao": "40 perguntas por conjunto", "onde_na_fonte": "análise de factualidade"}
+      ],
+      "nao_afirma": ["Exige modelos com bom raciocínio em poucos exemplos e contexto longo.", "Não faz ablação isolada do número de parágrafos além do ajuste de K.", "Chama o modelo uma vez por frase de raciocínio, com custo que a página reconhece mas não quantifica em CPU."],
+      "aplicacao_ao_agente": "Dá uma regra de parada usual (resposta pronta ou teto de passos) e mostra que em modelo pequeno a consulta nova pesa mais que o raciocínio; o agente não escreve cadeia de raciocínio, e cada volta custaria cerca de 47 a 78 s medidos."
+    },
+    {
+      "id": "F09",
+      "referencia_abnt": "XU, X. et al. Re-Reading Improves Reasoning in Large Language Models. arXiv preprint arXiv:2309.06275v4, 2024. Disponível em: https://arxiv.org/abs/2309.06275. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2309.06275",
+      "url": "https://arxiv.org/abs/2309.06275",
+      "ano": 2024,
+      "veiculo": "arXiv (v4, nov. 2024); a página não nomeia o evento, a pista indica EMNLP 2024",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (método, tabelas 1, 2, 4, 5, limitações)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F09.a", "afirmacao_pt": "Repetir a pergunta no prompt ('leia a pergunta de novo') dá ganhos médios pequenos em 14 conjuntos, com perdas em alguns casos, e perde força em modelos ajustados por instrução.", "numero": "davinci-003 aritmética +3,81 sem cadeia de raciocínio e +2,22 com ela; no ChatGPT cerca de 71% dos experimentos melhoraram, com queda de 4,33 no AQUA", "condicao": "text-davinci-003 e ChatGPT; raciocínio aritmético, de senso comum e simbólico", "onde_na_fonte": "tabelas 1 e 2, seção 3.3"},
+        {"id": "F09.b", "afirmacao_pt": "Em modelos abertos sem ajuste por instrução, o ganho com cadeia de raciocínio é maior em GSM8K e MultiArith, mas alguns casos pioram.", "numero": "Llama-2-70B: +6,98 no GSM8K e +9,00 no MultiArith; queda de 4,81 no AddSub (CoT)", "condicao": "Llama-2-13B e 70B, zero-shot", "onde_na_fonte": "tabela 5"},
+        {"id": "F09.c", "afirmacao_pt": "Repetir mais de duas ou três vezes reduz o desempenho, e repetir a instrução de raciocínio não ajuda.", "numero": "", "condicao": "variantes de prompt", "onde_na_fonte": "seção 3.4, tabela 7"}
+      ],
+      "nao_afirma": ["Não é releitura de contexto recuperado nem de resposta anterior: repete só a pergunta no mesmo passe.", "Raciocínio aritmético e de senso comum; nenhum teste de classificação de causa.", "Não mede quantização em 4 bits nem modelo de 7B em CPU (usa o 7B só para custo, sem números no texto)."],
+      "aplicacao_ao_agente": "A releitura da mesma entrada rende de 0 a poucos pontos e pode piorar, o que contraria um segundo passe que só repete o contexto; ela custa o prefill extra de a pergunta dobrar, pequeno, mas sem evidência nova."
+    },
+    {
+      "id": "F10",
+      "referencia_abnt": "AGGARWAL, P. et al. AutoMix: Automatically Mixing Language Models. arXiv preprint arXiv:2310.12963v5, 2025. Disponível em: https://arxiv.org/abs/2310.12963. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2310.12963",
+      "url": "https://arxiv.org/abs/2310.12963",
+      "ano": 2023,
+      "veiculo": "arXiv (v5, jan. 2025); a página não nomeia o evento, a pista indica NeurIPS 2024",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (seções 4, 5, apêndices A e C, limitações)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F10.a", "afirmacao_pt": "No AutoMix o modelo pequeno confere a própria resposta contra o contexto por 8 amostras e, se a nota de 'correto' for baixa, o caso sobe para o modelo grande; o texto afirma corte de mais de 50% do custo com desempenho comparável.", "numero": "mais de 50% de custo menor; ganho de custo-benefício médio de 122% no conjunto diplomat", "condicao": "pequenos gpt-3.5, llama2-13b e mistral-7b; grande gpt-4; custo relativo de 60, 100 ou 200 vezes o do pequeno", "onde_na_fonte": "resumo, seção 4 e tabela 1"},
+        {"id": "F10.b", "afirmacao_pt": "A nota de autoverificação não é confiável em todos os conjuntos: no qasper e no quality uma confiança maior não significa mais acerto, e com um modelo intermediário de autoverificação inútil o ganho some.", "numero": "", "condicao": "llama2-13b, llama2-70b e gpt-4", "onde_na_fonte": "figura 12 e apêndice C.2.4"},
+        {"id": "F10.c", "afirmacao_pt": "Os autores dizem que o método foi pensado para raciocínio sobre contexto dado e diálogo, não para QA factual nem senso comum.", "numero": "", "condicao": "seção de limitações", "onde_na_fonte": "limitações"}
+      ],
+      "nao_afirma": ["Cascata contra um modelo grande de API; o agente é 100% local e não tem modelo maior em CPU com custo útil.", "O verificador é o próprio modelo pequeno, que a literatura anterior do projeto já mostrou ser fraco quando fala de si.", "Não usa probabilidade de token."],
+      "aplicacao_ao_agente": "Vale como desenho de escalonamento (modelo grande só nos casos duvidosos), com o custo medido em unidades de modelo; no projeto o 'maior' seria o Coder 7B ou uma pessoa, e a nota de confiança já existe no selo."
+    },
+    {
+      "id": "F11",
+      "referencia_abnt": "KAMATH, A.; JIA, R.; LIANG, P. Selective Question Answering under Domain Shift. In: ANNUAL MEETING OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS (ACL), 58., 2020. Anais [...]. Disponível em: https://arxiv.org/abs/2006.09462. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2006.09462",
+      "url": "https://arxiv.org/abs/2006.09462",
+      "ano": 2020,
+      "veiculo": "ACL 2020",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo e campos da página de resumo; o texto completo não foi aberto",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F11.a", "afirmacao_pt": "A probabilidade do softmax sozinha é um sinal fraco para abster-se sob mudança de domínio, e um calibrador treinado para prever quando o modelo erra, mesmo visto só em outro domínio fora do teste, responde mais perguntas na mesma exatidão.", "numero": "56% das perguntas respondidas com 80% de acerto, contra 48% pela probabilidade bruta", "condicao": "modelo treinado no SQuAD, testado numa mistura com cinco outros conjuntos de QA", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["O resumo não traz a divisão dentro e fora do domínio nem o modelo de classificação de rótulos.", "Modelo de leitura extrativa, não LLM gerativo de 7B."],
+      "aplicacao_ao_agente": "Mostra como se mede abstenção: cobertura contra acerto; o selo do agente (probabilidade do primeiro token, calibrada em 90 casos) pode ser avaliado assim, com a ressalva de que a calibração precisa de casos de mais de um tipo."
+    },
+    {
+      "id": "F12",
+      "referencia_abnt": "CEMRI, M. et al. Why Do Multi-Agent LLM Systems Fail? arXiv preprint arXiv:2503.13657, 2025. Disponível em: https://arxiv.org/abs/2503.13657. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2503.13657",
+      "url": "https://arxiv.org/abs/2503.13657",
+      "ano": 2025,
+      "veiculo": "arXiv; a página aberta não nomeia o evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML, primeiros 100 mil caracteres (taxonomia, figura 1, seção 4 e 5, apêndice H)",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F12.a", "afirmacao_pt": "Na taxonomia de 14 modos de falha sobre 1.642 trilhas de 7 sistemas, repetir passos (15,7%) e não saber quando terminar (12,4%) são os dois modos mais frequentes de desenho do sistema, e a terminação prematura aparece em 6,2%.", "numero": "15,7%, 12,4% e 6,2%", "condicao": "7 arcabouços multiagente com modelos GPT-4, Claude, Qwen2.5 e CodeLlama", "onde_na_fonte": "figura 1 e seção 4"},
+        {"id": "F12.b", "afirmacao_pt": "Verificação ausente ou incompleta (8,2%) e verificação incorreta (9,1%) também estão entre as falhas, e acrescentar uma etapa de verificação do objetivo da tarefa subiu o sucesso de um dos sistemas em 15,6%.", "numero": "+15,6% (ChatDev no ProgramDev); +9,4% ao esclarecer papéis", "condicao": "intervenções de caso, que os autores dizem serem insuficientes sozinhas", "onde_na_fonte": "apêndice H"},
+        {"id": "F12.c", "afirmacao_pt": "A concordância entre anotadores humanos foi alta, e um anotador automático chegou perto dela.", "numero": "kappa de 0,88 entre humanos e 0,77 do anotador automático contra humanos", "condicao": "1.642 trilhas", "onde_na_fonte": "validação da taxonomia"}
+      ],
+      "nao_afirma": ["Sistemas multiagente de código e tarefas, não agente de uma chamada com modelo local pequeno.", "Não dá número de iterações que valha a pena.", "A concentração em desenho do sistema não separa o efeito do tamanho do modelo."],
+      "aplicacao_ao_agente": "Sustenta pôr critério de término e teto de passos explícitos em qualquer laço novo e verificação separada da geração; o agente de uma chamada só incorre nisso se ganhar um laço."
+    }
+  ],
+  "nao_achei": [
+    "Nenhum trabalho que meça disparo por probabilidade do primeiro token com modelo de 7B quantizado em CPU, nem em classificação com lista fechada de rótulos.",
+    "Nenhum estudo que meça segunda volta com consulta reescrita sobre um índice pequeno e fechado de documentação técnica (39 documentos) com BM25.",
+    "Self-RAG (ICLR 2024), Adaptive-RAG (NAACL 2024), Cuconasu et al. (SIGIR 2024) e a revisão de abstenção de Wen et al. (TACL 2025) já constam nos levantamentos anteriores e não foram reabertos nesta rodada; o Adaptive-RAG foi aberto, mas não entrou por exigir roteamento de várias estratégias que o agente não tem (T5-large; 2,2 contra 4,7 passos, 3,6 contra 8,8 s no FLAN-T5-XL).",
+    "Nenhuma das páginas HTML abertas nomeia o evento de publicação; os eventos citados na coluna veiculo vêm das pistas do pedido e não foram conferidos no ACL Anthology nem no OpenReview. Em cada página, os últimos 6 a 60 mil caracteres (apêndices) não foram lidos.",
+    "Kamath et al. (2020) ficou só no resumo; o artigo completo não foi aberto."
+  ],
+  "rascunho_de_sintese_pt": "O que as fontes sustentam: (1) disparar a busca por um sinal barato do próprio modelo funciona e custa menos que buscar sempre. O FLARE ganha da busca única e de intervalos fixos (F02.a), o DRAGIN gasta menos buscas que o intervalo fixo e acerta mais com modelos de 7B e 13B (F03.a, F03.b), e em F01 estimadores simples de incerteza empatam ou superam pipelines completos em um salto com no máximo cerca de 2 chamadas por pergunta (F01.a). (2) Um avaliador da recuperação, mesmo pequeno (T5-large), dispara a correção com ganho de 4 a 11 pontos num gerador de 7B (F04.a, F04.b); no agente esse avaliador seria código sobre os sinais da busca.\n\nO que apoia a ideia de 'só quando acende': buscar demais prejudica (F02.b), a busca crua pode piorar uma resposta que o modelo acertaria (F05.b, F06.b), e modelos pequenos já precisam buscar em quase todo caso (F05.a), o que quer dizer que o ganho de disparar condicional em modelo pequeno é sobretudo de tempo, não de acerto.\n\nSobre evidência nova contra releitura: repetir a pergunta no mesmo passe dá de 0 a poucos pontos e às vezes piora (F09.a, F09.b, F09.c). Reescrever a consulta dá ganhos pequenos e instáveis (F06.a, F06.b); usar a saída anterior como consulta pesa mais, mas a primeira volta errada contamina a segunda (F07.c).\n\nSobre parada: a segunda volta rende quase tudo, a terceira e a quarta pouco ou nada (F07.a); o IRCoT para por resposta pronta ou por 8 passos (F08.a); a taxonomia de falhas de agentes aponta repetição de passos e falta de critério de término como os modos mais frequentes de desenho (F12.a), e verificação separada ajuda (F12.b).\n\nAlternativas ao segundo passe: a cascata para um modelo maior custa menos que usar sempre o grande (F10.a), mas a verificação pelo próprio modelo pequeno falha em alguns conjuntos (F10.b); abster-se e medir cobertura contra acerto é o desenho clássico (F11.a, só resumo).\n\nO que contraria: nada mede que a segunda volta traga ganho consistente em classificação; F06 e F07 usam QA aberto, e F01 mostra que em vários saltos o sinal simples perde para pipelines caros.\n\nO que ninguém mediu em modelo pequeno: nenhum trabalho usa 7B quantizado em CPU, probabilidade do primeiro token de um rótulo como gatilho, ou índice fechado de poucos documentos; todos os números de custo vêm de API ou GPU."
+}

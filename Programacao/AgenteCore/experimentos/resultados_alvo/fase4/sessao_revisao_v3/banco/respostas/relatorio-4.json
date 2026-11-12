@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:44:01.900Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-4",
+  "comentario": "O agente errou o diagnóstico. O sintoma (\"ainda lista a reserva 9 como 'Em Analise' logo depois de cancelar... repetida cerca de 5 minutos depois traz o status novo\") indica claramente um problema de cache/tempo, o que aponta para a causa alternativa dado_desatualizado (Dado desatualizado (cache)), que chegou a bater 0,22 de probabilidade. No entanto, o agente cravou registro_duplicado (0,76). Como não havia registro duplicado no corpo da resposta (havia a reserva 8 e a 9, distintas) e o verbete dado_desatualizado ficou de fora do contexto na busca (ficou em 5º), o modelo alucinou a causa errada e disparou a falha técnica causa_sem_verbete_que_a_trate. A utilidade é 5 porque o relatório documenta perfeitamente o gatilho de revisão por baixa confiança (0,76) e o erro do motor de busca.",
+  "decidido_em": "2026-11-09T19:44:53.751Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 4,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:45:28.185Z",
+  "segundos": 51,
+  "segundos_relogio": 52,
+  "utilidade": 5
+}

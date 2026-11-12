@@ -1,0 +1,522 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_ensaio_v4/qwen2.5_7b/localizador-front-busca#1",
+ "nome": "localizador-front-busca__r1",
+ "caso": "localizador-front-busca#1",
+ "corrida": "fase4_ensaio_v4",
+ "modo": "cenarios",
+ "modelo": "qwen2.5:7b",
+ "classe": null,
+ "nivel": null,
+ "eventos": {
+  "primeiro": 225,
+  "ultimo": 264,
+  "hash": "5749715a12eca74e"
+ },
+ "relatorio_v3": "../relatorios_v3/localizador-front-busca__r1.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "mandar ao modelo a árvore de acessibilidade podada (37 linhas), não a página inteira",
+   "alternativas": [
+    {
+     "opcao": "a árvore de acessibilidade inteira",
+     "detalhe": "250 nós",
+     "escolhida": false
+    },
+    {
+     "opcao": "a árvore podada",
+     "detalhe": "37 linhas",
+     "escolhida": true
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A poda da árvore de acessibilidade da tela levou 250 nós a 37 linhas.",
+     "origem": "observado",
+     "eventos": [
+      229
+     ]
+    },
+    {
+     "texto": "O que saiu, pelas regras em código: 16 cartões iguais omitidos (ficam os primeiros e os que contêm o alvo), 1 elemento de decoração removido (separador, moldura ou figura), 1 título abaixo do nível 4 removido fora dos cartões, 21 imagens removidas, 14 botões e campos sem nome acessível removidos, 18 listas e grupos achatados (fica só o conteúdo) e 3 textos sem letra nem número removidos.",
+     "origem": "observado",
+     "eventos": [
+      229
+     ]
+    },
+    {
+     "texto": "O que ficou: os elementos tocados pelo roteiro, os controles com nome acessível, os textos com letra, os títulos até o nível 4 e os marcos da página, na forma textual dos casos escritos.",
+     "origem": "observado",
+     "eventos": [
+      229
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3586 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      232
+     ]
+    }
+   ],
+   "eventos": [
+    229,
+    232
+   ],
+   "diferencas": []
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "localizador_quebrado",
+     "detalhe": "posição 1, pontuação 31,60: 30,60 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 31.5994,
+     "posicao": 1
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "detalhe": "posição 2, pontuação 16,91: 15,91 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": true,
+     "pontuacao": 16.91,
+     "posicao": 2
+    },
+    {
+     "opcao": "limites-do-sistema",
+     "detalhe": "posição 3, pontuação 9,83: 9,83 pelas palavras do caso, sem reforço",
+     "escolhida": true,
+     "pontuacao": 9.8316,
+     "posicao": 3
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "detalhe": "posição 4, pontuação 9,09: 8,09 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 9.0931,
+     "posicao": 4
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 5, pontuação 7,80: 7,80 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 7.8005,
+     "posicao": 5
+    },
+    {
+     "opcao": "dado_desatualizado",
+     "detalhe": "posição 6, pontuação 6,29: 5,29 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 6.2914,
+     "posicao": 6
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 7, pontuação 5,80: 5,80 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 5.7959,
+     "posicao": 7
+    },
+    {
+     "opcao": "ancora-saiba-mais",
+     "detalhe": "posição 8, pontuação 5,44: 4,44 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 5.4383,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `localizador_quebrado` (31,60), `tempo_de_resposta_excedido` (16,91) e `limites-do-sistema` (9,83).",
+     "origem": "observado",
+     "eventos": [
+      230
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da entidade entrou em `localizador_quebrado`; o do status, em `tempo_de_resposta_excedido`; `limites-do-sistema` pontuou só pelas palavras.",
+     "origem": "observado",
+     "eventos": [
+      230
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `corpo_nao_e_json` (9,09), `colecao_no_lugar_de_objeto` (7,80), `dado_desatualizado` (6,29), `valor_fora_do_dominio` (5,80) e `ancora-saiba-mais` (5,44).",
+     "origem": "observado",
+     "eventos": [
+      230
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota nenhuma, entidade `Interface`, status 200 e 41 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      230
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `limites-do-sistema`, e o primeiro de fora, `corpo_nao_e_json`, só o texto do caso já punha o primeiro à frente (9,83 contra 8,09); a diferença final foi 0,74.",
+     "origem": "observado",
+     "eventos": [
+      230
+     ]
+    }
+   ],
+   "eventos": [
+    230
+   ],
+   "entregues": [
+    "localizador_quebrado",
+    "tempo_de_resposta_excedido",
+    "limites-do-sistema"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": null,
+    "entidade": "Interface",
+    "status": 200,
+    "termos": 41
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "localizador_quebrado",
+   "alternativas": [
+    {
+     "opcao": "localizador_quebrado",
+     "probabilidade": 0.9087802783038699,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,909; verbetes entregues que a tratam: `localizador_quebrado`"
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "probabilidade": 7.035893943487752e-08,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `tempo_de_resposta_excedido`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `localizador_quebrado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `tempo_de_resposta_excedido` (Tempo de resposta excedido), ficou com probabilidade 0,000 contra 0,909 da escolhida; verbetes entregues que a sustentam: `tempo_de_resposta_excedido`.",
+     "origem": "observado",
+     "eventos": [
+      250
+     ]
+    },
+    {
+     "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,909, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      250
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      250
+     ]
+    },
+    {
+     "texto": "A trilha não aponta um sinal medido em código para esta causa.",
+     "origem": "desconhecido",
+     "eventos": [
+      250
+     ]
+    },
+    {
+     "texto": "A linha FONTE cita `localizador_quebrado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `localizador_quebrado`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `localizador_quebrado`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `localizador_quebrado` (Localizador (seletor) quebrado; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/localizador_quebrado.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/localizador_quebrado.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      250
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 9 de 9 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      250
+     ]
+    }
+   ],
+   "eventos": [
+    250
+   ],
+   "segunda": "tempo_de_resposta_excedido",
+   "campo": null,
+   "confianca": {
+    "selo": "medio",
+    "palavra": "média",
+    "p_rotulo": 0.9087802783038699,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 26,
+     "certos": 22,
+     "acerto_pct": 84.6
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,909, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Localizador (seletor) quebrado",
+   "probabilidade": 0.9087802783038699,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  },
+  {
+   "numero": 4,
+   "chave": "cura",
+   "titulo": "a cura",
+   "escolha": "papel_e_nome",
+   "alternativas": [
+    {
+     "opcao": "papel_e_nome",
+     "seletor": "role=searchbox[name=\"search\"]",
+     "escolhida": true,
+     "detalhe": "gerado; passou as verificações estáticas; aplicado: levou o roteiro ao fim na reexecução",
+     "verificacoes_passadas": 5
+    },
+    {
+     "opcao": "papel_e_nome_parecido",
+     "seletor": null,
+     "escolhida": false,
+     "detalhe": "não gerado: nenhum searchbox da árvore podada tem nome parecido com \"search\" acima do limiar 0.6",
+     "verificacoes_passadas": 0
+    },
+    {
+     "opcao": "texto_contido",
+     "seletor": null,
+     "escolhida": false,
+     "detalhe": "não gerado: o alvo da referência não tem texto visível",
+     "verificacoes_passadas": 0
+    },
+    {
+     "opcao": "data_id",
+     "seletor": null,
+     "escolhida": false,
+     "detalhe": "não gerado: o alvo da referência não tem data-id",
+     "verificacoes_passadas": 0
+    },
+    {
+     "opcao": "caminho_do_ancestral_com_id",
+     "seletor": "#form-busca > div:nth-of-type(1) > input:nth-of-type(1)",
+     "escolhida": false,
+     "detalhe": "gerado; passou as verificações estáticas; não foi tentado: passou as verificações estáticas, mas um candidato anterior já tinha levado o roteiro ao fim",
+     "verificacoes_passadas": 4
+    },
+    {
+     "opcao": "posicao_entre_irmaos",
+     "seletor": "#form-busca > div:nth-of-type(1) >> role=searchbox >> nth=0",
+     "escolhida": false,
+     "detalhe": "gerado; passou as verificações estáticas; não foi tentado: passou as verificações estáticas, mas um candidato anterior já tinha levado o roteiro ao fim",
+     "verificacoes_passadas": 4
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "O passo 2 do roteiro, localizador `#buscar`, falhou: o navegador não achou o elemento (a mensagem dele está em citação abaixo).",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "Dos 6 candidatos previstos, 3 foram gerados da árvore podada e do alvo da referência, e 3 passaram nas quatro checagens em código (um elemento só, visível e habilitado, mesmo papel e nome parecido acima de 0,6).",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "Aplicado `papel_e_nome` (`role=searchbox[name=\"search\"]`): o elemento é achado pelo papel e pelo nome acessíveis, iguais aos do alvo; passou as 5 verificações em código: um elemento só, visível e habilitado, mesmo papel, nome parecido e efeito na reexecução.",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "A reexecução foi validada: o roteiro chegou ao fim com o localizador novo, e é o mesmo elemento da referência.",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "Outros 2 candidatos, `caminho_do_ancestral_com_id` e `posicao_entre_irmaos`, também passaram nas quatro checagens e não foram tentados, porque o primeiro já tinha fechado o roteiro.",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "Não foram gerados: `papel_e_nome_parecido` (nenhum searchbox da árvore podada tem nome parecido com \"search\" acima do limiar 0.6); `texto_contido` (o alvo da referência não tem texto visível); `data_id` (o alvo da referência não tem data-id).",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "Da detecção à reexecução validada: 73,3 s.",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    },
+    {
+     "texto": "Divergência registrada no nó da cura: o aplicado foi `papel_e_nome` (role=searchbox[name=\"search\"]); o segundo candidato, `caminho_do_ancestral_com_id` (#form-busca > div:nth-of-type(1) > input:nth-of-type(1)), também passou as verificações estáticas e não foi tentado: a ordem fixa decidiu, não a verificação.",
+     "origem": "observado",
+     "eventos": [
+      251,
+      252,
+      262
+     ]
+    }
+   ],
+   "eventos": [
+    251,
+    252,
+    262
+   ],
+   "seletor": "role=searchbox[name=\"search\"]",
+   "curado": true,
+   "mesmo_elemento": true,
+   "erro": "TimeoutError: Page.wait_for_selector: Timeout 5000ms exceeded.\nCall log:\n  - waiting for locator(\"#buscar\") to be visible\n",
+   "mttr_s": 73.322,
+   "passo": 2,
+   "localizador": "#buscar",
+   "divergencia": {
+    "detalhe": "o aplicado foi `papel_e_nome` (role=searchbox[name=\"search\"]); o segundo candidato, `caminho_do_ancestral_com_id` (#form-busca > div:nth-of-type(1) > input:nth-of-type(1)), também passou as verificações estáticas e não foi tentado: a ordem fixa decidiu, não a verificação",
+    "entre": [
+     "programa",
+     "verificacao"
+    ],
+    "ha": true
+   },
+   "falha": null,
+   "reexecucao": "validada"
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário não consegue iniciar uma busca, pois o seletor do campo de busca não está sendo encontrado.",
+  "fonte": "[localizador_quebrado]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: localizador_quebrado\nCAMPO: nenhum\nIMPACTO: O usuário não consegue iniciar uma busca, pois o seletor do campo de busca não está sendo encontrado.\nFONTE: [localizador_quebrado]"
+ },
+ "resumo": {
+  "decisoes": 4,
+  "afirmacoes": 32,
+  "rotulos": {
+   "observado": 23,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 1
+  },
+  "divergencia": true,
+  "cura": true,
+  "selo": "medio",
+  "confianca": "média",
+  "falha": null,
+  "escolha": "localizador_quebrado",
+  "causa_em_palavras": "Localizador (seletor) quebrado",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1,
+   "cura": 1,
+   "reexecucao": 1
+  }
+ }
+}

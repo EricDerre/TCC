@@ -1,0 +1,524 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/run-1@tela",
+ "nome": "run-1@tela",
+ "caso": "run-1",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 5,
+ "nivel": 1,
+ "eventos": {
+  "primeiro": 433,
+  "ultimo": 468,
+  "hash": "2d965b60e454e8cb"
+ },
+ "relatorio_v3": "../relatorios_v3/run-1@tela.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "mandar ao modelo a árvore de acessibilidade podada (21 linhas) e a diferença do corpo da resposta (205 caracteres), não a página inteira",
+   "alternativas": [
+    {
+     "opcao": "a árvore de acessibilidade inteira",
+     "detalhe": "54 nós",
+     "escolhida": false
+    },
+    {
+     "opcao": "a árvore podada",
+     "detalhe": "21 linhas",
+     "escolhida": true
+    },
+    {
+     "opcao": "o corpo da resposta inteiro",
+     "detalhe": "50 caracteres",
+     "escolhida": false
+    },
+    {
+     "opcao": "a diferença do corpo contra o contrato esperado pela interface e a resposta da mesma rota em modo normal (a referência)",
+     "detalhe": "205 caracteres",
+     "escolhida": true
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A página chamou `GET /api/produtos` (status 500 (a API falhou por erro interno), 50 caracteres de corpo).",
+     "origem": "observado",
+     "eventos": [
+      438
+     ]
+    },
+    {
+     "texto": "A poda da árvore de acessibilidade da tela levou 54 nós a 21 linhas.",
+     "origem": "observado",
+     "eventos": [
+      441
+     ]
+    },
+    {
+     "texto": "O que saiu, pelas regras em código: 1 elemento de decoração removido (separador, moldura ou figura), 1 título abaixo do nível 4 removido fora dos cartões, 2 imagens removidas, 8 botões e campos sem nome acessível removidos, 14 listas e grupos achatados (fica só o conteúdo) e 3 textos sem letra nem número removidos.",
+     "origem": "observado",
+     "eventos": [
+      441
+     ]
+    },
+    {
+     "texto": "O que ficou: os elementos tocados pelo roteiro, os controles com nome acessível, os textos com letra, os títulos até o nível 4 e os marcos da página, na forma textual dos casos escritos.",
+     "origem": "observado",
+     "eventos": [
+      441
+     ]
+    },
+    {
+     "texto": "A tela comparada com a referência (a mesma página sem falha injetada): esperado `22 linha(s) da referência`, recebido `4 linha(s) novas`.",
+     "origem": "observado",
+     "eventos": [
+      441
+     ]
+    },
+    {
+     "texto": "A poda do corpo da resposta levou 50 caracteres a 205 caracteres: só a diferença contra o contrato esperado pela interface e a resposta da mesma rota em modo normal (a referência) vai ao modelo.",
+     "origem": "observado",
+     "eventos": [
+      443
+     ]
+    },
+    {
+     "texto": "A comparação do corpo achou 9 diferenças, no corpo inteiro (a tabela das diferenças está abaixo).",
+     "origem": "observado",
+     "eventos": [
+      443
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 4228 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      446
+     ]
+    }
+   ],
+   "eventos": [
+    438,
+    441,
+    443,
+    446
+   ],
+   "diferencas": [
+    {
+     "alvo": "tela",
+     "onde": "árvore de acessibilidade, contra a referência",
+     "esperado": "22 linha(s) da referência",
+     "recebido": "4 linha(s) novas",
+     "tipo": null
+    },
+    {
+     "alvo": "corpo",
+     "onde": "corpo inteiro",
+     "esperado": "lista",
+     "recebido": "objeto",
+     "tipo": "forma_diferente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo id",
+     "esperado": "inteiro",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo nome",
+     "esperado": "texto",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo resumo",
+     "esperado": "texto|nulo",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo tipo",
+     "esperado": "texto",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo preco",
+     "esperado": "numero",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo imagem",
+     "esperado": "texto|nulo",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo destaque",
+     "esperado": "booleano",
+     "recebido": "ausente",
+     "tipo": "ausente"
+    },
+    {
+     "alvo": "corpo",
+     "onde": "campo detail",
+     "esperado": null,
+     "recebido": "texto",
+     "tipo": "inesperado"
+    }
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "erro_interno_do_servidor",
+     "detalhe": "posição 1, pontuação 44,14: 41,14 pelas palavras do caso, mais 2,0 por rota e 1,0 por status",
+     "escolhida": true,
+     "pontuacao": 44.1428,
+     "posicao": 1
+    },
+    {
+     "opcao": "contagem_inconsistente",
+     "detalhe": "posição 2, pontuação 37,93: 34,93 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 37.9251,
+     "posicao": 2
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 3, pontuação 35,88: 32,88 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 35.8835,
+     "posicao": 3
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "detalhe": "posição 4, pontuação 34,38: 31,38 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 34.3773,
+     "posicao": 4
+    },
+    {
+     "opcao": "modos-de-injecao",
+     "detalhe": "posição 5, pontuação 30,58: 29,58 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 30.583,
+     "posicao": 5
+    },
+    {
+     "opcao": "mensagens-de-erro-do-codigo",
+     "detalhe": "posição 6, pontuação 29,79: 28,79 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 29.7938,
+     "posicao": 6
+    },
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 7, pontuação 27,86: 24,86 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 27.8632,
+     "posicao": 7
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 8, pontuação 27,78: 24,78 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 27.7776,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `erro_interno_do_servidor` (44,14), `contagem_inconsistente` (37,93) e `contrato-produto` (35,88).",
+     "origem": "observado",
+     "eventos": [
+      444
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `erro_interno_do_servidor`, `contagem_inconsistente` e `contrato-produto`; o da entidade, em `contagem_inconsistente` e `contrato-produto`; o do status, em `erro_interno_do_servidor`.",
+     "origem": "observado",
+     "eventos": [
+      444
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `estrutura_aninhada_divergente` (34,38), `modos-de-injecao` (30,58), `mensagens-de-erro-do-codigo` (29,79), `entidade-produto` (27,86) e `colecao_no_lugar_de_objeto` (27,78).",
+     "origem": "observado",
+     "eventos": [
+      444
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 500 e 63 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato e com a referência.",
+     "origem": "observado",
+     "eventos": [
+      444
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `contrato-produto`, e o primeiro de fora, `estrutura_aninhada_divergente`, só o texto do caso já punha o primeiro à frente (32,88 contra 31,38), e os reforços em código levaram a diferença a 1,51.",
+     "origem": "observado",
+     "eventos": [
+      444
+     ]
+    }
+   ],
+   "eventos": [
+    444
+   ],
+   "entregues": [
+    "erro_interno_do_servidor",
+    "contagem_inconsistente",
+    "contrato-produto"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 500,
+    "termos": 63
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "erro_interno_do_servidor",
+   "alternativas": [
+    {
+     "opcao": "erro_interno_do_servidor",
+     "probabilidade": 0.9905633926638923,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,991; verbetes entregues que a tratam: `erro_interno_do_servidor`"
+    },
+    {
+     "opcao": "resposta_truncada",
+     "probabilidade": 0.00015907545684381563,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 1.9255024951114123e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `erro_interno_do_servidor`"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 1.9255024951114123e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 5.874181601503063e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 5.874181601503063e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 7.627131553126484e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `erro_interno_do_servidor`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `resposta_truncada` (Resposta truncada), ficou com probabilidade 0,000 contra 0,991 da escolhida; nenhum verbete entregue a sustenta.",
+     "origem": "observado",
+     "eventos": [
+      468
+     ]
+    },
+    {
+     "texto": "As outras 5 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `corpo_nao_e_json` (0,000), `corpo_vazio` (0,000) e `campo_ausente` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      468
+     ]
+    },
+    {
+     "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,991, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      468
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      468
+     ]
+    },
+    {
+     "texto": "O sinal medido em código está presente na resposta HTTP: `esperado lista, recebido objeto`.",
+     "origem": "observado",
+     "eventos": [
+      443,
+      441,
+      438
+     ]
+    },
+    {
+     "texto": "A linha FONTE cita `erro_interno_do_servidor` e `contrato-produto`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Os 2 verbetes citados (`erro_interno_do_servidor` e `contrato-produto`): existem na biblioteca (confere), estavam entre os entregues ao modelo (confere), traz o termo da causa no texto: `erro_interno_do_servidor` confere; `contrato-produto` não confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `erro_interno_do_servidor`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Camada de leitura de cada verbete citado: `erro_interno_do_servidor` (Erro interno do servidor (500); leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/erro_interno_do_servidor.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/erro_interno_do_servidor.md`); `contrato-produto` (Contrato de /api/produtos; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/contratos/contrato-produto.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/contratos/contrato-produto.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      468
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 9 de 11 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      468
+     ]
+    }
+   ],
+   "eventos": [
+    468
+   ],
+   "segunda": "resposta_truncada",
+   "campo": null,
+   "confianca": {
+    "selo": "alto",
+    "palavra": "alta",
+    "p_rotulo": 0.9905633926638923,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 37,
+     "certos": 34,
+     "acerto_pct": 91.9
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,991, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Erro interno do servidor (500)",
+   "probabilidade": 0.9905633926638923,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário vê uma página de erro sem detalhes, enquanto a interface esperava uma lista de produtos formatada corretamente.",
+  "fonte": "[erro_interno_do_servidor] [contrato-produto]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: erro_interno_do_servidor\nCAMPO: nenhum\nIMPACTO: O usuário vê uma página de erro sem detalhes, enquanto a interface esperava uma lista de produtos formatada corretamente.\nFONTE: [erro_interno_do_servidor] [contrato-produto]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 29,
+  "rotulos": {
+   "observado": 21,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "alto",
+  "confianca": "alta",
+  "falha": null,
+  "escolha": "erro_interno_do_servidor",
+  "causa_em_palavras": "Erro interno do servidor (500)",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

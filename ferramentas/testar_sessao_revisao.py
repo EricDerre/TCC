@@ -101,6 +101,26 @@ class TesteDaPagina(unittest.TestCase):
         planilha = _pasta_de_sessao(self.raiz, ["zeta-2"], extra="O contrato esperado pela tela e nulo_inesperado são textos do próprio caso.")
         self.assertIn("MARCA_zeta-2", sr.pagina(sr.ler_planilha(planilha), planilha.parent))
 
+    # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q5) o perfil v3 da página: os textos da sessão da corrida 24 (relatórios v3 com a árvore de decisão,
+    # planilha revisao_v3.md) no lugar dos da corrida 22, e a frase da taxa da faixa de confiança aceita só nesse perfil.
+    # ! Motivo: a ficha 40 foi fechada pela opção (b) e a sessão com revisor humano roda nesta mesma página; a árvore diz "acertou a causa em N de M" sobre a corrida de
+    # calibração (decisão 110), que não é o resultado do caso, e o perfil da corrida 22 continua recusando qualquer "acertou".
+    def teste_perfil_v3_troca_os_textos_da_sessao_e_aceita_a_taxa_da_faixa_na_arvore(self):
+        planilha = _pasta_de_sessao(self.raiz, ["zeta-2"], extra="Na calibração, dos 26 casos da faixa média, o agente acertou a causa em 22 de 26: 84,6% (observado).")
+        with self.assertRaises(ValueError):
+            sr.pagina(sr.ler_planilha(planilha), planilha.parent)
+        pagina = sr.pagina(sr.ler_planilha(planilha), planilha.parent, perfil=sr.PERFIL_V3)
+        self.assertIn("MARCA_zeta-2", pagina)
+        for trecho in ("Revisão dos relatórios v3 e das árvores de decisão", "corrida 24", "revisao_v3.md", "ineditos.json", "bloco 12, Veredito do agente", "sessao_revisao_v3_v1", "1 relatórios"):
+            self.assertIn(trecho, pagina, trecho)
+        for trecho in ("corrida 22", "revisao_trilha.md", "trilha.json", "sessao_revisao_trilha_v1", "@@"):
+            self.assertNotIn(trecho, pagina, trecho)
+        casos = json.loads(re.search(r'<script type="application/json" id="casos">(.*?)</script>', pagina, re.DOTALL).group(1))
+        self.assertEqual(casos, [{"posicao": 1, "caso": "relatorio-1"}])
+        antiga = sr.pagina(sr.ler_planilha(_pasta_de_sessao(self.raiz, ["zeta-2"])), planilha.parent)
+        for trecho in ("corrida 22", "revisao_trilha.md", "sessao_revisao_trilha_v1", "seção 1, Veredito"):
+            self.assertIn(trecho, antiga, trecho)
+
     def teste_pagina_para_quando_falta_um_relatorio(self):
         planilha = _pasta_de_sessao(self.raiz, ["zeta-2"])
         (self.raiz / "relatorios_x" / "zeta-2@base.md").unlink()
@@ -231,6 +251,22 @@ class TesteDaGravacao(unittest.TestCase):
         self.assertIn("| 1 | `zeta-2` | 7 | `relatorios_x/zeta-2@base.md` | 143 |", texto)
         with self.assertRaises(ValueError):
             sr.gravar_respostas(self.planilha, [_resposta(1, segundos=None)], corrigir=True)
+
+    # ! Alteração de IA - Revisar: (10/11/2026) a gravação aceita a resposta de um analista, colada pelo Eric, sem tempo medido e marcada com a origem "analista".
+    # ! Motivo: na sessão de 09 e 10/11/2026 o Eric passou os relatórios a um analista e colou na página o que ele respondeu; o tempo que a página mediu nesses
+    # relatórios é o da troca entre os dois, não o de uma leitura, e não pode entrar na planilha como tempo até a decisão.
+    def teste_gravar_aceita_resposta_de_um_analista_sem_tempo_e_troca_a_linha_ja_preenchida_so_com_corrigir(self):
+        sr.gravar_respostas(self.planilha, [_resposta(1), _resposta(2, segundos=31, comentario="texto do analista")])
+        do_analista = _resposta(2, segundos=None, origem=sr.ORIGEM_ANALISTA, comentario="texto do analista")
+        with self.assertRaises(ValueError):
+            sr.gravar_respostas(self.planilha, [do_analista])
+        sr.gravar_respostas(self.planilha, [do_analista], corrigir=True)
+        texto = self.planilha.read_text(encoding="utf-8")
+        self.assertIn(f"| 2 | `alfa-1` | 8 | `relatorios_x/alfa-1@base.md` | {sr.TEMPO_NAO_MEDIDO} | n.a. | aceitar | 4 | certo | texto do analista |", texto)
+        self.assertIn("| 1 | `zeta-2` | 7 | `relatorios_x/zeta-2@base.md` | 143 |", texto)
+        self.assertIn(sr.ORIGEM_ANALISTA, sr.ORIGENS_SEM_TEMPO)
+        with self.assertRaises(ValueError):
+            sr.gravar_respostas(self.planilha, [_resposta(1, segundos=None, origem="outra")], corrigir=True)
 
     @unittest.skipUnless((sr.PLANILHA.parent / "pre_analise_revisao_trilha.md").exists(), "pré-análise real ausente")
     def teste_parecer_real_cobre_os_relatorios_da_planilha_com_valores_aceitos(self):

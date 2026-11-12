@@ -1,0 +1,415 @@
+{
+ "gerado_por": "arvore_de_decisao.py",
+ "versao": 1,
+ "corrida": "fase4_ensaio_v4",
+ "modo": "cenarios",
+ "trilha": "trilha_cenarios.jsonl",
+ "modelo": "qwen2.5:7b",
+ "hash_prompt_fixo": "2e42cf9c31826941",
+ "hash_biblioteca": "95af35290860",
+ "calibracao": {
+  "corrida": "fase4_calibracao",
+  "disponivel": true
+ },
+ "limiares_texto": {
+  "gerado_em": "2026-11-07T19:55:59"
+ },
+ "arvores": [
+  {
+   "nome": "contrato-malformed_json__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/contrato-malformed_json#1",
+   "caso": "contrato-malformed_json#1",
+   "classe": 1,
+   "nivel": 1,
+   "escolha": "resposta_truncada",
+   "causa_em_palavras": "Resposta truncada",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 776,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "contrato-malformed_json__r1.md",
+    "json": "contrato-malformed_json__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/contrato-malformed_json__r1.md",
+   "hash_eventos": "1a8231a6607840d1"
+  },
+  {
+   "nome": "contrato-field_missing__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/contrato-field_missing#1",
+   "caso": "contrato-field_missing#1",
+   "classe": 2,
+   "nivel": 1,
+   "escolha": "campo_ausente",
+   "causa_em_palavras": "Campo ausente",
+   "campo": "preco",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 850,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "contrato-field_missing__r1.md",
+    "json": "contrato-field_missing__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/contrato-field_missing__r1.md",
+   "hash_eventos": "f59a32bccdd4744d"
+  },
+  {
+   "nome": "contrato-field_renamed__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/contrato-field_renamed#1",
+   "caso": "contrato-field_renamed#1",
+   "classe": 2,
+   "nivel": 2,
+   "escolha": "campo_renomeado",
+   "causa_em_palavras": "Campo renomeado",
+   "campo": "preco",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 829,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "contrato-field_renamed__r1.md",
+    "json": "contrato-field_renamed__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/contrato-field_renamed__r1.md",
+   "hash_eventos": "30390002a6cb8f01"
+  },
+  {
+   "nome": "contrato-type_drift__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/contrato-type_drift#1",
+   "caso": "contrato-type_drift#1",
+   "classe": 3,
+   "nivel": 2,
+   "escolha": "tipo_divergente",
+   "causa_em_palavras": "Tipo divergente",
+   "campo": "preco",
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 852,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "contrato-type_drift__r1.md",
+    "json": "contrato-type_drift__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/contrato-type_drift__r1.md",
+   "hash_eventos": "22bcc9450b8ea71d"
+  },
+  {
+   "nome": "contrato-escala_ou_unidade_errada__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/contrato-escala_ou_unidade_errada#1",
+   "caso": "contrato-escala_ou_unidade_errada#1",
+   "classe": 4,
+   "nivel": 2,
+   "escolha": "escala_ou_unidade_errada",
+   "causa_em_palavras": "Escala ou unidade errada",
+   "campo": "preco",
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 30,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 6,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 840,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "contrato-escala_ou_unidade_errada__r1.md",
+    "json": "contrato-escala_ou_unidade_errada__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/contrato-escala_ou_unidade_errada__r1.md",
+   "hash_eventos": "0551d025f198ae15"
+  },
+  {
+   "nome": "contrato-error_500__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/contrato-error_500#1",
+   "caso": "contrato-error_500#1",
+   "classe": 5,
+   "nivel": 1,
+   "escolha": "erro_interno_do_servidor",
+   "causa_em_palavras": "Erro interno do servidor (500)",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": false,
+   "cura": false,
+   "falha": null,
+   "decisoes": 3,
+   "afirmacoes": 29,
+   "rotulos": {
+    "observado": 21,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 0
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": false,
+    "termos_sem_expansao": [],
+    "palavras": 803,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "contrato-error_500__r1.md",
+    "json": "contrato-error_500__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/contrato-error_500__r1.md",
+   "hash_eventos": "aa7c3c1423c6941e"
+  },
+  {
+   "nome": "localizador-front-busca__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/localizador-front-busca#1",
+   "caso": "localizador-front-busca#1",
+   "classe": null,
+   "nivel": null,
+   "escolha": "localizador_quebrado",
+   "causa_em_palavras": "Localizador (seletor) quebrado",
+   "campo": null,
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": true,
+   "cura": true,
+   "falha": null,
+   "decisoes": 4,
+   "afirmacoes": 32,
+   "rotulos": {
+    "observado": 23,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 1
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 931,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "localizador-front-busca__r1.md",
+    "json": "localizador-front-busca__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/localizador-front-busca__r1.md",
+   "hash_eventos": "5749715a12eca74e"
+  },
+  {
+   "nome": "localizador-front-admin-login__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/localizador-front-admin-login#1",
+   "caso": "localizador-front-admin-login#1",
+   "classe": null,
+   "nivel": null,
+   "escolha": "localizador_quebrado",
+   "causa_em_palavras": "Localizador (seletor) quebrado",
+   "campo": null,
+   "confianca": "média",
+   "selo": "medio",
+   "divergencia": true,
+   "cura": true,
+   "falha": null,
+   "decisoes": 4,
+   "afirmacoes": 33,
+   "rotulos": {
+    "observado": 24,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 1
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 872,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "localizador-front-admin-login__r1.md",
+    "json": "localizador-front-admin-login__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/localizador-front-admin-login__r1.md",
+   "hash_eventos": "2d9b755a7eeefe52"
+  },
+  {
+   "nome": "localizador-front-admin-produtos__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/localizador-front-admin-produtos#1",
+   "caso": "localizador-front-admin-produtos#1",
+   "classe": null,
+   "nivel": null,
+   "escolha": "localizador_quebrado",
+   "causa_em_palavras": "Localizador (seletor) quebrado",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": true,
+   "cura": true,
+   "falha": null,
+   "decisoes": 4,
+   "afirmacoes": 33,
+   "rotulos": {
+    "observado": 24,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 1
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 884,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "localizador-front-admin-produtos__r1.md",
+    "json": "localizador-front-admin-produtos__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/localizador-front-admin-produtos__r1.md",
+   "hash_eventos": "f0548bfd6fb24b0e"
+  },
+  {
+   "nome": "localizador-front-cliente-reserva__r1",
+   "trilha": "fase4_ensaio_v4/qwen2.5_7b/localizador-front-cliente-reserva#1",
+   "caso": "localizador-front-cliente-reserva#1",
+   "classe": null,
+   "nivel": null,
+   "escolha": "localizador_quebrado",
+   "causa_em_palavras": "Localizador (seletor) quebrado",
+   "campo": null,
+   "confianca": "alta",
+   "selo": "alto",
+   "divergencia": true,
+   "cura": true,
+   "falha": null,
+   "decisoes": 4,
+   "afirmacoes": 33,
+   "rotulos": {
+    "observado": 24,
+    "conferido": 5,
+    "declarado": 3,
+    "desconhecido": 1
+   },
+   "filtros": {
+    "aprovado": true,
+    "alarme_flesch": true,
+    "termos_sem_expansao": [],
+    "palavras": 899,
+    "reprovou_em": []
+   },
+   "arquivos": {
+    "md": "localizador-front-cliente-reserva__r1.md",
+    "json": "localizador-front-cliente-reserva__r1.json"
+   },
+   "relatorio_v3": "../relatorios_v3/localizador-front-cliente-reserva__r1.md",
+   "hash_eventos": "488b6fcc4671f9b1"
+  }
+ ],
+ "resumo": {
+  "trilhas": 10,
+  "decisoes_por_chave": {
+   "leitura": 10,
+   "verbetes": 10,
+   "causa": 10,
+   "cura": 4
+  },
+  "nos_por_decisao": {
+   "cura": 4,
+   "diagnostico": 10,
+   "reexecucao": 4
+  },
+  "com_divergencia": 4,
+  "com_cura": 4,
+  "afirmacoes": 309,
+  "rotulos": {
+   "observado": 221,
+   "conferido": 54,
+   "declarado": 30,
+   "desconhecido": 4
+  },
+  "por_confianca": {
+   "alta": 7,
+   "média": 3
+  },
+  "filtros": {
+   "n": 10,
+   "aprovados": 10
+  },
+  "filtros_detalhe": {
+   "termos_sem_expansao": {},
+   "alarme_flesch": 4,
+   "reprovaram": []
+  }
+ }
+}

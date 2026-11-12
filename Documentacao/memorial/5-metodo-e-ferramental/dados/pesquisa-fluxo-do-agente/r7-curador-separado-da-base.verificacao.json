@@ -1,0 +1,396 @@
+{
+  "_tag": "! Alteração de IA - Revisar: segunda leitura (verificação cética) do tópico r7-curador-separado-da-base da rodada 7 da pesquisa (10/11/2026), escrita por um subagente verificador que abriu de novo cada fonte: identificador conferido, o que a fonte afirma, o que não afirma e o veredito de cada afirmação do primeiro leitor.",
+  "_motivo": "! Motivo: a rodada 6 entrou sem segunda leitura, e a ficha 64 pede pesquisa que embase decisão sobre o fluxo do agente; uma afirmação só entra na síntese se a segunda leitura a confirmar, e o que foi rejeitado fica registrado com o motivo.",
+  "key": "r7-curador-separado-da-base",
+  "verificado_em": "10/11/2026",
+  "fontes": [
+    {
+      "id": "F01",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2510.04618",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ICLR 2026, visto no campo de comentários da página do arXiv (v3 de 29/03/2026)",
+      "referencia_abnt_corrigida": "ZHANG, Qizheng et al. Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models. In: INTERNATIONAL CONFERENCE ON LEARNING REPRESENTATIONS (ICLR), 2026. arXiv:2510.04618 [cs.CL]. Disponível em: https://arxiv.org/abs/2510.04618. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "O ACE trata o contexto do agente como um caderno que cresce por pequenas atualizações (delta) feitas por três papéis, Gerador, Refletor e Curador, e a fusão dessas atualizações é feita por lógica sem modelo (ids, contadores de útil e prejudicial, deduplicação por embedding, poda só quando a janela estoura). Nos testes principais os três papéis usam o mesmo modelo grande, DeepSeek-V3.1 de 671B.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não testou modelo pequeno (até 13B) como espinha dorsal principal; só a tabela de ablação e o apêndice com outros modelos grandes.",
+        "Não compara o mesmo agente executando e escrevendo contra papéis separados com o mesmo modelo; o ganho do refletor está misturado com épocas, delta e contadores.",
+        "A tabela do Llama-3.3-70B e o apêndice final não estavam no trecho que consegui ler (primeiros 100 mil de 131 mil caracteres)."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F01.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "55,1 contra 59,4 (ReAct 42,4)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabela 3: ReAct 42,4; ACE sem Refletor e sem várias épocas 55,1; ACE completo 59,4 (também há linha intermediária sem épocas, 56,8). Diferença de 4,3 pontos."
+        },
+        {
+          "id": "F01.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "57,2 contra 59,4; 77,1 contra 81,9; FiNER online 67,3 (base 70,7)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabela 1: AppWorld offline 59,4 com rótulo e 57,2 sem. Tabela 2: finanças 81,9 com rótulo e 77,1 sem; FiNER online sem rótulo 67,3, que fica 3,4 abaixo da base de 70,7. Mesmo modelo de 671B."
+        },
+        {
+          "id": "F01.c",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "A fusão determinística, o id novo, os contadores, a deduplicação por embedding e a poda preguiçosa estão no texto. Sobre o Llama-3.3-70B só li o texto do apêndice (ganho menor, atribuído a reflexões mais ruidosas); a tabela não estava no trecho. O Curador em si continua sendo modelo, como o leitor registrou."
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2504.13171",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz evento nem periódico)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Propõe deixar o modelo raciocinar sobre o contexto antes de a pergunta chegar, guardando inferências que reduzem o trabalho na hora da pergunta. Mede cerca de 5 vezes menos computação na hora para a mesma acurácia em versões com estado de GSM-Symbolic e AIME, ganhos de até 13% e 18% ao escalar o trabalho prévio, e mostra que o benefício segue a previsibilidade da pergunta. Há um estudo de caso de engenharia de software com 33 PRs.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não trata de escrever ou manter memória ou documentação; é raciocínio sobre um contexto fixo.",
+        "Não informa tamanhos de modelo; só modelos de API e o DeepSeek-R1; nada de 7B.",
+        "Não compara curador separado contra o mesmo agente escrevendo; é preprint."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F02.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "cerca de 5 vezes; até 13% e até 18%",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Resumo e texto conferem: cerca de 5 vezes, até 13% e até 18%. Modelos: GPT-4o e GPT-4o-mini (GSM-Symbolic); o1, o3-mini, Claude Sonnet 3.7 e DeepSeek-R1 (AIME); tamanhos não informados."
+        },
+        {
+          "id": "F02.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "cerca de 1,5 vez; 33 exemplos",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "O estudo de caso SWE-Features usa 33 PRs do Aider e do ComfyUI; em orçamentos baixos o ganho é de até cerca de 1,5 vez menos tokens, e em orçamentos altos o raciocínio na hora foi melhor. A dependência da previsibilidade da pergunta consta no resumo."
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "abriu": "sim",
+      "identificador_conferido": "https://langchain-ai.github.io/langmem/concepts/conceptual_guide/",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "documentação oficial do LangMem (página aberta); data não conferida na página",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "A página descreve duas formas de formar memória: no caminho quente, durante a conversa, com atualização imediata e mais latência e carga de decisão para o agente; e em segundo plano, depois da conversa ou de um tempo parado, sem atrasar as respostas e com tendência a captar mais, ao custo de atraso. O gerenciador de memória extrai, atualiza, remove e consolida memórias, e uma opção controla se pode criar novas.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não traz medição de latência, recall ou custo.",
+        "Não compara qualidade entre segundo plano e caminho quente.",
+        "Não fala de modelo pequeno nem de CPU; o ano 2025 do leitor não foi conferido na página."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F03.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Descrição qualitativa conferida; a página diz que o segundo plano tende a captar mais do que vale lembrar."
+        },
+        {
+          "id": "F03.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Operações de extrair, atualizar, remover e consolidar conferem; a opção chamada enable_inserts controla a criação de memórias novas (útil para perfis, que só atualizam)."
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "abriu": "sim",
+      "identificador_conferido": "https://docs.letta.com/guides/agents/architectures/sleeptime",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "documentação oficial da Letta (página aberta); ano não conferido na página",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "A página descreve o recurso chamado dreaming: subagentes em segundo plano revisam conversas recentes e atualizam a memória, disparados após um número de passos do agente ou quando o contexto é compactado. A memória fica num sistema de arquivos com Git, que o agente pode inspecionar. Há uma opção em que uma segunda conversa em segundo plano revisa e ajusta as atualizações antes de aplicar, gastando mais tokens e sem pedir aprovação humana.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não traz medida de desempenho nem de qualidade da memória.",
+        "Não informa que modelos foram testados.",
+        "Não diz o que o subagente recebe além das conversas recentes."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F04.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Gatilhos (passos concluídos ou compactação), memória em sistema de arquivos com Git e ausência de interrupção do trabalho ativo conferem."
+        },
+        {
+          "id": "F04.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "A opção de o agente revisar antes de aplicar existe, usa mais tokens e não pede aprovação de pessoa."
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2508.19828",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv v5 não tem comentários nem evento; a pesquisa do leitor citou ACL 2026, que não vi em página primária)",
+      "referencia_abnt_corrigida": "YAN, Sikuan et al. Memory-R1: Enhancing Large Language Model Agents to Manage and Utilize Memories via Reinforcement Learning. arXiv preprint arXiv:2508.19828 [cs.CL], 2026. Disponível em: https://arxiv.org/abs/2508.19828. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Treina por reforço (PPO e GRPO) um Gerenciador de Memória que escolhe ADD, UPDATE, DELETE e NOOP e um agente de resposta, só com a correção da resposta como recompensa, usando 152 pares de pergunta e resposta de treino. Em LoCoMo, MSC e LongMemEval supera as linhas de base com modelos de 3B a 14B, e o ajuste por reforço do gerenciador pesa nas ablações.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não compara papel separado contra o mesmo agente escrevendo e respondendo no mesmo passo.",
+        "É memória de diálogo pessoal, não documentação, e depende de treino por reforço que o projeto não tem.",
+        "Não confirma venue; a página primária não cita ACL."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F05.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "152 perguntas de treino",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "A página confirma o Gerenciador com ADD, UPDATE, DELETE e NOOP e os 152 pares de treino (mais 81 de validação e 1.307 de teste). As cláusulas sem subconjunto adversarial e sem rótulo de operação não foram conferidas uma a uma, mas o treino só com correção da resposta consta."
+        },
+        {
+          "id": "F05.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "43,14 contra 30,61 (Qwen 7B); 45,02 contra 30,41 (LLaMA 8B)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabela 1 confere nos dez números citados (Qwen-2.5-7B: 30,61; 34,64; 39,51; 41,72; 43,14. LLaMA-3.1-8B: 30,41; 35,04; 42,81; 41,05; 45,02)."
+        },
+        {
+          "id": "F05.c",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "45,0 para 37,5; 41,0 para 34,5",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Seção 4.4: sem o ajuste por reforço no LLaMA-3.1-8B o F1 cai de 45,0 para 37,5 (GRPO) e de 41,0 para 34,5 (PPO). O apêndice A.1 traz o exemplo do gerenciador sem treino que apaga duas memórias e reinsere uma, onde o treinado faz um UPDATE; é um exemplo, não uma frequência medida."
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2605.06614",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv lista só 11 páginas, 6 figuras e 3 tabelas; sem evento)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O SkillOS treina por reforço (GRPO) um curador Qwen3-8B que mantém um repositório de habilidades em Markdown, com executor congelado. O curador recebe a trajetória, um rótulo de correção dado por um juiz de LLM e habilidades relacionadas recuperadas por BM25, e devolve operações de inserir, atualizar e apagar. No ALFWorld com executor Qwen3-8B vai de 47,9 sem memória a 61,2.",
+      "o_que_a_fonte_nao_afirma": [
+        "O curador de 8B sem treino só chegou a 53,1; o ganho principal vem do treino por reforço.",
+        "Não testou 7B em CPU nem documentação técnica.",
+        "Não compara curador separado contra o mesmo executor escrevendo no mesmo passo; é preprint. Não li a parte final (cerca de 52 mil caracteres) da página."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F06.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Entrada (trajetória, rótulo de juiz de LLM sobre o executor congelado, habilidades por BM25) e saída (chamadas de inserir, atualizar, apagar sobre arquivos Markdown) conferem; curador Qwen3-8B com GRPO."
+        },
+        {
+          "id": "F06.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "61,2 contra 53,1 (sem treino) e 50,7 (Gemini instruído)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabela 1: 47,9 sem memória, 53,1 sem treino, 50,7 com Gemini-2.5-Pro como curador, 61,2 treinado. Tabela 3: ablações caem 2,6, 1,2 e 3,9 pontos (faixa de 1,2 a 3,9 confere). A frase sobre testes com Qwen3-32B e Gemini como executores não foi conferida."
+        }
+      ]
+    },
+    {
+      "id": "F07",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2308.10144",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "AAAI-24 (38ª conferência), visto no campo de comentários do arXiv",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O ExpeL extrai insights em texto depois das tarefas, com um passo separado que vê pares de trajetória falha e sucesso ou lotes de trajetórias bem-sucedidas, e decide ADD, EDIT, UPVOTE ou DOWNVOTE; cada insight começa com contagem 2 e sai ao chegar a zero. No HotpotQA, o extrator gpt-4 rende 39,0 e o gpt-3.5-turbo 32,0.",
+      "o_que_a_fonte_nao_afirma": [
+        "Só modelos de API (gpt-4-0613 e gpt-3.5-turbo); nada com modelo aberto pequeno.",
+        "Não compara o mesmo modelo escrevendo no caminho da tarefa contra papel separado.",
+        "Mede sucesso da tarefa depois dos insights, não a qualidade de cada insight. Volume e número da edição (v. 38, n. 17) da referência não foram conferidos."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F07.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "contagem inicial 2; lotes de 8 e 4",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Seção 4.2: entrada de par falha e sucesso ou lote de L trajetórias bem-sucedidas, com L igual a 8 (HotpotQA e ALFWorld) e 4 (WebShop); operações ADD, EDIT, UPVOTE, DOWNVOTE; contagem inicial 2; remoção em zero; extrator gpt-4-0613."
+        },
+        {
+          "id": "F07.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "39,0 contra 32,0 (gpt-3.5) e 29,0 (com reflexões)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabela 3: ReAct 28,0; insights à mão 32,0; insights com reflexões 29,0; gpt-3.5-turbo 32,0; ExpeL com gpt-4 39,0. Os autores atribuem a queda com reflexões a alucinações nelas. Observação: 29,0 ainda fica um ponto acima do ReAct."
+        }
+      ]
+    },
+    {
+      "id": "F08",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2308.00352",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ICLR 2024, visto em proceedings.iclr.cc (a página do arXiv não traz o evento)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O MetaGPT organiza agentes em papéis de uma linha de montagem de software (produto, arquitetura, gerência de projeto, engenharia, teste) que trocam documentos e diagramas estruturados por um espaço comum de mensagens. A ablação acrescenta papéis ao engenheiro e a executabilidade sobe de 1,0 para 4,0 com custo maior; a comparação de modelos mostra GPT-4 melhor que GPT-3.5 e o Deepseek Coder 33B pior que os dois.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não trata de base de conhecimento nem de documentação como papel próprio.",
+        "Nenhum modelo de 7B; o menor é o Deepseek Coder 33B.",
+        "A ablação de papéis cobre quatro configurações e não inclui o testador, e os papéis acrescentados mudam também a entrada do engenheiro."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F08.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "cinco papéis",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Cinco papéis (produto, arquitetura, gerência de projeto, engenharia, QA) e comunicação por documentos e diagramas com espaço de mensagens com assinatura por papel; a vantagem sobre conversa livre é argumentada, sem comparação numérica direta."
+        },
+        {
+          "id": "F08.b",
+          "veredito": "parcial",
+          "numero_que_a_fonte_sustenta": "executabilidade 1,0 para 4,0; revisões 10 para 2,5; produto mais gerência de projeto 2,0 contra produto mais arquitetura 2,5",
+          "afirmacao_corrigida_pt": "Ao acrescentar papéis ao engenheiro sozinho, a executabilidade foi de 1,0 para 4,0 e as revisões de 10 para 2,5, com custo de US$ 0,915 para US$ 1,385; a subida não é monótona (engenheiro mais produto e gerência de projeto ficou em 2,0, abaixo de engenheiro mais produto e arquitetura, 2,5).",
+          "motivo": "Números conferem (executabilidade 1,0 para 4,0; revisões 10 para 2,5; custo US$ 0,915 para US$ 1,385; esses 4,0 e 2,5 são da configuração engenheiro mais produto, arquitetura e gerência de projeto). A não monotonicidade foi descrita com os papéis trocados: o que ficou abaixo foi engenheiro mais produto e gerência de projeto (2,0), que perde para engenheiro mais produto e arquitetura (2,5)."
+        },
+        {
+          "id": "F08.c",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "3,8 e 1,2 contra 2,8 e 2,4; Deepseek Coder 33B 1,4 e 2,6",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabela 5 (cinco tarefas do SoftwareDev): GPT-4 3,8 e 1,2 revisões; GPT-3.5 2,8 e 2,4; Deepseek Coder 33B 1,4 e 2,6, ou seja, abaixo dos dois."
+        }
+      ]
+    },
+    {
+      "id": "F09",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2504.08725",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ACL 2025 (aceito, segundo o campo de comentários do arXiv; a página não diz demonstração de sistema, o que o leitor escreveu não foi visto por mim)",
+      "referencia_abnt_corrigida": "YANG, Dayu et al. DocAgent: A Multi-Agent System for Automated Code Documentation Generation. In: ANNUAL MEETING OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS (ACL), 2025. arXiv:2504.08725. Disponível em: https://arxiv.org/abs/2504.08725. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "O DocAgent usa Leitor, Buscador, Redator, Verificador e um Orquestrador com limite de iterações para documentar código em ordem topológica. O único experimento de ablação troca essa ordem por uma ordem aleatória e a veracidade cai (94,64% para 86,75% com GPT-4o mini; 87,76% para 83,06% com CodeLlama-34B). Não há ablação do verificador.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não isola o efeito do verificador; o 95,74% contra 45,04% está na tabela 3 e compara com um baseline de preenchimento de código com modelo diferente.",
+        "Menor modelo do sistema: CodeLlama-34B.",
+        "Os números do artigo têm inconsistências internas: o texto dá utilidade 3,69 e 2,39 onde a tabela 4 dá 3,88 e 2,35, e algumas razões de veracidade não batem com as contagens ao lado."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F09.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Papéis e roteamento conferem: formato volta ao Redator, informação faltante volta ao Leitor, limite de iterações no Orquestrador. Modelos: GPT-4o mini e CodeLlama-34B-instruct. A demonstração de sistema não conferi."
+        },
+        {
+          "id": "F09.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "veracidade 94,64 para 86,75 (GPT-4o mini); 87,76 para 83,06 (CodeLlama-34B)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Tabelas 4 e 5 conferem os números citados; veracidade em 50 componentes sorteados; nenhuma ablação de verificador ou leitor. Aviso: a própria fonte tem números internos que não fecham (ver o que a fonte não afirma), então citar com cautela."
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2605.20616",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página diz apenas Preprint)",
+      "referencia_abnt_corrigida": "YE, Chongrui et al. Auto-Dreamer: Learning Offline Memory Consolidation for Language Agents. arXiv preprint arXiv:2605.20616 [cs.CL], 2026. Disponível em: https://arxiv.org/abs/2605.20616. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Propõe um consolidador de memória que roda fora das sessões: lê uma região de um banco de memória tipado, consulta entradas e as trajetórias de origem com chamadas limitadas e escreve um conjunto compacto que substitui a região. É iniciado do Qwen3-14B e treinado por GRPO só no ScienceWorld; o agente é congelado (Qwen3.5-9B em ALFWorld e ScienceWorld, Gemini-3-flash no WebArena). Na tabela 2, o escritor por sessão sozinho rende menos que a consolidação, treinada ou não.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não traz baseline com o mesmo agente consolidando no mesmo passo; o writer-only é um escritor por sessão sem consolidação.",
+        "O consolidador treinado usa reforço; a variante sem treino é um pipeline de reescrita da região.",
+        "Jogos e navegação; nada de documentação técnica. Não li o final da página (cerca de 69 mil caracteres) e a referência do leitor estava sem autores."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F10.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Descrição do consolidador, da região como entrada, das trajetórias de origem e da substituição pela região compacta conferem com o resumo; modelos do agente e do consolidador conferem. A cláusula de a região ser somente de leitura não foi conferida literalmente."
+        },
+        {
+          "id": "F10.b",
+          "veredito": "parcial",
+          "numero_que_a_fonte_sustenta": "ALFWorld 48,0 para 59,2 (sem treino) e 60,2 (treinado); ScienceWorld 29,6, 31,4 e 41,1; WebArena 44,2, 46,6 e 52,3",
+          "afirmacao_corrigida_pt": "Na ablação, só o escritor por sessão deu 48,0 no ALFWorld, 29,6 no ScienceWorld e 44,2 no WebArena; a variante sem treino do consolidador deu 59,2, 31,4 e 46,6; a treinada, 60,2, 41,1 e 52,3 (taxa de sucesso, em %).",
+          "motivo": "Tabela 2 confere os números (writer-only 48,0, 29,6, 44,2; sem treino 59,2, 31,4, 46,6; treinado 60,2, 41,1, 52,3). A frase com muito menos tokens de memória na variante sem treino não foi confirmada: o resumo só diz que a memória ativa é bem menor que a do melhor baseline, e não comparei com o writer-only."
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2605.12978",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz comentários nem evento; o NeurIPS 2026 citado pelo leitor não foi visto por mim)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Mostra que memórias reescritas continuamente por um LLM costumam piorar mesmo quando partem de boas experiências: o GPT-5.4 resolve os 19 problemas ARC-AGI do subconjunto sem memória e cai a 52,6% na rodada 10 de consolidação em fluxo, enquanto consolidar o lote de uma vez fica no teto. Guardar episódios brutos fica competitivo e, no ambiente controlado, rende cerca do dobro de quem é forçado a consolidar.",
+      "o_que_a_fonte_nao_afirma": [
+        "Na parte lida só aparecem GPT-5.4, GPT-5.4-mini e GPT-5-nano; nada de modelo aberto pequeno (o apêndice não foi lido).",
+        "Não compara curador separado contra o mesmo agente escrevendo; contrasta consolidar sempre, escolher e nunca.",
+        "Resumo (54% de falhas) e introdução (46%) divergem entre si e da figura 2 (52,6% de acerto implica cerca de 47% de falhas). A página tem v2 de 29/08/2026; li a versão atual."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F11.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "100% para 52,6% na rodada 10",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Figura 2: subconjunto de 19 problemas, 100% sem memória, 52,6% na rodada 10 em fluxo; consolidação do lote inteiro fica no teto. A divergência 54% e 46% entre resumo e introdução também confere."
+        },
+        {
+          "id": "F11.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "cerca do dobro (do resumo)",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "O resumo diz que quem retém episódios brutos por padrão tem cerca do dobro da acurácia de quem é forçado a consolidar e recomenda tratar o bruto como evidência primária e controlar a consolidação; os números exatos estão em apêndice que não li."
+        },
+        {
+          "id": "F11.c",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "perda de 17 a 38 pontos; 0,64 para 0,20",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Legenda da figura 3: consolidar em fluxo perde cerca de 17 a 38 pontos contra o lote inteiro. Seção 4.1: a memória de workflows no WebShop cai de 0,64 com 8 exemplos para 0,20 com 128, igual à base sem memória (sucesso em 50 episódios)."
+        }
+      ]
+    },
+    {
+      "id": "F12",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2509.25140",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ICLR 2026, visto no campo de comentários da página do arXiv (v2 de 16/03/2026)",
+      "referencia_abnt_corrigida": "OUYANG, Siru et al. ReasoningBank: Scaling Agent Self-Evolving with Reasoning Memory. In: INTERNATIONAL CONFERENCE ON LEARNING REPRESENTATIONS (ICLR), 2026. arXiv:2509.25140 [cs.AI]. Disponível em: https://arxiv.org/abs/2509.25140. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "O ReasoningBank extrai estratégias de raciocínio das trajetórias do próprio agente, de sucessos e falhas, e as devolve na próxima tarefa. A extração é um passo separado com o mesmo modelo do agente, o rótulo de sucesso ou falha vem de um juiz de LLM sem verdade de referência e a consolidação é só acrescentar. Mede em navegação e engenharia de software, com modelos de API.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não compara o mesmo agente escrevendo no passo da tarefa contra o extrator separado.",
+        "Resultados com modelos abertos menores ficam em apêndice que não li.",
+        "Navegação na web; não é documentação técnica nem diagnóstico. Não li os últimos 25 mil caracteres da página."
+      ],
+      "afirmacoes": [
+        {
+          "id": "F12.a",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "no máximo 3 itens por trajetória",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "Entrada de trajetória com consulta, rótulo de juiz de LLM, prompts diferentes para sucesso e falha, no máximo 3 itens por trajetória, mesmo modelo do agente, temperatura 1,0 na extração e 0,0 no juiz, consolidação por simples adição. A parte de o juiz ver estado final e saída não foi conferida; os modelos citados (Gemini-2.5, Claude-3.7) também só constam por confiança no primeiro leitor."
+        },
+        {
+          "id": "F12.b",
+          "veredito": "confirmada",
+          "numero_que_a_fonte_sustenta": "72,7% de concordância; 46,5 para 49,7",
+          "afirmacao_corrigida_pt": "",
+          "motivo": "72,7% de concordância do juiz no WebArena-Shopping com Gemini-2.5-flash; juízes simulados de 70% a 90% dão desempenho parecido e 100% dá o melhor; falhas elevam o Shopping de 46,5 para 49,7, enquanto o AWM cai de 44,4 para 42,2."
+        }
+      ]
+    }
+  ]
+}

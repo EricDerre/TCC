@@ -16,6 +16,7 @@ import datetime as dt
 import hashlib
 import inspect
 import json
+import re
 import sys
 import traceback
 from pathlib import Path
@@ -82,6 +83,35 @@ def gravar_hashes() -> dict[str, str | None]:
                                   "com CRLF lido como LF, para valer depois de um clone em outra máquina."}}
     ARQUIVO_HASHES.write_text(json.dumps(dados, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     return areas
+
+
+# ! Alteração de IA - Revisar: (11/11/2026) função nova, chamada pelos lançadores com `--registrar-ponte <pasta>`: acrescenta ao registro das áreas só de leitura a
+# pasta de uma ponte de versão nova, e só ela. Recusa se a pasta não for `fase3b_ponte_*`, se não existir, se alguma área já registrada tiver mudado ou sumido, ou se
+# a própria ponte já estiver registrada com outro conteúdo. As outras linhas do registro e a data dele ficam como estavam; o acréscimo entra em `acrescimos`.
+# ! Motivo: a regra R6 manda rodar a ponte quando o Ollama muda de versão, e a ponte cria uma pasta `resultados_alvo/fase3b_ponte_<versão>`. Como o teste das áreas
+# só de leitura compara as pastas `fase3b_*` com o registro, toda ponte nova fazia a bateria falhar, e a bateria roda antes de cada corrida: em 11/11/2026 a fila
+# rodou a ponte da 0.40.15 e a corrida 25 parou em seguida. `--gravar-hashes` regrava tudo e apagaria o aviso de uma mudança de verdade; aqui o resto é conferido antes.
+def registrar_ponte(nome: str, areas: dict[str, Path] | None = None, arquivo: Path | None = None) -> str:
+    areas = _areas_so_leitura() if areas is None else areas
+    arquivo = ARQUIVO_HASHES if arquivo is None else arquivo
+    if not re.fullmatch(r"fase3b_ponte_\w+", nome) or nome == "fase3b_ponte_":
+        raise ValueError(f"{nome}: só a pasta de uma ponte de versão (fase3b_ponte_<versão>) entra por aqui")
+    if nome not in areas or not areas[nome].is_dir():
+        raise ValueError(f"{nome}: a pasta não existe em resultados_alvo")
+    dados = json.loads(arquivo.read_text(encoding="utf-8"))
+    gravado = dados["areas"]
+    mudaram = sorted(n for n, h in gravado.items() if n != nome and (n not in areas or _hash_conteudo(areas[n]) != h))
+    if mudaram:
+        raise ValueError(f"áreas só de leitura alteradas ou ausentes desde a gravação: {mudaram}; a ponte {nome} não foi registrada")
+    agora = _hash_conteudo(areas[nome])
+    if nome in gravado:
+        if gravado[nome] != agora:
+            raise ValueError(f"{nome} já está no registro com outro conteúdo: a pasta da ponte mudou depois de registrada")
+        return "ja_registrada"
+    gravado[nome] = agora
+    dados.setdefault("acrescimos", []).append({"area": nome, "em": dt.datetime.now().isoformat(timespec="seconds"), "por": "testar_fase4.py --registrar-ponte"})
+    arquivo.write_text(json.dumps(dados, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    return "registrada"
 
 
 # ----------------------------------------------------------------------------- P0: ambiente
@@ -194,6 +224,57 @@ def teste_areas_so_leitura_intocadas():
     assert set(agora) == set(gravado), (sorted(set(agora) ^ set(gravado)))
     diferentes = sorted(nome for nome in agora if agora[nome] != gravado[nome])
     assert not diferentes, f"áreas só de leitura alteradas desde a gravação: {diferentes}"
+
+
+# ! Alteração de IA - Revisar: (11/11/2026) teste de `registrar_ponte`, escrito antes da função: a pasta de uma ponte de versão nova entra no registro das áreas só de
+# leitura sem regravar as outras, e nada entra se outra área mudou, se a pasta não é de ponte ou se a ponte já registrada mudou de conteúdo.
+# ! Motivo: em 11/11/2026 a fila das corridas 25, 26 e 27 rodou a ponte da versão 0.40.15 do Ollama, que cria a pasta `resultados_alvo/fase3b_ponte_04015`, e a corrida
+# 25 parou em 9 segundos: `teste_areas_so_leitura_intocadas` acusou a pasta nova como diferença contra o registro de 04/11, e a bateria roda antes de toda corrida.
+# Regravar o registro inteiro (`--gravar-hashes`) esconderia uma mudança de verdade em outra área; por isso só a pasta da ponte entra, e só com o resto intacto.
+def teste_registrar_ponte_acrescenta_so_a_pasta_nova_e_recusa_o_resto():
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        raiz = Path(d)
+        for nome, texto in (("fase3", "a"), ("fase3b_ponte_0344", "b"), ("fase3b_ponte_09999", "c"), ("fase3b_ponte_08888", "d"), ("fase3b_cruzada_qwen", "e")):
+            (raiz / nome).mkdir()
+            (raiz / nome / "x.json").write_text(texto, encoding="utf-8")
+        areas = {p.name: p for p in sorted(raiz.iterdir())}
+        arquivo = raiz / "hashes.json"
+        antigas = {n: _hash_conteudo(areas[n]) for n in ("fase3", "fase3b_ponte_0344")}
+        arquivo.write_text(json.dumps({"gravado_em": "2026-11-04T20:17:05", "areas": antigas, "tag_ia": {"alteracao": "x", "motivo": "y"}}), encoding="utf-8")
+        assert registrar_ponte("fase3b_ponte_09999", areas, arquivo) == "registrada"
+        dados = json.loads(arquivo.read_text(encoding="utf-8"))
+        assert dados["areas"] == {**antigas, "fase3b_ponte_09999": _hash_conteudo(areas["fase3b_ponte_09999"])}, dados["areas"]
+        assert dados["gravado_em"] == "2026-11-04T20:17:05" and dados["tag_ia"] == {"alteracao": "x", "motivo": "y"}, "o resto do registro não muda"
+        assert [a["area"] for a in dados["acrescimos"]] == ["fase3b_ponte_09999"] and dados["acrescimos"][0]["em"], dados["acrescimos"]
+        # de novo, com o mesmo conteúdo: nada a fazer, e o arquivo fica byte a byte
+        antes = arquivo.read_bytes()
+        assert registrar_ponte("fase3b_ponte_09999", areas, arquivo) == "ja_registrada" and arquivo.read_bytes() == antes
+
+        def recusa(nome: str, trecho: str) -> None:
+            antes = arquivo.read_bytes()
+            try:
+                registrar_ponte(nome, areas, arquivo)
+            except ValueError as e:
+                assert trecho in str(e), (nome, str(e))
+                assert arquivo.read_bytes() == antes, "recusou e não gravou"
+                return
+            raise AssertionError(f"{nome} devia ser recusada")
+
+        # só pasta de ponte de versão, e que exista
+        recusa("fase3", "ponte de versão")
+        recusa("fase3b_cruzada_qwen", "ponte de versão")
+        recusa("fase3b_ponte_nao_existe", "não existe")
+        # outra área já registrada mudou: a ponte nova não entra
+        (raiz / "fase3" / "x.json").write_text("mudou", encoding="utf-8")
+        recusa("fase3b_ponte_08888", "fase3")
+        (raiz / "fase3" / "x.json").write_text("a", encoding="utf-8")
+        # a ponte já registrada mudou de conteúdo
+        (raiz / "fase3b_ponte_09999" / "x.json").write_text("outro", encoding="utf-8")
+        recusa("fase3b_ponte_09999", "fase3b_ponte_09999")
+        (raiz / "fase3b_ponte_09999" / "x.json").write_text("c", encoding="utf-8")
+        assert registrar_ponte("fase3b_ponte_08888", areas, arquivo) == "registrada"
+        assert [a["area"] for a in json.loads(arquivo.read_text(encoding="utf-8"))["acrescimos"]] == ["fase3b_ponte_09999", "fase3b_ponte_08888"]
 
 
 # ----------------------------------------------------------------------------- P1: trilha v2
@@ -1503,7 +1584,11 @@ def teste_executar_fase4_calibracao_e_tela_partes_puras():
     # ! Alteração de IA - Revisar: (04/11/2026, P7) o modo `avaliacao_trilha` entra na tupla.
     # ! Motivo: a corrida 22 é `executar_fase4.py --modo avaliacao_trilha` (plano aprovado, seção 5, P7).
     # (05/11, decisões 91 e 92) experimento_prompt e ineditos, as corridas 23 e 24, em corridas_em_texto.py
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")   # (01/11, P4) cura, (03/11, P5) biblioteca, (04/11, P6) cenarios, (04/11, P7) avaliacao_trilha
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) a tupla ganha `segundo_passe` (a corrida 26, o segundo passe do diagnóstico).
+    # ! Motivo: a corrida 26 roda por `executar_fase4.py --modo segundo_passe`, como as outras corridas em texto; a tupla é fixada inteira, e o modo novo entra com os testes dele.
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) a tupla ganha `analista` (a corrida 27, o analista de documentação com a ficha curta do caso).
+    # ! Motivo: a corrida 27 roda por `executar_fase4.py --modo analista`; a tupla é fixada inteira, e o modo novo entra com os testes dele.
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")   # (01/11, P4) cura, (03/11, P5) biblioteca, (04/11, P6) cenarios, (04/11, P7) avaliacao_trilha, (10/11, decisao 116) sem_notas
 
     def reg(caso: str, causa: str, resposta: str) -> dict:
         return {"caso": caso, "gabarito": {"causa_raiz": causa, "campo_afetado": None},
@@ -1679,7 +1764,15 @@ def teste_rodar_fase4_ps1_com_bom_sem_travessao_e_modos_novos():
     # ! Motivo: a corrida 22 é `rodar_fase4.ps1 -Modo avaliacao_trilha -Saida fase4_trilha` (plano aprovado, seção 6).
     # ! Alteração de IA - Revisar: (05/11/2026, decisões 91 e 92) os modos `experimento_prompt` e `ineditos` entram no ValidateSet.
     # ! Motivo: a corrida 23 é `rodar_fase4.ps1 -Modo experimento_prompt -Saida fase4_experimento` e a 24, `-Modo ineditos -Saida fase4_ineditos`.
-    assert 'ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")' in texto, "os modos novos entram no ValidateSet"
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) o modo `sem_notas` (corrida 25) entra no ValidateSet.
+    # ! Motivo: a corrida 25 é `rodar_fase4.ps1 -Modo sem_notas -Saida fase4_sem_notas`: a biblioteca de produção sem as notas do modelo, em texto (ficha 63 opção b).
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) o modo `segundo_passe` (corrida 26) entra no ValidateSet.
+    # ! Motivo: a corrida 26 é `rodar_fase4.ps1 -Modo segundo_passe -Saida fase4_segundo_passe`: um segundo pedido de diagnóstico, com os verbetes seguintes da busca, só nos casos das
+    # corridas 22 e 24 em que o selo baixo ou a FONTE divergente acendeu (ficha 66 opção b).
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) o modo `analista` (corrida 27) entra no ValidateSet.
+    # ! Motivo: a corrida 27 é `rodar_fase4.ps1 -Modo analista -Saida fase4_analista`: o analista de documentação com a ficha curta do caso, nos 54 casos de aprendizado da
+    # corrida 20 (ficha 67 opção b).
+    assert 'ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")' in texto, "os modos novos entram no ValidateSet"
     assert '($Modo -eq "cenarios")' in texto, "o modo cenarios passa --repeticoes ao executor"
     assert '($Modo -eq "avaliacao_trilha")' in texto and "[switch]$SemSeletor" in texto and "--sem-seletor" in texto, "o modo avaliacao_trilha e -SemSeletor"
     assert "avaliacao_trilha" in texto.split("$ComModelo = ", 1)[1].split("\n", 1)[0], "o modo avaliacao_trilha é um modo com modelo (Ollama, RAM, ponte)"
@@ -2270,7 +2363,11 @@ def teste_executar_fase4_modo_cura_partes_puras():
     # ! Motivo: a corrida 21 é `executar_fase4.py --modo cenarios` (plano aprovado, seção 5, P6).
     # ! Alteração de IA - Revisar: (04/11/2026, P7) a tupla ganha `avaliacao_trilha` (a corrida 22).
     # ! Motivo: plano aprovado, seção 5 (P7); o teste fixa a tupla inteira para um modo novo nunca entrar sem o seu teste.
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) a tupla ganha `segundo_passe` (a corrida 26, o segundo passe do diagnóstico).
+    # ! Motivo: a corrida 26 roda por `executar_fase4.py --modo segundo_passe`, como as outras corridas em texto; a tupla é fixada inteira, e o modo novo entra com os testes dele.
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) a tupla ganha `analista` (a corrida 27, o analista de documentação com a ficha curta do caso).
+    # ! Motivo: a corrida 27 roda por `executar_fase4.py --modo analista`; a tupla é fixada inteira, e o modo novo entra com os testes dele.
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")   # (10/11, decisao 116) sem_notas
     ap = ex.montar_parser()
     a = ap.parse_args(["--modo", "cura", "--saida", "x"])
     assert a.repeticoes == 5 and a.formas == "harness,php" and a.roteiros is None and a.modos is None
@@ -3177,7 +3274,11 @@ def teste_executar_fase4_modo_biblioteca_partes_puras():
     # ! Motivo: a corrida 21 é `executar_fase4.py --modo cenarios` (plano aprovado, seção 5, P6).
     # ! Alteração de IA - Revisar: (04/11/2026, P7) a tupla ganha `avaliacao_trilha` (a corrida 22).
     # ! Motivo: plano aprovado, seção 5 (P7); o teste fixa a tupla inteira para um modo novo nunca entrar sem o seu teste.
-    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos")
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) a tupla ganha `segundo_passe` (a corrida 26, o segundo passe do diagnóstico).
+    # ! Motivo: a corrida 26 roda por `executar_fase4.py --modo segundo_passe`, como as outras corridas em texto; a tupla é fixada inteira, e o modo novo entra com os testes dele.
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) a tupla ganha `analista` (a corrida 27, o analista de documentação com a ficha curta do caso).
+    # ! Motivo: a corrida 27 roda por `executar_fase4.py --modo analista`; a tupla é fixada inteira, e o modo novo entra com os testes dele.
+    assert ex.MODOS == ("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")   # (10/11, decisao 116) sem_notas
     ap = ex.montar_parser()
     a = ap.parse_args(["--modo", "biblioteca", "--saida", "x"])
     assert a.base_ineditos == "corrida12" and a.sem_sonda is False and a.sem_correcao is False and a.teto_proposta == 700
@@ -3315,11 +3416,17 @@ def teste_pontes_conhecidas_ignora_ponte_listada_que_ainda_nao_rodou():
     assert "fase3b_ponte_04014" in a3b.PONTES, a3b.PONTES
     assert a3b.PONTE_DA_CRUZADA == "fase3b_ponte_0344", "a linha de base da cruzada não muda com a ponte nova (decisão 69)"
     original = a3b.PONTES
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) o teste também esvazia a lista das pastas de ponte achadas no disco.
+    # ! Motivo: `pontes_conhecidas` passou a achar as pastas fase3b_ponte_* que a lista não traz (a ponte de uma versão nova do Ollama); sem isto a pasta da
+    # ponte 0.40.14, que existe, voltaria pela outra porta e o teste deixaria de simular "a ponte ainda não rodou".
     a3b.PONTES = ["fase3b_ponte_0402", "fase3b_ponte_que_nao_rodou"]
+    no_disco = av.pastas_de_ponte_no_disco
+    av.pastas_de_ponte_no_disco = list   # chamada sem argumento, devolve a lista vazia
     try:
         dado = av.pontes_conhecidas()
     finally:
         a3b.PONTES = original
+        av.pastas_de_ponte_no_disco = no_disco
     corridas = [p["corrida"] for p in dado["pontes"]]
     assert "fase3b_ponte_que_nao_rodou" not in corridas and "fase3b_ponte_0402" in corridas, corridas
     assert ex.versao_precisa_de_ponte("0.40.14", dado) is True and ex.versao_precisa_de_ponte("0.40.2", dado) is False
@@ -4178,7 +4285,12 @@ def teste_rodar_fase4_ps1_cada_modo_chama_uma_leitura_que_o_avaliador_aceita():
         return
     arq = EXP / "rodar_fase4.ps1"
     modos = re.findall(r'"([a-z_]+)"', re.search(r'ValidateSet\(([^)]*)\)\]\[string\]\$Modo', arq.read_text(encoding="utf-8-sig")).group(1))
-    assert "avaliacao_trilha" in modos and "experimento_prompt" in modos and "ineditos" in modos and len(modos) == 9, modos
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) o ValidateSet passa a ter 11 modos, com `segundo_passe` (corrida 26).
+    # ! Motivo: este teste roda a linha da leitura para cada modo do `.ps1`; o modo novo precisa de `avaliar_fase4.py --segundo_passe`, senão a corrida terminaria sem gravar a leitura,
+    # como aconteceu na corrida 22.
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) o ValidateSet passa a ter 12 modos, com `analista` (corrida 27).
+    # ! Motivo: o modo novo precisa de `avaliar_fase4.py --analista`, que este teste exercita pela linha da leitura do `.ps1`.
+    assert "avaliacao_trilha" in modos and "experimento_prompt" in modos and "ineditos" in modos and "sem_notas" in modos and "segundo_passe" in modos and "analista" in modos and len(modos) == 12, modos
     caminho = "'" + str(arq).replace("'", "''") + "'"
     lista = ",".join(f"'{m}'" for m in modos)
     roteiro = "\n".join([
@@ -5667,17 +5779,355 @@ def teste_corridas_em_texto_viram_modos_do_executor_e_do_avaliador():
     lido = av.montar_parser().parse_args(["--experimento_prompt", "--saida", "fase4_experimento"])
     assert lido.experimento_prompt is True
     assert av.montar_parser().parse_args(["--ineditos", "--saida", "fase4_ineditos"]).ineditos is True
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) o modo `sem_notas` (corrida 25) entra no executor, na lista dos modos com modelo e no avaliador.
+    # ! Motivo: a corrida roda pelo mesmo comando das outras (`rodar_fase4.ps1 -Modo sem_notas`), que chama a leitura pelo nome do modo.
+    assert "sem_notas" in ex.MODOS and "sem_notas" in ex.MODOS_COM_MODELO
+    assert ex.montar_parser().parse_args(["--modo", "sem_notas", "--saida", "fase4_sem_notas"]).modo == "sem_notas"
+    assert av.montar_parser().parse_args(["--sem_notas", "--saida", "fase4_sem_notas"]).sem_notas is True
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) o modo `segundo_passe` (corrida 26) entra no executor, na lista dos modos com modelo e no avaliador.
+    # ! Motivo: a corrida roda pelo mesmo comando das outras (`rodar_fase4.ps1 -Modo segundo_passe`), que chama a leitura pelo nome do modo.
+    assert "segundo_passe" in ex.MODOS and "segundo_passe" in ex.MODOS_COM_MODELO
+    assert ex.montar_parser().parse_args(["--modo", "segundo_passe", "--saida", "fase4_segundo_passe"]).modo == "segundo_passe"
+    assert av.montar_parser().parse_args(["--segundo_passe", "--saida", "fase4_segundo_passe"]).segundo_passe is True
+    # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) o modo `analista` (corrida 27) entra no executor, na lista dos modos com modelo e no avaliador.
+    # ! Motivo: a corrida roda pelo mesmo comando das outras (`rodar_fase4.ps1 -Modo analista`), que chama a leitura pelo nome do modo.
+    assert "analista" in ex.MODOS and "analista" in ex.MODOS_COM_MODELO
+    assert ex.montar_parser().parse_args(["--modo", "analista", "--saida", "fase4_analista"]).modo == "analista"
+    assert av.montar_parser().parse_args(["--analista", "--saida", "fase4_analista"]).analista is True
+
+
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 63 opção b, decisão 116) testes da corrida 25 (`experimento_sem_notas.py`, modo `sem_notas`), escritos antes da
+# ligação: a fumaça de ponta a ponta com o Ollama de mentira (um caso de cada banco, a retomada, a cópia sem notas na pasta da corrida, nenhum texto de nota no
+# prompt, o registro com as 37 chaves), a recusa de rodar a corrida inteira numa versão do Ollama sem ponte, o que o lançador pergunta sobre a ponte, a ponte de
+# uma versão nova achada pela pasta, e o lançador `rodar_experimento_sem_notas.ps1`.
+# ! Motivo: a corrida custa cerca de duas horas na janela do Eric (a ponte da versão nova e as 72 inferências); uma falha de ligação só apareceria lá. A versão
+# 0.40.15 do Ollama, instalada hoje, não tem ponte: o lançador roda a ponte antes, pelo `rodar_fase3b.ps1` que já rodou as quatro anteriores, e a pasta dela
+# precisa entrar em pontes.json mesmo sem estar na lista de `analisar_fase3b.PONTES`.
+def teste_corrida25_roda_de_ponta_a_ponta_e_retoma():
+    import biblioteca as bib
+    import diagnostico_ao_vivo as dv
+    import evolucao_biblioteca as evo
+    import executar_bateria
+    import executar_fase4 as ex
+    import experimento_sem_notas as esn
+    import recuperacao as rec
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "sem_notas", "--saida", "_fumaca_semnotas", "--casos", "1"])
+    resposta = _RESPOSTA_DA_FUMACA.replace("campo ausente", "campo_ausente")
+    producao = bib.carregar(dv.PASTA_CURADA)
+    primeiro = ex.fixture_sem_gabarito(esn.casos_do_experimento(1)[0][1])
+    assert " Notas: " in dv.montar_prompt(producao, rec.Indice(producao), primeiro, 3)[1], "controle: com a biblioteca de produção o prompt do mesmo caso traz as notas"
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.14"):
+        assert esn.rodar(args) == 0
+        assert len(chamadas) == 2, "um caso de cada banco"
+        assert all(" Notas: " not in c["prompt"] for c in chamadas), "nenhuma nota do modelo chega ao prompt"
+        assert esn.rodar(args) == 0
+        assert len(chamadas) == 2, "relançar retoma de onde parou"
+        raiz = tmp / "_fumaca_semnotas"
+        condicoes = json.loads((raiz / "condicoes_fase4.json").read_text(encoding="utf-8"))
+        copia = raiz / "bibliotecas" / "qwen2.5_7b" / esn.PASTA_DA_COPIA
+        assert condicoes["parcial"] is True and condicoes["modo"] == "sem_notas" and condicoes["casos_por_banco"] == {"avaliacao": 1, "ineditos": 1}, condicoes
+        assert condicoes["biblioteca"]["hash"] == evo.hash_biblioteca(copia) and condicoes["biblioteca"]["origem_hash"] == evo.hash_biblioteca(dv.PASTA_CURADA) != condicoes["biblioteca"]["hash"]
+        assert all(not bib.notas(v) for v in bib.carregar(copia)) and not (copia / "aprendidos").exists()
+        registros = executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "diagnosticos__sem_notas.jsonl")
+        assert len(registros) == 2 and tuple(registros[0]) == dv.CHAVES_OFICIAIS and registros[0]["gabarito"] is None
+        assert all(r["notas_no_contexto"] == 0 and r["verbetes_novos_no_contexto"] == [] and r["biblioteca_versao"] == condicoes["biblioteca"]["hash"] for r in registros), registros
+        assert [x["banco"] for x in executar_bateria.ler_jsonl(raiz / "sem_notas.jsonl")] == ["avaliacao", "ineditos"]
+        assert len(executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "logprobs__sem_notas.jsonl")) == 2
+        bruto = esn.ler("_fumaca_semnotas")
+        dado = esn.resumir(bruto["registros"], bruto["linhas"], bruto["casos_por_banco"], bruto["referencias"], bruto["condicoes"], ponte=bruto["ponte"], corrida16=bruto["corrida16"],
+                           corrida="_fumaca_semnotas")
+        assert dado["resumo"]["casos"] == 2 and dado["resumo"]["completo"] is False and dado["resumo"]["sai_do_ruido"] is None, dado["resumo"]
+        assert [b["casos"] for b in dado["por_banco"]] == [1, 1] and dado["contra_a_corrida_16"]["casos"] == 1, dado["por_banco"]
+        assert "tb_f4_semnotas_resumo" in esn.render(dado)
+
+
+def teste_corrida25_inteira_nao_roda_numa_versao_do_ollama_sem_ponte():
+    import contextlib
+    import io
+
+    import executar_fase4 as ex
+    import experimento_sem_notas as esn
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "sem_notas", "--saida", "_fumaca_semnotas_r6"])
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: ("", .9, []), chamadas, versao="9.9.9"):
+        assert esn.rodar(args) == 2 and chamadas == [], "sem ponte da versão, a corrida inteira para antes de chamar o modelo"
+        assert "regra R6" in (tmp / "_fumaca_semnotas_r6" / "fase4.log").read_text(encoding="utf-8")
+        # o que o lançador pergunta: a versão no ar e a pasta da ponte que falta
+        assert esn.situacao_da_ponte() == {"versao": "9.9.9", "ponte": None, "falta": "fase3b_ponte_999"}
+        saida = io.StringIO()
+        with contextlib.redirect_stdout(saida):
+            assert esn.main(["--ponte"]) == 0
+        # ! Alteração de IA - Revisar: (11/11/2026) a saída ganhou a linha `pasta=`, vazia quando a ponte falta e com a pasta da ponte quando ela existe.
+        # ! Motivo: o lançador precisa do nome da pasta para pôr a ponte no registro das áreas só de leitura antes da bateria da corrida (`--registrar-ponte`).
+        assert saida.getvalue().splitlines() == ["versao=9.9.9", "falta=fase3b_ponte_999", "pareavel=", "pasta="], saida.getvalue()
+    with _ollama_de_mentira_v2(lambda prompt, corpo: ("", .9, []), chamadas, versao="0.40.14"):
+        s = esn.situacao_da_ponte()
+        assert s["versao"] == "0.40.14" and s["falta"] is None and s["ponte"]["corrida"] == "fase3b_ponte_04014" and s["ponte"]["pareavel"] is True, s
+        saida = io.StringIO()
+        with contextlib.redirect_stdout(saida):
+            assert esn.main(["--ponte"]) == 0
+        assert saida.getvalue().splitlines() == ["versao=0.40.14", "falta=", "pareavel=sim", "pasta=fase3b_ponte_04014"], saida.getvalue()
+
+
+def teste_pontes_conhecidas_acha_a_ponte_de_uma_versao_nova_pela_pasta():
+    import analisar_fase3b as a3b
+    import avaliar_fase4 as av
+    # as listadas vêm primeiro, na ordem da lista; depois as pastas fase3b_ponte_* que a lista não traz
+    assert av.nomes_das_pontes(["fase3b_ponte", "fase3b_ponte_0344"], ["fase3b_ponte_0344", "fase3b_ponte_04015", "fase3b_ponte", "fase3b_cruzada_qwen", "fase3b_ponte_04016"]) == \
+        ["fase3b_ponte", "fase3b_ponte_0344", "fase3b_ponte_04015", "fase3b_ponte_04016"]
+    no_disco = av.pastas_de_ponte_no_disco()
+    assert "fase3b_ponte_04014" in no_disco and all(n.startswith("fase3b_ponte_") for n in no_disco), no_disco
+    # as pontes da lista continuam entrando (a de uma versão nova, rodada depois, entra a mais), e pontes.json bate com as pontes rodadas
+    corridas = [p["corrida"] for p in av.pontes_conhecidas()["pontes"]]
+    assert all(n in corridas for n in a3b.PONTES), corridas
+    assert av._conferir_ou_gravar_json(RA / "fase4" / "pontes.json", av.pontes_conhecidas(), True) == 0, "pontes.json não bate com as pontes rodadas: rode avaliar_fase4.py --pontes"
+
+
+def teste_rodar_experimento_sem_notas_ps1_faz_a_ponte_antes_e_a_leitura_depois():
+    arq = EXP / "rodar_experimento_sem_notas.ps1"
+    cru = arq.read_bytes()
+    assert cru[:3] == b"\xef\xbb\xbf", "o .ps1 precisa de BOM: o Windows PowerShell 5.1 lê sem BOM na codepage ANSI"
+    texto = cru.decode("utf-8-sig")
+    assert "—" not in texto and "→" not in texto, "sem travessão nem seta: sem BOM o travessão fecha a string no meio"
+    assert "de IA - Revisar" in texto and "! Motivo:" in texto
+    corpo = texto[texto.index("\nparam("):]   # os comandos, sem o cabeçalho de comentários, que cita os mesmos nomes
+    # ! Alteração de IA - Revisar: (11/11/2026) a ordem ganhou o registro da pasta da ponte nas áreas só de leitura, entre a ponte e a corrida.
+    # ! Motivo: sem esse passo a bateria que `rodar_fase4.ps1` roda antes da corrida acusa a pasta nova da ponte, e a corrida 25 para (foi o que aconteceu em 11/11/2026).
+    ordem = [corpo.index(trecho) for trecho in ('"experimento_sem_notas.py", "--ponte"', '".\\rodar_fase3b.ps1" -Modo ponte', '"avaliar_fase4.py", "--pontes"',
+                                                 '"testar_fase4.py", "--registrar-ponte"', '".\\rodar_fase4.ps1" -Modo sem_notas', "gerar_dashboard.py")]
+    assert ordem == sorted(ordem), ("a ordem do lançador: perguntar pela ponte, rodar a ponte, regravar pontes.json, registrar a pasta da ponte, rodar a corrida (que grava a "
+                                    "leitura) e regerar o painel")
+    assert "-Modelos qwen2.5:7b" in texto and "fase4_sem_notas" in texto and "$LASTEXITCODE" in texto
+    if not shutil.which("powershell"):
+        print("  (pulado com aviso: powershell não está no PATH; a sintaxe do lançador não foi conferida)")
+        return
+    import base64
+    import subprocess
+    caminho = "'" + str(arq).replace("'", "''") + "'"
+    roteiro = ("$tokens = $null; $erros = $null; [System.Management.Automation.Language.Parser]::ParseFile(" + caminho + ", [ref]$tokens, [ref]$erros) | Out-Null; "
+               "if ($erros.Count) { $erros | ForEach-Object { Write-Output $_.Message }; exit 1 }")
+    r = subprocess.run(["powershell", "-NoProfile", "-EncodedCommand", base64.b64encode(roteiro.encode("utf-16-le")).decode("ascii")], capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", timeout=90, check=False)
+    assert r.returncode == 0, (r.stdout, r.stderr)
+
+
+# ! Alteração de IA - Revisar: (10/11/2026, ficha 66 opção b, decisão 120) testes da corrida 26 (`experimento_segundo_passe.py`, modo `segundo_passe`), escritos antes da
+# ligação: a fumaça de ponta a ponta com o Ollama de mentira (o primeiro caso com sinal de cada banco, a retomada, a cópia fiel da biblioteca de produção na pasta da
+# corrida, o pedido com os verbetes das posições 4 a 6 da busca e sem os três do primeiro pedido, o registro com as 37 chaves, a linha de resumo com os dois sinais da
+# segunda resposta e a leitura parcial sem veredito) e a recusa de rodar a corrida inteira numa versão do Ollama sem ponte.
+# ! Motivo: a corrida roda na janela do Eric, depois da ponte e da corrida 25; um nome errado na ligação entre a busca refeita, o diagnóstico do agente e a trilha só
+# apareceria lá. O segundo pedido entra no diagnóstico do agente pelo parâmetro `extras` com k = 0, sem mudar `diagnostico_ao_vivo.py`, e só a corrida simulada prova que
+# esse caminho monta o pedido certo e grava tudo o que a leitura precisa.
+def teste_corrida26_roda_de_ponta_a_ponta_e_retoma():
+    import biblioteca as bib
+    import diagnostico_ao_vivo as dv
+    import evolucao_biblioteca as evo
+    import executar_bateria
+    import executar_fase4 as ex
+    import experimento_segundo_passe as sp
+    import recuperacao as rec
+    import trilha as tr
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "segundo_passe", "--saida", "_fumaca_segpasse", "--casos", "1"])
+    resposta = _RESPOSTA_DA_FUMACA.replace("campo ausente", "campo_ausente")
+    producao = bib.carregar(dv.PASTA_CURADA)
+    indice = rec.Indice(producao)
+    hash_producao = evo.hash_biblioteca(dv.PASTA_CURADA)
+    itens = sp.casos_com_sinal(1)
+    assert [b for b, _, _ in itens] == ["avaliacao", "ineditos"]
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.14"):
+        assert sp.rodar(args) == 0
+        assert len(chamadas) == 2, "um segundo pedido para o primeiro caso com sinal de cada banco"
+        for chamada, (_, caso, primeira) in zip(chamadas, itens):
+            ordem = [v for _, v in rec.pontuar(indice, dv.caso_da_busca(ex.fixture_sem_gabarito(caso)))]
+            assert [v["id"] for v in ordem[:3]] == primeira["registro"]["verbetes_ids"]
+            assert all(bib.render(v) in chamada["prompt"] for v in ordem[3:6]), "os verbetes das posições 4 a 6 da busca estão no pedido"
+            assert all(bib.render(v) not in chamada["prompt"] for v in ordem[:3]), "os três verbetes do primeiro pedido não voltam"
+            assert primeira["registro"]["resposta"].strip() not in chamada["prompt"], "o pedido não leva a primeira resposta"
+        assert sp.rodar(args) == 0
+        assert len(chamadas) == 2, "relançar retoma de onde parou"
+        raiz = tmp / "_fumaca_segpasse"
+        condicoes = json.loads((raiz / "condicoes_fase4.json").read_text(encoding="utf-8"))
+        assert condicoes["parcial"] is True and condicoes["modo"] == "segundo_passe" and condicoes["corrida"] == 26 and condicoes["verbetes_seguintes"] == 3 and condicoes["posicoes"] == [4, 5, 6], condicoes
+        assert condicoes["casos_por_banco"] == {"avaliacao": 1, "ineditos": 1} and condicoes["limite_de_tokens"] == 1409, condicoes
+        copia = raiz / "bibliotecas" / "qwen2.5_7b" / f"epoca-{dv.VERSAO_CURADA}"
+        assert condicoes["biblioteca"]["hash"] == evo.hash_biblioteca(copia) == hash_producao == evo.hash_biblioteca(dv.PASTA_CURADA), "a cópia é fiel e a produção só é lida"
+        registros = executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "diagnosticos__segundo_passe.jsonl")
+        assert len(registros) == 2 and tuple(registros[0]) == dv.CHAVES_OFICIAIS and registros[0]["gabarito"] is None
+        assert all(r["biblioteca_versao"] == hash_producao and len(r["verbetes_ids"]) == 3 and r["versao_ollama"] == "0.40.14" for r in registros), registros
+        linhas = executar_bateria.ler_jsonl(raiz / "segundo_passe.jsonl")
+        assert [x["banco"] for x in linhas] == ["avaliacao", "ineditos"] and all(x["posicoes"] == [4, 5, 6] for x in linhas), linhas
+        assert all(isinstance(x["selo_baixo"], bool) and isinstance(x["fonte_divergente"], bool) and x["selo"] in ("alto", "medio", "baixo") and x["p_rotulo"] for x in linhas), linhas
+        assert [x["verbetes_ids"] for x in linhas] == [r["verbetes_ids"] for r in registros]
+        assert len(executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "logprobs__segundo_passe.jsonl")) == 2
+        lida = tr.Trilha.carregar(raiz / "trilha_segundo_passe.jsonl")
+        assert sum(1 for x in lida.linhas() if '"tipo": "entrada"' in x or '"tipo":"entrada"' in x) == 2, "uma entrada por caso, sem repetir na retomada"
+        bruto = sp.ler("_fumaca_segpasse")
+        dado = sp.resumir(bruto["registros"], bruto["linhas"], bruto["casos_por_banco"], bruto["primeiras"], bruto["condicoes"], ponte=bruto["ponte"], corrida="_fumaca_segpasse")
+        r = dado["resumo"]
+        assert r["segundos_passes"] == 2 and r["casos"] == 72 and r["completo"] is False and r["sai_do_ruido"] is None, r
+        assert "tb_f4_segpasse_resumo" in sp.render(dado)
+
+
+def teste_corrida26_inteira_nao_roda_numa_versao_do_ollama_sem_ponte():
+    import executar_fase4 as ex
+    import experimento_segundo_passe as sp
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "segundo_passe", "--saida", "_fumaca_segpasse_r6"])
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: ("", .9, []), chamadas, versao="9.9.9"):
+        assert sp.rodar(args) == 2 and chamadas == [], "sem ponte da versão, a corrida inteira para antes de chamar o modelo"
+        assert "regra R6" in (tmp / "_fumaca_segpasse_r6" / "fase4.log").read_text(encoding="utf-8")
+
+
+# ! Alteração de IA - Revisar: (11/11/2026, ficha 67 opção b, decisão 121) testes da corrida 27 (`experimento_analista.py`, modo `analista`): a fumaça de ponta a ponta com o
+# Ollama de mentira (dois casos de aprendizado, a retomada, o prompt com as instruções fixas na frente, o verbete da causa certa e a ficha, sem o corpo HTTP e sem o prompt
+# do diagnóstico; a resposta lida e passada pelos cinco portões; a biblioteca de antes do lote intacta; o registro com o que a leitura precisa) e a recusa de rodar a
+# corrida inteira numa versão do Ollama sem ponte.
+# ! Motivo: a corrida roda na janela do Eric, no fim da fila; um nome errado na ligação entre a trilha da corrida 20, a ficha, a inferência e os portões só apareceria lá,
+# depois de mais de duas horas de máquina das corridas anteriores.
+def teste_corrida27_roda_de_ponta_a_ponta_e_retoma():
+    import biblioteca as bib
+    import evolucao_biblioteca as evo
+    import executar_bateria
+    import executar_fase4 as ex
+    import experimento_analista as ea
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "analista", "--saida", "_fumaca_analista", "--casos", "2"])
+    resposta = ("PROPOSTA\nOPERACAO: nota\nPALAVRAS_CHAVE: nenhuma\nSINTOMAS: nenhum\n"
+                "TEXTO: A interface monta a tela com o que a API devolve e mostra o erro de leitura quando o corpo da resposta nao segue o contrato.\n"
+                "MOTIVO: O status 200 da resposta nao bastou para a tela montar a lista de produtos.\nFIM")
+    base = ea.base_da_corrida_20()
+    hash_base = evo.hash_biblioteca(base)
+    itens = ea.casos_da_corrida_20()[:2]
+    verbetes = {v["id"]: v for v in bib.carregar(base)}
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.14"):
+        assert ea.rodar(args) == 0
+        assert len(chamadas) == 2, "uma chamada do analista por caso"
+        for chamada, item in zip(chamadas, itens):
+            prompt = chamada["prompt"]
+            ouro = verbetes[item["caso"]["gabarito"]["causa_raiz"]]
+            assert prompt.startswith(ea.INSTRUCOES) and bib.render(ouro) in prompt and ea.ficha_do_caso(item, verbetes) in prompt and prompt.rstrip().endswith(ea.LEMBRETE_FINAL)
+            assert "CAUSA_RAIZ:" not in prompt and "CORREÇÃO DESTE CASO" not in prompt, "o prompt do diagnóstico e o da proposta de hoje não entram"
+            assert not item["corpo_http"] or len(item["corpo_http"]) < 20 or item["corpo_http"][:40] not in prompt, "o corpo HTTP não vai ao analista"
+        assert ea.rodar(args) == 0
+        assert len(chamadas) == 2, "relançar retoma de onde parou"
+        raiz = tmp / "_fumaca_analista"
+        condicoes = json.loads((raiz / "condicoes_fase4.json").read_text(encoding="utf-8"))
+        assert (condicoes["modo"], condicoes["corrida"], condicoes["parcial"], condicoes["casos"], condicoes["casos_da_corrida_20"]) == ("analista", 27, True, 2, 54), condicoes
+        assert condicoes["hash_das_instrucoes"] == ea.HASH_DAS_INSTRUCOES and condicoes["instrucoes"] == ea.INSTRUCOES and condicoes["biblioteca"]["hash"] == hash_base, condicoes["biblioteca"]
+        registros = executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / ea.NOME_DO_REGISTRO)
+        assert len(registros) == 2 and [r["caso"] for r in registros] == [i["caso"]["id"] for i in itens]
+        for r in registros:
+            assert (r["operacao"], r["abstencao"], r["malformado"], r["versao_ollama"], r["biblioteca_versao"]) == ("nota", False, None, "0.40.14", hash_base), r["caso"]
+            assert r["destino"] in ea.DESTINOS and set(r["portoes"]) == set(ea.PORTOES) and r["portoes"]["forma"]["passa"] is True and r["portoes"]["validador"] is not None, r["destino"]
+            assert r["ficha"] and r["prompt"].startswith(ea.INSTRUCOES) and r["hash_das_instrucoes"] == ea.HASH_DAS_INSTRUCOES and r["resposta"] == resposta
+            assert "gabarito" not in r and r["verbete"] and isinstance(r["selecao"]["lacuna"], bool)
+        assert len(executar_bateria.ler_jsonl(raiz / "analista.jsonl")) == 2
+        assert evo.hash_biblioteca(base) == hash_base, "a biblioteca de antes do lote da corrida 20 só é lida"
+        bruto = ea.ler("_fumaca_analista")
+        dado = ea.resumir(bruto["registros"], bruto["corrida20"], bruto["condicoes"], ponte=bruto["ponte"], corrida="_fumaca_analista", revisao=bruto["revisao"])
+        assert dado["resumo"]["casos"] == 2 and dado["resumo"]["completo"] is False and dado["resumo"]["propostas"] == 2 and bruto["revisao"] is None, dado["resumo"]
+        assert all(l["veredito"].startswith("sem veredito") for l in dado["leituras"]), dado["leituras"]
+        assert "tb_f4_analista_resumo" in ea.render(dado)
+
+
+def teste_corrida27_inteira_nao_roda_numa_versao_do_ollama_sem_ponte():
+    import executar_fase4 as ex
+    import experimento_analista as ea
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "analista", "--saida", "_fumaca_analista_r6"])
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: ("", .9, []), chamadas, versao="9.9.9"):
+        assert ea.rodar(args) == 2 and chamadas == [], "sem ponte da versão, a corrida inteira para antes de chamar o modelo"
+        assert "regra R6" in (tmp / "_fumaca_analista_r6" / "fase4.log").read_text(encoding="utf-8")
+
+
+# ! Alteração de IA - Revisar: (11/11/2026, decisões 116, 120 e 121) teste da fila `rodar_fila_pre_fase5.ps1`, escrito antes dela: o arquivo com BOM, só ASCII, sem
+# travessão nem seta e com a tag; a ordem dos comandos (a corrida 25 pelo lançador dela, sem o painel; a ponte conferida antes das corridas 26 e 27; cada corrida pelo
+# `rodar_fase4.ps1`, que grava a leitura; a página da revisão às cegas; o painel uma vez só, no fim); a sintaxe conferida pelo PowerShell; e a fila executada de verdade
+# em modo `-Simular`, que imprime cada comando sem rodar nada: as três corridas na ordem, a escolha das etapas e a recusa de uma etapa que não existe.
+# ! Motivo: a fila roda cerca de quatro horas na janela do Eric, e um erro de sintaxe, um parâmetro com o nome errado ou uma etapa fora de ordem só apareceria lá, com a
+# máquina parada. O modo `-Simular` deixa o teste percorrer o mesmo caminho do lançamento real (os parâmetros, a escolha das etapas, a leitura das estimativas nas
+# prévias) sem subir o Ollama.
+def teste_rodar_fila_pre_fase5_ps1_roda_as_tres_corridas_em_ordem_e_simula_sem_rodar_nada():
+    arq = EXP / "rodar_fila_pre_fase5.ps1"
+    cru = arq.read_bytes()
+    assert cru[:3] == b"\xef\xbb\xbf", "o .ps1 precisa de BOM: o Windows PowerShell 5.1 lê sem BOM na codepage ANSI"
+    texto = cru.decode("utf-8-sig")
+    assert "—" not in texto and "→" not in texto, "sem travessão nem seta: sem BOM o travessão fecha a string no meio"
+    assert all(ord(c) < 128 for c in texto), "só ASCII: " + repr(sorted({c for c in texto if ord(c) >= 128}))
+    assert "de IA - Revisar" in texto and "! Motivo:" in texto
+    corpo = texto[texto.index("\nparam("):]   # os comandos, sem o cabeçalho de comentários, que cita os mesmos nomes
+    ordem = [corpo.index(trecho) for trecho in ('".\\rodar_experimento_sem_notas.ps1" -SemPainel', '".\\rodar_fase4.ps1" -Modo segundo_passe -Saida fase4_segundo_passe',
+                                                 '".\\rodar_fase4.ps1" -Modo analista -Saida fase4_analista', "revisao_propostas.py", "gerar_dashboard.py", "testar_painel_textos.py",
+                                                 "testar_painel_topicos.py")]
+    assert ordem == sorted(ordem), "a ordem da fila: corrida 25 (com a ponte), corrida 26, corrida 27, a página da revisão às cegas e o painel no fim"
+    assert corpo.count("gerar_dashboard.py") == 1, "o painel é regerado uma vez só, no fim da fila"
+    assert '"experimento_sem_notas.py", "--ponte"' in corpo and '".\\rodar_fase3b.ps1" -Modo ponte' in corpo and "-Modelos qwen2.5:7b" in corpo, "a ponte é conferida antes das corridas 26 e 27"
+    assert "$LASTEXITCODE" in corpo and "exit $Codigo" in corpo, "a fila para na primeira etapa que falhar, com o código dela"
+    # ! Alteração de IA - Revisar: (11/11/2026) a fila também registra a pasta da ponte nas áreas só de leitura antes das corridas 26 e 27.
+    # ! Motivo: se o Ollama se atualizar no meio da fila, a ponte nova cria outra pasta, e a bateria da corrida seguinte pararia como parou a da corrida 25.
+    assert corpo.index('"avaliar_fase4.py", "--pontes"') < corpo.index('"testar_fase4.py", "--registrar-ponte"'), "a pasta da ponte entra no registro depois de a ponte ser lida"
+    if not shutil.which("powershell"):
+        print("  (pulado com aviso: powershell não está no PATH; a sintaxe e a simulação da fila não foram conferidas)")
+        return
+    import base64
+    import subprocess
+    caminho = "'" + str(arq).replace("'", "''") + "'"
+    roteiro = ("$tokens = $null; $erros = $null; [System.Management.Automation.Language.Parser]::ParseFile(" + caminho + ", [ref]$tokens, [ref]$erros) | Out-Null; "
+               "if ($erros.Count) { $erros | ForEach-Object { Write-Output $_.Message }; exit 1 }")
+    r = subprocess.run(["powershell", "-NoProfile", "-EncodedCommand", base64.b64encode(roteiro.encode("utf-16-le")).decode("ascii")], capture_output=True, text=True, encoding="utf-8",
+                       errors="replace", timeout=90, check=False)
+    assert r.returncode == 0, (r.stdout, r.stderr)
+
+    def simular(*opcoes: str):
+        s = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(arq), "-Simular", *opcoes], capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=120, check=False)
+        return s.returncode, [linha.split("SIMULADO: ", 1)[1].strip() for linha in s.stdout.splitlines() if "SIMULADO: " in linha], s.stdout + s.stderr
+
+    codigo, comandos, saida = simular()
+    assert codigo == 0, saida
+    esperado = ["rodar_experimento_sem_notas.ps1 -SemPainel", "experimento_sem_notas.py --ponte", "rodar_fase4.ps1 -Modo segundo_passe -Saida fase4_segundo_passe",
+                "experimento_sem_notas.py --ponte", "rodar_fase4.ps1 -Modo analista -Saida fase4_analista", "revisao_propostas.py --gerar", "gerar_dashboard.py", "testar_painel_textos.py",
+                "testar_painel_topicos.py"]
+    assert len(comandos) == len(esperado) and all(e in c for e, c in zip(esperado, comandos)), comandos
+    # as durações que a fila anuncia vêm das prévias gravadas, e não de um número escrito no .ps1
+    minutos = {nome: json.loads((RA / "fase4" / f"{nome}.json").read_text(encoding="utf-8"))["resumo"] for nome in ("sem_notas_previa", "segundo_passe_previa", "analista_previa")}
+    for trecho in (f"cerca de {minutos['sem_notas_previa']['minutos_estimados_pela_mediana_das_referencias']} minutos", f"cerca de {minutos['segundo_passe_previa']['minutos_estimados']} minutos",
+                   f"cerca de {minutos['analista_previa']['minutos_estimados']} minutos"):
+        assert trecho in saida, (trecho, saida)
+    # só as corridas 26 e 27: a 25 não roda, e a ponte continua sendo conferida antes de cada uma
+    codigo, comandos, saida = simular("-Etapas", "26,27")
+    assert codigo == 0 and not any("rodar_experimento_sem_notas.ps1" in c for c in comandos) and sum("--ponte" in c for c in comandos) == 2, saida
+    assert any("-Modo segundo_passe" in c for c in comandos) and any("-Modo analista" in c for c in comandos), comandos
+    # sem a corrida 27: nem a corrida nem a página da revisão
+    codigo, comandos, saida = simular("-Etapas", "25,26", "-SemPainel")
+    assert codigo == 0 and not any("analista" in c or "revisao_propostas" in c or "gerar_dashboard" in c for c in comandos), comandos
+    assert any("rodar_experimento_sem_notas.ps1" in c for c in comandos) and any("-Modo segundo_passe" in c for c in comandos), comandos
+    # etapa que não existe: a fila recusa antes de rodar qualquer coisa
+    codigo, comandos, saida = simular("-Etapas", "25,30")
+    assert codigo == 2 and comandos == [] and "30" in saida, (codigo, saida)
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--gravar-hashes", action="store_true",
                     help="grava o hash de conteúdo das áreas só de leitura em fixtures_fase4/ e sai")
+    ap.add_argument("--registrar-ponte", metavar="PASTA",
+                    help="acrescenta ao registro das áreas só de leitura a pasta de uma ponte de versão nova (fase3b_ponte_<versão>), conferindo antes as outras, e sai")
     args = ap.parse_args()
     if args.gravar_hashes:
         for nome, h in gravar_hashes().items():
             print(f"{nome}: {h}")
         print(f"gravado em {ARQUIVO_HASHES}")
+        return
+    if args.registrar_ponte:
+        try:
+            situacao = registrar_ponte(args.registrar_ponte)
+        except ValueError as e:
+            print(f"!! {e}", file=sys.stderr)
+            sys.exit(1)
+        print(f"{args.registrar_ponte}: " + ("já estava no registro, com o mesmo conteúdo" if situacao == "ja_registrada" else f"registrada em {ARQUIVO_HASHES}"))
         return
     modulo = sys.modules[__name__]
     testes = [(nome, obj) for nome, obj in vars(modulo).items()

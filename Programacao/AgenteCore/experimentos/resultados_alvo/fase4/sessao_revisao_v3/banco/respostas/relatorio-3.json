@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:42:26.588Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-3",
+  "comentario": "O diagnóstico cravou a causa correta (tempo_de_resposta_excedido) para o sintoma de timeout (espera de 2 segundos num roteiro de 1 segundo). O agente não apontou campo (nenhum), o que está correto para um erro de latência. A falha registrada de \"causa_sem_verbete_que_a_trate\" aponta para uma falha do mecanismo de busca RAG (o verbete tempo_de_resposta_excedido ficou em 7º lugar na busca e não foi entregue ao contexto), mas não do diagnóstico final do Qwen2.5, que superou o contexto limitado com base na forte evidência do prompt (sintoma e observação adicional).",
+  "decidido_em": "2026-11-09T19:43:31.233Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 3,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:44:00.484Z",
+  "segundos": 65,
+  "segundos_relogio": 65,
+  "utilidade": 5
+}

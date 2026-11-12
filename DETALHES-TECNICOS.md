@@ -46,6 +46,16 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 
 ### Fases
 
+<!-- ! Alteração de IA - Revisar: (10/11/2026, tarde) a linha da Pós-Fase 4 e o item da avaliação da trilha passaram a dizer que quase todos os relatórios foram lidos por um analista e que o tempo não foi medido; a linha ganhou a curadoria das leituras.
+     ! Motivo: o texto da manhã dizia que o revisor tinha sido o Eric; ele declarou que passou os relatórios a um analista (decisão 114), e a curadoria foi aplicada (decisão 115). -->
+<!-- ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a linha da Pós-Fase 4 diz que o Q5 também está feito, e o item da avaliação da trilha, abaixo, que a medida com revisor humano foi feita.
+     ! Motivo: o pacote Q5 fez a medida que estava em aberto pela decisão 95 (ficha 40, opção b, decisão 113); sem as frases, a tabela pararia no Q4 e o item diria que a medida ainda está por fazer. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) a linha da Pós-Fase 4 diz que o Q4 também está feito.
+     ! Motivo: o pacote Q4 entregou a barra de progresso e o protótipo da seleção pelo diff do Git; sem a frase, a tabela pararia no Q3. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) a linha da Pós-Fase 4 diz que o Q3 também está feito.
+     ! Motivo: o pacote Q3 gerou a árvore de decisão de cada caso das corridas vigentes; sem a frase, a tabela pararia no Q2. -->
+<!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) a linha da Pós-Fase 4 diz o que a fase entrega e que os pacotes Q1 e Q2 estão feitos.
+     ! Motivo: a linha ainda dizia "Não iniciada" com o texto da decisão 94; a fase foi especificada e planejada em 07/11/2026 (decisões 101 a 106) e dois pacotes já saíram. -->
 | Fase | O que é | Estado |
 |---|---|---|
 | 1 | Ambiente e sistemas cobaia | Concluída |
@@ -55,7 +65,7 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 | 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
 | Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Concluída em 26/10/2026 (relatório fechado; parte B da pesquisa integrada; especificação da trilha aprovada; corrida 13 cancelada) |
 | 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Concluída em 06/11/2026: pacotes P0 a P8 e corridas 16 a 24 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 cumprida na corrida 18d, no limite exato, decisões 97 e 98; medida com revisor humano em aberto, decisão 95) |
-| Pós-Fase 4 | Ajustes e ideias focadas no visual do projeto: tipo de resposta e formatação, com possibilidade de gráficos ou de um dashboard dinâmico (decisão 94) | Não iniciada |
+| Pós-Fase 4 | O que chega ao analista: relatório por caso no molde do relatório de defeitos da seção 5.5 do CTFL 4.0, camada de leitura dos verbetes, filtros determinísticos de prolixidade e objetividade, árvore de decisão e barra de progresso antes da Fase 5; hub central e integração com o Git depois dela (decisões 94 e 101 a 106) | Em andamento desde 07/11/2026: Q1 (relatório v3 e camada de leitura) e Q2 (filtros de texto, `filtros_de_texto.py`) feitos em 07/11/2026; Q3 (árvore de decisão por caso, `arvore_de_decisao.py`) e Q4 (barra de progresso, `progresso.py`, e protótipo da seleção pelo diff do Git, `impacto_git.py`) feitos em 08/11/2026; Q5 (a sessão de revisão dos 36 relatórios v3 com a árvore da corrida 24, lidos quase todos por um analista a quem o Eric passou os relatórios, `revisao_v3.py`, `sessao_revisao.py --perfil v3` e `avaliar_fase4.py --revisao_v3`) e a curadoria das 39 leituras dos verbetes (`ferramentas/curadoria_leituras.py`) feitos em 10/11/2026 |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
 
 ### Resultado principal
@@ -110,9 +120,11 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 - Cura de localizador: 160 de 160 quebras armadas curadas em código.
 - Ensaio dos dez cenários, com uma repetição por cenário: 10 de 10 com Task Success (Wilson 95% de 72,2 a 100,0%; a rodada anterior deu 9 de 10, antes de um conserto na cura) e MTTR médio de 74,0 s com o prompt dentro do limite e os sinais novos da busca (72,5 s na corrida anterior; 105,2 s antes do corte), sem linha de base manual ainda.
 - Experimento dos itens da decisão 55, nos 90 casos: 70 acertos com o exemplar e 67 com os rótulos em palavras, contra 68 na corrida 16, sem se separar do acaso (decisão 91).
+<!-- ! Alteração de IA - Revisar: (10/11/2026, depois das fichas 62 e 63) o item da avaliação da trilha passou a dizer que os 36 relatórios foram lidos por um analista de QA da empresa.
+     ! Motivo: o Eric declarou no quadro quem é o analista e que as 36 respostas são dele (decisão 117, que fecha a ficha 62); o item dizia 35 de 36 e que faltava declarar quem ele é. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026) a medida com revisor humano passou a em aberto (decisão 95), e a tabela das fases ganhou a Pós-Fase 4 (decisão 94).
      ! Motivo: o Eric pediu "em aberto" nesta data; o texto dizia limitação declarada, sem nova sessão. -->
-- Avaliação da trilha: a medida com revisor humano da especificação da trilha está em aberto: será feita depois da Pós-Fase 4 (decisão 95).
+- Avaliação da trilha: a medida com revisor humano da especificação da trilha foi feita em parte em 09 e 10/11/2026, no pacote Q5 da Pós-Fase 4: os 36 relatórios lidos por um analista de QA da empresa, a quem o Eric passou os relatórios (fichas 40 e 62, decisões 113, 114 e 117; leitura em `resultados_alvo/fase4/leitura_revisao_v3.md`). Ficaram medidas a adesão, a localização do erro e a utilidade; o tempo até a decisão não, e é um leitor só.
 
 #### O que falta antes da Fase 5
 
@@ -217,6 +229,8 @@ dois clientes diferentes o consumindo).
 
 ## Estrutura do repositório
 
+<!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q1) a árvore ganhou `biblioteca_producao_leitura/` ao lado de `biblioteca_producao/`.
+     ! Motivo: a camada de leitura dos verbetes nasceu nesta data (decisão 103) e mora fora da biblioteca que o modelo lê; sem a linha, quem abre o repositório não saberia de qual das duas pastas o analista lê. -->
 ```
 TCC/
 ├── README.md                                # porta de entrada: o projeto, as figuras e como rodar
@@ -247,7 +261,8 @@ TCC/
     │   ├── base_conhecimento/              # biblioteca de documentação original do cobaia (Fase 2-B); nunca escrita por script
     │   │   ├── negocio/ contratos/ erros/ falhas_injetadas/ defeitos_conhecidos/
     │   │   └── INDICE.md                   # gerado por validar_banco.py --indice
-    │   ├── biblioteca_producao/            # cópia curada da biblioteca L1 do qwen2.5:7b (ponto de partida da Fase 4)
+    │   ├── biblioteca_producao/            # cópia curada da biblioteca L1 do qwen2.5:7b (ponto de partida da Fase 4); é o que o modelo lê
+    │   ├── biblioteca_producao_leitura/    # camada de leitura dos verbetes (Pós-Fase 4, decisão 103): o que o analista lê; gerada por biblioteca_leitura.py e curada à mão
     │   ├── experimentos/                   # baterias de avaliação dos modelos locais (Fases 2-A, 2-B, 3, 3-B e 4) e os registros em resultados_alvo/
     │   └── requirements.txt
     ├── CobaiaFront/                        # site PHP legado ("Churrascaria Fornalha")
@@ -294,7 +309,11 @@ do PHP, do MariaDB e do Python/venv.
 **Máquina sem administrador (conferido em 26/10/2026 na máquina-alvo i5):** o PHP continua vindo do `winget` em escopo de usuário (`PHP.PHP.8.2`, zip em `%LOCALAPPDATA%\Microsoft\WinGet\Packages`), e o MariaDB foi instalado pelo zip oficial em vez do MSI: extraído em `%LOCALAPPDATA%\MariaDB\mariadb-<versão>-winx64\`, com a pasta de dados criada por `bin\mariadb-install-db.exe --datadir=%LOCALAPPDATA%\MariaDB\data --port=3306` (root sem senha). `run.py` e `install.py` acham o cliente, o servidor e o `my.ini` nesse lugar (`_env_common.py`), e o servidor sobe como processo comum, sem serviço.
 <!-- ! Alteração de IA - Revisar: a frase final passou de "o passo é manual" para o que o install.py faz agora (26/10/2026, à noite).
      ! Motivo: `install.ensure_mariadb_installed` ganhou o caminho portátil (`instalar_mariadb_portatil`: API de downloads, pergunta, SHA-256, extração e `mariadb-install-db.exe`); o README dizia que o passo era manual. -->
-Sem administrador, o `install.py` faz isso sozinho: pergunta antes de baixar, confere o SHA-256 que o site do MariaDB publica, extrai, cria a pasta de dados e segue para o schema e o seed. `COBAIA_MARIADB_PORTATIL=1` dispensa a pergunta e força o portátil mesmo com administrador; `=0` força o MSI do winget. A API da CobaiaAPI sobe por `python -m uvicorn` da venv dela (`run.py`), não pelo lançador `uvicorn.exe`, porque uma venv movida de pasta deixa os lançadores `.exe` sem funcionar e sem mensagem.
+Sem administrador, o `install.py` faz isso sozinho: pergunta antes de baixar, confere o SHA-256 que o site do MariaDB publica, extrai, cria a pasta de dados e segue para o schema e o seed.
+
+<!-- ! Alteração de IA - Revisar: parágrafo novo (07/11/2026, ficha 55): a pasta de dados do MariaDB portátil passou de `%LOCALAPPDATA%\MariaDB\data` para `.mariadb\data` dentro do projeto (fora do git); os binários continuam em `%LOCALAPPDATA%\MariaDB`.
+     ! Motivo: o aplicativo Claude é um pacote MSIX e o que um processo dele grava em `AppData\Local` vai para a pasta privada do pacote; o servidor subido de dentro do app lia o dicionário do InnoDB da cópia privada e as tabelas da cópia real, respondia `ERROR 1932 ... doesn't exist in engine` em todas as tabelas de `ti93phpdb01` e, em 07/11/2026, apagou os `.ibd` da cópia real. Sem o parágrafo, quem lesse a seção procuraria a pasta de dados no lugar antigo. -->
+**Pasta de dados dentro do projeto (desde 07/11/2026):** a pasta de dados do MariaDB portátil fica em `.mariadb\data` na raiz do repositório (ignorada pelo git), criada por `mariadb-install-db.exe --datadir=<projeto>\.mariadb\data --port=3306`; `_env_common.find_mariadb_datadir_config` procura o `my.ini` dela antes dos caminhos antigos, então `install.py`, `run.py`, `restaurar_banco.py` e o `Cobaia.exe` (recompilado em 07/11/2026) usam a mesma pasta, aberta na janela do Eric ou de dentro do app Claude. Motivo: o app Claude é um pacote MSIX, e o que ele grava em `AppData\Local` vai para uma pasta privada do pacote; com a pasta de dados lá, o servidor subido de dentro do app misturava o dicionário do InnoDB de uma cópia com as tabelas da outra e nenhuma tabela existia "no motor" (erro 1932). A pasta do projeto não passa por essa virtualização. `COBAIA_MARIADB_PORTATIL=1` dispensa a pergunta e força o portátil mesmo com administrador; `=0` força o MSI do winget. A API da CobaiaAPI sobe por `python -m uvicorn` da venv dela (`run.py`), não pelo lançador `uvicorn.exe`, porque uma venv movida de pasta deixa os lançadores `.exe` sem funcionar e sem mensagem.
 
 ### O que o instalador faz
 
@@ -478,6 +497,14 @@ isolada, independente do navegador padrão do sistema.
 Site de restaurante ("Churrascaria Fornalha"): cardápio público, busca de
 produtos, formulário de contato (PHPMailer), painel admin com CRUD
 completo, e área de cliente com reservas.
+
+<!-- ! Alteração de IA - Revisar: (11/11/2026) parágrafo novo com a origem do site: o Projeto CHULETA, o autor e a nota que lista o que mudou.
+     ! Motivo: o Eric pediu a citação correta do projeto de onde veio a parte PHP da cobaia; este documento dizia só "cedido por um integrante do grupo", sem nome nem endereço. -->
+O site é o [Projeto CHULETA](https://github.com/pedrohtgoncalvesgit/Projeto-CHULETA),
+de Pedro Henrique Torres Gonçalves, integrante do grupo, cedido pelo autor. Ele
+entrou neste repositório em 31/08/2026 como foi clonado. O que este trabalho
+acrescentou e mudou depois, e a diferença contra o repositório público de
+origem, estão em [`Programacao/CobaiaFront/ORIGEM.md`](Programacao/CobaiaFront/ORIGEM.md).
 
 Rotas principais:
 - `/index.php`: home (destaques + produtos + carrossel)
@@ -877,6 +904,9 @@ O que não coube nas células da tabela:
   - O adaptador remonta a trilha das corridas já gravadas, sem rodar modelo, e diz até onde o prompt remontado está provado.
   - `--errata` recupera do git o texto antigo dos dois casos corrigidos em 28/09.
 - `gerar_relatorio_raciocinio.py`: `--vitrine` grava as trilhas e os relatórios versionados em `resultados_alvo/pre_fase4/` (`--check`, `--colar`).
+  <!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, Q1) o item do relatório v3 e da opção `--v3`.
+       ! Motivo: o gerador ganhou a terceira versão do relatório por caso (decisão 104) e a opção que regera uma corrida inteira; sem o item, quem lê a tabela acharia só a vitrine da Pré-Fase 4. -->
+  - Desde 07/11/2026 (Pós-Fase 4, pacote Q1), `--v3 --saida <corrida>` grava em `relatorios_v3/` da pasta da corrida o relatório v3 de cada trilha com nó de decisão, no molde do relatório de defeitos da seção 5.5 do CTFL 4.0 (os onze campos da 5.5 primeiro, com severidade, prioridade e estado em branco para o analista; depois os seis blocos do v2 em linguagem direta), mais um índice; `--check` confere. Os verbetes são citados pela camada de leitura (`biblioteca_leitura.py`). O relatório v2 continua igual, byte a byte.
 - `gerar_atlas.py`:
   - Mede também a especialização, a validação deixando um caso de fora, as citações e as trocas entre causas de cada corrida e a rota de cada caso.
   - Grava `resultados_alvo/pre_fase4/atlas.{json,md}` (`--check`, `--colar`).
@@ -891,6 +921,16 @@ O que não coube nas células da tabela:
      ! Motivo: o pacote P6 é o dos cenários da Fase 5 e da corrida 21; quem abre o repositório precisa achar o módulo, o modo e o ajudante da linha de base manual pelo nome. -->
 <!-- ! Alteração de IA - Revisar: (04/11/2026 à noite, Fase 4, pacote P7) as linhas de `executar_fase4.py`, `avaliar_fase4.py` e `testar_fase4.py` ganharam a avaliação da própria trilha (modo `avaliacao_trilha`, leitura `--trilha`, testes do P7) e entrou a linha de `avaliacao_trilha.py`.
      ! Motivo: o pacote P7 é o da avaliação da trilha e da corrida 22; quem abre o repositório precisa achar o módulo, o modo e a leitura pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q1) entraram as linhas de `biblioteca_leitura.py` e `testar_pos_fase4.py`, e a pasta `biblioteca_producao_leitura/` na árvore do repositório acima.
+     ! Motivo: o pacote Q1 é o do relatório v3 no molde da seção 5.5 do syllabus e da camada de leitura dos verbetes (decisões 103 e 104); quem abre o repositório precisa achar o gerador, a pasta e os testes pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) entrou a linha de `filtros_de_texto.py`, e a de `testar_pos_fase4.py` passou a cobrir o Q2.
+     ! Motivo: o pacote Q2 é o dos filtros determinísticos de prolixidade e objetividade (plano da Pós-Fase 4, seção 3.3); quem abre o repositório precisa achar o módulo, a calibração e a leitura pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) entraram as linhas de `progresso.py`, `impacto_git.py` e `rodar_fumaca_progresso.ps1`, e a de `testar_pos_fase4.py` passou a cobrir o Q4.
+     ! Motivo: o pacote Q4 é o da barra de progresso e do protótipo da seleção pelo diff do Git (plano da Pós-Fase 4, seções 3.5 e 3.7); quem abre o repositório precisa achar os módulos, os derivados e os testes pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) entrou a linha de `arvore_de_decisao.py`, e a de `testar_pos_fase4.py` passou a cobrir o Q3.
+     ! Motivo: o pacote Q3 é o da árvore de decisão por caso (plano da Pós-Fase 4, seção 3.4); quem abre o repositório precisa achar o módulo, a pasta `arvores/` e os testes pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (11/11/2026, decisões 120 e 121) entraram as linhas de `experimento_segundo_passe.py` (corrida 26), `portoes_de_edicao.py` (medida M1), `experimento_analista.py` (corrida 27) e `rodar_fila_pre_fase5.ps1` (a fila das corridas 25, 26 e 27); os modos e as leituras das duas corridas entraram nas tabelas de `executar_fase4.py` e de `avaliar_fase4.py`, mais abaixo.
+     ! Motivo: são os experimentos em texto e a medida sem modelo que o Eric pediu antes da Fase 5 (fichas 66 e 67); quem abre o repositório precisa achar os módulos, as prévias sem modelo e o lançador pelo nome. A corrida 25 (`experimento_sem_notas.py` e `rodar_experimento_sem_notas.ps1`) ainda não tem linha nesta tabela. -->
 | Script | O que faz | Como rodar |
 |---|---|---|
 | `ambiente_fase4.py` | (P0) Grava `resultados_alvo/fase4/ambiente.json` com as versões do Python, do Playwright, do navegador e do Ollama, o canal do navegador e o que a máquina tem das cobaias (`--check` compara com a máquina atual). | - |
@@ -911,7 +951,18 @@ O que não coube nas células da tabela:
 | `corridas_em_texto.py` | (decisões 91 e 92) As corridas 23 e 24, em texto: as condições do experimento como transformação do prompt pronto, a leitura da linha CAUSA_RAIZ inteira e os resumos das duas. | modos `experimento_prompt` e `ineditos` de `executar_fase4.py` |
 | `conferir_corte_tela.py` | (decisões 90, 96, 97 e 99) Hoje compara com as corridas 18d, 18e e 21d, diz se o prompt ficou igual byte a byte, mede com o Ollama os que mudaram de tamanho (`--medir-tokens`) e grava `teto_prompt_tela.json`; as conferências anteriores ficam em `corte_prompt_tela.json` e `busca_prompt_tela.json`. Monta sem modelo, com as cobaias de verdade, o prompt das corridas 18c e 21c e compara com o guardado: tokens estimados, verbetes recuperados e verbete certo. | grava `resultados_alvo/fase4/corte_prompt_tela.json` |
 | `gerar_conferencia_ineditos.py` | (decisão 92) O documento da conferência dos 36 inéditos: cada caso, o que a corrida 17 viu e a pré-análise. | grava `resultados_alvo/fase4/conferencia_ineditos.{json,md}` |
+| `biblioteca_leitura.py` | (Pós-Fase 4, Q1, decisão 103) A camada de leitura dos verbetes: gera um arquivo por verbete de `biblioteca_producao/` em `biblioteca_producao_leitura/` (mesmo id e mesmos campos do cabeçalho, mais os blocos "O que é", "Como aparece na tela", "O que conferir" e "Onde está no código"; notas do modelo rotuladas como texto do modelo) e confere a camada contra a biblioteca. Um arquivo com `curado: sim` no cabeçalho nunca é regravado. A biblioteca que o modelo lê não muda. | `python biblioteca_leitura.py --gerar` e `--check` |
+| `filtros_de_texto.py` | (Pós-Fase 4, Q2) Os filtros determinísticos de prolixidade e objetividade: mede qualquer texto que chega ao analista (relatório v3, camada de leitura, frase do modelo) e devolve as oito métricas da base D do levantamento §6.15.4, cada uma com o limiar e a fonte (palavras por frase, Flesch adaptado ao português com separador silábico próprio, preenchimento e jargão por listas fechadas, repetição de trigramas, compressão, densidade do domínio, tamanho só como covariável). `--calibrar` mede o corpus de referência (os "! Motivo:" dos comentários de IA do repositório e o exemplo canônico do resumo técnico do Eric, sem copiar texto) e grava os limiares no percentil 95; `--medir` lê arquivos contra eles. Só biblioteca padrão. | `python filtros_de_texto.py --calibrar [--check]` grava `resultados_alvo/fase4/limiares_texto.json`; `python filtros_de_texto.py --medir <arquivo.md>` |
+| `arvore_de_decisao.py` | (Pós-Fase 4, Q3) A árvore de decisão de cada caso, lida da trilha v2 pelo mesmo leitor do relatório v3 e emitida em Markdown (para o analista) e em JSON (para o hub do Q6): um bloco por decisão, na ordem (o que o modelo lê depois da poda e por qual regra; que verbetes entram, com os que ficaram de fora e o sinal que decidiu; a causa contra a segunda, com a confiança em palavras e a taxa de acerto da faixa na calibração, a evidência e a divergência; a cura, quando houve, com os candidatos descartados e o motivo). Cada afirmação leva o rótulo de origem (observado, conferido, declarado, desconhecido; o desconhecido nunca vira percentual), e as linhas do modelo ficam à parte como texto do modelo. Grava `arvores/` (um `.md` e um `.json` por trilha, mais `INDICE.md` e `INDICE.json`) na pasta da corrida, sem tocar no resto, e mede cada Markdown com os filtros do Q2. | `RESULTADOS_DIR=resultados_alvo python arvore_de_decisao.py --saida fase4_tela_v4 [--check]`; `--trilha <id>` imprime uma árvore; `--pasta <pasta>` no lugar de `--saida` |
+| `progresso.py` | (Pós-Fase 4, Q4) A barra de progresso da inferência: estima o tempo em duas fases com as taxas gravadas das respostas anteriores do mesmo modelo nesta máquina (prefill pelos tokens do prompt, estimados pelos caracteres, divididos pela taxa de prefill; geração pela mediana de tokens gerados dividida pela taxa de geração, com o teto como máximo), começa indeterminada com a etapa nomeada, vira determinada sem trocar de forma, nunca recua, chega a 90% na estimativa e segue devagar depois, e Ctrl+C grava "cancelado". Observa a chamada ao modelo por dentro de `cliente_ollama` (`observando`), sem mudar o corpo enviado nem o registro; grava `progresso.json` e `progresso_medidas.jsonl` na pasta da corrida; no terminal redesenha a linha, num log imprime só os marcos. Só biblioteca padrão. | `RESULTADOS_DIR=resultados_alvo python progresso.py --taxas [--check]` grava `resultados_alvo/fase4/taxas_progresso.{json,md}`; `--erro [--check]` grava `erro_progresso.{json,md}`; `--fumaca <pasta da corrida>` resume as medidas de uma corrida real em `fumaca_progresso.{json,md}`; `--demo` mostra a barra sem modelo; a barra entra sozinha em `executar_fase4.py` nos modos com modelo |
+| `impacto_git.py` | (Pós-Fase 4, Q4; protótipo do Q7) A seleção de cenários pelo diff do Git, sem ligar ao agente nem ao hub: o mapa dos verbetes (`arquivos:` e `endpoints:` do cabeçalho da biblioteca de produção, só leitura) e dos cenários (página, páginas abertas pelos passos, includes do PHP, endpoint e os verbetes e arquivos ligados a ele); dado o `git diff --name-only` entre dois commits, diz quais cenários e verbetes são atingidos e por quê, com as três regras da base E (arquivo da aplicação fora do mapa roda tudo, nunca nada; rodada completa periódica; o que ficou de fora é registrado para a conferência contra a rodada completa). Só comandos git de leitura. | `RESULTADOS_DIR=resultados_alvo python impacto_git.py --prova [--check]` grava `resultados_alvo/fase4/impacto_git.{json,md}` (a seleção em cada par de commits que mexeram nas cobaias); `--desde <commit> [--ate HEAD]` mostra a seleção para o que mudou; `--mapa` imprime o mapa |
+| `testar_pos_fase4.py` | Testes sem LLM da Pós-Fase 4 (Q1: o relatório v3 e a camada de leitura, com as trilhas gravadas das corridas 18d, 21d e 24, o hash do prompt fixo e o da biblioteca; Q2: os filtros de texto com três textos de controle, a separação silábica conferida em amostra, o corpus sem cópia de texto, a calibração, a leitura antes e depois com `--check` e a fumaça de que todo relatório v3 passa; Q3: os rótulos de origem e o desconhecido sem percentual, a confiança em palavras com e sem calibração, a árvore de um caso de teste, dois casos reais com divergência e um com cura conferidos campo a campo, as 120 trilhas vigentes geradas com cada nó virando decisão e o Markdown passando nos filtros do Q2, a gravação em `arvores/` com `--check` e a fumaça das árvores gravadas; Q4: a estimativa das duas fases com taxas conhecidas, a fração que nunca recua nem para no fim, a barra indeterminada que vira determinada sem trocar de forma, o estado em JSON gravado e lido de volta, o cancelamento, a integração com um Ollama de mentira com o registro e o corpo enviado iguais aos de antes, as taxas e o erro da estimativa extraídos das corridas vigentes com `--check`, a ligação ao executor e ao `.ps1`, e, no protótipo do Git, o mapa sem alterar a biblioteca, a seleção com as três regras, o diff de um repositório temporário e de um commit conhecido e a prova no histórico com `--check`), no formato de `testar_fase4.py`; roda com o Python do PATH, sem a venv. | `python testar_pos_fase4.py` |
 | `rodar_pendencias_fase4.ps1` | Fila das corridas 18c, 21c e 23 pelo `rodar_fase4.ps1`, parando na primeira que falhar. | janela do Eric |
+| `rodar_fumaca_progresso.ps1` | (Pós-Fase 4, Q4, ficha 60) A fumaça real da barra de progresso num comando só: `rodar_fase4.ps1 -Modo ineditos -Saida fase4_fumaca_progresso -Casos 1`, depois `progresso.py --fumaca` (grava `resultados_alvo/fase4/fumaca_progresso.{json,md}`, com `--check`) e o painel regerado e testado; para na primeira etapa que falhar. | janela do Eric, com o VS Code e o aplicativo Claude fechados (6,5 GB de RAM livre) |
+| `experimento_segundo_passe.py` | (decisão 120) A corrida 26, em texto: um segundo pedido de diagnóstico só nos casos das corridas 22 e 24 com o selo baixo ou a FONTE divergente, com os três verbetes seguintes da mesma busca, e a escolha entre as duas respostas por regra em código fixada antes. | modo `segundo_passe` de `executar_fase4.py`; `python experimento_segundo_passe.py --previa [--check]` grava `segundo_passe_previa.{json,md}` |
+| `portoes_de_edicao.py` | (decisão 121) Os três portões por edição da proposta do analista de documentação (a forma de instrução, os filtros de texto e a busca) e a medida M1: os três aplicados, sem modelo, às propostas da corrida 20, contra a revisão humana do lote. | `python portoes_de_edicao.py --m1 [--check]` grava `portoes_m1.{json,md}` |
+| `experimento_analista.py` | (decisão 121) A corrida 27, a medida M2: o modelo como analista de documentação nos casos de aprendizado da corrida 20, com instruções próprias (hash gravado em cada registro), o verbete da causa certa e a ficha curta do caso; cada proposta passa por cinco portões em código. | modo `analista` de `executar_fase4.py`; `python experimento_analista.py --previa [--check]` grava `analista_previa.{json,md}` |
+| `rodar_fila_pre_fase5.ps1` | Fila das corridas 25, 26 e 27: o lançador da corrida 25 (com a ponte da versão do Ollama), `rodar_fase4.ps1` nos modos `segundo_passe` e `analista`, a página da revisão às cegas e o painel uma vez no fim. Confere a ponte antes de cada corrida e para na primeira etapa que falhar; `-Etapas`, `-SemPainel` e `-Simular`. | janela do Eric, com o VS Code e o aplicativo Claude fechados |
 | `gerar_figuras_documentos.py` (+ `testar_figuras_documentos.py`) | Figuras do README e do documento do TCC, em `Documentacao/figuras/`, e a tabela de cada uma em `dados-das-figuras.md`, tudo lido dos JSON de `resultados_alvo/`. | `../.venv/Scripts/python.exe gerar_figuras_documentos.py` (com matplotlib); `--check` confere sem desenhar |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4. | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
@@ -1023,6 +1074,8 @@ Os 13 filtros da decisão 65:
 
 #### `executar_fase4.py` (+ `rodar_fase4.ps1`): modos
 
+<!-- ! Alteração de IA - Revisar: (11/11/2026, decisões 120 e 121) as linhas dos modos `segundo_passe` (corrida 26) e `analista` (corrida 27) no fim da tabela.
+     ! Motivo: os dois modos entraram no executor e no `.ps1` para as corridas que o Eric roda antes da Fase 5; a tabela é onde se acha o que cada modo grava. O modo `sem_notas` (corrida 25) ainda não tem linha aqui. -->
 | Modo | Corrida | O que faz | O que grava | Opções |
 |---|---|---|---|---|
 | `reproducao` | 17 | Liga o modo de cada caso de avaliação na CobaiaAPI, roda o roteiro, poda, monta o caso ao vivo e decide se a tela reproduz o caso (regra R1). | `reproducao.jsonl`, `fora.json`, `condicoes_fase4.json`, a trilha v2 da corrida e o log com a linha FIM. | `--banco`: `avaliacao`, `ineditos_fase4` ou `todos` |
@@ -1034,11 +1087,16 @@ Os 13 filtros da decisão 65:
 | `avaliacao_trilha` | 22 | Os 36 casos de avaliação lidos do fixture, sem gabarito, e a mutação do seletor nos quatro roteiros de localizador. | `avaliacao.jsonl`, `seletor.jsonl`, os registros de 37 chaves por etapa, a trilha v2 e os relatórios por caso. | `--sem-seletor` (`-SemSeletor`) |
 | `experimento_prompt` | 23 | Os 90 casos em texto, uma condição por item da decisão 55, com a biblioteca e o k da corrida 16. | `qwen2.5_7b/diagnosticos__<condição>.jsonl` |
 | `ineditos` | 24 | Os 36 inéditos da ficha 27 em texto, pelo diagnóstico do agente, com a biblioteca de produção. | `qwen2.5_7b/diagnosticos__ineditos.jsonl`, `logprobs__ineditos.jsonl`, `ineditos.jsonl`, `trilha_ineditos.jsonl` |
+| `segundo_passe` | 26 | O segundo pedido de diagnóstico, em texto, só nos casos das corridas 22 e 24 em que um sinal acendeu, com os verbetes seguintes da mesma busca; a primeira resposta é a gravada. | `qwen2.5_7b/diagnosticos__segundo_passe.jsonl`, `logprobs__segundo_passe.jsonl`, `segundo_passe.jsonl`, `trilha_segundo_passe.jsonl` | `--casos` |
+| `analista` | 27 | O modelo como analista de documentação nos casos de aprendizado da corrida 20, uma proposta por caso, passada em código pelos cinco portões. | `qwen2.5_7b/propostas__analista.jsonl`, `analista.jsonl`, `condicoes_fase4.json` | `--casos`, `--teto-proposta` |
 
 O que não coube nas células da tabela:
 
 - Observações gerais dos modos com modelo (P3 em diante):
   - Todo modo sobe as cobaias e restaura o banco antes.
+  <!-- ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) o item da barra de progresso nos modos com modelo.
+       ! Motivo: a barra entrou em `executar_fase4.com_progresso` para todos os modos que chamam o modelo (plano da Pós-Fase 4, seção 3.5); quem acompanha uma corrida precisa saber onde está o estado e o que sai no log. -->
+  - Desde 08/11/2026 (Pós-Fase 4, Q4), cada inferência mostra a barra de progresso de `progresso.py`: estimativa em duas fases pelas taxas de `resultados_alvo/fase4/taxas_progresso.json` (sem o arquivo, a barra fica indeterminada), estado em `<saida>/progresso.json` e as medidas estimado contra medido em `<saida>/progresso_medidas.jsonl`; no console a barra se redesenha na mesma linha, e quando a saída vai para um arquivo (`saida_completa.log`) saem só os marcos de cada inferência. Ctrl+C grava o estado como cancelado e a corrida para como já parava. A chamada ao modelo e o registro não mudam.
   - A versão do Ollama é conferida a cada caso, e a corrida para se ela mudar.
   - `--casos` faz uma corrida parcial, que nunca grava derivado oficial.
 - `reproducao` (corrida 17):
@@ -1074,6 +1132,10 @@ O que não coube nas células da tabela:
 
 #### `avaliar_fase4.py`: leituras
 
+<!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) a linha de `--texto` no fim da tabela.
+     ! Motivo: a leitura antes e depois dos textos que chegam ao analista é gravada como as outras leituras da fase, com `--check`, e precisa constar aqui. -->
+<!-- ! Alteração de IA - Revisar: (11/11/2026, decisões 120 e 121) as linhas de `--segundo_passe` (corrida 26) e `--analista` (corrida 27), depois da de `--ineditos`.
+     ! Motivo: as duas leituras são gravadas pelo `rodar_fase4.ps1` no fim de cada corrida e lidas pelo painel; a tabela é onde se acha o que cada uma grava. A leitura `--sem_notas` (corrida 25) ainda não tem linha aqui. -->
 | Opção | Corrida | O que lê | O que grava |
 |---|---|---|---|
 | `--reproducao` | 17 | A corrida por classe, nível e modo, com o custo por cenário e os tamanhos. | `resultados_alvo/fase4/reproducibilidade.{json,md}` (`--check`, `--colar`) |
@@ -1089,8 +1151,11 @@ O que não coube nas células da tabela:
 | `--tela` com `--nome tela_v3` e `--titulo`, e `--cenarios` com `--nome cenarios_v3` e `--titulo` | 18c e 21c | As leituras vigentes, com o prompt dentro do limite; a da tela conta também o acerto com e sem o verbete certo no contexto e o acerto por selo. | `tela_v3`, `cenarios_v3` |
 | `--experimento_prompt` | 23 | Cada condição contra a corrida 16, caso a caso: acerto, acurácia balanceada, b e c, trocas de rótulo, a forma da resposta e o custo. | `experimento_prompt.{json,md}` (blocos `tb_f4_exp_*`) |
 | `--ineditos` | 24 | Os 36 inéditos da ficha 27 lidos pelo modelo: acerto, por classe, nível e selo, com e sem o verbete certo no contexto, e a comparação com a corrida 18e. | `ineditos.{json,md}` (blocos `tb_f4_ineditos_*`) |
+| `--segundo_passe` | 26 | O que a segunda resposta consertaria e estragaria se valesse sempre, o que a regra de escolha trocou, por sinal, por banco e pelo lugar do verbete da causa certa, e o teste pareado contra a primeira resposta. | `segundo_passe.{json,md}` (blocos `tb_f4_segpasse_*`) |
+| `--analista` | 27 | A abstenção, a forma do texto e a parcela correta contra a corrida 20, o que cada um dos cinco portões fez e, quando `revisao_as_cegas.json` existe na pasta da corrida, a revisão humana às cegas. | `analista.{json,md}` (blocos `tb_f4_analista_*`) |
 | `--trilha` | 22 | O acerto de cada caso contra o gabarito e TPR x TNR de cada sinal da trilha contra os erros reais. | `trilha.{json,md}` (blocos `tb_f4_trilha_*`), os relatórios da sessão de revisão em `relatorios_revisao_trilha/` e a planilha `revisao_trilha.md`, nunca regravada depois de preenchida |
 | `--revisao` | 22 | A planilha `revisao_trilha.md` preenchida contra o acerto de cada caso em `trilha.json`: adesão apropriada, localização do erro, tempo até a decisão e utilidade. | `leitura_revisao_trilha.{json,md}` (blocos `tb_f4_revisao_*`) |
+| `--texto` | 18d, 21d e 24 (Pós-Fase 4, Q2) | Os textos que chegam ao analista antes e depois: o relatório v2 (gravado em `relatorios/`, ou regerado da trilha onde a corrida não o gravou) contra o v3 de cada caso, os verbetes da biblioteca de produção contra a camada de leitura, e as frases de impacto do modelo à parte, medidos por `filtros_de_texto.py` contra `limiares_texto.json`. | `texto.{json,md}` (blocos `tb_f4_texto_*`, `--check`; sem `--colar`, porque o relatório da Pós-Fase 4 é o pacote Q8) |
 
 O que não coube nas células da tabela:
 
@@ -1119,6 +1184,9 @@ O que não coube nas células da tabela:
   - Molde e relatório v2, restauração do banco, poda, diff do contrato, interceptador, HAR, caso ao vivo, cenários, seleção dos casos da corrida 17 e a avaliação.
   - Os testes de integração com as cobaias são pulados com aviso quando as portas 8080 e 8000 não respondem.
   - `--gravar-hashes` grava a linha de base das áreas só de leitura.
+<!-- ! Alteração de IA - Revisar: (11/11/2026) item novo, `--registrar-ponte`, que os lançadores das corridas chamam depois de uma ponte de versão.
+     ! Motivo: a ponte cria uma pasta `fase3b_ponte_<versão>`, e a bateria acusava a pasta nova como área alterada; em 11/11/2026 isso parou a corrida 25 antes da primeira inferência. -->
+  - `--registrar-ponte <pasta>` acrescenta à linha de base só a pasta de uma ponte de versão nova (`fase3b_ponte_<versão>`), depois de conferir que nenhuma outra área mudou; os lançadores `rodar_experimento_sem_notas.ps1` e `rodar_fila_pre_fase5.ps1` chamam esse passo depois da ponte e antes de cada corrida.
 - P3 (27/10/2026):
   - O diagnóstico ao vivo com Ollama de mentira: prompt igual ao do fixture, registro com as 37 chaves, probabilidade no token certo, limiares e selo, gatilhos e divergência, nó com as intervenções e a justificativa.
   - As partes puras dos modos novos (ponte R6, regra R8, casos que reproduzem).
@@ -1153,6 +1221,13 @@ O que não coube nas células da tabela:
   - A sonda plantando só num verbete não citado.
   - As mutações ao vivo com o Ollama de mentira, as partes puras do modo `avaliacao_trilha`, a leitura `--trilha` com `--check` e a planilha da sessão de revisão.
   - Depois da corrida 22: a linha do `.ps1` que chama a leitura, executada para cada modo, o relatório de um caso de texto mostrando o caso, o controle da sonda e os números em três casas (97 testes).
+<!-- ! Alteração de IA - Revisar: (11/11/2026, decisões 120 e 121) item novo com os testes das corridas 26 e 27 e da fila.
+     ! Motivo: as duas corridas e a fila rodam na janela do Eric; a lista diz o que a bateria confere delas sem modelo. -->
+- Corridas 26 e 27 e a fila (10 e 11/11/2026):
+  - Cada corrida simulada de ponta a ponta com o Ollama de mentira, com a retomada, e a recusa de rodar inteira numa versão do Ollama sem ponte (regra R6).
+  - Os dois modos novos na lista de modos do executor e no `ValidateSet` do `rodar_fase4.ps1`.
+  - A fila `rodar_fila_pre_fase5.ps1`: BOM, só ASCII, a ordem dos comandos, o parse pelo PowerShell e a execução em modo `-Simular`, que imprime os comandos sem rodar nada.
+  - As regras, as prévias sem modelo com `--check`, os portões e a medida M1 são conferidos em `testar_pos_fase4.py`.
 
 ## Ferramentas de apoio ao trabalho com IA (`ferramentas/`)
 
@@ -1166,6 +1241,8 @@ modelo):
      ! Motivo: quem abre o repositório precisa saber que a poda mudou depois das corridas e onde está a medida disso. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) entrou a linha de `sessao_revisao.py` na tabela abaixo, `--revisao` na linha de `avaliar_fase4.py` e a página na árvore do repositório.
      ! Motivo: quem abre o repositório precisa achar a página da sessão, o gerador e a leitura pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (11/11/2026) três linhas novas na tabela abaixo: `painel_fases.py`, `painel_glossario.py` e `painel_grupo.py`, cada uma com o seu teste.
+     ! Motivo: são os módulos da reorganização do painel por fase (decisão 124); a aba Ferramental do painel lê esta tabela por script, e sem as linhas os três ficariam fora dela. -->
 <!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `gerar_dashboard.py` foi reescrita e entrou a linha de `painel_topicos.py` (30/09/2026).
      ! Motivo: o Eric pediu a aba do comparativo qwen × Coder e que o painel fosse o compilador das análises, com uma aba por tópico; a linha antiga ainda descrevia o painel só com as abas de 28/09. -->
 <!-- ! Alteração de IA - Revisar: na tabela abaixo entrou a linha de `sincronizar_orientador.py` (22/10/2026).
@@ -1174,6 +1251,8 @@ modelo):
      ! Motivo: a parte B ganhou três tópicos em 23/10/2026 e as duas subseções finais mudaram de número; a tabela citava §6.14.12 e §6.14.13. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026) células da tabela abaixo acima de cerca de 300 caracteres foram encurtadas e o resto foi para a lista "O que não coube nas células" logo depois da tabela.
      ! Motivo: o Eric reclamou (05/11/2026) da leitura; a tabela segue com as colunas `Script | O que faz` e como primeira tabela da seção, porque o painel do projeto (`ferramentas/painel_topicos.py`) lê essa tabela por script. Nenhum fato foi tirado. -->
+<!-- ! Alteração de IA - Revisar: (11/11/2026, decisão 121) entrou a linha de `revisao_propostas.py`, a revisão humana às cegas das propostas de edição da corrida 27.
+     ! Motivo: a medida M2 pede que a mesma pessoa julgue as propostas das corridas 20 e 27 sem saber a origem; quem abre o repositório precisa achar a página, a planilha e o comando que grava o resultado. -->
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: lê os JSON de resultado e as figuras 01–18, monta os gráficos e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
@@ -1185,7 +1264,11 @@ modelo):
 | `painel_textos.py` (+ `testar_painel_textos.py`) | Leitura das fichas de `pendencias.md` e das tabelas de `roadmap.md` para o painel, e conversão do resto dos dois documentos em HTML; o teste confere o formato dos arquivos reais. |
 | `painel_topicos.py` (+ `testar_painel_topicos.py`) | Abas por tópico do painel (30/09/2026). Cada aba: pergunta, resposta em uma frase, números-chave, um ou dois gráficos, leitura curta e tabelas recolhidas; nenhum número digitado à mão. |
 | `painel_leituras.py` | Regras de leitura do painel, aplicadas à página montada: um "Como ler" por gráfico e por figura, a resposta direta de cada aba, e as tabelas de dados e figuras repetidas em "Mais informações". O teste acusa gráfico sem explicação. |
+| `painel_fases.py` (+ `testar_painel_fases.py`) | Organização do painel por fase (11/11/2026): a navegação lateral com cada fase como cabeçalho e as abas dela embaixo, a faixa de sub-abas no alto de cada aba, os cartões do roadmap em linha, a aba de visão de cada fase e o Início. As perguntas, os estados, as descobertas e as figuras são lidos do README e do roadmap. |
+| `painel_glossario.py` (+ `testar_painel_glossario.py`) | Glossário do painel (11/11/2026): os termos e os métodos de medida, cada método com o resumo, o que o projeto faz de diferente e a fonte copiada de `referencias.md`; marca o termo na primeira vez em que aparece em cada aba e lista, no fim da aba, os termos que ela usou. |
+| `painel_grupo.py` (+ `testar_painel_grupo.py`) | Troca do nome do autor e de "você" por "grupo" no texto que o painel mostra, feita só na montagem da página; o Memorial continua registrando quem decidiu o quê. |
 | `sessao_revisao.py` (+ `testar_sessao_revisao.py`) | Sessão de revisão dos relatórios da trilha (Fase 4, P7): gera `Documentacao/dashboard/sessao-revisao-trilha.html` só da planilha `revisao_trilha.md` e dos relatórios dela, publicada como [página da sessão](https://claude.ai/artifact/7UrQ4gaqHj9qnvo22tfDgS); `--gravar` passa as respostas do banco da página para a planilha, conferindo os valores. |
+| `revisao_propostas.py` (+ `testar_revisao_propostas.py`) | Revisão humana às cegas das propostas de edição (corrida 27, medida M2): `--gerar` monta `Documentacao/dashboard/revisao-propostas.html` e a planilha, com as propostas da corrida 27 e as edições revisadas da corrida 20 em ordem embaralhada, sem a origem; `--gravar --quem` grava `revisao_as_cegas.json` na pasta da corrida. |
 | `painel_atlas.py` | Aba Atlas do painel (01/10/2026): o mapa dos verbetes pelas seis classes de defeito, desenhado em SVG no próprio Python; lê `resultados_alvo/pre_fase4/atlas.json`. |
 | `painel_explorador.py` | Explorador de casos da aba "Raciocínio aberto" do painel (01/10/2026): de cada trilha versionada, o recorte por caso das três camadas (o que o programa fez, o que o modelo declarou, o que o código conferiu) e, à parte e recolhida, a avaliação contra o gabarito. |
 | `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). `--agentes rótulo=id,...` soma só os subagentes pedidos (usado na regra de permanência do servidor MCP, 29/09/2026). |
@@ -1260,6 +1343,10 @@ cd Programacao\CobaiaAPI
      ! Motivo: é o teste do script que grava a cópia no repositório do orientador (decisão 72); a lista de testes que rodam sem modelo precisa cobrir tudo o que o Eric roda antes de entregar. -->
 <!-- ! Alteração de IA - Revisar: o bloco ganhou `testar_fase4.py` e `testar_instalador.py` (26/10/2026).
      ! Motivo: são os testes da Fase 4 e dos scripts da raiz (instalador sem administrador e run.py), escritos antes do código; a lista precisa cobrir tudo o que roda sem modelo. -->
+<!-- ! Alteração de IA - Revisar: o bloco ganhou `testar_pos_fase4.py` (07/11/2026, Pós-Fase 4, pacote Q1).
+     ! Motivo: são os testes do relatório v3 e da camada de leitura dos verbetes, escritos antes do código; a lista precisa cobrir tudo o que roda sem modelo. -->
+<!-- ! Alteração de IA - Revisar: o bloco ganhou `testar_revisao_propostas.py` (11/11/2026, corrida 27).
+     ! Motivo: são os testes da ferramenta da revisão humana às cegas das propostas, escritos antes do código; a lista precisa cobrir tudo o que roda sem modelo. -->
 Experimentos, painel e documentação, sem chamar modelo nenhum:
 
 ```powershell
@@ -1268,6 +1355,7 @@ python testar_fase3.py
 python testar_fase3b.py
 python testar_pre_fase4.py
 python testar_fase4.py
+python testar_pos_fase4.py
 python testar_figuras_documentos.py
 cd ..\..\..
 python testar_instalador.py
@@ -1276,6 +1364,7 @@ python ferramentas/testar_painel_topicos.py
 python ferramentas/testar_integrar_pesquisa_pre_fase4.py
 python ferramentas/testar_sincronizar_orientador.py
 python ferramentas/testar_sessao_revisao.py
+python ferramentas/testar_revisao_propostas.py
 python ferramentas/testar_gerar_tcc_docx.py
 python ferramentas/gerar_dashboard.py --check
 python ferramentas/conferir_docs.py

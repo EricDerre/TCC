@@ -15,6 +15,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import gerar_dashboard as gd  # noqa: E402
+import painel_fases as pf
+import painel_grupo as pg
 import painel_textos as pt  # noqa: E402
 import painel_leituras as pl  # noqa: E402
 import painel_topicos as tp  # noqa: E402
@@ -46,6 +48,8 @@ def _ctx() -> dict:
         **gd.contexto_pre_fase4(),
         **gd.contexto_fase4(),
         **gd.contexto_pos_fase4(),
+        **gd.contexto_arvores(),
+        **gd.contexto_progresso(),
     }
 
 
@@ -70,23 +74,33 @@ class TestesAbasPorTopico(unittest.TestCase):
     # ! Motivo: o Eric pediu a barra de seções na lateral (com 23 abas a faixa horizontal ficou ilegível) e a ordem
     # por importância: primeiro o projeto e o que depende dele, depois a decisão e os resultados, a biblioteca gerida
     # pelo modelo, a Pré-Fase 4, a pesquisa e, por último, as fases anteriores.
-    def teste_navegacao_lateral_em_ordem_de_importancia(self):
+    # ! Alteração de IA - Revisar: (11/11/2026) a navegação lateral passa a ser por fase: o teste confere os grupos pelo atributo `data-grupo`, a ordem das fases,
+    # a aba de visão abrindo cada fase e um cabeçalho clicável por fase.
+    # ! Motivo: o Eric pediu, em 11/11/2026, abas que detalhem cada fase, com as abas dos tópicos embaixo de cada uma: a lista antiga, em ordem de importância, não
+    # dizia de que fase era cada aba, e o título do grupo não se distinguia da aba clicável. A ordem por importância de 06/10/2026 deixa de valer.
+    def teste_navegacao_lateral_por_fase(self):
         html = gd.pagina(self.ctx["dados"] | {"topicos": self.dados_t}, gd.blocos_tabelas(gd.F3 / "tabelas_relatorio.md"), {},
                          pt.ler_pendencias(gd.MEMORIAL / "pendencias.md"), self.ctx["road"], self.html)
         lateral = re.search(r'<aside class="lateral" id="lateral">(.*?)</aside>', html, re.S)
         self.assertTrue(lateral, "a navegação fica num <aside class=\"lateral\">")
         self.assertIn('<nav aria-label="Seções">', lateral.group(1))
         self.assertEqual(re.findall(r'data-alvo="([^"]+)"', lateral.group(1)), [sid for _, abas in tp.NAV for sid, _, _ in abas])
-        self.assertEqual(re.findall(r'<span class="grupo">([^<]+)</span>', lateral.group(1)), [g for g, _ in tp.NAV])
+        self.assertEqual(re.findall(r'data-grupo="([^"]+)"', lateral.group(1)), [g for g, _ in tp.NAV])
+        self.assertEqual([g for g, _ in tp.NAV], [pf.GERAL] + [f["grupo"] for f in pf.FASES] + [pf.APOIO])
+        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio"] + [f["sid"] for f in pf.FASES] + ["pesquisa"])
+        self.assertEqual(pf.abas_fora_de_lugar(tp.NAV), [], "fase sem grupo, grupo que não abre pela visão da fase, ou atalho para aba que não existe")
+        self.assertEqual(lateral.group(1).count('class="fase-topo"'), len(pf.FASES), "cada fase tem um cabeçalho que abre a visão dela")
+        nomes = [nome for _, abas in tp.NAV for _, nome, _ in abas]
+        self.assertEqual(len(nomes), len(set(nomes)), "duas abas com o mesmo nome confundem a navegação")
+        self.assertIn("if(window.aoMostrar) window.aoMostrar(id);", html, "ao trocar de aba, a fase dela abre na lateral")
+        self.assertIn("window.aoMostrar = function(id)", html)
         # ! Alteração de IA - Revisar: (27/10/2026) o grupo "Fase 4" entra depois da Pré-Fase 4, com a aba "Reprodução na tela".
         # ! Motivo: a Fase 4 abriu em 26/10 e a corrida 17 é a primeira análise dela; o grupo fica na ordem cronológica, logo
         # depois da pesquisa que a preparou, sem mexer na ordem por importância que o Eric pediu para os grupos anteriores.
         # ! Alteração de IA - Revisar: (07/11/2026) o grupo "Pós-Fase 4" entra depois do "Fase 4".
         # ! Motivo: a Pós-Fase 4 foi especificada e pesquisada nesta data e ganhou a sua aba; a ordem dos grupos segue a ordem das fases.
-        self.assertEqual([g for g, _ in tp.NAV], ["Projeto", "Decisão e resultados", "Biblioteca gerida pelo modelo", "Pré-Fase 4", "Fase 4", "Pós-Fase 4", "Pesquisa e método", "Fases anteriores"])
-        # ! Alteração de IA - Revisar: (05/11/2026, P8) o grupo "Fase 4" passa a abrir pela aba "Fechamento da fase".
-        # ! Motivo: a regra do mapa é a aba mais importante de cada grupo em primeiro, e com a fase fechada essa é a do fechamento.
-        self.assertEqual([abas[0][0] for _, abas in tp.NAV], ["inicio", "decisao", "fase3", "colibri", "fechamentof4", "posfase4", "pesquisa", "fases2"])
+        # ! Alteração de IA - Revisar: (11/11/2026) saem as duas conferências que fixavam os oito grupos por importância e a primeira aba de cada um.
+        # ! Motivo: a ordem dos grupos e a aba que abre cada um passaram a vir das fases (conferidas no começo deste teste).
         # em tela estreita a lateral vira gaveta aberta por um botão
         self.assertIn('<button class="menu" aria-controls="lateral" aria-expanded="false">', html)
         self.assertRegex(html, r"@media \(max-width:\s*900px\)\{[^}]*\.lateral\{")
@@ -809,6 +823,495 @@ class TestesAbasPorTopico(unittest.TestCase):
             self.assertEqual(sum(x["fontes"] for x in dados_reais["leituras"]), sum(len(v["fontes"]) for v in ipp.carregar().values()), "as fontes contadas batem com o integrador")
             self.assertIn("ficha 54", secao)
 
+    def teste_texto_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) a aba "O que chega ao analista" lê texto.json: quantos relatórios e leituras passam nos
+        # filtros antes e depois, a parcela por critério, os termos sem o significado e os limiares com a fonte; sem o JSON, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela: os números da aba têm de ser os de texto.json.
+        self.assertIn("texto", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("txtCriterios", "txtTermos"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["texto"])
+        self.assertIn(("texto", "Métrica"), pl.TABELAS_A_VISTA)
+        self.assertIn("texto", pl.RESPOSTA_SIMPLES)
+        for g in ("g-texto-criterios", "g-texto-termos"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_texto(None)
+        self.assertIn('<section id="texto"', vazia)
+        self.assertIn("avaliar_fase4.py --texto", vazia)
+        real = self.ctx.get("texto")
+        self.assertTrue(real, "texto.json existe em resultados_alvo/fase4")
+        d, h = tp.secao_texto(real)
+        rel, ver = real["resumo"]["relatorios"], real["resumo"]["verbetes"]
+        for trecho in (f'{rel["depois"]["aprovados"]} de {rel["depois"]["n"]}', f'{rel["antes"]["aprovados"]} de {rel["antes"]["n"]}',
+                       f'{ver["depois"]["aprovados"]} de {ver["depois"]["n"]}', "g-texto-criterios", "g-texto-termos", "percentil 95"):
+            self.assertIn(trecho, h)
+        chaves = [m["chave"] for m in real["metricas"] if m["regra"] in ("ate", "zero")]
+        self.assertEqual(d["criterios"]["chaves"], chaves)
+        self.assertEqual([s["nome"] for s in d["criterios"]["series"]], ["relatórios v2", "relatórios v3", "verbetes", "camada de leitura"])
+        self.assertEqual(d["criterios"]["series"][1]["pct"], [rel["depois"]["criterios"][ch]["passam_pct"] for ch in chaves])
+        self.assertEqual(d["criterios"]["series"][2]["pct"], [ver["antes"]["criterios"][ch]["passam_pct"] for ch in chaves])
+        self.assertEqual(sum(d["termos"]["antes"]), sum(rel["antes"]["termos_sem_expansao"].values()) + sum(ver["antes"]["termos_sem_expansao"].values()))
+        self.assertEqual(sum(d["termos"]["depois"]), sum(rel["depois"]["termos_sem_expansao"].values()) + sum(ver["depois"]["termos_sem_expansao"].values()))
+        for m in real["metricas"]:
+            self.assertIn(m["nome"], h, "toda métrica aparece com o nome, o limiar e a fonte")
+        lim = real["limiares"]["valores"]["repeticao_razao"]["valor"]
+        self.assertIn(f"{lim:.4f}".replace(".", ","), h)
+        self.assertNotIn("—", h)
+        self.assertNotIn("→", h)
+        # ! Alteração de IA - Revisar: (10/11/2026) a aba mostra a curadoria das leituras: quantas estão curadas, quantas o analista aprovou e quantas reescreveu, e os
+        # consertos do Claude, lidos de curadoria_leituras/respostas.json e consertos.json.
+        # ! Motivo: a regra do painel pede que toda curadoria apareça numa aba lida dos arquivos; a aba ainda dizia que o que reprovava ficava "para a curadoria do Eric",
+        # depois de as 39 leituras terem sido curadas por um analista e consertadas (decisão 115).
+        cur = self.ctx.get("curadoria_leituras")
+        self.assertTrue(cur and cur.get("respostas") and cur.get("consertos"), "respostas.json e consertos.json da curadoria existem em resultados_alvo/fase4/curadoria_leituras")
+        d, h = tp.secao_texto(real, cur)
+        cam = next(g for g in real["grupos"] if g["id"] == "camada_de_leitura")
+        curadas = sum(1 for p in cam["pares"] if p["curado"])
+        reescritas = sum(1 for x in cur["respostas"] if x["estado"] == "editada")
+        aprovadas = sum(1 for x in cur["respostas"] if x["estado"] == "aprovada")
+        n_cons = sum(len(v) for v in cur["consertos"].values())
+        for trecho in (f"{curadas} de {ver['depois']['n']}", f"{reescritas} reescritas", f"{aprovadas} aprovadas como estavam", f"{n_cons} consertos", "um analista", "decisão 115",
+                       "A curadoria, leitura a leitura"):
+            self.assertIn(trecho, h, trecho)
+        self.assertEqual(d["curadoria"], {"curadas": curadas, "aprovadas": aprovadas, "reescritas": reescritas, "consertos": n_cons, "leituras_consertadas": len(cur["consertos"])})
+        self.assertNotIn("que a curadoria do Eric reescreve", h)
+        self.assertIn("analista", pl.RESPOSTA_SIMPLES["texto"])
+        self.assertNotIn("—", h)
+        self.assertNotIn("→", h)
+        secao = self.html[self.html.index('<section id="texto"'):].split("</section>")[0]
+        self.assertIn(f'{rel["depois"]["aprovados"]} de {rel["depois"]["n"]}', secao, "a página real traz a leitura")
+        self.assertEqual(json.dumps(self.dados_t["texto"], ensure_ascii=False)[:1], "{")
+
+    def teste_arvore_usa_os_numeros_dos_json(self):
+        # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) a aba "Árvore de decisão" lê os arvores/INDICE.json das três corridas vigentes e o JSON de cada
+        # trilha: as árvores, os nós que viraram decisões, as afirmações por rótulo, os casos com divergência e com cura, os filtros do Q2 e o explorador com um caso por
+        # árvore; sem as pastas, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela: os números da aba têm de ser os dos índices gravados.
+        self.assertIn("arvore", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("arvRotulos", "arvConfianca", "arvExplorar"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["arvore"])
+        self.assertIn("arvore", pl.RESPOSTA_SIMPLES)
+        for g in ("g-arvore-rotulos", "g-arvore-confianca"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_arvore(None)
+        self.assertIn('<section id="arvore"', vazia)
+        self.assertIn("arvore_de_decisao.py --saida", vazia)
+        real = self.ctx.get("arvores")
+        self.assertTrue(real, "arvores/INDICE.json existe nas três corridas vigentes")
+        self.assertEqual([c["corrida"] for c in real], ["fase4_tela_v4", "fase4_ensaio_v4", "fase4_ineditos"])
+        d, h = tp.secao_arvore(real)
+        resumos = [c["indice"]["resumo"] for c in real]
+        total = sum(r["trilhas"] for r in resumos)
+        com_div, com_cura = sum(r["com_divergencia"] for r in resumos), sum(r["com_cura"] for r in resumos)
+        observado = sum(r["rotulos"]["observado"] for r in resumos)
+        afirmacoes = sum(r["afirmacoes"] for r in resumos)
+        for trecho in (f"{total} árvores", f"{com_div} de {total}", f"{com_cura} de {total}", f"{observado} de {afirmacoes}", "g-arvore-rotulos", "g-arvore-confianca", "arv-explorador"):
+            self.assertIn(trecho, h)
+        self.assertEqual(d["resumo"]["arvores"], total)
+        self.assertEqual(d["resumo"]["rotulos"]["observado"], observado)
+        self.assertEqual(d["resumo"]["filtros"], {"n": sum(r["filtros"]["n"] for r in resumos), "aprovados": sum(r["filtros"]["aprovados"] for r in resumos)})
+        self.assertEqual([s["nome"] for s in d["rotulos"]["series"]], ["observado", "conferido", "declarado", "desconhecido"])
+        self.assertEqual(d["rotulos"]["series"][0]["n"], [r["rotulos"]["observado"] for r in resumos])
+        self.assertEqual(sum(d["confianca"]["series"][0]["n"]), sum(r["por_confianca"].get("alta", 0) for r in resumos))
+        casos = [x for c in d["explorador"]["corridas"] for x in c["casos"]]
+        self.assertEqual(len(casos), total, "o explorador leva uma árvore por trilha")
+        for x in casos:
+            self.assertTrue(x["decisoes"] and all(a[1] in ("observado", "conferido", "declarado", "desconhecido") for dd in x["decisoes"] for a in dd["afirmacoes"]), x["nome"])
+            self.assertEqual([dd["chave"] for dd in x["decisoes"]][:3], ["leitura", "verbetes", "causa"])
+        com_cura_expl = [x for x in casos if x["resumo"]["cura"]]
+        self.assertEqual(len(com_cura_expl), com_cura)
+        self.assertTrue(all(x["decisoes"][-1]["chave"] == "cura" for x in com_cura_expl))
+        padrao = d["explorador"]["padrao"]
+        self.assertIn(padrao["caso"], [x["nome"] for x in d["explorador"]["corridas"][padrao["corrida"]]["casos"]])
+        self.assertNotIn("—", h)
+        self.assertNotIn("→", h)
+        secao = self.html[self.html.index('<section id="arvore"'):].split("</section>")[0]
+        self.assertIn(f"{com_div} de {total}", secao, "a página real traz a leitura")
+        self.assertEqual(json.dumps(self.dados_t["arvore"], ensure_ascii=False)[:1], "{")
+
+    def teste_progresso_e_git_usam_os_numeros_dos_json(self):
+        # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) a aba "Barra e Git" lê taxas_progresso.json, erro_progresso.json e impacto_git.json (e
+        # fumaca_progresso.json quando a fumaça real tiver rodado): as taxas do modelo nesta máquina, o erro da estimativa por fase e a prova da seleção pelo diff
+        # do Git no histórico do repositório; sem os arquivos, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela: os números da aba têm de ser os dos arquivos gravados.
+        self.assertIn("progresso", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("progErro", "progGit"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["progresso"])
+        self.assertIn("progresso", pl.RESPOSTA_SIMPLES)
+        for g in ("g-prog-erro", "g-git-pares"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_progresso(None, None, None)
+        self.assertIn('<section id="progresso"', vazia)
+        self.assertIn("progresso.py --taxas", vazia)
+        taxas, erro, impacto = self.ctx.get("taxas_progresso"), self.ctx.get("erro_progresso"), self.ctx.get("impacto_git")
+        self.assertTrue(taxas and erro and impacto, "os três JSON do Q4 existem em resultados_alvo/fase4")
+        d, h = tp.secao_progresso(taxas, erro, impacto, self.ctx.get("fumaca_progresso"))
+        m = taxas["por_modelo"]["qwen2.5:7b"]
+        r = erro["por_modelo"]["qwen2.5:7b"]["fora_da_corrida"]
+        for trecho in (f"{m['prefill_tokens_por_s']['mediana']:.1f}".replace(".", ","), f"{m['geracao_tokens_por_s']['mediana']:.2f}".replace(".", ","),
+                       f"{r['total_s']['erro_abs_mediana_s']:.1f}".replace(".", ","), f"{impacto['resumo']['selecao_parcial']} de {impacto['resumo']['pares']}",
+                       "g-prog-erro", "g-git-pares", "fumaça"):
+            self.assertIn(trecho, h, trecho)
+        self.assertEqual(d["erro"]["fases"], ["prefill", "geração", "prefill mais geração"])
+        self.assertEqual(d["erro"]["series"][0]["n"][2], r["total_s"]["erro_abs_mediana_s"])
+        self.assertEqual(len(d["git"]["pares"]), impacto["resumo"]["pares"])
+        self.assertEqual(d["git"]["selecionados"], [len(p["selecao"]["cenarios"]) for p in impacto["pares"]])
+        self.assertEqual(d["git"]["total"], impacto["mapa"]["cenarios"])
+        self.assertEqual(d["resumo"]["registros"], m["n"])
+        self.assertNotIn("—", h)
+        self.assertNotIn("→", h)
+        secao = self.html[self.html.index('<section id="progresso"'):].split("</section>")[0]
+        self.assertIn(f"{impacto['resumo']['selecao_parcial']} de {impacto['resumo']['pares']}", secao, "a página real traz a leitura")
+        self.assertEqual(json.dumps(self.dados_t["progresso"], ensure_ascii=False)[:1], "{")
+
+    def teste_revisao_v3_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a aba "Revisão humana" lê leitura_revisao_v3.json (a sessão com revisor humano dos
+        # relatórios v3 e das árvores da corrida 24, ficha 40 opção b): a adesão apropriada por grupo, o erro localizado, o tempo até a decisão, a utilidade e a
+        # tabela caso a caso com o comentário do revisor; sem o arquivo, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela: os números da aba têm de ser os do arquivo gravado.
+        self.assertIn("revisaov3", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("revV3Adesao", "revV3Utilidade"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["revisaov3"])
+        self.assertIn("revisaov3", pl.RESPOSTA_SIMPLES)
+        for g in ("g-revv3-adesao", "g-revv3-utilidade"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_revisao_v3(None)
+        self.assertIn('<section id="revisaov3"', vazia)
+        self.assertIn("avaliar_fase4.py --revisao_v3", vazia)
+        rev = self.ctx.get("revisao_v3")
+        self.assertTrue(rev, "leitura_revisao_v3.json existe em resultados_alvo/fase4")
+        d, h = tp.secao_revisao_v3(rev, self.ctx.get("revisao_trilha"))
+        r = rev["resumo"]
+        certos, errados = rev["adesao"][0], rev["adesao"][1]
+        for trecho in (f"{r['adesao_apropriada']} de {r['relatorios']}", f"{r['adesao_pct']:.1f}".replace(".", ","), f"{r['erros_localizados']} de {r['erros_na_amostra']}",
+                       f"{certos['aceitou']} de {certos['n']}", f"{errados['recusou']} de {errados['n']}", "g-revv3-adesao", "g-revv3-utilidade", "ficha 40", "relatorio-",
+                       rev["casos"][0]["comentario"][:40]):
+            self.assertIn(trecho, h, trecho)
+        self.assertEqual(d["adesao"]["grupos"], [certos["grupo"], errados["grupo"]])
+        self.assertEqual(d["adesao"]["series"][0]["n"], [certos["apropriadas"], errados["apropriadas"]])
+        self.assertEqual(d["adesao"]["series"][1]["n"], [certos["n"] - certos["apropriadas"], errados["n"] - errados["apropriadas"]])
+        self.assertEqual(sum(d["utilidade"]["series"][0]["n"]) + sum(d["utilidade"]["series"][1]["n"]), r["relatorios"])
+        self.assertEqual(d["resumo"]["adesao_pct"], r["adesao_pct"])
+        self.assertEqual(h.count("<code>relatorio-"), len([c for c in rev["casos"] if c["apropriada"] is False]))
+        # ! Alteração de IA - Revisar: (10/11/2026) a aba diz quem respondeu cada relatório e só dá o tempo onde ele foi medido.
+        # ! Motivo: a versão de 10/11/2026 dizia que o Eric tinha lido os 36 relatórios em 31 s de mediana; quase todas as respostas vieram de um analista, coladas
+        # pelo Eric, e o tempo que a página mediu nelas era o da troca entre os dois.
+        origem = {x["origem"]: x["n"] for x in rev["por_origem"]}
+        tempo_n = next(x for x in rev["tempo"] if x["grupo"] == "todos")["n"]
+        self.assertGreater(origem.get("analista", 0), 0, "a leitura gravada separa as respostas do analista")
+        for trecho in (f"{origem['analista']} de {r['relatorios']}", "um analista", "troca entre os dois", "digitada ou colada pelo Eric",
+                       f"{rev['pagina']['intervalo_entre_relatorios_mediana_s']} s", "decisão 114", "Quem respondeu"):
+            self.assertIn(trecho, h, trecho)
+        # o tempo: sem nenhuma resposta dada na página por quem leu, a aba diz que ele não foi medido e não mostra número nenhum de segundos como tempo de leitura
+        if tempo_n:
+            self.assertIn(f"medido em {tempo_n} de {r['relatorios']}", h)
+        else:
+            self.assertIn(f"não foi medido em nenhum dos {r['relatorios']}", h)
+            self.assertNotIn("n/d s", h)
+        if rev.get("quem_leu"):
+            self.assertIn(rev["quem_leu"]["quem"], h)
+            self.assertIn(rev["quem_leu"]["relacao_com_o_projeto"], h)
+        for trecho in ("O revisor (o autor do trabalho) leu os", "Decidir é rápido"):
+            self.assertNotIn(trecho, h, trecho)
+        self.assertEqual(d["resumo"]["respostas_do_analista"], origem["analista"])
+        self.assertEqual(d["resumo"]["tempo_medido_em"], tempo_n)
+        self.assertIn("analista", pl.RESPOSTA_SIMPLES["revisaov3"])
+        self.assertNotIn("meio minuto", pl.RESPOSTA_SIMPLES["revisaov3"])
+        self.assertNotIn("—", h)
+        self.assertNotIn("→", h)
+        secao = self.html[self.html.index('<section id="revisaov3"'):].split("</section>")[0]
+        self.assertIn(f"{r['adesao_apropriada']} de {r['relatorios']}", secao, "a página real traz a leitura")
+        self.assertEqual(json.dumps(self.dados_t["revisaov3"], ensure_ascii=False)[:1], "{")
+
+    def teste_sem_notas_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (10/11/2026, ficha 63 opção b, decisão 116) a aba "Notas do modelo" lê sem_notas_previa.json (a prévia sem modelo da corrida 25:
+        # o que muda no contexto dos 72 casos quando a biblioteca perde as notas do modelo e os verbetes aprendidos) e, quando a corrida tiver rodado, sem_notas.json
+        # (os pares contra as corridas 22 e 24 e o veredito pela regra fixada antes); sem os arquivos, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela. A corrida ainda não rodou: a aba tem de dizer isso, mostrar
+        # o que já se sabe sem o modelo e, depois da corrida, mostrar o resultado sem ninguém mexer no código.
+        self.assertIn("semnotas", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("semNotasContexto", "semNotasPares"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["semnotas"])
+        self.assertIn("semnotas", pl.RESPOSTA_SIMPLES)
+        for g in ("g-semnotas-contexto", "g-semnotas-pares"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_sem_notas(None, None)
+        self.assertIn('<section id="semnotas"', vazia)
+        self.assertIn("experimento_sem_notas.py --previa", vazia)
+        previa = self.ctx.get("sem_notas_previa")
+        self.assertTrue(previa, "sem_notas_previa.json existe em resultados_alvo/fase4")
+        r, b = previa["resumo"], previa["biblioteca"]
+        d, h = tp.secao_sem_notas(previa, None)
+        for trecho in (f"{b['notas_retiradas']} notas", f"{b['notas_em_forma_de_instrucao']} de {b['notas_retiradas']}", f"{r['contextos_que_mudam']} de {r['casos']}",
+                       f"{r['com_aprendido_na_referencia']} de {r['casos']}", "decisão 116", "ficha 63", "rodar_experimento_sem_notas.ps1", "corrida 22", "corrida 24", "corrida 16",
+                       previa["casos_com_verbetes_diferentes"][0]["caso"], "g-semnotas-contexto", "ainda não rodou", "0,05"):
+            self.assertIn(trecho, h, trecho)
+        # antes da corrida o gráfico dos pares já existe, só com os acertos das corridas de referência (todo gráfico da página tem a sua leitura, e toda leitura o seu gráfico)
+        self.assertIn("g-semnotas-pares", h)
+        self.assertEqual([s["n"] for s in d["pares"]["series"]], [[x["acertos_referencia"] for x in previa["por_banco"]]])
+        self.assertEqual(d["previa"]["casos"], r["casos"])
+        self.assertEqual([sum(s["n"][i] for s in d["previa"]["series"]) for i in range(len(d["previa"]["grupos"]))], [x["casos"] for x in previa["por_banco"]])
+        # com a leitura da corrida, a aba mostra o veredito, os pares e o segundo gráfico, e deixa de dizer que não rodou
+        par = {"casos": 36, "acertos_sem_notas": 28, "acerto_sem_notas_pct": 77.8, "wilson_lo_pct": 61.9, "wilson_hi_pct": 88.3, "acertos_referencia": 31, "acerto_referencia_pct": 86.1,
+               "b": 1, "c": 4, "saldo": -3, "p": 0.375, "mesmo_rotulo": 30, "ganhos": ["lex-1"], "perdas": ["lex-2", "lex-3", "sin-5", "efe-5"]}
+        leitura = {"metadados": {"corrida": "fase4_sem_notas", "gerado_em": "2026-11-11T10:00:00"}, "condicoes": {"versao_ollama": "0.40.15"},
+                   "regra": {"alfa": 0.05, "texto": previa["regra"], "pareavel": True, "mesma_versao_das_referencias": False,
+                             "ponte": {"corrida": "fase3b_ponte_04015", "versao": "0.40.15", "b": 1, "c": 0, "n": 35, "limite": 2, "pareavel": True}},
+                   "resumo": {**par, "casos": 72, "acertos_sem_notas": 53, "acerto_sem_notas_pct": 73.6, "acertos_referencia": 56, "acerto_referencia_pct": 77.8, "b": 2, "c": 5, "saldo": -3, "p": 0.4531,
+                              "mesmo_rotulo": 61, "completo": True, "sai_do_ruido": False, "veredito": "dentro do ruído", "tokens_entrada_mediana": 1010, "tokens_entrada_mediana_referencia": 1150,
+                              "segundos_mediana": 58.2, "segundos_mediana_referencia": 66.4},
+                   "por_banco": [{**par, "banco": "avaliacao", "referencia": "corrida 22"}, {**par, "banco": "ineditos", "referencia": "corrida 24", "acertos_sem_notas": 25, "acertos_referencia": 25,
+                                                                                            "b": 1, "c": 1, "p": 1.0, "ganhos": ["run-22"], "perdas": ["lex-27"]}],
+                   "por_mudanca_do_contexto": [{"mudanca": m, "casos": n, "acertos_sem_notas": n - 5, "acertos_referencia": n - 4, "b": 1, "c": 2, "mesmo_rotulo": n - 3}
+                                               for m, n in (("contexto idêntico", 0), ("mesmos verbetes, sem as notas", 59), ("mesmos verbetes, outra ordem", 4), ("verbetes diferentes", 9))],
+                   "contra_a_corrida_16": {"corrida": "16", **par, "biblioteca": "1fca10f1a6f6", "versao_ollama": "0.40.2"}, "por_classe": [],
+                   "casos": [{"caso": "lex-2", "banco": "avaliacao", "gabarito": "campo_ausente", "rotulo": "tipo_divergente", "rotulo_referencia": "campo_ausente", "mudou": "perda",
+                              "mudanca_do_contexto": "mesmos verbetes, sem as notas", "verbetes_ids": ["a", "b", "c"], "verbetes_ids_referencia": ["a", "b", "c"]},
+                             {"caso": "lex-9", "banco": "avaliacao", "gabarito": "campo_ausente", "rotulo": "campo_ausente", "rotulo_referencia": "campo_ausente", "mudou": "",
+                              "mudanca_do_contexto": "mesmos verbetes, sem as notas", "verbetes_ids": ["a", "b", "c"], "verbetes_ids_referencia": ["a", "b", "c"]}]}
+        d2, h2 = tp.secao_sem_notas(previa, leitura)
+        for trecho in ("dentro do ruído", "53 de 72", "56 de 72", "0,453", "fase3b_ponte_04015", "g-semnotas-pares", "<code>lex-2</code>", "1fca10f1a6f6"):
+            self.assertIn(trecho, h2, trecho)
+        self.assertNotIn("ainda não rodou", h2)
+        self.assertNotIn("<code>lex-9</code>", h2, "a tabela caso a caso traz só os que mudaram de acerto")
+        self.assertEqual([s["n"] for s in d2["pares"]["series"]], [[28, 25], [31, 25]])
+
+    def teste_segundo_passe_usa_os_numeros_do_json(self):
+        # ! Alteração de IA - Revisar: (10/11/2026, ficha 66 opção b, decisão 120) a aba "Segundo passe" lê segundo_passe_previa.json (a prévia sem modelo da corrida 26: os
+        # casos com sinal, o que o segundo pedido alcança, o tamanho do prompt e os desenhos descartados) e, quando a corrida tiver rodado, segundo_passe.json (o que a
+        # segunda resposta consertaria e estragaria, o que a regra de escolha trocou e o veredito pela regra fixada antes); sem os arquivos, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela. A corrida ainda não rodou: a aba tem de dizer isso, mostrar o
+        # que a conta sem modelo já diz (o resultado não tem como sair do ruído) e, depois da corrida, mostrar o resultado sem ninguém mexer no código. Os dois gráficos
+        # existem antes e depois da corrida, porque todo gráfico da página precisa da sua leitura e toda leitura do seu gráfico.
+        self.assertIn("segpasse", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("segPasseAlcance", "segPasseResultado"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["segpasse"])
+        self.assertIn("segpasse", pl.RESPOSTA_SIMPLES)
+        for g in ("g-segpasse-alcance", "g-segpasse-resultado"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_segundo_passe(None, None)
+        self.assertIn('<section id="segpasse"', vazia)
+        self.assertIn("experimento_segundo_passe.py --previa", vazia)
+        previa = self.ctx.get("segundo_passe_previa")
+        self.assertTrue(previa, "segundo_passe_previa.json existe em resultados_alvo/fase4")
+        r, des = previa["resumo"], previa["desenho"]
+        d, h = tp.secao_segundo_passe(previa, None)
+        for trecho in (f"{r['com_sinal']} de {r['casos']}", f"{r['erros_com_sinal']} dos {r['erros']}", f"{r['erros_ao_alcance']} dos {r['erros_com_sinal']}", "decisão 120", "ficha 66",
+                       "rodar_fila_pre_fase5.ps1", "corrida 22", "corrida 24", str(des["limite_de_tokens"]), "ainda não rodou", "0,05", "g-segpasse-alcance", "g-segpasse-resultado",
+                       previa["casos"][0]["caso"], "posições 4 a 6", "descartado", "escolhido"):
+            self.assertIn(trecho, h, trecho)
+        # antes da corrida o gráfico do resultado traz só os erros e os acertos da primeira resposta, por sinal
+        self.assertEqual([s["n"] for s in d["resultado"]["series"]], [[x["erros"] for x in previa["por_sinal"]], [x["acertos"] for x in previa["por_sinal"]]])
+        self.assertEqual(d["alcance"]["grupos"], [x["sinal"] for x in previa["por_sinal"]])
+        self.assertEqual([sum(s["n"][i] for s in d["alcance"]["series"]) for i in range(len(d["alcance"]["grupos"]))], [x["casos"] for x in previa["por_sinal"]])
+        # com a leitura da corrida, a aba mostra o veredito, o que a segunda resposta faria sozinha e o que a regra trocou, e deixa de dizer que não rodou
+        grupo = {"casos": 8, "erros_primeira": 3, "acertos_primeira": 5, "acertos_segunda": 3, "mesmo_rotulo": 4, "consertaria": 1, "estragaria": 2, "trocas": 1, "b": 1, "c": 0}
+        leitura = {"metadados": {"corrida": "fase4_segundo_passe", "gerado_em": "2026-11-11T12:00:00"},
+                   "condicoes": {"versao_ollama": "0.40.15", "verbetes_seguintes": 3, "posicoes": [4, 5, 6], "limite_de_tokens": des["limite_de_tokens"]},
+                   "regra": {"alfa": 0.05, "texto": previa["regra"], "escolha": "fica a primeira resposta, salvo quando a segunda é mais provável e não acende sinal", "pareavel": True,
+                             "mesma_versao_das_referencias": False, "ponte": {"corrida": "fase3b_ponte_04015", "versao": "0.40.15", "b": 1, "c": 0, "n": 35, "limite": 2, "pareavel": True}},
+                   "resumo": {"casos": 72, "com_sinal": 24, "segundos_passes": 24, "acertos_primeira": 56, "acertos_final": 55, "erros_primeira_com_sinal": 10, "acertos_primeira_com_sinal": 14,
+                              "acertos_segunda": 9, "mesmo_rotulo": 13, "consertaria": 2, "estragaria": 5, "trocas": 4, "b": 1, "c": 2, "saldo": -1, "p": 1.0, "ganhos": ["sin-5"],
+                              "perdas": ["efe-2", "lex-8"], "completo": True, "sai_do_ruido": False, "veredito": "dentro do ruído", "tokens_entrada_mediana": 1290,
+                              "tokens_entrada_mediana_primeira": 1185, "tokens_entrada_maximo": 1520, "limite_de_tokens": des["limite_de_tokens"], "acima_do_limite": 7, "segundos_mediana": 71.2,
+                              "segundos_mediana_primeira": 66.0, "segundos_no_total": 1700.0},
+                   "por_sinal": [{"sinal": g, **grupo} for g in des["grupos_de_sinal"]],
+                   "por_banco": [{"banco": "avaliacao", "referencia": "corrida 22", **grupo, "casos": 36, "com_sinal": 8, "segundos_passes": 8, "acertos_primeira_no_banco": 31},
+                                 {"banco": "ineditos", "referencia": "corrida 24", **grupo, "casos": 36, "com_sinal": 16, "segundos_passes": 16, "acertos_primeira_no_banco": 25}],
+                   "por_alcance": [{"alcance": a, **grupo} for a in des["alcances"]],
+                   "por_regra": [{"regra": nome, "trocas": t, "b": b, "c": c, "acertos": 56 + b - c, "p": 1.0}
+                                 for nome, t, b, c in (("sempre a primeira (o agente de hoje)", 0, 0, 0), ("sempre a segunda", 11, 2, 5), ("a de maior probabilidade, sem olhar os sinais", 6, 2, 3),
+                                                       ("a regra fixada antes da corrida", 4, 1, 2))],
+                   "motivos": [{"motivo": "as duas respostas dão a mesma causa", "casos": 13, "troca": False},
+                               {"motivo": "a segunda dá outra causa da lista, sem sinal aceso e com probabilidade maior", "casos": 4, "troca": True}],
+                   "casos": [{"caso": "sin-5", "banco": "avaliacao", "sinal": des["grupos_de_sinal"][0], "gabarito": "campo_ausente", "rotulo_primeira": "colecao_no_lugar_de_objeto", "acerto_primeira": False,
+                              "p_primeira": 0.625, "rotulo_segunda": "campo_ausente", "acerto_segunda": True, "p_segunda": 0.91, "selo_segunda": "medio", "fonte_divergente_segunda": False,
+                              "efeito_da_segunda": "consertaria", "fica": "segunda", "motivo": "a segunda dá outra causa da lista, sem sinal aceso e com probabilidade maior", "mudou": "ganho",
+                              "alcance": des["alcances"][1], "verbetes_segunda": ["campo_ausente", "campo_renomeado", "valor_fora_do_dominio"], "tokens_entrada": 1180}]}
+        d2, h2 = tp.secao_segundo_passe(previa, leitura)
+        for trecho in ("dentro do ruído", "2 dos 10", "5 dos 14", "de 56 a 55", "1,000", "fase3b_ponte_04015", "<code>sin-5</code>", "sempre a segunda", "a regra fixada antes da corrida"):
+            self.assertIn(trecho, h2, trecho)
+        self.assertNotIn("ainda não rodou", h2)
+        self.assertEqual([s["n"] for s in d2["resultado"]["series"]], [[3, 3, 3], [5, 5, 5], [1, 1, 1], [2, 2, 2], [1, 1, 1], [0, 0, 0]])
+        self.assertNotIn("—", h2)
+        self.assertNotIn("→", h2)
+        secao = self.html[self.html.index('<section id="segpasse"'):].split("</section>")[0]
+        self.assertIn(f"{r['com_sinal']} de {r['casos']}", secao, "a página real traz a prévia")
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba também é montada com uma leitura que sai do próprio `experimento_segundo_passe.resumir`, e não só com a
+        # leitura escrita à mão acima.
+        # ! Motivo: a fila regera o painel logo depois da corrida, na janela do Eric; se a leitura gravada pela corrida tivesse uma chave com outro nome, a aba só
+        # quebraria lá, no fim de quatro horas de máquina.
+        import os
+        os.environ.setdefault("RESULTADOS_DIR", "resultados_alvo")
+        sys.path.insert(0, str(gd.EXP))
+        from testar_pos_fase4 import _dados_do_segundo_passe, _resumo_sp
+        real = _resumo_sp(_dados_do_segundo_passe(), corrida="fase4_segundo_passe")
+        d3, h3 = tp.secao_segundo_passe(previa, real)
+        self.assertIn(real["resumo"]["veredito"], h3)
+        self.assertIn(f"<code>{real['casos'][0]['caso']}</code>", h3)
+        self.assertNotIn("ainda não rodou", h3)
+        self.assertEqual(len(d3["resultado"]["series"]), 6)
+
+    def teste_analista_usa_os_numeros_dos_json(self):
+        # ! Alteração de IA - Revisar: (10/11/2026, ficha 67 opção b, decisão 121) a aba "Analista de documentação" lê portoes_m1.json (a medida M1: os portões 3, 4 e 5 da
+        # proposta aplicados às 92 propostas da corrida 20, contra a revisão humana) e, da corrida 27 (a medida M2), a prévia sem modelo e a leitura quando existirem; sem
+        # os arquivos, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o Eric decide por ela. A M1 já rodou; a corrida 27 espera o Eric, e a aba tem de
+        # mostrar as duas coisas sem número digitado. Os gráficos existem antes e depois da corrida, porque todo gráfico da página precisa da sua leitura.
+        self.assertIn("analista", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("analistaPortoes", "analistaSequencia"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["analista"])
+        self.assertIn("analista", pl.RESPOSTA_SIMPLES)
+        for g in ("g-analista-portoes", "g-analista-sequencia"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_analista(None, None, None)
+        self.assertIn('<section id="analista"', vazia)
+        self.assertIn("portoes_de_edicao.py --m1", vazia)
+        m1 = self.ctx.get("portoes_m1")
+        self.assertTrue(m1, "portoes_m1.json existe em resultados_alvo/fase4")
+        r = m1["resumo"]
+        d, h = tp.secao_analista(m1, None, None)
+        for trecho in (f"{r['forma_recusa']} das {r['propostas']}", f"{r['sobram_depois_dos_tres']} de {r['revisadas']}", "decisão 121", "ficha 67", "M1", "corrida 20", "g-analista-portoes",
+                       "g-analista-sequencia", f"<code>{m1['revisadas'][0]['caso']}</code>", "revisão humana"):
+            self.assertIn(trecho, h, trecho)
+        self.assertEqual(len(d["portoes"]["grupos"]), len(m1["por_portao"]))
+
+        def recusa(p, veredito):
+            return next(x["recusa"] for x in p["nas_revisadas"]["por_veredito"] if x["veredito"] == veredito)
+
+        self.assertEqual([s["n"] for s in d["portoes"]["series"]], [[recusa(p, v) for p in m1["por_portao"]] for v in ("Errada", "Parcial", "Correta")])
+        etapas = m1["em_sequencia"] + m1["outras_sequencias"]
+        self.assertEqual([sum(s["n"][i] for s in d["sequencia"]["series"]) for i in range(len(d["sequencia"]["grupos"]))], [x["sobram"] for x in etapas])
+        self.assertNotIn("→", h)
+        secao = self.html[self.html.index('<section id="analista"'):].split("</section>")[0]
+        self.assertIn(f"{r['forma_recusa']} das {r['propostas']}", secao, "a página real traz a M1")
+        # ! Alteração de IA - Revisar: (11/11/2026, decisão 121) a parte da corrida 27 (medida M2) na mesma aba: antes de a corrida rodar, a prévia sem modelo
+        # (analista_previa.json: os 54 casos, a ficha, o tamanho do pedido, as instruções congeladas com o hash) e dois gráficos que já existem (as três leituras só com a
+        # corrida 20, e os casos com lacuna e sem lacuna); depois, a leitura (analista.json) com os três vereditos e, quando houver, a revisão humana às cegas.
+        # ! Motivo: a corrida 27 roda na janela do Eric, e a aba tem de mostrar o que já se sabe e o prompt que ele aprova, e depois o resultado, sem ninguém mexer no
+        # código. A leitura de teste sai do próprio `experimento_analista.resumir`, para o formato que a aba lê ser o que a corrida grava.
+        import os
+        os.environ.setdefault("RESULTADOS_DIR", "resultados_alvo")
+        sys.path.insert(0, str(gd.EXP))
+        import experimento_analista as ea
+        from testar_pos_fase4 import _dados_do_analista
+        for f in ("analistaLeituras", "analistaCasos"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["analista"])
+        for g in ("g-analista-leituras", "g-analista-casos"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        previa = self.ctx.get("analista_previa")
+        self.assertTrue(previa, "analista_previa.json existe em resultados_alvo/fase4")
+        p, c20 = previa["resumo"], previa["corrida_20"]
+        d3, h3 = tp.secao_analista(m1, previa, None)
+        for trecho in ("ainda não rodou", previa["prompt"]["hash_das_instrucoes"], f"{p['com_lacuna']} de {p['casos']}", "rodar_fila_pre_fase5.ps1", "g-analista-leituras", "g-analista-casos",
+                       "corrida 27", "M2", "revisao_propostas.py", f"<code>{previa['casos'][0]['caso']}</code>", previa["prompt"]["lembrete_final"], f"{p['minutos_estimados']} minutos",
+                       f"{r['forma_recusa']} das {r['propostas']}", "g-analista-portoes"):
+            self.assertIn(trecho, h3, trecho)
+        self.assertIn('<pre class="bruto">', h3, "as instruções do analista aparecem inteiras, como texto")
+        # antes da corrida o gráfico das leituras só tem a corrida 20, e o dos casos só os grupos e quem o desenho chamaria
+        self.assertEqual([s["nome"] for s in d3["leituras"]["series"]], ["corrida 20"])
+        self.assertEqual(d3["leituras"]["series"][0]["rotulos"], [f"{c20['abstencoes']} de {c20['casos']}", f"{c20['afirmacoes']} de {c20['com_texto']}",
+                                                                 f"{c20['por_veredito']['Correta']} de {c20['passaram_nos_filtros']}"])
+        self.assertEqual(len(d3["leituras"]["grupos"]), 3)
+        self.assertEqual([s["nome"] for s in d3["casos"]["series"]], ["casos do grupo", "o desenho chamaria o analista"])
+        self.assertEqual(d3["casos"]["series"][0]["n"], [p["com_lacuna"], p["sem_lacuna"]])
+        self.assertEqual(sum(d3["casos"]["series"][1]["n"]), p["seriam_chamados"])
+        self.assertEqual(d3["portoes"], d["portoes"], "os gráficos da M1 continuam os mesmos")
+        self.assertNotIn("→", h3)
+        # o prompt de exemplo traz o verbete como o modelo o lê, e o verbete é texto de origem: o travessão dele fica; fora desses blocos, nenhum
+        self.assertNotIn("—", re.sub(r"<pre.*?</pre>", "", h3, flags=re.DOTALL))
+        # com a leitura da corrida, a aba mostra as três leituras com o veredito de cada uma e deixa de dizer que não rodou
+        x = _dados_do_analista()
+        lei = ea.resumir(x["registros"], x["corrida20"], x["condicoes"], ponte=x["ponte"], corrida="fase4_analista", gerado_em="2026-11-11T12:00:00")
+        d4, h4 = tp.secao_analista(m1, previa, lei)
+        self.assertNotIn("ainda não rodou", h4)
+        for trecho in ("2 de 10", "5 de 6", "sai do ruído: mais afirmações na corrida 27", "falta a revisão humana", "fase3b_ponte_04015", "<code>c-n1</code>", "dentro do ruído",
+                       "A rota de lista devolve os sete campos do contrato em cada item.", ea.DESTINOS[-1], "g-analista-leituras", "g-analista-casos"):
+            self.assertIn(trecho, h4, trecho)
+        self.assertEqual([s["nome"] for s in d4["leituras"]["series"]], ["corrida 20", "corrida 27"])
+        self.assertEqual(d4["leituras"]["series"][1]["rotulos"], ["2 de 10", "5 de 6", "sem revisão"])
+        self.assertEqual(d4["leituras"]["series"][1]["n"], [20.0, 83.3, None])
+        self.assertEqual([s["nome"] for s in d4["casos"]["series"]], ["casos do grupo", "o desenho chamaria o analista", "abstenções", "propostas", "passam nos cinco portões"])
+        self.assertEqual([s["n"] for s in d4["casos"]["series"]][2:], [[0, 2], [7, 0], [4, 0]])
+        # com a revisão humana às cegas gravada, entram quem revisou, a parcela correta das duas corridas e os portões contra a revisão
+        revisao = {"quem": "revisor de teste", "itens": [{"origem": "27", "caso": c, "veredito": v} for c, v in (("c-n1", "Correta"), ("c-n2", "Correta"), ("c-n3", "Parcial"), ("c-s1", "Errada"),
+                                                                                                             ("c-x8", "Correta"), ("c-x9", "Correta"))]
+                   + [{"origem": "20", "caso": f"z-{n}", "veredito": v} for n, v in enumerate(["Correta"] * 2 + ["Parcial"] * 9 + ["Errada"] * 9)]}
+        lei_r = ea.resumir(x["registros"], x["corrida20"], x["condicoes"], ponte=x["ponte"], corrida="fase4_analista", gerado_em="2026-11-11T12:00:00", revisao=revisao)
+        d5, h5 = tp.secao_analista(m1, previa, lei_r)
+        for trecho in ("revisor de teste", "4 de 6", "2 de 20", "sai do ruído: parcela correta maior na corrida 27", "pelo mesmo revisor"):
+            self.assertIn(trecho, h5, trecho)
+        self.assertNotIn("falta a revisão humana", h5)
+        self.assertEqual(d5["leituras"]["series"][1]["rotulos"], ["2 de 10", "5 de 6", "4 de 6"])
+        self.assertIn(f"{p['com_lacuna']} de {p['casos']}", secao, "a página real traz a prévia da corrida 27")
+
+    def teste_fluxo_usa_os_numeros_dos_json(self):
+        # ! Alteração de IA - Revisar: (10/11/2026, decisão 118, sessão da pesquisa) a aba "Fluxo do agente" lê resumo_para_o_painel.json (as contagens da rodada 7 da pesquisa, os
+        # vereditos por ideia, o mapa e as tabelas, gerados por integrar_pesquisa_fluxo_do_agente.py) e medidas_do_repositorio.json (os números das corridas, de
+        # medidas_fluxo_do_agente.py), e mostra as fichas 65 a 67; sem os arquivos, o estado vazio. A aba Pesquisa passa a contar a rodada 7.
+        # ! Motivo: a regra do painel é uma aba por análise, lida dos JSON versionados, e o Eric decide por ela: as três fichas novas estão abertas, e os números da aba têm
+        # de ser os dos dois arquivos, nunca digitados.
+        self.assertIn("fluxo", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("fluxoConferencia", "fluxoPosicao", "fluxoCusto", "fluxoAfirmacoes"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["fluxo"])
+        self.assertIn("fluxo", pl.RESPOSTA_SIMPLES)
+        for g in ("g-fluxo-conferencia", "g-fluxo-posicao", "g-fluxo-custo", "g-fluxo-afirmacoes"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        self.assertIn(("fluxo", "Tema"), pl.TABELAS_A_VISTA)
+        _, vazia = tp.secao_fluxo(None, None, [])
+        self.assertIn('<section id="fluxo"', vazia)
+        self.assertIn("integrar_pesquisa_fluxo_do_agente.py", vazia)
+        resumo, medidas = self.ctx.get("fluxo_resumo"), self.ctx.get("fluxo_medidas")
+        self.assertTrue(resumo and medidas, "resumo_para_o_painel.json e medidas_do_repositorio.json existem em dados/pesquisa-fluxo-do-agente")
+        d, h = tp.secao_fluxo(resumo, medidas, self.ctx["pend"])
+        tot = resumo["totais"]
+        conf = medidas["ideia_1"]["conferencia_depois_da_resposta"]["por_corrida"]
+        os72 = medidas["ideia_2"]["os_72_casos"]
+        forma = medidas["ideia_3"]["forma_de_instrucao"]
+        cen = medidas["ideia_3"]["cenarios_do_analista"]
+        for trecho in (f"{tot['fontes']} fontes", f"{tot['aprovadas']} de {tot['afirmacoes']}", f"{conf[3]['erros_contraditos']} de {conf[3]['erros']}",
+                       f"{os72['disparos']} de {os72['casos']}", f"{forma['em_forma_de_instrucao']} de {forma['propostas']}", "ficha 65", "ficha 66", "ficha 67", "decisão 118",
+                       "proposta-analista-de-documentacao.md", "levantamento-2026-11-10-fluxo-do-agente.md", "g-fluxo-conferencia", "g-fluxo-posicao", "g-fluxo-custo", "g-fluxo-afirmacoes",
+                       "Como ler", "tab-mapa-fluxo", resumo["vereditos"][0]["nome"], resumo["vereditos"][2]["nome"], "corrida 25"):
+            self.assertIn(trecho, h, trecho)
+        self.assertNotIn("→", h)
+        self.assertNotIn("—", h)
+        self.assertNotIn("{{", h)
+        # os dados dos gráficos batem com os dois arquivos
+        self.assertEqual(len(d["afirmacoes"]["topicos"]), tot["topicos"])
+        self.assertEqual(sum(sum(s["n"]) for s in d["afirmacoes"]["series"]), tot["afirmacoes"])
+        self.assertEqual([s["n"] for s in d["conferencia"]["series"]], [[c["erros_contraditos"] for c in conf], [c["erros"] - c["erros_contraditos"] for c in conf]])
+        c24, c22 = medidas["ideia_2"]["corrida_24"], medidas["ideia_2"]["corrida_22"]["cruzamento"]
+        self.assertEqual([s["n"] for s in d["posicao"]["series"]], [[p["erros"] for p in c24["posicao_do_verbete_certo"]], [p["erros"] for p in c22["posicao_do_verbete_certo"]]])
+        self.assertEqual(d["custo"]["segundos"], [cen["medido_hoje"]["segundos"]] + [c["segundos"] for c in cen["cenarios"]])
+        self.assertEqual(len(d["custo"]["cenarios"]), len(d["custo"]["segundos"]))
+        # o mapa traz uma linha por opção, com o veredito lido do resumo
+        for linha in resumo["mapa"]:
+            self.assertIn(linha["opcao"], h)
+        # a aba diz se a corrida 25 já rodou, pelo arquivo de medidas
+        self.assertIn("ainda não rodou" if not medidas["ideia_3"]["corrida_25"]["rodou"] else "já rodou", h)
+        import copy
+        rodou = copy.deepcopy(medidas)
+        rodou["ideia_3"]["corrida_25"] = {"rodou": True, "resumo": {"veredito": "dentro do ruído"}}
+        self.assertIn("já rodou", tp.secao_fluxo(resumo, rodou, self.ctx["pend"])[1])
+        # a página real traz a aba, e a aba Pesquisa conta a rodada 7
+        secao = self.html[self.html.index('<section id="fluxo"'):].split("</section>")[0]
+        self.assertIn("ficha 67", secao)
+        self.assertEqual(tp.RODADAS[-1][0], "levantamento-2026-11-10-fluxo-do-agente.md")
+        rodadas = self.dados_t["pesquisa"]["rodadas"]
+        self.assertEqual((rodadas[-1]["aprovadas"], rodadas[-1]["rejeitadas"], rodadas[-1]["nao_verificadas"]), (tot["aprovadas"], tot["rejeitadas"], tot["nao_verificadas"]))
+        pesquisa = self.html[self.html.index('<section id="pesquisa"'):].split("</section>")[0]
+        self.assertIn("§6.16", pesquisa)
+        self.assertIn("Rodada 7", pesquisa)
+
     def teste_conferencia_mostra_as_respostas_do_eric(self):
         # ! Alteração de IA - Revisar: (06/11/2026, decisão 100) com as respostas gravadas, a aba diz que os casos foram conferidos, por quem, como e o que mudou.
         # ! Motivo: a ficha 44 nasceu de a conferência não estar registrada, e a aba não pode continuar dizendo que nenhuma pessoa conferiu.
@@ -1079,8 +1582,11 @@ class TestesAbasPorTopico(unittest.TestCase):
     # ! Alteração de IA - Revisar: (05/11/2026, pacote P8) teste da aba "Fechamento da fase": as regras lidas da seção 10 do relatório da Fase 4, com o estado de cada uma, as fichas abertas e os cartões lidos dos JSON das leituras vigentes.
     # ! Motivo: é a aba que o plano chama de aba da fase (seção 3.8), e o Eric decide pelo painel; sem o teste, uma regra não cumprida poderia aparecer como cumprida, ou o cartão poderia ler a corrida que não vale.
     def teste_fechamento_da_fase_4_le_o_relatorio_e_as_leituras_vigentes(self):
+        # ! Alteração de IA - Revisar: (11/11/2026) a aba do fechamento passa a ser a última do grupo da Fase 4; quem abre o grupo é a visão da fase.
+        # ! Motivo: com a navegação por fase, o grupo abre pela aba de visão (o caminho da fase e os tópicos) e segue a ordem do documento do TCC, em que o fechamento vem no fim.
         grupo = next(abas for nome, abas in tp.NAV if nome == "Fase 4")
-        self.assertEqual(grupo[0][0], "fechamentof4", "a aba do fechamento abre o grupo da fase")
+        self.assertEqual(grupo[0][0], "f-4", "a visão da fase abre o grupo")
+        self.assertEqual(grupo[-1][0], "fechamentof4", "a aba do fechamento fecha o grupo da fase")
         self.assertEqual(tp._classe_regra("Cumprida"), "cumprida")
         self.assertEqual(tp._classe_regra("Cumprida, com ressalva: os 100% vêm do desenho"), "ressalva")
         self.assertEqual(tp._classe_regra("Não cumprida: limitação declarada, decisão 82"), "nao")
@@ -1136,6 +1642,11 @@ class TestesAbasPorTopico(unittest.TestCase):
         if faltam:
             self.assertIn("Corridas que faltam antes da Fase 5", self.html)
             self.assertIn(f'id="corrida-{faltam[0]}-f4"', self.html)
+            # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) o cartão das corridas que faltam não diz mais de que fichas elas vieram.
+            # ! Motivo: o texto fixo dizia "pedidas pelas respostas às fichas 42 a 44", o que valia para as corridas 18c, 21c, 23 e 24; a corrida 25 veio da ficha 63, e
+            # o cartão de cada corrida, lido do roadmap, já diz de onde ela veio.
+            self.assertNotIn("pedidas pelas respostas às fichas 42 a 44", self.html)
+            self.assertIn("o comando e o pré-requisito de cada uma estão nos cartões abaixo", self.html)
 
     def teste_slots_cobrem_os_modelos_das_fases(self):
         for m in self.ctx["dados"]["modelos"]:
@@ -1202,9 +1713,13 @@ class TesteLeituras(unittest.TestCase):
         saida = pl.aplicar(f'<style></style><main><section id="fase3"><h2>T</h2>{fig}</section></main>')
         self.assertIn('<details class="mais-info"><summary>Mais informações: figura 12, Fase 3 · acerto</summary>' + fig + '<p class="como-ler">', saida)
 
+    # ! Alteração de IA - Revisar: (11/11/2026) a frase direta é procurada na página sem as marcas do glossário e já com a troca por "grupo".
+    # ! Motivo: a página gravada passa por mais dois passos depois de painel_leituras (gerar_dashboard.montar): o glossário marca o termo dentro da frase, e
+    # painel_grupo troca o nome do autor e "você". Comparar letra a letra com o texto de RESPOSTA_SIMPLES deixaria de achar a frase sem que ela tivesse saído.
     def teste_resposta_simples_entra_e_o_paragrafo_antigo_fica_recolhido(self):
+        pagina = re.sub(r'<span class="termo"[^>]*>([^<]*)</span>', r"\1", self.pagina)
         for aba, texto in pl.RESPOSTA_SIMPLES.items():
-            self.assertIn(f'<p class="lead">{texto}</p><details class="mais-info"><summary>Mais informações: a resposta com todos os números</summary>', self.pagina, aba)
+            self.assertIn(f'<p class="lead">{pg.texto_para_o_grupo(texto)}</p><details class="mais-info"><summary>Mais informações: a resposta com todos os números</summary>', pagina, aba)
             self.assertIn(f'<section id="{aba}"', self.pagina, aba)
         saida = pl.aplicar('<style></style><main><section id="tela" hidden><h1>T</h1><p class="lead">b + c = 9</p></section></main>')
         self.assertIn(pl.RESPOSTA_SIMPLES["tela"], saida)

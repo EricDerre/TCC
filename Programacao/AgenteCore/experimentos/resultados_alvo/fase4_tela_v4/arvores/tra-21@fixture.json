@@ -1,0 +1,382 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/tra-21@fixture",
+ "nome": "tra-21@fixture",
+ "caso": "tra-21",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 4,
+ "nivel": 3,
+ "eventos": {
+  "primeiro": 2055,
+  "ultimo": 2076,
+  "hash": "2f9f1603e36de699"
+ },
+ "relatorio_v3": "../relatorios_v3/tra-21@fixture.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (585 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (585 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      2055
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3656 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      2058
+     ]
+    }
+   ],
+   "eventos": [
+    2058
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "contagem_inconsistente",
+     "detalhe": "posição 1, pontuação 39,41: 36,41 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 39.4081,
+     "posicao": 1
+    },
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 2, pontuação 24,57: 21,57 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 24.566,
+     "posicao": 2
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 3, pontuação 18,79: 15,79 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 18.7863,
+     "posicao": 3
+    },
+    {
+     "opcao": "localizador_quebrado",
+     "detalhe": "posição 4, pontuação 16,89: 16,89 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 16.8858,
+     "posicao": 4
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 5, pontuação 16,65: 13,65 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 16.6494,
+     "posicao": 5
+    },
+    {
+     "opcao": "campo_ausente",
+     "detalhe": "posição 6, pontuação 16,65: 13,65 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 16.6454,
+     "posicao": 6
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "detalhe": "posição 7, pontuação 16,31: 13,31 pelas palavras do caso, mais 2,0 por rota e 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 16.3074,
+     "posicao": 7
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "detalhe": "posição 8, pontuação 15,90: 12,90 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 15.8963,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `contagem_inconsistente` (39,41), `entidade-produto` (24,57) e `contrato-produto` (18,79).",
+     "origem": "observado",
+     "eventos": [
+      2056
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `contagem_inconsistente`, `entidade-produto` e `contrato-produto`; o da entidade, em `contagem_inconsistente`, `entidade-produto` e `contrato-produto`.",
+     "origem": "observado",
+     "eventos": [
+      2056
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `localizador_quebrado` (16,89), `colecao_no_lugar_de_objeto` (16,65), `campo_ausente` (16,65), `tempo_de_resposta_excedido` (16,31) e `estrutura_aninhada_divergente` (15,90).",
+     "origem": "observado",
+     "eventos": [
+      2056
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 200 e 47 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      2056
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `contrato-produto`, e o primeiro de fora, `localizador_quebrado`, só pelo texto do caso o segundo estaria à frente (16,89 contra 15,79); os reforços em código viraram a ordem, com diferença final de 1,90.",
+     "origem": "observado",
+     "eventos": [
+      2056
+     ]
+    }
+   ],
+   "eventos": [
+    2056
+   ],
+   "entregues": [
+    "contagem_inconsistente",
+    "entidade-produto",
+    "contrato-produto"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 47
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "contagem_inconsistente",
+   "alternativas": [
+    {
+     "opcao": "contagem_inconsistente",
+     "probabilidade": 0.9857121111128564,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,986; verbetes entregues que a tratam: `contagem_inconsistente`"
+    },
+    {
+     "opcao": "resposta_truncada",
+     "probabilidade": 0.00325247137374106,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,003; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "probabilidade": 8.457543119002335e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 3.6837721769902756e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 3.6837721769902756e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 1.497741995439929e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 1.497741995439929e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `contagem_inconsistente`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `resposta_truncada` (Resposta truncada), ficou com probabilidade 0,003 contra 0,986 da escolhida; nenhum verbete entregue a sustenta.",
+     "origem": "observado",
+     "eventos": [
+      2076
+     ]
+    },
+    {
+     "texto": "As outras 5 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `colecao_no_lugar_de_objeto` (0,000), `corpo_nao_e_json` (0,000) e `corpo_vazio` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      2076
+     ]
+    },
+    {
+     "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,986, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      2076
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      2076
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `contagem_inconsistente`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `contagem_inconsistente`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `contagem_inconsistente`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `contagem_inconsistente` (Contagem inconsistente; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/contagem_inconsistente.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/contagem_inconsistente.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      2076
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 7 de 7 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      2076
+     ]
+    }
+   ],
+   "eventos": [
+    2076
+   ],
+   "segunda": "resposta_truncada",
+   "campo": null,
+   "confianca": {
+    "selo": "medio",
+    "palavra": "média",
+    "p_rotulo": 0.9857121111128564,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 26,
+     "certos": 22,
+     "acerto_pct": 84.6
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,986, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Contagem inconsistente",
+   "probabilidade": 0.9857121111128564,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário vê uma lista incompleta de produtos, com um item ausente que deveria estar presente.",
+  "fonte": "[contagem_inconsistente]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: contagem_inconsistente\nCAMPO: nenhum\nIMPACTO: O usuário vê uma lista incompleta de produtos, com um item ausente que deveria estar presente.\nFONTE: [contagem_inconsistente]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 23,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "medio",
+  "confianca": "média",
+  "falha": null,
+  "escolha": "contagem_inconsistente",
+  "causa_em_palavras": "Contagem inconsistente",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

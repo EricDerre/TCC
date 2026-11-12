@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:26:07.669Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-26",
+  "comentario": "O diagnóstico é preciso e adequado. O sintoma principal e o código HTTP apontam para a falta de um recurso (a listagem do produto de ID 5 constava na grade principal do frontend, mas a API retornou status 404 com a mensagem produto não encontrado no GET direto). O defeito se alinha exatamente à definição de recurso_inexistente. O motor de busca entregou os resultados ideais e o LLM interpretou corretamente o cenário.",
+  "decidido_em": "2026-11-09T22:27:02.236Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 26,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:27:13.689Z",
+  "segundos": 55,
+  "segundos_relogio": 55,
+  "utilidade": 5
+}

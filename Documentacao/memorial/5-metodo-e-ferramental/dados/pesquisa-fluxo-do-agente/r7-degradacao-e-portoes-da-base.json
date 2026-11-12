@@ -1,0 +1,228 @@
+{
+  "_tag": "! Alteração de IA - Revisar: leitura da rodada 7 da pesquisa (10/11/2026), tópico r7-degradacao-e-portoes-da-base, escrita por um subagente leitor: as fontes abertas, o que cada uma afirma e o que não afirma.",
+  "_motivo": "! Motivo: a ficha 64 pede pesquisa antes de qualquer mudança no fluxo do agente; a leitura fica em JSON para o integrador gerar o levantamento e para a segunda leitura conferir fonte a fonte.",
+  "key": "r7-degradacao-e-portoes-da-base",
+  "frente": 3,
+  "titulo": "Degradação da base de conhecimento com o tempo e portões de validação das edições",
+  "pesquisado_em": "10/11/2026",
+  "pergunta": "Como uma base de conhecimento ou memória editada por um modelo se degrada com o tempo, e que portões de validação a literatura e a prática usam antes de aceitar uma edição (só aceitar se os casos ligados ao item não piorarem; aprovação humana à imagem de uma pull request)?",
+  "ja_levantado": [
+    {"secao": "§6.13.3", "o_que_ja_dizia": "Admissão, consolidação e curadoria de memória escrita pelo agente: A-Mem (ligar memória nova às antigas), Dynamic Cheatsheet (o modelo decide o que manter, sem validador), ConsistencyGate (filtro por autoconsistência), MemoryAgentBench (o modelo falha em consolidar fato contraditório) e LightMem (consolidação em modelos de 1B a 3B). Não trazia o efeito de adição e apagamento ao longo do tempo."},
+    {"secao": "§6.13.7", "o_que_ja_dizia": "Detecção de documentação desatualizada (comentário just-in-time, CASCADE, DocAgent) e atualização seletiva por diff do Git (RepoDoc); o desenho 'IA propõe, código decide'."},
+    {"secao": "§6.13.10", "o_que_ja_dizia": "Filtros adotados: histórico datado de revisões nunca sobrescritas, auditoria separada de admissão e de atualização, revisão humana dirigida por métricas de rejeição em vez de amostra uniforme."},
+    {"secao": "§6.15.1", "o_que_ja_dizia": "Modelo de revisão de pull request (GitHub, Azure DevOps), pesquisa sobre revisão de código e humanos revisando saída de IA; fixou o que o hub precisa mostrar ao revisor."},
+    {"secao": "§6.15.13", "o_que_ja_dizia": "GEPA lido como otimizador offline de prompt (minilote, depois conjunto de validação com fronteira de Pareto), não como filtro de respostas. Faltava a regra de aceitação medida e a degradação da base."}
+  ],
+  "fontes": [
+    {
+      "id": "F01",
+      "referencia_abnt": "XIONG, Z.; LIN, Y.; XIE, W.; HE, P.; LIU, Z.; TANG, J.; LAKKARAJU, H.; XIANG, Z. How Memory Management Impacts LLM Agents: An Empirical Study of Experience-Following Behavior. arXiv, 2025. Disponível em: https://arxiv.org/abs/2505.16067. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2505.16067",
+      "url": "https://arxiv.org/abs/2505.16067",
+      "ano": 2025,
+      "veiculo": "arXiv (preprint; a página não indica congresso)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo; versão HTML (seções 3 a 5, tabelas 1, 2 e 4, limitações), lida por extração da página",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F01.a", "afirmacao_pt": "Quando o agente grava todas as execuções na memória, o desempenho cai abaixo do de uma memória fixa nos quatro agentes testados; só a adição seletiva por rótulo de verdade supera a memória fixa.", "numero": "EHRAgent: fixa 16,75, grava tudo 13,05, seletiva estrita 38,50 (acurácia); CIC-IoT: 71,50, 59,90 e 85,40; AgentDriver: 40,11, 32,32 e 51,00 (sucesso)", "condicao": "GPT-4o-mini como agente; quatro tarefas (regressão sintética, consultas a prontuários, planejamento de direção, classificação de tráfego IoT); a seletiva estrita compara com o gabarito", "onde_na_fonte": "tabela 1, seção 3.1"},
+        {"id": "F01.b", "afirmacao_pt": "Entradas parecidas produzem saídas parecidas (comportamento de seguir a experiência), e por isso uma experiência errada gravada se propaga: gravar tudo ou filtrar por juiz automático aumenta a distância para uma execução sem erros.", "numero": "correlação de Pearson perto de 1 no RegAgent com memória grande", "condicao": "GPT-4o-mini; juízes GPT-4o-mini, GPT-4.1-mini e GPT-4.1-mini ajustado em 300 trajetórias", "onde_na_fonte": "seções 3.3 e 3.4, figura 4"},
+        {"id": "F01.c", "afirmacao_pt": "Apagar registros por utilidade histórica (média do ganho nas vezes em que foi recuperado) melhora o resultado e encolhe a memória; apagar por pouca recuperação encolhe mais, com perda pequena.", "numero": "EHRAgent: de 38,67 para 42,06 com memória de 1.012 para 784; combinada: 42,34 com 248 registros; CIC-IoT: de 85,40 para 89,60", "condicao": "GPT-4o-mini; avaliador estrito (compara com o gabarito)", "onde_na_fonte": "tabela 2, seção 4.2"},
+        {"id": "F01.d", "afirmacao_pt": "Os registros que sobrevivem à poda são mais corretos que os apagados, mas execuções aparentemente certas podem servir de pouco ou de mau exemplo (repetição desalinhada).", "numero": "CIC-IoT: 78,9% de corretos entre os mantidos contra 56,7% entre os apagados; EHRAgent: 44,1% contra 36,3%", "condicao": "juiz GPT-4o-mini", "onde_na_fonte": "tabela 4, seção 4.3"}
+      ],
+      "nao_afirma": ["Só modelo de API (GPT-4o-mini; checagens com GPT-4o e DeepSeek-V3); nenhum modelo de 7B local ou quantizado.", "Tarefas de agente com execução e rótulo, não de documentação em texto; a memória guarda execuções, não notas escritas pelo modelo.", "Não estuda fusão, resumo nem reflexão (o próprio texto diz); sem garantia teórica."],
+      "aplicacao_ao_agente": "Sustenta que gravar toda proposta de nota sem rótulo piora a base e que um sinal de utilidade por uso (o verbete ajudou ou não nos casos em que foi entregue) serve para apagar; o rótulo de verdade que o projeto tem nos 90 casos faz o papel da adição seletiva estrita."
+    },
+    {
+      "id": "F02",
+      "referencia_abnt": "ZHANG, Q. et al. Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models. arXiv, 2025. Disponível em: https://arxiv.org/abs/2510.04618. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2510.04618",
+      "url": "https://arxiv.org/abs/2510.04618",
+      "ano": 2025,
+      "veiculo": "arXiv (preprint, v3 de mar. 2026; a página não indica congresso)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML até cerca do caractere 100.000 (seções 2.2, 3, 3.1, 3.2, 4.2, 4.6, 4.7); apêndice A.5 (ablação das atualizações incrementais) não lido",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F02.a", "afirmacao_pt": "Reescrever o contexto inteiro a cada passo pode colapsar a base: num estudo de caso a base passou de 18.282 para 122 tokens de um passo para o seguinte e a acurácia caiu abaixo da de nenhuma adaptação.", "numero": "18.282 tokens com 66,7 de acurácia, depois 122 tokens com 57,1; sem adaptação, 63,7", "condicao": "AppWorld, método Dynamic Cheatsheet; a página não diz que modelo reescreveu o contexto", "onde_na_fonte": "seção 2.2, figura 2"},
+        {"id": "F02.b", "afirmacao_pt": "O viés para a brevidade (otimizadores convergem para instruções curtas e genéricas) é citado de outro trabalho, não medido nos experimentos do próprio artigo.", "numero": "", "condicao": "evidência tomada de Gao et al. (2025), geração de testes unitários", "onde_na_fonte": "seção 2.2"},
+        {"id": "F02.c", "afirmacao_pt": "A alternativa é guardar itens em tópicos com contadores de útil e prejudicial e aplicar só atualizações pequenas (deltas) por lógica comum, sem novo texto do modelo, acrescentando itens e removendo duplicatas por similaridade de embedding.", "numero": "ablação offline: completo 59,4; sem reflexão nem múltiplas épocas 55,1; online sem rótulo 56,1; base ReAct 42,4", "condicao": "AppWorld, DeepSeek-V3.1 como gerador, refletor e curador; checagens com GPT-OSS-120B, GPT-5.1 e Llama-3.3-70B", "onde_na_fonte": "seções 3, 3.1, 3.2 e tabela 3"}
+      ],
+      "nao_afirma": ["Nenhum modelo pequeno ou quantizado; o menor citado é Llama-3.3-70B.", "O colapso foi observado num método concorrente em uma tarefa de agente, não em base de documentação escrita pelo modelo.", "Os ganhos do ACE aparecem em acurácia de tarefa; não há portão de regressão por item."],
+      "aplicacao_ao_agente": "Argumenta contra pedir ao modelo de 7B que reescreva um verbete inteiro: edições em acréscimo, com contador de uso por item e fusão feita em código, evitam o encolhimento. Combina com o desenho do projeto de só acrescentar com validação em código."
+    },
+    {
+      "id": "F03",
+      "referencia_abnt": "AGRAWAL, L. A. et al. GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning. arXiv, 2025. Disponível em: https://arxiv.org/abs/2507.19457. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2507.19457",
+      "url": "https://arxiv.org/abs/2507.19457",
+      "ano": 2025,
+      "veiculo": "arXiv (v2 de fev. 2026; a página não confirma congresso)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML até cerca do caractere 100.000 (seção 3, algoritmo 1, figura 4, tabelas 1 e 2)",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F03.a", "afirmacao_pt": "A regra de aceitação tem dois portões: o candidato só entra no conjunto se a média num minilote de treino superar a do pai nesse mesmo minilote, e só então é avaliado no conjunto de validação inteiro, onde é escolhido o melhor.", "numero": "", "condicao": "otimização de prompt; minilote de D_feedback e validação D_pareto", "onde_na_fonte": "algoritmo 1 (linha 16), figura 4, seção 3"},
+        {"id": "F03.b", "afirmacao_pt": "Com essa regra o GEPA superou o ajuste por aprendizado por reforço e o MIPROv2 no Qwen3 8B, com muito menos execuções.", "numero": "agregado de seis testes: GEPA 54,85, GRPO 48,91, MIPROv2 47,84; até 35 vezes menos execuções que o GRPO", "condicao": "Qwen3 8B (aberto) e GPT-4.1 Mini; tabela 1 e 2; tarefas de raciocínio e de respostas, não de documentação", "onde_na_fonte": "tabelas 1 e 2"}
+      ],
+      "nao_afirma": ["Otimiza o prompt do agente, não edita uma base de conhecimento por item.", "O portão compara a média do lote; não exige que cada caso que passava continue passando.", "Não mede degradação ao longo de muitas rodadas de uso."],
+      "aplicacao_ao_agente": "É o exemplo de portão por média em lote e depois em validação; para os verbetes, um portão mais estrito (nenhum caso ligado ao verbete piora) seria uma variante mais conservadora do mesmo desenho."
+    },
+    {
+      "id": "F04",
+      "referencia_abnt": "JIMENEZ, C. E.; YANG, J.; WETTIG, A.; YAO, S.; PEI, K.; PRESS, O.; NARASIMHAN, K. SWE-bench: Can Language Models Resolve Real-World GitHub Issues? arXiv, 2023. Disponível em: https://arxiv.org/abs/2310.06770. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2310.06770",
+      "url": "https://arxiv.org/abs/2310.06770",
+      "ano": 2023,
+      "veiculo": "ICLR 2024 (segundo os comentários da página do arXiv)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo; versão HTML, seções 2.1 a 2.3 e apêndices A.4 e A.5, por extração da página",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F04.a", "afirmacao_pt": "Um conserto só conta como resolvido se passarem todos os testes que falhavam e passam a passar (FAIL_TO_PASS) e todos os que já passavam e devem continuar passando (PASS_TO_PASS).", "numero": "mediana de 51 testes PASS_TO_PASS por instância; 2.294 problemas em 12 repositórios Python", "condicao": "problemas reais do GitHub; o melhor modelo da época (Claude 2) resolvia 1,96%", "onde_na_fonte": "seções 2.2 e 2.3, apêndice A.4"}
+      ],
+      "nao_afirma": ["Avalia código, não texto de documentação.", "Não trata de aceitar ou recusar uma edição de base de conhecimento.", "Os números de resolução são de 2023 e de modelos grandes."],
+      "aplicacao_ao_agente": "É o modelo clássico de portão por regressão: uma edição só passa se os casos que já acertavam seguem acertando e o caso-alvo passa a acertar. Para um verbete, os casos ligados a ele fazem o papel dos testes PASS_TO_PASS."
+    },
+    {
+      "id": "F05",
+      "referencia_abnt": "YAO, Y.; WANG, P.; TIAN, B.; CHENG, S.; LI, Z.; DENG, S.; CHEN, H.; ZHANG, N. Editing Large Language Models: Problems, Methods, and Opportunities. In: EMNLP, 2023. arXiv, 2023. Disponível em: https://arxiv.org/abs/2305.13172. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2305.13172",
+      "url": "https://arxiv.org/abs/2305.13172",
+      "ano": 2023,
+      "veiculo": "EMNLP 2023",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo; versão HTML, seção 2 (definições) e tabela 1 (localidade no ZsRE)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F05.a", "afirmacao_pt": "Uma edição boa precisa ser confiável (acerta o caso editado), generalizar (acerta as reformulações) e ser local, isto é, manter as respostas do modelo antes da edição nas entradas sem relação com ela.", "numero": "", "condicao": "edição de conhecimento em pesos de modelo", "onde_na_fonte": "seção 2, equações 2 a 4"},
+        {"id": "F05.b", "afirmacao_pt": "A localidade varia muito por método: o ajuste fino simples mexe no que não devia, enquanto os métodos que editam com precisão mantêm quase tudo.", "numero": "localidade no ZsRE: FT-L 89,01 (T5-XL) e 37,24 (GPT-J); ROME 99,19 e MEMIT 99,62 (GPT-J); SERAC 98,13 e 99,90", "condicao": "T5-XL e GPT-J; ROME e MEMIT não funcionaram no T5-XL", "onde_na_fonte": "tabela 1"}
+      ],
+      "nao_afirma": ["Edita pesos, não uma base de documentos em Markdown recuperada por busca.", "Não fala de aprovação humana nem de portão em produção.", "Os números são de 2023, em T5-XL e GPT-J (modelos da ordem de 3B a 6B), sem quantização."],
+      "aplicacao_ao_agente": "Dá o nome e a conta para o que o projeto quer: depois de editar um verbete, os casos sem relação com ele não podem mudar de resposta; a localidade vira a fração dos casos não ligados cuja saída ficou igual."
+    },
+    {
+      "id": "F06",
+      "referencia_abnt": "GU, J.-C.; XU, H.-X.; MA, J.-Y.; LU, P.; LING, Z.-H.; CHANG, K.-W.; PENG, N. Model Editing Harms General Abilities of Large Language Models: Regularization to the Rescue. In: EMNLP, 2024. arXiv, 2024. Disponível em: https://arxiv.org/abs/2401.04700. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2401.04700",
+      "url": "https://arxiv.org/abs/2401.04700",
+      "ano": 2024,
+      "veiculo": "EMNLP 2024",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página do arXiv",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F06.a", "afirmacao_pt": "Editar fatos num modelo pode prejudicar habilidades gerais (raciocínio, inferência, perguntas e respostas), porque a edição altera demais os pesos originais.", "numero": "quatro métodos de edição, três modelos, oito tarefas", "condicao": "edição em pesos; a regularização proposta mantém mais de 94% do desempenho de edição", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["O resumo não menciona edições em sequência nem o número de edições (o título que a pista sugeria, sobre esquecimento catastrófico, não foi o que abriu).", "Não fala de bases de documentos."],
+      "aplicacao_ao_agente": "Reforça, por analogia, que medir só o caso editado não basta: o dano aparece em casos sem relação, o que justifica rodar também os casos fora do verbete editado."
+    },
+    {
+      "id": "F07",
+      "referencia_abnt": "CONSORTIUM FOR SERVICE INNOVATION. Technique 5.2: KCS Article State. In: KCS v6 Practices Guide. Disponível em: https://library.serviceinnovation.org/KCS/KCS_v6/KCS_v6_Practices_Guide/030/040/010/030. Acesso em: 10 nov. 2026.",
+      "identificador": "https://library.serviceinnovation.org/KCS/KCS_v6/KCS_v6_Practices_Guide/030/040/010/030",
+      "url": "https://library.serviceinnovation.org/KCS/KCS_v6/KCS_v6_Practices_Guide/030/040/010/030",
+      "ano": 2023,
+      "veiculo": "Guia de práticas do Consortium for Service Innovation (KCS v6)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "técnica 5.2 (estados do artigo, transições de confiança); as técnicas 7.1 (licenças) e 5.5 (arquivar) só foram identificadas no índice, não lidas",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F07.a", "afirmacao_pt": "O artigo passa por estados: em andamento (sem solução), não validado (tem solução mas pouca confiança ou fora do padrão de conteúdo), validado (confiança confirmada e conforme o padrão) e arquivado (sai da busca sem ser apagado e pode voltar).", "numero": "", "condicao": "gestão de conhecimento de suporte; prática, não experimento", "onde_na_fonte": "seção sobre confiança do artigo"},
+        {"id": "F07.b", "afirmacao_pt": "A permissão depende do papel: o candidato só cria ou altera artigos não validados e um coach revisa; os papéis acima podem validar, e quem aponta problema marca o artigo como não validado para um publicador aprovar a mudança.", "numero": "", "condicao": "modelo de licenças do KCS; a lista de papéis vem desta página, a técnica 7.1 não foi aberta", "onde_na_fonte": "seções de transições de confiança e de quem define o estado"},
+        {"id": "F07.c", "afirmacao_pt": "Passar de não validado a validado exige reutilização com confirmação de quem pediu e conformidade com o padrão de conteúdo, ou seja, o uso bem-sucedido é o gatilho da promoção.", "numero": "", "condicao": "prática do KCS, sem medida de custo", "onde_na_fonte": "transições de confiança"}
+      ],
+      "nao_afirma": ["Não mede custo da revisão nem o quanto ela reduz erro.", "Não trata de texto escrito por modelo de linguagem.", "Não detalha a regra de arquivamento por falta de uso (técnica 5.5 não lida)."],
+      "aplicacao_ao_agente": "Dá um modelo pronto de estados e de quem decide: nota do modelo entra como não validada, e só a confirmação em casos (uso com acerto) mais a revisão humana a promovem; é o equivalente de papel de candidato para o modelo."
+    },
+    {
+      "id": "F08",
+      "referencia_abnt": "WINTERS, T.; MANSHRECK, T.; WRIGHT, H. Software Engineering at Google: Lessons Learned from Programming over Time. Sebastopol: O'Reilly, 2020. Capítulo 10, Documentation. Disponível em: https://abseil.io/resources/swe-book/html/ch10.html. Acesso em: 10 nov. 2026.",
+      "identificador": "https://abseil.io/resources/swe-book/html/ch10.html",
+      "url": "https://abseil.io/resources/swe-book/html/ch10.html",
+      "ano": 2020,
+      "veiculo": "Livro (O'Reilly), versão aberta no site Abseil",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "capítulo 10 completo na versão HTML, por extração da página",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F08.a", "afirmacao_pt": "Documentação tratada como código: fica em controle de versão junto do código, tem dono nomeado, é revisada, é atualizada na mesma mudança do código e seus erros entram como defeitos; sem dono, as páginas ficam obsoletas e duplicadas.", "numero": "", "condicao": "prática do Google, relato de caso (a wiki GooWiki), sem experimento", "onde_na_fonte": "seções Ownership e Treating Docs Like Code"},
+        {"id": "F08.b", "afirmacao_pt": "A revisão da documentação tem três tipos (técnica, de público e de escrita), e mesmo um só revisor é melhor que nenhum.", "numero": "", "condicao": "prática", "onde_na_fonte": "seção de revisão"},
+        {"id": "F08.c", "afirmacao_pt": "Os sinais de limpeza são data de última revisão com lembrete por e-mail após um prazo (como três meses), aviso de obsoleto e apagamento; ao aposentar a wiki, cerca de 90% dos documentos não tinham visita nem edição nos meses anteriores.", "numero": "cerca de 90%", "condicao": "uma wiki interna em desuso, valor aproximado do relato", "onde_na_fonte": "seções de documentos desatualizados"}
+      ],
+      "nao_afirma": ["Não é estudo medido; é experiência de uma empresa.", "Não trata de documentação escrita por modelo.", "Não dá o custo em horas da revisão."],
+      "aplicacao_ao_agente": "Sustenta a ideia de revisar verbetes como código, com dono e data de última revisão, e de usar a falta de uso (verbete nunca entregue nem consultado) como sinal para limpar."
+    },
+    {
+      "id": "F09",
+      "referencia_abnt": "ZHAO, A.; HUANG, D.; XU, Q.; LIN, M.; LIU, Y.-J.; HUANG, G. ExpeL: LLM Agents Are Experiential Learners. arXiv, 2023. Disponível em: https://arxiv.org/abs/2308.10144. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2308.10144",
+      "url": "https://arxiv.org/abs/2308.10144",
+      "ano": 2023,
+      "veiculo": "AAAI 2024 (a página lida não confirma; consta em referencias.md)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML v3 até cerca do caractere 100.000 (operadores de insights, contagem de importância, ablação)",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F09.a", "afirmacao_pt": "A lista de regras aprendidas é mantida por quatro operadores (adicionar, editar, votar a favor, votar contra); cada regra começa com contagem 2, sobe com voto a favor ou edição, desce com voto contra e é removida ao chegar a zero.", "numero": "contagem inicial 2; remoção em 0", "condicao": "gpt-4-0613 extrai as regras; gpt-3.5-turbo-0613 age; HotpotQA", "onde_na_fonte": "seção do método de extração de insights"},
+        {"id": "F09.b", "afirmacao_pt": "Regras aprendidas do próprio histórico superaram regras escritas à mão, e acrescentar reflexões piorou; um extrator mais fraco rendeu menos.", "numero": "HotpotQA: ReAct 28,0; regras à mão 32,0; com reflexões 29,0; extrator gpt-3.5 32,0; completo 39,0", "condicao": "agente gpt-3.5-turbo; sucesso em HotpotQA com desvio entre execuções", "onde_na_fonte": "ablação"}
+      ],
+      "nao_afirma": ["Não mede degradação em longo prazo nem erro propagado de regras erradas.", "O voto é decidido pelo próprio modelo, sem verificação externa.", "Sem modelo pequeno."],
+      "aplicacao_ao_agente": "Mostra a remoção por contagem de votos; a diferença para o projeto é que o voto viria de código (o verbete ajudou ou não nos casos com gabarito), não do modelo de 7B."
+    },
+    {
+      "id": "F10",
+      "referencia_abnt": "LV, C.; CHANG, H.; TAO, S.; CHEN, M.; FAN, Z.; ZHANG, Z.; GUO, Y.; ZHOU, S. All-Mem: Agentic Lifelong Memory via Dynamic Topology Evolution. arXiv, 2026. Disponível em: https://arxiv.org/abs/2603.19595. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2603.19595",
+      "url": "https://arxiv.org/abs/2603.19595",
+      "ano": 2026,
+      "veiculo": "arXiv (preprint)",
+      "revisao_por_pares": false,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página do arXiv",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F10.a", "afirmacao_pt": "Os autores afirmam que sistemas de memória costumam piorar à medida que o histórico cresce, devolvendo contexto redundante, desatualizado ou ruidoso, e propõem consolidação offline sem destruir o original (dividir, fundir, atualizar, com um diagnosticador que dá confiança a cada edição).", "numero": "o resumo não traz número", "condicao": "LoCoMo e LongMemEval-s; os modelos não são nomeados no resumo", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["O resumo não mede a degradação nem dá número; a afirmação é de motivação do método.", "Memória de conversa, não documentação de causa raiz."],
+      "aplicacao_ao_agente": "Apoia, com baixa força, o princípio de consolidar fora de linha e sem apagar a versão original (histórico de revisões), o que já consta nos filtros adotados."
+    },
+    {
+      "id": "F11",
+      "referencia_abnt": "XIE, W.; GUO, S.; ZHANG, F.; XIA, T.; YANG, X.; MA, L.; YAN, J.; REN, Q. MemEvoBench: Benchmarking Safety Risks from Memory Misevolution in LLM Agents. arXiv, 2026. Disponível em: https://arxiv.org/abs/2604.15774. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2604.15774",
+      "url": "https://arxiv.org/abs/2604.15774",
+      "ano": 2026,
+      "veiculo": "arXiv (preprint, v2 de mai. 2026)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e versão HTML até cerca do caractere 100.000 (seções 4.1 a 4.4, tabelas 1 a 3)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F11.a", "afirmacao_pt": "Memória evoluída com informação enganosa deixa o agente pior do que sem memória: nas perguntas e respostas, a taxa de sucesso do ataque sobe muito com a memória.", "numero": "Qwen3-32B na rodada 1: 50,5% sem memória contra 85,2% com; Qwen3-Next-80B: 42,6% contra 84,2%", "condicao": "nove modelos de 32B a 235B e de API, temperatura 0; 108 casos de perguntas e 83 de fluxo; no fluxo a diferença é pequena", "onde_na_fonte": "tabelas 1 a 3, seção 4.4"},
+        {"id": "F11.b", "afirmacao_pt": "Um prompt de segurança fixo ajuda pouco e piora com feedback enviesado, enquanto uma ferramenta que corrige a memória derruba mais a taxa, mas a detecção de memória enganosa piora com as rodadas.", "numero": "prompt fixo: média de 76,2% para 55,5% na rodada 1; Qwen3-235B: de 76,9% para 20,4% com a ferramenta de correção", "condicao": "mesmos nove modelos; mede segurança, não acerto de classificação", "onde_na_fonte": "seções 4.2 e 4.3, figura 5"}
+      ],
+      "nao_afirma": ["Mede risco de segurança sob memória contaminada de propósito, não erro acidental de um modelo pequeno escrevendo a própria nota.", "Nenhum modelo de 7B."],
+      "aplicacao_ao_agente": "Contra a ideia de que uma regra no prompt basta: a correção da base precisa ser uma etapa separada com checagem, e a checagem também se desgasta com o número de rodadas."
+    }
+  ],
+  "nao_achei": [
+    "Fonte primária (artigo revisado por pares) que mede portão de regressão por item para edições de documento em modelos de até 13B: não achei.",
+    "Prática de teste de regressão de prompt: só achei guias de praticantes (golden dataset, queda máxima da taxa de acerto, caso canário), sem documentação oficial nem medida; ficaram de fora.",
+    "KCS: as técnicas 7.1 (licenças e papéis) e 5.5 (arquivar artigos antigos) só foram vistas no índice; o texto do guia sobre custo e frequência de revisão não foi lido.",
+    "A pista de esquecimento por edições em sequência no modelo (edição em escala) não foi aberta: o endereço tentado trouxe outro artigo (F06, só o resumo).",
+    "Voyager: a página do resumo não afirma verificação antes de admitir a habilidade, então não entrou; a seção do método não foi aberta.",
+    "Aghajani et al. 2019 já consta em referencias.md e não foi reaberto; trabalhos de 2024 a 2026 sobre detecção de documentação desatualizada já estão no §6.13.7. Envenenamento de memória (MemoryGraft, MPBench, MemPoison) só apareceu em busca e não foi aberto; é ataque deliberado, fora do escopo.",
+    "Número de custo de revisão humana em horas ou por item para base de conhecimento: não achei."
+  ],
+  "rascunho_de_sintese_pt": "O que as fontes sustentam para a pergunta, em ordem do problema à solução. (1) Gravar sem filtro faz mal: no estudo de memória de agente, gravar tudo ficou abaixo da memória fixa nos quatro agentes, e só a adição com rótulo de verdade ficou acima (F01.a). A experiência errada se propaga porque entradas parecidas puxam saídas parecidas (F01.b). Isso vale com GPT-4o-mini, não com 7B local. (2) Apagar ajuda quando guiado por utilidade: apagar por média histórica do ganho melhorou o acerto e encolheu a memória (F01.c), e os registros que ficam são mais corretos (F01.d). O ExpeL mostra a mesma ideia com votos e remoção em zero, mas com voto do próprio modelo (F09). (3) A base pode encolher por reescrita total: o ACE mede um colapso de 18.282 para 122 tokens com queda de acurácia abaixo de nenhuma adaptação (F02.a), num método concorrente e em modelo grande; o viés para brevidade é citado de outro trabalho (F02.b). A saída é atualizar por acréscimo e fusão em código (F02.c). (4) Portão por regressão: o modelo mais claro é o SWE-bench, que só aceita o conserto se os testes que já passavam seguem passando (F04.a); o GEPA aceita em dois passos, minilote e depois validação, por média e não por caso (F03.a). Na edição de conhecimento, localidade é a fração de entradas sem relação que não muda (F05.a, F05.b), e editar pode machucar habilidades gerais (F06.a, só resumo). Ninguém dos três mede isso para um verbete de documentação lido por busca. (5) Portão humano: o KCS fornece estados (em andamento, não validado, validado, arquivado), papéis com permissão diferente e promoção por reutilização confirmada (F07.a a F07.c); o Google trata documentação como código, com dono, revisão de três tipos, data de revisão e apagamento (F08.a a F08.c). Ambos são relatos de prática, sem custo medido. (6) Sinais para limpar: pouca recuperação e baixa utilidade média (F01.c), votos (F09.a), data de última revisão e falta de visitas (F08.c); o All-Mem apenas afirma que memória degrada com o crescimento, sem número no resumo (F10.a). (7) Contra uma regra só no prompt: a correção da memória precisa de etapa própria, e ela mesma perde força nas rodadas (F11.b). O que ninguém mediu em modelo pequeno: degradação da base com um modelo de 7B quantizado escrevendo notas, a eficácia de portão por casos ligados a cada item e o custo real de uma revisão humana por item."
+}

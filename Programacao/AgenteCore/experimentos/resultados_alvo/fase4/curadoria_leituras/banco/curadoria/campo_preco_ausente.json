@@ -1,0 +1,10 @@
+{
+  "caminho": "aprendidos/campo_preco_ausente.md",
+  "corpo_sha": "b8483e68a59d5e9c",
+  "editado": true,
+  "editado_em": "2026-11-10T12:26:54.533Z",
+  "estado": "editada",
+  "id": "campo_preco_ausente",
+  "salvo_em": "2026-11-10T12:18:34.466Z",
+  "texto": "\n# Campo preço ausente\n\nCamada de leitura do verbete `campo_preco_ausente` (`biblioteca_producao/aprendidos/campo_preco_ausente.md`). Tipo: aprendido (escrito pelo modelo a partir de um caso, nas Fases 3 e 4, e aceito pela validação em código e pela revisão); estado: ativo (em vigor); sistema: CobaiaFront (o site PHP); entidade principal: Produto.\n\n## O que é\n\nA omissão da chave preco no objeto da API faz com que a renderização do botão de compra/detalhes no frontend exiba o literal undefined (ou R$ undefined), em vez do valor numérico formatado.\n\n## Como aparece na tela\n\n- botao com valor undefined.\n- precos ausentes na interface.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `botao com valor undefined`, `precos ausentes na interface`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `campo_ausente` (Campo ausente).\n\n## Onde está no código\n\n- Arquivos: Programacao/CobaiaFront/produtos_api.php.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `campo ausente`, `preco`, `interface web`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado e aprovado. A definição do sintoma foi refinada para detalhar a exibição do literal undefined no frontend e o mapeamento do arquivo produtos_api.php foi preenchido.\n"
+}

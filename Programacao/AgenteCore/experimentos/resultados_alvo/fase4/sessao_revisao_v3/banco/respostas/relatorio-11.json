@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:53:21.017Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-11",
+  "comentario": "O modelo acertou precisamente o diagnóstico. O corpo da resposta era HTML (<html><body><h1>Erro</h1>...) em vez de um objeto JSON válido, violando frontalmente a expectativa do front-end que tentou realizar o parse e quebrou na tag <. O sintoma de erro no front-end junto com a resposta da API sustentam completamente a causa raiz corpo_nao_e_json. O mecanismo de busca funcionou perfeitamente, entregando o verbete correto em 1º lugar com folga na pontuação, a justificativa e o campo (nenhum) foram perfeitamente indicados.",
+  "decidido_em": "2026-11-09T19:53:46.997Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 11,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:53:56.143Z",
+  "segundos": 26,
+  "segundos_relogio": 26,
+  "utilidade": 5
+}

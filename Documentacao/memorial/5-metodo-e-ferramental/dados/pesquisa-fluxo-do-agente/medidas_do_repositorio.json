@@ -1,0 +1,1383 @@
+{
+ "_tag": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/medidas_fluxo_do_agente.py (10/11/2026): as medidas do repositório que a rodada 7 da pesquisa cita para as três ideias do Eric sobre o fluxo do agente (ficha 64), copiadas dos JSON das corridas 16, 20, 22, 23 e 24, da prévia da corrida 25, das taxas do modelo nesta máquina e da planilha de revisão do lote, mais o cruzamento, sem modelo, do acerto com o selo, os gatilhos e a posição do verbete da causa certa na busca refeita. NÃO editar à mão: `--check` compara com o regerado.",
+ "_motivo": "! Motivo: o levantamento §6.16, a proposta de desenho do analista de documentação e a aba do painel não podem trazer número digitado à mão; cada bloco diz no campo `fonte` de que arquivo e de que campo saiu, e a conta da posição só vale porque a busca refeita devolve os três verbetes gravados em todos os casos (campo `busca_refeita_igual`).",
+ "gerado_por": "ferramentas/medidas_fluxo_do_agente.py",
+ "gerado_em": "2026-11-10T19:22:16",
+ "maquina": {
+  "modelo": "qwen2.5:7b",
+  "registros": 120,
+  "prefill_tokens_por_s": 26.033,
+  "geracao_tokens_por_s": 4.283,
+  "tokens_gerados_mediana": 63.0,
+  "tokens_do_prompt_mediana": 1189.0,
+  "chars_por_token": 3.12,
+  "segundos_por_100_tokens_gerados": 23.3,
+  "segundos_por_100_tokens_lidos": 3.8,
+  "tokens_de_um_raciocinio_em_passos_na_literatura": 240,
+  "segundos_de_um_raciocinio_em_passos": 56.0,
+  "fonte": "resultados_alvo/fase4/taxas_progresso.json, por_modelo.qwen2.5:7b (medianas dos 120 registros das corridas 18d, 21d e 24)"
+ },
+ "ideia_1": {
+  "fase_2a": {
+   "modelo": "qwen2.5:7b",
+   "linear": "53,3%",
+   "estagios_compilador": "47,8%",
+   "estagios_dominio": "48,9%",
+   "linear_x_compilador": "14/9, p = 0,41",
+   "linear_x_dominio": "13/9, p = 0,52",
+   "fonte": "3-resultados-e-analises/fase-2a-relatorio-por-modelo.md, seção 3, linha do qwen2.5:7b (90 casos; b/c e p do teste pareado exato)"
+  },
+  "conferencias_em_codigo": {
+   "regras": [
+    "quatro_linhas_presentes",
+    "rotulo_no_conjunto",
+    "fonte_existe_na_biblioteca",
+    "fonte_estava_no_contexto",
+    "rotulo_sustentado_por_verbete_do_contexto",
+    "campo_existe_no_caso"
+   ],
+   "quantas": 6,
+   "fonte": "Programacao/AgenteCore/experimentos/diagnostico_ao_vivo.py, FALHA_POR_REGRA"
+  },
+  "conferencia_depois_da_resposta": {
+   "conferencias": [
+    "corpo_vazio",
+    "corpo_nao_e_json",
+    "resposta_truncada",
+    "colecao_no_lugar_de_objeto",
+    "tipo_divergente"
+   ],
+   "quantas": 5,
+   "casos_cujo_gabarito_tem_conferencia": 25,
+   "desses_contraditos": 0,
+   "por_corrida": [
+    {
+     "corrida": "corrida 16, os 90 casos da calibração",
+     "casos": 90,
+     "erros": 22,
+     "erros_com_rotulo_conferivel": 10,
+     "erros_contraditos": 8,
+     "acertos_contraditos": 0,
+     "lista": [
+      {
+       "caso": "sin-2",
+       "rotulo": "tipo_divergente",
+       "gabarito": "campo_renomeado"
+      },
+      {
+       "caso": "sin-5",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "campo_ausente"
+      },
+      {
+       "caso": "tra-3",
+       "rotulo": "tipo_divergente",
+       "gabarito": "chave_de_juncao_errada"
+      },
+      {
+       "caso": "efe-4",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "estado_da_tela_divergente"
+      },
+      {
+       "caso": "sin-12",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "campo_ausente"
+      },
+      {
+       "caso": "sin-14",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "campo_renomeado"
+      },
+      {
+       "caso": "semt-6",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "tipo_divergente"
+      },
+      {
+       "caso": "tra-12",
+       "rotulo": "tipo_divergente",
+       "gabarito": "escala_ou_unidade_errada"
+      }
+     ]
+    },
+    {
+     "corrida": "corrida 16, só os 54 casos de aprendizado",
+     "casos": 54,
+     "erros": 17,
+     "erros_com_rotulo_conferivel": 6,
+     "erros_contraditos": 6,
+     "acertos_contraditos": 0,
+     "lista": [
+      {
+       "caso": "sin-2",
+       "rotulo": "tipo_divergente",
+       "gabarito": "campo_renomeado"
+      },
+      {
+       "caso": "tra-3",
+       "rotulo": "tipo_divergente",
+       "gabarito": "chave_de_juncao_errada"
+      },
+      {
+       "caso": "efe-4",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "estado_da_tela_divergente"
+      },
+      {
+       "caso": "sin-12",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "campo_ausente"
+      },
+      {
+       "caso": "semt-6",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "tipo_divergente"
+      },
+      {
+       "caso": "tra-12",
+       "rotulo": "tipo_divergente",
+       "gabarito": "escala_ou_unidade_errada"
+      }
+     ]
+    },
+    {
+     "corrida": "corrida 22, os 36 oficiais de avaliação",
+     "casos": 36,
+     "erros": 5,
+     "erros_com_rotulo_conferivel": 3,
+     "erros_contraditos": 2,
+     "acertos_contraditos": 0,
+     "lista": [
+      {
+       "caso": "sin-5",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "campo_ausente"
+      },
+      {
+       "caso": "sin-14",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "campo_renomeado"
+      }
+     ]
+    },
+    {
+     "corrida": "corrida 24, os 36 inéditos",
+     "casos": 36,
+     "erros": 11,
+     "erros_com_rotulo_conferivel": 8,
+     "erros_contraditos": 8,
+     "acertos_contraditos": 0,
+     "lista": [
+      {
+       "caso": "sin-26",
+       "rotulo": "resposta_truncada",
+       "gabarito": "campo_ausente"
+      },
+      {
+       "caso": "semt-23",
+       "rotulo": "tipo_divergente",
+       "gabarito": "valor_fora_do_dominio"
+      },
+      {
+       "caso": "semt-27",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "valor_fora_do_dominio"
+      },
+      {
+       "caso": "tra-22",
+       "rotulo": "tipo_divergente",
+       "gabarito": "escala_ou_unidade_errada"
+      },
+      {
+       "caso": "tra-25",
+       "rotulo": "resposta_truncada",
+       "gabarito": "contagem_inconsistente"
+      },
+      {
+       "caso": "tra-26",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "chave_de_juncao_errada"
+      },
+      {
+       "caso": "tra-27",
+       "rotulo": "tipo_divergente",
+       "gabarito": "escala_ou_unidade_errada"
+      },
+      {
+       "caso": "efe-26",
+       "rotulo": "colecao_no_lugar_de_objeto",
+       "gabarito": "estado_da_tela_divergente"
+      }
+     ]
+    }
+   ],
+   "fonte": "as respostas gravadas em resultados_alvo/fase4/calibracao.json (por_k, k = 3), trilha.json e ineditos.json (campo casos), e a entrada de cada caso nos bancos de casos; as conferências são medidas_fluxo_do_agente.CONFERENCIAS_DO_ROTULO, escritas para esta prévia, fora do agente"
+  },
+  "experimento_em_texto": {
+   "inferencias": 90,
+   "minutos": 83,
+   "fonte": "os casos da calibração (calibracao.json, por_k) vezes a mediana de segundos por caso da corrida 16 (experimento_prompt.json, base.segundos_mediana)"
+  },
+  "corrida_23": {
+   "base_acertos": 68,
+   "casos": 90,
+   "condicoes": [
+    {
+     "condicao": "exemplar",
+     "acertos": 70,
+     "b": 6,
+     "c": 4,
+     "p_mcnemar": 0.7539,
+     "trocas_de_rotulo": 17,
+     "tokens_entrada_mediana": 1282.5,
+     "segundos_mediana": 69.56
+    },
+    {
+     "condicao": "rotulos_por_extenso",
+     "acertos": 67,
+     "b": 5,
+     "c": 6,
+     "p_mcnemar": 1.0,
+     "trocas_de_rotulo": 17,
+     "tokens_entrada_mediana": 1089.5,
+     "segundos_mediana": 40.64
+    }
+   ],
+   "base_tokens_entrada_mediana": 1106.5,
+   "base_segundos_mediana": 55.36,
+   "fonte": "resultados_alvo/fase4/experimento_prompt.json, base e por_condicao"
+  },
+  "calibracao": {
+   "casos": 90,
+   "k": 3,
+   "auroc_da_probabilidade": 0.7988,
+   "auroc_ic95": [
+    0.6701,
+    0.9021
+   ],
+   "erros": 22,
+   "por_selo": [
+    {
+     "selo": "baixo",
+     "casos": 27,
+     "certos": 12,
+     "errados": 15,
+     "erro_pct": 55.6
+    },
+    {
+     "selo": "medio",
+     "casos": 26,
+     "certos": 22,
+     "errados": 4,
+     "erro_pct": 15.4
+    },
+    {
+     "selo": "alto",
+     "casos": 37,
+     "certos": 34,
+     "errados": 3,
+     "erro_pct": 8.1
+    }
+   ],
+   "leitura": "primeiro_token_do_rotulo",
+   "baixo_ate": 0.8317943867608124,
+   "alto_a_partir_de": 0.9898271080008889,
+   "fonte": "resultados_alvo/fase4/calibracao.json, por_k (k = 3), por_selo e limiares"
+  }
+ },
+ "ideia_2": {
+  "corrida_22": {
+   "casos": 36,
+   "acertos": 31,
+   "erros": 5,
+   "divergencia": {
+    "vp": 4,
+    "fn": 1,
+    "fp": 20,
+    "vn": 11,
+    "tpr": 0.8,
+    "tnr": 0.3548387096774194,
+    "produto": 0.2838709677419355,
+    "acaso": 0.25
+   },
+   "divergencia_por_gatilho": {
+    "vp": 3,
+    "fn": 2,
+    "fp": 3,
+    "vn": 28,
+    "tpr": 0.6,
+    "tnr": 0.9032258064516129,
+    "produto": 0.5419354838709677,
+    "acaso": 0.25
+   },
+   "selo_baixo": {
+    "vp": 3,
+    "fn": 2,
+    "fp": 4,
+    "vn": 27,
+    "tpr": 0.6,
+    "tnr": 0.8709677419354839,
+    "produto": 0.5225806451612903,
+    "acaso": 0.25
+   },
+   "intervencoes": [
+    {
+     "tipo": "remocao",
+     "n": 36,
+     "mudou_rotulo": 13
+    },
+    {
+     "tipo": "troca",
+     "n": 36,
+     "mudou_rotulo": 17
+    },
+    {
+     "tipo": "sem_documentacao",
+     "n": 36,
+     "mudou_rotulo": 16
+    },
+    {
+     "tipo": "repeticao_da_base",
+     "n": 36,
+     "mudou_rotulo": 0
+    }
+   ],
+   "repeticao": {
+    "n": 36,
+    "manteve": 36,
+    "mudou": 0
+   },
+   "sonda": {
+    "casos": 36,
+    "cita_plantado": 8,
+    "mudou_rotulo": 2,
+    "pos_racionalizacao": 7,
+    "taxa_pct": 19.4,
+    "controle_cita": 2,
+    "controle_pct": 5.6
+   },
+   "segundos_por_caso_com_as_intervencoes": 349.8,
+   "segundos_da_inferencia_de_base": 64.52,
+   "cruzamento": {
+    "casos": 36,
+    "acertos": 31,
+    "erros": 5,
+    "verbete_certo_no_contexto": {
+     "presente": {
+      "casos": 30,
+      "acertos": 28
+     },
+     "ausente": {
+      "casos": 6,
+      "acertos": 3
+     }
+    },
+    "erros_sem_o_verbete_certo": 3,
+    "posicao_do_verbete_certo": [
+     {
+      "faixa": "1 a 3",
+      "casos": 30,
+      "erros": 2
+     },
+     {
+      "faixa": "4 a 5",
+      "casos": 4,
+      "erros": 2
+     },
+     {
+      "faixa": "6 a 10",
+      "casos": 1,
+      "erros": 1
+     },
+     {
+      "faixa": "acima de 10",
+      "casos": 1,
+      "erros": 0
+     }
+    ],
+    "gatilhos": [
+     {
+      "gatilho": "selo baixo",
+      "disparos": 7,
+      "erros_pegos": 3,
+      "acertos_incomodados": 4,
+      "erros_perdidos": 2
+     },
+     {
+      "gatilho": "FONTE divergente",
+      "disparos": 2,
+      "erros_pegos": 1,
+      "acertos_incomodados": 1,
+      "erros_perdidos": 4
+     },
+     {
+      "gatilho": "selo baixo ou FONTE divergente",
+      "disparos": 8,
+      "erros_pegos": 3,
+      "acertos_incomodados": 5,
+      "erros_perdidos": 2
+     }
+    ],
+    "fonte_divergente_por_falha": [
+     {
+      "falha": "causa_sem_verbete_que_a_trate",
+      "casos": 2,
+      "acertos": 1,
+      "erros": 1
+     }
+    ],
+    "teto_de_um_segundo_passe": [
+     {
+      "verbetes": 5,
+      "disparos": 8,
+      "erros_ao_alcance": 1,
+      "erros_fora_do_alcance": 4
+     },
+     {
+      "verbetes": 10,
+      "disparos": 8,
+      "erros_ao_alcance": 2,
+      "erros_fora_do_alcance": 3
+     }
+    ],
+    "lista_de_erros": [
+     {
+      "caso": "sin-5",
+      "gabarito": "campo_ausente",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "selo": "baixo",
+      "posicao": 4,
+      "gatilho_probabilidade": true,
+      "gatilho_fonte": false,
+      "faixa": "4 a 5"
+     },
+     {
+      "caso": "efe-1",
+      "gabarito": "localizador_quebrado",
+      "rotulo": "tempo_de_resposta_excedido",
+      "selo": "medio",
+      "posicao": 1,
+      "gatilho_probabilidade": false,
+      "gatilho_fonte": false,
+      "faixa": "1 a 3"
+     },
+     {
+      "caso": "sin-14",
+      "gabarito": "campo_renomeado",
+      "rotulo": "colecao_no_lugar_de_objeto",
+      "selo": "baixo",
+      "posicao": 3,
+      "gatilho_probabilidade": true,
+      "gatilho_fonte": false,
+      "faixa": "1 a 3"
+     },
+     {
+      "caso": "semt-9",
+      "gabarito": "valor_fora_do_dominio",
+      "rotulo": "tipo_divergente",
+      "selo": "alto",
+      "posicao": 4,
+      "gatilho_probabilidade": false,
+      "gatilho_fonte": false,
+      "faixa": "4 a 5"
+     },
+     {
+      "caso": "tra-15",
+      "gabarito": "escala_ou_unidade_errada",
+      "rotulo": "registro_duplicado",
+      "selo": "baixo",
+      "posicao": 7,
+      "gatilho_probabilidade": true,
+      "gatilho_fonte": true,
+      "faixa": "6 a 10"
+     }
+    ],
+    "busca_refeita_igual": 36,
+    "verbetes_na_biblioteca": 39,
+    "hash_da_biblioteca": "95af35290860",
+    "versao_ollama": "0.40.14",
+    "por_selo": [
+     {
+      "selo": "alto",
+      "casos": 16,
+      "erros": 1
+     },
+     {
+      "selo": "medio",
+      "casos": 13,
+      "erros": 1
+     },
+     {
+      "selo": "baixo",
+      "casos": 7,
+      "erros": 3
+     }
+    ]
+   },
+   "fonte": "resultados_alvo/fase4/trilha.json (resumo, sinais, intervencoes, repeticao, sonda); o cruzamento usa fase4_trilha/qwen2.5_7b/diagnosticos__base.jsonl e trilha_avaliacao.jsonl"
+  },
+  "corrida_24": {
+   "casos": 36,
+   "acertos": 25,
+   "erros": 11,
+   "verbete_certo_no_contexto": {
+    "presente": {
+     "casos": 20,
+     "acertos": 18
+    },
+    "ausente": {
+     "casos": 16,
+     "acertos": 7
+    }
+   },
+   "erros_sem_o_verbete_certo": 9,
+   "posicao_do_verbete_certo": [
+    {
+     "faixa": "1 a 3",
+     "casos": 20,
+     "erros": 2
+    },
+    {
+     "faixa": "4 a 5",
+     "casos": 5,
+     "erros": 3
+    },
+    {
+     "faixa": "6 a 10",
+     "casos": 6,
+     "erros": 4
+    },
+    {
+     "faixa": "acima de 10",
+     "casos": 5,
+     "erros": 2
+    }
+   ],
+   "gatilhos": [
+    {
+     "gatilho": "selo baixo",
+     "disparos": 8,
+     "erros_pegos": 4,
+     "acertos_incomodados": 4,
+     "erros_perdidos": 7
+    },
+    {
+     "gatilho": "FONTE divergente",
+     "disparos": 10,
+     "erros_pegos": 4,
+     "acertos_incomodados": 6,
+     "erros_perdidos": 7
+    },
+    {
+     "gatilho": "selo baixo ou FONTE divergente",
+     "disparos": 16,
+     "erros_pegos": 7,
+     "acertos_incomodados": 9,
+     "erros_perdidos": 4
+    }
+   ],
+   "fonte_divergente_por_falha": [
+    {
+     "falha": "causa_sem_verbete_que_a_trate",
+     "casos": 10,
+     "acertos": 6,
+     "erros": 4
+    }
+   ],
+   "teto_de_um_segundo_passe": [
+    {
+     "verbetes": 5,
+     "disparos": 16,
+     "erros_ao_alcance": 2,
+     "erros_fora_do_alcance": 9
+    },
+    {
+     "verbetes": 10,
+     "disparos": 16,
+     "erros_ao_alcance": 3,
+     "erros_fora_do_alcance": 8
+    }
+   ],
+   "lista_de_erros": [
+    {
+     "caso": "sin-26",
+     "gabarito": "campo_ausente",
+     "rotulo": "resposta_truncada",
+     "selo": "medio",
+     "posicao": 3,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": true,
+     "faixa": "1 a 3"
+    },
+    {
+     "caso": "semt-23",
+     "gabarito": "valor_fora_do_dominio",
+     "rotulo": "tipo_divergente",
+     "selo": "medio",
+     "posicao": 7,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": false,
+     "faixa": "6 a 10"
+    },
+    {
+     "caso": "semt-27",
+     "gabarito": "valor_fora_do_dominio",
+     "rotulo": "colecao_no_lugar_de_objeto",
+     "selo": "baixo",
+     "posicao": 7,
+     "gatilho_probabilidade": true,
+     "gatilho_fonte": false,
+     "faixa": "6 a 10"
+    },
+    {
+     "caso": "tra-22",
+     "gabarito": "escala_ou_unidade_errada",
+     "rotulo": "tipo_divergente",
+     "selo": "baixo",
+     "posicao": 12,
+     "gatilho_probabilidade": true,
+     "gatilho_fonte": false,
+     "faixa": "acima de 10"
+    },
+    {
+     "caso": "tra-23",
+     "gabarito": "escala_ou_unidade_errada",
+     "rotulo": "valor_fora_do_dominio",
+     "selo": "baixo",
+     "posicao": 16,
+     "gatilho_probabilidade": true,
+     "gatilho_fonte": false,
+     "faixa": "acima de 10"
+    },
+    {
+     "caso": "tra-25",
+     "gabarito": "contagem_inconsistente",
+     "rotulo": "resposta_truncada",
+     "selo": "alto",
+     "posicao": 3,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": true,
+     "faixa": "1 a 3"
+    },
+    {
+     "caso": "tra-26",
+     "gabarito": "chave_de_juncao_errada",
+     "rotulo": "colecao_no_lugar_de_objeto",
+     "selo": "medio",
+     "posicao": 7,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": false,
+     "faixa": "6 a 10"
+    },
+    {
+     "caso": "tra-27",
+     "gabarito": "escala_ou_unidade_errada",
+     "rotulo": "tipo_divergente",
+     "selo": "medio",
+     "posicao": 9,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": false,
+     "faixa": "6 a 10"
+    },
+    {
+     "caso": "run-26",
+     "gabarito": "dado_desatualizado",
+     "rotulo": "registro_duplicado",
+     "selo": "baixo",
+     "posicao": 5,
+     "gatilho_probabilidade": true,
+     "gatilho_fonte": true,
+     "faixa": "4 a 5"
+    },
+    {
+     "caso": "efe-26",
+     "gabarito": "estado_da_tela_divergente",
+     "rotulo": "colecao_no_lugar_de_objeto",
+     "selo": "medio",
+     "posicao": 5,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": false,
+     "faixa": "4 a 5"
+    },
+    {
+     "caso": "efe-27",
+     "gabarito": "estado_da_tela_divergente",
+     "rotulo": "dado_desatualizado",
+     "selo": "medio",
+     "posicao": 5,
+     "gatilho_probabilidade": false,
+     "gatilho_fonte": true,
+     "faixa": "4 a 5"
+    }
+   ],
+   "busca_refeita_igual": 36,
+   "verbetes_na_biblioteca": 39,
+   "hash_da_biblioteca": "95af35290860",
+   "versao_ollama": "0.40.14",
+   "por_selo": [
+    {
+     "selo": "alto",
+     "casos": 13,
+     "erros": 1
+    },
+    {
+     "selo": "medio",
+     "casos": 15,
+     "erros": 6
+    },
+    {
+     "selo": "baixo",
+     "casos": 8,
+     "erros": 4
+    }
+   ],
+   "por_classe": [
+    {
+     "classe": 1,
+     "casos": 6,
+     "acertos": 6,
+     "erros": 0
+    },
+    {
+     "classe": 2,
+     "casos": 6,
+     "acertos": 5,
+     "erros": 1
+    },
+    {
+     "classe": 3,
+     "casos": 6,
+     "acertos": 4,
+     "erros": 2
+    },
+    {
+     "classe": 4,
+     "casos": 6,
+     "acertos": 1,
+     "erros": 5
+    },
+    {
+     "classe": 5,
+     "casos": 6,
+     "acertos": 5,
+     "erros": 1
+    },
+    {
+     "classe": 6,
+     "casos": 6,
+     "acertos": 4,
+     "erros": 2
+    }
+   ],
+   "segundos_mediana": 68.38,
+   "fonte": "resultados_alvo/fase4/ineditos.json (casos, verbete_certo, por_classe, resumo), fase4_ineditos/ineditos.jsonl e trilha_ineditos.jsonl; a posição vem da busca refeita"
+  },
+  "os_72_casos": {
+   "disparos_da_fonte_divergente": 12,
+   "fonte_divergente_por_falha": [
+    {
+     "falha": "causa_sem_verbete_que_a_trate",
+     "casos": 12,
+     "acertos": 7,
+     "erros": 5
+    }
+   ],
+   "casos": 72,
+   "erros": 16,
+   "erros_sem_o_verbete_certo": 12,
+   "disparos": 24,
+   "erros_pegos": 10,
+   "acertos_incomodados": 14,
+   "erros_perdidos": 6,
+   "teto_de_um_segundo_passe": [
+    {
+     "verbetes": 5,
+     "erros_ao_alcance": 3
+    },
+    {
+     "verbetes": 10,
+     "erros_ao_alcance": 5
+    }
+   ],
+   "minutos_a_mais_dos_disparos": 27.4,
+   "p_do_melhor_cenario": [
+    {
+     "verbetes": 5,
+     "ganhos": 3,
+     "perdas": 0,
+     "p": 0.25
+    },
+    {
+     "verbetes": 10,
+     "ganhos": 5,
+     "perdas": 0,
+     "p": 0.0625
+    }
+   ],
+   "casos_com_disparo_pct": 33.3,
+   "fonte": "a soma dos cruzamentos das corridas 22 e 24; os minutos são os disparos vezes a mediana de segundos por diagnóstico da corrida 24"
+  },
+  "corrida_16_numero_de_verbetes": {
+   "por_k": [
+    {
+     "k": 3,
+     "n": 90,
+     "acertos": 68,
+     "acuracia_balanceada_pct": 81.5,
+     "segundos_mediana": 55.365,
+     "tokens_entrada_mediana": 1106.5,
+     "tokens_entrada_max": 1281
+    },
+    {
+     "k": 5,
+     "n": 90,
+     "acertos": 65,
+     "acuracia_balanceada_pct": 75.7,
+     "segundos_mediana": 60.5,
+     "tokens_entrada_mediana": 1469.0,
+     "tokens_entrada_max": 1668
+    }
+   ],
+   "par": {
+    "n_comuns": 90,
+    "b": 5,
+    "c": 8,
+    "p_mcnemar": 0.5811,
+    "rotulos_diferentes": 19
+   },
+   "motivo": "k = 3 acerta mais por acurácia balanceada (81,5% contra 75,7%)",
+   "fonte": "resultados_alvo/fase4/calibracao.json, por_k e r8 (os mesmos 90 casos com 3 e com 5 verbetes)"
+  },
+  "corrida_20_sonda": {
+   "casos": 7,
+   "com_proposta_anterior": 2,
+   "mudaram_a_proposta": 2,
+   "mencionam_a_correcao": 0,
+   "fonte": "resultados_alvo/fase4/biblioteca.json, sonda"
+  }
+ },
+ "ideia_3": {
+  "corrida_20": {
+   "casos": 54,
+   "acertos_diagnostico": 37,
+   "propostas": 92,
+   "aceitas": 19,
+   "para_revisao": 1,
+   "recusadas_p5": 16,
+   "recusadas_fase3": 56,
+   "taxa_de_rejeicao_pct": 78.3,
+   "abstencoes": 0,
+   "aceitas_por_tipo": {
+    "nota": 10,
+    "novo_verbete": 6,
+    "retificacao": 3
+   },
+   "filtros": [
+    {
+     "filtro": "evidencia_obrigatoria",
+     "recusas": 6
+    },
+    {
+     "filtro": "atomicidade",
+     "recusas": 1
+    },
+    {
+     "filtro": "abstencao_valida",
+     "recusas": 0
+    },
+    {
+     "filtro": "fonte_confiavel",
+     "recusas": 5
+    },
+    {
+     "filtro": "granularidade",
+     "recusas": 0
+    },
+    {
+     "filtro": "peso_por_tipo",
+     "recusas": 0
+    },
+    {
+     "filtro": "redundancia",
+     "recusas": 3
+    },
+    {
+     "filtro": "proveniencia",
+     "recusas": 0
+    },
+    {
+     "filtro": "auditoria_por_etapa",
+     "recusas": 0
+    },
+    {
+     "filtro": "conflito_deterministico",
+     "recusas": 0
+    },
+    {
+     "filtro": "metricas_por_rodada",
+     "recusas": 0
+    },
+    {
+     "filtro": "revisao_humana_amostral",
+     "recusas": 0
+    },
+    {
+     "filtro": "regra_dos_40",
+     "recusas": 1
+    }
+   ],
+   "rejeicoes_do_validador_da_fase_3": {
+    "arquivo_inexistente": 4,
+    "duplicada": 14,
+    "id_repetido": 12,
+    "palavra_chave_invalida": 15,
+    "retificacao_sem_trecho": 1,
+    "teto_notas_verbete": 1,
+    "teto_verbetes_novos": 3,
+    "texto_curto": 2,
+    "texto_longo": 2,
+    "trecho_nao_encontrado": 2
+   },
+   "rejeicoes_dos_filtros_do_p5": {
+    "mensagem_nao_encontrada_no_codigo": 5,
+    "redundante": 3,
+    "sem_evidencia_do_caso": 6,
+    "texto_de_origem_proibida": 1,
+    "texto_nao_atomico": 1
+   },
+   "reavaliacao": {
+    "n": 36,
+    "b": 0,
+    "c": 0,
+    "acerto_base": 27,
+    "acerto_novo": 27,
+    "veredito": "aceito"
+   },
+   "teto_de_tokens_da_proposta": 700,
+   "fonte": "resultados_alvo/fase4/biblioteca.json (resumo, lote, filtros, rejeicoes, reavaliacao, condicoes)"
+  },
+  "revisao_do_lote": {
+   "edicoes_revisadas": 20,
+   "por_veredito": {
+    "Correta": 2,
+    "Parcial": 9,
+    "Errada": 9
+   },
+   "por_operacao": [
+    {
+     "operacao": "nota",
+     "Correta": 1,
+     "Parcial": 6,
+     "Errada": 4
+    },
+    {
+     "operacao": "novo_verbete",
+     "Correta": 0,
+     "Parcial": 3,
+     "Errada": 3
+    },
+    {
+     "operacao": "retificacao",
+     "Correta": 1,
+     "Parcial": 0,
+     "Errada": 2
+    }
+   ],
+   "fonte": "resultados_alvo/fase4_biblioteca/revisao_do_lote.md, coluna Avaliação, lida por biblioteca_fase4.vereditos_da_planilha"
+  },
+  "forma_de_instrucao": {
+   "propostas": 92,
+   "em_forma_de_instrucao": 76,
+   "passaram_nos_filtros": 20,
+   "passaram_em_forma_de_instrucao": 18,
+   "por_veredito": [
+    {
+     "veredito": "Correta",
+     "edicoes": 2,
+     "em_forma_de_instrucao": 2
+    },
+    {
+     "veredito": "Parcial",
+     "edicoes": 9,
+     "em_forma_de_instrucao": 8
+    },
+    {
+     "veredito": "Errada",
+     "edicoes": 9,
+     "em_forma_de_instrucao": 8
+    }
+   ],
+   "verbos": [
+    "Adicionar",
+    "Adicione",
+    "Corrig",
+    "Notar",
+    "Inclu"
+   ],
+   "fonte": "resultados_alvo/fase4_biblioteca/qwen2.5_7b/propostas__E101.jsonl (campo TEXTO de cada proposta e a decisão dos filtros) e revisao_do_lote.md; os verbos são experimento_sem_notas.VERBOS_DE_INSTRUCAO"
+  },
+  "portao_da_busca_no_lote": {
+   "casos_com_gabarito": 126,
+   "edicoes": 20,
+   "edicoes_que_nao_mudam_a_busca_de_nenhum_caso": 4,
+   "edicoes_que_mudam_a_busca": 16,
+   "verbete_certo_entra_no_total": 4,
+   "verbete_certo_sai_no_total": 7,
+   "edicoes_que_nenhum_caso_leria": 6,
+   "casos_que_leriam_a_edicao_mediana": 9.0,
+   "casos_que_leriam_a_edicao_maximo": 65,
+   "verbete_com_mais_casos": "contrato-produto",
+   "casos_que_leriam_a_edicao_soma": 221,
+   "verbetes_novos": {
+    "edicoes": 6,
+    "que_nenhum_caso_leria": 5,
+    "com_algum_caso": 1,
+    "casos_que_os_leriam_no_total": 1
+   },
+   "por_edicao": [
+    {
+     "caso": "sin-1",
+     "verbete": "campo_preco_ausente",
+     "operacao": "novo_verbete",
+     "casos_em_que_os_tres_verbetes_mudam": 6,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 1,
+     "casos_que_leriam_a_edicao": 1
+    },
+    {
+     "caso": "tra-3",
+     "verbete": "novo_verbete",
+     "operacao": "novo_verbete",
+     "casos_em_que_os_tres_verbetes_mudam": 4,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 0
+    },
+    {
+     "caso": "tra-5",
+     "verbete": "pessoas_incorretas",
+     "operacao": "novo_verbete",
+     "casos_em_que_os_tres_verbetes_mudam": 5,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 0
+    },
+    {
+     "caso": "run-3",
+     "verbete": "limite_de_requisicoes",
+     "operacao": "retificacao",
+     "casos_em_que_os_tres_verbetes_mudam": 0,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 4
+    },
+    {
+     "caso": "run-5",
+     "verbete": "contrato-pedido",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 5,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 27
+    },
+    {
+     "caso": "efe-4",
+     "verbete": "estado_da_tela_divergente",
+     "operacao": "retificacao",
+     "casos_em_que_os_tres_verbetes_mudam": 8,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 2,
+     "casos_que_leriam_a_edicao": 20
+    },
+    {
+     "caso": "sin-15",
+     "verbete": "colecao_no_lugar_de_objeto",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 0,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 7
+    },
+    {
+     "caso": "semt-6",
+     "verbete": "tipo_divergente",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 6,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 3,
+     "casos_que_leriam_a_edicao": 15
+    },
+    {
+     "caso": "semt-7",
+     "verbete": "tipo_divergente",
+     "operacao": "retificacao",
+     "casos_em_que_os_tres_verbetes_mudam": 5,
+     "verbete_certo_entra": 1,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 12
+    },
+    {
+     "caso": "semt-10",
+     "verbete": "tipo_divergente",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 2,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 11
+    },
+    {
+     "caso": "semt-15",
+     "verbete": "validacao-na-api",
+     "operacao": "novo_verbete",
+     "casos_em_que_os_tres_verbetes_mudam": 3,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 0
+    },
+    {
+     "caso": "tra-6",
+     "verbete": "formato_preco",
+     "operacao": "novo_verbete",
+     "casos_em_que_os_tres_verbetes_mudam": 4,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 1,
+     "casos_que_leriam_a_edicao": 0
+    },
+    {
+     "caso": "tra-14",
+     "verbete": "contagem_inconsistente",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 3,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 17
+    },
+    {
+     "caso": "run-12",
+     "verbete": "erro_interno_do_servidor",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 0,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 5
+    },
+    {
+     "caso": "efe-8",
+     "verbete": "estado_da_tela_divergente",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 4,
+     "verbete_certo_entra": 1,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 13
+    },
+    {
+     "caso": "efe-8",
+     "verbete": "atualizacao-da-tela",
+     "operacao": "novo_verbete",
+     "casos_em_que_os_tres_verbetes_mudam": 7,
+     "verbete_certo_entra": 1,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 0
+    },
+    {
+     "caso": "efe-10",
+     "verbete": "interface-frontend",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 0,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 0
+    },
+    {
+     "caso": "efe-11",
+     "verbete": "localizador_quebrado",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 2,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 13
+    },
+    {
+     "caso": "efe-13",
+     "verbete": "estado_da_tela_divergente",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 6,
+     "verbete_certo_entra": 1,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 11
+    },
+    {
+     "caso": "efe-4",
+     "verbete": "contrato-produto",
+     "operacao": "nota",
+     "casos_em_que_os_tres_verbetes_mudam": 9,
+     "verbete_certo_entra": 0,
+     "verbete_certo_sai": 0,
+     "casos_que_leriam_a_edicao": 65
+    }
+   ],
+   "fonte": "resultados_alvo/fase4_biblioteca/lote.json (as 19 edições aceitas e a segurada) aplicadas uma a uma, por evolucao_biblioteca.aplicar_edicao, a uma cópia temporária de bibliotecas/qwen2.5_7b/epoca-100 (a biblioteca de antes do lote); a busca é recuperacao.pontuar nos 90 casos oficiais e nos 36 inéditos da ficha 27"
+  },
+  "custo_dos_portoes": {
+   "segundos_por_diagnostico": 68.38,
+   "diagnosticos_do_portao_por_edicao": 221,
+   "horas_do_portao_por_edicao": 4.2,
+   "minutos_dos_72_casos": 82,
+   "fonte": "os diagnósticos do portão por edição são a soma de `casos_que_leriam_a_edicao` das 20 edições do lote da corrida 20; o tempo usa a mediana de segundos por diagnóstico da corrida 24 (ineditos.json, resumo.segundos_mediana)"
+  },
+  "cenarios_do_analista": {
+   "verbete_tokens": 160,
+   "instrucoes_tokens": 678,
+   "tokens_por_proposta": 204,
+   "ficha_curta_tokens": 400,
+   "medido_hoje": {
+    "tokens_lidos": 2358.0,
+    "tokens_escritos": 361.0,
+    "segundos": 158.225,
+    "minutos": 2.6
+   },
+   "cenarios": [
+    {
+     "cenario": "relatório v3 inteiro",
+     "tokens_lidos": 5921,
+     "tokens_escritos": 204,
+     "segundos": 275.1,
+     "minutos": 4.6
+    },
+    {
+     "cenario": "árvore de decisão",
+     "tokens_lidos": 3299,
+     "tokens_escritos": 204,
+     "segundos": 174.4,
+     "minutos": 2.9
+    },
+    {
+     "cenario": "ficha curta do caso",
+     "tokens_lidos": 1238,
+     "tokens_escritos": 204,
+     "segundos": 95.2,
+     "minutos": 1.6
+    }
+   ],
+   "experimento_em_texto": {
+    "inferencias": 54,
+    "minutos_com_a_ficha_curta": 86,
+    "minutos_como_a_proposta_de_hoje": 142
+   },
+   "fonte": "a entrada de cada cenário é o texto do caso (relatorios_v3/*.md e arvores/*.md da corrida 24, ou o orçamento declarado da ficha curta) mais um verbete (mediana de biblioteca.render sobre a biblioteca de produção) e o bloco de instruções (estrategias._FORMATO_PROPOSTA), em tokens estimados por chars_por_token; a saída é uma proposta (mediana de tokens_saida por proposta em propostas__E101.jsonl); a conta usa as taxas de `maquina`"
+  },
+  "promocao": {
+   "mantidas": 11,
+   "removidas": 9,
+   "politica": {
+    "remover": [
+     "Errada"
+    ]
+   },
+   "hash": "95af35290860",
+   "verbetes": 39,
+   "verbetes_novos": 3,
+   "notas": 18,
+   "retificacoes": 8,
+   "aprendidos_em_espera": 4,
+   "fonte": "Programacao/AgenteCore/biblioteca_producao/fechamento.json"
+  },
+  "curadoria_da_fase_3": {
+   "edicoes_na_epoca": 40,
+   "mantidas": 23,
+   "removidas": 17,
+   "fonte": "Programacao/AgenteCore/biblioteca_producao/curadoria.json (a cópia curada da biblioteca da Fase 3, 29/09/2026)"
+  },
+  "notas_do_modelo": {
+   "verbetes_producao": 39,
+   "verbetes_com_notas": 20,
+   "notas_retiradas": 26,
+   "notas_em_forma_de_instrucao": 25,
+   "verbetes_retirados": [
+    "atualizacao-da-tela",
+    "campo_preco_ausente",
+    "novo_verbete"
+   ],
+   "tokens_estimados_producao": 8576,
+   "tokens_estimados_sem_notas": 6582,
+   "contextos_que_mudam": 72,
+   "casos": 72,
+   "com_aprendido_na_referencia": 0,
+   "fonte": "resultados_alvo/fase4/sem_notas_previa.json, biblioteca e resumo (a prévia sem modelo da corrida 25)"
+  },
+  "custo_da_proposta": {
+   "inferencias": 54,
+   "proposta": {
+    "tokens_entrada": 2358.0,
+    "tokens_saida": 361.0,
+    "prefill_ms": 63047.0,
+    "geracao_ms": 93523.5,
+    "segundos": 158.225
+   },
+   "diagnostico": {
+    "tokens_entrada": 1190.5,
+    "tokens_saida": 63.0,
+    "prefill_ms": 55188.0,
+    "geracao_ms": 14966.5,
+    "segundos": 71.065
+   },
+   "segundos_sem_reaproveitar_o_prompt": 174.9,
+   "reavaliacao_do_lote": {
+    "inferencias": 36,
+    "segundos_mediana": 67.665,
+    "minutos_no_total": 38.8
+   },
+   "fonte": "resultados_alvo/fase4_biblioteca/qwen2.5_7b/propostas__E101.jsonl, diagnosticos__L100.jsonl e reavaliacao__E101.jsonl (medianas); `segundos_sem_reaproveitar_o_prompt` é a conta com as taxas da máquina para o mesmo tamanho de entrada e de saída lido do zero"
+  },
+  "o_que_o_analista_leria": {
+   "relatorio_v3": {
+    "arquivos": 36,
+    "chars_mediana": 15859.5,
+    "tokens_estimados": 5083,
+    "segundos_de_leitura": 195.3
+   },
+   "arvore_de_decisao": {
+    "arquivos": 36,
+    "chars_mediana": 7679.5,
+    "tokens_estimados": 2461,
+    "segundos_de_leitura": 94.5
+   },
+   "fonte": "resultados_alvo/fase4_ineditos/relatorios_v3/*.md e arvores/*.md (mediana de caracteres), divididos por chars_por_token e pela taxa de prefill"
+  },
+  "revisao_humana_v3": {
+   "relatorios": 36,
+   "adesao_apropriada": 30,
+   "adesao_pct": 83.3,
+   "erros_na_corrida": 11,
+   "erros_localizados": 10,
+   "utilidade_mediana": 5.0,
+   "certos_recusados": 5,
+   "errados_recusados": 10,
+   "acertos_com_a_fonte_divergente": 6,
+   "acertos_com_a_fonte_divergente_recusados": 5,
+   "certos_recusados_com_a_fonte_divergente": 5,
+   "certos_recusados_sem_a_fonte_divergente": 0,
+   "certos_recusados_por_falha": [
+    {
+     "falha": "causa_sem_verbete_que_a_trate",
+     "casos": 5
+    }
+   ],
+   "erros_com_a_fonte_divergente": 4,
+   "erros_com_a_fonte_divergente_recusados": 3,
+   "fonte": "resultados_alvo/fase4/leitura_revisao_v3.json, resumo e adesao (a sessão de revisão da corrida 24, com um analista de QA); o cruzamento com a FONTE divergente usa `casos` do mesmo arquivo (a decisão por relatório) e o nó de diagnóstico de fase4_ineditos/trilha_ineditos.jsonl (o gatilho e a falha gravada)"
+  },
+  "filtros_em_codigo": {
+   "codigos_do_validador_da_fase_3": 30,
+   "filtros_da_fase_4": 13,
+   "propostas_por_caso": 2,
+   "parcela_da_regra_dos_40_pct": 40,
+   "fonte": "evolucao_biblioteca.CODIGOS_REJEICAO e MAX_PROPOSTAS_POR_CASO; biblioteca_fase4.FILTROS e PARCELA_PARA_REVISAO"
+  },
+  "corrida_25": {
+   "rodou": false,
+   "fonte": "resultados_alvo/fase4/sem_notas.json ainda não existe: a corrida 25 espera o Eric"
+  }
+ }
+}

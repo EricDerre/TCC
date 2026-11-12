@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:55:10.544Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-13",
+  "comentario": "O modelo acertou o diagnóstico ao apontar a causa raiz dado_desatualizado para o campo preco. O sintoma reflete exatamente um problema de cache/tempo, já que o produto teve o preço alterado no banco e a API respondeu corretamente com o novo valor (94.9), mas a interface (sem recarregar) manteve a renderização antiga (R$ 84,90). A falha apontada (causa_sem_verbete_que_a_trate) não é do raciocínio da LLM, mas sim uma limitação do motor de busca, que não entregou o verbete dado_desatualizado entre os top 3, forçando o Qwen2.5 a \"burlar\" o RAG e diagnosticar corretamente a situação baseando-se apenas nos fatos fornecidos.",
+  "decidido_em": "2026-11-09T19:55:50.186Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 13,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:56:02.891Z",
+  "segundos": 40,
+  "segundos_relogio": 40,
+  "utilidade": 5
+}

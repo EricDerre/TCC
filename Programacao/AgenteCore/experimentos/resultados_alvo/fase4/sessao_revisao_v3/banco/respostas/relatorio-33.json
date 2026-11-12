@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:30:20.804Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-33",
+  "comentario": "O diagnóstico falhou na categorização da causa raiz. O campo preco recebeu os valores -80.9 e -75.9, que pertencem ao tipo numérico (float), atendendo estritamente à especificação de tipo do contrato (preco: numero). O problema real é a violação da regra de negócio/domínio (um preço de produto não pode ser um valor negativo), o que caracteriza a falha como valor_fora_do_dominio. O agente considerou essa alternativa em segundo lugar (com 0,06 de probabilidade), mas escolheu erroneamente tipo_divergente. A utilidade recebe nota 3 porque o campo (preco) e a descrição do impacto visual no produto foram identificados corretamente, o que ajuda na localização do problema no código.",
+  "decidido_em": "2026-11-10T11:32:35.796Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 33,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:32:53.382Z",
+  "segundos": 135,
+  "segundos_relogio": 135,
+  "utilidade": 3
+}

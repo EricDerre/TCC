@@ -1,0 +1,64 @@
+﻿[2026-11-12 00:10:04] rodar_fase4.ps1: modo analista, saida fase4_analista, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-12 00:10:07] Ollama 0.40.15; modelo qwen2.5:7b; RAM livre 7,8 GB
+[2026-11-12 00:10:07] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_analista\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-12 00:10:07] testar_fase4.py
+[2026-11-12 00:10:40] executar_fase4.py --modo analista --saida fase4_analista --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20
+[2026-11-12 00:10:43] a ponte da versão 0.40.15 é pareável com a Fase 3 (b + c = 1, limite 2)
+[2026-11-12 00:10:43] INÍCIO analista: Ollama 0.40.15, qwen2.5:7b, biblioteca de antes do lote da corrida 20 (1fca10f1a6f6), instruções cbc4505b3c2052f1; 54 casos; 0 já feito(s)
+[2026-11-12 00:12:17] [1/54] lex-2 (tela): nota | passa nos cinco portões | 83.14 s; 1237 tokens lidos, 91 escritos
+[2026-11-12 00:13:10] [2/54] lex-3 (tela): nota | recusada pelos filtros da Fase 4 (redundante) | 47.89 s; 1196 tokens lidos, 93 escritos
+[2026-11-12 00:14:06] [3/54] lex-5 (fixture): nota | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 50.68 s; 1120 tokens lidos, 120 escritos
+[2026-11-12 00:14:59] [4/54] sin-1 (tela): nota | passa nos cinco portões | 47.91 s; 1152 tokens lidos, 92 escritos
+[2026-11-12 00:15:51] [5/54] sin-2 (tela): sem proposta | sem proposta válida (bloco_malformado) | 48.36 s; 1218 tokens lidos, 88 escritos
+[2026-11-12 00:16:50] [6/54] sin-3 (tela): sem proposta | sem proposta válida (bloco_malformado) | 54.22 s; 1242 tokens lidos, 109 escritos
+[2026-11-12 00:17:45] [7/54] semt-2 (tela): sem proposta | sem proposta válida (bloco_malformado) | 51.43 s; 1150 tokens lidos, 117 escritos
+[2026-11-12 00:18:42] [8/54] semt-4 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 53.2 s; 1084 tokens lidos, 140 escritos
+[2026-11-12 00:19:51] [9/54] tra-2 (fixture): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 64.24 s; 1319 tokens lidos, 138 escritos
+[2026-11-12 00:20:35] [10/54] tra-3 (tela): sinal_de_busca | recusada pelo portão da busca (busca) | 39.47 s; 1262 tokens lidos, 107 escritos
+[2026-11-12 00:21:57] [11/54] tra-5 (fixture): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 77.0 s; 1275 tokens lidos, 197 escritos
+[2026-11-12 00:22:58] [12/54] run-3 (tela): sinal_de_busca | recusada pelo validador da Fase 3 (palavra_chave_invalida) | 56.43 s; 1205 tokens lidos, 128 escritos
+[2026-11-12 00:23:48] [13/54] run-5 (fixture): sinal_de_busca | recusada pelo validador da Fase 3 (palavra_chave_invalida) | 46.36 s; 1094 tokens lidos, 106 escritos
+[2026-11-12 00:24:42] [14/54] efe-4 (fixture): sinal_de_busca | recusada pelo validador da Fase 3 (copia_do_caso) | 49.84 s; 1111 tokens lidos, 119 escritos
+[2026-11-12 00:25:34] [15/54] lex-6 (fixture): nota | recusada pelo validador da Fase 3 (duplicada) | 47.63 s; 1142 tokens lidos, 102 escritos
+[2026-11-12 00:26:16] [16/54] lex-9 (tela): nota | passa nos cinco portões | 37.05 s; 1238 tokens lidos, 83 escritos
+[2026-11-12 00:26:40] [17/54] lex-12 (tela): nota | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 19.76 s; 1238 tokens lidos, 76 escritos
+[2026-11-12 00:27:31] [18/54] sin-6 (tela): nota | recusada pelo validador da Fase 3 (texto_curto) | 47.23 s; 1143 tokens lidos, 100 escritos
+[2026-11-12 00:28:22] [19/54] sin-8 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 46.38 s; 1166 tokens lidos, 90 escritos
+[2026-11-12 00:29:22] [20/54] sin-9 (tela): sem proposta | sem proposta válida (bloco_malformado) | 56.19 s; 1211 tokens lidos, 124 escritos
+[2026-11-12 00:30:17] [21/54] sin-12 (fixture): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 50.67 s; 1083 tokens lidos, 125 escritos
+[2026-11-12 00:31:20] [22/54] sin-13 (tela): nota | passa nos cinco portões | 57.48 s; 1276 tokens lidos, 114 escritos
+[2026-11-12 00:32:09] [23/54] sin-15 (fixture): nota | recusada pelos filtros da Fase 4 (redundante) | 44.73 s; 1155 tokens lidos, 85 escritos
+[2026-11-12 00:33:04] [24/54] semt-6 (tela): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 49.98 s; 1206 tokens lidos, 98 escritos
+[2026-11-12 00:33:47] [25/54] semt-7 (fixture): sinal_de_busca | recusada pelo portão da busca (busca) | 38.9 s; 1077 tokens lidos, 115 escritos
+[2026-11-12 00:34:29] [26/54] semt-10 (tela): sem proposta | sem proposta válida (bloco_malformado) | 37.66 s; 1150 tokens lidos, 93 escritos
+[2026-11-12 00:35:18] [27/54] semt-11 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 44.9 s; 1117 tokens lidos, 93 escritos
+[2026-11-12 00:36:12] [28/54] semt-12 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 49.35 s; 1096 tokens lidos, 118 escritos
+[2026-11-12 00:37:02] [29/54] semt-13 (tela): sinal_de_busca | recusada pelo validador da Fase 3 (palavra_chave_invalida) | 46.1 s; 1057 tokens lidos, 111 escritos
+[2026-11-12 00:37:55] [30/54] semt-15 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 49.36 s; 1148 tokens lidos, 107 escritos
+[2026-11-12 00:39:14] [31/54] tra-6 (tela): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 73.97 s; 1358 tokens lidos, 169 escritos
+[2026-11-12 00:40:03] [32/54] tra-7 (tela): sinal_de_busca | recusada pelo portão da busca (busca) | 44.2 s; 1375 tokens lidos, 108 escritos
+[2026-11-12 00:41:02] [33/54] tra-9 (fixture): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 54.37 s; 1276 tokens lidos, 173 escritos
+[2026-11-12 00:41:56] [34/54] tra-12 (tela): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 49.25 s; 1376 tokens lidos, 121 escritos
+[2026-11-12 00:42:40] [35/54] tra-13 (tela): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 39.04 s; 1288 tokens lidos, 101 escritos
+[2026-11-12 00:43:33] [36/54] tra-14 (tela): sem proposta | sem proposta válida (bloco_malformado) | 49.38 s; 1151 tokens lidos, 108 escritos
+[2026-11-12 00:44:33] [37/54] run-6 (fixture): nota | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 55.58 s; 1183 tokens lidos, 125 escritos
+[2026-11-12 00:45:32] [38/54] run-7 (tela): sem proposta | sem proposta válida (bloco_malformado) | 54.83 s; 1267 tokens lidos, 103 escritos
+[2026-11-12 00:46:13] [39/54] run-8 (fixture): nota | recusada pelo validador da Fase 3 (texto_curto) | 36.36 s; 1183 tokens lidos, 90 escritos
+[2026-11-12 00:47:05] [40/54] run-11 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 47.73 s; 1111 tokens lidos, 108 escritos
+[2026-11-12 00:48:12] [41/54] run-12 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 63.15 s; 1200 tokens lidos, 157 escritos
+[2026-11-12 00:49:11] [42/54] run-14 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 54.59 s; 1111 tokens lidos, 139 escritos
+[2026-11-12 00:50:05] [43/54] run-15 (tela): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 49.84 s; 1106 tokens lidos, 117 escritos
+[2026-11-12 00:50:56] [44/54] efe-6 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 46.75 s; 1148 tokens lidos, 98 escritos
+[2026-11-12 00:51:47] [45/54] efe-8 (fixture): sinal_de_busca | recusada pelo validador da Fase 3 (palavra_chave_invalida) | 46.46 s; 1072 tokens lidos, 113 escritos
+[2026-11-12 00:52:44] [46/54] efe-9 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 53.05 s; 1145 tokens lidos, 125 escritos
+[2026-11-12 00:53:49] [47/54] efe-10 (fixture): sinal_de_busca | recusada pelo portão da busca (busca) | 60.73 s; 1171 tokens lidos, 153 escritos
+[2026-11-12 00:54:40] [48/54] efe-11 (fixture): sinal_de_busca | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 46.63 s; 1061 tokens lidos, 151 escritos
+[2026-11-12 00:55:32] [49/54] efe-12 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 47.74 s; 1142 tokens lidos, 105 escritos
+[2026-11-12 00:56:32] [50/54] efe-13 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 56.11 s; 1160 tokens lidos, 136 escritos
+[2026-11-12 00:57:23] [51/54] efe-15 (fixture): sem proposta | sem proposta válida (bloco_malformado) | 46.74 s; 1109 tokens lidos, 139 escritos
+[2026-11-12 00:58:12] [52/54] lex-13 (fixture): nota | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 44.11 s; 1112 tokens lidos, 93 escritos
+[2026-11-12 00:59:08] [53/54] lex-14 (fixture): nota | recusada pelos filtros da Fase 4 (sem_evidencia_do_caso) | 51.8 s; 1127 tokens lidos, 124 escritos
+[2026-11-12 01:00:05] [54/54] lex-15 (tela): nota | recusada pelos filtros da Fase 4 (mensagem_nao_encontrada_no_codigo) | 51.83 s; 1238 tokens lidos, 98 escritos
+[2026-11-12 01:00:11] FIM analista: 54 casos; duração 2970 s
+[2026-11-12 01:00:13] avaliar_fase4.py --analista --saida fase4_analista
+[2026-11-12 01:00:14] FIM rodar_fase4.ps1 (modo analista) - duracao total 00h50

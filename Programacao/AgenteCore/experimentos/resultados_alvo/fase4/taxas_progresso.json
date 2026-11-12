@@ -1,0 +1,94 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-08T12:34:46",
+    "gerado_por": "progresso.py --taxas",
+    "corridas": [
+      "fase4_tela_v4",
+      "fase4_ensaio_v4",
+      "fase4_ineditos"
+    ],
+    "leituras": [
+      "tela_v4.json",
+      "cenarios_v4.json",
+      "ineditos.json"
+    ],
+    "hash_prompt_fixo": "2e42cf9c31826941",
+    "hash_biblioteca": "95af35290860",
+    "metodo": "por modelo: mediana, percentis 10 e 90 (statistics.quantiles, inclusive), mínimo, máximo e n de cada medida; a estimativa da barra usa a mediana, e os percentis dizem o intervalo em que a taxa variou nesta máquina",
+    "fontes": [
+      "Nielsen (1993): limites de 0,1 s, 1 s e 10 s; acima de 10 s, indicador de fração concluída com estimativa",
+      "Myers (1985): 86,1% dos sujeitos preferem o indicador de fração concluída, que distingue espera de travamento",
+      "Harrison et al. (2007): pausas perto do fim parecem mais lentas; a barra nunca para antes de concluir",
+      "Apple HIG (2023) e Material Components: determinado quando a duração é estimável, trocando de indeterminado sem mudar o formato",
+      "Ollama, API reference: prompt_eval_count, prompt_eval_duration, eval_count e eval_duration só chegam no fim da resposta"
+    ]
+  },
+  "por_modelo": {
+    "qwen2.5:7b": {
+      "n": 120,
+      "maquinas": [
+        "TARGET_TSP030"
+      ],
+      "versoes_ollama": [
+        "0.40.14"
+      ],
+      "teto_tokens": [
+        600
+      ],
+      "prefill_tokens_por_s": {
+        "mediana": 26.033,
+        "p10": 20.111,
+        "p90": 49.43,
+        "min": 19.45,
+        "max": 5918.803,
+        "n": 120,
+        "origem": "tokens_entrada / (prefill_ms / 1000) de cada registro em <corrida>/<modelo>/diagnosticos__*.jsonl das corridas vigentes"
+      },
+      "geracao_tokens_por_s": {
+        "mediana": 4.283,
+        "p10": 4.191,
+        "p90": 4.338,
+        "min": 3.446,
+        "max": 4.475,
+        "n": 120,
+        "origem": "tokens_saida / (geracao_ms / 1000) de cada registro em <corrida>/<modelo>/diagnosticos__*.jsonl das corridas vigentes"
+      },
+      "tokens_saida": {
+        "mediana": 63.0,
+        "p10": 56.0,
+        "p90": 75.0,
+        "min": 45,
+        "max": 88,
+        "n": 120,
+        "origem": "tokens_saida de cada registro em diagnosticos__*.jsonl (o que o modelo escreveu de fato, abaixo do teto)"
+      },
+      "tokens_entrada": {
+        "mediana": 1189.0,
+        "p10": 1100.4,
+        "p90": 1376.9,
+        "min": 1027,
+        "max": 1580,
+        "n": 120,
+        "origem": "tokens_entrada de cada registro em diagnosticos__*.jsonl (a contagem real do prompt feita pelo Ollama)"
+      },
+      "chars_por_token": {
+        "mediana": 3.12,
+        "p10": 3.056,
+        "p90": 3.194,
+        "min": 2.986,
+        "max": 3.346,
+        "n": 120,
+        "origem": "chars do evento prompt / tokens_entrada do evento inferencia (mesmo pai) da trilha v2 de cada corrida"
+      },
+      "carga_ms": {
+        "mediana": 32.0,
+        "p10": 28.0,
+        "p90": 37.1,
+        "min": 13,
+        "max": 9064,
+        "n": 120,
+        "origem": "carga_ms de cada registro em diagnosticos__*.jsonl (quase zero com o modelo residente; segundos na primeira chamada)"
+      }
+    }
+  }
+}

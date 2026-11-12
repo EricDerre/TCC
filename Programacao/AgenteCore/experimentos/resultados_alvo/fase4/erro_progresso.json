@@ -1,0 +1,5264 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-08T12:34:46",
+    "gerado_por": "progresso.py --erro",
+    "corridas": [
+      "fase4_tela_v4",
+      "fase4_ensaio_v4",
+      "fase4_ineditos"
+    ],
+    "taxas_de": "taxas_progresso.json",
+    "metodo": "cada inferência gravada é estimada pelos caracteres do prompt (evento prompt da trilha) e comparada com prefill_ms e geracao_ms do evento inferencia; fora_da_corrida usa as taxas das outras duas corridas (o que a barra vê numa corrida nova), na_amostra usa as taxas de todas, as de taxas_progresso.json; erro = estimado menos medido (negativo quer dizer que a barra acabaria antes do real); total_s é prefill mais geração, parede_s é o tempo de relógio da chamada, que inclui a carga do modelo"
+  },
+  "por_modelo": {
+    "qwen2.5:7b": {
+      "n": 120,
+      "modos": [
+        "fora_da_corrida",
+        "na_amostra"
+      ],
+      "por_registro": [
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-1@tela",
+          "chars": 3938,
+          "medido": {
+            "prefill_s": 61.61,
+            "geracao_s": 15.04,
+            "total_s": 76.65,
+            "parede_s": 87.8,
+            "tokens_entrada": 1218,
+            "tokens_saida": 65
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1272,
+              "prefill_s": 50.762,
+              "geracao_s": 14.709,
+              "total_s": 65.471
+            },
+            "na_amostra": {
+              "tokens_prompt": 1262,
+              "prefill_s": 48.477,
+              "geracao_s": 14.709,
+              "total_s": 63.186
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.848,
+              "geracao_s": -0.331,
+              "total_s": -11.179,
+              "parede_s": -22.329,
+              "tokens_prompt": 54
+            },
+            "na_amostra": {
+              "prefill_s": -13.133,
+              "geracao_s": -0.331,
+              "total_s": -13.464,
+              "parede_s": -24.614,
+              "tokens_prompt": 44
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-1@fixture",
+          "chars": 3590,
+          "medido": {
+            "prefill_s": 54.075,
+            "geracao_s": 12.917,
+            "total_s": 66.992,
+            "parede_s": 69.12,
+            "tokens_entrada": 1118,
+            "tokens_saida": 56
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1160,
+              "prefill_s": 46.293,
+              "geracao_s": 14.709,
+              "total_s": 61.002
+            },
+            "na_amostra": {
+              "tokens_prompt": 1151,
+              "prefill_s": 44.213,
+              "geracao_s": 14.709,
+              "total_s": 58.922
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -7.782,
+              "geracao_s": 1.792,
+              "total_s": -5.99,
+              "parede_s": -8.118,
+              "tokens_prompt": 42
+            },
+            "na_amostra": {
+              "prefill_s": -9.862,
+              "geracao_s": 1.792,
+              "total_s": -8.07,
+              "parede_s": -10.198,
+              "tokens_prompt": 33
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-4@tela",
+          "chars": 3807,
+          "medido": {
+            "prefill_s": 59.968,
+            "geracao_s": 14.289,
+            "total_s": 74.257,
+            "parede_s": 76.38,
+            "tokens_entrada": 1225,
+            "tokens_saida": 62
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1230,
+              "prefill_s": 49.086,
+              "geracao_s": 14.709,
+              "total_s": 63.795
+            },
+            "na_amostra": {
+              "tokens_prompt": 1220,
+              "prefill_s": 46.864,
+              "geracao_s": 14.709,
+              "total_s": 61.573
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.882,
+              "geracao_s": 0.42,
+              "total_s": -10.462,
+              "parede_s": -12.585,
+              "tokens_prompt": 5
+            },
+            "na_amostra": {
+              "prefill_s": -13.104,
+              "geracao_s": 0.42,
+              "total_s": -12.684,
+              "parede_s": -14.807,
+              "tokens_prompt": -5
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-4@fixture",
+          "chars": 3501,
+          "medido": {
+            "prefill_s": 36.309,
+            "geracao_s": 12.639,
+            "total_s": 48.948,
+            "parede_s": 51.1,
+            "tokens_entrada": 1110,
+            "tokens_saida": 48
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1131,
+              "prefill_s": 45.135,
+              "geracao_s": 14.709,
+              "total_s": 59.844
+            },
+            "na_amostra": {
+              "tokens_prompt": 1122,
+              "prefill_s": 43.099,
+              "geracao_s": 14.709,
+              "total_s": 57.808
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 8.826,
+              "geracao_s": 2.07,
+              "total_s": 10.896,
+              "parede_s": 8.744,
+              "tokens_prompt": 21
+            },
+            "na_amostra": {
+              "prefill_s": 6.79,
+              "geracao_s": 2.07,
+              "total_s": 8.86,
+              "parede_s": 6.708,
+              "tokens_prompt": 12
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-4@tela",
+          "chars": 3953,
+          "medido": {
+            "prefill_s": 62.21,
+            "geracao_s": 19.734,
+            "total_s": 81.944,
+            "parede_s": 84.06,
+            "tokens_entrada": 1259,
+            "tokens_saida": 68
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1277,
+              "prefill_s": 50.962,
+              "geracao_s": 14.709,
+              "total_s": 65.671
+            },
+            "na_amostra": {
+              "tokens_prompt": 1267,
+              "prefill_s": 48.669,
+              "geracao_s": 14.709,
+              "total_s": 63.378
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -11.248,
+              "geracao_s": -5.025,
+              "total_s": -16.273,
+              "parede_s": -18.389,
+              "tokens_prompt": 18
+            },
+            "na_amostra": {
+              "prefill_s": -13.541,
+              "geracao_s": -5.025,
+              "total_s": -18.566,
+              "parede_s": -20.682,
+              "tokens_prompt": 8
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-4@fixture",
+          "chars": 3790,
+          "medido": {
+            "prefill_s": 22.796,
+            "geracao_s": 15.301,
+            "total_s": 38.097,
+            "parede_s": 40.21,
+            "tokens_entrada": 1207,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1224,
+              "prefill_s": 48.847,
+              "geracao_s": 14.709,
+              "total_s": 63.556
+            },
+            "na_amostra": {
+              "tokens_prompt": 1215,
+              "prefill_s": 46.672,
+              "geracao_s": 14.709,
+              "total_s": 61.381
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 26.051,
+              "geracao_s": -0.592,
+              "total_s": 25.459,
+              "parede_s": 23.346,
+              "tokens_prompt": 17
+            },
+            "na_amostra": {
+              "prefill_s": 23.876,
+              "geracao_s": -0.592,
+              "total_s": 23.284,
+              "parede_s": 21.171,
+              "tokens_prompt": 8
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-5@tela",
+          "chars": 3409,
+          "medido": {
+            "prefill_s": 51.792,
+            "geracao_s": 13.62,
+            "total_s": 65.412,
+            "parede_s": 67.55,
+            "tokens_entrada": 1077,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1101,
+              "prefill_s": 43.938,
+              "geracao_s": 14.709,
+              "total_s": 58.647
+            },
+            "na_amostra": {
+              "tokens_prompt": 1093,
+              "prefill_s": 41.985,
+              "geracao_s": 14.709,
+              "total_s": 56.694
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -7.854,
+              "geracao_s": 1.089,
+              "total_s": -6.765,
+              "parede_s": -8.903,
+              "tokens_prompt": 24
+            },
+            "na_amostra": {
+              "prefill_s": -9.807,
+              "geracao_s": 1.089,
+              "total_s": -8.718,
+              "parede_s": -10.856,
+              "tokens_prompt": 16
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-5@fixture",
+          "chars": 3663,
+          "medido": {
+            "prefill_s": 40.777,
+            "geracao_s": 16.008,
+            "total_s": 56.785,
+            "parede_s": 58.94,
+            "tokens_entrada": 1188,
+            "tokens_saida": 69
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1183,
+              "prefill_s": 47.21,
+              "geracao_s": 14.709,
+              "total_s": 61.919
+            },
+            "na_amostra": {
+              "tokens_prompt": 1174,
+              "prefill_s": 45.097,
+              "geracao_s": 14.709,
+              "total_s": 59.806
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 6.433,
+              "geracao_s": -1.299,
+              "total_s": 5.134,
+              "parede_s": 2.979,
+              "tokens_prompt": -5
+            },
+            "na_amostra": {
+              "prefill_s": 4.32,
+              "geracao_s": -1.299,
+              "total_s": 3.021,
+              "parede_s": 0.866,
+              "tokens_prompt": -14
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-1@tela",
+          "chars": 3485,
+          "medido": {
+            "prefill_s": 53.781,
+            "geracao_s": 15.362,
+            "total_s": 69.143,
+            "parede_s": 71.28,
+            "tokens_entrada": 1107,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1126,
+              "prefill_s": 44.936,
+              "geracao_s": 14.709,
+              "total_s": 59.645
+            },
+            "na_amostra": {
+              "tokens_prompt": 1117,
+              "prefill_s": 42.907,
+              "geracao_s": 14.709,
+              "total_s": 57.616
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -8.845,
+              "geracao_s": -0.653,
+              "total_s": -9.498,
+              "parede_s": -11.635,
+              "tokens_prompt": 19
+            },
+            "na_amostra": {
+              "prefill_s": -10.874,
+              "geracao_s": -0.653,
+              "total_s": -11.527,
+              "parede_s": -13.664,
+              "tokens_prompt": 10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-1@fixture",
+          "chars": 3560,
+          "medido": {
+            "prefill_s": 56.664,
+            "geracao_s": 14.905,
+            "total_s": 71.569,
+            "parede_s": 73.72,
+            "tokens_entrada": 1153,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1150,
+              "prefill_s": 45.894,
+              "geracao_s": 14.709,
+              "total_s": 60.603
+            },
+            "na_amostra": {
+              "tokens_prompt": 1141,
+              "prefill_s": 43.829,
+              "geracao_s": 14.709,
+              "total_s": 58.538
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.77,
+              "geracao_s": -0.196,
+              "total_s": -10.966,
+              "parede_s": -13.117,
+              "tokens_prompt": -3
+            },
+            "na_amostra": {
+              "prefill_s": -12.835,
+              "geracao_s": -0.196,
+              "total_s": -13.031,
+              "parede_s": -15.182,
+              "tokens_prompt": -12
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-1@tela",
+          "chars": 4196,
+          "medido": {
+            "prefill_s": 68.883,
+            "geracao_s": 17.447,
+            "total_s": 86.33,
+            "parede_s": 88.46,
+            "tokens_entrada": 1385,
+            "tokens_saida": 74
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1355,
+              "prefill_s": 54.075,
+              "geracao_s": 14.709,
+              "total_s": 68.784
+            },
+            "na_amostra": {
+              "tokens_prompt": 1345,
+              "prefill_s": 51.665,
+              "geracao_s": 14.709,
+              "total_s": 66.374
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -14.808,
+              "geracao_s": -2.738,
+              "total_s": -17.546,
+              "parede_s": -19.676,
+              "tokens_prompt": -30
+            },
+            "na_amostra": {
+              "prefill_s": -17.218,
+              "geracao_s": -2.738,
+              "total_s": -19.956,
+              "parede_s": -22.086,
+              "tokens_prompt": -40
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-1@fixture",
+          "chars": 3896,
+          "medido": {
+            "prefill_s": 63.635,
+            "geracao_s": 17.698,
+            "total_s": 81.333,
+            "parede_s": 83.48,
+            "tokens_entrada": 1281,
+            "tokens_saida": 75
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1258,
+              "prefill_s": 50.204,
+              "geracao_s": 14.709,
+              "total_s": 64.913
+            },
+            "na_amostra": {
+              "tokens_prompt": 1249,
+              "prefill_s": 47.978,
+              "geracao_s": 14.709,
+              "total_s": 62.687
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -13.431,
+              "geracao_s": -2.989,
+              "total_s": -16.42,
+              "parede_s": -18.567,
+              "tokens_prompt": -23
+            },
+            "na_amostra": {
+              "prefill_s": -15.657,
+              "geracao_s": -2.989,
+              "total_s": -18.646,
+              "parede_s": -20.793,
+              "tokens_prompt": -32
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-4@tela",
+          "chars": 3922,
+          "medido": {
+            "prefill_s": 53.223,
+            "geracao_s": 13.364,
+            "total_s": 66.587,
+            "parede_s": 68.71,
+            "tokens_entrada": 1267,
+            "tokens_saida": 57
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1267,
+              "prefill_s": 50.563,
+              "geracao_s": 14.709,
+              "total_s": 65.272
+            },
+            "na_amostra": {
+              "tokens_prompt": 1257,
+              "prefill_s": 48.285,
+              "geracao_s": 14.709,
+              "total_s": 62.994
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -2.66,
+              "geracao_s": 1.345,
+              "total_s": -1.315,
+              "parede_s": -3.438,
+              "tokens_prompt": 0
+            },
+            "na_amostra": {
+              "prefill_s": -4.938,
+              "geracao_s": 1.345,
+              "total_s": -3.593,
+              "parede_s": -5.716,
+              "tokens_prompt": -10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-4@fixture",
+          "chars": 3720,
+          "medido": {
+            "prefill_s": 58.362,
+            "geracao_s": 17.219,
+            "total_s": 75.581,
+            "parede_s": 77.73,
+            "tokens_entrada": 1189,
+            "tokens_saida": 74
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1202,
+              "prefill_s": 47.969,
+              "geracao_s": 14.709,
+              "total_s": 62.678
+            },
+            "na_amostra": {
+              "tokens_prompt": 1192,
+              "prefill_s": 45.788,
+              "geracao_s": 14.709,
+              "total_s": 60.497
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.393,
+              "geracao_s": -2.51,
+              "total_s": -12.903,
+              "parede_s": -15.052,
+              "tokens_prompt": 13
+            },
+            "na_amostra": {
+              "prefill_s": -12.574,
+              "geracao_s": -2.51,
+              "total_s": -15.084,
+              "parede_s": -17.233,
+              "tokens_prompt": 3
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-1@tela",
+          "chars": 4228,
+          "medido": {
+            "prefill_s": 65.84,
+            "geracao_s": 15.955,
+            "total_s": 81.795,
+            "parede_s": 83.92,
+            "tokens_entrada": 1328,
+            "tokens_saida": 68
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1366,
+              "prefill_s": 54.514,
+              "geracao_s": 14.709,
+              "total_s": 69.223
+            },
+            "na_amostra": {
+              "tokens_prompt": 1355,
+              "prefill_s": 52.049,
+              "geracao_s": 14.709,
+              "total_s": 66.758
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -11.326,
+              "geracao_s": -1.246,
+              "total_s": -12.572,
+              "parede_s": -14.697,
+              "tokens_prompt": 38
+            },
+            "na_amostra": {
+              "prefill_s": -13.791,
+              "geracao_s": -1.246,
+              "total_s": -15.037,
+              "parede_s": -17.162,
+              "tokens_prompt": 27
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-1@fixture",
+          "chars": 3503,
+          "medido": {
+            "prefill_s": 42.907,
+            "geracao_s": 15.257,
+            "total_s": 58.164,
+            "parede_s": 60.33,
+            "tokens_entrada": 1114,
+            "tokens_saida": 65
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1131,
+              "prefill_s": 45.135,
+              "geracao_s": 14.709,
+              "total_s": 59.844
+            },
+            "na_amostra": {
+              "tokens_prompt": 1123,
+              "prefill_s": 43.138,
+              "geracao_s": 14.709,
+              "total_s": 57.847
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 2.228,
+              "geracao_s": -0.548,
+              "total_s": 1.68,
+              "parede_s": -0.486,
+              "tokens_prompt": 17
+            },
+            "na_amostra": {
+              "prefill_s": 0.231,
+              "geracao_s": -0.548,
+              "total_s": -0.317,
+              "parede_s": -2.483,
+              "tokens_prompt": 9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-2@tela",
+          "chars": 3580,
+          "medido": {
+            "prefill_s": 35.014,
+            "geracao_s": 17.238,
+            "total_s": 52.252,
+            "parede_s": 54.45,
+            "tokens_entrada": 1165,
+            "tokens_saida": 74
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1156,
+              "prefill_s": 46.133,
+              "geracao_s": 14.709,
+              "total_s": 60.842
+            },
+            "na_amostra": {
+              "tokens_prompt": 1147,
+              "prefill_s": 44.059,
+              "geracao_s": 14.709,
+              "total_s": 58.768
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 11.119,
+              "geracao_s": -2.529,
+              "total_s": 8.59,
+              "parede_s": 6.392,
+              "tokens_prompt": -9
+            },
+            "na_amostra": {
+              "prefill_s": 9.045,
+              "geracao_s": -2.529,
+              "total_s": 6.516,
+              "parede_s": 4.318,
+              "tokens_prompt": -18
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-2@fixture",
+          "chars": 3445,
+          "medido": {
+            "prefill_s": 51.1,
+            "geracao_s": 17.322,
+            "total_s": 68.422,
+            "parede_s": 70.54,
+            "tokens_entrada": 1062,
+            "tokens_saida": 75
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1113,
+              "prefill_s": 44.417,
+              "geracao_s": 14.709,
+              "total_s": 59.126
+            },
+            "na_amostra": {
+              "tokens_prompt": 1104,
+              "prefill_s": 42.408,
+              "geracao_s": 14.709,
+              "total_s": 57.117
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -6.683,
+              "geracao_s": -2.613,
+              "total_s": -9.296,
+              "parede_s": -11.414,
+              "tokens_prompt": 51
+            },
+            "na_amostra": {
+              "prefill_s": -8.692,
+              "geracao_s": -2.613,
+              "total_s": -11.305,
+              "parede_s": -13.423,
+              "tokens_prompt": 42
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "efe-3@tela",
+          "chars": 3397,
+          "medido": {
+            "prefill_s": 19.248,
+            "geracao_s": 15.3,
+            "total_s": 34.548,
+            "parede_s": 36.7,
+            "tokens_entrada": 1069,
+            "tokens_saida": 63
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1097,
+              "prefill_s": 43.778,
+              "geracao_s": 14.709,
+              "total_s": 58.487
+            },
+            "na_amostra": {
+              "tokens_prompt": 1089,
+              "prefill_s": 41.832,
+              "geracao_s": 14.709,
+              "total_s": 56.541
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 24.53,
+              "geracao_s": -0.591,
+              "total_s": 23.939,
+              "parede_s": 21.787,
+              "tokens_prompt": 28
+            },
+            "na_amostra": {
+              "prefill_s": 22.584,
+              "geracao_s": -0.591,
+              "total_s": 21.993,
+              "parede_s": 19.841,
+              "tokens_prompt": 20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "efe-3@fixture",
+          "chars": 3419,
+          "medido": {
+            "prefill_s": 34.936,
+            "geracao_s": 11.754,
+            "total_s": 46.69,
+            "parede_s": 48.83,
+            "tokens_entrada": 1091,
+            "tokens_saida": 51
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1104,
+              "prefill_s": 44.058,
+              "geracao_s": 14.709,
+              "total_s": 58.767
+            },
+            "na_amostra": {
+              "tokens_prompt": 1096,
+              "prefill_s": 42.1,
+              "geracao_s": 14.709,
+              "total_s": 56.809
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 9.122,
+              "geracao_s": 2.955,
+              "total_s": 12.077,
+              "parede_s": 9.937,
+              "tokens_prompt": 13
+            },
+            "na_amostra": {
+              "prefill_s": 7.164,
+              "geracao_s": 2.955,
+              "total_s": 10.119,
+              "parede_s": 7.979,
+              "tokens_prompt": 5
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-7@tela",
+          "chars": 3889,
+          "medido": {
+            "prefill_s": 60.178,
+            "geracao_s": 18.471,
+            "total_s": 78.649,
+            "parede_s": 80.79,
+            "tokens_entrada": 1230,
+            "tokens_saida": 79
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1256,
+              "prefill_s": 50.124,
+              "geracao_s": 14.709,
+              "total_s": 64.833
+            },
+            "na_amostra": {
+              "tokens_prompt": 1246,
+              "prefill_s": 47.862,
+              "geracao_s": 14.709,
+              "total_s": 62.571
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.054,
+              "geracao_s": -3.762,
+              "total_s": -13.816,
+              "parede_s": -15.957,
+              "tokens_prompt": 26
+            },
+            "na_amostra": {
+              "prefill_s": -12.316,
+              "geracao_s": -3.762,
+              "total_s": -16.078,
+              "parede_s": -18.219,
+              "tokens_prompt": 16
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-7@fixture",
+          "chars": 3534,
+          "medido": {
+            "prefill_s": 44.137,
+            "geracao_s": 11.718,
+            "total_s": 55.855,
+            "parede_s": 57.99,
+            "tokens_entrada": 1118,
+            "tokens_saida": 51
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1141,
+              "prefill_s": 45.534,
+              "geracao_s": 14.709,
+              "total_s": 60.243
+            },
+            "na_amostra": {
+              "tokens_prompt": 1133,
+              "prefill_s": 43.522,
+              "geracao_s": 14.709,
+              "total_s": 58.231
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 1.397,
+              "geracao_s": 2.991,
+              "total_s": 4.388,
+              "parede_s": 2.253,
+              "tokens_prompt": 23
+            },
+            "na_amostra": {
+              "prefill_s": -0.615,
+              "geracao_s": 2.991,
+              "total_s": 2.376,
+              "parede_s": 0.241,
+              "tokens_prompt": 15
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-8@tela",
+          "chars": 3739,
+          "medido": {
+            "prefill_s": 26.542,
+            "geracao_s": 13.833,
+            "total_s": 40.375,
+            "parede_s": 42.53,
+            "tokens_entrada": 1215,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1208,
+              "prefill_s": 48.208,
+              "geracao_s": 14.709,
+              "total_s": 62.917
+            },
+            "na_amostra": {
+              "tokens_prompt": 1198,
+              "prefill_s": 46.019,
+              "geracao_s": 14.709,
+              "total_s": 60.728
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 21.666,
+              "geracao_s": 0.876,
+              "total_s": 22.542,
+              "parede_s": 20.387,
+              "tokens_prompt": -7
+            },
+            "na_amostra": {
+              "prefill_s": 19.477,
+              "geracao_s": 0.876,
+              "total_s": 20.353,
+              "parede_s": 18.198,
+              "tokens_prompt": -17
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-8@fixture",
+          "chars": 3479,
+          "medido": {
+            "prefill_s": 48.14,
+            "geracao_s": 14.499,
+            "total_s": 62.639,
+            "parede_s": 64.77,
+            "tokens_entrada": 1116,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1124,
+              "prefill_s": 44.856,
+              "geracao_s": 14.709,
+              "total_s": 59.565
+            },
+            "na_amostra": {
+              "tokens_prompt": 1115,
+              "prefill_s": 42.83,
+              "geracao_s": 14.709,
+              "total_s": 57.539
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -3.284,
+              "geracao_s": 0.21,
+              "total_s": -3.074,
+              "parede_s": -5.205,
+              "tokens_prompt": 8
+            },
+            "na_amostra": {
+              "prefill_s": -5.31,
+              "geracao_s": 0.21,
+              "total_s": -5.1,
+              "parede_s": -7.231,
+              "tokens_prompt": -1
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-10@tela",
+          "chars": 3938,
+          "medido": {
+            "prefill_s": 0.23,
+            "geracao_s": 13.638,
+            "total_s": 13.868,
+            "parede_s": 16.02,
+            "tokens_entrada": 1218,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1272,
+              "prefill_s": 50.762,
+              "geracao_s": 14.709,
+              "total_s": 65.471
+            },
+            "na_amostra": {
+              "tokens_prompt": 1262,
+              "prefill_s": 48.477,
+              "geracao_s": 14.709,
+              "total_s": 63.186
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 50.532,
+              "geracao_s": 1.071,
+              "total_s": 51.603,
+              "parede_s": 49.451,
+              "tokens_prompt": 54
+            },
+            "na_amostra": {
+              "prefill_s": 48.247,
+              "geracao_s": 1.071,
+              "total_s": 49.318,
+              "parede_s": 47.166,
+              "tokens_prompt": 44
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-10@fixture",
+          "chars": 3823,
+          "medido": {
+            "prefill_s": 59.276,
+            "geracao_s": 14.127,
+            "total_s": 73.403,
+            "parede_s": 75.53,
+            "tokens_entrada": 1211,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1235,
+              "prefill_s": 49.286,
+              "geracao_s": 14.709,
+              "total_s": 63.995
+            },
+            "na_amostra": {
+              "tokens_prompt": 1225,
+              "prefill_s": 47.056,
+              "geracao_s": 14.709,
+              "total_s": 61.765
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -9.99,
+              "geracao_s": 0.582,
+              "total_s": -9.408,
+              "parede_s": -11.535,
+              "tokens_prompt": 24
+            },
+            "na_amostra": {
+              "prefill_s": -12.22,
+              "geracao_s": 0.582,
+              "total_s": -11.638,
+              "parede_s": -13.765,
+              "tokens_prompt": 14
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-11@tela",
+          "chars": 3807,
+          "medido": {
+            "prefill_s": 26.812,
+            "geracao_s": 14.381,
+            "total_s": 41.193,
+            "parede_s": 43.34,
+            "tokens_entrada": 1225,
+            "tokens_saida": 62
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1230,
+              "prefill_s": 49.086,
+              "geracao_s": 14.709,
+              "total_s": 63.795
+            },
+            "na_amostra": {
+              "tokens_prompt": 1220,
+              "prefill_s": 46.864,
+              "geracao_s": 14.709,
+              "total_s": 61.573
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 22.274,
+              "geracao_s": 0.328,
+              "total_s": 22.602,
+              "parede_s": 20.455,
+              "tokens_prompt": 5
+            },
+            "na_amostra": {
+              "prefill_s": 20.052,
+              "geracao_s": 0.328,
+              "total_s": 20.38,
+              "parede_s": 18.233,
+              "tokens_prompt": -5
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-11@fixture",
+          "chars": 3495,
+          "medido": {
+            "prefill_s": 54.877,
+            "geracao_s": 14.135,
+            "total_s": 69.012,
+            "parede_s": 71.13,
+            "tokens_entrada": 1127,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1129,
+              "prefill_s": 45.055,
+              "geracao_s": 14.709,
+              "total_s": 59.764
+            },
+            "na_amostra": {
+              "tokens_prompt": 1120,
+              "prefill_s": 43.022,
+              "geracao_s": 14.709,
+              "total_s": 57.731
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -9.822,
+              "geracao_s": 0.574,
+              "total_s": -9.248,
+              "parede_s": -11.366,
+              "tokens_prompt": 2
+            },
+            "na_amostra": {
+              "prefill_s": -11.855,
+              "geracao_s": 0.574,
+              "total_s": -11.281,
+              "parede_s": -13.399,
+              "tokens_prompt": -7
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-11@tela",
+          "chars": 3834,
+          "medido": {
+            "prefill_s": 60.486,
+            "geracao_s": 13.364,
+            "total_s": 73.85,
+            "parede_s": 75.97,
+            "tokens_entrada": 1219,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1238,
+              "prefill_s": 49.405,
+              "geracao_s": 14.709,
+              "total_s": 64.114
+            },
+            "na_amostra": {
+              "tokens_prompt": 1229,
+              "prefill_s": 47.209,
+              "geracao_s": 14.709,
+              "total_s": 61.918
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -11.081,
+              "geracao_s": 1.345,
+              "total_s": -9.736,
+              "parede_s": -11.856,
+              "tokens_prompt": 19
+            },
+            "na_amostra": {
+              "prefill_s": -13.277,
+              "geracao_s": 1.345,
+              "total_s": -11.932,
+              "parede_s": -14.052,
+              "tokens_prompt": 10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-11@fixture",
+          "chars": 3676,
+          "medido": {
+            "prefill_s": 57.156,
+            "geracao_s": 17.994,
+            "total_s": 75.15,
+            "parede_s": 77.29,
+            "tokens_entrada": 1170,
+            "tokens_saida": 77
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1187,
+              "prefill_s": 47.37,
+              "geracao_s": 14.709,
+              "total_s": 62.079
+            },
+            "na_amostra": {
+              "tokens_prompt": 1178,
+              "prefill_s": 45.25,
+              "geracao_s": 14.709,
+              "total_s": 59.959
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -9.786,
+              "geracao_s": -3.285,
+              "total_s": -13.071,
+              "parede_s": -15.211,
+              "tokens_prompt": 17
+            },
+            "na_amostra": {
+              "prefill_s": -11.906,
+              "geracao_s": -3.285,
+              "total_s": -15.191,
+              "parede_s": -17.331,
+              "tokens_prompt": 8
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-14@tela",
+          "chars": 3492,
+          "medido": {
+            "prefill_s": 52.307,
+            "geracao_s": 16.133,
+            "total_s": 68.44,
+            "parede_s": 70.59,
+            "tokens_entrada": 1080,
+            "tokens_saida": 69
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1128,
+              "prefill_s": 45.016,
+              "geracao_s": 14.709,
+              "total_s": 59.725
+            },
+            "na_amostra": {
+              "tokens_prompt": 1119,
+              "prefill_s": 42.984,
+              "geracao_s": 14.709,
+              "total_s": 57.693
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -7.291,
+              "geracao_s": -1.424,
+              "total_s": -8.715,
+              "parede_s": -10.865,
+              "tokens_prompt": 48
+            },
+            "na_amostra": {
+              "prefill_s": -9.323,
+              "geracao_s": -1.424,
+              "total_s": -10.747,
+              "parede_s": -12.897,
+              "tokens_prompt": 39
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-14@fixture",
+          "chars": 3588,
+          "medido": {
+            "prefill_s": 37.627,
+            "geracao_s": 15.875,
+            "total_s": 53.502,
+            "parede_s": 55.65,
+            "tokens_entrada": 1137,
+            "tokens_saida": 68
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1159,
+              "prefill_s": 46.253,
+              "geracao_s": 14.709,
+              "total_s": 60.962
+            },
+            "na_amostra": {
+              "tokens_prompt": 1150,
+              "prefill_s": 44.175,
+              "geracao_s": 14.709,
+              "total_s": 58.884
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 8.626,
+              "geracao_s": -1.166,
+              "total_s": 7.46,
+              "parede_s": 5.312,
+              "tokens_prompt": 22
+            },
+            "na_amostra": {
+              "prefill_s": 6.548,
+              "geracao_s": -1.166,
+              "total_s": 5.382,
+              "parede_s": 3.234,
+              "tokens_prompt": 13
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-8@tela",
+          "chars": 3389,
+          "medido": {
+            "prefill_s": 52.782,
+            "geracao_s": 13.586,
+            "total_s": 66.368,
+            "parede_s": 68.5,
+            "tokens_entrada": 1086,
+            "tokens_saida": 56
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1095,
+              "prefill_s": 43.699,
+              "geracao_s": 14.709,
+              "total_s": 58.408
+            },
+            "na_amostra": {
+              "tokens_prompt": 1086,
+              "prefill_s": 41.716,
+              "geracao_s": 14.709,
+              "total_s": 56.425
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -9.083,
+              "geracao_s": 1.123,
+              "total_s": -7.96,
+              "parede_s": -10.092,
+              "tokens_prompt": 9
+            },
+            "na_amostra": {
+              "prefill_s": -11.066,
+              "geracao_s": 1.123,
+              "total_s": -9.943,
+              "parede_s": -12.075,
+              "tokens_prompt": 0
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-8@fixture",
+          "chars": 3350,
+          "medido": {
+            "prefill_s": 53.815,
+            "geracao_s": 14.386,
+            "total_s": 68.201,
+            "parede_s": 70.34,
+            "tokens_entrada": 1090,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1082,
+              "prefill_s": 43.18,
+              "geracao_s": 14.709,
+              "total_s": 57.889
+            },
+            "na_amostra": {
+              "tokens_prompt": 1074,
+              "prefill_s": 41.255,
+              "geracao_s": 14.709,
+              "total_s": 55.964
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.635,
+              "geracao_s": 0.323,
+              "total_s": -10.312,
+              "parede_s": -12.451,
+              "tokens_prompt": -8
+            },
+            "na_amostra": {
+              "prefill_s": -12.56,
+              "geracao_s": 0.323,
+              "total_s": -12.237,
+              "parede_s": -14.376,
+              "tokens_prompt": -16
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-9@tela",
+          "chars": 3589,
+          "medido": {
+            "prefill_s": 56.622,
+            "geracao_s": 14.677,
+            "total_s": 71.299,
+            "parede_s": 73.43,
+            "tokens_entrada": 1138,
+            "tokens_saida": 63
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1159,
+              "prefill_s": 46.253,
+              "geracao_s": 14.709,
+              "total_s": 60.962
+            },
+            "na_amostra": {
+              "tokens_prompt": 1150,
+              "prefill_s": 44.175,
+              "geracao_s": 14.709,
+              "total_s": 58.884
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.369,
+              "geracao_s": 0.032,
+              "total_s": -10.337,
+              "parede_s": -12.468,
+              "tokens_prompt": 21
+            },
+            "na_amostra": {
+              "prefill_s": -12.447,
+              "geracao_s": 0.032,
+              "total_s": -12.415,
+              "parede_s": -14.546,
+              "tokens_prompt": 12
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-9@fixture",
+          "chars": 3558,
+          "medido": {
+            "prefill_s": 38.026,
+            "geracao_s": 14.159,
+            "total_s": 52.185,
+            "parede_s": 54.33,
+            "tokens_entrada": 1141,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1149,
+              "prefill_s": 45.854,
+              "geracao_s": 14.709,
+              "total_s": 60.563
+            },
+            "na_amostra": {
+              "tokens_prompt": 1140,
+              "prefill_s": 43.791,
+              "geracao_s": 14.709,
+              "total_s": 58.5
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 7.828,
+              "geracao_s": 0.55,
+              "total_s": 8.378,
+              "parede_s": 6.233,
+              "tokens_prompt": 8
+            },
+            "na_amostra": {
+              "prefill_s": 5.765,
+              "geracao_s": 0.55,
+              "total_s": 6.315,
+              "parede_s": 4.17,
+              "tokens_prompt": -1
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-14@tela",
+          "chars": 3350,
+          "medido": {
+            "prefill_s": 19.921,
+            "geracao_s": 13.503,
+            "total_s": 33.424,
+            "parede_s": 35.56,
+            "tokens_entrada": 1072,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1082,
+              "prefill_s": 43.18,
+              "geracao_s": 14.709,
+              "total_s": 57.889
+            },
+            "na_amostra": {
+              "tokens_prompt": 1074,
+              "prefill_s": 41.255,
+              "geracao_s": 14.709,
+              "total_s": 55.964
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 23.259,
+              "geracao_s": 1.206,
+              "total_s": 24.465,
+              "parede_s": 22.329,
+              "tokens_prompt": 10
+            },
+            "na_amostra": {
+              "prefill_s": 21.334,
+              "geracao_s": 1.206,
+              "total_s": 22.54,
+              "parede_s": 20.404,
+              "tokens_prompt": 2
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-14@fixture",
+          "chars": 3495,
+          "medido": {
+            "prefill_s": 38.009,
+            "geracao_s": 14.027,
+            "total_s": 52.036,
+            "parede_s": 54.19,
+            "tokens_entrada": 1135,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1129,
+              "prefill_s": 45.055,
+              "geracao_s": 14.709,
+              "total_s": 59.764
+            },
+            "na_amostra": {
+              "tokens_prompt": 1120,
+              "prefill_s": 43.022,
+              "geracao_s": 14.709,
+              "total_s": 57.731
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 7.046,
+              "geracao_s": 0.682,
+              "total_s": 7.728,
+              "parede_s": 5.574,
+              "tokens_prompt": -6
+            },
+            "na_amostra": {
+              "prefill_s": 5.013,
+              "geracao_s": 0.682,
+              "total_s": 5.695,
+              "parede_s": 3.541,
+              "tokens_prompt": -15
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-8@tela",
+          "chars": 3922,
+          "medido": {
+            "prefill_s": 0.23,
+            "geracao_s": 13.166,
+            "total_s": 13.396,
+            "parede_s": 15.54,
+            "tokens_entrada": 1267,
+            "tokens_saida": 57
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1267,
+              "prefill_s": 50.563,
+              "geracao_s": 14.709,
+              "total_s": 65.272
+            },
+            "na_amostra": {
+              "tokens_prompt": 1257,
+              "prefill_s": 48.285,
+              "geracao_s": 14.709,
+              "total_s": 62.994
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 50.333,
+              "geracao_s": 1.543,
+              "total_s": 51.876,
+              "parede_s": 49.732,
+              "tokens_prompt": 0
+            },
+            "na_amostra": {
+              "prefill_s": 48.055,
+              "geracao_s": 1.543,
+              "total_s": 49.598,
+              "parede_s": 47.454,
+              "tokens_prompt": -10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-8@fixture",
+          "chars": 3713,
+          "medido": {
+            "prefill_s": 21.014,
+            "geracao_s": 14.919,
+            "total_s": 35.933,
+            "parede_s": 38.06,
+            "tokens_entrada": 1185,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1199,
+              "prefill_s": 47.849,
+              "geracao_s": 14.709,
+              "total_s": 62.558
+            },
+            "na_amostra": {
+              "tokens_prompt": 1190,
+              "prefill_s": 45.711,
+              "geracao_s": 14.709,
+              "total_s": 60.42
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 26.835,
+              "geracao_s": -0.21,
+              "total_s": 26.625,
+              "parede_s": 24.498,
+              "tokens_prompt": 14
+            },
+            "na_amostra": {
+              "prefill_s": 24.697,
+              "geracao_s": -0.21,
+              "total_s": 24.487,
+              "parede_s": 22.36,
+              "tokens_prompt": 5
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-11@tela",
+          "chars": 3922,
+          "medido": {
+            "prefill_s": 31.578,
+            "geracao_s": 15.213,
+            "total_s": 46.791,
+            "parede_s": 48.93,
+            "tokens_entrada": 1267,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1267,
+              "prefill_s": 50.563,
+              "geracao_s": 14.709,
+              "total_s": 65.272
+            },
+            "na_amostra": {
+              "tokens_prompt": 1257,
+              "prefill_s": 48.285,
+              "geracao_s": 14.709,
+              "total_s": 62.994
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 18.985,
+              "geracao_s": -0.504,
+              "total_s": 18.481,
+              "parede_s": 16.342,
+              "tokens_prompt": 0
+            },
+            "na_amostra": {
+              "prefill_s": 16.707,
+              "geracao_s": -0.504,
+              "total_s": 16.203,
+              "parede_s": 14.064,
+              "tokens_prompt": -10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-11@fixture",
+          "chars": 3494,
+          "medido": {
+            "prefill_s": 53.853,
+            "geracao_s": 12.722,
+            "total_s": 66.575,
+            "parede_s": 68.69,
+            "tokens_entrada": 1101,
+            "tokens_saida": 55
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1129,
+              "prefill_s": 45.055,
+              "geracao_s": 14.709,
+              "total_s": 59.764
+            },
+            "na_amostra": {
+              "tokens_prompt": 1120,
+              "prefill_s": 43.022,
+              "geracao_s": 14.709,
+              "total_s": 57.731
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -8.798,
+              "geracao_s": 1.987,
+              "total_s": -6.811,
+              "parede_s": -8.926,
+              "tokens_prompt": 28
+            },
+            "na_amostra": {
+              "prefill_s": -10.831,
+              "geracao_s": 1.987,
+              "total_s": -8.844,
+              "parede_s": -10.959,
+              "tokens_prompt": 19
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-9@tela",
+          "chars": 3580,
+          "medido": {
+            "prefill_s": 35.955,
+            "geracao_s": 17.536,
+            "total_s": 53.491,
+            "parede_s": 55.66,
+            "tokens_entrada": 1165,
+            "tokens_saida": 74
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1156,
+              "prefill_s": 46.133,
+              "geracao_s": 14.709,
+              "total_s": 60.842
+            },
+            "na_amostra": {
+              "tokens_prompt": 1147,
+              "prefill_s": 44.059,
+              "geracao_s": 14.709,
+              "total_s": 58.768
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 10.178,
+              "geracao_s": -2.827,
+              "total_s": 7.351,
+              "parede_s": 5.182,
+              "tokens_prompt": -9
+            },
+            "na_amostra": {
+              "prefill_s": 8.104,
+              "geracao_s": -2.827,
+              "total_s": 5.277,
+              "parede_s": 3.108,
+              "tokens_prompt": -18
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-9@fixture",
+          "chars": 3750,
+          "medido": {
+            "prefill_s": 40.289,
+            "geracao_s": 13.316,
+            "total_s": 53.605,
+            "parede_s": 55.77,
+            "tokens_entrada": 1182,
+            "tokens_saida": 57
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1211,
+              "prefill_s": 48.328,
+              "geracao_s": 14.709,
+              "total_s": 63.037
+            },
+            "na_amostra": {
+              "tokens_prompt": 1202,
+              "prefill_s": 46.172,
+              "geracao_s": 14.709,
+              "total_s": 60.881
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 8.039,
+              "geracao_s": 1.393,
+              "total_s": 9.432,
+              "parede_s": 7.267,
+              "tokens_prompt": 29
+            },
+            "na_amostra": {
+              "prefill_s": 5.883,
+              "geracao_s": 1.393,
+              "total_s": 7.276,
+              "parede_s": 5.111,
+              "tokens_prompt": 20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-16@tela",
+          "chars": 4224,
+          "medido": {
+            "prefill_s": 65.196,
+            "geracao_s": 20.897,
+            "total_s": 86.093,
+            "parede_s": 88.24,
+            "tokens_entrada": 1299,
+            "tokens_saida": 88
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1364,
+              "prefill_s": 54.434,
+              "geracao_s": 14.709,
+              "total_s": 69.143
+            },
+            "na_amostra": {
+              "tokens_prompt": 1354,
+              "prefill_s": 52.011,
+              "geracao_s": 14.709,
+              "total_s": 66.72
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -10.762,
+              "geracao_s": -6.188,
+              "total_s": -16.95,
+              "parede_s": -19.097,
+              "tokens_prompt": 65
+            },
+            "na_amostra": {
+              "prefill_s": -13.185,
+              "geracao_s": -6.188,
+              "total_s": -19.373,
+              "parede_s": -21.52,
+              "tokens_prompt": 55
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-16@fixture",
+          "chars": 3839,
+          "medido": {
+            "prefill_s": 38.294,
+            "geracao_s": 13.63,
+            "total_s": 51.924,
+            "parede_s": 54.07,
+            "tokens_entrada": 1158,
+            "tokens_saida": 59
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1240,
+              "prefill_s": 49.485,
+              "geracao_s": 14.709,
+              "total_s": 64.194
+            },
+            "na_amostra": {
+              "tokens_prompt": 1230,
+              "prefill_s": 47.248,
+              "geracao_s": 14.709,
+              "total_s": 61.957
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 11.191,
+              "geracao_s": 1.079,
+              "total_s": 12.27,
+              "parede_s": 10.124,
+              "tokens_prompt": 82
+            },
+            "na_amostra": {
+              "prefill_s": 8.954,
+              "geracao_s": 1.079,
+              "total_s": 10.033,
+              "parede_s": 7.887,
+              "tokens_prompt": 72
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-18@tela",
+          "chars": 3739,
+          "medido": {
+            "prefill_s": 26.616,
+            "geracao_s": 13.89,
+            "total_s": 40.506,
+            "parede_s": 42.65,
+            "tokens_entrada": 1215,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1208,
+              "prefill_s": 48.208,
+              "geracao_s": 14.709,
+              "total_s": 62.917
+            },
+            "na_amostra": {
+              "tokens_prompt": 1198,
+              "prefill_s": 46.019,
+              "geracao_s": 14.709,
+              "total_s": 60.728
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 21.592,
+              "geracao_s": 0.819,
+              "total_s": 22.411,
+              "parede_s": 20.267,
+              "tokens_prompt": -7
+            },
+            "na_amostra": {
+              "prefill_s": 19.403,
+              "geracao_s": 0.819,
+              "total_s": 20.222,
+              "parede_s": 18.078,
+              "tokens_prompt": -17
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "lex-18@fixture",
+          "chars": 3744,
+          "medido": {
+            "prefill_s": 41.108,
+            "geracao_s": 14.792,
+            "total_s": 55.9,
+            "parede_s": 58.04,
+            "tokens_entrada": 1191,
+            "tokens_saida": 62
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1209,
+              "prefill_s": 48.248,
+              "geracao_s": 14.709,
+              "total_s": 62.957
+            },
+            "na_amostra": {
+              "tokens_prompt": 1200,
+              "prefill_s": 46.095,
+              "geracao_s": 14.709,
+              "total_s": 60.804
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 7.14,
+              "geracao_s": -0.083,
+              "total_s": 7.057,
+              "parede_s": 4.917,
+              "tokens_prompt": 18
+            },
+            "na_amostra": {
+              "prefill_s": 4.987,
+              "geracao_s": -0.083,
+              "total_s": 4.904,
+              "parede_s": 2.764,
+              "tokens_prompt": 9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-16@tela",
+          "chars": 3485,
+          "medido": {
+            "prefill_s": 35.653,
+            "geracao_s": 14.969,
+            "total_s": 50.622,
+            "parede_s": 52.77,
+            "tokens_entrada": 1095,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1126,
+              "prefill_s": 44.936,
+              "geracao_s": 14.709,
+              "total_s": 59.645
+            },
+            "na_amostra": {
+              "tokens_prompt": 1117,
+              "prefill_s": 42.907,
+              "geracao_s": 14.709,
+              "total_s": 57.616
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 9.283,
+              "geracao_s": -0.26,
+              "total_s": 9.023,
+              "parede_s": 6.875,
+              "tokens_prompt": 31
+            },
+            "na_amostra": {
+              "prefill_s": 7.254,
+              "geracao_s": -0.26,
+              "total_s": 6.994,
+              "parede_s": 4.846,
+              "tokens_prompt": 22
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-16@fixture",
+          "chars": 3595,
+          "medido": {
+            "prefill_s": 23.165,
+            "geracao_s": 13.763,
+            "total_s": 36.928,
+            "parede_s": 39.02,
+            "tokens_entrada": 1136,
+            "tokens_saida": 59
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1161,
+              "prefill_s": 46.333,
+              "geracao_s": 14.709,
+              "total_s": 61.042
+            },
+            "na_amostra": {
+              "tokens_prompt": 1152,
+              "prefill_s": 44.252,
+              "geracao_s": 14.709,
+              "total_s": 58.961
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 23.168,
+              "geracao_s": 0.946,
+              "total_s": 24.114,
+              "parede_s": 22.022,
+              "tokens_prompt": 25
+            },
+            "na_amostra": {
+              "prefill_s": 21.087,
+              "geracao_s": 0.946,
+              "total_s": 22.033,
+              "parede_s": 19.941,
+              "tokens_prompt": 16
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-20@tela",
+          "chars": 3425,
+          "medido": {
+            "prefill_s": 36.476,
+            "geracao_s": 15.384,
+            "total_s": 51.86,
+            "parede_s": 54.01,
+            "tokens_entrada": 1077,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1106,
+              "prefill_s": 44.138,
+              "geracao_s": 14.709,
+              "total_s": 58.847
+            },
+            "na_amostra": {
+              "tokens_prompt": 1098,
+              "prefill_s": 42.177,
+              "geracao_s": 14.709,
+              "total_s": 56.886
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 7.662,
+              "geracao_s": -0.675,
+              "total_s": 6.987,
+              "parede_s": 4.837,
+              "tokens_prompt": 29
+            },
+            "na_amostra": {
+              "prefill_s": 5.701,
+              "geracao_s": -0.675,
+              "total_s": 5.026,
+              "parede_s": 2.876,
+              "tokens_prompt": 21
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-20@fixture",
+          "chars": 3783,
+          "medido": {
+            "prefill_s": 30.84,
+            "geracao_s": 13.152,
+            "total_s": 43.992,
+            "parede_s": 46.16,
+            "tokens_entrada": 1213,
+            "tokens_saida": 56
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1222,
+              "prefill_s": 48.767,
+              "geracao_s": 14.709,
+              "total_s": 63.476
+            },
+            "na_amostra": {
+              "tokens_prompt": 1212,
+              "prefill_s": 46.556,
+              "geracao_s": 14.709,
+              "total_s": 61.265
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 17.927,
+              "geracao_s": 1.557,
+              "total_s": 19.484,
+              "parede_s": 17.316,
+              "tokens_prompt": 9
+            },
+            "na_amostra": {
+              "prefill_s": 15.716,
+              "geracao_s": 1.557,
+              "total_s": 17.273,
+              "parede_s": 15.105,
+              "tokens_prompt": -1
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-21@tela",
+          "chars": 3992,
+          "medido": {
+            "prefill_s": 62.799,
+            "geracao_s": 18.866,
+            "total_s": 81.665,
+            "parede_s": 83.79,
+            "tokens_entrada": 1254,
+            "tokens_saida": 74
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1289,
+              "prefill_s": 51.441,
+              "geracao_s": 14.709,
+              "total_s": 66.15
+            },
+            "na_amostra": {
+              "tokens_prompt": 1279,
+              "prefill_s": 49.13,
+              "geracao_s": 14.709,
+              "total_s": 63.839
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -11.358,
+              "geracao_s": -4.157,
+              "total_s": -15.515,
+              "parede_s": -17.64,
+              "tokens_prompt": 35
+            },
+            "na_amostra": {
+              "prefill_s": -13.669,
+              "geracao_s": -4.157,
+              "total_s": -17.826,
+              "parede_s": -19.951,
+              "tokens_prompt": 25
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "sin-21@fixture",
+          "chars": 3879,
+          "medido": {
+            "prefill_s": 50.201,
+            "geracao_s": 16.887,
+            "total_s": 67.088,
+            "parede_s": 69.23,
+            "tokens_entrada": 1238,
+            "tokens_saida": 72
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1253,
+              "prefill_s": 50.004,
+              "geracao_s": 14.709,
+              "total_s": 64.713
+            },
+            "na_amostra": {
+              "tokens_prompt": 1243,
+              "prefill_s": 47.747,
+              "geracao_s": 14.709,
+              "total_s": 62.456
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -0.197,
+              "geracao_s": -2.178,
+              "total_s": -2.375,
+              "parede_s": -4.517,
+              "tokens_prompt": 15
+            },
+            "na_amostra": {
+              "prefill_s": -2.454,
+              "geracao_s": -2.178,
+              "total_s": -4.632,
+              "parede_s": -6.774,
+              "tokens_prompt": 5
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-16@tela",
+          "chars": 3558,
+          "medido": {
+            "prefill_s": 20.422,
+            "geracao_s": 14.161,
+            "total_s": 34.583,
+            "parede_s": 36.72,
+            "tokens_entrada": 1131,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1149,
+              "prefill_s": 45.854,
+              "geracao_s": 14.709,
+              "total_s": 60.563
+            },
+            "na_amostra": {
+              "tokens_prompt": 1140,
+              "prefill_s": 43.791,
+              "geracao_s": 14.709,
+              "total_s": 58.5
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 25.432,
+              "geracao_s": 0.548,
+              "total_s": 25.98,
+              "parede_s": 23.843,
+              "tokens_prompt": 18
+            },
+            "na_amostra": {
+              "prefill_s": 23.369,
+              "geracao_s": 0.548,
+              "total_s": 23.917,
+              "parede_s": 21.78,
+              "tokens_prompt": 9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-16@fixture",
+          "chars": 3553,
+          "medido": {
+            "prefill_s": 37.412,
+            "geracao_s": 12.357,
+            "total_s": 49.769,
+            "parede_s": 51.94,
+            "tokens_entrada": 1140,
+            "tokens_saida": 53
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1148,
+              "prefill_s": 45.814,
+              "geracao_s": 14.709,
+              "total_s": 60.523
+            },
+            "na_amostra": {
+              "tokens_prompt": 1139,
+              "prefill_s": 43.752,
+              "geracao_s": 14.709,
+              "total_s": 58.461
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 8.402,
+              "geracao_s": 2.352,
+              "total_s": 10.754,
+              "parede_s": 8.583,
+              "tokens_prompt": 8
+            },
+            "na_amostra": {
+              "prefill_s": 6.34,
+              "geracao_s": 2.352,
+              "total_s": 8.692,
+              "parede_s": 6.521,
+              "tokens_prompt": -1
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-17@tela",
+          "chars": 3347,
+          "medido": {
+            "prefill_s": 19.878,
+            "geracao_s": 14.929,
+            "total_s": 34.807,
+            "parede_s": 37.08,
+            "tokens_entrada": 1069,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1081,
+              "prefill_s": 43.14,
+              "geracao_s": 14.709,
+              "total_s": 57.849
+            },
+            "na_amostra": {
+              "tokens_prompt": 1073,
+              "prefill_s": 41.217,
+              "geracao_s": 14.709,
+              "total_s": 55.926
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 23.262,
+              "geracao_s": -0.22,
+              "total_s": 23.042,
+              "parede_s": 20.769,
+              "tokens_prompt": 12
+            },
+            "na_amostra": {
+              "prefill_s": 21.339,
+              "geracao_s": -0.22,
+              "total_s": 21.119,
+              "parede_s": 18.846,
+              "tokens_prompt": 4
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-17@fixture",
+          "chars": 3611,
+          "medido": {
+            "prefill_s": 39.555,
+            "geracao_s": 18.969,
+            "total_s": 58.524,
+            "parede_s": 60.68,
+            "tokens_entrada": 1176,
+            "tokens_saida": 81
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1166,
+              "prefill_s": 46.532,
+              "geracao_s": 14.709,
+              "total_s": 61.241
+            },
+            "na_amostra": {
+              "tokens_prompt": 1157,
+              "prefill_s": 44.444,
+              "geracao_s": 14.709,
+              "total_s": 59.153
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 6.977,
+              "geracao_s": -4.26,
+              "total_s": 2.717,
+              "parede_s": 0.561,
+              "tokens_prompt": -10
+            },
+            "na_amostra": {
+              "prefill_s": 4.889,
+              "geracao_s": -4.26,
+              "total_s": 0.629,
+              "parede_s": -1.527,
+              "tokens_prompt": -19
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-20@tela",
+          "chars": 3971,
+          "medido": {
+            "prefill_s": 64.492,
+            "geracao_s": 14.846,
+            "total_s": 79.338,
+            "parede_s": 81.47,
+            "tokens_entrada": 1297,
+            "tokens_saida": 63
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1283,
+              "prefill_s": 51.201,
+              "geracao_s": 14.709,
+              "total_s": 65.91
+            },
+            "na_amostra": {
+              "tokens_prompt": 1273,
+              "prefill_s": 48.899,
+              "geracao_s": 14.709,
+              "total_s": 63.608
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -13.291,
+              "geracao_s": -0.137,
+              "total_s": -13.428,
+              "parede_s": -15.56,
+              "tokens_prompt": -14
+            },
+            "na_amostra": {
+              "prefill_s": -15.593,
+              "geracao_s": -0.137,
+              "total_s": -15.73,
+              "parede_s": -17.862,
+              "tokens_prompt": -24
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-20@fixture",
+          "chars": 3429,
+          "medido": {
+            "prefill_s": 19.847,
+            "geracao_s": 14.713,
+            "total_s": 34.56,
+            "parede_s": 36.71,
+            "tokens_entrada": 1108,
+            "tokens_saida": 63
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1108,
+              "prefill_s": 44.217,
+              "geracao_s": 14.709,
+              "total_s": 58.926
+            },
+            "na_amostra": {
+              "tokens_prompt": 1099,
+              "prefill_s": 42.216,
+              "geracao_s": 14.709,
+              "total_s": 56.925
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 24.37,
+              "geracao_s": -0.004,
+              "total_s": 24.366,
+              "parede_s": 22.216,
+              "tokens_prompt": 0
+            },
+            "na_amostra": {
+              "prefill_s": 22.369,
+              "geracao_s": -0.004,
+              "total_s": 22.365,
+              "parede_s": 20.215,
+              "tokens_prompt": -9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-21@tela",
+          "chars": 3885,
+          "medido": {
+            "prefill_s": 29.049,
+            "geracao_s": 13.654,
+            "total_s": 42.703,
+            "parede_s": 44.86,
+            "tokens_entrada": 1257,
+            "tokens_saida": 57
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1255,
+              "prefill_s": 50.084,
+              "geracao_s": 14.709,
+              "total_s": 64.793
+            },
+            "na_amostra": {
+              "tokens_prompt": 1245,
+              "prefill_s": 47.824,
+              "geracao_s": 14.709,
+              "total_s": 62.533
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 21.035,
+              "geracao_s": 1.055,
+              "total_s": 22.09,
+              "parede_s": 19.933,
+              "tokens_prompt": -2
+            },
+            "na_amostra": {
+              "prefill_s": 18.775,
+              "geracao_s": 1.055,
+              "total_s": 19.83,
+              "parede_s": 17.673,
+              "tokens_prompt": -12
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "semt-21@fixture",
+          "chars": 3591,
+          "medido": {
+            "prefill_s": 38.941,
+            "geracao_s": 10.383,
+            "total_s": 49.324,
+            "parede_s": 51.48,
+            "tokens_entrada": 1145,
+            "tokens_saida": 45
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1160,
+              "prefill_s": 46.293,
+              "geracao_s": 14.709,
+              "total_s": 61.002
+            },
+            "na_amostra": {
+              "tokens_prompt": 1151,
+              "prefill_s": 44.213,
+              "geracao_s": 14.709,
+              "total_s": 58.922
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 7.352,
+              "geracao_s": 4.326,
+              "total_s": 11.678,
+              "parede_s": 9.522,
+              "tokens_prompt": 15
+            },
+            "na_amostra": {
+              "prefill_s": 5.272,
+              "geracao_s": 4.326,
+              "total_s": 9.598,
+              "parede_s": 7.442,
+              "tokens_prompt": 6
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-17@tela",
+          "chars": 4239,
+          "medido": {
+            "prefill_s": 67.037,
+            "geracao_s": 16.32,
+            "total_s": 83.357,
+            "parede_s": 85.48,
+            "tokens_entrada": 1328,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1369,
+              "prefill_s": 54.633,
+              "geracao_s": 14.709,
+              "total_s": 69.342
+            },
+            "na_amostra": {
+              "tokens_prompt": 1359,
+              "prefill_s": 52.203,
+              "geracao_s": 14.709,
+              "total_s": 66.912
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -12.404,
+              "geracao_s": -1.611,
+              "total_s": -14.015,
+              "parede_s": -16.138,
+              "tokens_prompt": 41
+            },
+            "na_amostra": {
+              "prefill_s": -14.834,
+              "geracao_s": -1.611,
+              "total_s": -16.445,
+              "parede_s": -18.568,
+              "tokens_prompt": 31
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-17@fixture",
+          "chars": 3677,
+          "medido": {
+            "prefill_s": 21.988,
+            "geracao_s": 11.15,
+            "total_s": 33.138,
+            "parede_s": 35.29,
+            "tokens_entrada": 1189,
+            "tokens_saida": 48
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1188,
+              "prefill_s": 47.41,
+              "geracao_s": 14.709,
+              "total_s": 62.119
+            },
+            "na_amostra": {
+              "tokens_prompt": 1179,
+              "prefill_s": 45.289,
+              "geracao_s": 14.709,
+              "total_s": 59.998
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 25.422,
+              "geracao_s": 3.559,
+              "total_s": 28.981,
+              "parede_s": 26.829,
+              "tokens_prompt": -1
+            },
+            "na_amostra": {
+              "prefill_s": 23.301,
+              "geracao_s": 3.559,
+              "total_s": 26.86,
+              "parede_s": 24.708,
+              "tokens_prompt": -10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-19@tela",
+          "chars": 4196,
+          "medido": {
+            "prefill_s": 0.234,
+            "geracao_s": 15.428,
+            "total_s": 15.662,
+            "parede_s": 17.84,
+            "tokens_entrada": 1385,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1355,
+              "prefill_s": 54.075,
+              "geracao_s": 14.709,
+              "total_s": 68.784
+            },
+            "na_amostra": {
+              "tokens_prompt": 1345,
+              "prefill_s": 51.665,
+              "geracao_s": 14.709,
+              "total_s": 66.374
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 53.841,
+              "geracao_s": -0.719,
+              "total_s": 53.122,
+              "parede_s": 50.944,
+              "tokens_prompt": -30
+            },
+            "na_amostra": {
+              "prefill_s": 51.431,
+              "geracao_s": -0.719,
+              "total_s": 50.712,
+              "parede_s": 48.534,
+              "tokens_prompt": -40
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-19@fixture",
+          "chars": 3453,
+          "medido": {
+            "prefill_s": 23.371,
+            "geracao_s": 17.598,
+            "total_s": 40.969,
+            "parede_s": 43.13,
+            "tokens_entrada": 1131,
+            "tokens_saida": 75
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1115,
+              "prefill_s": 44.497,
+              "geracao_s": 14.709,
+              "total_s": 59.206
+            },
+            "na_amostra": {
+              "tokens_prompt": 1107,
+              "prefill_s": 42.523,
+              "geracao_s": 14.709,
+              "total_s": 57.232
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 21.126,
+              "geracao_s": -2.889,
+              "total_s": 18.237,
+              "parede_s": 16.076,
+              "tokens_prompt": -16
+            },
+            "na_amostra": {
+              "prefill_s": 19.152,
+              "geracao_s": -2.889,
+              "total_s": 16.263,
+              "parede_s": 14.102,
+              "tokens_prompt": -24
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-20@tela",
+          "chars": 4239,
+          "medido": {
+            "prefill_s": 0.236,
+            "geracao_s": 15.447,
+            "total_s": 15.683,
+            "parede_s": 17.85,
+            "tokens_entrada": 1328,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1369,
+              "prefill_s": 54.633,
+              "geracao_s": 14.709,
+              "total_s": 69.342
+            },
+            "na_amostra": {
+              "tokens_prompt": 1359,
+              "prefill_s": 52.203,
+              "geracao_s": 14.709,
+              "total_s": 66.912
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 54.397,
+              "geracao_s": -0.738,
+              "total_s": 53.659,
+              "parede_s": 51.492,
+              "tokens_prompt": 41
+            },
+            "na_amostra": {
+              "prefill_s": 51.967,
+              "geracao_s": -0.738,
+              "total_s": 51.229,
+              "parede_s": 49.062,
+              "tokens_prompt": 31
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-20@fixture",
+          "chars": 4504,
+          "medido": {
+            "prefill_s": 52.62,
+            "geracao_s": 16.474,
+            "total_s": 69.094,
+            "parede_s": 71.23,
+            "tokens_entrada": 1424,
+            "tokens_saida": 69
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1455,
+              "prefill_s": 58.065,
+              "geracao_s": 14.709,
+              "total_s": 72.774
+            },
+            "na_amostra": {
+              "tokens_prompt": 1444,
+              "prefill_s": 55.468,
+              "geracao_s": 14.709,
+              "total_s": 70.177
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 5.445,
+              "geracao_s": -1.765,
+              "total_s": 3.68,
+              "parede_s": 1.544,
+              "tokens_prompt": 31
+            },
+            "na_amostra": {
+              "prefill_s": 2.848,
+              "geracao_s": -1.765,
+              "total_s": 1.083,
+              "parede_s": -1.053,
+              "tokens_prompt": 20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-21@tela",
+          "chars": 3913,
+          "medido": {
+            "prefill_s": 31.708,
+            "geracao_s": 13.381,
+            "total_s": 45.089,
+            "parede_s": 47.27,
+            "tokens_entrada": 1263,
+            "tokens_saida": 57
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1264,
+              "prefill_s": 50.443,
+              "geracao_s": 14.709,
+              "total_s": 65.152
+            },
+            "na_amostra": {
+              "tokens_prompt": 1254,
+              "prefill_s": 48.17,
+              "geracao_s": 14.709,
+              "total_s": 62.879
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 18.735,
+              "geracao_s": 1.328,
+              "total_s": 20.063,
+              "parede_s": 17.882,
+              "tokens_prompt": 1
+            },
+            "na_amostra": {
+              "prefill_s": 16.462,
+              "geracao_s": 1.328,
+              "total_s": 17.79,
+              "parede_s": 15.609,
+              "tokens_prompt": -9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "tra-21@fixture",
+          "chars": 3656,
+          "medido": {
+            "prefill_s": 39.116,
+            "geracao_s": 13.447,
+            "total_s": 52.563,
+            "parede_s": 54.72,
+            "tokens_entrada": 1163,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1181,
+              "prefill_s": 47.131,
+              "geracao_s": 14.709,
+              "total_s": 61.84
+            },
+            "na_amostra": {
+              "tokens_prompt": 1172,
+              "prefill_s": 45.02,
+              "geracao_s": 14.709,
+              "total_s": 59.729
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 8.015,
+              "geracao_s": 1.262,
+              "total_s": 9.277,
+              "parede_s": 7.12,
+              "tokens_prompt": 18
+            },
+            "na_amostra": {
+              "prefill_s": 5.904,
+              "geracao_s": 1.262,
+              "total_s": 7.166,
+              "parede_s": 5.009,
+              "tokens_prompt": 9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-19@tela",
+          "chars": 3539,
+          "medido": {
+            "prefill_s": 53.902,
+            "geracao_s": 15.147,
+            "total_s": 69.049,
+            "parede_s": 71.21,
+            "tokens_entrada": 1157,
+            "tokens_saida": 65
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1143,
+              "prefill_s": 45.614,
+              "geracao_s": 14.709,
+              "total_s": 60.323
+            },
+            "na_amostra": {
+              "tokens_prompt": 1134,
+              "prefill_s": 43.56,
+              "geracao_s": 14.709,
+              "total_s": 58.269
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -8.288,
+              "geracao_s": -0.438,
+              "total_s": -8.726,
+              "parede_s": -10.887,
+              "tokens_prompt": -14
+            },
+            "na_amostra": {
+              "prefill_s": -10.342,
+              "geracao_s": -0.438,
+              "total_s": -10.78,
+              "parede_s": -12.941,
+              "tokens_prompt": -23
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-19@fixture",
+          "chars": 3233,
+          "medido": {
+            "prefill_s": 41.736,
+            "geracao_s": 17.183,
+            "total_s": 58.919,
+            "parede_s": 61.06,
+            "tokens_entrada": 1027,
+            "tokens_saida": 74
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1044,
+              "prefill_s": 41.663,
+              "geracao_s": 14.709,
+              "total_s": 56.372
+            },
+            "na_amostra": {
+              "tokens_prompt": 1036,
+              "prefill_s": 39.796,
+              "geracao_s": 14.709,
+              "total_s": 54.505
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -0.073,
+              "geracao_s": -2.474,
+              "total_s": -2.547,
+              "parede_s": -4.688,
+              "tokens_prompt": 17
+            },
+            "na_amostra": {
+              "prefill_s": -1.94,
+              "geracao_s": -2.474,
+              "total_s": -4.414,
+              "parede_s": -6.555,
+              "tokens_prompt": 9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-21@tela",
+          "chars": 3773,
+          "medido": {
+            "prefill_s": 42.556,
+            "geracao_s": 14.461,
+            "total_s": 57.017,
+            "parede_s": 59.16,
+            "tokens_entrada": 1231,
+            "tokens_saida": 62
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1219,
+              "prefill_s": 48.647,
+              "geracao_s": 14.709,
+              "total_s": 63.356
+            },
+            "na_amostra": {
+              "tokens_prompt": 1209,
+              "prefill_s": 46.441,
+              "geracao_s": 14.709,
+              "total_s": 61.15
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 6.091,
+              "geracao_s": 0.248,
+              "total_s": 6.339,
+              "parede_s": 4.196,
+              "tokens_prompt": -12
+            },
+            "na_amostra": {
+              "prefill_s": 3.885,
+              "geracao_s": 0.248,
+              "total_s": 4.133,
+              "parede_s": 1.99,
+              "tokens_prompt": -22
+            }
+          }
+        },
+        {
+          "corrida": "fase4_tela_v4",
+          "caso": "run-21@fixture",
+          "chars": 4085,
+          "medido": {
+            "prefill_s": 47.765,
+            "geracao_s": 15.602,
+            "total_s": 63.367,
+            "parede_s": 65.5,
+            "tokens_entrada": 1330,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1319,
+              "prefill_s": 52.638,
+              "geracao_s": 14.709,
+              "total_s": 67.347
+            },
+            "na_amostra": {
+              "tokens_prompt": 1309,
+              "prefill_s": 50.282,
+              "geracao_s": 14.709,
+              "total_s": 64.991
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 4.873,
+              "geracao_s": -0.893,
+              "total_s": 3.98,
+              "parede_s": 1.847,
+              "tokens_prompt": -11
+            },
+            "na_amostra": {
+              "prefill_s": 2.517,
+              "geracao_s": -0.893,
+              "total_s": 1.624,
+              "parede_s": -0.509,
+              "tokens_prompt": -21
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "contrato-malformed_json#1",
+          "chars": 3938,
+          "medido": {
+            "prefill_s": 62.623,
+            "geracao_s": 18.369,
+            "total_s": 80.992,
+            "parede_s": 90.69,
+            "tokens_entrada": 1218,
+            "tokens_saida": 78
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1263,
+              "prefill_s": 46.344,
+              "geracao_s": 14.702,
+              "total_s": 61.046
+            },
+            "na_amostra": {
+              "tokens_prompt": 1262,
+              "prefill_s": 48.477,
+              "geracao_s": 14.709,
+              "total_s": 63.186
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -16.279,
+              "geracao_s": -3.667,
+              "total_s": -19.946,
+              "parede_s": -29.644,
+              "tokens_prompt": 45
+            },
+            "na_amostra": {
+              "prefill_s": -14.146,
+              "geracao_s": -3.66,
+              "total_s": -17.806,
+              "parede_s": -27.504,
+              "tokens_prompt": 44
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "contrato-field_missing#1",
+          "chars": 3570,
+          "medido": {
+            "prefill_s": 54.928,
+            "geracao_s": 14.241,
+            "total_s": 69.169,
+            "parede_s": 71.3,
+            "tokens_entrada": 1124,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1145,
+              "prefill_s": 42.014,
+              "geracao_s": 14.702,
+              "total_s": 56.716
+            },
+            "na_amostra": {
+              "tokens_prompt": 1144,
+              "prefill_s": 43.944,
+              "geracao_s": 14.709,
+              "total_s": 58.653
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -12.914,
+              "geracao_s": 0.461,
+              "total_s": -12.453,
+              "parede_s": -14.584,
+              "tokens_prompt": 21
+            },
+            "na_amostra": {
+              "prefill_s": -10.984,
+              "geracao_s": 0.468,
+              "total_s": -10.516,
+              "parede_s": -12.647,
+              "tokens_prompt": 20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "contrato-field_renamed#1",
+          "chars": 3650,
+          "medido": {
+            "prefill_s": 56.463,
+            "geracao_s": 12.469,
+            "total_s": 68.932,
+            "parede_s": 71.05,
+            "tokens_entrada": 1133,
+            "tokens_saida": 54
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1171,
+              "prefill_s": 42.968,
+              "geracao_s": 14.702,
+              "total_s": 57.67
+            },
+            "na_amostra": {
+              "tokens_prompt": 1170,
+              "prefill_s": 44.943,
+              "geracao_s": 14.709,
+              "total_s": 59.652
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -13.495,
+              "geracao_s": 2.233,
+              "total_s": -11.262,
+              "parede_s": -13.38,
+              "tokens_prompt": 38
+            },
+            "na_amostra": {
+              "prefill_s": -11.52,
+              "geracao_s": 2.24,
+              "total_s": -9.28,
+              "parede_s": -11.398,
+              "tokens_prompt": 37
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "contrato-type_drift#1",
+          "chars": 3485,
+          "medido": {
+            "prefill_s": 54.007,
+            "geracao_s": 15.256,
+            "total_s": 69.263,
+            "parede_s": 71.39,
+            "tokens_entrada": 1107,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1118,
+              "prefill_s": 41.023,
+              "geracao_s": 14.702,
+              "total_s": 55.725
+            },
+            "na_amostra": {
+              "tokens_prompt": 1117,
+              "prefill_s": 42.907,
+              "geracao_s": 14.709,
+              "total_s": 57.616
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -12.984,
+              "geracao_s": -0.554,
+              "total_s": -13.538,
+              "parede_s": -15.665,
+              "tokens_prompt": 11
+            },
+            "na_amostra": {
+              "prefill_s": -11.1,
+              "geracao_s": -0.547,
+              "total_s": -11.647,
+              "parede_s": -13.774,
+              "tokens_prompt": 10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "contrato-escala_ou_unidade_errada#1",
+          "chars": 4196,
+          "medido": {
+            "prefill_s": 69.585,
+            "geracao_s": 17.418,
+            "total_s": 87.003,
+            "parede_s": 89.13,
+            "tokens_entrada": 1385,
+            "tokens_saida": 73
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1346,
+              "prefill_s": 49.389,
+              "geracao_s": 14.702,
+              "total_s": 64.091
+            },
+            "na_amostra": {
+              "tokens_prompt": 1345,
+              "prefill_s": 51.665,
+              "geracao_s": 14.709,
+              "total_s": 66.374
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -20.196,
+              "geracao_s": -2.716,
+              "total_s": -22.912,
+              "parede_s": -25.039,
+              "tokens_prompt": -39
+            },
+            "na_amostra": {
+              "prefill_s": -17.92,
+              "geracao_s": -2.709,
+              "total_s": -20.629,
+              "parede_s": -22.756,
+              "tokens_prompt": -40
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "contrato-error_500#1",
+          "chars": 4228,
+          "medido": {
+            "prefill_s": 66.197,
+            "geracao_s": 14.588,
+            "total_s": 80.785,
+            "parede_s": 82.91,
+            "tokens_entrada": 1328,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1356,
+              "prefill_s": 49.756,
+              "geracao_s": 14.702,
+              "total_s": 64.458
+            },
+            "na_amostra": {
+              "tokens_prompt": 1355,
+              "prefill_s": 52.049,
+              "geracao_s": 14.709,
+              "total_s": 66.758
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -16.441,
+              "geracao_s": 0.114,
+              "total_s": -16.327,
+              "parede_s": -18.452,
+              "tokens_prompt": 28
+            },
+            "na_amostra": {
+              "prefill_s": -14.148,
+              "geracao_s": 0.121,
+              "total_s": -14.027,
+              "parede_s": -16.152,
+              "tokens_prompt": 27
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "localizador-front-busca#1",
+          "chars": 3586,
+          "medido": {
+            "prefill_s": 55.205,
+            "geracao_s": 13.122,
+            "total_s": 68.327,
+            "parede_s": 70.45,
+            "tokens_entrada": 1127,
+            "tokens_saida": 56
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1150,
+              "prefill_s": 42.197,
+              "geracao_s": 14.702,
+              "total_s": 56.899
+            },
+            "na_amostra": {
+              "tokens_prompt": 1149,
+              "prefill_s": 44.136,
+              "geracao_s": 14.709,
+              "total_s": 58.845
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -13.008,
+              "geracao_s": 1.58,
+              "total_s": -11.428,
+              "parede_s": -13.551,
+              "tokens_prompt": 23
+            },
+            "na_amostra": {
+              "prefill_s": -11.069,
+              "geracao_s": 1.587,
+              "total_s": -9.482,
+              "parede_s": -11.605,
+              "tokens_prompt": 22
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "localizador-front-admin-login#1",
+          "chars": 3567,
+          "medido": {
+            "prefill_s": 24.212,
+            "geracao_s": 13.277,
+            "total_s": 37.489,
+            "parede_s": 39.59,
+            "tokens_entrada": 1118,
+            "tokens_saida": 57
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1144,
+              "prefill_s": 41.977,
+              "geracao_s": 14.702,
+              "total_s": 56.679
+            },
+            "na_amostra": {
+              "tokens_prompt": 1143,
+              "prefill_s": 43.906,
+              "geracao_s": 14.709,
+              "total_s": 58.615
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 17.765,
+              "geracao_s": 1.425,
+              "total_s": 19.19,
+              "parede_s": 17.089,
+              "tokens_prompt": 26
+            },
+            "na_amostra": {
+              "prefill_s": 19.694,
+              "geracao_s": 1.432,
+              "total_s": 21.126,
+              "parede_s": 19.025,
+              "tokens_prompt": 25
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "localizador-front-admin-produtos#1",
+          "chars": 3766,
+          "medido": {
+            "prefill_s": 46.788,
+            "geracao_s": 14.194,
+            "total_s": 60.982,
+            "parede_s": 63.1,
+            "tokens_entrada": 1196,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1208,
+              "prefill_s": 44.325,
+              "geracao_s": 14.702,
+              "total_s": 59.027
+            },
+            "na_amostra": {
+              "tokens_prompt": 1207,
+              "prefill_s": 46.364,
+              "geracao_s": 14.709,
+              "total_s": 61.073
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -2.463,
+              "geracao_s": 0.508,
+              "total_s": -1.955,
+              "parede_s": -4.073,
+              "tokens_prompt": 12
+            },
+            "na_amostra": {
+              "prefill_s": -0.424,
+              "geracao_s": 0.515,
+              "total_s": 0.091,
+              "parede_s": -2.027,
+              "tokens_prompt": 11
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ensaio_v4",
+          "caso": "localizador-front-cliente-reserva#1",
+          "chars": 4116,
+          "medido": {
+            "prefill_s": 48.42,
+            "geracao_s": 14.956,
+            "total_s": 63.376,
+            "parede_s": 65.5,
+            "tokens_entrada": 1230,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1321,
+              "prefill_s": 48.472,
+              "geracao_s": 14.702,
+              "total_s": 63.174
+            },
+            "na_amostra": {
+              "tokens_prompt": 1319,
+              "prefill_s": 50.666,
+              "geracao_s": 14.709,
+              "total_s": 65.375
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 0.052,
+              "geracao_s": -0.254,
+              "total_s": -0.202,
+              "parede_s": -2.326,
+              "tokens_prompt": 91
+            },
+            "na_amostra": {
+              "prefill_s": 2.246,
+              "geracao_s": -0.247,
+              "total_s": 1.999,
+              "parede_s": -0.125,
+              "tokens_prompt": 89
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "lex-22",
+          "chars": 3820,
+          "medido": {
+            "prefill_s": 49.032,
+            "geracao_s": 12.29,
+            "total_s": 61.322,
+            "parede_s": 70.79,
+            "tokens_entrada": 1204,
+            "tokens_saida": 55
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1216,
+              "prefill_s": 45.864,
+              "geracao_s": 14.709,
+              "total_s": 60.573
+            },
+            "na_amostra": {
+              "tokens_prompt": 1224,
+              "prefill_s": 47.017,
+              "geracao_s": 14.709,
+              "total_s": 61.726
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -3.168,
+              "geracao_s": 2.419,
+              "total_s": -0.749,
+              "parede_s": -10.217,
+              "tokens_prompt": 12
+            },
+            "na_amostra": {
+              "prefill_s": -2.015,
+              "geracao_s": 2.419,
+              "total_s": 0.404,
+              "parede_s": -9.064,
+              "tokens_prompt": 20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "lex-23",
+          "chars": 3839,
+          "medido": {
+            "prefill_s": 44.629,
+            "geracao_s": 14.371,
+            "total_s": 59.0,
+            "parede_s": 61.16,
+            "tokens_entrada": 1159,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1222,
+              "prefill_s": 46.091,
+              "geracao_s": 14.709,
+              "total_s": 60.8
+            },
+            "na_amostra": {
+              "tokens_prompt": 1230,
+              "prefill_s": 47.248,
+              "geracao_s": 14.709,
+              "total_s": 61.957
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 1.462,
+              "geracao_s": 0.338,
+              "total_s": 1.8,
+              "parede_s": -0.36,
+              "tokens_prompt": 63
+            },
+            "na_amostra": {
+              "prefill_s": 2.619,
+              "geracao_s": 0.338,
+              "total_s": 2.957,
+              "parede_s": 0.797,
+              "tokens_prompt": 71
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "lex-24",
+          "chars": 3606,
+          "medido": {
+            "prefill_s": 46.494,
+            "geracao_s": 15.05,
+            "total_s": 61.544,
+            "parede_s": 63.68,
+            "tokens_entrada": 1149,
+            "tokens_saida": 67
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1148,
+              "prefill_s": 43.3,
+              "geracao_s": 14.709,
+              "total_s": 58.009
+            },
+            "na_amostra": {
+              "tokens_prompt": 1156,
+              "prefill_s": 44.405,
+              "geracao_s": 14.709,
+              "total_s": 59.114
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -3.194,
+              "geracao_s": -0.341,
+              "total_s": -3.535,
+              "parede_s": -5.671,
+              "tokens_prompt": -1
+            },
+            "na_amostra": {
+              "prefill_s": -2.089,
+              "geracao_s": -0.341,
+              "total_s": -2.43,
+              "parede_s": -4.566,
+              "tokens_prompt": 7
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "lex-25",
+          "chars": 4147,
+          "medido": {
+            "prefill_s": 40.333,
+            "geracao_s": 16.315,
+            "total_s": 56.648,
+            "parede_s": 58.82,
+            "tokens_entrada": 1341,
+            "tokens_saida": 71
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1320,
+              "prefill_s": 49.787,
+              "geracao_s": 14.709,
+              "total_s": 64.496
+            },
+            "na_amostra": {
+              "tokens_prompt": 1329,
+              "prefill_s": 51.051,
+              "geracao_s": 14.709,
+              "total_s": 65.76
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 9.454,
+              "geracao_s": -1.606,
+              "total_s": 7.848,
+              "parede_s": 5.676,
+              "tokens_prompt": -21
+            },
+            "na_amostra": {
+              "prefill_s": 10.718,
+              "geracao_s": -1.606,
+              "total_s": 9.112,
+              "parede_s": 6.94,
+              "tokens_prompt": -12
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "lex-26",
+          "chars": 3654,
+          "medido": {
+            "prefill_s": 42.231,
+            "geracao_s": 14.767,
+            "total_s": 56.998,
+            "parede_s": 59.14,
+            "tokens_entrada": 1176,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1163,
+              "prefill_s": 43.865,
+              "geracao_s": 14.709,
+              "total_s": 58.574
+            },
+            "na_amostra": {
+              "tokens_prompt": 1171,
+              "prefill_s": 44.981,
+              "geracao_s": 14.709,
+              "total_s": 59.69
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 1.634,
+              "geracao_s": -0.058,
+              "total_s": 1.576,
+              "parede_s": -0.566,
+              "tokens_prompt": -13
+            },
+            "na_amostra": {
+              "prefill_s": 2.75,
+              "geracao_s": -0.058,
+              "total_s": 2.692,
+              "parede_s": 0.55,
+              "tokens_prompt": -5
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "lex-27",
+          "chars": 3605,
+          "medido": {
+            "prefill_s": 51.307,
+            "geracao_s": 13.1,
+            "total_s": 64.407,
+            "parede_s": 66.52,
+            "tokens_entrada": 1179,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1148,
+              "prefill_s": 43.3,
+              "geracao_s": 14.709,
+              "total_s": 58.009
+            },
+            "na_amostra": {
+              "tokens_prompt": 1155,
+              "prefill_s": 44.367,
+              "geracao_s": 14.709,
+              "total_s": 59.076
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -8.007,
+              "geracao_s": 1.609,
+              "total_s": -6.398,
+              "parede_s": -8.511,
+              "tokens_prompt": -31
+            },
+            "na_amostra": {
+              "prefill_s": -6.94,
+              "geracao_s": 1.609,
+              "total_s": -5.331,
+              "parede_s": -7.444,
+              "tokens_prompt": -24
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "sin-22",
+          "chars": 3621,
+          "medido": {
+            "prefill_s": 35.436,
+            "geracao_s": 13.639,
+            "total_s": 49.075,
+            "parede_s": 51.23,
+            "tokens_entrada": 1163,
+            "tokens_saida": 59
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1153,
+              "prefill_s": 43.488,
+              "geracao_s": 14.709,
+              "total_s": 58.197
+            },
+            "na_amostra": {
+              "tokens_prompt": 1161,
+              "prefill_s": 44.597,
+              "geracao_s": 14.709,
+              "total_s": 59.306
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 8.052,
+              "geracao_s": 1.07,
+              "total_s": 9.122,
+              "parede_s": 6.967,
+              "tokens_prompt": -10
+            },
+            "na_amostra": {
+              "prefill_s": 9.161,
+              "geracao_s": 1.07,
+              "total_s": 10.231,
+              "parede_s": 8.076,
+              "tokens_prompt": -2
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "sin-23",
+          "chars": 3626,
+          "medido": {
+            "prefill_s": 53.148,
+            "geracao_s": 15.232,
+            "total_s": 68.38,
+            "parede_s": 70.56,
+            "tokens_entrada": 1144,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1154,
+              "prefill_s": 43.526,
+              "geracao_s": 14.709,
+              "total_s": 58.235
+            },
+            "na_amostra": {
+              "tokens_prompt": 1162,
+              "prefill_s": 44.636,
+              "geracao_s": 14.709,
+              "total_s": 59.345
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -9.622,
+              "geracao_s": -0.523,
+              "total_s": -10.145,
+              "parede_s": -12.325,
+              "tokens_prompt": 10
+            },
+            "na_amostra": {
+              "prefill_s": -8.512,
+              "geracao_s": -0.523,
+              "total_s": -9.035,
+              "parede_s": -11.215,
+              "tokens_prompt": 18
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "sin-24",
+          "chars": 3953,
+          "medido": {
+            "prefill_s": 53.673,
+            "geracao_s": 16.926,
+            "total_s": 70.599,
+            "parede_s": 72.73,
+            "tokens_entrada": 1276,
+            "tokens_saida": 72
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1259,
+              "prefill_s": 47.486,
+              "geracao_s": 14.709,
+              "total_s": 62.195
+            },
+            "na_amostra": {
+              "tokens_prompt": 1267,
+              "prefill_s": 48.669,
+              "geracao_s": 14.709,
+              "total_s": 63.378
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -6.187,
+              "geracao_s": -2.217,
+              "total_s": -8.404,
+              "parede_s": -10.535,
+              "tokens_prompt": -17
+            },
+            "na_amostra": {
+              "prefill_s": -5.004,
+              "geracao_s": -2.217,
+              "total_s": -7.221,
+              "parede_s": -9.352,
+              "tokens_prompt": -9
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "sin-25",
+          "chars": 3865,
+          "medido": {
+            "prefill_s": 60.36,
+            "geracao_s": 15.538,
+            "total_s": 75.898,
+            "parede_s": 78.06,
+            "tokens_entrada": 1224,
+            "tokens_saida": 67
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1230,
+              "prefill_s": 46.392,
+              "geracao_s": 14.709,
+              "total_s": 61.101
+            },
+            "na_amostra": {
+              "tokens_prompt": 1239,
+              "prefill_s": 47.593,
+              "geracao_s": 14.709,
+              "total_s": 62.302
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -13.968,
+              "geracao_s": -0.829,
+              "total_s": -14.797,
+              "parede_s": -16.959,
+              "tokens_prompt": 6
+            },
+            "na_amostra": {
+              "prefill_s": -12.767,
+              "geracao_s": -0.829,
+              "total_s": -13.596,
+              "parede_s": -15.758,
+              "tokens_prompt": 15
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "sin-26",
+          "chars": 3917,
+          "medido": {
+            "prefill_s": 30.313,
+            "geracao_s": 14.103,
+            "total_s": 44.416,
+            "parede_s": 46.55,
+            "tokens_entrada": 1275,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1247,
+              "prefill_s": 47.034,
+              "geracao_s": 14.709,
+              "total_s": 61.743
+            },
+            "na_amostra": {
+              "tokens_prompt": 1255,
+              "prefill_s": 48.208,
+              "geracao_s": 14.709,
+              "total_s": 62.917
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 16.721,
+              "geracao_s": 0.606,
+              "total_s": 17.327,
+              "parede_s": 15.193,
+              "tokens_prompt": -28
+            },
+            "na_amostra": {
+              "prefill_s": 17.895,
+              "geracao_s": 0.606,
+              "total_s": 18.501,
+              "parede_s": 16.367,
+              "tokens_prompt": -20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "sin-27",
+          "chars": 4579,
+          "medido": {
+            "prefill_s": 54.943,
+            "geracao_s": 16.385,
+            "total_s": 71.328,
+            "parede_s": 73.5,
+            "tokens_entrada": 1469,
+            "tokens_saida": 69
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1458,
+              "prefill_s": 54.992,
+              "geracao_s": 14.709,
+              "total_s": 69.701
+            },
+            "na_amostra": {
+              "tokens_prompt": 1468,
+              "prefill_s": 56.39,
+              "geracao_s": 14.709,
+              "total_s": 71.099
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 0.049,
+              "geracao_s": -1.676,
+              "total_s": -1.627,
+              "parede_s": -3.799,
+              "tokens_prompt": -11
+            },
+            "na_amostra": {
+              "prefill_s": 1.447,
+              "geracao_s": -1.676,
+              "total_s": -0.229,
+              "parede_s": -2.401,
+              "tokens_prompt": -1
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "semt-22",
+          "chars": 3546,
+          "medido": {
+            "prefill_s": 56.003,
+            "geracao_s": 17.419,
+            "total_s": 73.422,
+            "parede_s": 75.61,
+            "tokens_entrada": 1155,
+            "tokens_saida": 75
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1129,
+              "prefill_s": 42.583,
+              "geracao_s": 14.709,
+              "total_s": 57.292
+            },
+            "na_amostra": {
+              "tokens_prompt": 1137,
+              "prefill_s": 43.675,
+              "geracao_s": 14.709,
+              "total_s": 58.384
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -13.42,
+              "geracao_s": -2.71,
+              "total_s": -16.13,
+              "parede_s": -18.318,
+              "tokens_prompt": -26
+            },
+            "na_amostra": {
+              "prefill_s": -12.328,
+              "geracao_s": -2.71,
+              "total_s": -15.038,
+              "parede_s": -17.226,
+              "tokens_prompt": -18
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "semt-23",
+          "chars": 3797,
+          "medido": {
+            "prefill_s": 42.026,
+            "geracao_s": 20.506,
+            "total_s": 62.532,
+            "parede_s": 64.7,
+            "tokens_entrada": 1236,
+            "tokens_saida": 88
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1209,
+              "prefill_s": 45.6,
+              "geracao_s": 14.709,
+              "total_s": 60.309
+            },
+            "na_amostra": {
+              "tokens_prompt": 1217,
+              "prefill_s": 46.748,
+              "geracao_s": 14.709,
+              "total_s": 61.457
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 3.574,
+              "geracao_s": -5.797,
+              "total_s": -2.223,
+              "parede_s": -4.391,
+              "tokens_prompt": -27
+            },
+            "na_amostra": {
+              "prefill_s": 4.722,
+              "geracao_s": -5.797,
+              "total_s": -1.075,
+              "parede_s": -3.243,
+              "tokens_prompt": -19
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "semt-24",
+          "chars": 3841,
+          "medido": {
+            "prefill_s": 52.632,
+            "geracao_s": 15.896,
+            "total_s": 68.528,
+            "parede_s": 70.71,
+            "tokens_entrada": 1249,
+            "tokens_saida": 68
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1223,
+              "prefill_s": 46.128,
+              "geracao_s": 14.709,
+              "total_s": 60.837
+            },
+            "na_amostra": {
+              "tokens_prompt": 1231,
+              "prefill_s": 47.286,
+              "geracao_s": 14.709,
+              "total_s": 61.995
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -6.504,
+              "geracao_s": -1.187,
+              "total_s": -7.691,
+              "parede_s": -9.873,
+              "tokens_prompt": -26
+            },
+            "na_amostra": {
+              "prefill_s": -5.346,
+              "geracao_s": -1.187,
+              "total_s": -6.533,
+              "parede_s": -8.715,
+              "tokens_prompt": -18
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "semt-25",
+          "chars": 3564,
+          "medido": {
+            "prefill_s": 56.876,
+            "geracao_s": 20.078,
+            "total_s": 76.954,
+            "parede_s": 79.09,
+            "tokens_entrada": 1169,
+            "tokens_saida": 87
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1135,
+              "prefill_s": 42.809,
+              "geracao_s": 14.709,
+              "total_s": 57.518
+            },
+            "na_amostra": {
+              "tokens_prompt": 1142,
+              "prefill_s": 43.867,
+              "geracao_s": 14.709,
+              "total_s": 58.576
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -14.067,
+              "geracao_s": -5.369,
+              "total_s": -19.436,
+              "parede_s": -21.572,
+              "tokens_prompt": -34
+            },
+            "na_amostra": {
+              "prefill_s": -13.009,
+              "geracao_s": -5.369,
+              "total_s": -18.378,
+              "parede_s": -20.514,
+              "tokens_prompt": -27
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "semt-26",
+          "chars": 3672,
+          "medido": {
+            "prefill_s": 56.75,
+            "geracao_s": 13.814,
+            "total_s": 70.564,
+            "parede_s": 72.74,
+            "tokens_entrada": 1176,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1169,
+              "prefill_s": 44.092,
+              "geracao_s": 14.709,
+              "total_s": 58.801
+            },
+            "na_amostra": {
+              "tokens_prompt": 1177,
+              "prefill_s": 45.212,
+              "geracao_s": 14.709,
+              "total_s": 59.921
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -12.658,
+              "geracao_s": 0.895,
+              "total_s": -11.763,
+              "parede_s": -13.939,
+              "tokens_prompt": -7
+            },
+            "na_amostra": {
+              "prefill_s": -11.538,
+              "geracao_s": 0.895,
+              "total_s": -10.643,
+              "parede_s": -12.819,
+              "tokens_prompt": 1
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "semt-27",
+          "chars": 4108,
+          "medido": {
+            "prefill_s": 47.604,
+            "geracao_s": 19.362,
+            "total_s": 66.966,
+            "parede_s": 69.11,
+            "tokens_entrada": 1338,
+            "tokens_saida": 82
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1308,
+              "prefill_s": 49.334,
+              "geracao_s": 14.709,
+              "total_s": 64.043
+            },
+            "na_amostra": {
+              "tokens_prompt": 1317,
+              "prefill_s": 50.59,
+              "geracao_s": 14.709,
+              "total_s": 65.299
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 1.73,
+              "geracao_s": -4.653,
+              "total_s": -2.923,
+              "parede_s": -5.067,
+              "tokens_prompt": -30
+            },
+            "na_amostra": {
+              "prefill_s": 2.986,
+              "geracao_s": -4.653,
+              "total_s": -1.667,
+              "parede_s": -3.811,
+              "tokens_prompt": -21
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "tra-22",
+          "chars": 3722,
+          "medido": {
+            "prefill_s": 52.035,
+            "geracao_s": 15.033,
+            "total_s": 67.068,
+            "parede_s": 69.2,
+            "tokens_entrada": 1246,
+            "tokens_saida": 63
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1185,
+              "prefill_s": 44.695,
+              "geracao_s": 14.709,
+              "total_s": 59.404
+            },
+            "na_amostra": {
+              "tokens_prompt": 1193,
+              "prefill_s": 45.826,
+              "geracao_s": 14.709,
+              "total_s": 60.535
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -7.34,
+              "geracao_s": -0.324,
+              "total_s": -7.664,
+              "parede_s": -9.796,
+              "tokens_prompt": -61
+            },
+            "na_amostra": {
+              "prefill_s": -6.209,
+              "geracao_s": -0.324,
+              "total_s": -6.533,
+              "parede_s": -8.665,
+              "tokens_prompt": -53
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "tra-23",
+          "chars": 3698,
+          "medido": {
+            "prefill_s": 41.24,
+            "geracao_s": 13.807,
+            "total_s": 55.047,
+            "parede_s": 57.23,
+            "tokens_entrada": 1182,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1177,
+              "prefill_s": 44.393,
+              "geracao_s": 14.709,
+              "total_s": 59.102
+            },
+            "na_amostra": {
+              "tokens_prompt": 1185,
+              "prefill_s": 45.519,
+              "geracao_s": 14.709,
+              "total_s": 60.228
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 3.153,
+              "geracao_s": 0.902,
+              "total_s": 4.055,
+              "parede_s": 1.872,
+              "tokens_prompt": -5
+            },
+            "na_amostra": {
+              "prefill_s": 4.279,
+              "geracao_s": 0.902,
+              "total_s": 5.181,
+              "parede_s": 2.998,
+              "tokens_prompt": 3
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "tra-24",
+          "chars": 4674,
+          "medido": {
+            "prefill_s": 57.775,
+            "geracao_s": 13.732,
+            "total_s": 71.507,
+            "parede_s": 73.68,
+            "tokens_entrada": 1518,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1488,
+              "prefill_s": 56.123,
+              "geracao_s": 14.709,
+              "total_s": 70.832
+            },
+            "na_amostra": {
+              "tokens_prompt": 1498,
+              "prefill_s": 57.542,
+              "geracao_s": 14.709,
+              "total_s": 72.251
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -1.652,
+              "geracao_s": 0.977,
+              "total_s": -0.675,
+              "parede_s": -2.848,
+              "tokens_prompt": -30
+            },
+            "na_amostra": {
+              "prefill_s": -0.233,
+              "geracao_s": 0.977,
+              "total_s": 0.744,
+              "parede_s": -1.429,
+              "tokens_prompt": -20
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "tra-25",
+          "chars": 3913,
+          "medido": {
+            "prefill_s": 44.533,
+            "geracao_s": 14.244,
+            "total_s": 58.777,
+            "parede_s": 60.93,
+            "tokens_entrada": 1267,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1246,
+              "prefill_s": 46.996,
+              "geracao_s": 14.709,
+              "total_s": 61.705
+            },
+            "na_amostra": {
+              "tokens_prompt": 1254,
+              "prefill_s": 48.17,
+              "geracao_s": 14.709,
+              "total_s": 62.879
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 2.463,
+              "geracao_s": 0.465,
+              "total_s": 2.928,
+              "parede_s": 0.775,
+              "tokens_prompt": -21
+            },
+            "na_amostra": {
+              "prefill_s": 3.637,
+              "geracao_s": 0.465,
+              "total_s": 4.102,
+              "parede_s": 1.949,
+              "tokens_prompt": -13
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "tra-26",
+          "chars": 4117,
+          "medido": {
+            "prefill_s": 48.293,
+            "geracao_s": 12.806,
+            "total_s": 61.099,
+            "parede_s": 63.24,
+            "tokens_entrada": 1359,
+            "tokens_saida": 54
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1311,
+              "prefill_s": 49.447,
+              "geracao_s": 14.709,
+              "total_s": 64.156
+            },
+            "na_amostra": {
+              "tokens_prompt": 1320,
+              "prefill_s": 50.705,
+              "geracao_s": 14.709,
+              "total_s": 65.414
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 1.154,
+              "geracao_s": 1.903,
+              "total_s": 3.057,
+              "parede_s": 0.916,
+              "tokens_prompt": -48
+            },
+            "na_amostra": {
+              "prefill_s": 2.412,
+              "geracao_s": 1.903,
+              "total_s": 4.315,
+              "parede_s": 2.174,
+              "tokens_prompt": -39
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "tra-27",
+          "chars": 3626,
+          "medido": {
+            "prefill_s": 39.114,
+            "geracao_s": 14.563,
+            "total_s": 53.677,
+            "parede_s": 55.8,
+            "tokens_entrada": 1181,
+            "tokens_saida": 63
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1154,
+              "prefill_s": 43.526,
+              "geracao_s": 14.709,
+              "total_s": 58.235
+            },
+            "na_amostra": {
+              "tokens_prompt": 1162,
+              "prefill_s": 44.636,
+              "geracao_s": 14.709,
+              "total_s": 59.345
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 4.412,
+              "geracao_s": 0.146,
+              "total_s": 4.558,
+              "parede_s": 2.435,
+              "tokens_prompt": -27
+            },
+            "na_amostra": {
+              "prefill_s": 5.522,
+              "geracao_s": 0.146,
+              "total_s": 5.668,
+              "parede_s": 3.545,
+              "tokens_prompt": -19
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "run-22",
+          "chars": 3888,
+          "medido": {
+            "prefill_s": 59.305,
+            "geracao_s": 15.409,
+            "total_s": 74.714,
+            "parede_s": 76.86,
+            "tokens_entrada": 1207,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1238,
+              "prefill_s": 46.694,
+              "geracao_s": 14.709,
+              "total_s": 61.403
+            },
+            "na_amostra": {
+              "tokens_prompt": 1246,
+              "prefill_s": 47.862,
+              "geracao_s": 14.709,
+              "total_s": 62.571
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -12.611,
+              "geracao_s": -0.7,
+              "total_s": -13.311,
+              "parede_s": -15.457,
+              "tokens_prompt": 31
+            },
+            "na_amostra": {
+              "prefill_s": -11.443,
+              "geracao_s": -0.7,
+              "total_s": -12.143,
+              "parede_s": -14.289,
+              "tokens_prompt": 39
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "run-23",
+          "chars": 3566,
+          "medido": {
+            "prefill_s": 58.249,
+            "geracao_s": 14.764,
+            "total_s": 73.013,
+            "parede_s": 75.17,
+            "tokens_entrada": 1181,
+            "tokens_saida": 64
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1135,
+              "prefill_s": 42.809,
+              "geracao_s": 14.709,
+              "total_s": 57.518
+            },
+            "na_amostra": {
+              "tokens_prompt": 1143,
+              "prefill_s": 43.906,
+              "geracao_s": 14.709,
+              "total_s": 58.615
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -15.44,
+              "geracao_s": -0.055,
+              "total_s": -15.495,
+              "parede_s": -17.652,
+              "tokens_prompt": -46
+            },
+            "na_amostra": {
+              "prefill_s": -14.343,
+              "geracao_s": -0.055,
+              "total_s": -14.398,
+              "parede_s": -16.555,
+              "tokens_prompt": -38
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "run-24",
+          "chars": 4201,
+          "medido": {
+            "prefill_s": 49.838,
+            "geracao_s": 15.45,
+            "total_s": 65.288,
+            "parede_s": 67.43,
+            "tokens_entrada": 1376,
+            "tokens_saida": 66
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1337,
+              "prefill_s": 50.428,
+              "geracao_s": 14.709,
+              "total_s": 65.137
+            },
+            "na_amostra": {
+              "tokens_prompt": 1346,
+              "prefill_s": 51.704,
+              "geracao_s": 14.709,
+              "total_s": 66.413
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 0.59,
+              "geracao_s": -0.741,
+              "total_s": -0.151,
+              "parede_s": -2.293,
+              "tokens_prompt": -39
+            },
+            "na_amostra": {
+              "prefill_s": 1.866,
+              "geracao_s": -0.741,
+              "total_s": 1.125,
+              "parede_s": -1.017,
+              "tokens_prompt": -30
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "run-25",
+          "chars": 3593,
+          "medido": {
+            "prefill_s": 47.322,
+            "geracao_s": 14.104,
+            "total_s": 61.426,
+            "parede_s": 63.57,
+            "tokens_entrada": 1160,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1144,
+              "prefill_s": 43.149,
+              "geracao_s": 14.709,
+              "total_s": 57.858
+            },
+            "na_amostra": {
+              "tokens_prompt": 1152,
+              "prefill_s": 44.252,
+              "geracao_s": 14.709,
+              "total_s": 58.961
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -4.173,
+              "geracao_s": 0.605,
+              "total_s": -3.568,
+              "parede_s": -5.712,
+              "tokens_prompt": -16
+            },
+            "na_amostra": {
+              "prefill_s": -3.07,
+              "geracao_s": 0.605,
+              "total_s": -2.465,
+              "parede_s": -4.609,
+              "tokens_prompt": -8
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "run-26",
+          "chars": 4000,
+          "medido": {
+            "prefill_s": 34.243,
+            "geracao_s": 12.851,
+            "total_s": 47.094,
+            "parede_s": 49.27,
+            "tokens_entrada": 1292,
+            "tokens_saida": 55
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1273,
+              "prefill_s": 48.014,
+              "geracao_s": 14.709,
+              "total_s": 62.723
+            },
+            "na_amostra": {
+              "tokens_prompt": 1282,
+              "prefill_s": 49.245,
+              "geracao_s": 14.709,
+              "total_s": 63.954
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 13.771,
+              "geracao_s": 1.858,
+              "total_s": 15.629,
+              "parede_s": 13.453,
+              "tokens_prompt": -19
+            },
+            "na_amostra": {
+              "prefill_s": 15.002,
+              "geracao_s": 1.858,
+              "total_s": 16.86,
+              "parede_s": 14.684,
+              "tokens_prompt": -10
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "run-27",
+          "chars": 3887,
+          "medido": {
+            "prefill_s": 45.651,
+            "geracao_s": 13.531,
+            "total_s": 59.182,
+            "parede_s": 61.31,
+            "tokens_entrada": 1272,
+            "tokens_saida": 58
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1238,
+              "prefill_s": 46.694,
+              "geracao_s": 14.709,
+              "total_s": 61.403
+            },
+            "na_amostra": {
+              "tokens_prompt": 1246,
+              "prefill_s": 47.862,
+              "geracao_s": 14.709,
+              "total_s": 62.571
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 1.043,
+              "geracao_s": 1.178,
+              "total_s": 2.221,
+              "parede_s": 0.093,
+              "tokens_prompt": -34
+            },
+            "na_amostra": {
+              "prefill_s": 2.211,
+              "geracao_s": 1.178,
+              "total_s": 3.389,
+              "parede_s": 1.261,
+              "tokens_prompt": -26
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "efe-22",
+          "chars": 4576,
+          "medido": {
+            "prefill_s": 74.391,
+            "geracao_s": 16.519,
+            "total_s": 90.91,
+            "parede_s": 93.05,
+            "tokens_entrada": 1491,
+            "tokens_saida": 70
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1457,
+              "prefill_s": 54.954,
+              "geracao_s": 14.709,
+              "total_s": 69.663
+            },
+            "na_amostra": {
+              "tokens_prompt": 1467,
+              "prefill_s": 56.352,
+              "geracao_s": 14.709,
+              "total_s": 71.061
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -19.437,
+              "geracao_s": -1.81,
+              "total_s": -21.247,
+              "parede_s": -23.387,
+              "tokens_prompt": -34
+            },
+            "na_amostra": {
+              "prefill_s": -18.039,
+              "geracao_s": -1.81,
+              "total_s": -19.849,
+              "parede_s": -21.989,
+              "tokens_prompt": -24
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "efe-23",
+          "chars": 4497,
+          "medido": {
+            "prefill_s": 56.637,
+            "geracao_s": 14.061,
+            "total_s": 70.698,
+            "parede_s": 72.85,
+            "tokens_entrada": 1478,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1432,
+              "prefill_s": 54.011,
+              "geracao_s": 14.709,
+              "total_s": 68.72
+            },
+            "na_amostra": {
+              "tokens_prompt": 1441,
+              "prefill_s": 55.353,
+              "geracao_s": 14.709,
+              "total_s": 70.062
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -2.626,
+              "geracao_s": 0.648,
+              "total_s": -1.978,
+              "parede_s": -4.13,
+              "tokens_prompt": -46
+            },
+            "na_amostra": {
+              "prefill_s": -1.284,
+              "geracao_s": 0.648,
+              "total_s": -0.636,
+              "parede_s": -2.788,
+              "tokens_prompt": -37
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "efe-24",
+          "chars": 4604,
+          "medido": {
+            "prefill_s": 75.58,
+            "geracao_s": 14.48,
+            "total_s": 90.06,
+            "parede_s": 92.23,
+            "tokens_entrada": 1505,
+            "tokens_saida": 61
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1466,
+              "prefill_s": 55.294,
+              "geracao_s": 14.709,
+              "total_s": 70.003
+            },
+            "na_amostra": {
+              "tokens_prompt": 1476,
+              "prefill_s": 56.697,
+              "geracao_s": 14.709,
+              "total_s": 71.406
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -20.286,
+              "geracao_s": 0.229,
+              "total_s": -20.057,
+              "parede_s": -22.227,
+              "tokens_prompt": -39
+            },
+            "na_amostra": {
+              "prefill_s": -18.883,
+              "geracao_s": 0.229,
+              "total_s": -18.654,
+              "parede_s": -20.824,
+              "tokens_prompt": -29
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "efe-25",
+          "chars": 4610,
+          "medido": {
+            "prefill_s": 42.138,
+            "geracao_s": 14.368,
+            "total_s": 56.506,
+            "parede_s": 58.67,
+            "tokens_entrada": 1491,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1468,
+              "prefill_s": 55.369,
+              "geracao_s": 14.709,
+              "total_s": 70.078
+            },
+            "na_amostra": {
+              "tokens_prompt": 1478,
+              "prefill_s": 56.774,
+              "geracao_s": 14.709,
+              "total_s": 71.483
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": 13.231,
+              "geracao_s": 0.341,
+              "total_s": 13.572,
+              "parede_s": 11.408,
+              "tokens_prompt": -23
+            },
+            "na_amostra": {
+              "prefill_s": 14.636,
+              "geracao_s": 0.341,
+              "total_s": 14.977,
+              "parede_s": 12.813,
+              "tokens_prompt": -13
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "efe-26",
+          "chars": 4893,
+          "medido": {
+            "prefill_s": 61.875,
+            "geracao_s": 18.285,
+            "total_s": 80.16,
+            "parede_s": 82.35,
+            "tokens_entrada": 1580,
+            "tokens_saida": 76
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1558,
+              "prefill_s": 58.764,
+              "geracao_s": 14.709,
+              "total_s": 73.473
+            },
+            "na_amostra": {
+              "tokens_prompt": 1568,
+              "prefill_s": 60.231,
+              "geracao_s": 14.709,
+              "total_s": 74.94
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -3.111,
+              "geracao_s": -3.576,
+              "total_s": -6.687,
+              "parede_s": -8.877,
+              "tokens_prompt": -22
+            },
+            "na_amostra": {
+              "prefill_s": -1.644,
+              "geracao_s": -3.576,
+              "total_s": -5.22,
+              "parede_s": -7.41,
+              "tokens_prompt": -12
+            }
+          }
+        },
+        {
+          "corrida": "fase4_ineditos",
+          "caso": "efe-27",
+          "chars": 4207,
+          "medido": {
+            "prefill_s": 51.342,
+            "geracao_s": 14.146,
+            "total_s": 65.488,
+            "parede_s": 67.64,
+            "tokens_entrada": 1409,
+            "tokens_saida": 60
+          },
+          "estimado": {
+            "fora_da_corrida": {
+              "tokens_prompt": 1339,
+              "prefill_s": 50.504,
+              "geracao_s": 14.709,
+              "total_s": 65.213
+            },
+            "na_amostra": {
+              "tokens_prompt": 1348,
+              "prefill_s": 51.78,
+              "geracao_s": 14.709,
+              "total_s": 66.489
+            }
+          },
+          "erro": {
+            "fora_da_corrida": {
+              "prefill_s": -0.838,
+              "geracao_s": 0.563,
+              "total_s": -0.275,
+              "parede_s": -2.427,
+              "tokens_prompt": -70
+            },
+            "na_amostra": {
+              "prefill_s": 0.438,
+              "geracao_s": 0.563,
+              "total_s": 1.001,
+              "parede_s": -1.151,
+              "tokens_prompt": -61
+            }
+          }
+        }
+      ],
+      "fora_da_corrida": {
+        "prefill_s": {
+          "n": 120,
+          "erro_mediana_s": 0.05,
+          "erro_abs_mediana_s": 9.906,
+          "erro_abs_p90_s": 23.177,
+          "erro_relativo_mediana": 0.1871,
+          "subestimados": 59
+        },
+        "geracao_s": {
+          "n": 120,
+          "erro_mediana_s": -0.029,
+          "erro_abs_mediana_s": 1.075,
+          "erro_abs_p90_s": 3.312,
+          "erro_relativo_mediana": 0.0777,
+          "subestimados": 61
+        },
+        "total_s": {
+          "n": 120,
+          "erro_mediana_s": -0.712,
+          "erro_abs_mediana_s": 10.324,
+          "erro_abs_p90_s": 23.132,
+          "erro_relativo_mediana": 0.162,
+          "subestimados": 64
+        },
+        "parede_s": {
+          "n": 120,
+          "erro_mediana_s": -3.143,
+          "erro_abs_mediana_s": 11.411,
+          "erro_abs_p90_s": 22.329,
+          "erro_relativo_mediana": 0.1675,
+          "subestimados": 67
+        },
+        "tokens_prompt": {
+          "n": 120,
+          "erro_mediana": 7.0,
+          "erro_abs_mediana": 20.0,
+          "erro_abs_max": 91
+        }
+      },
+      "na_amostra": {
+        "prefill_s": {
+          "n": 120,
+          "erro_mediana_s": 0.335,
+          "erro_abs_mediana_s": 10.929,
+          "erro_abs_p90_s": 21.112,
+          "erro_relativo_mediana": 0.2043,
+          "subestimados": 59
+        },
+        "geracao_s": {
+          "n": 120,
+          "erro_mediana_s": -0.029,
+          "erro_abs_mediana_s": 1.075,
+          "erro_abs_p90_s": 3.312,
+          "erro_relativo_mediana": 0.0777,
+          "subestimados": 61
+        },
+        "total_s": {
+          "n": 120,
+          "erro_mediana_s": 0.247,
+          "erro_abs_mediana_s": 10.579,
+          "erro_abs_p90_s": 21.213,
+          "erro_relativo_mediana": 0.163,
+          "subestimados": 59
+        },
+        "parede_s": {
+          "n": 120,
+          "erro_mediana_s": -2.214,
+          "erro_abs_mediana_s": 12.73,
+          "erro_abs_p90_s": 21.546,
+          "erro_relativo_mediana": 0.1768,
+          "subestimados": 68
+        },
+        "tokens_prompt": {
+          "n": 120,
+          "erro_mediana": -0.5,
+          "erro_abs_mediana": 16.5,
+          "erro_abs_max": 89
+        }
+      }
+    }
+  }
+}

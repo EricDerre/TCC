@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:48:43.166Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-8",
+  "comentario": "O agente errou o diagnóstico. O corpo da resposta trouxe os produtos com IDs negativos (-2 e -3), o que quebra a validação do tipo de dado inteiro de autoincremento para IDs de banco. O problema real é valor_fora_do_dominio. No entanto, o agente escolheu colecao_no_lugar_de_objeto com probabilidade baixa (0,64). O erro ocorreu porque o motor de busca não entregou o verbete valor_fora_do_dominio aos 3 primeiros (ele ficou em 7º lugar na busca). Sem a causa real no contexto, o modelo forçou um encaixe com colecao_no_lugar_de_objeto. O relatório e a árvore documentam muito bem essa falha da busca e a incerteza do modelo.",
+  "decidido_em": "2026-11-09T19:49:00.334Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 8,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:49:28.761Z",
+  "segundos": 17,
+  "segundos_relogio": 17,
+  "utilidade": 5
+}

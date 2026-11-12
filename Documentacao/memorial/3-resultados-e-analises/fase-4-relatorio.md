@@ -21,7 +21,7 @@ Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md)
 | A biblioteca final acerta em casos que nunca viu? | Menos que nos casos de avaliação: 25 de 36 (69,4%; Wilson 95% de 53,1 a 82,0), contra 31 de 36 nos casos de avaliação, que não são os mesmos. Com o verbete certo, 18 de 20; sem ele, 7 de 16. A classe de tradução faz 1 de 6. Há uma condição só: a corrida não diz quanto a biblioteca ajuda nesses casos. | Seção 7.1, corrida 24 |
 | Quanto tempo o agente inteiro leva e em quantos cenários acerta? | 10 de 10 com Task Success (a tarefa concluída, pelo critério da ficha 35) na repetição, com Wilson 95% de 72,2 a 100,0%, e MTTR (tempo da detecção ao reparo validado) médio de 74,0 s com o prompt dentro do limite e os sinais novos da busca (72,5 s na 21c; 105,2 s antes do corte), quase todo do modelo. Uma repetição por cenário, sem linha de base manual. | Seção 8, corridas 21, 21b, 21c e 21d |
 | A divergência da trilha aponta os erros reais? | Com as intervenções em todos os casos, quase não: TPR x TNR (erros pegos vezes acertos deixados em paz) de 0,284 contra 0,250 do acaso. Contada por gatilho, 0,542, numa corrida que não rodou assim. São só 5 erros. Nas mutações, o nó previsto em 100%, o que é esperado por construção. | Seções 9.1 a 9.3, corrida 22 |
-| O relatório por caso ajuda um revisor humano a decidir? | Em aberto: a sessão de 05/11 tem 1 resposta do Eric e 10 pareceres do Claude aprovados por ele, e a medida será feita depois da Pós-Fase 4 (decisões 85, 86 e 95). | Seção 9.5 |
+| O relatório por caso ajuda um revisor humano a decidir? | Feita em parte em 09 e 10/11/2026, no pacote Q5 da Pós-Fase 4, sobre os 36 relatórios v3 da corrida 24: 35 lidos por um analista, a quem o Eric passou os relatórios, e 1 pelo Eric (ficha 40, decisões 113 e 114; leitura em `resultados_alvo/fase4/leitura_revisao_v3.md`). Ficaram medidas a adesão, a localização do erro e a utilidade; o tempo até a decisão não. A sessão de 05/11 (1 resposta do Eric e 10 pareceres do Claude aprovados, decisões 85 e 86) fica como registro. | Seção 9.5 |
 
 ## 2. Como a fase rodou
 
@@ -1300,12 +1300,18 @@ O primeiro nó que divergiu da trilha da base foi o previsto em 36 de 36 no verb
 
 </details>
 
-### 9.5 A medida com revisor humano está em aberto (decisões 85, 86 e 95)
+<!-- ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a medida com revisor humano foi feita: título desta seção, frase no fim dela, a tabela de abertura e a lista da seção 15.
+     ! Motivo: o relatório dizia que a medida estava em aberto pela decisão 95; com a sessão feita pelo Eric (ficha 40, opção b, decisão 113), quem lê precisa saber onde está a leitura e a limitação. -->
+<!-- ! Alteração de IA - Revisar: (10/11/2026, tarde) os quatro trechos desta medida foram reescritos: quem leu quase todos os relatórios foi um analista, a quem o Eric passou os relatórios, e o tempo até a decisão não foi medido (decisão 114).
+     ! Motivo: os trechos da manhã diziam que o Eric tinha lido os 36 relatórios; ele declarou no quadro que colou as respostas de um analista, e o registro da página confirma. -->
+### 9.5 A medida com revisor humano: em aberto em 05/11, feita em parte em 10/11/2026 (decisões 85, 86, 95, 113 e 114)
 
+<!-- ! Alteração de IA - Revisar: (10/11/2026, decisão 117) este trecho e o item da seção 15 passaram a dizer que os 36 relatórios foram lidos por um analista de QA da empresa.
+     ! Motivo: o Eric declarou no quadro quem é o analista e que as 36 respostas são dele; o texto dizia 35 do analista e 1 do Eric e remetia à ficha 62, que fechou. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 95) a medida com revisor humano passou de limitação declarada a em aberto, neste trecho, no estado do relatório, na tabela de abertura, na seção 12 e na lista da seção 15.
      ! Motivo: o Eric pediu "em aberto": usou a pré-análise por agora, e a revisão será feita depois de as respostas serem normalizadas na Pós-Fase 4. O relato do que aconteceu na sessão de 05/11 não muda. -->
 
-A especificação da trilha (seção 12 c) pede, com um revisor humano, o acerto da localização do erro, o tempo até a decisão e a adesão apropriada, isto é, aceitar o diagnóstico quando está certo e recusar quando está errado. **Essa medida ainda não foi feita e está em aberto: será feita depois que a Pós-Fase 4 normalizar e melhorar as respostas (decisão 95, que revê a 87).** Por agora vale a pré-análise do Claude que o Eric usou.
+A especificação da trilha (seção 12 c) pede, com um revisor humano, o acerto da localização do erro, o tempo até a decisão e a adesão apropriada, isto é, aceitar o diagnóstico quando está certo e recusar quando está errado. **Essa medida ainda não foi feita e está em aberto: será feita depois que a Pós-Fase 4 normalizar e melhorar as respostas (decisão 95, que revê a 87).** Por agora vale a pré-análise do Claude que o Eric usou. **Feita em parte em 09 e 10/11/2026 (pacote Q5 da Pós-Fase 4; fichas 40 e 62, decisões 113, 114 e 117):** os 36 relatórios v3 com a árvore de decisão da corrida 24 foram lidos um por vez, sem o nome do caso, a classe nem o nível, todos por um analista de QA da empresa, que não participou do projeto nem conhecia o agente e a quem o Eric passou os relatórios. Ficaram medidas a adesão apropriada, a localização do erro e a utilidade; o tempo até a decisão não, porque a página mediu a troca entre os dois. A leitura está em `resultados_alvo/fase4/leitura_revisao_v3.md` e na aba "Revisão humana" do painel; a declaração de quem leu está em `sessao_revisao_v3/quem_leu.json`, e é um leitor só.
 
 O que aconteceu: a amostra tem 11 relatórios, não os 12 do plano, porque a corrida teve só 5 erros: são os 5 e mais 6 acertos. O Eric respondeu o relatório 1, e só esse tem resposta própria dele e tempo medido (307 s). Depois pediu uma pré-análise do Claude e escolheu lê-la (decisão 85), e aprovou o parecer do Claude nos outros 10 relatórios, sem resposta própria e sem tempo medido (decisão 86).
 
@@ -1422,7 +1428,7 @@ A comparação da poda de antes com a de agora, sem modelo, está em `resultados
 
 ## 12. Limitações
 
-- **A medida com revisor humano está em aberto** (decisões 85, 86 e 95, seção 9.5): 1 resposta do Eric e 10 pareceres do Claude aprovados. O parecer acertar não substitui a medida, que será feita depois da Pós-Fase 4.
+- **A medida com revisor humano foi feita em parte depois, no pacote Q5 da Pós-Fase 4** (fichas 40 e 62, decisões 113, 114 e 117; seção 9.5): na sessão de 05/11, 1 resposta do Eric e 10 pareceres do Claude aprovados (decisões 85, 86 e 95); em 09 e 10/11/2026, os 36 relatórios v3 da corrida 24 foram lidos por um analista de QA da empresa, a quem o Eric passou os relatórios (`resultados_alvo/fase4/leitura_revisao_v3.md`): adesão, localização do erro e utilidade medidas, tempo até a decisão não.
 - **A regra R1 rodou mais larga que o texto do plano** (seção 3): não confere o campo do gabarito, e só 12 dos 37 casos derrubam uma conferência do roteiro.
 - **A regra R2 fechou no limite exato, e por uma leitura fixada depois da 18c** (decisões 97 e 98, seção 5): a tela perde 3 casos para o caso escrito, e o limite é 3; pela soma dos dois lados, a conta usada até a 18c, são 8. A leitura foi fixada antes da 18d, sem conhecer o resultado, e as duas contas saem em toda leitura. Corridas iguais já variaram até 3 casos, então outra corrida pode passar do limite.
 - **Os sinais da busca foram escritos olhando os 37 casos da 18d** (decisão 97): a conferência limpa é a 18e, com 25 casos, e esses casos deixam de servir de conferência limpa para outro ajuste na busca. A corrida 24 releu esses 25 em texto e deu o mesmo rótulo nos 25.

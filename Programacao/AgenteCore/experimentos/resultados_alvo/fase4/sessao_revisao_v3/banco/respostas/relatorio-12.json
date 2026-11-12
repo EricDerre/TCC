@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:53:57.225Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-12",
+  "comentario": "O modelo acertou o diagnóstico ao apontar a chave_de_juncao_errada no campo tipo. O RAG entregou a fonte adequada aos 3 primeiros resultados e o agente citou as fontes e o campo corretamente sem inventar informações, produzindo uma inferência direta, lógica e suportada pelo caso (0,915).",
+  "decidido_em": "2026-11-09T19:54:55.039Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 12,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:55:09.503Z",
+  "segundos": 58,
+  "segundos_relogio": 58,
+  "utilidade": 5
+}

@@ -1,0 +1,11 @@
+﻿[2026-11-08 13:13:21] rodar_fase4.ps1: modo ineditos, saida fase4_fumaca_progresso, canal chromium, resultados resultados_alvo, casos 1
+[2026-11-08 13:13:23] Ollama 0.40.15; modelo qwen2.5:7b; RAM livre 6,9 GB
+[2026-11-08 13:13:23] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_fumaca_progresso\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-08 13:13:23] testar_fase4.py
+[2026-11-08 13:13:58] executar_fase4.py --modo ineditos --saida fase4_fumaca_progresso --canal chromium --banco avaliacao --casos 1 --modelo qwen2.5:7b --top 20
+[2026-11-08 13:14:01] aviso: a versão 0.40.15 do Ollama não tem ponte completa registrada; a corrida parcial segue
+[2026-11-08 13:14:01] INÍCIO ineditos: Ollama 0.40.15, qwen2.5:7b, biblioteca de produção (95af35290860), k = 3; 1 casos; 0 já feito(s)
+[2026-11-08 13:15:25] [1/1] lex-22: corpo_nao_e_json (p 0.9196558578410939, selo medio; 70.04 s)
+[2026-11-08 13:15:31] FIM ineditos: 1 casos; duração 92 s; trilha 23771 bytes
+[2026-11-08 13:15:33] avaliar_fase4.py --ineditos --saida fase4_fumaca_progresso --pasta C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_fumaca_progresso
+[2026-11-08 13:15:34] FIM rodar_fase4.ps1 (modo ineditos) - duracao total 00h02

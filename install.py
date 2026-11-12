@@ -25,6 +25,7 @@ from _env_common import (
     AGENTE_CORE,
     COBAIA_API,
     COBAIA_FRONT,
+    DATADIR_DO_PROJETO,
     IS_FROZEN,
     OS_NAME,
     ensure_mariadb_running,
@@ -107,16 +108,20 @@ def escolher_zip_mariadb(resposta: dict, sufixo: str = "-winx64.zip") -> dict:
     raise ValueError(f"nenhum arquivo *{sufixo} (winx64.zip) na resposta da API do MariaDB")
 
 
-def caminhos_mariadb_portatil(versao: str, base: Path | None = None) -> dict:
+def caminhos_mariadb_portatil(versao: str, base: Path | None = None, dados: Path | None = None) -> dict:
     """! Alteração de IA - Revisar: os caminhos do MariaDB portátil: zip baixado, pasta extraída
     (`mariadb-<versão>-winx64`), `bin`, `mariadb-install-db.exe`, pasta de dados e `my.ini`.
     ! Motivo: `_env_common.find_mysql_cli`, `find_mariadbd_server`, `find_mariadb_admin` e
     `find_mariadb_datadir_config` procuram exatamente nesses lugares (`%LOCALAPPDATA%\\MariaDB\\...`);
-    montar os caminhos num lugar só evita que o instalador grave numa pasta que o run.py não acha."""
+    montar os caminhos num lugar só evita que o instalador grave numa pasta que o run.py não acha.
+    ! Alteração de IA - Revisar: (07/11/2026, ficha 55) a pasta de dados passa a ser `DATADIR_DO_PROJETO` (`.mariadb/data`
+    dentro do projeto, fora do git); `dados=` troca o lugar só nos testes. Os binários continuam em `%LOCALAPPDATA%\\MariaDB`.
+    ! Motivo: ver a tag de DATADIR_DO_PROJETO em _env_common.py: dentro do app Claude (pacote MSIX) a pasta de dados em
+    AppData\\Local virava duas, e o servidor misturava as duas camadas."""
     if base is None:
         base = Path(os.path.expandvars(r"%LOCALAPPDATA%")) / "MariaDB"
     pasta = base / f"mariadb-{versao}-winx64"
-    dados = base / "data"
+    dados = dados or DATADIR_DO_PROJETO
     return {"base": base, "download": base / "download", "zip": base / "download" / f"mariadb-{versao}-winx64.zip",
             "pasta": pasta, "bin": pasta / "bin", "install_db": pasta / "bin" / "mariadb-install-db.exe",
             "dados": dados, "my_ini": dados / "my.ini"}
@@ -205,7 +210,8 @@ def instalar_mariadb_portatil(perguntar: bool = True) -> str | None:
     (série MARIADB_SERIE), pergunta antes de baixar (a menos de `COBAIA_MARIADB_PORTATIL=1`), baixa
     o zip oficial em `%LOCALAPPDATA%\\MariaDB\\download`, confere o SHA-256 publicado, extrai em
     `%LOCALAPPDATA%\\MariaDB` e cria a pasta de dados com `mariadb-install-db.exe --datadir ... --port=3306`
-    (root sem senha). Devolve o cliente achado por `find_mysql_cli`, ou None com a causa no log.
+    (root sem senha; desde 07/11/2026 a pasta de dados é `.mariadb/data` dentro do projeto, ficha 55).
+    Devolve o cliente achado por `find_mysql_cli`, ou None com a causa no log.
     ! Motivo: em 26/10/2026 esse caminho foi feito à mão na máquina-alvo i5 (as cobaias nunca tinham
     subido lá); sem a função, quem clonasse o repositório numa máquina sem administrador pararia no MSI
     do winget. Cada passo é pulado quando já foi feito, então rodar de novo é seguro; bloqueio de rede

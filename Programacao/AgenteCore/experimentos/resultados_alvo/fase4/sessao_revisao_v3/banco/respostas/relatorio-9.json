@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:51:21.927Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-9",
+  "comentario": "Assim como ocorreu no relatório 1, o diagnóstico aponta para codificacao_incorreta (o que visualmente parece fazer sentido devido ao \"PÃ£o\" no payload), mas viola o contrato do seu mecanismo RAG. O motor de busca entregou entidade-produto, campo_ausente e pagina-produtos-api, e nenhum deles cobre o verbete codificacao_incorreta. A árvore de decisão documenta corretamente o erro do modelo (\"nenhum verbete entregue trata da causa respondida\") e a falha disparada (causa_sem_verbete_que_a_trate), expondo que a LLM alucinou as referências da linha FONTE para forçar uma causa externa ao contexto recebido.",
+  "decidido_em": "2026-11-09T19:51:39.609Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 9,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:52:10.209Z",
+  "segundos": 18,
+  "segundos_relogio": 18,
+  "utilidade": 4
+}

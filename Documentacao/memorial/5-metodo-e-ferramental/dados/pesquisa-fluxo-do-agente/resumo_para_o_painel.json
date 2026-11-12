@@ -1,0 +1,1042 @@
+{
+ "_tag": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/integrar_pesquisa_fluxo_do_agente.py (10/11/2026): o resumo da rodada 7 da pesquisa que a aba \"Fluxo do agente\" do painel lê, com as contagens por tópico, os vereditos por ideia e o mapa já com os números das medidas. NÃO editar à mão.",
+ "_motivo": "! Motivo: a aba do painel lê arquivos versionados e não digita número; sem este resumo ela teria de repetir a leitura cruzada das leituras com as segundas leituras e a troca dos marcadores, e as duas contas poderiam divergir.",
+ "data": "10/11/2026",
+ "secao": "6.16",
+ "frentes": {
+  "1": "o roteiro de raciocínio em passos com lista de conferência",
+  "2": "o ciclo de reavaliação pelo próprio agente",
+  "3": "os dois momentos do modelo, com um analista de documentação"
+ },
+ "topicos": [
+  {
+   "secao": "6.16.1",
+   "chave": "r7-raciocinio-em-passos-em-modelo-pequeno",
+   "frente": "1",
+   "titulo": "Raciocínio em passos antes da resposta em modelo pequeno: acerto, custo e ordem",
+   "titulo_da_sintese": "Pedir passos ao modelo pequeno antes do rótulo custa caro e não tem ganho medido em escolha fechada",
+   "fontes": 10,
+   "aprovadas": 23,
+   "parciais": 4,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "O roteiro de raciocínio escrito pelo modelo antes do rótulo não entra no diagnóstico: não há ganho medido em escolha fechada com modelo de 7B, o projeto mediu empate na Fase 2-A (53,3% no prompt direto contra 47,8% e 48,9% nos dois prompts em etapas, no `qwen2.5:7b`) e o custo seria de cerca de 56 s por caso.",
+    "Raciocínio depois do rótulo não muda a escolha: as linhas `IMPACTO` e `FONTE` já são esse texto, e o relatório as rotula como texto do modelo.",
+    "Se um dia uma forma curta for medida, a conta tem de usar os tokens de fato escritos e o tempo em segundos, não o limite pedido no prompt.",
+    "A forma que sobra é tirar o raciocínio do modelo e pô-lo no código (§6.16.3)."
+   ],
+   "lacunas": [
+    "Nenhum estudo isola, em classificação com lista fechada e modelo aberto de 7B a 13B, o rótulo antes contra o rótulo depois do raciocínio.",
+    "Nenhuma medida de raciocínio em passos em GGUF de 4 bits no llama.cpp ou no Ollama, nem em CPU.",
+    "Duas fontes ficaram só no resumo nas duas leituras (Meincke et al.; Ye e Durrett), porque o PDF não abriu; a ordem entre explicação e predição em Ye e Durrett não foi conferida."
+   ]
+  },
+  {
+   "secao": "6.16.2",
+   "chave": "r7-raciocinio-calibracao-e-primeiro-token",
+   "frente": "1",
+   "titulo": "O raciocínio escrito e a confiança lida no token do rótulo",
+   "titulo_da_sintese": "Raciocínio antes do rótulo infla a probabilidade lida e tira dela o poder de apontar o erro",
+   "fontes": 14,
+   "aprovadas": 28,
+   "parciais": 6,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "Um raciocínio escrito antes do rótulo desfaz a leitura do selo por dois lados: a probabilidade sobe, mais nos erros, e separa pior o erro do acerto. No projeto, a probabilidade lida hoje tem AUROC de 0,80 nos 90 casos da corrida 16, e é o melhor sinal de triagem que o agente tem.",
+    "Se o prompt do diagnóstico mudar, com ou sem raciocínio, os cortes do selo têm de ser refeitos nos 90 casos da calibração, e a medida a comparar é o AUROC, não só o acerto.",
+    "A confiança pedida em palavras não substitui a probabilidade do token neste porte de modelo.",
+    "Ler a confiança numa chamada sem raciocínio e o raciocínio em outra dobraria o custo por caso; nenhuma fonte mediu esse desenho em modelo pequeno."
+   ],
+   "lacunas": [
+    "Nenhum estudo mede a probabilidade do token do rótulo depois de um raciocínio em classificação com cerca de 23 rótulos, em modelo de 7B quantizado.",
+    "Nenhuma fonte dá o número mínimo de casos para recalibrar a probabilidade de um rótulo: uma mede o ajuste da confiança dita em palavras (200 perguntas por tarefa, Platt), e outra escolhe um limiar de abstenção sobre a probabilidade com 100 questões rotuladas, o que não é recalibrar o rótulo.",
+    "A discordância entre o primeiro token e o texto não foi medida no Qwen2.5."
+   ]
+  },
+  {
+   "secao": "6.16.3",
+   "chave": "r7-lista-de-conferencia-em-codigo",
+   "frente": "1",
+   "titulo": "A lista de conferência calculada em código e entregue como fato",
+   "titulo_da_sintese": "O que rende é o que o código mede e entrega; o risco é o modelo seguir o fato entregue quando ele está errado",
+   "fontes": 12,
+   "aprovadas": 26,
+   "parciais": 5,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "A lista de conferência que cabe é a calculada em código. Parte dela já chega ao modelo: a diferença do corpo contra o contrato e contra a referência e os sinais que a busca usa (decisões 81 e 97).",
+    "Há dois lugares novos para ela, com custos diferentes. Dentro do prompt, como um bloco de fatos medidos: muda o que o modelo lê, desfaz a calibração do selo e pede repetir as corridas 16, 18, 21 e 24. Depois da resposta, como conferência em código que contradiz o rótulo (o modelo responde coleção no lugar de objeto e o corpo medido é um objeto): não muda o prompt nem o selo, e pode ser medida nos registros já gravados, sem modelo. Na prévia desta rodada, 5 conferências de exemplo contradizem o rótulo em 8 dos 11 erros da corrida 24 e em nenhum acerto (§6.16.9).",
+    "Só entra na lista o que o código mediu. Nada de inferência, de hipótese nem de texto do modelo: o modelo segue o que o prompt afirma, e um item errado vira erro de diagnóstico.",
+    "A conferência depois da resposta alimenta o que já existe: o campo `divergencia` do nó de diagnóstico, os gatilhos de revisão e a árvore de decisão."
+   ],
+   "lacunas": [
+    "Nenhuma fonte mede, em modelo de 7B ou menor, itens calculados em código entregues no prompt contra o modelo achá-los sozinho, em classificação de causa de falha.",
+    "Nenhuma fonte mede o que acontece quando o fato entregue pelo código está errado em tarefa de diagnóstico; as medidas são de calculadora, de busca e de estimativa numérica.",
+    "A fonte das estruturas de raciocínio escolhidas antes (Zhou et al.) ficou só no resumo nas duas leituras."
+   ]
+  },
+  {
+   "secao": "6.16.4",
+   "chave": "r7-reavaliacao-quando-ajuda",
+   "frente": "2",
+   "titulo": "Reavaliação da própria resposta: quando ajuda e quando troca certo por errado",
+   "titulo_da_sintese": "Sem informação nova, a revisão troca mais certo por errado; só ajuda com um verificador de fora",
+   "fontes": 11,
+   "aprovadas": 29,
+   "parciais": 6,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "Reler o mesmo contexto e rever a resposta, com o mesmo modelo, não entra: é o desenho que mais troca certo por errado em modelos deste porte. O projeto já tinha descartado o pedido de rever o diagnóstico na especificação da trilha (seção 9), e a corrida 22 mediu que a divergência que o próprio agente sinaliza separa erro de acerto com produto de 0,284, contra 0,25 do acaso.",
+    "O que faz a revisão ajudar é um sinal de fora, que o modelo não produz: no agente, as conferências em código e a pessoa. A forma que resta é a do §6.16.5: disparo por sinal externo e evidência nova.",
+    "Se houver um segundo passe, o pedido não pode dizer que a primeira resposta pode estar errada nem pedir que o modelo a reveja: tem de ser um diagnóstico novo, com contexto novo, e a escolha entre as duas respostas fica com uma regra em código.",
+    "Uma rodada só. Na única fonte que mede rodadas repetidas em múltipla escolha, a revisão converge já na primeira (a medida é de convergência, não de acerto), e as rodadas seguintes somam custo e o viés a favor do próprio texto."
+   ],
+   "lacunas": [
+    "Nenhuma medida de revisão da própria resposta em modelo de 7B quantizado, em CPU, nem em classificação de causa com lista fechada e documentação no contexto.",
+    "Nenhuma fonte compara, em modelo pequeno, repetir a chamada com o mesmo contexto contra pedir confirmação.",
+    "As taxas exatas de troca de certo para errado de um dos estudos (Li et al.) estão só numa figura e não foram lidas."
+   ]
+  },
+  {
+   "secao": "6.16.5",
+   "chave": "r7-disparo-parada-e-evidencia-nova",
+   "frente": "2",
+   "titulo": "Segundo passe por sinal externo, com regra de parada e evidência nova",
+   "titulo_da_sintese": "O disparo por incerteza e a busca nova têm medida a favor; o ganho encolhe em modelo pequeno e depende de a base ter o documento",
+   "fontes": 12,
+   "aprovadas": 35,
+   "parciais": 11,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "O desenho com mais apoio é o que o agente já tem pela metade: um sinal externo (selo baixo ou FONTE divergente) decide quem vai a revisão. Hoje o caso vai à pessoa; a alternativa pesquisada é um segundo passe com outra busca.",
+    "A consulta do segundo passe não pode sair da resposta do modelo: quando a primeira resposta está errada, ela engana a segunda busca. Tem de sair do código (os verbetes seguintes da mesma busca, ou a busca sem o verbete que não tratou da causa).",
+    "Uma volta só, fixada em código: a maior parte do ganho medido está na segunda volta, e repetir passos e não saber quando terminar são os modos de falha de desenho mais frequentes na taxonomia de sistemas com vários agentes.",
+    "O teto no projeto é baixo, pela medida sem modelo desta rodada (§6.16.9): nos 72 casos das corridas 22 e 24, os dois gatilhos acenderiam em 24, pegariam 10 dos 16 erros e incomodariam 14 acertos; e só em 3 erros o verbete da causa certa estaria entre os 5 primeiros da busca (5 entre os 10). A corrida 16 já mediu que entregar 5 verbetes no lugar de 3 a todos os casos não ajuda (5 casos ganhos e 8 perdidos em 90).",
+    "O agente é local e não tem modelo maior a quem passar o caso: o degrau de cima é a pessoa, e é o que os gatilhos de hoje fazem."
+   ],
+   "lacunas": [
+    "Nenhum trabalho mede disparo pela probabilidade do token de um rótulo em modelo de 7B quantizado, nem em classificação com lista fechada.",
+    "Nenhum estudo mede segunda volta sobre um índice pequeno e fechado de documentação (39 documentos) com busca por palavras.",
+    "Os trabalhos não trazem regra de parada medida: o número de voltas é parâmetro."
+   ]
+  },
+  {
+   "secao": "6.16.6",
+   "chave": "r7-curador-separado-da-base",
+   "frente": "3",
+   "titulo": "Um papel separado para escrever a base de conhecimento",
+   "titulo_da_sintese": "Separar quem escreve a base de quem faz a tarefa tem apoio; a qualidade vem do rótulo de certo ou errado, do porte de quem escreve e de a fusão ser em código",
+   "fontes": 12,
+   "aprovadas": 28,
+   "parciais": 2,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "A separação em dois momentos tem apoio no desenho: quem escreve na base trabalha depois da tarefa, em segundo plano e em lote, e a análise não espera por ele. No agente, o tempo até o resultado do diagnóstico não muda.",
+    "O rótulo de certo ou errado que o redator recebe pesa. Hoje a proposta de edição recebe o gabarito, que só existe nos casos de aprendizado; em uso, o rótulo é a decisão da pessoa sobre o relatório. Sem o rótulo verdadeiro, a literatura mede queda, num caso abaixo de não ter memória, e com juiz automático o melhor resultado é o do juiz que acerta sempre.",
+    "De um redator de 7B sem treino espera-se menos do que a literatura mostra: os curadores pequenos que mais rendem nela são treinados, e o projeto não treina. O ganho esperado da separação não é o modelo escrever melhor; é escrever menos vezes, com rótulo, e passar por portões.",
+    "A fusão na base fica em código (acrescentar, contar o uso, arquivar), nunca em texto reescrito pelo modelo; e o relatório, a trilha e a decisão da pessoa ficam guardados como evidência primária.",
+    "A entrada do redator deve ser um documento estruturado e curto, gerado por código, e não o histórico inteiro nem as reflexões do próprio modelo."
+   ],
+   "lacunas": [
+    "Nenhuma fonte compara, com o mesmo modelo, a base escrita no passo da tarefa contra a base escrita por um papel separado; os ganhos medidos vêm misturados com treino, atualização por itens e contadores.",
+    "Nenhuma fonte mede um redator de 7B quantizado, em CPU e sem treino, escrevendo documentação técnica.",
+    "Nenhuma fonte mede a escrita disparada pela decisão de uma pessoa sobre um relatório; os rótulos da literatura vêm de teste, de juiz automático ou do gabarito."
+   ]
+  },
+  {
+   "secao": "6.16.7",
+   "chave": "r7-degradacao-e-portoes-da-base",
+   "frente": "3",
+   "titulo": "Degradação da base com o tempo e portões de validação",
+   "titulo_da_sintese": "A base editada por modelo se degrada por acúmulo e por reescrita; os portões que funcionam medem o efeito antes de aceitar e deixam a aprovação com uma pessoa",
+   "fontes": 11,
+   "aprovadas": 24,
+   "parciais": 2,
+   "rejeitadas": 0,
+   "nao_verificadas": 0,
+   "implicacoes": [
+    "Acrescentar tudo o que o modelo propõe degrada. No projeto, das 20 edições da corrida 20 que passaram nos filtros em código, a pessoa julgou 2 corretas, 9 parciais e 9 erradas; a regra do lote (R5) aceitou o lote com 0 casos ganhos e 0 perdidos nos 36 inéditos. Sem efeito medido não é o mesmo que correta.",
+    "O portão que falta é por edição, e a primeira parte dele não gasta modelo: refazer a busca dos casos com gabarito com a edição aplicada e recusar a que tira o verbete da causa certa de algum caso (o que passava continua passando). Aplicado uma a uma às 20 edições do lote da corrida 20, em 126 casos, ele mostra que o verbete certo sai dos três entregues 7 vezes e entra 4 (§6.16.9).",
+    "Edição sem efeito medido fica em espera, fora do que o modelo lê, até um caso mostrar que ela serve. É o estado não validado do KCS, e a pasta de espera já existe (`aprendidos_em_espera/`).",
+    "Limpar não precisa de modelo: os sinais são contáveis em código (nunca recuperado, contradito pela decisão de uma pessoa, escrito em forma de instrução) e a decisão é de uma pessoa. Nada se apaga: arquiva-se, com a data e o motivo.",
+    "A base nunca é reescrita inteira pelo modelo, e toda mudança é uma edição pequena com origem registrada. O projeto já faz isso (só acréscimo, decisões 30 e 33)."
+   ],
+   "lacunas": [
+    "Nenhuma fonte primária mede portão de regressão por edição em base de documentos lida por modelo de até 13B.",
+    "O custo da revisão humana por edição não aparece em nenhuma fonte lida.",
+    "A degradação com o crescimento da base é afirmada como motivação, sem curva medida contra o tamanho."
+   ]
+  }
+ ],
+ "totais": {
+  "topicos": 7,
+  "fontes": 82,
+  "afirmacoes": 193,
+  "aprovadas": 193,
+  "parciais": 36,
+  "rejeitadas": 0,
+  "nao_verificadas": 0,
+  "referencias_corrigidas": 21
+ },
+ "vereditos": [
+  {
+   "ideia": 1,
+   "nome": "Roteiro de raciocínio em passos com lista de conferência",
+   "veredito": "O roteiro escrito pelo modelo não entra. A lista de conferência cabe, calculada em código, e a forma que escapa do que o projeto já mediu é a conferência depois da resposta.",
+   "literatura": "Em escolha fechada com modelo de 7B não há ganho medido, e a única medida achada é de queda (§6.16.1). O raciocínio antes do rótulo infla a probabilidade lida, mais nos erros, e reduz o poder dela de apontar o erro (§6.16.2). O que rende na análise de causa é o que o código coleta e entrega, e o risco é o modelo seguir o fato entregue quando ele está errado (§6.16.3).",
+   "repositorio": "Na Fase 2-A o prompt em etapas empatou com o direto no `qwen2.5:7b` (53,3% contra 47,8% e 48,9%). Na corrida 23, um exemplar resolvido no prompt ganhou 6 casos e perdeu 4. O selo lê a probabilidade no primeiro token do rótulo, com AUROC de 0,80 nos 90 casos da corrida 16. O prompt já leva fatos calculados em código (a diferença contra o contrato e contra a referência), e 6 regras conferem a resposta depois que ela sai.",
+   "forma_que_escapa": "Duas formas, as duas com a lista calculada em código. (a) Depois da resposta: uma conferência nova que marca quando o rótulo respondido é contradito por um fato medido (o modelo responde coleção no lugar de objeto e o corpo medido é um objeto; responde resposta truncada e o corpo é um JSON completo). Não muda o prompt, o selo nem as corridas vigentes. (b) Dentro do prompt: um bloco de fatos medidos, um por família de causa. Muda o que o modelo lê.",
+   "como_medir": "A forma (a) se mede sem modelo, nos registros gravados, e a prévia desta rodada já fez a conta com 5 conferências de exemplo (§6.16.9): elas contradizem o rótulo respondido em 8 dos 11 erros da corrida 24, em 2 dos 5 da corrida 22 e em 8 dos 22 da corrida 16, sem contradizer nenhum acerto. Nos 54 casos de aprendizado da corrida 16, que não foram olhados ao escrever as conferências, são 6 dos 17 erros. Falta a medida das conferências como regra do agente: uma por causa, escrita antes de olhar os erros e aplicada a casos novos. A forma (b) pede um experimento em texto no molde da corrida 23: os 90 casos da calibração com o bloco no prompt, pareados com a corrida 16, olhando o acerto e o AUROC da probabilidade; se sair do ruído, a calibração e as corridas 18, 21 e 24 se repetem.",
+   "custo": "Um roteiro de passos escrito pelo modelo custaria cerca de 56 s a mais por caso. A forma (a) custa zero de modelo. A forma (b) custa 90 inferências no experimento, cerca de 83 minutos de máquina pela mediana de 55 s por caso da corrida 16, mais a ponte de versão.",
+   "recomendacao": "Não mexer no prompt antes da Fase 5. A forma (a) é a que vale levar adiante: não muda o prompt, o selo nem as corridas vigentes, e a prévia mostra que ela marca boa parte dos erros sem marcar acertos. Se ela vira regra do agente, quando e com que conferências, é a ficha 65. A forma (b) fica para depois da Fase 5."
+  },
+  {
+   "ideia": 2,
+   "nome": "Ciclo de reavaliação pelo próprio agente",
+   "veredito": "Rever a própria resposta com o mesmo contexto não entra. A forma que escapa existe (um segundo passe único, disparado em código e alimentado por outra busca), mas o teto dela nos dados do projeto é baixo.",
+   "literatura": "Sem informação nova, a revisão troca mais certo por errado, e no modelo pequeno é pior: uma rodada virou 58,8% das respostas certas de um modelo de 8B em perguntas de sim ou não (§6.16.4). O que ajuda é um verificador de fora. O disparo por incerteza com busca nova tem medida a favor, com ganho menor abaixo de 10B; a maior parte do ganho está na segunda volta, e a busca que parte da resposta errada do modelo é enganada por ela, o que pede uma volta só e a consulta nova saindo do código (§6.16.5).",
+   "repositorio": "Na corrida 22, a divergência que o agente sinaliza separa erro de acerto com produto de 0,284 contra 0,25 do acaso, e a repetição da mesma inferência manteve o rótulo em 36 de 36 casos. Na corrida 20, das 2 propostas refeitas depois de uma correção, 2 mudaram e 0 mencionam a correção. Na corrida 24, 9 dos 11 erros não tinham o verbete da causa certa entre os três entregues. Na corrida 16, entregar 5 verbetes no lugar de 3 ganhou 5 casos e perdeu 8.",
+   "forma_que_escapa": "Um segundo passe só nos casos em que um gatilho em código acende (selo baixo ou FONTE divergente, que nas duas corridas acendeu sempre porque nenhum verbete entregue tratava da causa respondida: 12 de 12 casos), uma única vez, com os verbetes seguintes da mesma busca no lugar dos três primeiros, num pedido de diagnóstico novo que não fala da primeira resposta, e com a escolha entre as duas respostas feita por regra em código.",
+   "como_medir": "A primeira medida não gasta modelo e está feita (§6.16.9): nos 72 casos das corridas 22 e 24, os gatilhos acenderiam em 24, pegariam 10 dos 16 erros e incomodariam 14 acertos; o verbete da causa certa estaria ao alcance de um segundo passe com 5 verbetes em 3 erros e com 10 em 5. A segunda medida seria um experimento em texto com as 24 inferências do segundo passe e a regra de escolha fixada antes. Mesmo no melhor cenário, com todos os erros ao alcance consertados e nenhum acerto perdido, o teste pareado exato dá p de 0,25 com 5 verbetes e de 0,06 com 10, acima do corte de 0,05 que o projeto usa (decisão 116): os 72 casos não têm como mostrar esse ganho fora do ruído.",
+   "custo": "24 chamadas a mais em 72 casos, cerca de 27 minutos de máquina, e mais uma inferência, de 68 s na mediana, no tempo até o resultado de 33% dos casos.",
+   "recomendacao": "Não implementar antes da Fase 5 e registrar como limitação e trabalho futuro. O gargalo dos erros é a primeira busca não entregar o verbete da causa certa, e isso se ataca na busca, para todos os casos e sem chamada a mais; o caso com gatilho continua indo à pessoa."
+  },
+  {
+   "ideia": 3,
+   "nome": "Dois momentos do modelo: o módulo de análise e o analista de documentação",
+   "veredito": "A separação tem apoio como desenho, e o valor dela está no rótulo dado por uma pessoa, na chamada só quando há lacuna e nos portões por edição, não em o modelo escrever melhor numa chamada separada.",
+   "literatura": "Escrever a base depois da tarefa, em segundo plano e em lote, é o desenho dos sistemas que medem ganho; a qualidade vem do rótulo de certo ou errado, do porte ou do treino de quem escreve e de a fusão ser em código (§6.16.6). Nenhuma fonte compara, com o mesmo modelo, escrever no passo da tarefa contra escrever num papel separado. A base editada por modelo se degrada por acúmulo e por reescrita, e os portões que funcionam medem o efeito antes de aceitar (§6.16.7).",
+   "repositorio": "A proposta de edição já é uma chamada separada, mas continua o prompt do diagnóstico, recebe o gabarito e só acrescenta. Na corrida 20, de 92 propostas, 19 foram aceitas pelos filtros e 1 foi segurada; das 20 revisadas por uma pessoa, 2 corretas, 9 parciais e 9 erradas. 76 das 92 propostas começam por verbo de instrução, e 18 das 20 que passaram nos filtros também. O modelo se absteve de propor em 0 dos 54 casos. A regra do lote aceitou com 0 ganhos e 0 perdas. Cada proposta custou 158 s na mediana.",
+   "forma_que_escapa": "A proposta de desenho (documento próprio): o analista de documentação é chamado em segundo plano, só para relatórios que uma pessoa já decidiu e em que há lacuna; lê uma ficha curta do caso gerada por código; propõe uma edição pequena por caso; a edição passa pelos filtros de hoje, por dois filtros novos (forma de instrução e os filtros de texto), por um portão da busca sem modelo e por um portão do diagnóstico nos casos que leriam a edição; o que não tem efeito medido fica em espera; a limpeza é por sinais em código e decisão de pessoa; e a aprovação é de uma pessoa, à imagem de uma pull request.",
+   "como_medir": "Sem modelo: os dois filtros novos e o portão da busca aplicados às 92 propostas da corrida 20 (o portão já foi aplicado nesta rodada, §6.16.9). Em texto: o analista com a ficha curta nos 54 casos de aprendizado da corrida 20, com o gabarito no lugar da decisão da pessoa, comparado com as propostas da corrida 20 pela mesma revisão humana. Se um lote for promovido: os 72 casos de novo, como a corrida 25 faz.",
+   "custo": "Uma chamada do analista com a ficha curta: cerca de 1,6 minuto, contra 2,6 da proposta de hoje e 4,6 se ele lesse o relatório inteiro. O experimento em texto: 54 inferências, cerca de 86 minutos com a ficha curta. O portão do diagnóstico por edição, se rodasse em todos os casos que leriam cada edição do lote da corrida 20: 221 diagnósticos, 4,2 horas.",
+   "recomendacao": "Aprovar a proposta como base de desenho para depois da Fase 5, junto do hub (pacote Q6), que é de onde vem a decisão da pessoa. Antes disso, só as medidas sem modelo. Se a corrida 25 mostrar que as notas de hoje atrapalham, a limpeza vira decisão própria."
+  }
+ ],
+ "mapa": [
+  {
+   "tema": "Raciocínio em passos",
+   "opcao": "Roteiro de passos escrito pelo modelo antes do rótulo",
+   "veredito": "descartado",
+   "motivo": "sem ganho medido em escolha fechada com modelo de 7B; empate na Fase 2-A; cerca de 56 s a mais por caso; infla a probabilidade que vira o selo",
+   "fonte": "§6.16.1 e §6.16.2; relatório da Fase 2-A, seção 3"
+  },
+  {
+   "tema": "Raciocínio em passos",
+   "opcao": "Raciocínio curto (rascunho de poucas palavras, limite de tokens no prompt)",
+   "veredito": "descartado",
+   "motivo": "o rascunho perde para o raciocínio completo em modelos de 1,5B a 3B; o limite pedido no prompt nem sempre é obedecido (medido em modelo de API), e no Llama 3.1 de 8B a técnica só de prompt perdeu para o raciocínio comum",
+   "fonte": "§6.16.1"
+  },
+  {
+   "tema": "Raciocínio em passos",
+   "opcao": "Texto depois do rótulo tratado como raciocínio",
+   "veredito": "descartado",
+   "motivo": "com a resposta primeiro, o que vem depois não participa da escolha; as linhas IMPACTO e FONTE já são justificativa",
+   "fonte": "§6.16.1"
+  },
+  {
+   "tema": "Selo de confiança",
+   "opcao": "Ler a probabilidade no token do rótulo, com o rótulo na primeira linha",
+   "veredito": "adotado",
+   "motivo": "já é assim; é o sinal que separa erro de acerto, e o raciocínio antes do rótulo o estragaria",
+   "fonte": "§6.16.2; corrida 16"
+  },
+  {
+   "tema": "Selo de confiança",
+   "opcao": "Confiança pedida em palavras ao modelo",
+   "veredito": "descartado",
+   "motivo": "fraca em modelos de até 14B e desalinhada da probabilidade interna",
+   "fonte": "§6.16.2"
+  },
+  {
+   "tema": "Lista de conferência",
+   "opcao": "Conferência em código depois da resposta: o rótulo contradito por um fato medido",
+   "veredito": "adiado",
+   "motivo": "não muda o prompt nem o selo; na prévia sem modelo, contradiz o rótulo em 8 dos 11 erros da corrida 24 e em nenhum acerto; virar regra do agente é decisão do Eric (ficha 65)",
+   "fonte": "§6.16.3 e §6.16.10"
+  },
+  {
+   "tema": "Lista de conferência",
+   "opcao": "Bloco de fatos calculados em código dentro do prompt",
+   "veredito": "adiado",
+   "motivo": "muda o que o modelo lê e pede repetir a calibração; só depois da Fase 5 e de um experimento em texto",
+   "fonte": "§6.16.3 e §6.16.10"
+  },
+  {
+   "tema": "Lista de conferência",
+   "opcao": "Lista gerada e respondida pelo próprio modelo",
+   "veredito": "descartado",
+   "motivo": "chamadas a mais, medida só em modelos grandes",
+   "fonte": "§6.16.3"
+  },
+  {
+   "tema": "Reavaliação",
+   "opcao": "Pedir ao modelo que reveja o diagnóstico com o mesmo contexto",
+   "veredito": "descartado",
+   "motivo": "troca mais certo por errado em modelos deste porte; a divergência que o agente sinaliza fica perto do acaso",
+   "fonte": "§6.16.4; corrida 22"
+  },
+  {
+   "tema": "Reavaliação",
+   "opcao": "Reavaliação disparada pelo próprio modelo, sem limite de voltas",
+   "veredito": "descartado",
+   "motivo": "repetir passos e não saber quando terminar são os modos de falha de desenho mais frequentes na taxonomia de sistemas com vários agentes",
+   "fonte": "§6.16.5"
+  },
+  {
+   "tema": "Reavaliação",
+   "opcao": "Segundo passe único, por gatilho em código, com outra busca e escolha por regra em código",
+   "veredito": "adiado",
+   "motivo": "o teto nos 72 casos é de 3 a 5 erros ao alcance, com 24 chamadas a mais; no melhor cenário o teste pareado dá p de 0,06, acima do corte de 0,05 (ficha 66)",
+   "fonte": "§6.16.5 e §6.16.9"
+  },
+  {
+   "tema": "Reavaliação",
+   "opcao": "Entregar mais verbetes a todos os casos",
+   "veredito": "descartado",
+   "motivo": "medido na corrida 16: 5 casos ganhos e 8 perdidos com 5 verbetes no lugar de 3",
+   "fonte": "corrida 16"
+  },
+  {
+   "tema": "Reavaliação",
+   "opcao": "O caso com gatilho vai à pessoa",
+   "veredito": "adotado",
+   "motivo": "já é assim; o agente é local e não tem modelo maior a quem passar o caso",
+   "fonte": "§6.16.5"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Redator separado, depois da tarefa, em segundo plano e em lote",
+   "veredito": "adiado",
+   "motivo": "tem apoio como desenho; entra na proposta, para depois da Fase 5 (ficha 67)",
+   "fonte": "§6.16.6; proposta de desenho"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Chamado só com a decisão de uma pessoa sobre o relatório e quando há lacuna",
+   "veredito": "adiado",
+   "motivo": "sem o rótulo verdadeiro a literatura mede queda na qualidade do que se escreve; depende do hub (pacote Q6)",
+   "fonte": "§6.16.6; proposta de desenho"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Relatório inteiro como entrada do redator",
+   "veredito": "descartado",
+   "motivo": "cerca de 5.921 tokens, 4,6 minutos por chamada nesta máquina; a ficha curta custa 1,6",
+   "fonte": "medidas do repositório, §6.16.9"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Filtro da forma de instrução e filtros de texto na admissão",
+   "veredito": "adiado",
+   "motivo": "18 das 20 edições que passaram nos filtros de hoje começam por verbo de instrução; entra na proposta",
+   "fonte": "§6.16.9; proposta de desenho"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Portão da busca por edição, sem modelo",
+   "veredito": "adiado",
+   "motivo": "aplicado ao lote da corrida 20, mostra o verbete certo saindo 7 vezes e entrando 4; entra na proposta",
+   "fonte": "§6.16.7 e §6.16.9"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Edição sem efeito medido fica em espera, fora do que o modelo lê",
+   "veredito": "adiado",
+   "motivo": "a regra do lote aceitou sem efeito medido um lote com 9 edições erradas; entra na proposta",
+   "fonte": "§6.16.7"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Limpeza por sinais em código e decisão de pessoa, sem modelo",
+   "veredito": "adiado",
+   "motivo": "o modelo não percebe a correção; os sinais de desuso são contáveis; entra na proposta",
+   "fonte": "§6.16.7; corrida 20"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "O modelo reescreve ou consolida verbetes inteiros",
+   "veredito": "descartado",
+   "motivo": "a base colapsa ou perde detalhe a cada reescrita; a consolidação em fluxo degrada mesmo com entrada correta",
+   "fonte": "§6.16.6 e §6.16.7"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Treinar um curador pequeno por reforço",
+   "veredito": "descartado",
+   "motivo": "é o que mais rende nos curadores pequenos da literatura, mas o projeto não treina modelo e a máquina não tem GPU",
+   "fonte": "§6.16.6"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Verbete novo proposto pelo modelo",
+   "veredito": "adiado",
+   "motivo": "na corrida 20 a revisão julgou 0 dos 6 verbetes novos corretos, e 5 deles nenhum caso com gabarito leria; só com portão mais duro",
+   "fonte": "§6.16.9; proposta de desenho"
+  },
+  {
+   "tema": "Analista de documentação",
+   "opcao": "Implementar os dois momentos antes da Fase 5",
+   "veredito": "adiado",
+   "motivo": "muda a biblioteca que o modelo lê e pede repetir as corridas vigentes; a decisão da pessoa vem do hub, que é de depois da Fase 5 (decisões 101 e 105)",
+   "fonte": "proposta de desenho, seção 8"
+  }
+ ],
+ "tabelas": {
+  "maquina": {
+   "cabecalho": [
+    "O que",
+    "Valor",
+    "De onde vem"
+   ],
+   "linhas": [
+    [
+     "Leitura do prompt (prefill)",
+     "26,0 tokens por segundo",
+     "mediana dos registros das corridas 18d, 21d e 24"
+    ],
+    [
+     "Escrita da resposta (geração)",
+     "4,28 tokens por segundo",
+     "idem"
+    ],
+    [
+     "Cada 100 tokens escritos",
+     "23,3 s",
+     "100 dividido pela taxa de escrita"
+    ],
+    [
+     "Prompt do diagnóstico",
+     "1.189 tokens",
+     "mediana"
+    ],
+    [
+     "Resposta do diagnóstico",
+     "63 tokens",
+     "mediana"
+    ],
+    [
+     "Um diagnóstico",
+     "68,4 s",
+     "mediana da corrida 24"
+    ],
+    [
+     "Um raciocínio em passos, se fosse pedido",
+     "cerca de 240 tokens, 56 s a mais",
+     "o tamanho é da literatura (§6.16.1); o tempo é a conta com a taxa de escrita"
+    ],
+    [
+     "Uma proposta de edição, hoje",
+     "2.358 tokens lidos, 361 escritos, 158,2 s",
+     "mediana das propostas da corrida 20"
+    ]
+   ]
+  },
+  "ideia_1": {
+   "cabecalho": [
+    "Medida",
+    "Resultado",
+    "De onde vem"
+   ],
+   "linhas": [
+    [
+     "Prompt direto contra prompt em etapas, `qwen2.5:7b`, 90 casos",
+     "53,3% no direto; 47,8% e 48,9% nos dois em etapas (14/9, p = 0,41; 13/9, p = 0,52)",
+     "Fase 2-A, relatório, seção 3"
+    ],
+    [
+     "Prompt com um exemplar resolvido no prompt, 90 casos",
+     "6 casos ganhos e 4 perdidos (p = 0,75); 17 rótulos trocados",
+     "corrida 23"
+    ],
+    [
+     "Prompt com os rótulos escritos em palavras, 90 casos",
+     "5 casos ganhos e 6 perdidos (p = 1,00); 17 rótulos trocados",
+     "corrida 23"
+    ],
+    [
+     "Probabilidade do primeiro token do rótulo como sinal de erro",
+     "AUROC de 0,80 (intervalo de 95% de 0,67 a 0,90) em 90 casos, 22 erros",
+     "corrida 16"
+    ],
+    [
+     "Selo baixo",
+     "27 casos, 15 errados (55,6%)",
+     "corrida 16"
+    ],
+    [
+     "Selo médio",
+     "26 casos, 4 errados (15,4%)",
+     "corrida 16"
+    ],
+    [
+     "Selo alto",
+     "37 casos, 3 errados (8,1%)",
+     "corrida 16"
+    ],
+    [
+     "Regras que conferem a resposta em código, depois que ela sai",
+     "6: `quatro_linhas_presentes`, `rotulo_no_conjunto`, `fonte_existe_na_biblioteca`, `fonte_estava_no_contexto`, `rotulo_sustentado_por_verbete_do_contexto`, `campo_existe_no_caso`",
+     "`diagnostico_ao_vivo.py`"
+    ]
+   ]
+  },
+  "conferencia": {
+   "cabecalho": [
+    "Onde",
+    "Erros",
+    "Erros que responderam um rótulo com conferência",
+    "Erros com o rótulo contradito",
+    "Acertos com o rótulo contradito"
+   ],
+   "linhas": [
+    [
+     "corrida 16, os 90 casos da calibração",
+     "22",
+     "10",
+     "8 de 22",
+     "0"
+    ],
+    [
+     "corrida 16, só os 54 casos de aprendizado",
+     "17",
+     "6",
+     "6 de 17",
+     "0"
+    ],
+    [
+     "corrida 22, os 36 oficiais de avaliação",
+     "5",
+     "3",
+     "2 de 5",
+     "0"
+    ],
+    [
+     "corrida 24, os 36 inéditos",
+     "11",
+     "8",
+     "8 de 11",
+     "0"
+    ]
+   ]
+  },
+  "ideia_2": {
+   "cabecalho": [
+    "Medida",
+    "Resultado",
+    "De onde vem"
+   ],
+   "linhas": [
+    [
+     "A divergência que o agente sinaliza, com as intervenções em todos os casos",
+     "pega 4 dos 5 erros e acende em 20 dos 31 acertos; produto 0,284 (acaso 0,25)",
+     "corrida 22"
+    ],
+    [
+     "A mesma divergência, contada só onde um gatilho acenderia",
+     "pega 3 dos 5 erros e acende em 3 dos 31 acertos; produto 0,542 (acaso 0,25)",
+     "corrida 22"
+    ],
+    [
+     "Só o selo baixo",
+     "pega 3 dos 5 erros e acende em 4 dos 31 acertos; produto 0,523 (acaso 0,25)",
+     "corrida 22"
+    ],
+    [
+     "Repetir a mesma inferência",
+     "mesmo rótulo em 36 de 36 casos",
+     "corrida 22"
+    ],
+    [
+     "Trecho plantado num verbete que o modelo não citava",
+     "citado em 8 de 36 casos (2 na corrida sem o trecho)",
+     "corrida 22"
+    ],
+    [
+     "Proposta refeita depois de o verbete ser corrigido",
+     "2 de 2 mudaram; 0 mencionam a correção",
+     "corrida 20"
+    ],
+    [
+     "Entregar 5 verbetes no lugar de 3",
+     "65 acertos contra 68 em 90 casos (5 ganhos, 8 perdidos, p = 0,58); o prompt vai de 1.106 a 1.469 tokens na mediana",
+     "corrida 16"
+    ],
+    [
+     "Erros sem o verbete da causa certa entre os três entregues",
+     "9 de 11 nos inéditos; 3 de 5 nos oficiais",
+     "corridas 24 e 22"
+    ]
+   ]
+  },
+  "gatilhos": {
+   "cabecalho": [
+    "Onde",
+    "Gatilho",
+    "Casos em que acende",
+    "Erros que pega",
+    "Acertos que incomoda"
+   ],
+   "linhas": [
+    [
+     "corrida 24, 36 inéditos",
+     "selo baixo",
+     "8",
+     "4 de 11",
+     "4 de 25"
+    ],
+    [
+     "corrida 24, 36 inéditos",
+     "FONTE divergente",
+     "10",
+     "4 de 11",
+     "6 de 25"
+    ],
+    [
+     "corrida 24, 36 inéditos",
+     "selo baixo ou FONTE divergente",
+     "16",
+     "7 de 11",
+     "9 de 25"
+    ],
+    [
+     "corrida 22, 36 oficiais",
+     "selo baixo",
+     "7",
+     "3 de 5",
+     "4 de 31"
+    ],
+    [
+     "corrida 22, 36 oficiais",
+     "FONTE divergente",
+     "2",
+     "1 de 5",
+     "1 de 31"
+    ],
+    [
+     "corrida 22, 36 oficiais",
+     "selo baixo ou FONTE divergente",
+     "8",
+     "3 de 5",
+     "5 de 31"
+    ]
+   ]
+  },
+  "posicao": {
+   "cabecalho": [
+    "Posição do verbete da causa certa na busca",
+    "Casos, corrida 24",
+    "Erros, corrida 24",
+    "Casos, corrida 22",
+    "Erros, corrida 22"
+   ],
+   "linhas": [
+    [
+     "1 a 3 (os três entregues)",
+     "20",
+     "2",
+     "30",
+     "2"
+    ],
+    [
+     "4 a 5",
+     "5",
+     "3",
+     "4",
+     "2"
+    ],
+    [
+     "6 a 10",
+     "6",
+     "4",
+     "1",
+     "1"
+    ],
+    [
+     "acima de 10",
+     "5",
+     "2",
+     "1",
+     "0"
+    ]
+   ]
+  },
+  "teto": {
+   "cabecalho": [
+    "Segundo passe por gatilho, nos 72 casos",
+    "Valor"
+   ],
+   "linhas": [
+    [
+     "Casos em que um dos dois gatilhos acende",
+     "24 de 72 (33%)"
+    ],
+    [
+     "Erros que os gatilhos pegam",
+     "10 de 16"
+    ],
+    [
+     "Acertos em que os gatilhos acendem",
+     "14"
+    ],
+    [
+     "Erros com o verbete certo ao alcance de um segundo passe com 5 verbetes",
+     "3 de 16"
+    ],
+    [
+     "Erros com o verbete certo ao alcance de um segundo passe com 10 verbetes",
+     "5 de 16"
+    ],
+    [
+     "Tempo de máquina das chamadas a mais",
+     "27 minutos"
+    ],
+    [
+     "Melhor cenário com 5 verbetes: 3 erros consertados e nenhum acerto perdido",
+     "p = 0,25 no teste pareado exato (o corte do projeto é 0,05)"
+    ],
+    [
+     "Melhor cenário com 10 verbetes: 5 erros consertados e nenhum acerto perdido",
+     "p = 0,06 no teste pareado exato (o corte do projeto é 0,05)"
+    ]
+   ]
+  },
+  "ideia_3": {
+   "cabecalho": [
+    "Medida",
+    "Resultado",
+    "De onde vem"
+   ],
+   "linhas": [
+    [
+     "Propostas de edição",
+     "92 em 54 casos; 0 casos sem proposta",
+     "corrida 20"
+    ],
+    [
+     "O que os filtros em código fizeram",
+     "19 aceitas, 1 segurada para revisão, 56 recusadas pelo validador da Fase 3 e 16 pelos filtros da Fase 4",
+     "corrida 20"
+    ],
+    [
+     "Revisão humana das que passaram",
+     "2 corretas, 9 parciais e 9 erradas em 20",
+     "planilha de revisão do lote"
+    ],
+    [
+     "Revisão por tipo: nota",
+     "1 correta, 6 parciais, 4 erradas",
+     "planilha de revisão do lote"
+    ],
+    [
+     "Revisão por tipo: verbete novo",
+     "0 corretas, 3 parciais, 3 erradas",
+     "planilha de revisão do lote"
+    ],
+    [
+     "Revisão por tipo: retificação",
+     "1 correta, 0 parciais, 2 erradas",
+     "planilha de revisão do lote"
+    ],
+    [
+     "Propostas que começam por verbo de instrução",
+     "76 de 92; entre as que passaram nos filtros, 18 de 20",
+     "propostas da corrida 20"
+    ],
+    [
+     "Regra do lote (R5) nos inéditos",
+     "0 casos ganhos e 0 perdidos em 36; lote aceito",
+     "corrida 20"
+    ],
+    [
+     "O que entrou na biblioteca de produção",
+     "11 edições mantidas e 9 removidas na promoção; 4 verbetes aprendidos em espera",
+     "`biblioteca_producao/fechamento.json`"
+    ],
+    [
+     "Notas do modelo na biblioteca que ele lê",
+     "26 notas em 20 dos 39 verbetes; 25 em forma de instrução",
+     "prévia da corrida 25"
+    ],
+    [
+     "Portão da busca, edição por edição, sem modelo",
+     "em 126 casos, 16 das 20 edições mudam os três verbetes de algum caso; o verbete certo sai 7 vezes e entra 4; 6 edições nenhum caso leria",
+     "medida desta rodada"
+    ],
+    [
+     "Verbetes novos do lote: quantos algum caso com gabarito leria",
+     "dos 6, 5 nenhum caso leria e 1 seria lido (1 caso no total)",
+     "medida desta rodada"
+    ],
+    [
+     "Revisão humana dos relatórios (a decisão que serviria de rótulo)",
+     "decisão apropriada em 30 de 36; erro localizado em 10 de 11",
+     "sessão de revisão da corrida 24"
+    ],
+    [
+     "Diagnósticos certos que o analista de QA recusou",
+     "5, dos quais 5 com a FONTE divergente acesa; dos 6 acertos com ela acesa, recusou 5",
+     "sessão de revisão da corrida 24, cruzada com a trilha"
+    ]
+   ]
+  },
+  "portao_por_edicao": {
+   "cabecalho": [
+    "Caso de origem",
+    "Verbete",
+    "Operação",
+    "Casos em que os três verbetes mudam",
+    "Verbete certo entra",
+    "Verbete certo sai",
+    "Casos que leriam a edição"
+   ],
+   "linhas": [
+    [
+     "sin-1",
+     "`campo_preco_ausente`",
+     "verbete novo",
+     "6",
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "tra-3",
+     "`novo_verbete`",
+     "verbete novo",
+     "4",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "tra-5",
+     "`pessoas_incorretas`",
+     "verbete novo",
+     "5",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "run-3",
+     "`limite_de_requisicoes`",
+     "retificação",
+     "0",
+     "0",
+     "0",
+     "4"
+    ],
+    [
+     "run-5",
+     "`contrato-pedido`",
+     "nota",
+     "5",
+     "0",
+     "0",
+     "27"
+    ],
+    [
+     "efe-4",
+     "`estado_da_tela_divergente`",
+     "retificação",
+     "8",
+     "0",
+     "2",
+     "20"
+    ],
+    [
+     "sin-15",
+     "`colecao_no_lugar_de_objeto`",
+     "nota",
+     "0",
+     "0",
+     "0",
+     "7"
+    ],
+    [
+     "semt-6",
+     "`tipo_divergente`",
+     "nota",
+     "6",
+     "0",
+     "3",
+     "15"
+    ],
+    [
+     "semt-7",
+     "`tipo_divergente`",
+     "retificação",
+     "5",
+     "1",
+     "0",
+     "12"
+    ],
+    [
+     "semt-10",
+     "`tipo_divergente`",
+     "nota",
+     "2",
+     "0",
+     "0",
+     "11"
+    ],
+    [
+     "semt-15",
+     "`validacao-na-api`",
+     "verbete novo",
+     "3",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "tra-6",
+     "`formato_preco`",
+     "verbete novo",
+     "4",
+     "0",
+     "1",
+     "0"
+    ],
+    [
+     "tra-14",
+     "`contagem_inconsistente`",
+     "nota",
+     "3",
+     "0",
+     "0",
+     "17"
+    ],
+    [
+     "run-12",
+     "`erro_interno_do_servidor`",
+     "nota",
+     "0",
+     "0",
+     "0",
+     "5"
+    ],
+    [
+     "efe-8",
+     "`estado_da_tela_divergente`",
+     "nota",
+     "4",
+     "1",
+     "0",
+     "13"
+    ],
+    [
+     "efe-8",
+     "`atualizacao-da-tela`",
+     "verbete novo",
+     "7",
+     "1",
+     "0",
+     "0"
+    ],
+    [
+     "efe-10",
+     "`interface-frontend`",
+     "nota",
+     "0",
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "efe-11",
+     "`localizador_quebrado`",
+     "nota",
+     "2",
+     "0",
+     "0",
+     "13"
+    ],
+    [
+     "efe-13",
+     "`estado_da_tela_divergente`",
+     "nota",
+     "6",
+     "1",
+     "0",
+     "11"
+    ],
+    [
+     "efe-4",
+     "`contrato-produto`",
+     "nota",
+     "9",
+     "0",
+     "0",
+     "65"
+    ]
+   ]
+  },
+  "cenarios": {
+   "cabecalho": [
+    "O que o analista de documentação leria",
+    "Tokens lidos",
+    "Tokens escritos",
+    "Tempo por chamada"
+   ],
+   "linhas": [
+    [
+     "Como a proposta de hoje (continua o prompt do diagnóstico, até 2 propostas)",
+     "2.358",
+     "361",
+     "158 s (2,6 min), medido"
+    ],
+    [
+     "Relatório v3 inteiro, um verbete e as instruções, uma proposta",
+     "5.921",
+     "204",
+     "275 s (4,6 min), estimado"
+    ],
+    [
+     "Árvore de decisão, um verbete e as instruções, uma proposta",
+     "3.299",
+     "204",
+     "174 s (2,9 min), estimado"
+    ],
+    [
+     "Ficha curta do caso, um verbete e as instruções, uma proposta",
+     "1.238",
+     "204",
+     "95 s (1,6 min), estimado"
+    ]
+   ]
+  },
+  "custo_dos_portoes": {
+   "cabecalho": [
+    "Portão",
+    "Custo nesta máquina"
+   ],
+   "linhas": [
+    [
+     "Filtros em código e portão da busca",
+     "segundos, sem modelo"
+    ],
+    [
+     "Portão do diagnóstico em todos os casos que leriam cada edição (lote da corrida 20)",
+     "221 diagnósticos, 4,2 horas"
+    ],
+    [
+     "Reavaliação do lote nos 36 inéditos, como a regra R5 fez",
+     "36 diagnósticos, 39 minutos"
+    ],
+    [
+     "Os 72 casos (os oficiais de avaliação e os inéditos), como a corrida 25",
+     "72 diagnósticos, 82 minutos"
+    ]
+   ]
+  }
+ }
+}

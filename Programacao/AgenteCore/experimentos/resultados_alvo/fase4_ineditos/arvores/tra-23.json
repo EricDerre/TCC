@@ -1,0 +1,393 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_ineditos/qwen2.5_7b/tra-23",
+ "nome": "tra-23",
+ "caso": "tra-23",
+ "corrida": "fase4_ineditos",
+ "modo": "ineditos",
+ "modelo": "qwen2.5:7b",
+ "classe": 4,
+ "nivel": 1,
+ "eventos": {
+  "primeiro": 468,
+  "ultimo": 493,
+  "hash": "b62b751f29151d15"
+ },
+ "relatorio_v3": "../relatorios_v3/tra-23.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (679 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (679 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      468
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3698 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      471
+     ]
+    }
+   ],
+   "eventos": [
+    471
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "contrato-pedido",
+     "detalhe": "posição 1, pontuação 54,95: 50,95 pelas palavras do caso, mais 2,0 por rota, 1,0 por entidade e 1,0 por status",
+     "escolhida": true,
+     "pontuacao": 54.9508,
+     "posicao": 1
+    },
+    {
+     "opcao": "pedido-reserva",
+     "detalhe": "posição 2, pontuação 48,66: 47,66 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 48.6562,
+     "posicao": 2
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 3, pontuação 32,22: 31,22 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 32.2191,
+     "posicao": 3
+    },
+    {
+     "opcao": "estado_da_tela_divergente",
+     "detalhe": "posição 4, pontuação 28,70: 28,70 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 28.6986,
+     "posicao": 4
+    },
+    {
+     "opcao": "fluxo-reserva-e-cancelamento",
+     "detalhe": "posição 5, pontuação 28,28: 25,28 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 28.281,
+     "posicao": 5
+    },
+    {
+     "opcao": "formato_de_data_divergente",
+     "detalhe": "posição 6, pontuação 25,20: 22,20 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 25.2007,
+     "posicao": 6
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "detalhe": "posição 7, pontuação 24,25: 23,25 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 24.2547,
+     "posicao": 7
+    },
+    {
+     "opcao": "dado_desatualizado",
+     "detalhe": "posição 8, pontuação 19,75: 18,75 pelas palavras do caso, mais 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 19.7518,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `contrato-pedido` (54,95), `pedido-reserva` (48,66) e `valor_fora_do_dominio` (32,22).",
+     "origem": "observado",
+     "eventos": [
+      469
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `contrato-pedido`; o da entidade, em `contrato-pedido`, `pedido-reserva` e `valor_fora_do_dominio`; o do status, em `contrato-pedido`.",
+     "origem": "observado",
+     "eventos": [
+      469
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `estado_da_tela_divergente` (28,70), `fluxo-reserva-e-cancelamento` (28,28), `formato_de_data_divergente` (25,20), `chave_de_juncao_errada` (24,25) e `dado_desatualizado` (19,75).",
+     "origem": "observado",
+     "eventos": [
+      469
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `POST /api/pedidos`, entidade `Pedido`, status 201 e 59 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      469
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `valor_fora_do_dominio`, e o primeiro de fora, `estado_da_tela_divergente`, só o texto do caso já punha o primeiro à frente (31,22 contra 28,70), e os reforços em código levaram a diferença a 3,52.",
+     "origem": "observado",
+     "eventos": [
+      469
+     ]
+    }
+   ],
+   "eventos": [
+    469
+   ],
+   "entregues": [
+    "contrato-pedido",
+    "pedido-reserva",
+    "valor_fora_do_dominio"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "POST /api/pedidos",
+    "entidade": "Pedido",
+    "status": 201,
+    "termos": 59
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "valor_fora_do_dominio",
+   "alternativas": [
+    {
+     "opcao": "valor_fora_do_dominio",
+     "probabilidade": 0.6494060130223378,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,649; verbetes entregues que a tratam: `contrato-pedido`, `pedido-reserva` e `valor_fora_do_dominio`"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 0.3467642775012335,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,347; verbetes entregues que a tratam: `valor_fora_do_dominio`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 0.0034184260986420186,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,003; verbetes entregues que a tratam: `contrato-pedido`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 0.0034184260986420186,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,003; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "formato_de_data_divergente",
+     "probabilidade": 2.83282753369907e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-pedido` e `valor_fora_do_dominio`"
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "probabilidade": 2.7539259399200428e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "escala_ou_unidade_errada",
+     "probabilidade": 9.152632273206396e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "registro_duplicado",
+     "probabilidade": 8.548563057414892e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `valor_fora_do_dominio`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo apontou o campo `pessoas`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "`pessoas` aparece no caso (procurado no contrato, no corpo, na requisição, na árvore e no seletor): confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `tipo_divergente` (Tipo divergente), ficou com probabilidade 0,347 contra 0,649 da escolhida; verbetes entregues que a sustentam: `valor_fora_do_dominio`.",
+     "origem": "observado",
+     "eventos": [
+      493
+     ]
+    },
+    {
+     "texto": "As outras 6 alternativas lidas na resposta somam probabilidade 0,007; as maiores: `campo_ausente` (0,003), `campo_renomeado` (0,003) e `formato_de_data_divergente` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      493
+     ]
+    },
+    {
+     "texto": "Confiança baixa: a probabilidade lida na causa respondida foi 0,649, e a faixa baixa vai até 0,832 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 27 casos que caíram na faixa baixa, o agente acertou a causa em 12 de 27: 44,4%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      493
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      493
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `POST /api/pedidos (enviado: {\"id_clientes\": 2, \"pessoas\": 4, \"data_pedido\": \"2026-12-19\"})`, o status 201 (a API criou o registro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `pedido-reserva` e `valor_fora_do_dominio`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Os 2 verbetes citados (`pedido-reserva` e `valor_fora_do_dominio`): existem na biblioteca (confere), estavam entre os entregues ao modelo (confere), traz o termo da causa no texto: `pedido-reserva` não confere; `valor_fora_do_dominio` confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `contrato-pedido`, `pedido-reserva` e `valor_fora_do_dominio`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Camada de leitura de cada verbete citado: `pedido-reserva` (Reserva de mesa (pedido); leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/negocio/pedido-reserva.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/negocio/pedido-reserva.md`); `valor_fora_do_dominio` (Valor fora do domínio; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/valor_fora_do_dominio.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/valor_fora_do_dominio.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      493
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 10 de 11 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      493
+     ]
+    }
+   ],
+   "eventos": [
+    493
+   ],
+   "segunda": "tipo_divergente",
+   "campo": "pessoas",
+   "confianca": {
+    "selo": "baixo",
+    "palavra": "baixa",
+    "p_rotulo": 0.6494060130223378,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 27,
+     "certos": 12,
+     "acerto_pct": 44.4
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança baixa: a probabilidade lida na causa respondida foi 0,649, e a faixa baixa vai até 0,832 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 27 casos que caíram na faixa baixa, o agente acertou a causa em 12 de 27: 44,4%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Valor fora do domínio",
+   "probabilidade": 0.6494060130223378,
+   "gatilhos": {
+    "algum": true,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": true
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário vê 400 pessoas reservadas em vez das 4 solicitadas.",
+  "fonte": "[pedido-reserva] [valor_fora_do_dominio]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: valor_fora_do_dominio\nCAMPO: pessoas\nIMPACTO: O usuário vê 400 pessoas reservadas em vez das 4 solicitadas.\nFONTE: [pedido-reserva] [valor_fora_do_dominio]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 24,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 6,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "baixo",
+  "confianca": "baixa",
+  "falha": null,
+  "escolha": "valor_fora_do_dominio",
+  "causa_em_palavras": "Valor fora do domínio",
+  "campo": "pessoas",
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

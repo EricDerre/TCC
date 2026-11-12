@@ -1,0 +1,345 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_ineditos/qwen2.5_7b/run-22",
+ "nome": "run-22",
+ "caso": "run-22",
+ "corrida": "fase4_ineditos",
+ "modo": "ineditos",
+ "modelo": "qwen2.5:7b",
+ "classe": 5,
+ "nivel": 1,
+ "eventos": {
+  "primeiro": 595,
+  "ultimo": 616,
+  "hash": "3a4fd6a256130d34"
+ },
+ "relatorio_v3": "../relatorios_v3/run-22.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (510 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (510 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      595
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3888 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      598
+     ]
+    }
+   ],
+   "eventos": [
+    598
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "limite_de_requisicoes",
+     "detalhe": "posição 1, pontuação 59,46: 56,46 pelas palavras do caso, mais 2,0 por rota e 1,0 por status",
+     "escolhida": true,
+     "pontuacao": 59.4618,
+     "posicao": 1
+    },
+    {
+     "opcao": "contagem_inconsistente",
+     "detalhe": "posição 2, pontuação 25,48: 22,48 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 25.4831,
+     "posicao": 2
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "detalhe": "posição 3, pontuação 24,59: 21,59 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 24.5879,
+     "posicao": 3
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "detalhe": "posição 4, pontuação 23,70: 20,70 pelas palavras do caso, mais 2,0 por rota e 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 23.6983,
+     "posicao": 4
+    },
+    {
+     "opcao": "mensagens-de-erro-do-codigo",
+     "detalhe": "posição 5, pontuação 22,14: 22,14 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 22.1429,
+     "posicao": 5
+    },
+    {
+     "opcao": "pagina-produtos-api",
+     "detalhe": "posição 6, pontuação 19,85: 17,85 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 19.8463,
+     "posicao": 6
+    },
+    {
+     "opcao": "corpo_vazio",
+     "detalhe": "posição 7, pontuação 17,44: 17,44 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 17.4395,
+     "posicao": 7
+    },
+    {
+     "opcao": "erro_interno_do_servidor",
+     "detalhe": "posição 8, pontuação 13,12: 11,12 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 13.1154,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `limite_de_requisicoes` (59,46), `contagem_inconsistente` (25,48) e `estrutura_aninhada_divergente` (24,59).",
+     "origem": "observado",
+     "eventos": [
+      596
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `limite_de_requisicoes`, `contagem_inconsistente` e `estrutura_aninhada_divergente`; o da entidade, em `contagem_inconsistente` e `estrutura_aninhada_divergente`; o do status, em `limite_de_requisicoes`.",
+     "origem": "observado",
+     "eventos": [
+      596
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `tempo_de_resposta_excedido` (23,70), `mensagens-de-erro-do-codigo` (22,14), `pagina-produtos-api` (19,85), `corpo_vazio` (17,44) e `erro_interno_do_servidor` (13,12).",
+     "origem": "observado",
+     "eventos": [
+      596
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 429 e 43 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      596
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `estrutura_aninhada_divergente`, e o primeiro de fora, `tempo_de_resposta_excedido`, só o texto do caso já punha o primeiro à frente (21,59 contra 20,70), e os reforços em código levaram a diferença a 0,89.",
+     "origem": "observado",
+     "eventos": [
+      596
+     ]
+    }
+   ],
+   "eventos": [
+    596
+   ],
+   "entregues": [
+    "limite_de_requisicoes",
+    "contagem_inconsistente",
+    "estrutura_aninhada_divergente"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 429,
+    "termos": 43
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "limite_de_requisicoes",
+   "alternativas": [
+    {
+     "opcao": "limite_de_requisicoes",
+     "probabilidade": 0.639723956292674,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,640; verbetes entregues que a tratam: `limite_de_requisicoes`"
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "probabilidade": 1.1538513131696257e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `limite_de_requisicoes`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `limite_de_requisicoes`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `tempo_de_resposta_excedido` (Tempo de resposta excedido), ficou com probabilidade 0,000 contra 0,640 da escolhida; verbetes entregues que a sustentam: `limite_de_requisicoes`.",
+     "origem": "observado",
+     "eventos": [
+      616
+     ]
+    },
+    {
+     "texto": "Confiança baixa: a probabilidade lida na causa respondida foi 0,640, e a faixa baixa vai até 0,832 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 27 casos que caíram na faixa baixa, o agente acertou a causa em 12 de 27: 44,4%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      616
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      616
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos`, o status 429 (a API barrou por excesso de requisições) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `limite_de_requisicoes`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `limite_de_requisicoes`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `limite_de_requisicoes`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `limite_de_requisicoes` (Limite de requisições (429); leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/limite_de_requisicoes.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/limite_de_requisicoes.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      616
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 7 de 7 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      616
+     ]
+    }
+   ],
+   "eventos": [
+    616
+   ],
+   "segunda": "tempo_de_resposta_excedido",
+   "campo": null,
+   "confianca": {
+    "selo": "baixo",
+    "palavra": "baixa",
+    "p_rotulo": 0.639723956292674,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 27,
+     "certos": 12,
+     "acerto_pct": 44.4
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança baixa: a probabilidade lida na causa respondida foi 0,640, e a faixa baixa vai até 0,832 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 27 casos que caíram na faixa baixa, o agente acertou a causa em 12 de 27: 44,4%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Limite de requisições (429)",
+   "probabilidade": 0.639723956292674,
+   "gatilhos": {
+    "algum": true,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": true
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "A página Produtos fica vazia, e a linha de status indica um erro de carregamento devido ao excesso de requisições.",
+  "fonte": "[limite_de_requisicoes]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: limite_de_requisicoes\nCAMPO: nenhum\nIMPACTO: A página Produtos fica vazia, e a linha de status indica um erro de carregamento devido ao excesso de requisições.\nFONTE: [limite_de_requisicoes]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 22,
+  "rotulos": {
+   "observado": 14,
+   "conferido": 5,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "baixo",
+  "confianca": "baixa",
+  "falha": null,
+  "escolha": "limite_de_requisicoes",
+  "causa_em_palavras": "Limite de requisições (429)",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

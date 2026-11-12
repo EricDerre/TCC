@@ -1,0 +1,42 @@
+{
+ "etapa": "lex-22 · diagnóstico",
+ "modelo": "qwen2.5:7b",
+ "estado": "concluido",
+ "fase": "geracao",
+ "tokens_prompt": 1224,
+ "chars_prompt": 3820,
+ "teto_tokens": 600,
+ "tokens_gerados": 55,
+ "decorrido_s": 70.037,
+ "estimativa_s": 61.726,
+ "estimativa_refeita_s": 76.803,
+ "fracao": 1.0,
+ "estimativa": {
+  "tokens_prompt": 1224,
+  "prefill_s": 47.017,
+  "geracao_s": 14.709,
+  "geracao_maxima_s": 140.089,
+  "total_s": 61.726,
+  "maximo_s": 187.106,
+  "origem": {
+   "tokens_prompt": "3820 caracteres do prompt / 3.12 caracteres por token (mediana das corridas gravadas)",
+   "prefill_s": "1224 tokens / 26.033 tokens por segundo (mediana do prefill das corridas gravadas)",
+   "geracao_s": "63.0 tokens (mediana dos gerados nas corridas gravadas) / 4.283 tokens por segundo (mediana da geração)",
+   "geracao_maxima_s": "teto de 600 tokens / 4.283 tokens por segundo"
+  }
+ },
+ "medido": {
+  "prefill_s": 47.06,
+  "geracao_s": 12.372,
+  "carga_s": 8.478,
+  "total_s": 67.948,
+  "tokens_entrada": 1204,
+  "tokens_saida": 55,
+  "tokens_em_cache": 0,
+  "decorrido_s": 70.037
+ },
+ "inferencias_concluidas": 1,
+ "iniciado_em": "2026-11-08T13:14:11",
+ "gravado_em": "2026-11-08T13:15:21",
+ "versao": 1
+}

@@ -1,0 +1,439 @@
+{
+ "atualizacao-da-tela": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  }
+ ],
+ "campo_preco_ausente": [
+  {
+   "antigo": "A omissão da chave preco no objeto da API faz com que a renderização do botão de compra/detalhes no frontend exiba o literal undefined (ou R$ undefined), em vez do valor numérico formatado.",
+   "novo": "A omissão da chave `preco` no objeto da API faz com que o botão do preço, na página `produtos_api.php`, mostre o texto `undefined` no lugar do valor formatado.",
+   "motivo": "conferido em Programacao/CobaiaFront/produtos_api.php (função formatarPreco, linhas 64 a 66): sem o campo, o botão do preço mostra só \"undefined\", nunca \"R$ undefined\", e não é o botão de compra nem o de detalhes; e \"frontend\" estava sem o significado na primeira menção"
+  },
+  {
+   "antigo": "- Arquivos: Programacao/CobaiaFront/produtos_api.php.",
+   "novo": "- Arquivos: nenhum declarado no cabeçalho do verbete. A página que mostra o preço é `Programacao/CobaiaFront/produtos_api.php` (apontada pelo analista na curadoria e conferida no código).",
+   "motivo": "a linha reproduz o campo arquivos do cabeçalho, que neste verbete está vazio; o arquivo apontado pelo analista é o certo, mas não está no cabeçalho, e a busca não o lê de lá"
+  },
+  {
+   "antigo": "Verbete revisado e aprovado. A definição do sintoma foi refinada para detalhar a exibição do literal undefined no frontend e o mapeamento do arquivo produtos_api.php foi preenchido.",
+   "novo": "Leitura revisada e aprovada. A definição do sintoma foi refinada para detalhar a exibição do texto `undefined` na página, e o arquivo `produtos_api.php` foi apontado em \"Onde está no código\".",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou; e \"frontend\" estava sem o significado"
+  }
+ ],
+ "campo_renomeado": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/campo_renomeado.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A redação original de \"O que conferir\" (\"contrato mudou no servidor sem atualizar o cliente\") se mantém, pois é tecnicamente mais precisa. A nota confusa gerada pelo modelo foi descartada.",
+   "novo": "A redação original de \"O que conferir\" se mantém, pois é tecnicamente mais precisa do que a retificação que o modelo propôs. A nota do modelo foi retirada desta leitura; continua no verbete que o modelo lê.",
+   "motivo": "a nota repetia entre aspas uma frase inteira do texto, e a repetição fazia a leitura reprovar no filtro de repetição; e a nota não dizia que o texto do modelo saiu só desta leitura e continua no verbete que o modelo lê"
+  }
+ ],
+ "chave_de_juncao_errada": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/chave_de_juncao_errada.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "Nota do modelo removida para evitar poluição semântica no mecanismo de busca do RAG e manter o foco estrito na taxonomia do defeito.",
+   "novo": "A nota do modelo foi retirada desta leitura para manter o foco na descrição do defeito; continua no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "colecao_no_lugar_de_objeto": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 2 notas do modelo. A curadoria de 10/11/2026 as retirou desta leitura; elas continuam em `biblioteca_producao/erros/colecao_no_lugar_de_objeto.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "As duas anotações do modelo das rodadas de treinamento (épocas 1 e 101) sobre o tratamento do array \"tipo\" foram apagadas para resguardar a integridade da semântica de busca do RAG e manter a finalidade de taxonomia pura.",
+   "novo": "As duas notas do modelo (épocas 1 e 101) sobre o tratamento do campo `tipo` foram retiradas desta leitura; continuam no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê; e a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "contagem_inconsistente": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/contagem_inconsistente.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A anotação do modelo (época 101) prescrevendo a reengenharia do envelope da API foi excluída para preservar o mapeamento neutro e a semântica correta do RAG",
+   "novo": "A nota do modelo (época 101), que pedia para incluir o total na resposta da API, foi retirada desta leitura; continua no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "contrato-pedido": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/contratos/contrato-pedido.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A nota de treinamento referente à idempotência em POST foi removida para evitar sobreposição semântica com a taxonomia registro_duplicado e manter o foco estrito nas regras da rota.",
+   "novo": "A nota do modelo sobre registros duplicados no POST foi retirada desta leitura, porque repete o que a causa `registro_duplicado` já trata; continua no verbete que o modelo lê.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "contrato-produto": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/contratos/contrato-produto.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A nota do modelo referente ao truncamento de resposta foi removida para manter o documento restrito às regras puras do contrato.",
+   "novo": "A nota do modelo sobre o truncamento de resposta foi retirada desta leitura, para ela ficar só com as regras do contrato; continua no verbete que o modelo lê.",
+   "motivo": "a nota não dizia que o texto do modelo saiu só desta leitura e continua no verbete que o modelo lê"
+  }
+ ],
+ "corpo_nao_e_json": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 2 notas do modelo. A curadoria de 10/11/2026 as retirou desta leitura; elas continuam em `biblioteca_producao/erros/corpo_nao_e_json.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "O termo \"token\" foi contextualizado para adequação à métrica Q2 de termos técnicos. Ambas as anotações do modelo (referentes a exemplos em HTML e XML) foram apagadas para resguardar a pureza semântica do RAG",
+   "novo": "O termo `token` foi explicado na primeira menção, para o filtro de termos técnicos do pacote Q2. As duas notas do modelo (exemplos em HTML e XML) foram retiradas desta leitura; continuam no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  },
+  {
+   "antigo": "- erro no console do navegador acusando caractere inválido (ex: \"Unexpected token <\", referindo-se a um token ou símbolo não esperado na leitura do JSON).",
+   "novo": "- erro no console do navegador acusando caractere inválido: `Unexpected token <`, em que token é o pedaço do texto que o leitor de JSON não esperava.",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  }
+ ],
+ "corpo_vazio": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 2 notas do modelo. A curadoria de 10/11/2026 as retirou desta leitura; elas continuam em `biblioteca_producao/erros/corpo_vazio.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "As notas metalinguísticas injetadas pelo agente em épocas de treino foram removidas para garantir aderência estrita à taxonomia e limpar a indexação semântica.",
+   "novo": "As duas notas do modelo foram retiradas desta leitura; continuam no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê; e a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "erro_interno_do_servidor": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 2 notas do modelo. A curadoria de 10/11/2026 as retirou desta leitura; elas continuam em `biblioteca_producao/erros/erro_interno_do_servidor.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "As duas notas redundantes do modelo das rodadas de treinamento (época 1) foram excluídas para manter a coesão documental.",
+   "novo": "As duas notas do modelo (época 1) foram retiradas desta leitura por repetirem o que o texto já diz; continuam no verbete que o modelo lê.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "escala_ou_unidade_errada": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/escala_ou_unidade_errada.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A anotação metalinguística de retificação da época 1 foi descartada para evitar repetição de sintomas e assegurar a fidelidade da taxonomia.",
+   "novo": "A nota do modelo (uma retificação da época 1) foi retirada desta leitura para não repetir sintomas; continua no verbete que o modelo lê.",
+   "motivo": "a nota não dizia que o texto do modelo saiu só desta leitura e continua no verbete que o modelo lê"
+  }
+ ],
+ "estado_da_tela_divergente": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/estado_da_tela_divergente.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A nota prescritiva remanescente do ciclo de treinamento (época 101) foi removida, mantendo o escopo documental limpo.",
+   "novo": "A nota do modelo (época 101), escrita como instrução, foi retirada desta leitura; continua no verbete que o modelo lê.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "estrutura_aninhada_divergente": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/estrutura_aninhada_divergente.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A nota redundante de treinamento foi descartada para garantir o matching preciso e limpo do RAG.",
+   "novo": "A nota do modelo foi retirada desta leitura por repetir o que o texto já diz; continua no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê; e a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "limite_de_requisicoes": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/limite_de_requisicoes.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A anotação redundante da época 101 foi descartada para resguardar a qualidade da busca vetorial no RAG.",
+   "novo": "A nota do modelo (época 101) foi retirada desta leitura; continua no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "limites-do-sistema": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "não aplica função de hash (transformação criptográfica unidirecional) na senha no login",
+   "novo": "não aplica hash (o resumo embaralhado da senha, que não se desfaz) na senha no login",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  },
+  {
+   "antigo": "O termo \"hash\" foi contextualizado em sua primeira menção para satisfazer os critérios do filtro Q2. Documento limpo, neutro e sem resíduos de treinamento.",
+   "novo": "O termo `hash` foi explicado na primeira menção, para o filtro de termos técnicos do pacote Q2. A leitura não tinha notas do modelo.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "localizador_quebrado": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 2 notas do modelo. A curadoria de 10/11/2026 as retirou desta leitura; elas continuam em `biblioteca_producao/erros/localizador_quebrado.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "As duas notas redundantes do modelo (épocas 1 e 101) foram excluídas para manter a integridade da semântica de busca do RAG.",
+   "novo": "As duas notas do modelo (épocas 1 e 101) foram retiradas desta leitura; continuam no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "mensagens-de-erro-do-codigo": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "\"token (chave de acesso ou credencial) inválido\" (403)",
+   "novo": "`\"token inválido\"` (403: a chave de acesso do administrador foi recusada)",
+   "motivo": "a explicação tinha sido posta dentro das aspas, e a mensagem que a API devolve de verdade é só \"token inválido\"; entre crases o texto literal não conta como termo sem explicação"
+  },
+  {
+   "antigo": "O termo \"token\" foi contextualizado para satisfazer o filtro Q2 de termos técnicos. O documento funciona como um excelente dicionário de hardcoded strings, livre de notas ou poluição semântica residual.",
+   "novo": "A mensagem literal da API ficou entre crases, com o significado ao lado, para o filtro de termos técnicos do pacote Q2. O documento funciona como um dicionário das mensagens fixas do código, e a leitura não tinha notas do modelo.",
+   "motivo": "a nota falava em \"poluição semântica residual\", que não descreve nada desta camada, e citava o termo fora de crases, o que fazia a leitura reprovar no mesmo filtro que a nota dizia atender"
+  }
+ ],
+ "modos-de-injecao": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "X-Admin-Token (chave de acesso/autorização)",
+   "novo": "o cabeçalho `X-Admin-Token` (a chave de acesso do administrador)",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  },
+  {
+   "antigo": "O termo \"token\" presente na especificação do cabeçalho de administração foi contextualizado para satisfazer o filtro Q2. O arquivo não apresentou resíduos de notas de treinamento e descreve com exatidão o mecanismo do injetor de falhas.",
+   "novo": "O nome do cabeçalho de administração ficou entre crases, com o significado ao lado, para o filtro de termos técnicos do pacote Q2. A leitura não tinha notas do modelo e descreve com exatidão o mecanismo do injetor de falhas.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "recurso_inexistente": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/recurso_inexistente.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "- vizinhos: 403 no admin sem token (chave de acesso/autorização); 422 sem login.",
+   "novo": "- vizinhos: 403 no admin sem a chave de acesso (o cabeçalho `X-Admin-Token`); 422 sem login.",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  },
+  {
+   "antigo": "O termo \"token\" foi contextualizado para adequação à métrica Q2. A nota do modelo, que sugeria uma adição já existente no corpo do texto, foi apagada para evitar redundância.",
+   "novo": "O nome do cabeçalho com a chave de acesso ficou entre crases, para o filtro de termos técnicos do pacote Q2. A nota do modelo, que sugeria uma adição já existente no texto, foi retirada desta leitura; continua no verbete que o modelo lê.",
+   "motivo": "a nota não dizia que o texto do modelo saiu só desta leitura e continua no verbete que o modelo lê; e a nota citava o termo fora de crases, o que fazia a leitura reprovar no mesmo filtro que ela dizia atender"
+  }
+ ],
+ "resposta_truncada": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 2 notas do modelo. A curadoria de 10/11/2026 as retirou desta leitura; elas continuam em `biblioteca_producao/erros/resposta_truncada.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "As duas notas redundantes do modelo da época 1 foram excluídas para manter a síntese e otimizar o ranqueamento no RAG.",
+   "novo": "As duas notas do modelo (época 1) foram retiradas desta leitura para ela ficar curta; continuam no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "senha-sem-hash": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "login compara sem hash (função de criptografia irreversível) (login.php:7)",
+   "novo": "login compara sem hash, o resumo embaralhado da senha, que não se desfaz (login.php:7)",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  },
+  {
+   "antigo": "O termo \"hash\" foi contextualizado para satisfazer os critérios do filtro estático Q2. O documento aborda com precisão o defeito intencional de desalinhamento de senhas no sistema legado PHP. Sem notas ou ruídos de treinamento identificados.",
+   "novo": "O termo `hash` foi explicado no texto, para o filtro de termos técnicos do pacote Q2. O documento aborda com precisão o defeito intencional de desalinhamento de senhas no sistema legado PHP. A leitura não tinha notas do modelo.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; neste projeto o modelo não é treinado: época é a rodada em que ele propôs acréscimos à biblioteca; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "tipo_divergente": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/tipo_divergente.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "A nota redundante da época 101 foi apagada para manter o verbete focado e otimizado para recuperação vetorial.",
+   "novo": "A nota do modelo (época 101) foi retirada desta leitura; continua no verbete que o modelo lê.",
+   "motivo": "a nota dizia que a retirada protegia a busca (\"RAG\", \"vetorial\", \"indexação semântica\"), mas a camada de leitura não é buscada nem lida pelo modelo, e a busca deste projeto é por palavras; a nota retirada continua no verbete que o modelo lê"
+  }
+ ],
+ "valor_fora_do_dominio": [
+  {
+   "antigo": "Verbete revisado e aprovado.",
+   "novo": "Leitura revisada e aprovada.",
+   "motivo": "o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  },
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/erros/valor_fora_do_dominio.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "ENUM (tipo de dado enumerado com valores fixos permitidos) no banco",
+   "novo": "`ENUM` no banco, uma lista fechada de valores permitidos",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  },
+  {
+   "antigo": "O termo técnico \"ENUM\" foi contextualizado para satisfazer o critério do filtro estático Q2. A nota prescritiva da época 1 foi expurgada por violar o caráter descritivo da base de verbetes. Com este arquivo, encerra-se com sucesso a curadoria do lote completo de 39 verbetes da biblioteca_producao.",
+   "novo": "O termo `ENUM` foi explicado na primeira menção, para o filtro de termos técnicos do pacote Q2. A nota do modelo (época 1), que pedia uma validação na API, foi retirada desta leitura por ser instrução e não descrição; continua no verbete que o modelo lê. Com este arquivo o analista encerrou a curadoria das 39 leituras.",
+   "motivo": "a nota dizia que a curadoria era dos 39 verbetes da biblioteca de produção; o que foi curado são as 39 leituras, e a biblioteca que o modelo lê não mudou; e a nota não dizia que o texto do modelo saiu só desta leitura e continua no verbete que o modelo lê"
+  }
+ ],
+ "entidade-produto": [
+  {
+   "antigo": "## Notas do modelo\n\n\n## Curadoria",
+   "novo": "## Notas do modelo\n\nO verbete que o modelo lê traz 1 nota do modelo. A curadoria de 10/11/2026 a retirou desta leitura; ela continua em `biblioteca_producao/negocio/entidade-produto.md`.\n\n## Curadoria",
+   "motivo": "a seção Notas do modelo ficou vazia depois de o analista retirar o texto do modelo; o analista que lê precisa saber que o verbete lido pelo modelo ainda traz essas notas"
+  },
+  {
+   "antigo": "destaque_produto é um enumerador de valores fixos (ENUM('Sim','Não'))",
+   "novo": "destaque_produto é `ENUM('Sim','Não')`, uma lista fechada de valores permitidos",
+   "motivo": "o termo continuava sem o significado na primeira menção, e os filtros de texto do pacote Q2 seguiam reprovando a leitura"
+  }
+ ],
+ "novo_verbete": [
+  {
+   "antigo": "- atributos da entidade relacionada aparecem trocados ou vazios na interface.Sintomas que a busca reconhece (campo sintomas do cabeçalho): entidade trocada, dados relacionados nulos, cruzamento indevido.",
+   "novo": "- atributos da entidade relacionada aparecem trocados ou vazios na interface.",
+   "motivo": "uma frase colada no fim do item dizia que o cabeçalho traz os sintomas \"entidade trocada, dados relacionados nulos, cruzamento indevido\"; o cabeçalho do verbete traz `tipo_divergente` e `chave_de_juncao_errada`, como diz a linha logo abaixo, que ficou, e é isso que a busca lê"
+  },
+  {
+   "antigo": "Verbete revisado. O texto original consistia em uma alucinação de treinamento, contendo instruções operacionais (\"Corrigir a junção\") e listando tags de outras taxonomias como sintomas visuais.",
+   "novo": "Leitura revisada. O texto original, escrito pelo modelo na época 101 a partir do caso `tra-3`, era uma instrução (\"Corrigir a junção\") e listava nomes de causas da taxonomia no lugar de sintomas da tela.",
+   "motivo": "a nota chamava as épocas de \"treinamento\"; o texto veio de uma proposta do modelo aceita na biblioteca, e os nomes listados são causas da mesma taxonomia, não de outra; o que foi revisado é a leitura; o verbete que o modelo lê não mudou"
+  }
+ ]
+}

@@ -1,0 +1,426 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_ineditos/qwen2.5_7b/run-26",
+ "nome": "run-26",
+ "caso": "run-26",
+ "corrida": "fase4_ineditos",
+ "modo": "ineditos",
+ "modelo": "qwen2.5:7b",
+ "classe": 5,
+ "nivel": 3,
+ "eventos": {
+  "primeiro": 691,
+  "ultimo": 712,
+  "hash": "8211e6707f45b278"
+ },
+ "relatorio_v3": "../relatorios_v3/run-26.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (981 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (981 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      691
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 4000 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      694
+     ]
+    }
+   ],
+   "eventos": [
+    694
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "contrato-pedido",
+     "detalhe": "posição 1, pontuação 83,59: 80,59 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 83.5919,
+     "posicao": 1
+    },
+    {
+     "opcao": "pedido-reserva",
+     "detalhe": "posição 2, pontuação 81,08: 78,08 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 81.0795,
+     "posicao": 2
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 3, pontuação 57,97: 54,97 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 57.9712,
+     "posicao": 3
+    },
+    {
+     "opcao": "fluxo-reserva-e-cancelamento",
+     "detalhe": "posição 4, pontuação 47,92: 46,92 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 47.9242,
+     "posicao": 4
+    },
+    {
+     "opcao": "dado_desatualizado",
+     "detalhe": "posição 5, pontuação 45,98: 42,98 pelas palavras do caso, mais 2,0 por rota e 1,0 por status",
+     "escolhida": false,
+     "pontuacao": 45.9837,
+     "posicao": 5
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "detalhe": "posição 6, pontuação 39,19: 36,19 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 39.1868,
+     "posicao": 6
+    },
+    {
+     "opcao": "usuario-e-login",
+     "detalhe": "posição 7, pontuação 34,88: 34,88 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 34.8841,
+     "posicao": 7
+    },
+    {
+     "opcao": "estado_da_tela_divergente",
+     "detalhe": "posição 8, pontuação 34,61: 34,61 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 34.6116,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `contrato-pedido` (83,59), `pedido-reserva` (81,08) e `valor_fora_do_dominio` (57,97).",
+     "origem": "observado",
+     "eventos": [
+      692
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `contrato-pedido`, `pedido-reserva` e `valor_fora_do_dominio`; o da entidade, em `contrato-pedido`, `pedido-reserva` e `valor_fora_do_dominio`.",
+     "origem": "observado",
+     "eventos": [
+      692
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `fluxo-reserva-e-cancelamento` (47,92), `dado_desatualizado` (45,98), `chave_de_juncao_errada` (39,19), `usuario-e-login` (34,88) e `estado_da_tela_divergente` (34,61).",
+     "origem": "observado",
+     "eventos": [
+      692
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/pedidos`, entidade `Pedido`, status 200 e 95 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      692
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `valor_fora_do_dominio`, e o primeiro de fora, `fluxo-reserva-e-cancelamento`, só o texto do caso já punha o primeiro à frente (54,97 contra 46,92), e os reforços em código levaram a diferença a 10,05.",
+     "origem": "observado",
+     "eventos": [
+      692
+     ]
+    }
+   ],
+   "eventos": [
+    692
+   ],
+   "entregues": [
+    "contrato-pedido",
+    "pedido-reserva",
+    "valor_fora_do_dominio"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/pedidos",
+    "entidade": "Pedido",
+    "status": 200,
+    "termos": 95
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "registro_duplicado",
+   "alternativas": [
+    {
+     "opcao": "registro_duplicado",
+     "probabilidade": 0.7565002340626116,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,757; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "dado_desatualizado",
+     "probabilidade": 0.2159684271471366,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,216; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "estado_da_tela_divergente",
+     "probabilidade": 0.010278302436238049,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,010; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "tempo_de_resposta_excedido",
+     "probabilidade": 0.0017890401522734506,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,002; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "resposta_truncada",
+     "probabilidade": 0.001119001928009435,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,001; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "nulo_inesperado",
+     "probabilidade": 0.000775525524944026,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,001; verbetes entregues que a tratam: `pedido-reserva` e `valor_fora_do_dominio`"
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "probabilidade": 0.0006147521368492314,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,001; verbetes entregues que a tratam: `contrato-pedido`, `pedido-reserva` e `valor_fora_do_dominio`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 0.0005227329288838191,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,001; verbetes entregues que a tratam: `contrato-pedido`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 0.0005227329288838191,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,001; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "contagem_inconsistente",
+     "probabilidade": 0.0004899263923700658,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "recurso_inexistente",
+     "probabilidade": 0.000265632060615011,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-pedido`"
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "probabilidade": 0.0001656473584506778,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `registro_duplicado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo não apontou campo (linha CAMPO: nenhum).",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `dado_desatualizado` (Dado desatualizado (cache)), ficou com probabilidade 0,216 contra 0,757 da escolhida; nenhum verbete entregue a sustenta.",
+     "origem": "observado",
+     "eventos": [
+      712
+     ]
+    },
+    {
+     "texto": "As outras 10 alternativas lidas na resposta somam probabilidade 0,017; as maiores: `estado_da_tela_divergente` (0,010), `tempo_de_resposta_excedido` (0,002) e `resposta_truncada` (0,001).",
+     "origem": "observado",
+     "eventos": [
+      712
+     ]
+    },
+    {
+     "texto": "Confiança baixa: a probabilidade lida na causa respondida foi 0,757, e a faixa baixa vai até 0,832 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 27 casos que caíram na faixa baixa, o agente acertou a causa em 12 de 27: 44,4%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa disparou; FONTE divergente disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      712
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      712
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/pedidos?login=11122233344`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `contrato-pedido`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `contrato-pedido`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), não traz o termo da causa no texto (não confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhum dos verbetes entregues é sobre essa causa.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `contrato-pedido` (Contrato de /api/pedidos; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/contratos/contrato-pedido.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/contratos/contrato-pedido.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "O declarado pelo modelo diverge do conferido pelo código (entre modelo e verificacao): nenhum verbete entregue trata da causa respondida registro_duplicado.",
+     "origem": "conferido",
+     "eventos": [
+      712
+     ]
+    },
+    {
+     "texto": "Falha registrada no nó: `causa_sem_verbete_que_a_trate` (a causa respondida não é tratada por nenhum dos verbetes entregues; origem na taxonomia da trilha: modelo).",
+     "origem": "conferido",
+     "eventos": [
+      712
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 5 de 7 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      712
+     ]
+    }
+   ],
+   "eventos": [
+    712
+   ],
+   "segunda": "dado_desatualizado",
+   "campo": null,
+   "confianca": {
+    "selo": "baixo",
+    "palavra": "baixa",
+    "p_rotulo": 0.7565002340626116,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 27,
+     "certos": 12,
+     "acerto_pct": 44.4
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança baixa: a probabilidade lida na causa respondida foi 0,757, e a faixa baixa vai até 0,832 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 27 casos que caíram na faixa baixa, o agente acertou a causa em 12 de 27: 44,4%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": {
+    "detalhe": "nenhum verbete entregue trata da causa respondida registro_duplicado",
+    "entre": [
+     "modelo",
+     "verificacao"
+    ],
+    "ha": true
+   },
+   "falha": "causa_sem_verbete_que_a_trate",
+   "causa_em_palavras": "Registro duplicado",
+   "probabilidade": 0.7565002340626116,
+   "gatilhos": {
+    "algum": true,
+    "amostra": false,
+    "fonte_divergente": true,
+    "probabilidade": true
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário vê reservas com status inconsistente, onde algumas reservas não refletem o status atualizado.",
+  "fonte": "[contrato-pedido]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: registro_duplicado\nCAMPO: nenhum\nIMPACTO: O usuário vê reservas com status inconsistente, onde algumas reservas não refletem o status atualizado.\nFONTE: [contrato-pedido]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 24,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 6,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": true,
+  "cura": false,
+  "selo": "baixo",
+  "confianca": "baixa",
+  "falha": "causa_sem_verbete_que_a_trate",
+  "escolha": "registro_duplicado",
+  "causa_em_palavras": "Registro duplicado",
+  "campo": null,
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

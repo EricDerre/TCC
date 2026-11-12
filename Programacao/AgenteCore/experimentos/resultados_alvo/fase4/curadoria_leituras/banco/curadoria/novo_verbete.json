@@ -1,0 +1,10 @@
+{
+  "caminho": "aprendidos/novo_verbete.md",
+  "corpo_sha": "ab1efb0f06d85c43",
+  "editado": true,
+  "editado_em": null,
+  "estado": "editada",
+  "id": "novo_verbete",
+  "salvo_em": "2026-11-10T15:36:48.218Z",
+  "texto": "\n# Junção de tabelas incorreta\n\nCamada de leitura do verbete `novo_verbete` (`biblioteca_producao/aprendidos/novo_verbete.md`). Tipo: aprendido (escrito pelo modelo a partir de um caso, nas Fases 3 e 4, e aceito pela validação em código e pela revisão); estado: ativo (em vigor); sistema: CobaiaAPI (a API); entidade principal: Produto.\n\n## O que é\n\nA instrução de junção (JOIN) ou o mapeamento ORM vincula colunas incorretas entre tabelas (ex: falha ao ligar id_tipo_produto), resultando em associações indevidas de dados.\n\n## Como aparece na tela\n\n- atributos da entidade relacionada aparecem trocados ou vazios na interface.Sintomas que a busca reconhece (campo sintomas do cabeçalho): entidade trocada, dados relacionados nulos, cruzamento indevido.\n\nSintomas que a busca reconhece (campo `sintomas` do cabeçalho): `tipo_divergente`, `chave_de_juncao_errada`.\n\n## O que conferir\n\nO verbete não descreve a causa nem como confirmar; confira pelos sinais acima e pelos arquivos abaixo.\n\nCausas vizinhas, que se confundem com esta (campo `causas_relacionadas`): `chave_de_juncao_errada` (Chave de junção errada).\n\n## Onde está no código\n\n- Arquivos: `Programacao/CobaiaAPI/app/models.py`.\n- Rotas da API: nenhuma declarada.\n- Tabelas do banco: nenhuma declarada.\n- Palavras que a busca usa para achar este verbete: `juncao`, `juncao incorreta`, `juncao de tabelas`.\n\n## Notas do modelo\n\nNenhuma nota do modelo neste verbete.\n\n## Curadoria\n\nVerbete revisado. O texto original consistia em uma alucinação de treinamento, contendo instruções operacionais (\"Corrigir a junção\") e listando tags de outras taxonomias como sintomas visuais. O conteúdo foi reescrito para um formato descritivo. Nota: Este verbete é um artefato redundante que sobrepõe a causa original chave_de_juncao_errada."
+}

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:18:09.927Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-17",
+  "comentario": "O agente errou o diagnóstico duplamente (lógica e regras do RAG). O corpo da resposta mostra um array JSON perfeitamente válido e fechado ([...]), mas com menos itens do que o esperado (13 em vez de 14). Isso caracteriza claramente uma contagem_inconsistente, verbete que inclusive foi entregue corretamente pelo motor de busca na 3ª posição. No entanto, o modelo Qwen2.5 ignorou essa causa correta, cravou resposta_truncada (que normalmente indica corte abrupto no pacote de rede, gerando um JSON quebrado/malformado) e forçou a linha FONTE para parecer que o contexto apoiava essa decisão. A auditoria estrutural do seu TCC funcionou muito bem ao barrar a alucinação registrando a falha causa_sem_verbete_que_a_trate.",
+  "decidido_em": "2026-11-09T22:19:11.040Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 17,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:19:51.051Z",
+  "segundos": 61,
+  "segundos_relogio": 61,
+  "utilidade": 5
+}

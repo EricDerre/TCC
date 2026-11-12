@@ -1,0 +1,178 @@
+{
+  "_tag": "! Alteração de IA - Revisar: segunda leitura (verificação cética) do tópico r7-lista-de-conferencia-em-codigo da rodada 7 da pesquisa (10/11/2026), escrita por um subagente verificador que abriu de novo cada fonte: identificador conferido, o que a fonte afirma, o que não afirma e o veredito de cada afirmação do primeiro leitor.",
+  "_motivo": "! Motivo: a rodada 6 entrou sem segunda leitura, e a ficha 64 pede pesquisa que embase decisão sobre o fluxo do agente; uma afirmação só entra na síntese se a segunda leitura a confirmar, e o que foi rejeitado fica registrado com o motivo.",
+  "key": "r7-lista-de-conferencia-em-codigo",
+  "verificado_em": "10/11/2026",
+  "fontes": [
+    {
+      "id": "F01",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2211.10435",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz periódico nem evento; v1 de 18 nov. 2022, v2 de 27 jan. 2023)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O modelo converte o problema em linguagem natural num programa Python e um interpretador o executa, de modo que o cálculo não fica com o modelo. Em 13 tarefas (8 de problemas matemáticos, 3 simbólicas, 2 algorítmicas), com o Codex, o método supera modelos maiores que raciocinam em texto; no GSM8K a taxa de acerto gananciosa é 72,0%, contra 56,9% do PaLM-540B com cadeia de pensamento.",
+      "o_que_a_fonte_nao_afirma": ["Não testa modelos de 7B abertos; os modelos são da família OpenAI (Codex e variantes) e o PaLM como comparação.", "Mostra que em modelos de linguagem natural fracos o método pode perder (text-davinci-001: 8,6% contra 26,5% de CoT).", "É tarefa de aritmética e lógica, não de classificação de causa nem de diagnóstico, e não mede o que acontece quando o resultado calculado está errado."],
+      "afirmacoes": [
+        {"id": "F01.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "O resumo e o texto descrevem o modelo escrevendo o programa e o interpretador calculando; as 13 tarefas conferem (8 matemáticas, 3 simbólicas, 2 algorítmicas)."},
+        {"id": "F01.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "72,0% contra 56,9% (cerca de 15 pontos), GSM8K", "afirmacao_corrigida_pt": "", "motivo": "O resumo diz cerca de 15 pontos absolutos e a Tabela 1 do texto traz 72,0 contra 56,9."}
+      ]
+    },
+    {
+      "id": "F02",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2305.06161",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz periódico nem comentário; a busca aponta o TMLR, mas a página do OpenReview bloqueou a abertura e não vi o veículo numa página primária)",
+      "referencia_abnt_corrigida": "LI, R. et al. StarCoder: may the source be with you! arXiv preprint arXiv:2305.06161, 2023 (v2, dez. 2023). Disponível em: https://arxiv.org/abs/2305.06161. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Apresenta o StarCoder e o StarCoderBase (15,5B). Na seção 7.1 e na Tabela 22 compara, no GSM8K com 8 exemplos, a cadeia de pensamento em texto com o PAL em vários modelos: no LLaMA 7B e 13B a cadeia em texto fica um pouco à frente do PAL, no LLaMA 33B o PAL fica 3 pontos à frente, e nos modelos treinados em código (StarCoderBase, CodeGen) o PAL é muito melhor.",
+      "o_que_a_fonte_nao_afirma": ["Não é um estudo sobre PAL: a comparação é um apêndice de avaliação de um modelo de código.", "Não testa Qwen nem modelos quantizados, e não trata de classificação nem de fatos entregues no prompt.", "Não diz quais são os exemplos usados."],
+      "afirmacoes": [
+        {"id": "F02.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "7B: PAL 10,5 contra CoT 11,0; 13B: 16,9 contra 17,8 (8 exemplos, decodificação gananciosa)", "afirmacao_corrigida_pt": "", "motivo": "Os valores batem com a Tabela 22. A parte 'sem quantização' não aparece como condição explícita, mas nada na fonte indica quantização."},
+        {"id": "F02.b", "veredito": "parcial", "numero_que_a_fonte_sustenta": "StarCoderBase 21,5 contra 8,4; LLaMA 33B 38,7 contra 35,6; CodeGen-Mono 13,1 contra 2,6; CodeGen-Multi 8,6 contra 3,18", "afirmacao_corrigida_pt": "O PAL rendeu ganho grande nos modelos treinados em código (StarCoderBase 21,5% contra 8,4% de CoT; CodeGen-Mono 13,1% contra 2,6%); no LLaMA de 33B o ganho foi pequeno (38,7% contra 35,6%).", "motivo": "Os números do StarCoderBase e do LLaMA 33B conferem, mas o 'só' do leitor está errado: o CodeGen de 16B também ganha muito com o PAL na mesma tabela."}
+      ]
+    },
+    {
+      "id": "F03",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2301.13379",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "IJCNLP-AACL 2023 (Nusa Dua, Bali, nov. 2023, p. 305 a 329), visto no ACL Anthology e no comentário do arXiv",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Em duas etapas, o modelo traduz a pergunta numa cadeia simbólica (por exemplo, programa ou Datalog) e um solucionador determinístico calcula a resposta, então o raciocínio mostrado é o que produz a resposta. Com o Codex (principal) e outros modelos da OpenAI, o método supera a cadeia de pensamento comum em 9 de 10 conjuntos, com ganho relativo de 3,4% (planejamento) a 21,4% (inferência relacional).",
+      "o_que_a_fonte_nao_afirma": ["Só usa modelos grandes da OpenAI; nenhum modelo pequeno aberto.", "A única perda (StrategyQA, 63,0 contra 72,5) é atribuída a erros de sintaxe do Datalog, o que mostra que a tradução para a forma simbólica é o ponto frágil.", "Não trata de dado errado entregue pelo solucionador."],
+      "afirmacoes": [
+        {"id": "F03.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "Descrição das duas etapas e do solucionador determinístico confere com o resumo e o texto; 10 conjuntos em 4 domínios."},
+        {"id": "F03.b", "veredito": "parcial", "numero_que_a_fonte_sustenta": "9 de 10 conjuntos; ganhos relativos de 3,4% a 21,4%; GSM8K 72,3 contra 63,3 de CoT", "afirmacao_corrigida_pt": "Com o Codex e decodificação gananciosa, o método supera a cadeia de pensamento em 9 de 10 conjuntos, com ganho relativo médio de 3,4% (planejamento) a 21,4% (inferência relacional) por domínio.", "motivo": "Os números conferem; o ajuste é a condição: a tabela principal é só do Codex, e o GPT-4 aparece no apêndice e no resumo, não como o modelo do 9 de 10."}
+      ]
+    },
+    {
+      "id": "F04",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2601.09446",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "Third NeusymBridge Workshop do AAAI 2026, segundo o campo de comentários da página do arXiv (submetido em 14 jan. 2026)",
+      "referencia_abnt_corrigida": "THATIKONDA, R. K.; HAN, J.; BUNTINE, W.; SHAREGHI, E. Improving Symbolic Translation of Language Models for Logical Reasoning. arXiv preprint arXiv:2601.09446, 2026. Informado como parte do Third NeusymBridge Workshop (AAAI 2026) no campo de comentários do arXiv. Disponível em: https://arxiv.org/abs/2601.09446. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Estuda modelos de 3 a 4B (Gemma-3-4B, Phi-4-mini, Qwen2.5-3B, Qwen3-4B-Instruct-2507) que traduzem problemas para lógica de primeira ordem para um solucionador, em quatro conjuntos (ProofWriter, FOLIO, ProntoQA, ProverQA). Com 5 exemplos no prompt, a taxa de execução e o acerto são baixíssimos (Qwen3-4B em FOLIO: execução 6,40%, acerto 3,45%); o ajuste fino com dados sintéticos levou a 60,10% e 40,39%. Propõe também inferência em duas etapas e um verificador de aridade de predicados.",
+      "o_que_a_fonte_nao_afirma": ["Não compara com entregar ao modelo o resultado já calculado: o modelo é quem traduz.", "Não usa 7B nem quantização GGUF e não é tarefa de diagnóstico de falha.", "O número de cerca de 10% do ganho da inferência em duas etapas não é definido com clareza no texto e não pude reproduzi-lo pelas tabelas."],
+      "afirmacoes": [
+        {"id": "F04.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "3,45% (5 exemplos) para 40,39% (ajuste fino), Qwen3-4B-Instruct-2507, FOLIO", "afirmacao_corrigida_pt": "", "motivo": "Tabela 2 confere. Detalhe útil: na linha dos 3,45% a taxa de execução era só 6,40%, ou seja, a maior parte do erro era o modelo não produzir uma forma executável."},
+        {"id": "F04.b", "veredito": "parcial", "numero_que_a_fonte_sustenta": "57,4% (190 para 81 erros, Qwen3-4B em FOLIO); 12% de aumento (Phi-4-mini em ProverQA; pelos totais da Tabela 6 dá cerca de 9,5%)", "afirmacao_corrigida_pt": "O ajuste fino reduziu os erros em 57,4% no Qwen3-4B em FOLIO e, em um caso, aumentou em 12% (Phi-4-mini em ProverQA, por perda de formato em problemas com muitas premissas); a inferência em duas etapas é descrita como ganho modesto, de cerca de 10% adicional, sem base de comparação clara.", "motivo": "O 57,4% e o 12% constam do texto; o 'cerca de 10% de redução do erro pela divisão em duas etapas' foi lido como número firme, mas a própria fonte o define de forma ambígua (adicional em relação ao aumento sob inferência padrão)."}
+      ]
+    },
+    {
+      "id": "F05",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2305.15778",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "EuroSys 2024 (abr. 2024), visto na página da publicação no Microsoft Research; a página da ACM bloqueou a abertura e a página do arXiv não traz o evento",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O RCACopilot associa o incidente a um roteiro de coleta conforme o tipo de alerta, coleta o diagnóstico em código, resume-o com o modelo e pede a categoria da causa. Em 653 incidentes de um ano (75% treino, 25% teste), o GPT-4 com prompt puro tem Micro-F1 de 0,026; o RCACopilot chega a 0,766 (GPT-4) e 0,761 (GPT-3.5). Só com o diagnóstico coletado, sem resumir, 0,689 e 0,510; os autores relatam que somar outras informações não melhorou e sugerem que excesso de informação atrapalha.",
+      "o_que_a_fonte_nao_afirma": ["Nenhum modelo pequeno aberto ou quantizado.", "O RCACopilot também usa recuperação de incidentes vizinhos e exemplos, então a diferença contra o GPT-4 puro não isola só o diagnóstico coletado.", "Não mede o risco de o diagnóstico coletado estar errado."],
+      "afirmacoes": [
+        {"id": "F05.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "0,689/0,510 (só diagnóstico) e 0,766/0,533 (resumido); GPT-4 puro 0,026/0,004; 653 incidentes", "afirmacao_corrigida_pt": "", "motivo": "Tabelas 2 e 3 conferem, inclusive a observação sobre excesso de informação."},
+        {"id": "F05.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "GPT-3.5: 0,761/0,505; GPT-4: 0,766/0,533", "afirmacao_corrigida_pt": "", "motivo": "Os números conferem. A leitura de que o ganho vem do diagnóstico e não do porte é interpretação do leitor, aceitável com a ressalva de que a recuperação de vizinhos também está no método."}
+      ]
+    },
+    {
+      "id": "F06",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2506.03691",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não lista evento; comentário: 12 páginas, 8 figuras; v1 de 4 jun. 2025, v2 de 6 out. 2025)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O LogSage seleciona em código as linhas de erro com uma janela de 4 linhas antes e 6 depois, usa modelos de logs de sucesso (3 execuções recentes) e entrega ao modelo só o trecho. Nos 250 casos de teste (de 367) o F1 foi de 0,9878 a 0,9898 nos três modelos de API, contra 0,48 a 0,60 dos baselines; o custo médio é de 17.853 tokens e 1,0 consulta, contra 122 a 153 mil tokens e 32 a 89 consultas.",
+      "o_que_a_fonte_nao_afirma": ["Não há ablação sem o pré-processamento; os baselines são outros métodos, então o ganho não é só do pré-processamento.", "Só modelos grandes de API (GPT-4o, Claude-3.7-Sonnet, DeepSeek V3).", "Não mede erro de seleção das linhas pelo código."],
+      "afirmacoes": [
+        {"id": "F06.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "F1 0,9878 a 0,9898 contra 0,5091 a 0,6035 (melhor baseline por modelo); 250 casos", "afirmacao_corrigida_pt": "", "motivo": "Tabela II confere (o melhor baseline por modelo é LogPrompt: 0,6035, 0,5091 e 0,5893). A temperatura de 0,1 não foi conferida por mim."},
+        {"id": "F06.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "17.853 tokens e 1,0 consulta; baselines 152.615/31,7 e 122.353/89,4", "afirmacao_corrigida_pt": "", "motivo": "Tabela III confere."}
+      ]
+    },
+    {
+      "id": "F07",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2410.03608",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não lista evento nem comentário; só a v1 de 4 out. 2024)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Propõe o TICK: o modelo gera uma lista de perguntas de sim ou não por instrução, e o juiz responde a cada uma e agrega. Com o juiz GPT-4o, a concordância exata com as preferências humanas sobe de 46,4% (nota direta) para 52,2%; a lista só colocada no prompt (Check-then-Score) fica em 48,7%. O auto-refino guiado pela lista (STICK) melhora o Command-R+ e pouco o GPT-4o, enquanto o refino sem lista piora.",
+      "o_que_a_fonte_nao_afirma": ["Os itens são gerados e respondidos por modelos, não calculados em código.", "Geradores de lista: GPT-4o, Command-R+ e Llama3.1-70B; nenhum modelo pequeno.", "Não é tarefa de classificação de causa; o texto do corpo traz 5,3% para o ganho do WildBench onde a tabela e o resumo dizem 6,3."],
+      "afirmacoes": [
+        {"id": "F07.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "46,4% para 52,2%", "afirmacao_corrigida_pt": "", "motivo": "Tabela 4 (conjunto interno) e resumo conferem; juiz GPT-4o."},
+        {"id": "F07.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Command-R+ +3,8 (32,0 para 35,8), +7,8 em raciocínio; GPT-4o +0,8; melhor de 8: +5,1 no InFoBench e +6,3 no WildBench", "afirmacao_corrigida_pt": "", "motivo": "Tabelas 1 e 5 conferem; o refino sem lista cai 8,3 pontos no Command-R+ e a leitura trouxe a mesma queda para o GPT-4o, o que me parece coincidência a rever se o número for citado."},
+        {"id": "F07.c", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Check-then-Score 0,487 contra TICK 0,522", "afirmacao_corrigida_pt": "", "motivo": "A fonte conclui que responder e agregar os itens é necessário; as limitações (pergunta factual simples, custo extra, estagnação ou piora na quarta rodada) conferem."}
+      ]
+    },
+    {
+      "id": "F08",
+      "abriu": "so_resumo",
+      "identificador_conferido": "arXiv:2402.03620",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv lista só a v1 de 6 fev. 2024, 17 páginas, 11 figuras, 5 tabelas, sem evento)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "O modelo escolhe módulos de raciocínio atômicos e os compõe numa estrutura explícita que guia a decodificação. No resumo: ganho de até 32% sobre a cadeia de pensamento em GPT-4 e PaLM 2 (BigBench-Hard, raciocínio de agente, MATH) e mais de 20% sobre autoconsistência com 10 a 40 vezes menos inferência.",
+      "o_que_a_fonte_nao_afirma": ["O resumo não traz tamanho nem teste em modelo pequeno.", "A estrutura é escolhida pelo próprio modelo antes de raciocinar, não calculada em código.", "Não é classificação, e só li o resumo da página primária, não as tabelas."],
+      "afirmacoes": [
+        {"id": "F08.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "até 32% sobre CoT", "afirmacao_corrigida_pt": "", "motivo": "O número está no resumo da página primária; o 'até' e a condição (GPT-4 e PaLM 2) conferem. Não abri as tabelas."},
+        {"id": "F08.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "mais de 20%; 10 a 40 vezes menos inferência", "afirmacao_corrigida_pt": "", "motivo": "Está no resumo da página primária; não abri as tabelas."}
+      ]
+    },
+    {
+      "id": "F09",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2412.06593",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não lista evento nem comentário; v1 de 9 dez. 2024, v2 de 18 dez. 2024)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Com 62 perguntas de previsão, 3 modelos da OpenAI, 30 repetições e temperatura 0,8, as respostas se movem na direção da dica numérica do prompt; dicas de especialista tiveram o efeito mais forte. Cadeia de pensamento, 'ignore a dica', princípios e reflexão não reduziram o viés de forma significativa no GPT-4 e no GPT-4o; mostrar as duas âncoras ajudou quando elas cercavam o valor verdadeiro.",
+      "o_que_a_fonte_nao_afirma": ["Só modelos da OpenAI, uma base de perguntas e poucas estratégias de mitigação.", "A tarefa é estimar um número, não escolher um rótulo.", "Não compara dica correta com dica errada."],
+      "afirmacoes": [
+        {"id": "F09.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "11 de 162 diferenças contrárias à dica, 9 delas no GPT-3.5; sem exceção nas dicas de especialista (12 perguntas)", "afirmacao_corrigida_pt": "", "motivo": "Conferido no texto, assim como 62 perguntas, 30 repetições e temperatura 0,8."},
+        {"id": "F09.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "A fonte diz que as quatro estratégias não reduziram o viés de forma significativa nas perguntas com âncora de especialista no GPT-4 e no GPT-4o e que mostrar as duas âncoras aproximou a resposta do valor certo só quando elas o cercavam; a fonte não dá tamanho de efeito."}
+      ]
+    },
+    {
+      "id": "F10",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2511.05766",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não lista evento; comentário: 17 páginas, 5 figuras, 1 tabela; v1 de 7 nov. 2025 e v2 com data de 7 nov. 2026 na página)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Em seis modelos abertos pequenos (GPT-2, GPT-Neo-125M, Falcon-RW-1B, Gemma-2B, Phi-2, Llama-2-7B), mede o deslocamento da distribuição de probabilidade da resposta numérica causado por uma âncora e a atribuição da âncora nos campos do prompt, e resume tudo num índice (ABSS). A mediana do deslocamento é de 7,17 pontos percentuais, contra cerca de 20 num estudo clássico com humanos, e os maiores efeitos são +28,70 (Gemma-2B) e +46,15 (Llama-2-7B).",
+      "o_que_a_fonte_nao_afirma": ["Não testa nenhuma mitigação (deixa como trabalho futuro).", "Não trata o tamanho do modelo como variável nem tira conclusão sobre escala.", "Autor único, sem menção a revisão por pares, estimativa numérica e não classificação, e sem Qwen nem quantização."],
+      "afirmacoes": [
+        {"id": "F10.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "mediana 7,17 pp; Gemma-2B +28,70 pp; Llama-2-7B +46,15 pp", "afirmacao_corrigida_pt": "", "motivo": "Conferem. A comparação com os 20 pontos dos humanos é chamada de descritiva pela própria fonte (uma pergunta contra várias)."},
+        {"id": "F10.b", "veredito": "parcial", "numero_que_a_fonte_sustenta": "ABSS: Gemma-2B 9,83; Llama-2-7B 4,60; GPT-2 2,89; GPT-Neo-125M -1,95", "afirmacao_corrigida_pt": "Os índices por modelo não mostram tendência clara com o tamanho: o Gemma-2B tem o maior (9,83) e o GPT-Neo-125M o menor (-1,95), com o Llama-2-7B no meio (4,60); a fonte não analisa a escala como variável.", "motivo": "Os números conferem, mas 'a sensibilidade não cresce com o tamanho' é conclusão do leitor; a fonte não a afirma, só apresenta o ranking, e o 125M tem efeito comportamental positivo (+4,3 a +10,6 pp), só a atribuição é negativa."}
+      ]
+    },
+    {
+      "id": "F11",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2406.19228",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não lista evento; comentário: 18 páginas, 12 figuras; v1 de 27 jun. 2024)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Propõe estudar a detecção de erros silenciosos de ferramentas e testa uma calculadora com defeito e planejamento incorporado. Com a calculadora quebrada, a acurácia cai (GPT-3.5 de 85,3 para 22,7; Command-R de 63,3 para 16,0; GPT-4 de 89,7 para 76,0); avisar no prompt que a ferramenta pode errar e dar uma lista de critérios recuperam parte; o GPT-4 detecta a saída ruim em 95% dos casos com o aviso.",
+      "o_que_a_fonte_nao_afirma": ["Não informa o tamanho de nenhum modelo; os testes da calculadora usam em geral modelos fechados.", "Não é diagnóstico nem classificação; a ferramenta é calculadora ou planejador de ações.", "O resumo da página não traz números; eles estão nas tabelas."],
+      "afirmacoes": [
+        {"id": "F11.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "GPT-3.5 85,3 para 22,7; Command-R 63,3 para 16,0; GPT-4 89,7 para 76,0", "afirmacao_corrigida_pt": "", "motivo": "Tabela 5 confere (melhor configuração sem ferramenta contra a ferramenta quebrada)."},
+        {"id": "F11.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "GPT-3.5 23 para 53; Command-R+ 57 para 76; Command-R com cadeia de pensamento 29 para 47 (lista de critérios)", "afirmacao_corrigida_pt": "", "motivo": "Tabela 1 confere, com o aviso de verificar a saída."},
+        {"id": "F11.c", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "95% (97% com cadeia de pensamento)", "afirmacao_corrigida_pt": "", "motivo": "Tabela 2 do experimento de aceitar ou rejeitar; GPT-4 zero-shot com aviso."}
+      ]
+    },
+    {
+      "id": "F12",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2609.05587",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não lista evento; comentário: 49 páginas, 4 figuras; v1 de 4 set. 2026, v2 de 26 set. 2026)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Avalia 14 modelos (de 12B a 235B nos que declaram tamanho; o Gemma-4-12B é o menor) em três ferramentas, com retornos corrompidos de forma plausível: adoção média de 68,0% na busca, 40,1% no subagente e 35,5% no executor de código. Prompts de verificação reduzem a adoção nas três ferramentas, e rótulo de confiabilidade ajuda em parte na busca.",
+      "o_que_a_fonte_nao_afirma": ["Nenhum modelo de 7B quantizado; o menor tem 12B.", "A ferramenta é busca, subagente ou código, não coletor de fatos sobre o caso.", "As partes de mitigação foram medidas em seis modelos, não nos 14; li o resumo, a Tabela 1 e as Tabelas 5, 6 e 16, mas não o texto inteiro (preprint de cerca de 197 mil caracteres)."],
+      "afirmacoes": [
+        {"id": "F12.a", "veredito": "parcial", "numero_que_a_fonte_sustenta": "68,0%; 40,1%; 35,5% (média dos 14 modelos, corrupção P1)", "afirmacao_corrigida_pt": "Com retornos corrompidos de forma plausível, a adoção média nos 14 modelos foi de 68,0% (busca), 40,1% (subagente) e 35,5% (executor de código); a relação com o tamanho do modelo é mista nas tabelas (por exemplo, o Gemma-4-31B adota menos que o 12B na busca, mas o par pensante do Qwen vai no sentido contrário).", "motivo": "Os três números conferem. A frase 'modelos maiores adotam menos, mas não em todas as ferramentas' não está como afirmação da fonte nos trechos que li; é leitura das tabelas e é irregular, então fica como parcial."},
+        {"id": "F12.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "40,2% para 30,4% (executor, 6 modelos); acerto com retorno certo 99,8% para 99,9%; busca 75,4% para 70,3% com rótulo de baixa confiabilidade", "afirmacao_corrigida_pt": "", "motivo": "Tabelas 5 e 6 conferem; as duas medidas são médias de seis modelos."}
+      ]
+    }
+  ]
+}

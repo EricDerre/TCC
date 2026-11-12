@@ -1,0 +1,17 @@
+{
+  "aberto_em": "2026-11-09T10:42:48.616Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-1",
+  "comentario": "O erro do agente está na violação da restrição de contexto (decisão 3 e item 15). O Qwen2.5 inventou a causa codificacao_incorreta, que não constava em nenhum dos três verbetes entregues pela busca (entidade-produto, contrato-produto, estado_da_tela_divergente). Como ele tentou forçar uma resposta fora do que foi fornecido, a camada de conferência do seu código agiu perfeitamente e registrou a divergência (causa_sem_verbete_que_a_trate). A utilidade é 4 justamente porque o relatório e os nós da árvore provam que o mecanismo de auditoria do TCC barrou a alucinação da LLM",
+  "decidido_em": "2026-11-09T10:47:45.717Z",
+  "decisao": "recusar",
+  "editado_em": "2026-11-09T19:42:24.892Z",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 1,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T10:48:04.412Z",
+  "segundos": 297,
+  "segundos_relogio": 297,
+  "utilidade": 4
+}

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:34:38.024Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-36",
+  "comentario": "O diagnóstico está impecável. O contrato da interface especifica claramente que o campo destaque deve ser do tipo booleano (representado em JSON como true ou false), mas a resposta da API retornou os valores encapsulados como texto/string (\"True\" e \"False\"). Trata-se de um exemplo clássico da falha tipo_divergente. O agente identificou com exatidão o campo afetado (destaque), sustentou o diagnóstico com os verbetes adequados entregues pelo RAG e registrou nível máximo de confiança (1,00).",
+  "decidido_em": "2026-11-10T11:35:03.682Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 36,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:35:15.094Z",
+  "segundos": 26,
+  "segundos_relogio": 26,
+  "utilidade": 5
+}

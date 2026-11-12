@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:21:15.989Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-20",
+  "comentario": "Exatamente o mesmo cenário estrutural do relatório 19. Do ponto de vista de software, o diagnóstico apontando codificacao_incorreta está perfeito, visto que \"Em AnÃ¡lise\" evidencia um clássico erro de charset (mojibake). Contudo, o verbete referente a essa causa não foi fornecido pela busca (que entregou contrato-pedido, pedido-reserva e formato_de_data_divergente). Ao forçar a resposta técnica correta fora do contexto e citar contrato-pedido como fonte (que não fala do erro), o modelo violou as restrições do RAG (alucinação de suporte). A auditoria localizou a falha adequadamente ao disparar causa_sem_verbete_que_a_trate.",
+  "decidido_em": "2026-11-09T22:21:54.046Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 20,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:22:13.547Z",
+  "segundos": 38,
+  "segundos_relogio": 38,
+  "utilidade": 5
+}

@@ -1,0 +1,208 @@
+{
+  "_tag": "! Alteração de IA - Revisar: leitura da rodada 7 da pesquisa (10/11/2026), tópico r7-raciocinio-em-passos-em-modelo-pequeno, escrita por um subagente leitor: as fontes abertas, o que cada uma afirma e o que não afirma.",
+  "_motivo": "! Motivo: a ficha 64 pede pesquisa antes de qualquer mudança no fluxo do agente; a leitura fica em JSON para o integrador gerar o levantamento e para a segunda leitura conferir fonte a fonte.",
+  "key": "r7-raciocinio-em-passos-em-modelo-pequeno",
+  "frente": 1,
+  "titulo": "Raciocínio em passos antes da resposta em modelo pequeno, local e quantizado: acerto, custo e ordem da resposta",
+  "pesquisado_em": "10/11/2026",
+  "pergunta": "Pedir a um modelo pequeno (até uns 13B, aberto, quantizado) que escreva um raciocínio em passos antes de escolher um rótulo numa lista fechada melhora o acerto, quanto custa em tokens gerados, e a ordem (rótulo primeiro contra raciocínio primeiro) muda o resultado?",
+  "ja_levantado": [
+    {"secao": "§6.9.14", "o_que_ja_dizia": "Em classificação de texto o ganho médio do CoT é de 0,7 pp (Sprague et al., 2025); abaixo de cerca de 100B o CoT piora no GSM8K (Wei et al., 2022); em 72 modelos pequenos de 0,5B a 8B o prompt direto empata ou supera o CoT (Srivastava et al., 2025); a quantização GPTQ de 8 bits e W4A16 não é variável confundidora (Srivastava et al.; Liu, R. et al., 2025); o custo de verbosidade (Chen et al., 2024) e o NoThinking sob orçamento fixo (Ma et al., 2025) já estavam; o formato JSON com restrição de esquema derruba raciocínio livre e ajuda rótulo fechado (Tam et al., 2024). A ideia de pedir raciocínio antes do rótulo já constava como descartada na Fase 3."},
+    {"secao": "§6.12.1", "o_que_ja_dizia": "Formato imposto na decodificação ajuda a seleção de rótulo e prejudica raciocínio livre (Tam et al., 2024), com a réplica de Kurt (2024b) atribuindo a queda a artefatos de prompt e de parser; recomendou-se deixar o campo de explicação curto e por último no esquema; gramática custa cerca do dobro por token no llama.cpp (Geng et al., 2025)."},
+    {"secao": "§6.12.7", "o_que_ja_dizia": "Cadeia de pensamento rende cerca de 10% só em modelos proprietários e não em abertos (Ismithdeen et al., 2025); contexto antes da pergunta rende +14,72 pp e CoT reduz esse vão (Ok; Lee, 2026); a ordem das opções muda muito o resultado (Pezeshkpour; Hruschka, 2024); a extração do rótulo do texto foi preferida ao primeiro token (Wang et al., 2024)."},
+    {"secao": "§6.14.6", "o_que_ja_dizia": "A cadeia escrita não é registro fiel do que decidiu a resposta (Turpin, Lanham, Chen, Arcuschin, Young e outros); a Fase 4 não deve ativar cadeia antes do rótulo porque o ganho em tarefa não simbólica é pequeno diante do custo em tokens e segundos (Sprague et al., 2025); a justificativa humana de cada nó deve ser montada em código, e o modelo continua nas 4 linhas fixas. Já estavam também Liu, R. et al. (2024) sobre CoT que piora em classificação com exceções."}
+  ],
+  "fontes": [
+    {
+      "id": "F01",
+      "referencia_abnt": "MEINCKE, L.; MOLLICK, E.; MOLLICK, L.; SHAPIRO, D. Prompting Science Report 2: The Decreasing Value of Chain of Thought in Prompting. [S. l.]: arXiv, 2025. Disponível em: https://arxiv.org/abs/2506.07142. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2506.07142",
+      "url": "https://arxiv.org/abs/2506.07142",
+      "ano": 2025,
+      "veiculo": "Relatório técnico (arXiv, cs.CL), jun. 2025",
+      "revisao_por_pares": false,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página do arXiv e a página de resultados do relatório no site dos autores (o PDF não pôde ser decodificado pela ferramenta de leitura, então tabelas e figuras não foram lidas)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F01.a", "afirmacao_pt": "Em cinco modelos sem modo de raciocínio, pedir passos de raciocínio deu ganho médio de 13,5 pontos no Gemini 2.0 Flash e de 11,7 no Sonnet 3.5, mas só 4,4 no GPT-4o-mini, e esse último sem significância estatística.", "numero": "+13,5; +11,7; +4,4 (pontos de acurácia média)", "condicao": "GPQA Diamond (198 questões de múltipla escolha de nível de pós-graduação), 25 repetições por questão e condição, modelos de API", "onde_na_fonte": "página de resultados do relatório, seção de achados para modelos sem raciocínio"},
+        {"id": "F01.a2", "afirmacao_pt": "O mesmo pedido aumentou a variabilidade das respostas: o Gemini Pro 1.5 perdeu 17,2 pontos na fração de questões acertadas em todas as repetições, e os autores dizem que outros modelos também caíram nessa medida.", "numero": "-17,2 pontos (Gemini Pro 1.5)", "condicao": "GPQA Diamond, 25 repetições, critério de acerto em 100% das repetições", "onde_na_fonte": "página de resultados do relatório, seção sobre modelos sem raciocínio"},
+        {"id": "F01.b", "afirmacao_pt": "O pedido de raciocínio levou de 35% a 600% mais tempo (de 5 a 15 segundos) nos modelos sem raciocínio embutido, e para os modelos com raciocínio embutido o ganho foi marginal (de +2,9 a +3,1 pontos, e -3,3 no Gemini Flash 2.5) com 20% a 80% mais tempo.", "numero": "35% a 600% mais tempo; +2,9, +3,1, -3,3", "condicao": "GPQA Diamond, modelos de API, sem número de tokens divulgado na página", "onde_na_fonte": "página de resultados do relatório, seções de achados"}
+      ],
+      "nao_afirma": ["Não testou modelo aberto nem modelo pequeno ou quantizado: todos são de API.", "Tarefa de perguntas de ciência com múltipla escolha, não de classificação em lista fechada de causas.", "Não deu o número de tokens extras na página lida; só o tempo.", "Não comparou ordem da resposta nem formato estruturado."],
+      "aplicacao_ao_agente": "Mesmo onde o raciocínio ajuda a média em modelos grandes, ele piora a repetibilidade das respostas e multiplica o tempo; num agente que precisa de resposta estável e de selo de confiança calibrado, esse custo pesa mais do que o ganho médio."
+    },
+    {
+      "id": "F02",
+      "referencia_abnt": "RENZE, M.; GUVEN, E. The Benefits of a Concise Chain of Thought on Problem-Solving in Large Language Models. [S. l.]: arXiv, 2024. v3, 19 out. 2024. Disponível em: https://arxiv.org/abs/2401.05618. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2401.05618",
+      "url": "https://arxiv.org/abs/2401.05618",
+      "ano": 2024,
+      "veiculo": "Preprint arXiv (cs.CL); a página não indica periódico ou evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão v3 em HTML: seções II (método), III (resultados) e IV-A (limitações), Tabela I",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F02.a", "afirmacao_pt": "Pedir passos de raciocínio e brevidade ao mesmo tempo, com exemplos curtos, reduziu em cerca de 48,7% o tamanho médio da resposta em relação ao raciocínio comum (47,6% no GPT-3.5 e 49,8% no GPT-4).", "numero": "48,70% de redução (47,62% e 49,77%)", "condicao": "GPT-3.5 e GPT-4 por API, exame de 1.000 questões de múltipla escolha, cada questão resolvida 10 vezes", "onde_na_fonte": "seção III-A"},
+        {"id": "F02.b", "afirmacao_pt": "O acerto geral praticamente não mudou com o raciocínio conciso (GPT-3.5 ficou 2,95% abaixo, sem significância, p = 0,55; GPT-4 ficou 0,25% acima, p = 0,21), mas em matemática o GPT-3.5 perdeu 27,69% em média.", "numero": "-2,95%; +0,25%; -27,69% em matemática", "condicao": "dez fontes de questões (ARC, LogiQA, LSAT, MedMCQA, SAT e outras); matemática é AQUA-RAT e SAT-Math", "onde_na_fonte": "seção III-B"}
+      ],
+      "nao_afirma": ["Só dois modelos de API; nada de modelo aberto, pequeno ou quantizado, e os próprios autores listam isso como limitação.", "Compara raciocínio comum contra raciocínio conciso, não contra resposta direta sem raciocínio.", "Não dá a contagem absoluta de tokens, só a redução relativa.", "Um único par de prompts testado; não mediu ordem da resposta nem formato estruturado."],
+      "aplicacao_ao_agente": "Se um dia se pedir raciocínio, uma forma concisa corta cerca de metade dos tokens sem perda geral em modelos grandes, mas nada garante isso num 7B quantizado, e a perda em matemática mostra que o corte pode custar onde há cálculo."
+    },
+    {
+      "id": "F03",
+      "referencia_abnt": "XU, S.; XIE, W.; ZHAO, L.; HE, P. Chain of Draft: Thinking Faster by Writing Less. [S. l.]: arXiv, 2025. v2, 3 mar. 2025. Disponível em: https://arxiv.org/abs/2502.18600. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2502.18600",
+      "url": "https://arxiv.org/abs/2502.18600",
+      "ano": 2025,
+      "veiculo": "Preprint arXiv (cs.CL); a página não indica periódico ou evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão v2 em HTML: seções 4.1 a 4.5 e Tabelas 1 a 6",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F03.a", "afirmacao_pt": "Com rascunhos de poucas palavras por passo e exemplos, o GPT-4o no GSM8K foi de 95,4% (CoT, 205,1 tokens) para 91,1% (rascunho, 43,9 tokens); em esportes (BIG-bench) o rascunho ficou acima do CoT, 98,3% contra 95,9%, com 15,0 contra 28,7 tokens.", "numero": "91,1% com 43,9 tokens contra 95,4% com 205,1 (GSM8K); 98,3% com 15,0 contra 95,9% com 28,7 (esportes)", "condicao": "GPT-4o e Claude 3.5 Sonnet, com exemplos (few-shot); resposta direta sem passos ficou em 53,3% no GSM8K e 90,0% em esportes", "onde_na_fonte": "Tabelas 1 e 3"},
+        {"id": "F03.b", "afirmacao_pt": "Sem exemplos (zero-shot) o rascunho perde muito: no GSM8K o GPT-4o cai de 94,8% (CoT) para 84,4% e o Claude 3.5 Sonnet de 90,4% para 65,5%, perto da resposta direta de 61,9%.", "numero": "84,4% e 65,5% contra 94,8% e 90,4%", "condicao": "GSM8K zero-shot, GPT-4o e Claude 3.5 Sonnet", "onde_na_fonte": "Tabela 5, seção 4.5"},
+        {"id": "F03.c", "afirmacao_pt": "Em quatro modelos pequenos o rascunho perde para o CoT completo por margem grande: por exemplo, Qwen2.5-3B-Instruct 43,1% com 41,2 tokens contra 59,1% com 236,4, e Llama 3.2 3B 52,5% contra 70,7%; todos ficam bem acima da resposta direta (3,9% a 7,2%).", "numero": "Qwen2.5-1,5B 24,2% contra 32,5%; Qwen2.5-3B 43,1% contra 59,1%; Llama 3.2 3B 52,5% contra 70,7%", "condicao": "GSM8K (matemática), modelos de 1,5B a 3B, instrução com exemplos", "onde_na_fonte": "Tabela 6, seção 4.5"}
+      ],
+      "nao_afirma": ["Tarefas são matemática, esportes e datas (BIG-bench) e cara ou coroa sintético, não classificação em lista fechada.", "Os modelos pequenos testados têm de 1,5B a 3B e só em matemática; nada de 7B a 13B nem de modelo quantizado em GGUF.", "O ganho de contar tokens vale para quem já decidiu pedir raciocínio; não diz que o raciocínio compensa em rótulo fechado.", "Não testou ordem da resposta."],
+      "aplicacao_ao_agente": "A forma curta existe e corta de 4 a 5 vezes os tokens, mas nos modelos pequenos o rascunho perde bastante do CoT completo e depende de exemplos; no 7B local, 40 a 80 tokens de rascunho ainda seriam de 9 a 19 segundos por caso a 4,3 tokens por segundo."
+    },
+    {
+      "id": "F04",
+      "referencia_abnt": "KUMAR, V.; KANISHKA; MANDORA, B. Structure Tax: How Structured Output affects LLMs Performance. In: AACL-IJCNLP 2026 (Main). [S. l.]: arXiv, 2026. Disponível em: https://arxiv.org/abs/2610.12056. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2610.12056",
+      "url": "https://arxiv.org/abs/2610.12056",
+      "ano": 2026,
+      "veiculo": "AACL-IJCNLP 2026 (Main), conforme a página do arXiv",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e HTML: seções 3.1, 3.3, 4 e 5, Tabelas 1 e 2 e Apêndice A.3 (os últimos 20 mil caracteres do HTML não foram lidos)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F04.a", "afirmacao_pt": "Em saída estruturada (JSON ou XML), pôr o campo de raciocínio antes do campo de resposta iguala ou supera a geração livre, enquanto pôr a resposta antes do raciocínio derruba o acerto em modelos pequenos: no GSM8K o Llama-3.1-8B vai de 79,98% (livre) para 31,01% (resposta primeiro, JSON) e 10,98% (XML), contra 80,21% e 83,53% (raciocínio primeiro).", "numero": "79,98% livre; 31,01% e 10,98% resposta primeiro; 80,21% e 83,53% raciocínio primeiro", "condicao": "Llama-3.1-8B, média de 5 execuções, GSM8K, JSON e XML; Gemma3-4B tem padrão igual (78,82%, 27,45%, 10,98%, 83,53%, 87,06%)", "onde_na_fonte": "Tabela 1, seção 4"},
+        {"id": "F04.b", "afirmacao_pt": "Em tarefas de conhecimento e lógica o efeito é bem menor e às vezes inverte: no MMLU o Llama-3.1-8B fica em 62,83% (livre), 64,14% (resposta primeiro, JSON) e 71,26% (raciocínio primeiro, JSON); no LogicBench a resposta primeiro (76,00%) supera o raciocínio primeiro (74,60%); no Spider (texto para SQL) o formato quase não importa.", "numero": "MMLU 62,83%, 64,14%, 71,26%; LogicBench 57,20%, 76,00%, 74,60%", "condicao": "Llama-3.1-8B, média de 5 execuções; o texto do artigo declara que os formatos com raciocínio primeiro igualam ou superam o livre na maioria das configurações", "onde_na_fonte": "Tabela 1 e síntese da seção 4"},
+        {"id": "F04.c", "afirmacao_pt": "A calibração dos modelos pequenos em saída XML ainda é pior que a dos modelos de API: o erro de calibração (ECE) do Llama-3.1-8B vai de 0,103 (LogicBench) a 0,273 (Spider), e a confiança verbalizada só acompanha a confiança por logit nos modelos mais fortes.", "numero": "ECE de 0,103 a 0,273 no Llama-3.1-8B; 0,020 a 0,201 no GPT-4o e no Sonnet", "condicao": "saída XML com raciocínio primeiro, modelos de 4B e 8B contra modelos de API", "onde_na_fonte": "Tabela 2, seção 5.2"}
+      ],
+      "nao_afirma": ["Não é classificação em lista fechada de rótulos: as tarefas são GSM8K, MMLU, LogicBench e Spider.", "Não testou quantização (nada diz se os modelos de 4B e 8B rodaram em precisão cheia ou quantizados) nem CPU.", "Os autores avisam que o baseline livre do Gemma3-4B tem falhas de leitura (29,8% de extração vazia no MMLU e 45,2% no LogicBench por erro de parser), então o contraste do Gemma3-4B com o livre deve ser lido com cuidado.", "A comparação decisiva é entre dois formatos estruturados, não entre rótulo primeiro e rótulo sem raciocínio nenhum."],
+      "aplicacao_ao_agente": "Se o agente passasse a pedir raciocínio dentro de um formato fixo, a ordem seria decisiva num modelo de 8B: raciocínio depois da resposta equivale a não ter raciocínio algum e ainda pode atrapalhar; com a ordem atual do agente (rótulo primeiro, campos depois) qualquer texto escrito depois do rótulo é só justificativa, não raciocínio que o precede."
+    },
+    {
+      "id": "F05",
+      "referencia_abnt": "HAN, T.; WANG, Z.; FANG, C.; ZHAO, S.; MA, S.; CHEN, Z. Token-Budget-Aware LLM Reasoning. In: FINDINGS OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: ACL 2025. [S. l.]: Association for Computational Linguistics, 2025. Disponível em: https://arxiv.org/abs/2412.18547. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2412.18547",
+      "url": "https://arxiv.org/abs/2412.18547",
+      "ano": 2025,
+      "veiculo": "Findings of ACL 2025 (conforme o levantamento anterior do repositório; a página do arXiv lida não nomeia o evento)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML: seções 4 e 6, Tabelas 3, 4 e 5, apêndices A.4 e A.8",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F05.a", "afirmacao_pt": "Escrever um limite de tokens no prompt corta o raciocínio, mas só dentro de uma faixa: no GPT-4o-mini um limite de 50 tokens gerou 86 tokens, e um limite de 10 tokens gerou 157, quase o dobro, porque o modelo desiste de obedecer.", "numero": "limite 50 gera 86 tokens; limite 10 gera 157 tokens; CoT comum 258", "condicao": "GPT-4o-mini, GSM8K, modelo de API", "onde_na_fonte": "seção 4, Figura 1"},
+        {"id": "F05.b", "afirmacao_pt": "O método de orçamento estimado por problema corta em média cerca de 68% dos tokens (de 461,25 para 148,72) com 2,7 pontos a menos de acerto (de 83,75% para 81,03%), e a perda é maior onde há mais cálculo (MathBench College 78,00% para 70,00%).", "numero": "461,25 para 148,72 tokens; 83,75% para 81,03%", "condicao": "GPT-4o-mini, seis conjuntos de matemática", "onde_na_fonte": "Tabela 3"},
+        {"id": "F05.c", "afirmacao_pt": "No único modelo aberto pequeno, o Llama-3.1-8B-Instruct, o CoT comum no GSM8K tem 77,56% com 241,51 tokens, e uma versão ajustada com o orçamento embutido (SFT) tem 78,57% com 139,63 tokens (cerca de 42% menos), ao passo que a técnica só de prompt ficou em 71,82% com 112,21 tokens.", "numero": "77,56% com 241,51; 78,57% com 139,63; 71,82% com 112,21", "condicao": "Llama-3.1-8B-Instruct, GSM8K; a versão SFT exige ajuste fino do modelo", "onde_na_fonte": "Tabela 5 e apêndice A.4"}
+      ],
+      "nao_afirma": ["Só matemática (e três tarefas de código e conversa com BLEU); nada de classificação em lista fechada.", "A parte aberta e pequena é um único Llama-3.1-8B, e o melhor resultado dele exige ajuste fino, o que não se aplica a um modelo usado como está.", "Não mede quantização nem CPU, nem tempo real, só tokens."],
+      "aplicacao_ao_agente": "Pedir um limite curto de raciocínio por prompt pode sair pior que o raciocínio normal se o limite for pequeno demais, então qualquer teste de raciocínio curto no 7B tem de medir os tokens realmente gerados, não os pedidos."
+    },
+    {
+      "id": "F06",
+      "referencia_abnt": "LOTFI, S.; KIRICHENKO, P.; LI, S.; LIU, Z. Quantized Reasoning Models Think They Need to Think Longer, but They Do Not. [S. l.]: arXiv, 2026. v1, 29 maio 2026. Disponível em: https://arxiv.org/abs/2606.00206. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2606.00206",
+      "url": "https://arxiv.org/abs/2606.00206",
+      "ano": 2026,
+      "veiculo": "Preprint arXiv (cs.LG); a página não indica periódico ou evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "HTML: seções 3 e 4.1, Tabela 2 e apêndice B.6 (os últimos 15 mil caracteres não foram lidos)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F06.a", "afirmacao_pt": "Modelos de raciocínio quantizados escrevem raciocínios bem mais longos e acertam menos, e o efeito é maior nos pequenos e nas provas difíceis: o DeepSeek-R1-Distill-Qwen-1,5B no MATH-500 vai de 85,6% com 5,2 mil tokens (BF16) para 47,0% com 23,4 mil tokens (AWQ de 3 bits).", "numero": "85,6% com 5,2K contra 47,0% com 23,4K tokens (3 bits AWQ); 83,0% com 6,3K em AWQ de 4 bits", "condicao": "modelos destilados do R1 de 1,5B a 14B e QwQ-32B, quantização só de pesos (GPTQ e AWQ) e FlatQuant, em GPU, MATH-500 e outras provas de matemática, código e ciência", "onde_na_fonte": "seção 4.1, Figura 2, Tabela 2 e apêndice B.6"},
+        {"id": "F06.b", "afirmacao_pt": "Nos modelos maiores e com 4 bits o efeito é pequeno: o Qwen 14B no MATH-500 vai de 94,6% com 3,7 mil tokens para 93,0% com 4,3 mil em 3 bits AWQ, e os autores descrevem 4 bits como em geral menos danoso que 3 bits.", "numero": "94,6% com 3,7K para 93,0% com 4,3K (3 bits AWQ, 14B)", "condicao": "mesmos modelos e provas acima", "onde_na_fonte": "Tabela 2 e apêndice B.6"}
+      ],
+      "nao_afirma": ["Modelos de raciocínio destilados com cadeias de milhares de tokens, não um modelo de instrução comum com um pedido de passos curtos.", "Quantização de pesos em GPTQ e AWQ, não GGUF Q4_K_M, e em matemática e código, não em classificação.", "Não mede ordem da resposta nem formato estruturado."],
+      "aplicacao_ao_agente": "Com 4 bits o alongamento do raciocínio é modesto em 7B a 14B, mas num 7B quantizado já aparece alguma perda; é mais um motivo para medir o raciocínio no próprio modelo do agente em vez de assumir a equivalência com a precisão cheia."
+    },
+    {
+      "id": "F07",
+      "referencia_abnt": "LI, Z. et al. Quantization Meets Reasoning: Exploring and Mitigating Degradation of Low-Bit LLMs in Mathematical Reasoning. [S. l.]: arXiv, 2025. v3. Disponível em: https://arxiv.org/abs/2505.11574. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2505.11574",
+      "url": "https://arxiv.org/abs/2505.11574",
+      "ano": 2025,
+      "veiculo": "Preprint arXiv (cs.LG); a página não indica periódico ou evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "HTML v3: seções 3.1.1, 4.1 a 4.4 e Tabelas 1, 3 e 4",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F07.a", "afirmacao_pt": "Quantizar para 4 bits de pesos derruba o raciocínio matemático de modelos pequenos, tanto mais quanto menor o modelo e mais difícil a prova: perda média de cerca de 7,16% no GSM8K e 15,18% no MATH, e no Qwen2.5-0,5B no MATH até 69,81% com GPTQ.", "numero": "7,16% no GSM8K; 15,18% no MATH; até 69,81% no Qwen2.5-0,5B", "condicao": "Qwen2.5-Instruct de 0,5B a 7B e Llama-3 de 1B a 8B, AWQ e GPTQ de 4 bits (W4A16) e SmoothQuant de 8 bits, matemática", "onde_na_fonte": "seção 4.1, Tabela 1"},
+        {"id": "F07.b", "afirmacao_pt": "O modelo de 7B perde pouco (de 2 a 4 pontos, e o texto e a tabela divergem entre si) e os autores atribuem a perda a erros de execução do método mais do que a erros conceituais; um ajuste fino curto recupera o desempenho.", "numero": "de 2 a 4 pontos no Qwen2.5-7B no MATH", "condicao": "Qwen2.5-7B-Instruct, 4 bits, MATH; a recuperação usou DPO com LoRA em 332 exemplos", "onde_na_fonte": "seções 4.1, 4.2 e 4.4, Tabelas 1, 3 e 4"}
+      ],
+      "nao_afirma": ["Só matemática (GSM8K, MATH, AIME) e o MMLU como controle da recuperação; nada de classificação.", "Quantização AWQ, GPTQ e SmoothQuant em GPU, não GGUF Q4_K_M em CPU.", "Não compara resposta direta com raciocínio quantizado, só o raciocínio quantizado contra a precisão cheia."],
+      "aplicacao_ao_agente": "A quantização machuca mais os modelos pequenos que precisam calcular; para um 7B escolhendo um rótulo, a perda esperada pelo raciocínio quantizado é pequena, mas não existe medida disso em classificação."
+    },
+    {
+      "id": "F08",
+      "referencia_abnt": "WALSHE, T.; MOON, S. Y.; XIAO, C.; GUNAWARDANA, Y.; SILAVONG, F. Automatic Labelling with Open-source LLMs using Dynamic Label Schema Integration. [S. l.]: arXiv, 2025. v1, 21 jan. 2025. Disponível em: https://arxiv.org/abs/2501.12332. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2501.12332",
+      "url": "https://arxiv.org/abs/2501.12332",
+      "ano": 2025,
+      "veiculo": "Preprint arXiv (cs.CL); a página não indica periódico ou evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "HTML: seção 2.2, 2.3 e apêndice A (Tabela 7) e apêndice C (Figura 5)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F08.a", "afirmacao_pt": "Num experimento preliminar de classificação com rótulo fechado, pedir ao Llama 2 de 7B que explique a resposta passo a passo derrubou a acurácia média de 71,7 para 58,4 (só rótulo) e de 72,3 para 58,6 (rótulo com descrição), numa queda de cerca de 13 pontos.", "numero": "71,7 para 58,4; 72,3 para 58,6", "condicao": "Llama 2 7B, zero-shot, média macro de quatro conjuntos (AGNews, DBpedia, intenções da Amazon, Banking77); o prompt termina com o pedido de explicar passo a passo", "onde_na_fonte": "apêndice A, Tabela 7; prompt na Figura 5, apêndice C"}
+      ],
+      "nao_afirma": ["É um experimento preliminar num apêndice, com só médias dos quatro conjuntos e sem resultado por conjunto nem teste estatístico.", "Os autores não explicam a queda e seguiram com o Mistral 7B por ele ser melhor na tarefa; não testaram o CoT no Mistral.", "Os autores notam que as descrições de rótulo foram geradas pelo Mistral 7B, o que pode enviesar a comparação.", "Não informa se o modelo estava quantizado nem onde a explicação ficava em relação ao rótulo."],
+      "aplicacao_ao_agente": "É a medida mais parecida com o agente achada nesta rodada, um 7B aberto escolhendo rótulo numa lista fechada, e ela aponta queda e não ganho com a explicação passo a passo, mas é frágil por ser um apêndice preliminar com um modelo antigo."
+    },
+    {
+      "id": "F09",
+      "referencia_abnt": "YE, X.; DURRETT, G. The Unreliability of Explanations in Few-shot Prompting for Textual Reasoning. In: ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS (NeurIPS), 35., 2022. Proceedings [...]. 2022. Preprint arXiv:2205.03401. Disponível em: https://arxiv.org/abs/2205.03401. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2205.03401",
+      "url": "https://arxiv.org/abs/2205.03401",
+      "ano": 2022,
+      "veiculo": "NeurIPS 2022",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página do arXiv (o PDF não pôde ser decodificado pela ferramenta de leitura, então a ordem explicação e predição e as tabelas não foram lidas)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F09.a", "afirmacao_pt": "Acrescentar explicações aos exemplos do prompt deu ganhos pequenos a moderados na maior parte dos quatro modelos testados (incluindo OPT-175B e GPT-3), e só o text-davinci-002 ganhou bastante.", "numero": "", "condicao": "quatro modelos grandes, três conjuntos de resposta a perguntas e inferência textual, com poucos exemplos", "onde_na_fonte": "resumo"},
+        {"id": "F09.b", "afirmacao_pt": "As explicações geradas muitas vezes não se apoiavam no texto de entrada e às vezes nem sustentavam a predição do próprio modelo, mas as que um avaliador julgou coerentes acompanhavam predições mais acertadas, e um calibrador treinado nisso melhorou o resultado depois.", "numero": "", "condicao": "mesmos modelos e conjuntos", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["O resumo não diz a ordem explicação antes ou depois da predição; só o artigo completo traria isso, e ele não pôde ser lido.", "Não testou modelos pequenos de 7B a 13B quantizados, só modelos grandes de 2022.", "Não é classificação em lista fechada de causas."],
+      "aplicacao_ao_agente": "Reforça que a explicação escrita pelo modelo nem sempre sustenta a resposta, mas é um sinal que, conferido em código, pode servir para calibrar a confiança; não responde à pergunta de ordem e por isso o artigo precisa ser relido no PDF antes de citar a ordem."
+    },
+    {
+      "id": "F10",
+      "referencia_abnt": "KOJIMA, T.; GU, S. S.; REID, M.; MATSUO, Y.; IWASAWA, Y. Large Language Models are Zero-Shot Reasoners. In: ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS (NeurIPS), 35., 2022. Proceedings [...]. 2022. Preprint arXiv:2205.11916. Disponível em: https://arxiv.org/abs/2205.11916. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2205.11916",
+      "url": "https://arxiv.org/abs/2205.11916",
+      "ano": 2022,
+      "veiculo": "NeurIPS 2022",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo da página do arXiv e a lista de tarefas e modelos que a página traz",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F10.a", "afirmacao_pt": "Acrescentar só a frase de pensar passo a passo, sem exemplos, levou o InstructGPT text-davinci-002 de 17,7% para 78,7% no MultiArith e de 10,4% para 40,7% no GSM8K.", "numero": "17,7% para 78,7%; 10,4% para 40,7%", "condicao": "text-davinci-002 (modelo grande), zero-shot, aritmética", "onde_na_fonte": "resumo e página do artigo"},
+        {"id": "F10.b", "afirmacao_pt": "O artigo avalia tarefas aritméticas, simbólicas e de lógica (data, troca de objetos), todas de raciocínio em vários passos, e só cita dois modelos, o InstructGPT grande e o PaLM de 540B.", "numero": "", "condicao": "benchmarks de aritmética, símbolos e lógica; modelos de API e de 540B", "onde_na_fonte": "resumo e lista de tarefas da página"}
+      ],
+      "nao_afirma": ["A página lida não traz resultado para modelos pequenos, então não diz se a técnica funciona em 7B.", "Nenhuma tarefa de classificação em lista fechada.", "Nada sobre quantização, custo em tokens ou ordem da resposta."],
+      "aplicacao_ao_agente": "É a origem da ideia de pedir passos sem exemplos e já nasce restrita a tarefas de vários passos em modelos enormes; serve para citar a origem e o limite, não como previsão para um 7B quantizado numa lista de rótulos."
+    }
+  ],
+  "nao_achei": [
+    "O PDF de Meincke et al. (2025) e o de Ye e Durrett (2022) vieram em binário que a ferramenta não decodificou, então só o resumo (e, no caso de Meincke, a página de resultados dos autores) foi lido; a ordem explicação e predição de Ye e Durrett ficou sem confirmação.",
+    "Não achei estudo que isole, em classificação de rótulo fechado com modelo aberto de 7B a 13B quantizado, o rótulo antes contra o rótulo depois do raciocínio; a única comparação de ordem sólida é a de Structure Tax (F04), que é em matemática, conhecimento e lógica, e a sua versão em classificação de texto não existe na busca.",
+    "Não achei medida do efeito do CoT sobre a acurácia de classificação em GGUF Q4_K_M no llama.cpp ou no Ollama; as medidas de quantização (F06, F07) são de GPTQ, AWQ e SmoothQuant em GPU e em matemática.",
+    "Não achei estudo de raciocínio curto (concisão, rascunho, orçamento) em classificação de rótulo fechado; F02, F03 e F05 são matemática, esportes e datas.",
+    "Plan-and-Solve (2305.04091) já consta em referencias.md e não foi reaberto; nenhuma fonte nova sobre roteiro de passos fixo em modelo de 7B apareceu."
+  ],
+  "rascunho_de_sintese_pt": "O que as fontes sustentam para a pergunta, em modelo pequeno e quantizado, é pouco direto e aponta mais para não pedir raciocínio antes do rótulo do que para pedir.\n\nSobre o acerto: o único trabalho achado que mede um 7B aberto escolhendo rótulo numa lista fechada com e sem explicação passo a passo (F08, Llama 2 7B, média de quatro conjuntos) viu queda de cerca de 13 pontos com a explicação, mas é um apêndice preliminar com um modelo antigo. Em modelos grandes de API o ganho do raciocínio é real em tarefas de ciência e matemática e some quase todo onde o modelo já raciocina sozinho (F01, F10), e o raciocínio piora a repetibilidade das respostas (F01.a2). Isso confirma, sem substituir, o que o levantamento de 22/09 e o de 01/10 já tinham (Sprague e outros): o ganho está em matemática, não em rótulo.\n\nSobre o custo: o raciocínio comum acrescenta de 130 a 240 tokens em modelos de 1,5B a 8B (F03, F05), e no 7B local isso é de 30 a 55 segundos a 4,3 tokens por segundo, mais que o dobro do que o agente gasta hoje. As formas curtas cortam de 40% a 80% dos tokens (F02, F03, F05), mas o rascunho perde bastante do CoT completo nos modelos de 1,5B a 3B (F03.c) e o limite de tokens pedido no prompt pode sair pior que o raciocínio normal (F05.a). Tudo isso foi medido em matemática.\n\nSobre a ordem: F04 é a única fonte de comparação direta e mostra que, num 8B e num 4B, resposta antes do raciocínio em saída estruturada derruba o GSM8K de cerca de 80% para 11% a 31%, e que raciocínio antes da resposta iguala ou supera a geração livre; em tarefas de conhecimento e lógica o efeito é bem menor e às vezes inverte. Quem lê isso não deve concluir que raciocínio primeiro melhora o agente: a leitura que a fonte sustenta é que, com o rótulo vindo primeiro, o texto que vem depois não raciocina a favor da resposta, só a justifica. Isso conversa com a cautela de F09 e com o que já se levantou na §6.14.6 sobre a fidelidade da explicação.\n\nSobre a quantização: a perda causada por 4 bits cresce quando o modelo é menor e a prova é mais difícil (F06, F07), mas em 7B a 14B é pequena, e nenhuma fonte mede GGUF Q4_K_M nem classificação.\n\nO que ninguém mediu em modelo pequeno: raciocínio curto em rótulo fechado de 23 classes, a ordem rótulo primeiro contra raciocínio primeiro em classificação, e o efeito da quantização GGUF sobre isso. Por isso qualquer mudança de fluxo precisa de medida própria no agente, com a mesma ponte pareada já usada, e com o custo medido em segundos reais."
+}

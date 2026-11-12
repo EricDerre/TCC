@@ -47,6 +47,15 @@ COBAIA_FRONT = REPO_ROOT / "Programacao" / "CobaiaFront"
 COBAIA_API = REPO_ROOT / "Programacao" / "CobaiaAPI"
 AGENTE_CORE = REPO_ROOT / "Programacao" / "AgenteCore"
 DB_NAME = "ti93phpdb01"
+# ! Alteração de IA - Revisar: (07/11/2026, ficha 55) a pasta de dados do MariaDB portátil passa a ficar dentro do projeto, em
+# `.mariadb/data` (fora do git), e não mais em `%LOCALAPPDATA%\MariaDB\data`; os binários continuam em `%LOCALAPPDATA%\MariaDB`.
+# ! Motivo: o aplicativo Claude é um pacote MSIX: o que um processo dele grava em AppData\Local vai para a pasta privada do pacote,
+# e o que ele lê é a mistura das duas camadas (a privada por cima da real). O servidor subido de dentro do app lia o dicionário do
+# InnoDB (ibdata1, redo, undo) da cópia privada e as tabelas (.frm/.ibd) da cópia real, respondia `ERROR 1932 (42S02): Table
+# 'ti93phpdb01.tbprodutos' doesn't exist in engine` em todas as tabelas e, numa partida em 07/11/2026, apagou os .ibd da cópia
+# real. A pasta do projeto não é virtualizada: a janela do Eric e o app enxergam a mesma pasta de dados.
+DATADIR_DO_PROJETO = REPO_ROOT / ".mariadb" / "data"
+MY_INI_DO_PROJETO = DATADIR_DO_PROJETO / "my.ini"
 OS_NAME = platform.system()  # "Windows" | "Linux" | "Darwin"
 IS_FROZEN = getattr(sys, "frozen", False)
 
@@ -293,7 +302,14 @@ def find_mariadb_admin() -> str | None:
     return None
 
 
-def find_mariadb_datadir_config() -> str | None:
+def find_mariadb_datadir_config(raiz: Path | None = None) -> str | None:
+    # ! Alteração de IA - Revisar: (07/11/2026, ficha 55) o my.ini de `.mariadb/data` na raiz do repositório vem antes dos caminhos
+    # antigos; `raiz=` troca a raiz só nos testes.
+    # ! Motivo: ver DATADIR_DO_PROJETO. Sem a preferência, a janela do Eric continuaria subindo o servidor com a pasta de AppData e
+    # o app com a mistura das duas camadas; com ela, os dois sobem o mesmo servidor sobre a mesma pasta.
+    my_ini = (raiz or REPO_ROOT) / ".mariadb" / "data" / "my.ini"
+    if my_ini.exists():
+        return str(my_ini)
     if OS_NAME == "Windows":
         # ! Alteração de IA - Revisar: (26/10/2026) o my.ini do MariaDB portátil fica na pasta de dados criada por
         # `mariadb-install-db.exe --datadir=%LOCALAPPDATA%\MariaDB\data` (ver a tag em find_mysql_cli).

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:22:14.781Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-21",
+  "comentario": "O diagnóstico é preciso e aponta exatamente para a falha do payload. O contrato exige o campo imagem, mas o corpo da resposta retornou imagem_v2 para alguns produtos (id 12 e id 14), o que fez com que o frontend não conseguisse renderizar as fotos para esses itens. A causa raiz campo_renomeado está perfeitamente alinhada e o campo problemático imagem_v2 foi apontado corretamente. O gatilho de probabilidade baixa (0,41) é esperado quando há múltiplos campos que a LLM tenta ponderar contra o contrato (ela teve que descartar 13 alternativas, muitas correlacionadas), mas não houve nenhuma alucinação ou violação no RAG.",
+  "decidido_em": "2026-11-09T22:22:42.480Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 21,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:22:52.800Z",
+  "segundos": 28,
+  "segundos_relogio": 28,
+  "utilidade": 5
+}

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:19:52.302Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-18",
+  "comentario": "O diagnóstico de limite_de_requisicoes está perfeito e reflete exatamente o sintoma descrito no caso. A API devolveu o status HTTP 429 (\"limite de requisições excedido\") acompanhado do cabeçalho Retry-After: 60. O motor de busca posicionou o verbete correto em primeiro lugar com folga, o modelo identificou a causa raiz e apontou a fonte corretamente. O gatilho de \"probabilidade baixa\" (0,64) foi acionado porque a LLM não tem total confiança estatística entre causas de timeout (a segunda opção era tempo_de_resposta_excedido), mas a dedução final e a análise estrutural estão corretas e sem falhas de alucinação.",
+  "decidido_em": "2026-11-09T22:20:14.259Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 18,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:20:28.862Z",
+  "segundos": 22,
+  "segundos_relogio": 22,
+  "utilidade": 5
+}

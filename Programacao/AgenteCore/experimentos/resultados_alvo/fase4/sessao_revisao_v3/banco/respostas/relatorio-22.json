@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:23:08.356Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-22",
+  "comentario": "O agente acertou o diagnóstico com precisão. O sintoma deixa claro que se trata de uma falha exclusiva da automação de testes: a API retornou os dados corretos e a interface renderizou o modal normalmente (como visto na árvore de acessibilidade no elemento id=\"modalDetalheTitulo\"), mas o script tentou buscar o seletor desatualizado/incorreto #modalDetalhe .modal-title, gerando o timeout. Isso é o cenário exato de localizador_quebrado. O motor de busca entregou o verbete em 1º lugar e o modelo fez a inferência correta, sem alucinar causas e apontando a origem exata.",
+  "decidido_em": "2026-11-09T22:23:37.848Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 22,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:23:46.947Z",
+  "segundos": 29,
+  "segundos_relogio": 29,
+  "utilidade": 5
+}

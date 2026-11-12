@@ -55,6 +55,7 @@ import evolucao_biblioteca as evo
 import executar_bateria
 import executar_fase3
 import poda
+import progresso
 import recuperacao as rec
 import trilha as tr
 import validar_banco
@@ -999,6 +1000,10 @@ def propor_p5(modelo: str, caso: dict, registro_diag: dict, ctx: dict, prompt_di
     ouro = rec.verbete_ouro(verbetes_leitura, caso)
     ids_visiveis = sorted(set(ctx["verbetes_ids"]) | {ouro["id"]})
     prompt = estrategias.proposta_de_edicao(prompt_diag, resposta_diag, caso, acertou, causa_respondida, bib.render(ouro), ids_visiveis)
+    # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) anuncia à barra de progresso que esta inferência é a proposta de edição do caso; o
+    # `import progresso` no topo entrou junto. A chamada (executar_fase3.inferir_com_repeticao, arquivo congelado) e o registro não mudam.
+    # ! Motivo: é a única inferência do agente que não passa por diagnostico_ao_vivo.inferir; sem o rótulo a barra diria só "inferência N".
+    progresso.anunciar(f"{caso['id']} · proposta de edição")
     r = executar_fase3.inferir_com_repeticao(modelo, prompt, teto, caso["id"], "proposta")
     executar_bateria.guarda_tokens_reais(r.get("tokens_entrada", 0), teto, f"proposta da época {comum.get('epoca')}")
     parseado = evo.parsear_propostas(r.get("resposta", ""), r.get("tokens_saida"), teto)

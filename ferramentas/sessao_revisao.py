@@ -32,6 +32,11 @@ EM_BRANCO = "(em branco)"
 # ! Motivo: o Eric aprovou o parecer para os relatórios 2 a 11 sem responder na página; o tempo não existe e não pode virar número, e a marca é o que permite à leitura não somar isso como revisão humana.
 TEMPO_NAO_MEDIDO = "não medido"
 ORIGEM_PARECER = "parecer_aprovado"
+# ! Alteração de IA - Revisar: (10/11/2026) ORIGEM_ANALISTA: a resposta que outra pessoa deu fora da página e o Eric colou; como o parecer aprovado, entra sem tempo.
+# ! Motivo: na sessão de 09 e 10/11/2026 o Eric passou os relatórios a um analista e colou as respostas dele; o tempo que a página mediu nesses relatórios é o da
+# troca entre os dois, não o de uma leitura, e gravá-lo como tempo até a decisão daria à planilha uma medida que não existe.
+ORIGEM_ANALISTA = "analista"
+ORIGENS_SEM_TEMPO = (ORIGEM_PARECER, ORIGEM_ANALISTA)
 RE_LINHA = re.compile(r"^\| \d+ \|")
 # Os nomes dos campos com a resposta certa na trilha e as frases que diriam o resultado: se um relatório os trouxer, a sessão deixa de ser às cegas.
 # "esperado" sozinho não entra: os relatórios falam do contrato esperado pela tela e da causa nulo_inesperado, que são texto do próprio caso.
@@ -42,6 +47,36 @@ RE_RESULTADO = re.compile(r"causa_correta|campo_correto|verbete_de_ouro|causa[ _
 RE_NOME_DE_CASO = re.compile(r"(?<![\w-])(?:efe|lex|run|semt|sin|tra)-\d+(?![\w-])")
 RE_COMANDO = re.compile(r"^Comando para reexecutar o caso: .*$", re.M)
 VALORES = {"erro_localizado": ("sim", "não", "n.a."), "decisao": ("aceitar", "recusar"), "avaliacao": ("certo", "errado")}
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q5) os textos da página que mudam de uma sessão para outra ficam num perfil: PERFIL_TRILHA é a sessão
+# de 05/11 (corrida 22, relatórios v2 da trilha, planilha revisao_trilha.md) e PERFIL_V3 é a sessão com revisor humano da Pós-Fase 4 (corrida 24, relatórios v3 com a
+# árvore de decisão, planilha revisao_v3.md gerada por experimentos/revisao_v3.py); `permitir` é a frase que o perfil deixa passar no aviso de vazamento do resultado.
+# ! Motivo: a ficha 40 foi fechada pela opção (b) e a sessão roda nesta mesma página, um relatório por vez e com o cronômetro, mas com outra planilha, outros
+# arquivos e outra corrida; e a árvore de decisão diz "acertou a causa em N de M" sobre a faixa de confiança na corrida de calibração (decisão 110), que não é o
+# resultado do caso, então só nesse perfil essa frase passa; o perfil da corrida 22 continua recusando qualquer "acertou".
+PERFIL_TRILHA = {
+    "nome": "trilha", "titulo": "Revisão dos relatórios da trilha", "olho": "Fase 4, corrida 22, sessão de revisão", "chave": "sessao_revisao_trilha_v1",
+    "abertura": ("São @@TOTAL@@ relatórios de diagnóstico, um por vez, na ordem sorteada. Em cada um você decide se aceita ou recusa o diagnóstico do agente. "
+                 "Reserve cerca de 1 hora; dá para parar entre um relatório e outro."),
+    "onde": "O diagnóstico é a causa na seção 1, Veredito.",
+    "pergunta": "Você aceita o diagnóstico da seção 1, Veredito?",
+    "cegas": ("Até terminar, não abra a planilha <code>revisao_trilha.md</code> nem os arquivos <code>trilha.md</code> e <code>trilha.json</code>: eles trazem o nome, a "
+              "família ou o resultado de cada caso. Por isso os relatórios aparecem aqui com um nome neutro."),
+    "tag": "página gerada por ferramentas/sessao_revisao.py para a sessão de revisão dos relatórios da corrida 22 (Fase 4).",
+    "planilha": "revisao_trilha.md", "saida": "sessao-revisao-trilha.html", "permitir": None,
+}
+PERFIL_V3 = {
+    "nome": "v3", "titulo": "Revisão dos relatórios v3 e das árvores de decisão", "olho": "Pós-Fase 4, corrida 24, sessão de revisão", "chave": "sessao_revisao_v3_v1",
+    "abertura": ("São @@TOTAL@@ relatórios de defeito, um por vez, na ordem sorteada, cada um com a árvore de decisão do caso depois dele. Em cada um você decide se "
+                 "aceita ou recusa o diagnóstico do agente. Reserve cerca de 3 horas; dá para parar entre um relatório e outro, e o que está respondido fica guardado."),
+    "onde": "O diagnóstico é a causa no bloco 2, Título, explicada no bloco 12, Veredito do agente; a árvore de decisão vem depois do relatório.",
+    "pergunta": "Você aceita o diagnóstico do agente (bloco 12, Veredito do agente)?",
+    "cegas": ("Até terminar, não abra a planilha <code>revisao_v3.md</code>, o arquivo <code>ineditos.json</code> nem a pasta da corrida <code>fase4_ineditos</code>: eles "
+              "trazem o nome, a família ou o resultado de cada caso. Por isso os relatórios aparecem aqui com um nome neutro, sem a classe e sem o nível."),
+    "tag": ("página gerada por ferramentas/sessao_revisao.py --perfil v3 para a sessão de revisão com revisor humano dos relatórios v3 e das árvores de decisão da "
+            "corrida 24 (Pós-Fase 4, pacote Q5; ficha 40, opção b)."),
+    "planilha": "revisao_v3.md", "saida": "sessao-revisao-v3.html", "permitir": re.compile(r"acertou a causa em \d+ de \d+"),
+}
+PERFIS = {p["nome"]: p for p in (PERFIL_TRILHA, PERFIL_V3)}
 
 CSS = """
 /* Layout: coluna larga para ler e ficha estreita que acompanha a rolagem; no celular a ficha vira barra presa embaixo e, depois da decisão, sobe para antes do relatório. */
@@ -132,8 +167,8 @@ label.campo{display:block;margin-bottom:.3rem;font-size:.92rem;font-weight:600}
 # ! Motivo: na primeira resposta real, o revisor aceitou o diagnóstico, avaliou como certo e marcou que achou o erro, o que sugere ter lido "erro" como o defeito do sistema; e, a partir do relatório 2, ele lê a pré-análise do Claude antes de decidir (decisão 85), embora o resultado de cada caso continue fechado.
 CORPO = """
 <header class="topo">
-  <p class="olho">Fase 4, corrida 22, sessão de revisão</p>
-  <h1>Revisão dos relatórios da trilha</h1>
+  <p class="olho">@@OLHO@@</p>
+  <h1>@@TITULO@@</h1>
   <nav class="trilho" aria-label="Relatórios da sessão">
     <ol id="trilho-lista">@@PIPS@@</ol>
     <span id="contagem" class="contagem">0 de @@TOTAL@@ respondidos</span>
@@ -142,14 +177,14 @@ CORPO = """
 <div id="aviso" class="aviso" role="status" hidden><span id="aviso-texto"></span> <button type="button" id="tentar" class="discreto" hidden>Tentar de novo</button></div>
 <main id="palco" class="palco" data-fase="inicio">
   <section id="inicio" class="bloco">
-    <p class="abertura">São @@TOTAL@@ relatórios de diagnóstico, um por vez, na ordem sorteada. Em cada um você decide se aceita ou recusa o diagnóstico do agente. Reserve cerca de 1 hora; dá para parar entre um relatório e outro.</p>
+    <p class="abertura">@@ABERTURA@@</p>
     <ol class="passos">
       <li><strong>Abra o relatório.</strong> O cronômetro liga nesse clique e só conta com a página à vista. A tela não mostra a contagem, para não apressar a leitura. Se precisar interromper, use Pausar: o relatório some e o tempo para.</li>
-      <li><strong>Decida.</strong> O diagnóstico é a causa na seção 1, Veredito. Aceitar ou Recusar para o cronômetro.</li>
+      <li><strong>Decida.</strong> @@ONDE@@ Aceitar ou Recusar para o cronômetro.</li>
       <li><strong>Complete a ficha.</strong> Diga se achou no relatório onde está o erro do agente, a utilidade do relatório de 1 a 5, a sua avaliação do diagnóstico e, se quiser, um comentário.</li>
       <li><strong>Salve.</strong> A resposta fica guardada nesta página, e o Claude lê daqui quando você terminar.</li>
     </ol>
-    <p class="cegas"><strong>Sem ver o resultado.</strong> Até terminar, não abra a planilha <code>revisao_trilha.md</code> nem os arquivos <code>trilha.md</code> e <code>trilha.json</code>: eles trazem o nome, a família ou o resultado de cada caso. Por isso os relatórios aparecem aqui com um nome neutro.</p>
+    <p class="cegas"><strong>Sem ver o resultado.</strong> @@CEGAS@@</p>
     <button type="button" id="comecar" class="primario">Começar pelo relatório 1</button>
   </section>
   <section id="antes" class="bloco" hidden>
@@ -168,7 +203,7 @@ CORPO = """
     <div class="painel-topo so-largo"><strong id="painel-titulo"></strong></div>
     <div id="decidir">
       <p class="relogio"><span class="luz" aria-hidden="true"></span> Cronômetro ligado <button type="button" id="pausar" class="discreto">Pausar</button></p>
-      <p class="pergunta so-largo">Você aceita o diagnóstico da seção 1, Veredito?</p>
+      <p class="pergunta so-largo">@@PERGUNTA@@</p>
       <div class="decisoes"><button type="button" id="aceitar" class="decisao">Aceitar</button><button type="button" id="recusar" class="decisao">Recusar</button></div>
       <p class="nota so-largo">O clique para o cronômetro.</p>
     </div>
@@ -226,7 +261,7 @@ JS = """
   document.documentElement.lang = "pt-BR";
   const CASOS = JSON.parse(document.getElementById("casos").textContent);
   const IDS = new Set(CASOS.map((c) => c.caso));
-  const CHAVE = "sessao_revisao_trilha_v1";
+  const CHAVE = "@@CHAVE@@";
   const $ = (id) => document.getElementById(id);
   const vazio = () => ({erro: null, utilidade: null, avaliacao: null, comentario: ""});
   const estado = {fase: "inicio", atual: 0, revisitando: false, documento: null, decisao: null, respostas: vazio(), aberto_em: null, decidido_em: null, segundos: null, segundos_relogio: null, pausas: 0, retomadas: 0};
@@ -626,12 +661,12 @@ def _apelido(x: dict) -> str:
     return f"relatorio-{x['posicao']}"
 
 
-def pagina(linhas: list[dict], pasta: Path) -> str:
-    """A página da sessão. Recebe só as linhas da planilha e a pasta dela; o nome do caso vira relatorio-N e a coluna Classe não entra."""
+def pagina(linhas: list[dict], pasta: Path, perfil: dict = PERFIL_TRILHA) -> str:
+    """A página da sessão. Recebe só as linhas da planilha, a pasta dela e o perfil (os textos da sessão); o nome do caso vira relatorio-N e a coluna Classe não entra."""
     moldes = []
     for i, x in enumerate(linhas):
         texto = pt.sem_comentarios((pasta / x["relatorio"]).read_text(encoding="utf-8"))
-        achado = RE_RESULTADO.search(texto)
+        achado = RE_RESULTADO.search(perfil["permitir"].sub("", texto) if perfil["permitir"] else texto)
         if achado:
             raise ValueError(f"o relatório de {x['caso']} traz o resultado do caso ({achado.group(0)}); a sessão deixaria de ser às cegas")
         texto = re.sub(rf"(?<![\w-]){re.escape(x['caso'])}(?![\w-])", _apelido(x), RE_COMANDO.sub("", texto))
@@ -641,20 +676,24 @@ def pagina(linhas: list[dict], pasta: Path) -> str:
         moldes.append(f'<template id="rel-{i}">{tp._relatorio_para_html(texto)}</template>')
     casos = json.dumps([{"posicao": x["posicao"], "caso": _apelido(x)} for x in linhas], ensure_ascii=False).replace("<", chr(92) + "u003c")
     pips = "".join(f'<li><button type="button" class="pip" id="pip-{i}" data-i="{i}" disabled>{x["posicao"]}</button></li>' for i, x in enumerate(linhas))
-    corpo = CORPO.replace("@@TOTAL@@", str(len(linhas))).replace("@@PIPS@@", pips)
-    return ("<title>Revisão dos relatórios da trilha</title>\n"
+    corpo = CORPO
+    for marca, valor in (("@@OLHO@@", perfil["olho"]), ("@@TITULO@@", perfil["titulo"]), ("@@ABERTURA@@", perfil["abertura"]), ("@@ONDE@@", perfil["onde"]),
+                         ("@@CEGAS@@", perfil["cegas"]), ("@@PERGUNTA@@", perfil["pergunta"])):
+        corpo = corpo.replace(marca, valor)
+    corpo = corpo.replace("@@TOTAL@@", str(len(linhas))).replace("@@PIPS@@", pips)
+    return (f"<title>{perfil['titulo']}</title>\n"
             '<meta name="claude:viewport-fit-sides" content="cover">\n'
-            "<!-- ! Alteração de IA - Revisar: página gerada por ferramentas/sessao_revisao.py para a sessão de revisão dos relatórios da corrida 22 (Fase 4).\n"
+            f"<!-- ! Alteração de IA - Revisar: {perfil['tag']}\n"
             "     ! Motivo: a medida com revisor humano da especificação da trilha (seção 12 c) precisa de um relatório por vez, do tempo até a decisão e de nada sobre o resultado de cada caso; "
-            "a página leva só a ordem da planilha e o texto dos relatórios, e as respostas ficam no banco da própria página até irem para revisao_trilha.md. -->\n"
+            f"a página leva só a ordem da planilha e o texto dos relatórios, e as respostas ficam no banco da própria página até irem para {perfil['planilha']}. -->\n"
             '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">\n'
             f"<style>{CSS}</style>\n{corpo}\n" + "\n".join(moldes) +
-            f'\n<script type="application/json" id="casos">{casos}</script>\n<script>{JS}</script>\n')
+            f'\n<script type="application/json" id="casos">{casos}</script>\n<script>{JS.replace("@@CHAVE@@", perfil["chave"])}</script>\n')
 
 
 def _erros_da_resposta(r: dict) -> list[str]:
     erros = [f"{campo} = {r.get(campo)!r}" for campo, aceitos in VALORES.items() if r.get(campo) not in aceitos]
-    parecer_sem_tempo = r.get("segundos") is None and r.get("origem") == ORIGEM_PARECER
+    parecer_sem_tempo = r.get("segundos") is None and r.get("origem") in ORIGENS_SEM_TEMPO
     if not parecer_sem_tempo and (type(r.get("segundos")) is not int or r["segundos"] < 0):
         erros.append(f"segundos = {r.get('segundos')!r}")
     if type(r.get("utilidade")) is not int or not 1 <= r["utilidade"] <= 5:
@@ -713,17 +752,25 @@ def respostas_do_parecer(texto: str, desde: int, comentario: str) -> list[dict]:
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="Página da sessão de revisão dos relatórios da trilha e gravação das respostas na planilha.")
+    ap = argparse.ArgumentParser(description="Página da sessão de revisão (um relatório por vez, com cronômetro) e gravação das respostas na planilha.")
     ap.add_argument("--gravar", type=Path, help="arquivo JSON com a lista de respostas lidas do banco da página")
     ap.add_argument("--corrigir", action="store_true", help="com --gravar, troca linhas já preenchidas")
+    # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q5) --perfil escolhe a sessão (trilha, a de 05/11; v3, a da Pós-Fase 4), e --planilha e --saida trocam os caminhos padrão do perfil.
+    # ! Motivo: a sessão com revisor humano da ficha 40 (opção b) usa a mesma página com a planilha revisao_v3.md e outros textos; sem a opção, o script só gerava a página da corrida 22.
+    ap.add_argument("--perfil", choices=sorted(PERFIS), default="trilha", help="a sessão: trilha (corrida 22, 05/11/2026) ou v3 (corrida 24, Pós-Fase 4)")
+    ap.add_argument("--planilha", type=Path, default=None, help="a planilha da sessão (padrão: a do perfil, em resultados_alvo/fase4)")
+    ap.add_argument("--saida", type=Path, default=None, help="o HTML gerado (padrão: o do perfil, em Documentacao/dashboard)")
     args = ap.parse_args()
+    perfil = PERFIS[args.perfil]
+    planilha = args.planilha or PLANILHA.with_name(perfil["planilha"])
+    saida = args.saida or SAIDA.with_name(perfil["saida"])
     if args.gravar:
-        faltam = gravar_respostas(PLANILHA, json.loads(args.gravar.read_text(encoding="utf-8")), corrigir=args.corrigir)
-        print(f"{PLANILHA.name}: gravada; casos em branco: {len(faltam)}")
+        faltam = gravar_respostas(planilha, json.loads(args.gravar.read_text(encoding="utf-8")), corrigir=args.corrigir)
+        print(f"{planilha.name}: gravada; casos em branco: {len(faltam)}")
         return 0
-    linhas = ler_planilha(PLANILHA)
-    SAIDA.write_text(pagina(linhas, PLANILHA.parent), encoding="utf-8", newline="\n")
-    print(f"{SAIDA.name}: {len(linhas)} relatórios, {SAIDA.stat().st_size:,} bytes")
+    linhas = ler_planilha(planilha)
+    saida.write_text(pagina(linhas, planilha.parent, perfil), encoding="utf-8", newline="\n")
+    print(f"{saida.name}: {len(linhas)} relatórios, {saida.stat().st_size:,} bytes")
     return 0
 
 

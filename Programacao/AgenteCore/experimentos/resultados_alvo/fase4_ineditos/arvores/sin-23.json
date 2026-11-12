@@ -1,0 +1,399 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_ineditos/qwen2.5_7b/sin-23",
+ "nome": "sin-23",
+ "caso": "sin-23",
+ "corrida": "fase4_ineditos",
+ "modo": "ineditos",
+ "modelo": "qwen2.5:7b",
+ "classe": 2,
+ "nivel": 1,
+ "eventos": {
+  "primeiro": 176,
+  "ultimo": 197,
+  "hash": "0354be1bfb1f8a66"
+ },
+ "relatorio_v3": "../relatorios_v3/sin-23.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (512 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (512 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      176
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3626 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      179
+     ]
+    }
+   ],
+   "eventos": [
+    179
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 1, pontuação 30,62: 27,62 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 30.6179,
+     "posicao": 1
+    },
+    {
+     "opcao": "campo_renomeado",
+     "detalhe": "posição 2, pontuação 27,94: 26,94 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 27.9439,
+     "posicao": 2
+    },
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 3, pontuação 26,39: 23,39 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 26.3928,
+     "posicao": 3
+    },
+    {
+     "opcao": "campo_ausente",
+     "detalhe": "posição 4, pontuação 22,44: 21,44 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 22.439,
+     "posicao": 4
+    },
+    {
+     "opcao": "tipo_divergente",
+     "detalhe": "posição 5, pontuação 17,37: 16,37 pelas palavras do caso, mais 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 17.3701,
+     "posicao": 5
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "detalhe": "posição 6, pontuação 17,12: 14,12 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 17.1181,
+     "posicao": 6
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "detalhe": "posição 7, pontuação 16,15: 16,15 pelas palavras do caso, sem reforço",
+     "escolhida": false,
+     "pontuacao": 16.1542,
+     "posicao": 7
+    },
+    {
+     "opcao": "pagina-produtos-api",
+     "detalhe": "posição 8, pontuação 12,62: 10,62 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 12.625,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `contrato-produto` (30,62), `campo_renomeado` (27,94) e `entidade-produto` (26,39).",
+     "origem": "observado",
+     "eventos": [
+      177
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `contrato-produto` e `entidade-produto`; o da entidade, em `contrato-produto`, `campo_renomeado` e `entidade-produto`.",
+     "origem": "observado",
+     "eventos": [
+      177
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `campo_ausente` (22,44), `tipo_divergente` (17,37), `colecao_no_lugar_de_objeto` (17,12), `chave_de_juncao_errada` (16,15) e `pagina-produtos-api` (12,62).",
+     "origem": "observado",
+     "eventos": [
+      177
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos/{id}`, entidade `Produto`, status 200 e 40 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      177
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `entidade-produto`, e o primeiro de fora, `campo_ausente`, só o texto do caso já punha o primeiro à frente (23,39 contra 21,44), e os reforços em código levaram a diferença a 3,95.",
+     "origem": "observado",
+     "eventos": [
+      177
+     ]
+    }
+   ],
+   "eventos": [
+    177
+   ],
+   "entregues": [
+    "contrato-produto",
+    "campo_renomeado",
+    "entidade-produto"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos/{id}",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 40
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "campo_renomeado",
+   "alternativas": [
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 0.9990315437183062,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,999; verbetes entregues que a tratam: `contrato-produto` e `campo_renomeado`"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 7.344215626531759e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto` e `entidade-produto`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 3.9040598637413206e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto` e `campo_renomeado`"
+    },
+    {
+     "opcao": "chave_de_juncao_errada",
+     "probabilidade": 1.3076214166882784e-05,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto`"
+    },
+    {
+     "opcao": "resposta_truncada",
+     "probabilidade": 4.386667348154482e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "probabilidade": 2.4882244989030725e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 1.3622660825361393e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 1.3622660825361393e-06,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "dado_desatualizado",
+     "probabilidade": 9.74742883769566e-07,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `campo_renomeado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo apontou o campo `resumo`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "`resumo` aparece no caso (procurado no contrato, no corpo, na requisição, na árvore e no seletor): confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `tipo_divergente` (Tipo divergente), ficou com probabilidade 0,000 contra 0,999 da escolhida; verbetes entregues que a sustentam: `contrato-produto` e `entidade-produto`.",
+     "origem": "observado",
+     "eventos": [
+      197
+     ]
+    },
+    {
+     "texto": "As outras 7 alternativas lidas na resposta somam probabilidade 0,000; as maiores: `campo_ausente` (0,000), `chave_de_juncao_errada` (0,000) e `resposta_truncada` (0,000).",
+     "origem": "observado",
+     "eventos": [
+      197
+     ]
+    },
+    {
+     "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      197
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      197
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos/10`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `campo_renomeado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `campo_renomeado`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `contrato-produto` e `campo_renomeado`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `campo_renomeado` (Campo renomeado; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/campo_renomeado.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/campo_renomeado.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      197
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 8 de 8 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      197
+     ]
+    }
+   ],
+   "eventos": [
+    197
+   ],
+   "segunda": "tipo_divergente",
+   "campo": "resumo",
+   "confianca": {
+    "selo": "alto",
+    "palavra": "alta",
+    "p_rotulo": 0.9990315437183062,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 37,
+     "certos": 34,
+     "acerto_pct": 91.9
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança alta: a probabilidade lida na causa respondida foi 0,999, e a faixa alta começa em 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 37 casos que caíram na faixa alta, o agente acertou a causa em 34 de 37: 91,9%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Campo renomeado",
+   "probabilidade": 0.9990315437183062,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O campo resumo foi renomeado para resumo_v2, mas a interface espera resumo, resultando em uma descrição não exibida corretamente.",
+  "fonte": "[campo_renomeado]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: campo_renomeado\nCAMPO: resumo\nIMPACTO: O campo resumo foi renomeado para resumo_v2, mas a interface espera resumo, resultando em uma descrição não exibida corretamente.\nFONTE: [campo_renomeado]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 24,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 6,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "alto",
+  "confianca": "alta",
+  "falha": null,
+  "escolha": "campo_renomeado",
+  "causa_em_palavras": "Campo renomeado",
+  "campo": "resumo",
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

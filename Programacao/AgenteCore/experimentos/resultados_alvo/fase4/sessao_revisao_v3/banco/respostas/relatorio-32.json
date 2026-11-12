@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:29:44.362Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-32",
+  "comentario": "O diagnóstico foi perfeito. O campo nome, explicitamente exigido pelo contrato, realmente não foi retornado no payload da API, o que resultou no sintoma visual de \"(sem nome)\" na grade do frontend. O agente cravou a causa raiz campo_ausente corretamente, identificou o campo faltante (nome), e referenciou as fontes sem alucinações.",
+  "decidido_em": "2026-11-10T11:30:07.040Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 32,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:30:19.755Z",
+  "segundos": 23,
+  "segundos_relogio": 23,
+  "utilidade": 5
+}

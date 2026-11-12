@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:26:10.194Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-28",
+  "comentario": "O diagnóstico está incorreto do ponto de vista da taxonomia. O banco de dados gravou o dado de entrada corretamente (4 pessoas), mas a API multiplicou ou transformou esse dado na resposta, exibindo 400. Isso é um erro clássico de transformação de dados no DTO de saída (o que na taxonomia costuma ser mapeado como escala_ou_unidade_errada), e não um valor_fora_do_dominio (já que 400 não viola o contrato que pede apenas um \"inteiro\"). O agente foi induzido ao erro pelo mecanismo de busca, que não recuperou o verbete correto, entregando valor_fora_do_dominio em terceiro lugar. Com as opções limitadas, o LLM tentou forçar um encaixe (o que é evidenciado pela baixa confiança de 0,65). Ainda assim, o relatório ganha nota 3 em utilidade porque aponta o campo exato (pessoas) e descreve o sintoma visual de forma impecável, o que seria suficiente para um desenvolvedor debugar o problema no código.",
+  "decidido_em": "2026-11-10T11:26:52.335Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 28,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:27:08.035Z",
+  "segundos": 42,
+  "segundos_relogio": 42,
+  "utilidade": 3
+}

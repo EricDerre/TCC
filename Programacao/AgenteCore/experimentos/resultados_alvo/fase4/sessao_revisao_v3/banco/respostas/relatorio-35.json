@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:33:52.954Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-35",
+  "comentario": "O agente errou a classificação taxonômica ao declarar resposta_truncada. O JSON retornado pela API é sintaticamente completo e válido; a falha real é a omissão pontual do campo preco nos objetos dos itens 8 e 10 (o que faz o frontend renderizar undefined), caracterizando o defeito como campo_ausente (que inclusive era a segunda opção do modelo com 0,02 de probabilidade e foi citada por ele na linha FONTE). Além da classificação incorreta, o agente violou as regras do RAG ao responder uma causa que não possuía suporte nos verbetes entregues (entidade-produto, contrato-produto, campo_ausente), disparando corretamente o gatilho causa_sem_verbete_que_a_trate. A utilidade recebe nota 4 porque o relatório isolou com precisão o campo afetado (preco) e o comportamento do sintoma.",
+  "decidido_em": "2026-11-10T11:34:23.689Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 35,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:34:36.697Z",
+  "segundos": 31,
+  "segundos_relogio": 31,
+  "utilidade": 4
+}

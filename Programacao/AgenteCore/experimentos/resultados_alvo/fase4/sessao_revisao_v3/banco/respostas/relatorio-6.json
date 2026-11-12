@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:46:16.647Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-6",
+  "comentario": "O modelo acertou o diagnóstico ao cravar estrutura_aninhada_divergente no campo tipo. O contrato exigia que \"tipo\" fosse apenas \"texto\" (ex: \"Carnes\"), mas a API retornou um objeto JSON completo ({\"valor\": \"Carnes\", \"moeda\": \"BRL\"}). O sintoma refletiu exatamente isso: a interface renderizou a string do objeto literal. Mesmo com confiança baixa (0,797), a inferência lógica do modelo foi precisa e alinhada ao verbete estrutura_aninhada_divergente, que estava corretamente presente no contexto. A única falha leve foi na citação das fontes (citou entidade-produto e contrato-produto, esquecendo de citar o verbete da causa em si), mas isso não invalida a corretude do diagnóstico da causa raiz.",
+  "decidido_em": "2026-11-09T19:46:51.037Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 6,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:47:00.947Z",
+  "segundos": 28,
+  "segundos_relogio": 34,
+  "utilidade": 5
+}

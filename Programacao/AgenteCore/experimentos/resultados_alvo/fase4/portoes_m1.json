@@ -1,0 +1,3125 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-10T20:36:53",
+    "medida": "M1",
+    "corrida": "fase4_biblioteca"
+  },
+  "o_que_e": "Os portões 3, 4 e 5 da proposta do analista de documentação aplicados, sem modelo, às propostas de edição da corrida 20, contra a revisão humana do lote (ficha 67, decisão 121). Os portões 3 e 4 leem o texto da proposta; o portão 5 aplica a edição a uma cópia da biblioteca de antes do lote e refaz a busca dos casos com gabarito, e por isso só vale para as propostas que viraram edição.",
+  "resumo": {
+    "propostas": 92,
+    "casos": 54,
+    "revisadas": 20,
+    "por_veredito": {
+      "Correta": 2,
+      "Parcial": 9,
+      "Errada": 9
+    },
+    "forma_recusa": 86,
+    "forma_passa": 6,
+    "forma_pela_lista_da_pesquisa": 76,
+    "forma_pela_lista_da_pesquisa_nas_revisadas": 18,
+    "texto_recusa": 11,
+    "texto_com_alarme_flesch": 73,
+    "busca_recusa": 4,
+    "sobram_depois_dos_tres": 1,
+    "sobram_sem_o_portao_da_forma": 15,
+    "sinais_de_busca_na_corrida": 0
+  },
+  "por_portao": [
+    {
+      "portao": "forma",
+      "nome": "portão 3, a forma de instrução",
+      "regra": "recusa o texto que começa por verbo de edição ou por rótulo seguido de dois-pontos (lista fechada)",
+      "nas_propostas": {
+        "recusa": 86,
+        "passa": 6,
+        "nao_se_aplica": 0
+      },
+      "nas_revisadas": {
+        "recusa": 18,
+        "passa": 2,
+        "por_veredito": [
+          {
+            "veredito": "Correta",
+            "edicoes": 2,
+            "recusa": 2,
+            "passa": 0
+          },
+          {
+            "veredito": "Parcial",
+            "edicoes": 9,
+            "recusa": 8,
+            "passa": 1
+          },
+          {
+            "veredito": "Errada",
+            "edicoes": 9,
+            "recusa": 8,
+            "passa": 1
+          }
+        ]
+      },
+      "corretas": 2,
+      "corretas_perdidas": 2,
+      "erradas_e_parciais": 18,
+      "erradas_e_parciais_recusadas": 16
+    },
+    {
+      "portao": "texto",
+      "nome": "portão 4, os filtros de texto",
+      "regra": "recusa o texto que reprova em alguma das medidas de prolixidade e objetividade do pacote Q2, com os limiares do corpus",
+      "nas_propostas": {
+        "recusa": 11,
+        "passa": 81,
+        "nao_se_aplica": 0
+      },
+      "nas_revisadas": {
+        "recusa": 3,
+        "passa": 17,
+        "por_veredito": [
+          {
+            "veredito": "Correta",
+            "edicoes": 2,
+            "recusa": 1,
+            "passa": 1
+          },
+          {
+            "veredito": "Parcial",
+            "edicoes": 9,
+            "recusa": 0,
+            "passa": 9
+          },
+          {
+            "veredito": "Errada",
+            "edicoes": 9,
+            "recusa": 2,
+            "passa": 7
+          }
+        ]
+      },
+      "corretas": 2,
+      "corretas_perdidas": 1,
+      "erradas_e_parciais": 18,
+      "erradas_e_parciais_recusadas": 2
+    },
+    {
+      "portao": "busca",
+      "nome": "portão 5, a busca",
+      "regra": "recusa a edição que, aplicada numa cópia da biblioteca, tira o verbete da causa certa dos três entregues de algum caso com gabarito; no sinal de busca, exige que o caso de origem passe a receber o verbete",
+      "nas_propostas": {
+        "recusa": 4,
+        "passa": 16,
+        "nao_se_aplica": 72
+      },
+      "nas_revisadas": {
+        "recusa": 4,
+        "passa": 16,
+        "por_veredito": [
+          {
+            "veredito": "Correta",
+            "edicoes": 2,
+            "recusa": 0,
+            "passa": 2
+          },
+          {
+            "veredito": "Parcial",
+            "edicoes": 9,
+            "recusa": 1,
+            "passa": 8
+          },
+          {
+            "veredito": "Errada",
+            "edicoes": 9,
+            "recusa": 3,
+            "passa": 6
+          }
+        ]
+      },
+      "corretas": 2,
+      "corretas_perdidas": 0,
+      "erradas_e_parciais": 18,
+      "erradas_e_parciais_recusadas": 4
+    }
+  ],
+  "em_sequencia": [
+    {
+      "etapa": "passaram nos filtros de hoje e foram revisadas",
+      "sobram": 20,
+      "Correta": 2,
+      "Parcial": 9,
+      "Errada": 9
+    },
+    {
+      "etapa": "depois do portão 3 (forma de instrução)",
+      "sobram": 2,
+      "Correta": 0,
+      "Parcial": 1,
+      "Errada": 1
+    },
+    {
+      "etapa": "depois do portão 4 (filtros de texto)",
+      "sobram": 2,
+      "Correta": 0,
+      "Parcial": 1,
+      "Errada": 1
+    },
+    {
+      "etapa": "depois do portão 5 (busca)",
+      "sobram": 1,
+      "Correta": 0,
+      "Parcial": 0,
+      "Errada": 1
+    }
+  ],
+  "outras_sequencias": [
+    {
+      "etapa": "só os portões 4 e 5, sem o da forma",
+      "sobram": 15,
+      "Correta": 1,
+      "Parcial": 8,
+      "Errada": 6
+    },
+    {
+      "etapa": "só o portão 5, o da busca",
+      "sobram": 16,
+      "Correta": 2,
+      "Parcial": 8,
+      "Errada": 6
+    }
+  ],
+  "por_destino": [
+    {
+      "destino": "aceita pelos filtros de hoje",
+      "propostas": 19,
+      "forma_recusa": 17,
+      "texto_recusa": 3
+    },
+    {
+      "destino": "segurada para revisão humana (regra dos 40%)",
+      "propostas": 1,
+      "forma_recusa": 1,
+      "texto_recusa": 0
+    },
+    {
+      "destino": "recusada pelo validador da Fase 3",
+      "propostas": 56,
+      "forma_recusa": 53,
+      "texto_recusa": 5
+    },
+    {
+      "destino": "recusada pelos filtros da Fase 4",
+      "propostas": 16,
+      "forma_recusa": 15,
+      "texto_recusa": 3
+    }
+  ],
+  "criterios_do_texto": [
+    {
+      "criterio": "palavras_por_frase_media",
+      "nome": "Palavras por frase (média)",
+      "reprovadas": 0,
+      "reprovadas_nas_revisadas": 0
+    },
+    {
+      "criterio": "palavras_por_frase_max",
+      "nome": "Palavras por frase (máximo)",
+      "reprovadas": 0,
+      "reprovadas_nas_revisadas": 0
+    },
+    {
+      "criterio": "preenchimento_razao",
+      "nome": "Razão de preenchimento (lista fechada)",
+      "reprovadas": 0,
+      "reprovadas_nas_revisadas": 0
+    },
+    {
+      "criterio": "repeticao_razao",
+      "nome": "Repetição interna (trigramas repetidos)",
+      "reprovadas": 5,
+      "reprovadas_nas_revisadas": 0
+    },
+    {
+      "criterio": "compressao",
+      "nome": "Taxa de compressão (palavras de conteúdo por palavra distinta, em janelas de 100)",
+      "reprovadas": 0,
+      "reprovadas_nas_revisadas": 0
+    },
+    {
+      "criterio": "termos_sem_expansao_n",
+      "nome": "Jargão e sigla sem expansão na primeira menção (lista fechada)",
+      "reprovadas": 6,
+      "reprovadas_nas_revisadas": 3
+    }
+  ],
+  "primeiras_palavras": [
+    {
+      "palavra": "adicionar",
+      "propostas": 56,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "corrigir",
+      "propostas": 15,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "retificar",
+      "propostas": 4,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "adicione",
+      "propostas": 3,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "adicionado",
+      "propostas": 2,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "notar",
+      "propostas": 2,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "o",
+      "propostas": 2,
+      "recusada_pela_forma": false
+    },
+    {
+      "palavra": "um",
+      "propostas": 2,
+      "recusada_pela_forma": false
+    },
+    {
+      "palavra": "adiciona",
+      "propostas": 1,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "corrigido",
+      "propostas": 1,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "cria",
+      "propostas": 1,
+      "recusada_pela_forma": true
+    },
+    {
+      "palavra": "documentação",
+      "propostas": 1,
+      "recusada_pela_forma": false
+    },
+    {
+      "palavra": "ocorre",
+      "propostas": 1,
+      "recusada_pela_forma": false
+    },
+    {
+      "palavra": "retificação:",
+      "propostas": 1,
+      "recusada_pela_forma": true
+    }
+  ],
+  "busca": {
+    "casos_com_gabarito": 126,
+    "base": "1fca10f1a6f6",
+    "edicoes": 20,
+    "edicoes_que_mudam_a_busca": 16,
+    "verbete_certo_entra": 4,
+    "verbete_certo_sai": 7,
+    "edicoes_recusadas": 4
+  },
+  "revisadas": [
+    {
+      "caso": "sin-1",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "campo_preco_ausente",
+      "texto": "Um campo preço ausente na resposta da API resulta em botões sem informações relevantes na interface web.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "um",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 1 caso(s): sin-5",
+        "casos_em_que_os_tres_verbetes_mudam": 6,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 1,
+        "casos_que_leriam_a_edicao": 1,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "sin-5"
+        ],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-3",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "novo_verbete",
+      "texto": "Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 4,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-5",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "pessoas_incorretas",
+      "texto": "Adicionar validação no número de pessoas no pedido para evitar valores incorretos.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 5,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "run-3",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "limite_de_requisicoes",
+      "texto": "Corrigir que o 429 pode ser emitido pelo próprio servidor ou intermediários, não necessariamente pelo CobaiaAPI.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Correta",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 4,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "run-5",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "contrato-pedido",
+      "texto": "Adicionar nota sobre a possibilidade de POST /api/pedidos inserir registros duplicados sem idempotência, causando registros com id consecutivo e duas respostas 201 para um único POST.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 5,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 27,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-4",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contrato-produto",
+      "texto": "Adicionar nota sobre a necessidade de verificar se a resposta é um objeto ou uma coleção, pois a interface espera um objeto.",
+      "destino": "segurada para revisão humana (regra dos 40%)",
+      "codigo": "para_revisao_humana",
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 9,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 65,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-4",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "Corrigir a lógica para atualizar o estado corretamente, independentemente de ser uma coleção ou um objeto.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 2 caso(s): sin-8, tra-13",
+        "casos_em_que_os_tres_verbetes_mudam": 8,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 2,
+        "casos_que_leriam_a_edicao": 20,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "sin-8",
+          "tra-13"
+        ],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "sin-15",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "colecao_no_lugar_de_objeto",
+      "texto": "Adicionar nota sobre a necessidade de tratar a categoria como uma string, não uma lista, no front-end.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Correta",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 7,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-6",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar nota sobre a necessidade de conversão correta do tipo id em inteiro no front-end, considerando que o backend retorna como string.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 3 caso(s): lex-5, sin-5, tra-13",
+        "casos_em_que_os_tres_verbetes_mudam": 6,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 3,
+        "casos_que_leriam_a_edicao": 15,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "lex-5",
+          "sin-5",
+          "tra-13"
+        ],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-7",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar exemplo de campo \"pessoas\" como número em vez de string, causando inconsistência na contagem total de lugares reservados.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 5,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 12,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-7"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-10",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar nota sobre a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 2,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 11,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-15",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "validacao-na-api",
+      "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio permitido pelo formulário.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 3,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-6",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "formato_preco",
+      "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 1 caso(s): lex-5",
+        "casos_em_que_os_tres_verbetes_mudam": 4,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 1,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "lex-5"
+        ],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-14",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contagem_inconsistente",
+      "texto": "Adicionar nota sobre a necessidade de incluir o total na resposta da API /api/produtos, para evitar contagens inconsistentes.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 3,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 17,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "run-12",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "erro_interno_do_servidor",
+      "texto": "Adicionar que a conversão de ErrorFault em 500 pode ser causada por problemas na rota.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 5,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-8",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "Adicionar nota sobre a necessidade de atualização correta do estado da tela após a resposta da API.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 4,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 13,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-15"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-8",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "atualizacao-da-tela",
+      "texto": "Adicionar verbete sobre a necessidade de atualização correta do estado da tela após a resposta da API, utilizando promises ou async/await.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 7,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-15"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-10",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "interface-frontend",
+      "texto": "Adicionar nota sobre a importância de atualizações corretas do DOM e a dependência de redirects na interface frontend.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-11",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "localizador_quebrado",
+      "texto": "Adicionar que a falta de ORDER BY na consulta pode causar ordem aleatória indeterminada dos produtos.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 2,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 13,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-13",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "O cancelamento depende de um redirect, o que pode causar divergência na interface.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "o",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 6,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 11,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-15"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": true
+    }
+  ],
+  "propostas": [
+    {
+      "caso": "lex-2",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "corpo_nao_e_json",
+      "texto": "Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON. Adicionar um exemplo de sintoma para clarificar que XML também pode causar parse falho.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "mensagem_nao_encontrada_no_codigo",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "repeticao_razao"
+      ],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "lex-3",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "corpo_vazio",
+      "texto": "Adicionar exemplo de sintoma: \"Tabela de reservas vazia, sem erro.\"",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-3",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "resposta_truncada",
+      "texto": "Retificação: onde diz \"Fora dele: limite num proxy, conexão encerrada durante o envio.\", leia: Corrigir a descrição para incluir que o truncamento pode ser causado por limites de proxy ou interrupção de conexão. Adicione um exemplo de como verificar o Content-Length na documentação para evitar esse problema.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "retificação:",
+        "motivo": "começa pelo rótulo \"retificação:\", que é registro de mudança e não afirmação sobre o sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-5",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "resposta_truncada",
+      "texto": "Corrigir a descrição para incluir que o truncamento pode ser causado por limites de proxy ou interrupção de conexão. Adicione um exemplo de como verificar o Content-Length na documentação para evitar esse problema.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "sem_evidencia_do_caso",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-5",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "resposta_truncada",
+      "texto": "Ocorre quando o corpo da resposta JSON é cortado antes de ser completamente enviado, resultando em uma lista incompleta ou parse falha. Verifique o Content-Length para evitar esse problema.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "ocorre",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-1",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "campo_ausente",
+      "texto": "Adicionar: \"Sinais: nome ausente: cartão '(sem nome)'; preço ausente: botão imprime 'undefined'; id ausente: botão de detalhe ou cancelar sem identificador, clique sem efeito.\"",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "texto_nao_atomico",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-1",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "campo_preco_ausente",
+      "texto": "Um campo preço ausente na resposta da API resulta em botões sem informações relevantes na interface web.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "um",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 1 caso(s): sin-5",
+        "casos_em_que_os_tres_verbetes_mudam": 6,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 1,
+        "casos_que_leriam_a_edicao": 1,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "sin-5"
+        ],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "sin-2",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "campo_renomeado",
+      "texto": "\"Corrigir a afirmação para: 'Contrato mudou no servidor sem atualizar o cliente e API não reflete as mudanças.'\"",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "mensagem_nao_encontrada_no_codigo",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-2",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "campo_incorreto",
+      "texto": "\"Um campo pode ser renomeado ou ausente no contrato, mas deve ser consistentemente implementado no cliente e servidor.\"",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "mensagem_nao_encontrada_no_codigo",
+      "veredito": null,
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "um",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-3",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "estrutura_aninhada_divergente",
+      "texto": "Adicionar exemplo de estrutura aninhada divergente no verbete.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-3",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "contrato-produto",
+      "texto": "Notar que o contrato especifica a estrutura do JSON esperado, mas não aborda o truncamento de resposta.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "notar",
+        "motivo": "começa por \"notar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-2",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar exemplo de converção incorreta no verbete.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "texto_curto",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-2",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "valor_fora_do_dominio",
+      "texto": "Retificar a informação sobre a validação do status do pedido na API.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "arquivo_inexistente",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "retificar",
+        "motivo": "começa por \"retificar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "semt-4",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "formato_de_data_divergente",
+      "texto": "Adicionar que o API deve retornar a data_pedido no formato ISO 8601 (AAAA-MM-DD) para evitar interpretação incorreta pelo cliente.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-4",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "formato_de_data_divergente",
+      "texto": "Corrigir que a data_pedido deve ser sempre retornada no formato ISO 8601 (AAAA-MM-DD) e não deve conter hora ou fuso.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "tra-2",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "chave_de_juncao_errada",
+      "texto": "Corrigir a junção entre tbpedido_reserva e tbusuarios, garantindo que id_clientes esteja corretamente ligado a login_usuario.id.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "arquivo_inexistente",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-3",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "chave_de_juncao_errada",
+      "texto": "Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-3",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "novo_verbete",
+      "texto": "Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 4,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-5",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "escala_ou_unidade_errada",
+      "texto": "Adicionar exemplo de conversão incorreta de valor_produto DECIMAL(9,2) para float, causando arredondamento.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-5",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "pessoas_incorretas",
+      "texto": "Adicionar validação no número de pessoas no pedido para evitar valores incorretos.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 5,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "run-3",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contrato-produto",
+      "texto": "Adicionar nota sobre o status 429 e sua relação com o limite de requisições.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "texto_de_origem_proibida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "run-3",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "limite_de_requisicoes",
+      "texto": "Corrigir que o 429 pode ser emitido pelo próprio servidor ou intermediários, não necessariamente pelo CobaiaAPI.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Correta",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 4,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "run-5",
+      "numero": 1,
+      "operacao": "novo_verbete",
+      "verbete": "registro_duplicado",
+      "texto": "Adicionar que POST /api/pedidos pode inserir registros duplicados sem idempotência, causando registros com id consecutivo e duas respostas 201 para um único POST.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "run-5",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "contrato-pedido",
+      "texto": "Adicionar nota sobre a possibilidade de POST /api/pedidos inserir registros duplicados sem idempotência, causando registros com id consecutivo e duas respostas 201 para um único POST.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 5,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 27,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-4",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contrato-produto",
+      "texto": "Adicionar nota sobre a necessidade de verificar se a resposta é um objeto ou uma coleção, pois a interface espera um objeto.",
+      "destino": "segurada para revisão humana (regra dos 40%)",
+      "codigo": "para_revisao_humana",
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 9,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 65,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-4",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "Corrigir a lógica para atualizar o estado corretamente, independentemente de ser uma coleção ou um objeto.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 2 caso(s): sin-8, tra-13",
+        "casos_em_que_os_tres_verbetes_mudam": 8,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 2,
+        "casos_que_leriam_a_edicao": 20,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "sin-8",
+          "tra-13"
+        ],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "lex-6",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "corpo_nao_e_json",
+      "texto": "Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "lex-9",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "corpo_nao_e_json",
+      "texto": "Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON. Adicionar um exemplo de sintoma para clarificar que XML também pode causar parse falho.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "mensagem_nao_encontrada_no_codigo",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "repeticao_razao"
+      ],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "lex-12",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "corpo_nao_e_json",
+      "texto": "Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON. Adicionar um exemplo de sintoma para clarificar que XML também pode causar parse falho.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "arquivo_inexistente",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "repeticao_razao"
+      ],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "sin-6",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "campo_ausente",
+      "texto": "Adicionar nota sobre a remoção de campos no fault_injection.py.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "sin-6",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "campo_renomeado",
+      "texto": "Adicionar verbete sobre campos renomeados e como isso afeta a documentação.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-8",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "colecao_no_lugar_de_objeto",
+      "texto": "Corrigir que o campo \"tipo\" deve ser tratado como uma string, não uma lista.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "sin-8",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "colecao_no_lugar_de_objeto",
+      "texto": "Corrigir que o campo \"tipo\" deve ser tratado como uma string, não uma lista.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "sin-9",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "campo_renomeado",
+      "texto": "Adicionar exemplo de estrutura aninhada divergente no verbete.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "sem_evidencia_do_caso",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-9",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "estrutura_aninhada_divergente",
+      "texto": "Adicionar exemplo de estrutura aninhada divergente no verbete.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-12",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "campo_ausente",
+      "texto": "Adicionado sintomas para campos ausentes em objetos JSON.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "texto_curto",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionado",
+        "motivo": "começa por \"adicionado\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-12",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "campo_ausente",
+      "texto": "Documentação adicionada para campos ausentes em objetos JSON, incluindo sintomas e causas.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "documentação",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-13",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "estrutura_aninhada_divergente",
+      "texto": "Adicionar exemplo de estrutura aninhada divergente no verbete.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "sin-15",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "colecao_no_lugar_de_objeto",
+      "texto": "Adicionar nota sobre a necessidade de tratar a categoria como uma string, não uma lista, no front-end.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Correta",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 7,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "sin-15",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "contrato-produto",
+      "texto": "Notar que o contrato especifica a estrutura do JSON esperado, mas não aborda o tratamento da categoria como uma string.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "redundante",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "notar",
+        "motivo": "começa por \"notar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-6",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar nota sobre a necessidade de conversão correta do tipo id em inteiro no front-end, considerando que o backend retorna como string.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 3 caso(s): lex-5, sin-5, tra-13",
+        "casos_em_que_os_tres_verbetes_mudam": 6,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 3,
+        "casos_que_leriam_a_edicao": 15,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "lex-5",
+          "sin-5",
+          "tra-13"
+        ],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-6",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "contagem_inconsistente",
+      "texto": "Retificar a descrição para mencionar que a contagem inconsistente pode ocorrer devido a consultas diferentes retornando resultados distintos.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "retificar",
+        "motivo": "começa por \"retificar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-7",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar exemplo de campo \"pessoas\" como número em vez de string, causando inconsistência na contagem total de lugares reservados.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 5,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 12,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-7"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-7",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "contagem_inconsistente",
+      "texto": "Adicionar verbete sobre inconsistência na contagem de reservas devido a tipos divergentes e formatos de data.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-10",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar nota sobre a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 2,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 11,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "semt-10",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "tipo_convercao",
+      "texto": "Adicionar um novo verbete para documentar a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "sem_evidencia_do_caso",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-11",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "valor_fora_do_dominio",
+      "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "arquivo_inexistente",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-12",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "formato_de_data_divergente",
+      "texto": "Corrigir a documentação para especificar que a API deve retornar data_pedido no formato ISO AAAA-MM-DD, e que valores como timestamp devem ser convertidos antes da resposta.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-13",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tipo_divergente",
+      "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "teto_notas_verbete",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-15",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "valor_fora_do_dominio",
+      "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "semt-15",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "validacao-na-api",
+      "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio permitido pelo formulário.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 3,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-6",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "escala_ou_unidade_errada",
+      "texto": "Adicionar exemplo de conversão incorreta de valor_produto DECIMAL(9,2) para float, causando arredondamento.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-6",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "formato_preco",
+      "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": false,
+        "motivo": "o verbete da causa certa sai dos três entregues de 1 caso(s): lex-5",
+        "casos_em_que_os_tres_verbetes_mudam": 4,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 1,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [
+          "lex-5"
+        ],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-7",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "entidade-produto",
+      "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-7",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "chave_de_juncao_errada",
+      "texto": "Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-9",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "formato_de_data_divergente",
+      "texto": "Adicionar exemplo de conversão incorreta de data, causando deslocamento.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-9",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "deslocamento_de_data",
+      "texto": "Adicionar exemplo de conversão incorreta de data, causando deslocamento.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-12",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "escala_ou_unidade_errada",
+      "texto": "Adicionar exemplo de conversão incorreta de valor_produto DECIMAL(9,2) para float, causando arredondamento.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-12",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "escala_ou_unidade_errada",
+      "texto": "Retificar trecho para: \"Adicionar exemplo de conversão incorreta de valor_produto DECIMAL(9,2) para float, causando arredondamento (ex: 89.90 -> 8990.0).\"",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "trecho_nao_encontrado",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "retificar",
+        "motivo": "começa por \"retificar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-13",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "chave_de_juncao_errada",
+      "texto": "Adicionar que a junção entre tbprodutos e tbtipos deve ser corrigida, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "redundante",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "tra-14",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "contagem_inconsistente",
+      "texto": "Adicionar nota sobre a necessidade de incluir o total na resposta da API /api/produtos, para evitar contagens inconsistentes.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 3,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 17,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "tra-14",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "contagem_total_inconsistente",
+      "texto": "Adicionar verbete sobre a necessidade de manter consistência entre o total de itens na lista e na interface, evitando contagens inconsistentes.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "run-6",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "erro_interno_do_servidor",
+      "texto": "Adicionar que este erro pode ocorrer devido a falhas no banco de dados ou em rotas, e que a mensagem genérica pode esconder problemas específicos. Adicionar que este erro pode ocorrer de forma intermitente, sem padrão, e que pode ser causado por problemas no banco de dados ou rota.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "texto_longo",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "repeticao_razao"
+      ],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "run-7",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "recurso_inexistente",
+      "texto": "Adicionar um exemplo de campo de busca errado, como login × id, para ilustrar melhor a causa raiz.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "run-8",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "recurso_inexistente",
+      "texto": "Adicionar um exemplo de campo de busca errado, como login × id, para ilustrar melhor a causa raiz.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "run-8",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "rotas-inexistentes",
+      "texto": "Adicionar um novo verbete para rotas inexistentes, especificando que um 404 com id válido pode indicar que a rota ou recurso buscado não existe.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "run-11",
+      "numero": 1,
+      "operacao": "retificacao",
+      "verbete": "dado_desatualizado",
+      "texto": "Corrigir a descrição do dado_desatualizado para enfatizar a leitura defasada devido a consultas ao banco em cada requisição.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "sem_evidencia_do_caso",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "run-12",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "erro_interno_do_servidor",
+      "texto": "Adicionar que este erro pode ocorrer de forma intermitente, sem padrão, e que pode ser causado por problemas no banco de dados ou rota.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "run-12",
+      "numero": 2,
+      "operacao": "nota",
+      "verbete": "erro_interno_do_servidor",
+      "texto": "Adicionar que a conversão de ErrorFault em 500 pode ser causada por problemas na rota.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 5,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "run-14",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "dado_desatualizado",
+      "texto": "Adiciona que a defasagem pode ser causada por cache do navegador, indicando que o usuário deve limpar cache ou recarregar a página.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adiciona",
+        "motivo": "começa por \"adiciona\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "run-15",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "tempo_de_resposta_excedido",
+      "texto": "Adicionar nota sobre a necessidade de otimizar o tempo de resposta, evitando dormências fixas e atrasos maiores que possam ocorrer com o banco, rede ou carga.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "sem_evidencia_do_caso",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-6",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "localizador_quebrado",
+      "texto": "Adicione que a ausência de ORDER BY na API pode causar localizadores ambíguos.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicione",
+        "motivo": "começa por \"adicione\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-6",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "tempo_de_resposta_excedido",
+      "texto": "Adicione que atrasos maiores podem ser causados por problemas na infraestrutura, como banco de dados, rede ou carga.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicione",
+        "motivo": "começa por \"adicione\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-8",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "Adicionar nota sobre a necessidade de atualização correta do estado da tela após a resposta da API.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 4,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 13,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-15"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-8",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "atualizacao-da-tela",
+      "texto": "Adicionar verbete sobre a necessidade de atualização correta do estado da tela após a resposta da API, utilizando promises ou async/await.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 7,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-15"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-9",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "localizador_quebrado",
+      "texto": "Adicionado que o localizador pode ser ambíguo, encontrando mais de um elemento com o mesmo seletor.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionado",
+        "motivo": "começa por \"adicionado\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-9",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "localizador_quebrado",
+      "texto": "Corrigido para \"a lista da API não tem ORDER BY (produtos.py:38).\"",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "palavra_chave_invalida",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigido",
+        "motivo": "começa por \"corrigido\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "efe-10",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "interface-frontend",
+      "texto": "Adicionar nota sobre a importância de atualizações corretas do DOM e a dependência de redirects na interface frontend.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 0,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 0,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": false,
+        "origem_recebe_o_verbete_depois": false
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-10",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "contrato-produto",
+      "texto": "Retificar para: Notas: Notar que o contrato especifica a estrutura do JSON esperado, mas não aborda o truncamento de resposta e a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "trecho_nao_encontrado",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "retificar",
+        "motivo": "começa por \"retificar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "termos_sem_expansao_n"
+      ],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-11",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "localizador_quebrado",
+      "texto": "Adicionar que a falta de ORDER BY na consulta pode causar ordem aleatória indeterminada dos produtos.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Parcial",
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 2,
+        "verbete_certo_entra": 0,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 13,
+        "casos_que_ganham_o_verbete_certo": [],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": false
+    },
+    {
+      "caso": "efe-11",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "ordem_aleatoria",
+      "texto": "Adicionar que a ordem aleatória dos produtos pode ser causada por falta de ORDER BY na consulta, inconsistências na contagem e problemas no localizador.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "teto_verbetes_novos",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-12",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "localizador_quebrado",
+      "texto": "Adicionar que o seletor pode ser ambíguo, encontrando mais de um elemento com o mesmo seletor.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "redundante",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "efe-12",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "localizador_quebrado",
+      "texto": "Corrigir para \"o roteiro não acha o elemento (seletor não casa) ou acha mais de um (ambíguo). O problema é o localizador, não o dado. Elementos reais de produtos_api.php: #produtos-api-grid, .thumbnail, button.saiba-mais[data-id], #modalDetalhe; a lista da API não tem ORDER BY (produtos.py:38).\"",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "texto_longo",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "efe-13",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "O cancelamento depende de um redirect, o que pode causar divergência na interface.",
+      "destino": "aceita pelos filtros de hoje",
+      "codigo": null,
+      "veredito": "Errada",
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "o",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": {
+        "passa": true,
+        "motivo": null,
+        "casos_em_que_os_tres_verbetes_mudam": 6,
+        "verbete_certo_entra": 1,
+        "verbete_certo_sai": 0,
+        "casos_que_leriam_a_edicao": 11,
+        "casos_que_ganham_o_verbete_certo": [
+          "semt-15"
+        ],
+        "casos_que_perdem_o_verbete_certo": [],
+        "origem_recebe_o_verbete_antes": true,
+        "origem_recebe_o_verbete_depois": true
+      },
+      "passa_nos_tres": true
+    },
+    {
+      "caso": "efe-13",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "cancelamento_via_redirect",
+      "texto": "O cancelamento é feito via redirect, que pode não atualizar a interface corretamente.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "teto_verbetes_novos",
+      "veredito": null,
+      "forma": {
+        "passa": true,
+        "primeira_palavra": "o",
+        "motivo": null
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-15",
+      "numero": 1,
+      "operacao": "novo_verbete",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "Adicionar que o cancelamento pode falhar visualmente na tela, mesmo que a API confirme, devido à atualização do DOM via innerHTML.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "efe-15",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "estado_da_tela_divergente",
+      "texto": "Corrigir para mencionar que o cancelamento depende de um redirect, não apenas da atualização do DOM via innerHTML.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "sem_evidencia_do_caso",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "corrigir",
+        "motivo": "começa por \"corrigir\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-13",
+      "numero": 1,
+      "operacao": "novo_verbete",
+      "verbete": "corpo_vazio",
+      "texto": "Adicionar: \"Nenhuma resposta ou resposta vazia pode ser retornada por nenhuma rota da CobaiaAPI.\"",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "id_repetido",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-14",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "resposta_truncada",
+      "texto": "Adicione um exemplo de como verificar o Content-Length na documentação para evitar esse problema.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "duplicada",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicione",
+        "motivo": "começa por \"adicione\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-14",
+      "numero": 2,
+      "operacao": "novo_verbete",
+      "verbete": "resposta_truncada_correta",
+      "texto": "Cria um verbete dedicado para a resposta truncada correta, incluindo o exemplo de verificação do Content-Length.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "teto_verbetes_novos",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "cria",
+        "motivo": "começa por \"cria\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": false,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    },
+    {
+      "caso": "lex-15",
+      "numero": 1,
+      "operacao": "nota",
+      "verbete": "corpo_nao_e_json",
+      "texto": "Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON. Adicionar um exemplo de sintoma para clarificar que XML também pode causar parse falho.",
+      "destino": "recusada pelos filtros da Fase 4",
+      "codigo": "mensagem_nao_encontrada_no_codigo",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": false,
+      "texto_reprovados": [
+        "repeticao_razao"
+      ],
+      "alarme_flesch": false,
+      "busca": null
+    },
+    {
+      "caso": "lex-15",
+      "numero": 2,
+      "operacao": "retificacao",
+      "verbete": "corpo_nao_e_json",
+      "texto": "Adicionar que este erro pode ocorrer devido a falhas de conexão no site que imprime \"Atenção ERRO\" em HTML (connect.php:16); Warning/Fatal do PHP saem antes da saída; gateway fora devolve a própria página.",
+      "destino": "recusada pelo validador da Fase 3",
+      "codigo": "retificacao_sem_trecho",
+      "veredito": null,
+      "forma": {
+        "passa": false,
+        "primeira_palavra": "adicionar",
+        "motivo": "começa por \"adicionar\", verbo de edição: o texto fala com quem vai mexer no verbete e não afirma um fato do sistema"
+      },
+      "forma_pela_lista_da_pesquisa": true,
+      "texto_passa": true,
+      "texto_reprovados": [],
+      "alarme_flesch": true,
+      "busca": null
+    }
+  ]
+}

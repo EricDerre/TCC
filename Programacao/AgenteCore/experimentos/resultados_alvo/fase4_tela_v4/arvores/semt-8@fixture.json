@@ -1,0 +1,411 @@
+{
+ "versao": 1,
+ "gerado_por": "arvore_de_decisao.py",
+ "trilha": "fase4_tela_v4/qwen2.5_7b/semt-8@fixture",
+ "nome": "semt-8@fixture",
+ "caso": "semt-8",
+ "corrida": "fase4_tela_v4",
+ "modo": "tela",
+ "modelo": "qwen2.5:7b",
+ "classe": 3,
+ "nivel": 1,
+ "eventos": {
+  "primeiro": 992,
+  "ultimo": 1013,
+  "hash": "ae9da1ae78e76814"
+ },
+ "relatorio_v3": "../relatorios_v3/semt-8@fixture.md",
+ "rotulos": {
+  "observado": "o código mediu",
+  "conferido": "o código checou o que o modelo disse",
+  "declarado": "o modelo escreveu, sem garantia",
+  "desconhecido": "faltou dado; nunca vira percentual"
+ },
+ "decisoes": [
+  {
+   "numero": 1,
+   "chave": "leitura",
+   "titulo": "o que o modelo lê",
+   "escolha": "ler o caso escrito inteiro, como veio (449 caracteres)",
+   "alternativas": [],
+   "afirmacoes": [
+    {
+     "texto": "O caso entrou em texto, sem poda: o modelo leu a requisição, o status, o contrato, o corpo e o sintoma como estavam no caso escrito (449 caracteres).",
+     "origem": "observado",
+     "eventos": [
+      992
+     ]
+    },
+    {
+     "texto": "O texto entregue ao modelo, com os verbetes da decisão 2, tem 3350 caracteres.",
+     "origem": "observado",
+     "eventos": [
+      995
+     ]
+    }
+   ],
+   "eventos": [
+    995
+   ]
+  },
+  {
+   "numero": 2,
+   "chave": "verbetes",
+   "titulo": "que verbetes entram",
+   "escolha": "entregar ao modelo os 3 verbetes mais bem pontuados pela busca",
+   "alternativas": [
+    {
+     "opcao": "entidade-produto",
+     "detalhe": "posição 1, pontuação 48,63: 45,63 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 48.6308,
+     "posicao": 1
+    },
+    {
+     "opcao": "nulo_inesperado",
+     "detalhe": "posição 2, pontuação 41,65: 39,65 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": true,
+     "pontuacao": 41.6471,
+     "posicao": 2
+    },
+    {
+     "opcao": "contrato-produto",
+     "detalhe": "posição 3, pontuação 29,27: 26,27 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": true,
+     "pontuacao": 29.271,
+     "posicao": 3
+    },
+    {
+     "opcao": "tipo_divergente",
+     "detalhe": "posição 4, pontuação 17,71: 14,71 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 17.7067,
+     "posicao": 4
+    },
+    {
+     "opcao": "pagina-produtos-api",
+     "detalhe": "posição 5, pontuação 16,14: 14,14 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 16.1434,
+     "posicao": 5
+    },
+    {
+     "opcao": "campo_ausente",
+     "detalhe": "posição 6, pontuação 15,27: 12,27 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 15.2688,
+     "posicao": 6
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "detalhe": "posição 7, pontuação 15,04: 13,04 pelas palavras do caso, mais 2,0 por rota",
+     "escolhida": false,
+     "pontuacao": 15.0379,
+     "posicao": 7
+    },
+    {
+     "opcao": "estrutura_aninhada_divergente",
+     "detalhe": "posição 8, pontuação 14,45: 11,45 pelas palavras do caso, mais 2,0 por rota e 1,0 por entidade",
+     "escolhida": false,
+     "pontuacao": 14.4526,
+     "posicao": 8
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A busca pontuou 39 verbetes da biblioteca e entregou os 3 primeiros: `entidade-produto` (48,63), `nulo_inesperado` (41,65) e `contrato-produto` (29,27).",
+     "origem": "observado",
+     "eventos": [
+      993
+     ]
+    },
+    {
+     "texto": "A pontuação soma a busca por palavras no texto do caso e os reforços em código (2,0 quando o verbete declara a rota da requisição, 1,0 quando trata da mesma entidade e 1,0 quando cita o status): o reforço da rota entrou em `entidade-produto`, `nulo_inesperado` e `contrato-produto`; o da entidade, em `entidade-produto` e `contrato-produto`.",
+     "origem": "observado",
+     "eventos": [
+      993
+     ]
+    },
+    {
+     "texto": "Ficaram de fora 36 verbetes; os mais perto de entrar: `tipo_divergente` (17,71), `pagina-produtos-api` (16,14), `campo_ausente` (15,27), `valor_fora_do_dominio` (15,04) e `estrutura_aninhada_divergente` (14,45).",
+     "origem": "observado",
+     "eventos": [
+      993
+     ]
+    },
+    {
+     "texto": "Sinais da consulta, tirados do caso em código: rota `GET /api/produtos`, entidade `Produto`, status 200 e 32 termos de busca, vindos do sintoma, da requisição, do corpo e da comparação do corpo com o contrato.",
+     "origem": "observado",
+     "eventos": [
+      993
+     ]
+    },
+    {
+     "texto": "Entre o último entregue, `contrato-produto`, e o primeiro de fora, `tipo_divergente`, só o texto do caso já punha o primeiro à frente (26,27 contra 14,71), e os reforços em código levaram a diferença a 11,56.",
+     "origem": "observado",
+     "eventos": [
+      993
+     ]
+    }
+   ],
+   "eventos": [
+    993
+   ],
+   "entregues": [
+    "entidade-produto",
+    "nulo_inesperado",
+    "contrato-produto"
+   ],
+   "pontuados": 39,
+   "k": 3,
+   "sinais": {
+    "endpoint": "GET /api/produtos",
+    "entidade": "Produto",
+    "status": 200,
+    "termos": 32
+   }
+  },
+  {
+   "numero": 3,
+   "chave": "causa",
+   "titulo": "a causa",
+   "escolha": "nulo_inesperado",
+   "alternativas": [
+    {
+     "opcao": "nulo_inesperado",
+     "probabilidade": 0.8502662774163865,
+     "escolhida": true,
+     "detalhe": "probabilidade 0,850; verbetes entregues que a tratam: `nulo_inesperado`"
+    },
+    {
+     "opcao": "tipo_divergente",
+     "probabilidade": 0.0762375484037321,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,076; verbetes entregues que a tratam: `entidade-produto` e `contrato-produto`"
+    },
+    {
+     "opcao": "valor_fora_do_dominio",
+     "probabilidade": 0.05349554750644128,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,053; verbetes entregues que a tratam: `nulo_inesperado`"
+    },
+    {
+     "opcao": "formato_de_data_divergente",
+     "probabilidade": 0.010294513264499084,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,010; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "resposta_truncada",
+     "probabilidade": 0.0007793724428810554,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,001; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "escala_ou_unidade_errada",
+     "probabilidade": 0.0004852052648979166,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `entidade-produto`"
+    },
+    {
+     "opcao": "campo_ausente",
+     "probabilidade": 0.0004608038781325529,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `nulo_inesperado` e `contrato-produto`"
+    },
+    {
+     "opcao": "campo_renomeado",
+     "probabilidade": 0.0004608038781325529,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    },
+    {
+     "opcao": "corpo_nao_e_json",
+     "probabilidade": 0.00024622468372799275,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "corpo_vazio",
+     "probabilidade": 0.00024622468372799275,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: nenhum"
+    },
+    {
+     "opcao": "colecao_no_lugar_de_objeto",
+     "probabilidade": 0.0001425058168693873,
+     "escolhida": false,
+     "detalhe": "probabilidade 0,000; verbetes entregues que a tratam: `contrato-produto`"
+    }
+   ],
+   "afirmacoes": [
+    {
+     "texto": "A linha CAUSA_RAIZ da resposta diz `nulo_inesperado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "O modelo apontou o campo `preco`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "`preco` aparece no caso (procurado no contrato, no corpo, na requisição, na árvore e no seletor): confere.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A segunda causa, `tipo_divergente` (Tipo divergente), ficou com probabilidade 0,076 contra 0,850 da escolhida; verbetes entregues que a sustentam: `entidade-produto` e `contrato-produto`.",
+     "origem": "observado",
+     "eventos": [
+      1013
+     ]
+    },
+    {
+     "texto": "As outras 9 alternativas lidas na resposta somam probabilidade 0,067; as maiores: `valor_fora_do_dominio` (0,053), `formato_de_data_divergente` (0,010) e `resposta_truncada` (0,001).",
+     "origem": "observado",
+     "eventos": [
+      1013
+     ]
+    },
+    {
+     "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,850, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Gatilhos de revisão humana: probabilidade baixa não disparou; FONTE divergente não disparou; amostra fixa não disparou.",
+     "origem": "observado",
+     "eventos": [
+      1013
+     ]
+    },
+    {
+     "texto": "Nenhuma intervenção rodou neste caso (modo `desligadas`).",
+     "origem": "observado",
+     "eventos": [
+      1013
+     ]
+    },
+    {
+     "texto": "Não houve diferença medida em código: o caso entrou em texto, e o modelo leu a requisição `GET /api/produtos`, o status 200 (a API respondeu sem código de erro) e o corpo como estavam no caso escrito.",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "A linha FONTE cita `nulo_inesperado`.",
+     "origem": "declarado",
+     "eventos": []
+    },
+    {
+     "texto": "Verbete citado `nulo_inesperado`: existe na biblioteca (confere), estava entre os entregues ao modelo (confere), traz o termo da causa no texto (confere).",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "A FONTE veio no formato pedido, só identificadores entre colchetes.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Há verbete entregue sobre essa causa: `nulo_inesperado`.",
+     "origem": "conferido",
+     "eventos": []
+    },
+    {
+     "texto": "Leitura do verbete `nulo_inesperado` (Nulo inesperado; leitura: `Programacao/AgenteCore/biblioteca_producao_leitura/erros/nulo_inesperado.md`; verbete: `Programacao/AgenteCore/biblioteca_producao/erros/nulo_inesperado.md`).",
+     "origem": "observado",
+     "eventos": []
+    },
+    {
+     "texto": "Nenhuma divergência entre o declarado pelo modelo e o conferido pelo código.",
+     "origem": "conferido",
+     "eventos": [
+      1013
+     ]
+    },
+    {
+     "texto": "Conferências em código com veredito: 8 de 8 conferem; a frase de impacto não tem como ser conferida por código.",
+     "origem": "conferido",
+     "eventos": [
+      1013
+     ]
+    }
+   ],
+   "eventos": [
+    1013
+   ],
+   "segunda": "tipo_divergente",
+   "campo": "preco",
+   "confianca": {
+    "selo": "medio",
+    "palavra": "média",
+    "p_rotulo": 0.8502662774163865,
+    "cortes": {
+     "baixo_ate": 0.8317943867608124,
+     "alto_a_partir_de": 0.9898271080008889
+    },
+    "historico": {
+     "casos": 26,
+     "certos": 22,
+     "acerto_pct": 84.6
+    },
+    "afirmacoes": [
+     {
+      "texto": "Confiança média: a probabilidade lida na causa respondida foi 0,850, e a faixa média vai de 0,832 a 0,990 (cortes fixados na calibração).",
+      "origem": "observado",
+      "eventos": []
+     },
+     {
+      "texto": "Na corrida de calibração (`fase4_calibracao`), dos 26 casos que caíram na faixa média, o agente acertou a causa em 22 de 26: 84,6%.",
+      "origem": "observado",
+      "eventos": []
+     }
+    ]
+   },
+   "divergencia": null,
+   "falha": null,
+   "causa_em_palavras": "Nulo inesperado",
+   "probabilidade": 0.8502662774163865,
+   "gatilhos": {
+    "algum": false,
+    "amostra": false,
+    "fonte_divergente": false,
+    "probabilidade": false
+   }
+  }
+ ],
+ "texto_do_modelo": {
+  "rotulo": "texto do modelo",
+  "impacto": "O usuário vê 'R$ 0,00' em vez do preço correto de R$ 89,90.",
+  "fonte": "[nulo_inesperado]",
+  "raciocinio": null,
+  "resposta": "CAUSA_RAIZ: nulo_inesperado\nCAMPO: preco\nIMPACTO: O usuário vê 'R$ 0,00' em vez do preço correto de R$ 89,90.\nFONTE: [nulo_inesperado]"
+ },
+ "resumo": {
+  "decisoes": 3,
+  "afirmacoes": 24,
+  "rotulos": {
+   "observado": 15,
+   "conferido": 6,
+   "declarado": 3,
+   "desconhecido": 0
+  },
+  "divergencia": false,
+  "cura": false,
+  "selo": "medio",
+  "confianca": "média",
+  "falha": null,
+  "escolha": "nulo_inesperado",
+  "causa_em_palavras": "Nulo inesperado",
+  "campo": "preco",
+  "nos": {
+   "diagnostico": 1
+  }
+ }
+}

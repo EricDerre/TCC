@@ -1,0 +1,213 @@
+{
+  "_tag": "! Alteração de IA - Revisar: segunda leitura (verificação cética) do tópico r7-degradacao-e-portoes-da-base da rodada 7 da pesquisa (10/11/2026), escrita por um subagente verificador que abriu de novo cada fonte: identificador conferido, o que a fonte afirma, o que não afirma e o veredito de cada afirmação do primeiro leitor.",
+  "_motivo": "! Motivo: a rodada 6 entrou sem segunda leitura, e a ficha 64 pede pesquisa que embase decisão sobre o fluxo do agente; uma afirmação só entra na síntese se a segunda leitura a confirmar, e o que foi rejeitado fica registrado com o motivo.",
+  "key": "r7-degradacao-e-portoes-da-base",
+  "verificado_em": "10/11/2026",
+  "fontes": [
+    {
+      "id": "F01",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2505.16067",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz campo de comentários nem evento; v1 de 21/05/2025, v2 de 10/10/2025)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Estuda a adição e o apagamento de registros na memória de agentes (GPT-4o-mini como base; checagens com GPT-4o e DeepSeek-V3) em quatro tarefas. Mostra que entradas parecidas puxam saídas parecidas, de modo que erros gravados se propagam; que gravar tudo fica abaixo da memória fixa; que apagar por utilidade histórica ou por pouca recuperação encolhe a memória com ganho ou perda pequena.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não testa modelo de 7B local nem quantizado.",
+        "Memória de execuções de agente com rótulo, não de notas de documentação escritas pelo modelo.",
+        "Não estuda fusão, resumo nem reflexão."
+      ],
+      "afirmacoes": [
+        {"id": "F01.a", "veredito": "parcial", "numero_que_a_fonte_sustenta": "Tabela 1: gravar tudo fica abaixo da memória fixa nos quatro agentes (RegAgent 55,48 contra 67,53; EHRAgent 13,05 contra 16,75; AgentDriver 32,32 contra 40,11; CIC-IoT 59,90 contra 71,50). A adição estrita (compara com o gabarito) fica acima da fixa nos quatro (70,95; 38,50; 51,00; 85,40). Os juízes automáticos (C1 a C3) também superam a fixa em vários casos (EHRAgent 26,19 a 34,66; CIC-IoT 74,00 e 79,50; AgentDriver C3 47,37).", "afirmacao_corrigida_pt": "Gravar toda execução deixa o desempenho abaixo do da memória fixa nos quatro agentes; a adição seletiva estrita, que usa o gabarito, é a que mais sobe e supera a fixa nos quatro, mas a adição filtrada por juiz automático também supera a fixa em parte dos agentes (o juiz mais fraco falha em alguns).", "motivo": "Os números do leitor para a fixa, para gravar tudo e para a estrita conferem. O trecho 'só a adição seletiva por rótulo supera a memória fixa' é exagero: na tabela 1 os juízes automáticos também ficam acima da fixa em vários agentes."},
+        {"id": "F01.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Correlação de Pearson próxima de 1 entre similaridade de entrada e de saída no RegAgent com memória grande; a distância para a execução sem erros cresce com gravar tudo e com filtro por juiz automático (as tendências estão em figuras, sem valor numérico).", "afirmacao_corrigida_pt": "", "motivo": "Juízes C1 a C3 conferem (GPT-4o-mini, GPT-4.1-mini e GPT-4.1-mini ajustado em 300 julgamentos); a figura não pôde ser lida, só o texto que a descreve."},
+        {"id": "F01.c", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Tabela 2, avaliador estrito: EHRAgent 38,67 (1.012 registros) para 42,06 (784) pela utilidade histórica; combinada 42,34 com 248; CIC-IoT 85,40 (904) para 89,60 (788). Apagar por pouca recuperação: memória de 60 a 80% menor, perda pequena na maioria (EHRAgent 38,67 para 38,59; AgentDriver 51,00 para 50,94), mas CIC-IoT cai de 85,40 para 80,80 e RegAgent de 70,95 para 67,65.", "afirmacao_corrigida_pt": "", "motivo": "Os números do leitor conferem; a perda 'pequena' do apagamento por pouca recuperação tem exceções de 3 a 5 pontos no CIC-IoT e no RegAgent."},
+        {"id": "F01.d", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Tabela 4, juiz GPT-4o-mini: CIC-IoT 78,9% de corretos entre os mantidos contra 56,7% entre os apagados; EHRAgent 44,1% contra 36,3%.", "afirmacao_corrigida_pt": "", "motivo": "O resumo da página confirma o problema de execuções aparentemente certas que valem pouco ou enganam."}
+      ]
+    },
+    {
+      "id": "F02",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2510.04618",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ICLR 2026 (campo de comentários da página do arXiv; v1 de 06/10/2025, v3 de 29/03/2026)",
+      "referencia_abnt_corrigida": "ZHANG, Q. et al. Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models. In: INTERNATIONAL CONFERENCE ON LEARNING REPRESENTATIONS (ICLR), 2026. arXiv:2510.04618. Disponível em: https://arxiv.org/abs/2510.04618. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Propõe o ACE, que trata o contexto como uma lista de itens com contadores de útil e prejudicial, atualizada por pequenos acréscimos (deltas) aplicados por lógica comum e com duplicatas removidas por similaridade de embedding, para evitar o colapso do contexto reescrito inteiro. Mostra um exemplo de colapso no AppWorld e uma ablação em que o completo chega a 59,4 contra 42,4 da base ReAct.",
+      "o_que_a_fonte_nao_afirma": [
+        "Nenhum modelo pequeno: o principal é DeepSeek-V3.1, e as checagens usam GPT-OSS-120B, GPT-5.1 e Llama-3.3-70B.",
+        "O colapso aparece num método concorrente numa tarefa de agente, não em base de documentação.",
+        "Não há portão de regressão por item.",
+        "Apêndice A.5 e o trecho final da página (cerca de 31 mil caracteres) não foram lidos por mim."
+      ],
+      "afirmacoes": [
+        {"id": "F02.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "No texto da seção 2.2: 18.282 tokens com acurácia 66,7 e, no passo seguinte, 122 tokens com 57,1; sem adaptação 63,7.", "afirmacao_corrigida_pt": "", "motivo": "O texto diz que o exemplo é de AppWorld, ilustrado com o Dynamic Cheatsheet, e que o problema não é só desse método; a figura não pôde ser lida, só o texto."},
+        {"id": "F02.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "O viés para a brevidade é atribuído a Gao et al. (2025), estudo de geração de testes unitários, e não é medido nos experimentos do ACE."},
+        {"id": "F02.c", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Tabela 3, base DeepSeek-V3.1: ReAct 42,4; ACE completo offline 59,4; sem refletor nem várias épocas 55,1; online sem rótulo 56,1.", "afirmacao_corrigida_pt": "", "motivo": "Itens com contadores de útil e prejudicial, deltas fundidos por lógica sem LLM, deduplicação por embedding: conferem na seção 3. As checagens com outros modelos estão no apêndice A.1, em tabelas separadas."}
+      ]
+    },
+    {
+      "id": "F03",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2507.19457",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ICLR 2026, apresentação oral (campo de comentários da página do arXiv; v1 de 25/07/2025, v2 de 14/02/2026)",
+      "referencia_abnt_corrigida": "AGRAWAL, L. A. et al. GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning. In: INTERNATIONAL CONFERENCE ON LEARNING REPRESENTATIONS (ICLR), 2026. arXiv:2507.19457. Disponível em: https://arxiv.org/abs/2507.19457. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Otimizador de prompt que reflete em linguagem natural sobre os rastros do sistema e mantém uma fronteira de Pareto de candidatos. Um candidato entra no conjunto se a média dele num minilote superar a do pai, e só então é avaliado no conjunto de validação. No Qwen3 8B o agregado é 54,85 contra 48,91 do GRPO e 47,84 do MIPROv2.",
+      "o_que_a_fonte_nao_afirma": [
+        "Otimiza prompt, não edita base de conhecimento por item.",
+        "O portão é por média do lote, não por caso individual.",
+        "Não mede degradação ao longo de muitas rodadas.",
+        "Fim da página (cerca de 81 mil caracteres) não lido por mim."
+      ],
+      "afirmacoes": [
+        {"id": "F03.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "O algoritmo 1 aceita o candidato se a pontuação no minilote supera a do pai e só depois o avalia no conjunto de validação (D_pareto); a página não detalhou a linha 16 em si, a descrição veio da leitura do algoritmo."},
+        {"id": "F03.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Tabela 1, Qwen3 8B, agregado: base 45,23; MIPROv2 47,84; GRPO 48,91; GEPA 54,85; até 35 vezes menos execuções que o GRPO (que usou 24.000 por tarefa).", "afirmacao_corrigida_pt": "", "motivo": "Seis tarefas e dois modelos (Qwen3 8B e GPT-4.1 Mini) conferem; a página nota que a maior parte do orçamento de execuções vai para validação."}
+      ]
+    },
+    {
+      "id": "F04",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2310.06770",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "ICLR 2024 (campo de comentários da página do arXiv)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Apresenta 2.294 problemas reais de 12 repositórios Python do GitHub; um conserto conta como resolvido quando o patch se aplica e passam os testes que mudam de falha para passa (FAIL_TO_PASS) e os que já passavam (PASS_TO_PASS, mediana de 51 por instância). O melhor modelo da época resolvia 1,96%.",
+      "o_que_a_fonte_nao_afirma": [
+        "Avalia código, não texto de documentação.",
+        "Não trata de aceitar ou recusar edição de base de conhecimento.",
+        "Números de resolução são de 2023, com modelos grandes."
+      ],
+      "afirmacoes": [
+        {"id": "F04.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Mediana de 51 testes PASS_TO_PASS; 2.294 instâncias em 12 repositórios; Claude 2 resolveu 1,96%.", "afirmacao_corrigida_pt": "", "motivo": "O critério de resolvido exige que todos os testes das duas listas passem."}
+      ]
+    },
+    {
+      "id": "F05",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2305.13172",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "EMNLP 2023 (campo de comentários da página do arXiv)",
+      "referencia_abnt_corrigida": "YAO, Y.; WANG, P.; TIAN, B.; CHENG, S.; LI, Z.; DENG, S.; CHEN, H.; ZHANG, N. Editing Large Language Models: Problems, Methods, and Opportunities. In: CONFERENCE ON EMPIRICAL METHODS IN NATURAL LANGUAGE PROCESSING (EMNLP), 2023. arXiv:2305.13172. Disponível em: https://arxiv.org/abs/2305.13172. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Define a edição de modelo por três propriedades: confiabilidade (acerta o caso editado), generalização (acerta as reformulações) e localidade (entradas sem relação mantêm a saída do modelo antes da edição, medida pela taxa de igualdade). A tabela 1 compara métodos em T5-XL e GPT-J no ZsRE.",
+      "o_que_a_fonte_nao_afirma": [
+        "Edita pesos, não uma base de documentos recuperada por busca.",
+        "Não fala de aprovação humana nem de portão em produção.",
+        "Só T5-XL (3B) e GPT-J (6B), sem quantização; números de 2023.",
+        "Fim da página (cerca de 500 caracteres) não lido por mim."
+      ],
+      "afirmacoes": [
+        {"id": "F05.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "As três definições conferem na seção 2."},
+        {"id": "F05.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Localidade no ZsRE: FT-L 89,01 (T5-XL) e 37,24 (GPT-J); SERAC 98,13 e 99,90; ROME 99,19 e MEMIT 99,62 (só GPT-J).", "afirmacao_corrigida_pt": "", "motivo": "ROME e MEMIT têm traço no T5-XL: a legenda diz que o método falha em editar esse modelo, e o apêndice diz que servem só a modelos só de decodificador."}
+      ]
+    },
+    {
+      "id": "F06",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2401.04700",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "EMNLP 2024 (campo de comentários da página do arXiv; v1 de 09/01/2024, v4 de 04/10/2024)",
+      "referencia_abnt_corrigida": "GU, J.-C.; XU, H.-X.; MA, J.-Y.; LU, P.; LING, Z.-H.; CHANG, K.-W.; PENG, N. Model Editing Harms General Abilities of Large Language Models: Regularization to the Rescue. In: CONFERENCE ON EMPIRICAL METHODS IN NATURAL LANGUAGE PROCESSING (EMNLP), 2024. arXiv:2401.04700. Disponível em: https://arxiv.org/abs/2401.04700. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Testa quatro métodos de edição (KN, MEND, ROME, MEMIT) em GPT-2 XL, LLaMA-1 7B e LLaMA-2 7B, com oito tarefas gerais antes e depois. Mostra que a edição piora raciocínio, inferência e perguntas e respostas, atribui isso a mudanças demais nos pesos e propõe o RECT, que mantém mais de 94% do desempenho de edição. Estuda também edições em sequência e em lote: o desempenho tende a cair com o número de edições.",
+      "o_que_a_fonte_nao_afirma": [
+        "Edição em pesos, não base de documentos.",
+        "O efeito do RECT em número grande de edições e em análise de sentimento fica em aberto, segundo os autores.",
+        "A página lida (cerca de 100 mil caracteres) é a versão HTML; não conferi tabelas individuais."
+      ],
+      "afirmacoes": [
+        {"id": "F06.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Quatro métodos, três modelos, oito tarefas; RECT preserva mais de 94% do desempenho de edição.", "afirmacao_corrigida_pt": "", "motivo": "Conferido no resumo e no texto. Correção ao limite do leitor: o texto completo trata, sim, de edições em sequência (o desempenho geral tende a cair com o número de edições), o que o leitor disse não constar no resumo."}
+      ]
+    },
+    {
+      "id": "F07",
+      "abriu": "sim",
+      "identificador_conferido": "https://library.serviceinnovation.org/KCS/KCS_v6/KCS_v6_Practices_Guide/030/040/010/030",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "guia de práticas do Consortium for Service Innovation, KCS v6, visto na página primária; o número 5.2 da técnica e o ano de 2023 não apareceram no texto que consegui ler",
+      "referencia_abnt_corrigida": "CONSORTIUM FOR SERVICE INNOVATION. KCS Article State. In: KCS v6 Practices Guide. Disponível em: https://library.serviceinnovation.org/KCS/KCS_v6/KCS_v6_Practices_Guide/030/040/010/030. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "Descreve quatro estados de confiança do artigo: em andamento (sem solução), não validado (tem solução, exatidão não confirmada, e a página recomenda registrar toda experiência assim, com o reuso funcionando como revisão), validado (confirmado pelo responsável ou pelo solicitante e conforme o padrão) e arquivado (fora da busca, sem apagar, restaurável). Candidatos só mexem em artigos não validados, que um coach revisa; publicadores modificam os validados.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não mede custo nem eficácia da revisão.",
+        "Não trata de texto escrito por modelo de linguagem.",
+        "Não define regra de arquivamento por falta de uso nesta página; as técnicas 7.1 e 5.5 não foram abertas por mim.",
+        "É prática de uma entidade, não experimento."
+      ],
+      "afirmacoes": [
+        {"id": "F07.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "Os quatro estados conferem. Acréscimo: as transições são não lineares, movidas pela demanda, e os artigos são revisados quando reusados, não por calendário."},
+        {"id": "F07.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "Candidatos criam ou alteram só artigos não validados, com revisão do coach; contribuidores, publicadores, especialistas e coaches atuam nos validados, com publicadores podendo modificar; quem sem direito de publicar vê problema marca o artigo como não validado para um publicador revisar. A lista de papéis é a da página; a técnica 7.1 não foi aberta."},
+        {"id": "F07.c", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "Não validado passa a validado quando um usuário licenciado verifica, com confirmação do solicitante, e o artigo segue o padrão de conteúdo."}
+      ]
+    },
+    {
+      "id": "F08",
+      "abriu": "sim",
+      "identificador_conferido": "https://abseil.io/resources/swe-book/html/ch10.html",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "versão aberta do capítulo 10 no site Abseil (livro da O'Reilly, 2020); a página lida não traz editora nem ano, que o leitor tirou do conhecimento prévio",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Relata a prática do Google de tratar documentação como código: em controle de versão, com dono, passando por revisão e alterada junto do código; sem dono, as páginas ficam obsoletas e duplicadas. Descreve três tipos de revisão (técnica, de público e de escrita) e diz que um só revisor já é melhor que nenhum. Para limpeza, usa data de última revisão com lembrete por e-mail após cerca de três meses, aviso de obsoleto e apagamento; na wiki desativada cerca de 90% dos documentos não tinham visita nem edição nos meses anteriores.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não é estudo medido, é relato de uma empresa.",
+        "Não trata de documentação escrita por modelo.",
+        "Não dá o custo em horas da revisão."
+      ],
+      "afirmacoes": [
+        {"id": "F08.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "Controle de versão, dono, revisão e rastreio de defeitos conferem; o nome GooWiki conferiu."},
+        {"id": "F08.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "", "afirmacao_corrigida_pt": "", "motivo": "Três tipos de revisão e a frase sobre um só revisor conferem."},
+        {"id": "F08.c", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Cerca de 90% sem visita nem edição nos meses anteriores; lembrete após cerca de três meses.", "afirmacao_corrigida_pt": "", "motivo": "O texto fala em aviso de obsoleto ou remoção do documento; o valor de 90% é aproximado, como diz o leitor."}
+      ]
+    },
+    {
+      "id": "F09",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2308.10144",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "AAAI 2024, 38.ª conferência (campo de comentários da página do arXiv; v3 de 20/12/2024)",
+      "referencia_abnt_corrigida": "ZHAO, A.; HUANG, D.; XU, Q.; LIN, M.; LIU, Y.-J.; HUANG, G. ExpeL: LLM Agents Are Experiential Learners. In: AAAI CONFERENCE ON ARTIFICIAL INTELLIGENCE, 38., 2024. arXiv:2308.10144. Disponível em: https://arxiv.org/abs/2308.10144. Acesso em: 10 nov. 2026.",
+      "o_que_a_fonte_afirma": "O agente ExpeL junta experiências em tarefas de treino e extrai regras em linguagem natural com um modelo mais forte (gpt-4-0613), por quatro operações (adicionar, editar, votar a favor, votar contra) sobre uma lista com contagem de importância; no uso, o agente (gpt-3.5-turbo-0613) recebe as regras e as trajetórias parecidas bem-sucedidas. Na ablação do HotpotQA, o completo chega a 39,0 contra 28,0 do ReAct.",
+      "o_que_a_fonte_nao_afirma": [
+        "Não mede degradação em longo prazo nem erro propagado de regras erradas.",
+        "O voto é do próprio modelo, sem verificação externa.",
+        "Sem modelo pequeno; usa APIs fechadas.",
+        "Fim da página (cerca de 200 caracteres) não lido por mim."
+      ],
+      "afirmacoes": [
+        {"id": "F09.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Contagem inicial 2; editar e votar a favor aumentam, votar contra diminui, remoção ao chegar a 0.", "afirmacao_corrigida_pt": "", "motivo": "Conferido; o extrator é gpt-4-0613 e o agente gpt-3.5-turbo-0613."},
+        {"id": "F09.b", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "HotpotQA, taxa de sucesso: ReAct 28,0; regras à mão 32,0; regras com reflexões 29,0; extrator gpt-3.5 32,0; completo 39,0.", "afirmacao_corrigida_pt": "", "motivo": "Todos os cinco números conferem. 'Acrescentar reflexões piorou' vale em relação ao completo e às regras só do histórico (29,0 contra 39,0)."}
+      ]
+    },
+    {
+      "id": "F10",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2603.19595",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz campo de comentários nem evento; v1 de 20/03/2026, v2 de 15/06/2026; existe de fato)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Propõe o All-Mem, memória de agente com consolidação offline: um diagnosticador baseado em LLM propõe edições (dividir, fundir, atualizar) com confiança entre 0 e 1, aplicadas só acima de um limiar (padrão 0,9), e a evidência original fica imutável e arquivada, nunca apagada. Mede recuperação e acerto no LoCoMo e no LongMemEval-s, com GPT-4o-mini como gerador.",
+      "o_que_a_fonte_nao_afirma": [
+        "A degradação com o crescimento do histórico é afirmada na motivação com apoio de trabalhos citados; o artigo não a mede variando o tamanho do histórico (o apêndice F, de escala, estava cortado).",
+        "Memória de conversa, não documentação de causa raiz.",
+        "Fim da página (cerca de 28 mil caracteres) não lido por mim."
+      ],
+      "afirmacoes": [
+        {"id": "F10.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "O resumo não traz número; o texto traz resultados de All-Mem, por exemplo 54,63 de 4o-J no LoCoMo e 60,20 no LongMemEval-s.", "afirmacao_corrigida_pt": "", "motivo": "A afirmação do leitor é de motivação do método e foi lida assim. Acréscimo: o modelo do diagnosticador não é nomeado no trecho que li, e o texto completo traz mais detalhe do que o resumo (limiar de confiança, ordem dividir, fundir, atualizar, arquivamento)."}
+      ]
+    },
+    {
+      "id": "F11",
+      "abriu": "sim",
+      "identificador_conferido": "arXiv:2604.15774",
+      "titulo_e_autores_batem": true,
+      "veiculo_conferido": "não confirmado (a página do arXiv não traz campo de comentários nem evento; v1 de 17/04/2026, v2 de 21/05/2026; existe de fato)",
+      "referencia_abnt_corrigida": "",
+      "o_que_a_fonte_afirma": "Apresenta o MemEvoBench, com 108 casos de perguntas e respostas e 83 de fluxo, para medir o desvio de segurança de agentes quando a memória evolui com informação enganosa, em nove modelos (de Llama-3.3-70B e Qwen3-32B a GPT-5 e Qwen3-235B). Mostra que a taxa de sucesso do ataque sobe muito com memória, que um prompt de segurança fixo ajuda pouco, que uma ferramenta de correção de memória derruba mais a taxa e que a detecção continua piorando com as rodadas.",
+      "o_que_a_fonte_nao_afirma": [
+        "Mede segurança sob memória contaminada de propósito, não erro acidental de modelo pequeno.",
+        "Nenhum modelo de 7B (o menor é de 32B).",
+        "Fim da página (cerca de 21 mil caracteres) não lido por mim."
+      ],
+      "afirmacoes": [
+        {"id": "F11.a", "veredito": "confirmada", "numero_que_a_fonte_sustenta": "Rodada 1, perguntas e respostas: Qwen3-32B 50,5% sem memória contra 85,2% com memória; Qwen3-Next-80B 42,6% contra 84,2%.", "afirmacao_corrigida_pt": "", "motivo": "Conferido na tabela 2. O trecho do leitor sobre o fluxo ter diferença pequena não foi conferido por mim."},
+        {"id": "F11.b", "veredito": "parcial", "numero_que_a_fonte_sustenta": "Média dos nove modelos na rodada 1, perguntas e respostas: 76,2% sem defesa contra 55,5% com prompt de segurança; Qwen3-235B: de 76,9% para 20,4% com a ferramenta de correção; a F1 da detecção da maioria dos modelos segue caindo com as rodadas.", "afirmacao_corrigida_pt": "Um prompt de segurança fixo reduz a taxa de ataque só em parte (média de 76,2% para 55,5%), a ferramenta de correção de memória reduz muito mais, e a detecção de memória enganosa piora com as rodadas.", "motivo": "Os números e a queda da detecção conferem. A parte 'piora com feedback enviesado' não a localizei na leitura, só o resumo da página diz que defesa estática por prompt é insuficiente."}
+      ]
+    }
+  ]
+}

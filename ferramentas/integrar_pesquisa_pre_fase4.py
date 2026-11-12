@@ -61,7 +61,10 @@ TETO = 16
 # ! Alteração de IA - Revisar: (07/11/2026) a lista de datas da frase do total de referências virou uma constante, com a rodada 6 (Pós-Fase 4) no fim.
 # ! Motivo: integrar_pesquisa_pos_fase4.py grava o bloco dele antes do bloco desta rodada e reconta o mesmo total; os dois scripts
 # precisam escrever a mesma frase, senão o --check de um deles acusa diferença depois de o outro rodar.
-DATAS_DOS_LEVANTAMENTOS = "11/09, 21/09, 22/09, 29/09, 01/10 e 07/11/2026"
+# ! Alteração de IA - Revisar: (10/11/2026) a lista de datas ganhou a rodada 7 (as três ideias para o fluxo do agente, levantamento §6.16).
+# ! Motivo: integrar_pesquisa_fluxo_do_agente.py grava o bloco dele em referencias.md e reconta o mesmo total; os três scripts escrevem a frase com esta
+# constante, senão o --check de um acusa diferença depois de outro rodar.
+DATAS_DOS_LEVANTAMENTOS = "11/09, 21/09, 22/09, 29/09, 01/10, 07/11 e 10/11/2026"
 
 # Parte da rodada e título curto de cada tópico, na ordem (fixa) das subseções §6.14.1 a §6.14.14: os três últimos
 # foram acrescentados em 23/10/2026 e ficam no fim para não mudar o número de nenhum tópico já citado.

@@ -27,6 +27,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 RAIZ = Path(__file__).resolve().parent
 sys.path.insert(0, str(RAIZ))
 
+import _env_common as env
 import install
 import run
 
@@ -85,10 +86,32 @@ def teste_caminhos_mariadb_portatil():
     assert c["zip"] == base / "download" / "mariadb-11.8.9-winx64.zip", c["zip"]
     assert c["pasta"] == base / "mariadb-11.8.9-winx64", c["pasta"]
     assert c["install_db"] == base / "mariadb-11.8.9-winx64" / "bin" / "mariadb-install-db.exe", c["install_db"]
-    assert c["dados"] == base / "data" and c["my_ini"] == base / "data" / "my.ini", c
-    # sem base, cai em %LOCALAPPDATA%\MariaDB
+    # ! Alteração de IA - Revisar: (07/11/2026, ficha 55) a pasta de dados fica dentro do projeto (`.mariadb/data`), não mais em
+    # `%LOCALAPPDATA%\MariaDB\data`; `dados=` troca o lugar só nos testes. Os binários continuam em `%LOCALAPPDATA%\MariaDB`.
+    # ! Motivo: o app Claude é um pacote MSIX e o que ele grava em AppData\Local vai para uma pasta privada; o servidor subido de
+    # dentro do app misturava o dicionário do InnoDB privado com as tabelas da cópia real (erro 1932 em todas as tabelas) e, numa
+    # partida, apagou os .ibd da cópia real. A pasta do projeto não é virtualizada: as duas janelas enxergam a mesma pasta.
+    assert c["dados"] == install.DATADIR_DO_PROJETO == env.REPO_ROOT / ".mariadb" / "data", c["dados"]
+    assert c["my_ini"] == install.DATADIR_DO_PROJETO / "my.ini", c["my_ini"]
+    outra = install.caminhos_mariadb_portatil("11.8.9", base=base, dados=Path(r"C:\y\dados"))
+    assert outra["dados"] == Path(r"C:\y\dados") and outra["my_ini"] == Path(r"C:\y\dados") / "my.ini", outra
+    # sem base, os binários continuam em %LOCALAPPDATA%\MariaDB
     padrao = install.caminhos_mariadb_portatil("11.8.9")
     assert padrao["base"].name == "MariaDB" and padrao["base"].parent.name == "Local", padrao["base"]
+
+
+def teste_my_ini_do_projeto_vem_antes_do_de_appdata():
+    # ! Alteração de IA - Revisar: (07/11/2026, ficha 55) find_mariadb_datadir_config prefere o my.ini de `.mariadb/data` na raiz do repositório.
+    # ! Motivo: é o que faz as duas janelas (a do Eric e a do app) subirem o servidor com a mesma pasta de dados; o caminho de
+    # AppData continua valendo numa máquina que só tem a instalação antiga.
+    raiz = Path(tempfile.mkdtemp(prefix="cobaia_raiz_"))
+    try:
+        assert env.find_mariadb_datadir_config(raiz=raiz) != str(raiz / ".mariadb" / "data" / "my.ini")
+        (raiz / ".mariadb" / "data").mkdir(parents=True)
+        (raiz / ".mariadb" / "data" / "my.ini").write_text("[mysqld]\n", encoding="utf-8")
+        assert env.find_mariadb_datadir_config(raiz=raiz) == str(raiz / ".mariadb" / "data" / "my.ini")
+    finally:
+        shutil.rmtree(raiz, ignore_errors=True)
 
 
 def teste_usar_mariadb_portatil():

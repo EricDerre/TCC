@@ -1,0 +1,87 @@
+{
+  "modo": "sem_notas",
+  "corrida": 25,
+  "criado_em": "2026-11-11T22:25:45",
+  "saida": "fase4_sem_notas",
+  "modelo": "qwen2.5:7b",
+  "versao_ollama": "0.40.15",
+  "k": 3,
+  "limiares": {
+    "medida": "p_rotulo",
+    "leitura": "primeiro_token_do_rotulo",
+    "parcela_baixa": 0.3,
+    "baixo_ate": 0.8317943867608124,
+    "alto_a_partir_de": 0.9898271080008889,
+    "n": 90,
+    "sem_rotulo": 0,
+    "k": 3,
+    "origem": "fase4_calibracao/k3",
+    "erros": 22,
+    "revisados": 27,
+    "erros_pegos": 15,
+    "acertos_revisados": 12,
+    "risco_no_que_sobra": 0.1111,
+    "mediana_certos": 0.9898271080008889,
+    "mediana_errados": 0.7511499810137099,
+    "regra": "ficha 31 (a): baixo = a parcela de menor probabilidade (gatilho de intervenção e de revisão humana); alto = acima da mediana dos acertos; médio = entre os dois",
+    "gravado_em": "2026-10-27T23:54:00"
+  },
+  "casos": 72,
+  "casos_por_banco": {
+    "avaliacao": 36,
+    "ineditos": 36
+  },
+  "parcial": false,
+  "top_logprobs": 20,
+  "teto_tokens": 600,
+  "hash_prompt_fixo": "2e42cf9c31826941",
+  "hash_indice": "3985e824bf7f5aaa",
+  "biblioteca": {
+    "origem_hash": "95af35290860",
+    "hash": "ba5ff9f5f632",
+    "verbetes": 36,
+    "verbetes_retirados": [
+      "atualizacao-da-tela",
+      "campo_preco_ausente",
+      "novo_verbete"
+    ],
+    "verbetes_com_notas": 20,
+    "notas_retiradas": 26,
+    "origem": "Programacao/AgenteCore/biblioteca_producao",
+    "lote_promovido_em": "2026-11-04T20:03:06",
+    "o_que_saiu": "a seção Notas do modelo de cada verbete e a pasta aprendidos/"
+  },
+  "referencias": {
+    "avaliacao": {
+      "corrida": "22",
+      "saida": "fase4_trilha"
+    },
+    "ineditos": {
+      "corrida": "24",
+      "saida": "fase4_ineditos"
+    }
+  },
+  "ponte": {
+    "versao": "0.40.15",
+    "corrida": "fase3b_ponte_04015",
+    "data": "2026-11-11",
+    "modelo": "qwen2.5:7b",
+    "completa": true,
+    "n": 35,
+    "b": 1,
+    "c": 0,
+    "discordantes": 1,
+    "ganhos": [
+      "sin-14"
+    ],
+    "perdas": [],
+    "pareavel": true,
+    "limite": 2,
+    "casos_de_texto_alterado": [
+      "efe-3"
+    ],
+    "acerto_nova_pct": 82.9,
+    "acerto_base_pct": 80.0
+  },
+  "regra": "Regra fixada antes da corrida (decisão 116): a diferença sai do ruído quando o teste pareado exato dos casos dos dois bancos juntos (McNemar, bilateral) dá p abaixo de 0,05, com a corrida completa e a ponte da versão do Ollama pareável com a Fase 3 (b + c até 2, decisão 47). Fora disso a diferença fica dentro do ruído e o agente não muda; se sair do ruído, mudar o agente é outra decisão."
+}

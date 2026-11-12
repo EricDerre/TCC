@@ -10,7 +10,9 @@
 
 Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade de São Paulo, 2026). É um agente de testes que abre um sistema web como uma pessoa abriria, percebe quando algo quebrou, diz por que quebrou e, quando a causa é só um seletor que mudou, conserta o próprio teste. Tudo roda na máquina de quem testa: o modelo de linguagem é local (Ollama, só CPU, sem nuvem).
 
-> **Em 05/11/2026:** a Fase 4, em que o agente passa a trabalhar na tela de verdade, está em andamento, com uma corrida por fazer antes da Fase 5, à espera da conferência dos casos que ela lê.
+<!-- ! Alteração de IA - Revisar: (11/11/2026) a linha de estado passa a dizer a Fase 4 concluída e a Pós-Fase 4 em andamento, como a tabela "Onde o projeto está".
+     ! Motivo: a linha ainda dizia, com data de 05/11/2026, que a Fase 4 estava em andamento com uma corrida por fazer; a fase fechou em 06/11/2026, e a tabela logo abaixo já dizia isso. -->
+> **Em 11/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, está concluída. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento, com três corridas por rodar antes da Fase 5.
 
 | Quero... | Vá para |
 |---|---|
@@ -50,12 +52,32 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 | 3-B | O resultado se sustenta com casos novos e com outro modelo lendo? | Concluída |
 | Pré-Fase 4 | Modelos maiores cabem nesta máquina? Dá para abrir o raciocínio do agente? | Concluída |
 | 4 | O agente funciona na tela de verdade, e não só em casos escritos? | Concluída |
-| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Não iniciada |
+<!-- ! Alteração de IA - Revisar: (07/11/2026, pacote Q1) a linha da Pós-Fase 4 passa a "Em andamento" e o item da lista abaixo diz o que já existe.
+     ! Motivo: o pacote Q1 gerou o relatório por caso no molde do syllabus e a camada de leitura dos verbetes; "Não iniciada" e "hoje os verbetes são difíceis de entender" sozinhos ficariam atrasados. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q3) a linha da Pós-Fase 4 diz que o Q3 também está feito.
+     ! Motivo: o pacote Q3 gerou a árvore de decisão de cada caso; sem a frase, a tabela pararia no Q2. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q4) a linha da Pós-Fase 4 diz que o Q4 também está feito.
+     ! Motivo: o pacote Q4 entregou a barra de progresso e o protótipo da seleção pelo diff do Git; sem a frase, a tabela pararia no Q3. -->
+<!-- ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) a linha da Pós-Fase 4 diz que o Q5 também está feito.
+     ! Motivo: o pacote Q5 fez a medida com revisor humano dos relatórios; sem a frase, a tabela pararia no Q4. -->
+| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Em andamento (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026) |
 | 5 | Ele resolve mais rápido que uma pessoa? | Não iniciada |
 
 **O que falta antes da Fase 5:**
 
-- rever o que o agente entrega ao analista, porque hoje os verbetes são difíceis de entender;
+<!-- ! Alteração de IA - Revisar: (07/11/2026, pacote Q2) a linha da Pós-Fase 4 na tabela acima diz que o Q2 também está feito, e o item abaixo ganhou os filtros de texto.
+     ! Motivo: o pacote Q2 passou a medir em código cada texto que chega ao analista e ajustou o molde do relatório até passar; sem a frase, o leitor acharia que só a camada de leitura existe. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q4) o item abaixo ganhou a barra de progresso e o protótipo da seleção pelo diff do Git.
+     ! Motivo: são as duas entregas do pacote Q4 (plano da Pós-Fase 4, seções 3.5 e 3.7); sem a frase, o leitor não saberia que existem. -->
+<!-- ! Alteração de IA - Revisar: (10/11/2026, depois das fichas 62 e 63) o item abaixo passou a dizer que os 36 relatórios foram lidos por um analista de QA da empresa.
+     ! Motivo: o Eric declarou no quadro quem é o analista e que as 36 respostas são dele (decisão 117, que fecha a ficha 62). -->
+<!-- ! Alteração de IA - Revisar: (10/11/2026, tarde) o item abaixo passou a dizer que quase todos os relatórios foram lidos por um analista, que o tempo de leitura não foi medido e que as leituras dos verbetes foram curadas.
+     ! Motivo: o texto da manhã dizia que o Eric tinha lido os 36 relatórios; ele declarou que passou os relatórios a um analista (decisão 114), e a curadoria das 39 leituras foi aplicada com consertos (decisão 115). -->
+<!-- ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) o item abaixo ganhou a sessão com revisor humano dos relatórios.
+     ! Motivo: é a medida da especificação da trilha que a Fase 4 deixou em aberto (ficha 40, decisão 113); sem a frase, o leitor acharia que ninguém leu os relatórios novos. -->
+<!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q3) o item abaixo ganhou a árvore de decisão por caso.
+     ! Motivo: o pacote Q3 é a terceira entrega do que chega ao analista (plano da Pós-Fase 4, seção 3.4); sem a frase, o leitor não saberia que a árvore existe. -->
+- rever o que o agente entrega ao analista, porque hoje os verbetes são difíceis de entender (desde 07/11/2026 existe uma camada de leitura dos verbetes, gerada por código e curada em 10/11/2026 por um analista, com consertos no que era fato errado; o relatório por caso segue o molde do relatório de defeitos do syllabus CTFL 4.0; e filtros em código medem cada texto que chega ao analista, com limiares calibrados nos comentários deste repositório: todos os relatórios passam, e as leituras dos verbetes passam todas depois da curadoria; e, desde 08/11/2026, cada caso tem uma árvore de decisão lida da trilha gravada, com o que o modelo leu, que verbetes entraram, a causa contra a segunda, a cura quando houve e a origem de cada afirmação: o que o código mediu, o que ele conferiu, o que o modelo só declarou e o que faltou; e, também desde 08/11/2026, enquanto o modelo pensa uma barra de progresso diz quanto falta, estimando pelas taxas das corridas anteriores desta máquina, com o erro medido nos registros gravados, e um protótipo lê o que mudou no Git para dizer quais cenários rodar e por quê, provado no histórico do próprio repositório; e, em 09 e 10/11/2026, os 36 relatórios da corrida 24 foram lidos no formato novo, um por vez e às cegas, todos por um analista de QA da empresa, que não participou do projeto, a quem o Eric passou os relatórios: ele decidiu certo na maior parte deles e deu a nota máxima de utilidade à maioria, mas o tempo de leitura não foi medido e é um leitor só);
 - a Pós-Fase 4: ajustes e ideias para o visual do projeto, com o tipo de resposta e a formatação, e talvez gráficos ou um dashboard dinâmico sobre cada assunto (decisão 94).
 
 ## O que já descobrimos
@@ -156,6 +178,10 @@ Medir sem depender de opinião pede um ambiente controlado. Por isso o repositó
 | **CobaiaFront** | Site PHP legado de um restaurante, mantido como veio | Falhas de página completa e erros clássicos de sistema antigo |
 | **CobaiaAPI** | API JSON em Python (FastAPI), com injeção de falhas | Deriva de contrato em respostas reais, o foco do agente |
 
+<!-- ! Alteração de IA - Revisar: (11/11/2026) parágrafo novo com a origem do CobaiaFront, o Projeto CHULETA, e o caminho da nota que lista o que este trabalho acrescentou e mudou nele.
+     ! Motivo: o Eric pediu a citação correta do projeto de onde veio a parte PHP da cobaia; nenhum arquivo do repositório dizia de onde o site veio, e a tabela acima diz "mantido como veio" sem dizer de quem. O repositório de origem foi conferido pela API do GitHub em 11/11/2026. -->
+O CobaiaFront é o [Projeto CHULETA](https://github.com/pedrohtgoncalvesgit/Projeto-CHULETA), de Pedro Henrique Torres Gonçalves, integrante do grupo, cedido pelo autor para servir de sistema sob teste. O que este trabalho acrescentou e mudou no site está em [`Programacao/CobaiaFront/ORIGEM.md`](Programacao/CobaiaFront/ORIGEM.md).
+
 A avaliação usa 90 casos de falha com a resposta certa conhecida, e as regras de decisão são fixadas antes de cada rodada. A arquitetura e o detalhe de cada sistema estão em [Detalhes técnicos](DETALHES-TECNICOS.md#arquitetura).
 
 ## Instalar e rodar
@@ -239,9 +265,23 @@ do GitHub. Em texto:
 > Trabalho de Conclusão de Curso (Ciência da Computação). Universidade Cidade de
 > São Paulo, São Paulo, 2026. Repositório: https://github.com/EricDerre/TCC.
 
+<!-- ! Alteração de IA - Revisar: (11/11/2026) a seção passa a dizer como citar o projeto de origem do CobaiaFront, e o `CITATION.cff` ganhou a mesma referência.
+     ! Motivo: pedido do Eric em 11/11/2026: o site PHP da cobaia é o Projeto CHULETA, e quem usa essa parte do repositório precisa citar o autor dela. -->
+O site de teste em PHP tem origem própria. Quem usar o CobaiaFront deve citar
+também o projeto de onde ele veio:
+
+> GONÇALVES, P. H. T. **Projeto CHULETA.** 2024. Repositório:
+> https://github.com/pedrohtgoncalvesgit/Projeto-CHULETA.
+
 ## Licença
 
 O código e a documentação deste repositório estão sob a [licença MIT](LICENSE).
+<!-- ! Alteração de IA - Revisar: (11/11/2026) frase nova sobre a licença do CobaiaFront, que vem do Projeto CHULETA.
+     ! Motivo: o repositório de origem não traz arquivo de licença (conferido em 11/11/2026); sem a frase, não ficava dito sob que licença o site é distribuído aqui nem que o autor dele assina a licença deste repositório. -->
+O CobaiaFront vem do Projeto CHULETA
+([origem](Programacao/CobaiaFront/ORIGEM.md)): o repositório de origem não traz
+arquivo de licença, e aqui o site é distribuído sob a licença MIT deste
+repositório, da qual o autor do site é um dos titulares.
 Componentes de terceiros mantêm as próprias licenças: Bootstrap 3.3.7 e jQuery
 (MIT) e PHPMailer 5.2.27 (LGPL 2.1, com o texto em
 `Programacao/CobaiaFront/PHPMailer/LICENSE`) no CobaiaFront; AngularJS 1.6.9 e

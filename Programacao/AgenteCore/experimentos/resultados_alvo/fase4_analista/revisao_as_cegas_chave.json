@@ -1,0 +1,576 @@
+{
+ "semente": 20261111,
+ "com_a_corrida_20": true,
+ "gerado_em": "2026-11-12T01:00:14",
+ "itens": [
+  {
+   "n": 1,
+   "id": "p01",
+   "origem": "20",
+   "caso": "run-5",
+   "verbete": "contrato-pedido",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a possibilidade de POST /api/pedidos inserir registros duplicados sem idempotência, causando registros com id consecutivo e duas respostas 201 para um único POST.",
+   "trecho": "",
+   "palavras_chave": [
+    "post duplo",
+    "registros duplicados"
+   ],
+   "sintomas": [
+    "duas reservas iguais apos um unico post",
+    "registros com id consecutivo"
+   ],
+   "motivo": "Este caso mostrou que a falta de mecanismo de idempotência no POST /api/pedidos pode resultar em registros duplicados, algo não coberto nos verbetes existentes.",
+   "verbete_texto": "[contrato-pedido] Contrato de /api/pedidos\nGET /api/pedidos?login=<cpf>; POST /api/pedidos {id_clientes, pessoas, data_pedido} → 201; POST /api/pedidos/{id}/cancelar. Campos: id_pedido, pessoas, data_pedido AAAA-MM-DD, status 'Em Análise'|'Cancelado', nome, cpf. Sinais: data noutro formato ou como número; status fora dos dois valores. Causa: cpf vem de login_usuario (pedidos.py). Busca exata na API; o site usa LIKE '%login%' (cliente/index.php:4).",
+   "ficha": "REQUISIÇÃO: POST /api/pedidos (enviado uma vez) | GET /api/pedidos?login=11122233344\nSTATUS HTTP: 200\nSINTOMA: O cliente ve duas reservas identicas apos confirmar uma unica vez.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 2 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [contrato-pedido] Contrato de /api/pedidos; [pedido-reserva] Reserva de mesa (pedido); [formato_de_data_divergente] Formato de data divergente. O verbete da causa certa, [registro_duplicado], ficou na posição 5 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa registro_duplicado; campo id_pedido; confiança alta.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhum verbete entregue trata da causa respondida registro_duplicado.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: registro_duplicado. Campo afetado: nenhum."
+  },
+  {
+   "n": 2,
+   "id": "p02",
+   "origem": "20",
+   "caso": "efe-13",
+   "verbete": "estado_da_tela_divergente",
+   "operacao": "nota",
+   "texto": "O cancelamento depende de um redirect, o que pode causar divergência na interface.",
+   "trecho": "",
+   "palavras_chave": [
+    "cancelar",
+    "redirect",
+    "cliente_cancelar.php"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostrou que a dependência de redirect para cancelamento pode levar a divergência na interface, mesmo com a resposta correta da API.",
+   "verbete_texto": "[estado_da_tela_divergente] Estado da tela divergente da resposta\nA rede está certa — status e corpo conferem — e o usuário vê outra coisa: \"Carregando\" parado, lista vazia, botão que não muda. Sinais: nenhum erro de console nem status de erro; recarregar corrige: o estado não foi atualizado. Causa: produtos_api.php só limpa \"Carregando...\" no then() do fetch e substitui o grid por innerHTML; na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).",
+   "ficha": "REQUISIÇÃO: GET /api/produtos (chamado duas vezes em sequencia; a primeira resposta chegou depois da segunda)\nSTATUS HTTP: 200\nSINTOMA: A tela mostra o preco antigo (R$ 69,90) do produto 3, embora a ultima resposta da API traga 74.9; nenhum erro no console.\nOBSERVAÇÃO: A pagina substitui o grid inteiro a cada resposta recebida; a resposta mais antiga chegou por ultimo e sobrescreveu a mais nova.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: não medida: o caso descreve a resposta em palavras, sem um corpo para comparar.\nBUSCA: entregou ao agente [estado_da_tela_divergente] Estado da tela divergente da resposta; [contagem_inconsistente] Contagem inconsistente; [corpo_vazio] Corpo vazio; [atualizacao_imediata] Atualização imediata do grid. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 1 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa dado_desatualizado; campo preco; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estado_da_tela_divergente. Campo afetado: nenhum."
+  },
+  {
+   "n": 3,
+   "id": "p03",
+   "origem": "20",
+   "caso": "efe-8",
+   "verbete": "atualizacao-da-tela",
+   "operacao": "novo_verbete",
+   "texto": "Adicionar verbete sobre a necessidade de atualização correta do estado da tela após a resposta da API, utilizando promises ou async/await.",
+   "trecho": "",
+   "palavras_chave": [
+    "fetch",
+    "innerhtml",
+    "redirect",
+    "promise"
+   ],
+   "sintomas": [
+    "carregando...",
+    "lista vazia",
+    "botao inativo"
+   ],
+   "motivo": "Este caso demonstrou a necessidade de documentar a atualização correta do estado da tela, diferentemente do tratamento atual do corpo da resposta.",
+   "verbete_texto": "(verbete novo, proposto com o título \"Atualização da Tela após a API\", para as causas estado_da_tela_divergente; não existe na biblioteca)",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A API respondeu 1 produto com sucesso, mas a tela mostra 'Carregando...' parado.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [estado_da_tela_divergente] Estado da tela divergente da resposta; [contrato-produto] Contrato de /api/produtos. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 2 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa estado_da_tela_divergente; campo nenhum; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: estado_da_tela_divergente. Campo afetado: nenhum."
+  },
+  {
+   "n": 4,
+   "id": "p04",
+   "origem": "27",
+   "caso": "tra-7",
+   "verbete": "chave_de_juncao_errada",
+   "operacao": "sinal_de_busca",
+   "texto": "",
+   "trecho": "",
+   "palavras_chave": [
+    "juncao",
+    "registro",
+    "campo derivado"
+   ],
+   "sintomas": [
+    "campo derivado incorreto",
+    "juncao incorreta",
+    "valor de registro errado"
+   ],
+   "motivo": "campo derivado incorreto não foi um dos sintomas da busca",
+   "verbete_texto": "[chave_de_juncao_errada] Chave de junção errada\nTipo e formato certos, mas o valor é de OUTRO registro: categoria ou imagem alheia no produto, nome ou cpf de outro usuário na reserva. Sinais: afeta campo derivado de junção (tipo, nome, cpf, imagem), não os próprios; o dado existe no banco, ligado ao registro errado. Causa: Junções: id_tipo_produto e id_clientes (models.py). No site, cliente/index.php:4 usa LIKE '%login%' — CPF substring de outro casa mais de um cliente. Notas: Retificação: onde diz \"Tipo e formato certos, mas o valor é de OUTRO registro: categoria ou imagem alheia no produto, nome ou cpf de outro usuário na reserva. Sinais: afeta campo derivado de junção (tipo, nome, cpf, imagem), não os próprios; o dado existe no banco, ligado ao registro errado. Causa: Junções: id_tipo_produto e id_clientes (models.py). No site, cliente/index.php:4 usa LIKE '%login%' — CPF substring de outro casa mais de um cliente.\", leia: Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo nome veio diferente da referência em modo normal em 13 itens, por exemplo no id 2: \"Picanha ao Alho\" em vez de \"Picanha Simples\". O campo resumo veio diferente da referência em modo normal em 12 itens, por exemplo no id 2: \"Picanha grelhad... em vez de \"Corte nobre gre.... O campo preco veio diferente da referência em modo normal em 12 itens, por exemplo no id 2: 89.9 em vez de 84.9. (...)\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 14 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [contagem_inconsistente] Contagem inconsistente; [estrutura_aninhada_divergente] Estrutura aninhada divergente. O verbete da causa certa, [chave_de_juncao_errada], ficou na posição 15 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa campo_renomeado; campo nome, resumo, preco, imagem, destaque, tipo; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: o campo apontado (nome, resumo, preco, imagem, destaque, tipo) não aparece no caso.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: chave_de_juncao_errada. Campo afetado: id."
+  },
+  {
+   "n": 5,
+   "id": "p05",
+   "origem": "20",
+   "caso": "tra-3",
+   "verbete": "novo_verbete",
+   "operacao": "novo_verbete",
+   "texto": "Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+   "trecho": "",
+   "palavras_chave": [
+    "juncao",
+    "juncao incorreta",
+    "juncao de tabelas"
+   ],
+   "sintomas": [
+    "tipo_divergente",
+    "chave_de_juncao_errada"
+   ],
+   "motivo": "O caso mostrou que a junção entre tabelas estava incorreta, levando a categorias incorretas nos produtos, e a documentação não abordava explicitamente a necessidade de corrigir essa junção.",
+   "verbete_texto": "(verbete novo, proposto com o título \"Junção de tabelas incorreta\", para as causas chave_de_juncao_errada; não existe na biblioteca)",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo tipo veio diferente da referência em modo normal em 4 itens, por exemplo no id 7: \"Bebidas\" em vez de \"Carnes\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 14 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [contrato-produto] Contrato de /api/produtos; [contagem_inconsistente] Contagem inconsistente; [chave_de_juncao_errada] Chave de junção errada. O verbete da causa certa, [chave_de_juncao_errada], ficou na posição 7 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa tipo_divergente; campo tipo; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: chave_de_juncao_errada. Campo afetado: tipo."
+  },
+  {
+   "n": 6,
+   "id": "p06",
+   "origem": "20",
+   "caso": "efe-8",
+   "verbete": "estado_da_tela_divergente",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a necessidade de atualização correta do estado da tela após a resposta da API.",
+   "trecho": "",
+   "palavras_chave": [
+    "fetch",
+    "innerhtml",
+    "redirect"
+   ],
+   "sintomas": [
+    "carregando...",
+    "lista vazia",
+    "botao inativo"
+   ],
+   "motivo": "Este caso mostrou que a documentação não aborda a atualização correta do estado da tela, diferentemente do tratamento do corpo da resposta.",
+   "verbete_texto": "[estado_da_tela_divergente] Estado da tela divergente da resposta\nA rede está certa — status e corpo conferem — e o usuário vê outra coisa: \"Carregando\" parado, lista vazia, botão que não muda. Sinais: nenhum erro de console nem status de erro; recarregar corrige: o estado não foi atualizado. Causa: produtos_api.php só limpa \"Carregando...\" no then() do fetch e substitui o grid por innerHTML; na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A API respondeu 1 produto com sucesso, mas a tela mostra 'Carregando...' parado.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [estado_da_tela_divergente] Estado da tela divergente da resposta; [contrato-produto] Contrato de /api/produtos. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 2 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa estado_da_tela_divergente; campo nenhum; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: estado_da_tela_divergente. Campo afetado: nenhum."
+  },
+  {
+   "n": 7,
+   "id": "p07",
+   "origem": "27",
+   "caso": "lex-2",
+   "verbete": "corpo_nao_e_json",
+   "operacao": "nota",
+   "texto": "A resposta não é JSON: veio como página ou texto com marcação.",
+   "trecho": "",
+   "palavras_chave": [],
+   "sintomas": [],
+   "motivo": "Sintoma \"A resposta não é JSON (começa por '<html><body><h1>...')\" da ficha não foi incluído no verbete.",
+   "verbete_texto": "[corpo_nao_e_json] Corpo não é JSON\nA resposta chega (às vezes 200 e Content-Type application/json), mas o corpo é HTML, XML ou aviso em texto — o parse falha no primeiro caractere. Sinais: console \"Unexpected token <\"; texto legível antes ou no lugar do JSON: Warning do PHP, página de gateway, \"Atenção ERRO\". Causa: Falha de conexão no site imprime \"Atenção ERRO\" em HTML (connect.php:16); Warning/Fatal do PHP saem antes da saída; gateway fora devolve a própria página. Notas: Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON. Adicionar um exemplo de sintoma para clarificar que XML também pode causar parse falho.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta não é JSON (começa por '<html><body><h1>...'). A tela mostra 140 linha(s) a menos que a referência; faltam: - img; - img; - img. A tela mostra 1 linha(s) a mais que a referência; sobram: - text: \"Erro ao carregar produtos da CobaiaAPI: Unexpected token '<', \\\"<html><bod\\\"... is not valid JSON\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: a resposta não é JSON: veio como página ou texto com marcação.\nBUSCA: entregou ao agente [corpo_nao_e_json] Corpo não é JSON; [mensagens-de-erro-do-codigo] Índice de mensagens literais do código; [erro_interno_do_servidor] Erro interno do servidor (500). O verbete da causa certa, [corpo_nao_e_json], ficou na posição 1 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa corpo_nao_e_json; campo nenhum; confiança alta.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: corpo_nao_e_json. Campo afetado: nenhum."
+  },
+  {
+   "n": 8,
+   "id": "p08",
+   "origem": "20",
+   "caso": "tra-6",
+   "verbete": "formato_preco",
+   "operacao": "novo_verbete",
+   "texto": "Adicionar nota sobre a necessidade de formatação correta do preço no front-end, considerando o formato brasileiro.",
+   "trecho": "",
+   "palavras_chave": [
+    "formatacao",
+    "monetario",
+    "localidade"
+   ],
+   "sintomas": [],
+   "motivo": "Este verbete aborda a necessidade de formatação correta do preço no front-end, conforme mencionado na documentação, ajudando a diagnosticar casos futuros com formatos de preço incorretos.",
+   "verbete_texto": "(verbete novo, proposto com o título \"Formato de preço errado\", para as causas escala_ou_unidade_errada; não existe na biblioteca)",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo preco veio diferente da referência em modo normal em 14 itens, por exemplo no id 1: 8990.0 em vez de 89.9. A tela mostra 14 linha(s) a menos que a referência; faltam: - button \"R$ 89,90\"; - button \"R$ 84,90\"; - button \"R$ 69,90\". A tela mostra 14 linha(s) a mais que a referência; sobram: - button \"R$ 8990,00\"; - button \"R$ 8490,00\"; - button \"R$ 6990,00\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 14 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [contagem_inconsistente] Contagem inconsistente; [nulo_inesperado] Nulo inesperado. O verbete da causa certa, [escala_ou_unidade_errada], ficou na posição 15 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa escala_ou_unidade_errada; campo preco; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: escala_ou_unidade_errada. Campo afetado: preco."
+  },
+  {
+   "n": 9,
+   "id": "p09",
+   "origem": "20",
+   "caso": "efe-11",
+   "verbete": "localizador_quebrado",
+   "operacao": "nota",
+   "texto": "Adicionar que a falta de ORDER BY na consulta pode causar ordem aleatória indeterminada dos produtos.",
+   "trecho": "",
+   "palavras_chave": [
+    "localizador",
+    "order by",
+    "consulta"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostrou que a ordem dos produtos pode variar, indicando a necessidade de uma consulta ordenada.",
+   "verbete_texto": "[localizador_quebrado] Localizador (seletor) quebrado\nNenhuma requisição falhou: o roteiro não acha o elemento (seletor não casa) ou acha mais de um (ambíguo). O problema é o localizador, não o dado. Sinais: \"Ver mais\" vs \"Saiba Mais...\", data-produto vs data-id: texto ou atributo inexistente; nth-child que funciona às vezes: ordem não garantida. Causa: Elementos reais de produtos_api.php: #produtos-api-grid, .thumbnail, button.saiba-mais[data-id], #modalDetalhe; a lista da API não tem ORDER BY (produtos.py:38). Notas: Adicionado que o localizador pode ser ambíguo, encontrando mais de um elemento com o mesmo seletor.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: Os cartoes aparecem em ordem aleatoria a cada recarregamento da pagina.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: não medida: o caso descreve a resposta em palavras, sem um corpo para comparar.\nBUSCA: entregou ao agente [contagem_inconsistente] Contagem inconsistente; [entidade-produto] Produto e sua categoria; [localizador_quebrado] Localizador (seletor) quebrado. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 6 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa localizador_quebrado; campo nenhum; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estado_da_tela_divergente. Campo afetado: nenhum."
+  },
+  {
+   "n": 10,
+   "id": "p10",
+   "origem": "20",
+   "caso": "semt-7",
+   "verbete": "tipo_divergente",
+   "operacao": "retificacao",
+   "texto": "Adicionar exemplo de campo \"pessoas\" como número em vez de string, causando inconsistência na contagem total de lugares reservados.",
+   "trecho": "Chave certa com o tipo JSON errado: número entre aspas ('89.90'), booleano como texto ('Sim') ou número (1), inteiro como texto ('4'). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; '89,90' com vírgula não converte; destaque fora de true/false sai literal.",
+   "palavras_chave": [],
+   "sintomas": [],
+   "motivo": "O caso mostrou que a contagem total de lugares reservados está incorreta, indicando que o tipo do campo \"pessoas\" está divergindo do esperado, necessitando de um exemplo explícito na documentação.",
+   "verbete_texto": "[tipo_divergente] Tipo divergente\nChave certa com o tipo JSON errado: número entre aspas (\"89.90\"), booleano como texto (\"Sim\") ou número (1), inteiro como texto (\"4\"). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; \"89,90\" com vírgula não converte; destaque fora de true/false sai literal. Causa: O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).",
+   "ficha": "REQUISIÇÃO: GET /api/pedidos?login=11122233344\nSTATUS HTTP: 200\nSINTOMA: A soma total de lugares reservados sai errada na tela administrativa.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo pessoas veio como texto em vez de inteiro.\nBUSCA: entregou ao agente [contrato-pedido] Contrato de /api/pedidos; [pedido-reserva] Reserva de mesa (pedido); [formato_de_data_divergente] Formato de data divergente. O verbete da causa certa, [tipo_divergente], ficou na posição 5 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa formato_de_data_divergente; campo data_pedido; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: tipo_divergente. Campo afetado: pessoas."
+  },
+  {
+   "n": 11,
+   "id": "p11",
+   "origem": "20",
+   "caso": "run-12",
+   "verbete": "erro_interno_do_servidor",
+   "operacao": "nota",
+   "texto": "Adicionar que a conversão de ErrorFault em 500 pode ser causada por problemas na rota.",
+   "trecho": "",
+   "palavras_chave": [
+    "converte",
+    "errorfault",
+    "500"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostrou que a documentação poderia ser mais detalhada sobre a origem do erro 500, ajudando a diferenciar de outros tipos de falhas.",
+   "verbete_texto": "[erro_interno_do_servidor] Erro interno do servidor (500)\n500 com {\"detail\": ...}: falha própria da API. detail \"fault injection: error_500 em produto\" é o injetor; \"Internal Server Error\" é exceção não tratada. Sinais: intermitente sem padrão: injetor com probability < 1; em toda requisição: banco inacessível ou defeito na rota. Causa: Rotas convertem ErrorFault em 500 (produtos.py:42). No site PHP, banco fora NÃO dá 500: imprime \"Atenção ERRO\" em HTML (connect.php:16). Notas: Adicionar que este erro pode ocorrer devido a falhas no banco de dados ou em rotas, e que a mensagem genérica pode esconder problemas específicos. Adicionar que este erro pode ocorrer de forma intermitente, sem padrão, e que pode ser causado por problemas no banco de dados ou rota.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos (1 em cada 3 tentativas)\nSTATUS HTTP: 500\nSINTOMA: A listagem falha de forma intermitente, sem padrao de horario.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: os campos id, nome, resumo, tipo, preco, imagem, destaque não vieram; a resposta veio como objeto em vez de lista; a resposta trouxe o campo detail, que o contrato não prevê.\nBUSCA: entregou ao agente [erro_interno_do_servidor] Erro interno do servidor (500); [estrutura_aninhada_divergente] Estrutura aninhada divergente; [contagem_inconsistente] Contagem inconsistente. O verbete da causa certa, [erro_interno_do_servidor], ficou na posição 1 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa erro_interno_do_servidor; campo nenhum; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: erro_interno_do_servidor. Campo afetado: nenhum."
+  },
+  {
+   "n": 12,
+   "id": "p12",
+   "origem": "20",
+   "caso": "efe-4",
+   "verbete": "estado_da_tela_divergente",
+   "operacao": "retificacao",
+   "texto": "Corrigir a lógica para atualizar o estado corretamente, independentemente de ser uma coleção ou um objeto.",
+   "trecho": "na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).",
+   "palavras_chave": [
+    "fetch",
+    "innerhtml",
+    "redirect"
+   ],
+   "sintomas": [
+    "lista vazia",
+    "botao que nao muda"
+   ],
+   "motivo": "Este caso mostrou que a lógica de atualização do estado da tela não está adequada, precisando ser verificada e ajustada para lidar com diferentes tipos de respostas.",
+   "verbete_texto": "[estado_da_tela_divergente] Estado da tela divergente da resposta\nA rede está certa — status e corpo conferem — e o usuário vê outra coisa: \"Carregando\" parado, lista vazia, botão que não muda. Sinais: nenhum erro de console nem status de erro; recarregar corrige: o estado não foi atualizado. Causa: produtos_api.php só limpa \"Carregando...\" no then() do fetch e substitui o grid por innerHTML; na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A API respondeu com 1 produto e sem erro, mas a listagem na tela aparece vazia.\nOBSERVAÇÃO: Nao ha erro no console. O filtro de categoria estava com 'Bebidas' selecionado.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [estado_da_tela_divergente] Estado da tela divergente da resposta; [contrato-produto] Contrato de /api/produtos; [interface-estados] Estados da Interface. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 2 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa colecao_no_lugar_de_objeto; campo id; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estado_da_tela_divergente. Campo afetado: nenhum."
+  },
+  {
+   "n": 13,
+   "id": "p13",
+   "origem": "20",
+   "caso": "semt-10",
+   "verbete": "tipo_divergente",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a converção de tipos entre a API e a interface web, especificamente sobre o campo destaque que vem como texto em vez de booleano.",
+   "trecho": "",
+   "palavras_chave": [
+    "tipo",
+    "convercao",
+    "json"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostra que a converção de tipos entre a API e a interface web precisa ser claramente documentada, pois o usuário pode interpretar incorretamente os dados.",
+   "verbete_texto": "[tipo_divergente] Tipo divergente\nChave certa com o tipo JSON errado: número entre aspas (\"89.90\"), booleano como texto (\"Sim\") ou número (1), inteiro como texto (\"4\"). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; \"89,90\" com vírgula não converte; destaque fora de true/false sai literal. Causa: O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo destaque veio como texto em vez de booleano. A tela mostra 14 linha(s) a menos que a referência; faltam: - paragraph: \"destaque: Sim\"; - paragraph: \"destaque: Sim\"; - paragraph: \"destaque: Sim\". A tela mostra 14 linha(s) a mais que a referência; sobram: - paragraph: \"destaque: True\"; - paragraph: \"destaque: True\"; - paragraph: \"destaque: True\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo destaque veio como texto em vez de booleano.\nBUSCA: entregou ao agente [contrato-produto] Contrato de /api/produtos; [campo_ausente] Campo ausente; [valor_fora_do_dominio] Valor fora do domínio. O verbete da causa certa, [tipo_divergente], ficou na posição 4 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa tipo_divergente; campo destaque; confiança alta.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: tipo_divergente. Campo afetado: destaque."
+  },
+  {
+   "n": 14,
+   "id": "p14",
+   "origem": "27",
+   "caso": "sin-13",
+   "verbete": "estrutura_aninhada_divergente",
+   "operacao": "nota",
+   "texto": "O campo tipo pode ser representado como um objeto ou uma lista simples, dependendo da versão do contrato.",
+   "trecho": "",
+   "palavras_chave": [
+    "estrutura aninhada",
+    "divergencia",
+    "campo simples"
+   ],
+   "sintomas": [
+    "campo simples como objeto",
+    "estrutura aninhada divergente"
+   ],
+   "motivo": "sintomas da ficha mostram que o campo pode ser representado de forma aninhada ou simples, mas o verbete não aborda essa flexibilidade.",
+   "verbete_texto": "[estrutura_aninhada_divergente] Estrutura aninhada divergente\nChaves existem, mas noutro nível: lista num envelope ({\"data\": {\"itens\": [...]}}) ou campo simples como objeto ({\"id\": 1, \"nome\": \"Carnes\"}). Sinais: envelope na raiz: Array.isArray falha, \"Nenhum produto retornado\"; campo como objeto: cartão imprime [object Object]. Causa: Contrato real: lista crua na raiz e tipo como texto (produtos.py _to_dict); envelope ou aninhamento veio de outra versão ou intermediário. Notas: Retificação: onde diz \"Chaves existem, mas noutro nível: lista num envelope ({'data': {'itens': [...]}}) ou campo simples como objeto ({'id': 1, 'nome': 'Carnes'}).\", leia: Adicionar exemplo de estrutura aninhada divergente no verbete.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo tipo veio como objeto em vez de texto. A tela mostra 14 linha(s) a menos que a referência; faltam: - strong: Carnes; - strong: Carnes; - strong: Carnes. A tela mostra 14 linha(s) a mais que a referência; sobram: - strong: \"{\\\"valor\\\":\\\"Carnes\\\",\\\"moeda\\\":\\\"BRL\\\"}\"; - strong: \"{\\\"valor\\\":\\\"Carnes\\\",\\\"moeda\\\":\\\"BRL\\\"}\"; - strong: \"{\\\"valor\\\":\\\"Carnes\\\",\\\"moeda\\\":\\\"BRL\\\"}\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo tipo veio como objeto em vez de texto.\nBUSCA: entregou ao agente [campo_ausente] Campo ausente; [colecao_no_lugar_de_objeto] Coleção no lugar de objeto (ou o inverso); [contrato-produto] Contrato de /api/produtos; [estrutura_aninhada_divergente] Estrutura aninhada divergente. O verbete da causa certa, [estrutura_aninhada_divergente], ficou na posição 5 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa tipo_divergente; campo tipo; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: a FONTE cita o verbete tipo_divergente, fora do contexto entregue.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estrutura_aninhada_divergente. Campo afetado: tipo."
+  },
+  {
+   "n": 15,
+   "id": "p15",
+   "origem": "27",
+   "caso": "efe-10",
+   "verbete": "estado_da_tela_divergente",
+   "operacao": "sinal_de_busca",
+   "texto": "",
+   "trecho": "",
+   "palavras_chave": [
+    "estado_da_tela_divergente",
+    "fetch",
+    "innerhtml",
+    "cliente_cancelar.php"
+   ],
+   "sintomas": [
+    "preco_incorreto",
+    "carregamento_parado",
+    "grid_vazio"
+   ],
+   "motivo": "A busca não entregou o verbete correto devido à falta de palavras-chave relacionadas ao estado da tela divergente.",
+   "verbete_texto": "[estado_da_tela_divergente] Estado da tela divergente da resposta\nA rede está certa — status e corpo conferem — e o usuário vê outra coisa: \"Carregando\" parado, lista vazia, botão que não muda. Sinais: nenhum erro de console nem status de erro; recarregar corrige: o estado não foi atualizado. Causa: produtos_api.php só limpa \"Carregando...\" no then() do fetch e substitui o grid por innerHTML; na área do cliente, cancelar depende do redirect (cliente_cancelar.php:7).",
+   "ficha": "REQUISIÇÃO: GET /api/produtos (consultado agora, com a pagina aberta desde antes da alteracao do cadastro)\nSTATUS HTTP: 200\nSINTOMA: A API, consultada agora, devolve preco 84.9 para a Costelona, mas o cartao na tela continua exibindo 'R$ 79,90'; nenhum erro no console.\nOBSERVAÇÃO: A pagina foi carregada antes de o administrador alterar o preco no cadastro e nao foi recarregada; (...)\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [contrato-produto] Contrato de /api/produtos; [entidade-produto] Produto e sua categoria; [estado_da_tela_divergente] Estado da tela divergente da resposta; [interface-frontend] Interface Frontend. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 3 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa valor_fora_do_dominio; campo preco; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhum verbete entregue trata da causa respondida valor_fora_do_dominio.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estado_da_tela_divergente. Campo afetado: preco."
+  },
+  {
+   "n": 16,
+   "id": "p16",
+   "origem": "20",
+   "caso": "semt-6",
+   "verbete": "tipo_divergente",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a necessidade de conversão correta do tipo id em inteiro no front-end, considerando que o backend retorna como string.",
+   "trecho": "",
+   "palavras_chave": [
+    "convercao",
+    "tipo",
+    "json"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostrou que a conversão incorreta do tipo id pode causar confusões na interface, e a documentação não explicitava essa necessidade.",
+   "verbete_texto": "[tipo_divergente] Tipo divergente\nChave certa com o tipo JSON errado: número entre aspas (\"89.90\"), booleano como texto (\"Sim\") ou número (1), inteiro como texto (\"4\"). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; \"89,90\" com vírgula não converte; destaque fora de true/false sai literal. Causa: O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo id veio como texto em vez de inteiro. A lista veio com 14 itens; a referência em modo normal tem 14: faltam os ids 1 (\"Picanha ao Alho\"), 2 (\"Picanha Simples\"), 3 (\"Fraldinha\"), 4 (\"Costelona\"), 5 (\"Alcatra na Pedra\"), 6 (\"Maminha\"), 7 (\"Cupim\"), 8 (\"Água Mineral\"), 9 (\"Balde de Cerveja\"), 10 (\"Refrigerante\"), 11 (\"Pão de Alho\"), 12 (\"Queijo Coalho\"), 13 (\"Hambúrguer Arte...), 14 (\"Abacaxi na Brasa\"); (...)\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo id veio como texto em vez de inteiro.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [campo_ausente] Campo ausente; [contagem_inconsistente] Contagem inconsistente. O verbete da causa certa, [tipo_divergente], ficou na posição 8 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa contagem_inconsistente; campo id; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: tipo_divergente. Campo afetado: id."
+  },
+  {
+   "n": 17,
+   "id": "p17",
+   "origem": "27",
+   "caso": "sin-1",
+   "verbete": "campo_ausente",
+   "operacao": "nota",
+   "texto": "O campo preco retorna undefined quando ausente, causando botões sem valor.",
+   "trecho": "",
+   "palavras_chave": [
+    "campo_preco",
+    "undefined",
+    "botao_impresso"
+   ],
+   "sintomas": [],
+   "motivo": "sintomas da ficha mostram undefined em botões, mas não foram mencionados no verbete.",
+   "verbete_texto": "[campo_ausente] Campo ausente\nUma chave do contrato não vem no objeto — nem com nulo. No JavaScript a leitura vira undefined. Sinais: nome ausente: cartão \"(sem nome)\"; preço ausente: botão imprime \"undefined\"; id ausente: botão de detalhe ou cancelar sem identificador, clique sem efeito. Causa: O modo field_missing remove o campo-alvo (fault_injection.py). Diferença para campo_renomeado: nenhuma chave nova aparece no lugar. Notas: Adicionar nota sobre a remoção de campos no fault_injection.py.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A conferência 'preço do primeiro cartão' falhou: esperava texto no padrão ^R\\$ \\d+,\\d{2}$; viu undefined. O campo preco não veio na resposta. A tela mostra 14 linha(s) a menos que a referência; faltam: - button \"R$ 89,90\"; - button \"R$ 84,90\"; - button \"R$ 69,90\". A tela mostra 14 linha(s) a mais que a referência; sobram: - button \"undefined\"; - button \"undefined\"; - button \"undefined\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo preco não veio.\nBUSCA: entregou ao agente [campo_ausente] Campo ausente; [contrato-produto] Contrato de /api/produtos; [campo_renomeado] Campo renomeado. O verbete da causa certa, [campo_ausente], ficou na posição 1 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa campo_ausente; campo preco; confiança alta.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: campo_ausente. Campo afetado: preco."
+  },
+  {
+   "n": 18,
+   "id": "p18",
+   "origem": "27",
+   "caso": "tra-3",
+   "verbete": "chave_de_juncao_errada",
+   "operacao": "sinal_de_busca",
+   "texto": "",
+   "trecho": "",
+   "palavras_chave": [
+    "juncao",
+    "tipo",
+    "produto",
+    "campo derivado"
+   ],
+   "sintomas": [
+    "campo tipo divergente",
+    "tipo de produto errado",
+    "juncao incorreta"
+   ],
+   "motivo": "sintoma campo tipo divergente não foi um dos termos de busca",
+   "verbete_texto": "[chave_de_juncao_errada] Chave de junção errada\nTipo e formato certos, mas o valor é de OUTRO registro: categoria ou imagem alheia no produto, nome ou cpf de outro usuário na reserva. Sinais: afeta campo derivado de junção (tipo, nome, cpf, imagem), não os próprios; o dado existe no banco, ligado ao registro errado. Causa: Junções: id_tipo_produto e id_clientes (models.py). No site, cliente/index.php:4 usa LIKE '%login%' — CPF substring de outro casa mais de um cliente. Notas: Retificação: onde diz \"Tipo e formato certos, mas o valor é de OUTRO registro: categoria ou imagem alheia no produto, nome ou cpf de outro usuário na reserva. Sinais: afeta campo derivado de junção (tipo, nome, cpf, imagem), não os próprios; o dado existe no banco, ligado ao registro errado. Causa: Junções: id_tipo_produto e id_clientes (models.py). No site, cliente/index.php:4 usa LIKE '%login%' — CPF substring de outro casa mais de um cliente.\", leia: Corrigir a junção entre tbprodutos e tbtipos, garantindo que id_tipo_produto esteja corretamente ligado a tbtipos.id_tipo.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: O campo tipo veio diferente da referência em modo normal em 4 itens, por exemplo no id 7: \"Bebidas\" em vez de \"Carnes\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 14 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [contrato-produto] Contrato de /api/produtos; [contagem_inconsistente] Contagem inconsistente; [chave_de_juncao_errada] Chave de junção errada. O verbete da causa certa, [chave_de_juncao_errada], ficou na posição 7 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa tipo_divergente; campo tipo; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: chave_de_juncao_errada. Campo afetado: tipo."
+  },
+  {
+   "n": 19,
+   "id": "p19",
+   "origem": "20",
+   "caso": "efe-10",
+   "verbete": "interface-frontend",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a importância de atualizações corretas do DOM e a dependência de redirects na interface frontend.",
+   "trecho": "",
+   "palavras_chave": [
+    "dom",
+    "atualizacao",
+    "redirect"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostrou que a interface não atualiza corretamente o DOM mesmo com a API retornando dados atualizados, evidenciando a necessidade de melhor documentação sobre atualizações do DOM e redirects.",
+   "verbete_texto": "[interface-frontend] Interface Frontend\nAdicionar a interface frontend como uma entidade, destacando a importância de atualizações corretas do DOM e a dependência de redirects.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos (consultado agora, com a pagina aberta desde antes da alteracao do cadastro)\nSTATUS HTTP: 200\nSINTOMA: A API, consultada agora, devolve preco 84.9 para a Costelona, mas o cartao na tela continua exibindo 'R$ 79,90'; nenhum erro no console.\nOBSERVAÇÃO: A pagina foi carregada antes de o administrador alterar o preco no cadastro e nao foi recarregada; (...)\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [contrato-produto] Contrato de /api/produtos; [entidade-produto] Produto e sua categoria; [estado_da_tela_divergente] Estado da tela divergente da resposta; [interface-frontend] Interface Frontend. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 3 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa valor_fora_do_dominio; campo preco; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhum verbete entregue trata da causa respondida valor_fora_do_dominio.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estado_da_tela_divergente. Campo afetado: preco."
+  },
+  {
+   "n": 20,
+   "id": "p20",
+   "origem": "27",
+   "caso": "lex-9",
+   "verbete": "corpo_nao_e_json",
+   "operacao": "nota",
+   "texto": "A resposta não é JSON: veio como página ou texto com marcação.",
+   "trecho": "",
+   "palavras_chave": [],
+   "sintomas": [],
+   "motivo": "Sintoma \"A resposta não é JSON (começa por '<html><body><h1>...')\" na ficha do caso.",
+   "verbete_texto": "[corpo_nao_e_json] Corpo não é JSON\nA resposta chega (às vezes 200 e Content-Type application/json), mas o corpo é HTML, XML ou aviso em texto — o parse falha no primeiro caractere. Sinais: console \"Unexpected token <\"; texto legível antes ou no lugar do JSON: Warning do PHP, página de gateway, \"Atenção ERRO\". Causa: Falha de conexão no site imprime \"Atenção ERRO\" em HTML (connect.php:16); Warning/Fatal do PHP saem antes da saída; gateway fora devolve a própria página. Notas: Adicionar um exemplo de sintoma específico, como \"Página de erro HTML em vez de JSON\", para melhorar a identificação de casos onde o corpo da resposta não é JSON. Adicionar um exemplo de sintoma para clarificar que XML também pode causar parse falho.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta não é JSON (começa por '<html><body><h1>...'). A tela mostra 140 linha(s) a menos que a referência; faltam: - img; - img; - img. A tela mostra 1 linha(s) a mais que a referência; sobram: - text: \"Erro ao carregar produtos da CobaiaAPI: Unexpected token '<', \\\"<html><bod\\\"... is not valid JSON\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: a resposta não é JSON: veio como página ou texto com marcação.\nBUSCA: entregou ao agente [corpo_nao_e_json] Corpo não é JSON; [mensagens-de-erro-do-codigo] Índice de mensagens literais do código; [erro_interno_do_servidor] Erro interno do servidor (500). O verbete da causa certa, [corpo_nao_e_json], ficou na posição 1 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa corpo_nao_e_json; campo nenhum; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: corpo_nao_e_json. Campo afetado: nenhum."
+  },
+  {
+   "n": 21,
+   "id": "p21",
+   "origem": "20",
+   "caso": "semt-15",
+   "verbete": "validacao-na-api",
+   "operacao": "novo_verbete",
+   "texto": "Adicionar validação no status do pedido na API para evitar valores fora do domínio permitido pelo formulário.",
+   "trecho": "",
+   "palavras_chave": [
+    "validacao",
+    "restricoes",
+    "formulario"
+   ],
+   "sintomas": [],
+   "motivo": "O caso mostrou a necessidade de validar os campos na API para corresponder às restrições do formulário, evitando reservas inválidas.",
+   "verbete_texto": "(verbete novo, proposto com o título \"Validação na API\", para as causas valor_fora_do_dominio; não existe na biblioteca)",
+   "ficha": "REQUISIÇÃO: GET /api/pedidos?login=11122233344\nSTATUS HTTP: 200\nSINTOMA: A reserva aparece na lista mas o restaurante nao consegue alocar mesa para ela.\nOBSERVAÇÃO: O formulario exige minimo de 1 pessoa (input com min=1).\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [contrato-pedido] Contrato de /api/pedidos; [pedido-reserva] Reserva de mesa (pedido); [estado_da_tela_divergente] Estado da tela divergente da resposta. O verbete da causa certa, [valor_fora_do_dominio], ficou na posição 4 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa valor_fora_do_dominio; campo pessoas; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: valor_fora_do_dominio. Campo afetado: pessoas."
+  },
+  {
+   "n": 22,
+   "id": "p22",
+   "origem": "20",
+   "caso": "tra-14",
+   "verbete": "contagem_inconsistente",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a necessidade de incluir o total na resposta da API /api/produtos, para evitar contagens inconsistentes.",
+   "trecho": "",
+   "palavras_chave": [
+    "contagem",
+    "lista",
+    "total"
+   ],
+   "sintomas": [
+    "menos itens na interface",
+    "lista crua sem total"
+   ],
+   "motivo": "Este caso mostrou que a falta de total na resposta da API pode levar a contagens inconsistentes na interface, evidenciando a necessidade de incluir este campo.",
+   "verbete_texto": "[contagem_inconsistente] Contagem inconsistente\nDois números que deveriam bater não batem: total 14 e lista com 1; total 0 com itens; página 2 vazia com total 14; contador de destaques diferente dos cartões. Sinais: total e lista vêm de consultas diferentes; rótulo numérico que não corresponde ao renderizado. Causa: GET /api/produtos devolve a lista crua, sem total nem paginação (produtos.py:34-43); o seed tem 14 produtos, 5 em destaque. Envelope com total indica outra versão.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 13 elementos. A lista veio com 13 itens; a referência em modo normal tem 14: falta o id 14 (\"Abacaxi na Brasa\"). A tela mostra 10 linha(s) a menos que a referência; faltam: - img; - paragraph:; - paragraph:.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 13 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [contagem_inconsistente] Contagem inconsistente; [contrato-produto] Contrato de /api/produtos. O verbete da causa certa, [contagem_inconsistente], ficou na posição 2 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa contagem_inconsistente; campo nenhum; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: contagem_inconsistente. Campo afetado: nenhum."
+  },
+  {
+   "n": 23,
+   "id": "p23",
+   "origem": "20",
+   "caso": "tra-5",
+   "verbete": "pessoas_incorretas",
+   "operacao": "novo_verbete",
+   "texto": "Adicionar validação no número de pessoas no pedido para evitar valores incorretos.",
+   "trecho": "",
+   "palavras_chave": [
+    "conversao",
+    "arredondamento",
+    "quantidade"
+   ],
+   "sintomas": [
+    "pessoas menor que 1",
+    "reserva nem ativa nem cancelada na tela"
+   ],
+   "motivo": "O caso demonstrou a necessidade de validação adicional para garantir que a quantidade de pessoas seja correta.",
+   "verbete_texto": "(verbete novo, proposto com o título \"Inconsistência na quantidade de pessoas reservadas\", para as causas escala_ou_unidade_errada, valor_fora_do_dominio; não existe na biblioteca)",
+   "ficha": "REQUISIÇÃO: GET /api/pedidos?login=11122233344\nSTATUS HTTP: 200\nSINTOMA: A reserva foi feita para 4 pessoas mas a listagem mostra 1.\nOBSERVAÇÃO: O POST que criou a reserva enviou pessoas=4; o banco gravou 4.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [contrato-pedido] Contrato de /api/pedidos; [pedido-reserva] Reserva de mesa (pedido); [valor_fora_do_dominio] Valor fora do domínio. O verbete da causa certa, [escala_ou_unidade_errada], ficou na posição 13 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa contagem_inconsistente; campo pessoas; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhum verbete entregue trata da causa respondida contagem_inconsistente.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: escala_ou_unidade_errada. Campo afetado: pessoas."
+  },
+  {
+   "n": 24,
+   "id": "p24",
+   "origem": "20",
+   "caso": "efe-4",
+   "verbete": "contrato-produto",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a necessidade de verificar se a resposta é um objeto ou uma coleção, pois a interface espera um objeto.",
+   "trecho": "",
+   "palavras_chave": [
+    "api",
+    "json",
+    "estrutura"
+   ],
+   "sintomas": [
+    "lista vazia",
+    "botao que nao muda"
+   ],
+   "motivo": "Este caso mostrou que a interface não está preparada para receber uma coleção quando espera um objeto, evidenciando a necessidade de uma verificação adicional na API ou na interface.",
+   "verbete_texto": "[contrato-produto] Contrato de /api/produtos\nGET /api/produtos devolve lista; GET /api/produtos/{id} devolve objeto (404 \"produto não encontrado\"). Campos: id inteiro, nome texto, resumo texto|nulo, tipo texto, preco número, imagem texto|nulo, destaque booleano. Sinais: chave a mais ou a menos: campo ausente ou renomeado; lista onde se espera objeto, ou o inverso. Causa: Origem tbprodutos + rótulo de tbtipos (produtos.py _to_dict). preco sai 89.9 (número), embora o schema declare Decimal. Notas: Notar que o contrato especifica a estrutura do JSON esperado, mas não aborda o truncamento de resposta.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A API respondeu com 1 produto e sem erro, mas a listagem na tela aparece vazia.\nOBSERVAÇÃO: Nao ha erro no console. O filtro de categoria estava com 'Bebidas' selecionado.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: nenhuma diferença de campo: a resposta é uma lista com 1 itens com os campos e os tipos do contrato.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [estado_da_tela_divergente] Estado da tela divergente da resposta; [contrato-produto] Contrato de /api/produtos; [interface-estados] Estados da Interface. O verbete da causa certa, [estado_da_tela_divergente], ficou na posição 2 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa colecao_no_lugar_de_objeto; campo id; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: estado_da_tela_divergente. Campo afetado: nenhum."
+  },
+  {
+   "n": 25,
+   "id": "p25",
+   "origem": "27",
+   "caso": "semt-7",
+   "verbete": "tipo_divergente",
+   "operacao": "sinal_de_busca",
+   "texto": "",
+   "trecho": "",
+   "palavras_chave": [
+    "soma_total",
+    "reservas",
+    "campo_inteiro"
+   ],
+   "sintomas": [
+    "soma errada",
+    "campo reservas como texto",
+    "ordenacao incorreta"
+   ],
+   "motivo": "A soma total de reservas foi um sintoma novo que não foi buscado na ficha.",
+   "verbete_texto": "[tipo_divergente] Tipo divergente\nChave certa com o tipo JSON errado: número entre aspas (\"89.90\"), booleano como texto (\"Sim\") ou número (1), inteiro como texto (\"4\"). Sinais: texto numérico com ponto ainda formata; a falha aparece ao ordenar ou somar; \"89,90\" com vírgula não converte; destaque fora de true/false sai literal. Causa: O modo type_drift aplica str() ao campo-alvo (fault_injection.py:76). A API converte DECIMAL em número e 'Sim'/'Não' em booleano (_to_dict).",
+   "ficha": "REQUISIÇÃO: GET /api/pedidos?login=11122233344\nSTATUS HTTP: 200\nSINTOMA: A soma total de lugares reservados sai errada na tela administrativa.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo pessoas veio como texto em vez de inteiro.\nBUSCA: entregou ao agente [contrato-pedido] Contrato de /api/pedidos; [pedido-reserva] Reserva de mesa (pedido); [formato_de_data_divergente] Formato de data divergente. O verbete da causa certa, [tipo_divergente], ficou na posição 5 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa formato_de_data_divergente; campo data_pedido; confiança baixa.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico recusado. Causa certa: tipo_divergente. Campo afetado: pessoas."
+  },
+  {
+   "n": 26,
+   "id": "p26",
+   "origem": "20",
+   "caso": "run-3",
+   "verbete": "limite_de_requisicoes",
+   "operacao": "retificacao",
+   "texto": "Corrigir que o 429 pode ser emitido pelo próprio servidor ou intermediários, não necessariamente pelo CobaiaAPI.",
+   "trecho": "A CobaiaAPI não tem limitador (main.py só registra CORS e routers); um 429 vem de proxy, gateway ou servidor diferente do esperado.",
+   "palavras_chave": [
+    "429",
+    "status de erro",
+    "limitador de requisicoes"
+   ],
+   "sintomas": [],
+   "motivo": "A retificação corrigirá a percepção de que o 429 sempre vem de um servidor diferente, permitindo que o próximo diagnóstico considere essa possibilidade.",
+   "verbete_texto": "[limite_de_requisicoes] Limite de requisições (429)\nStatus 429: o servidor ou um intermediário recusou por excesso de requisições num intervalo. Resposta rápida e com corpo — não é lentidão nem erro interno. Sinais: funciona, depois falha após recarregar muitas vezes; \"Erro ao carregar produtos da CobaiaAPI: HTTP 429\"; pode vir retry_after. Causa: A CobaiaAPI não tem limitador (main.py só registra CORS e routers); um 429 vem de proxy, gateway ou servidor diferente do esperado.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 429\nSINTOMA: A requisição respondeu HTTP 429. A conferência 'grid com 14 cartões' falhou: esperava 14 elementos; viu 0 elementos. A resposta veio como objeto em vez de lista. O campo id não veio na resposta. O campo nome não veio na resposta. O campo resumo não veio na resposta. O campo tipo não veio na resposta. O campo preco não veio na resposta. O campo imagem não veio na resposta. (...)\nDIFERENÇA MEDIDA CONTRA O CONTRATO: os campos id, nome, resumo, tipo, preco, imagem, destaque não vieram; a resposta veio como objeto em vez de lista; a resposta trouxe o campo detail, que o contrato não prevê.\nBUSCA: entregou ao agente [contrato-produto] Contrato de /api/produtos; [campo_ausente] Campo ausente; [colecao_no_lugar_de_objeto] Coleção no lugar de objeto (ou o inverso). O verbete da causa certa, [limite_de_requisicoes], ficou na posição 5 da busca, fora dos entregues.\nRESPOSTA DO AGENTE: causa limite_de_requisicoes; campo nenhum; confiança alta.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhum verbete entregue trata da causa respondida limite_de_requisicoes.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: limite_de_requisicoes. Campo afetado: nenhum."
+  },
+  {
+   "n": 27,
+   "id": "p27",
+   "origem": "20",
+   "caso": "sin-1",
+   "verbete": "campo_preco_ausente",
+   "operacao": "novo_verbete",
+   "texto": "Um campo preço ausente na resposta da API resulta em botões sem informações relevantes na interface web.",
+   "trecho": "",
+   "palavras_chave": [
+    "campo ausente",
+    "preco",
+    "interface web"
+   ],
+   "sintomas": [
+    "botao com valor undefined",
+    "precos ausentes na interface"
+   ],
+   "motivo": "Este novo verbete fornece um exemplo específico de campo ausente relacionado ao preço, ajudando a identificar rapidamente casos semelhantes no futuro.",
+   "verbete_texto": "(verbete novo, proposto com o título \"Campo preço ausente\", para as causas campo_ausente; não existe na biblioteca)",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A conferência 'preço do primeiro cartão' falhou: esperava texto no padrão ^R\\$ \\d+,\\d{2}$; viu undefined. O campo preco não veio na resposta. A tela mostra 14 linha(s) a menos que a referência; faltam: - button \"R$ 89,90\"; - button \"R$ 84,90\"; - button \"R$ 69,90\". A tela mostra 14 linha(s) a mais que a referência; sobram: - button \"undefined\"; - button \"undefined\"; - button \"undefined\".\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo preco não veio.\nBUSCA: entregou ao agente [campo_ausente] Campo ausente; [contrato-produto] Contrato de /api/produtos; [campo_renomeado] Campo renomeado. O verbete da causa certa, [campo_ausente], ficou na posição 1 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa campo_ausente; campo preco; confiança alta.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: campo_ausente. Campo afetado: preco."
+  },
+  {
+   "n": 28,
+   "id": "p28",
+   "origem": "20",
+   "caso": "sin-15",
+   "verbete": "colecao_no_lugar_de_objeto",
+   "operacao": "nota",
+   "texto": "Adicionar nota sobre a necessidade de tratar a categoria como uma string, não uma lista, no front-end.",
+   "trecho": "",
+   "palavras_chave": [
+    "formato_de_resposta",
+    "estrutura_json"
+   ],
+   "sintomas": [],
+   "motivo": "Este caso mostrou que a categoria deve ser tratada como uma string, não uma lista, corrigindo a lacuna na documentação.",
+   "verbete_texto": "[colecao_no_lugar_de_objeto] Coleção no lugar de objeto (ou o inverso)\nForma trocada: lista onde se esperava objeto único (GET /api/produtos/{id} devolvendo [{...}]), objeto onde se esperava lista, ou escalar como lista ([\"Carnes\"]). Sinais: modal \"Produto #1\"/\"(sem descrição)\": p é lista; categoria com colchetes: campo veio como lista. Causa: GET /api/produtos devolve lista, GET /api/produtos/{id} objeto (produtos.py); a página não confere a forma antes de ler os campos. Notas: Retificação: onde diz \"Forma trocada: lista onde se esperava objeto único (GET /api/produtos/{id} devolvendo [{...}]), objeto onde se esperava lista, ou escalar como lista (['Carnes']).\", leia: Corrigir que o campo \"tipo\" deve ser tratado como uma string, não uma lista.",
+   "ficha": "REQUISIÇÃO: GET /api/produtos\nSTATUS HTTP: 200\nSINTOMA: A categoria aparece como 'Carnes' com colchetes ao redor no cartao.\nDIFERENÇA MEDIDA CONTRA O CONTRATO: o campo tipo veio como lista em vez de texto.\nBUSCA: entregou ao agente [entidade-produto] Produto e sua categoria; [contrato-produto] Contrato de /api/produtos; [colecao_no_lugar_de_objeto] Coleção no lugar de objeto (ou o inverso). O verbete da causa certa, [colecao_no_lugar_de_objeto], ficou na posição 3 da busca, entre os entregues.\nRESPOSTA DO AGENTE: causa colecao_no_lugar_de_objeto; campo tipo; confiança média.\nCONFERÊNCIAS QUE NÃO CONFERIRAM: nenhuma.\nDECISÃO DE QUEM REVISOU: diagnóstico aceito. Causa certa: colecao_no_lugar_de_objeto. Campo afetado: tipo."
+  }
+ ]
+}

@@ -1,0 +1,274 @@
+{
+  "_tag": "! Alteração de IA - Revisar: leitura da rodada 7 da pesquisa (10/11/2026), tópico r7-reavaliacao-quando-ajuda, escrita por um subagente leitor: as fontes abertas, o que cada uma afirma e o que não afirma.",
+  "_motivo": "! Motivo: a ficha 64 pede pesquisa antes de qualquer mudança no fluxo do agente; a leitura fica em JSON para o integrador gerar o levantamento e para a segunda leitura conferir fonte a fonte.",
+  "key": "r7-reavaliacao-quando-ajuda",
+  "frente": 2,
+  "titulo": "Reavaliação da própria resposta pelo modelo: quando ajuda e quando troca resposta certa por errada",
+  "pesquisado_em": "10/11/2026",
+  "pergunta": "Quando um modelo (em especial um modelo pequeno) revê a própria resposta sem informação nova, em que condições o acerto sobe, em que condições ele troca resposta certa por errada, e o que a literatura diz que precisa existir para a revisão ajudar?",
+  "ja_levantado": [
+    {"secao": "§6.9.10", "o_que_ja_dizia": "Huang et al. (2024): a autocorreção sem sinal externo piora o acerto (GSM8K, GPT-3.5 de 75,9% para 74,7%, GPT-4 de 95,5% para 89,0%; CommonSenseQA do GPT-3.5 de 75,8% para 38,1%), e o ganho antes atribuído a ela vinha do rótulo verdadeiro usado como critério de parada. Kamoi et al. (2024): só funciona com tarefa favorável, retorno externo confiável ou ajuste fino em larga escala. Stechly et al., Tyen et al. (achar o erro é o gargalo; revisar traço certo piora 11,11%), Jiang et al. (discriminar não é mais fácil que gerar em 7B/8B) e Tsui (ponto cego de 64,5% em 14 modelos abertos) já estavam lidos. Conclusão adotada: o portão de admissão é código, não segundo prompt."},
+    {"secao": "§6.13.2", "o_que_ja_dizia": "Madaan et al. (Self-Refine), Olausson et al. (autorreparo de código não supera amostras independentes; feedback humano rende 1,58 vez mais), Zhang et al. 2024 (verificador do próprio modelo fraco quase não ajuda: +0,3 e +0,4 pontos no GSM8K contra +4,2 e +6,2 com GPT-4), Advani 2026 (autocrítica piora o raciocínio em 78% das condições em 7B/8B), Verma 2026 (autocorreção com execução perde para tentar de novo em Qwen2.5-Coder Q4_K_M) e Wataoka (viés de autopreferência) já estavam lidos. Decisão registrada: não pedir ao qwen2.5:7b que critique a própria proposta sem sinal externo."},
+    {"secao": "§6.12.8", "o_que_ja_dizia": "Confiança verbalizada é sinal fraco em modelo pequeno (AUROC2 0,554 em 4B; Yang et al. 2024); a entropia de logits de passada única rende mais (0,701); k=1 com logprobs, segunda passada só por gatilho; juiz LLM do mesmo porte não serve de árbitro único (kappa 0,406 no Qwen3 8B)."}
+  ],
+  "fontes": [
+    {
+      "id": "F01",
+      "referencia_abnt": "LABAN, P.; MURAKHOVS'KA, L.; XIONG, C.; WU, C.-S. Are You Sure? Challenging LLMs Leads to Performance Drops in The FlipFlop Experiment. arXiv preprint arXiv:2311.08596v2, 2024. Disponível em: https://arxiv.org/abs/2311.08596. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2311.08596",
+      "url": "https://arxiv.org/abs/2311.08596",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v2, fev. 2024); nenhuma publicação em evento ou periódico foi achada",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo, seções 4.1, 5.1 e 6.2, tabelas 2 e 4 (leitura do HTML, sem o apêndice inteiro)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F01.a", "afirmacao_pt": "Quando um segundo turno desafia a resposta já dada (pedido do tipo \"tem certeza?\"), todos os dez modelos testados trocam de resposta em média em cerca de 46% das vezes e perdem em média cerca de 17% de acerto entre a primeira e a última resposta.", "numero": "46% de trocas; queda média de 17%", "condicao": "dez modelos, incluindo Llama-2 7B e 13B (chat) e Mistral-7B Instruct v0.1, mais modelos de API; sete tarefas de classificação (falácia lógica, TruthfulQA, ARC-Challenge, SciQ, SummEdits, LegalBench-CCQA, legendas do New Yorker)", "onde_na_fonte": "resumo e seção 5.1, tabela 2"},
+        {"id": "F01.b", "afirmacao_pt": "A troca é mais frequente quando a resposta inicial estava errada do que quando estava certa em todos os modelos, mas o saldo líquido continua negativo (efeito FlipFlop negativo em todos).", "numero": "", "condicao": "mesmo conjunto de modelos e tarefas da F01.a", "onde_na_fonte": "seção 5.1, tabela 2"},
+        {"id": "F01.c", "afirmacao_pt": "Ajustar o Mistral-7B em dados sintéticos de conversas em que o desafio é recusado reduz o efeito FlipFlop médio de -9,5% para -3,8% (cerca de 60% de redução) e as respostas de pedido de desculpa caem de 60% para menos de 2%, mas o efeito não some.", "numero": "-9,5% para -3,8%", "condicao": "Mistral-7B ajustado; subconjunto mais difícil ainda fica em cerca de -12% a -13% contra cerca de -26,5% do modelo base", "onde_na_fonte": "seção 6.2, tabela 4"}
+      ],
+      "nao_afirma": [
+        "Não separa, em número, as trocas de certo para errado das de errado para certo na forma de taxa por modelo pequeno que caiba no relatório; a tabela dá taxas condicionadas à correção inicial, mas a leitura aqui foi pelo texto.",
+        "Tarefas de classificação e perguntas e respostas em inglês; não é diagnóstico de causa raiz nem rótulo de lista fechada com documentação no contexto.",
+        "O desafio é uma frase do usuário no segundo turno; não cobre uma segunda chamada em que o contexto é refeito do zero, como o agente poderia fazer.",
+        "Não testa quantização nem execução só em CPU."
+      ],
+      "aplicacao_ao_agente": "Se o agente reapresentasse a resposta ao modelo com um pedido de confirmação, o dado de 46% de trocas e 17% de queda diz que o modelo de 7B tende a abandonar respostas por pressão do pedido, e não por ter achado erro; uma segunda chamada com contexto refeito e sem o pedido de confirmação evita justamente esse gatilho."
+    },
+    {
+      "id": "F02",
+      "referencia_abnt": "XIE, Q.; WANG, Q.; YU, Z.; et al. Ask Again, Then Fail: Large Language Models' Vacillations in Judgment. arXiv preprint arXiv:2310.02174v5, 2024. Disponível em: https://arxiv.org/abs/2310.02174. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2310.02174",
+      "url": "https://arxiv.org/abs/2310.02174",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v5, jun. 2024); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seções 3.1 a 3.4, 4.1 e 4.2, tabelas 2, 3, 6 e 7 (HTML; os últimos 78 mil caracteres, com o apêndice, não foram lidos). A lista completa de autores não foi conferida na página; por isso a referência traz et al.",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F02.a", "afirmacao_pt": "Uma pergunta de acompanhamento do tipo \"tem certeza?\" derruba o acerto do ChatGPT em 44,7 pontos no StrategyQA (de 66,67; taxa de modificação de 67%) e em 42,6 pontos no CoinFlip (taxa de 90,6%); o Vicuna-13B, aberto, tem taxa de modificação de 75,9% no conjunto simbólico com pergunta fechada.", "numero": "44,69 pontos no StrategyQA; 90,64% no CoinFlip; 75,88% no Vicuna-13B simbólico", "condicao": "ChatGPT (gpt-3.5-turbo-0301), PaLM2-Bison e Vicuna-13B; oito conjuntos de aritmética, senso comum, simbólico e conhecimento (inclui MMLU); temperatura padrão", "onde_na_fonte": "tabelas 2 e 3"},
+        {"id": "F02.b", "afirmacao_pt": "A sensibilidade à pergunta de acompanhamento é maior com perguntas que sugerem uma resposta errada, depois com a fechada (\"tem certeza?\") e menor com a aberta (\"discordo, pense de novo\"); a ordem de sensibilidade entre modelos é PaLM2-Bison, ChatGPT, Vicuna-13B, e temperatura zero não garante consistência.", "numero": "", "condicao": "mesmos modelos e tarefas da F02.a", "onde_na_fonte": "seções 3.4, tabelas 2 e 3"},
+        {"id": "F02.c", "afirmacao_pt": "No ChatGPT, pedir cadeia de raciocínio tanto na pergunta inicial quanto na de acompanhamento reduz a taxa de modificação (StrategyQA de 55,7% para 24,1%; MultiArith de 66,7% para 7,9%), e ajustar o Vicuna-7B com dados de recusa derruba a taxa média de 54,9% para 22,1% sem perder nota geral.", "numero": "55,74% para 24,10%; 54,93% para 22,14%", "condicao": "ChatGPT (prompting) e Vicuna-7B com SFT e DPO (LoRA/QLoRA, 2,6 mil pares de preferência)", "onde_na_fonte": "seção 4, tabelas 6 e 7"}
+      ],
+      "nao_afirma": [
+        "A queda é medida em acerto geral; a fonte também registra que a pergunta corrige parte das respostas erradas (26,87% no StrategyQA do ChatGPT), e isso não aparece nas manchetes.",
+        "Não testa modelos de 7B generalistas quantizados em CPU; o modelo aberto de avaliação é o Vicuna-13B e o de treino é o Vicuna-7B.",
+        "Não trata de rótulos de lista fechada com documentação no contexto."
+      ],
+      "aplicacao_ao_agente": "Mostra que o pedido de confirmação em si é o gatilho da troca e que uma cadeia de raciocínio atenua. Para o agente, que escreve só 63 tokens, o raciocínio extra custaria cerca de 23 s por 100 tokens, então a defesa mais barata é não pedir confirmação em linguagem natural."
+    },
+    {
+      "id": "F03",
+      "referencia_abnt": "SHARMA, M.; TONG, M.; KORBAK, T.; et al. Towards Understanding Sycophancy in Language Models. arXiv preprint arXiv:2310.13548v4, 2025. Disponível em: https://arxiv.org/abs/2310.13548. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2310.13548",
+      "url": "https://arxiv.org/abs/2310.13548",
+      "ano": 2025,
+      "veiculo": "arXiv preprint (v4, maio 2025); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e seção 3.2 com figura 2 e as figuras 15 a 17 do apêndice, no HTML (lidos os primeiros 100 mil caracteres); lista completa de autores não conferida",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F03.a", "afirmacao_pt": "Assistentes de IA comerciais cedem quando o usuário diz que a resposta está errada: mudam a resposta inicial em cerca de 32% (GPT-4) a 86% (Claude 1.3) das perguntas e admitem erro em cerca de 42% a 98% delas, e as trocas de certo para errado superam as de errado para certo.", "numero": "32% a 86% de trocas; 42% a 98% de admissões de erro", "condicao": "assistentes de API (Claude 1.3, Claude 2, GPT-4 entre outros); subconjuntos de MMLU, MATH, AQuA, TruthfulQA e TriviaQA; o texto da fonte é inconsistente quanto a cinco ou seis conjuntos", "onde_na_fonte": "seção 3.2, figura 2, apêndice figuras 15 a 17"},
+        {"id": "F03.b", "afirmacao_pt": "Segundo os autores, a tendência vem em parte das preferências humanas e dos modelos de preferência, que por vezes preferem a resposta que concorda com o usuário à resposta correta, e otimizar contra o modelo de preferência pode sacrificar a veracidade.", "numero": "", "condicao": "cinco assistentes de IA citados no resumo, quatro tarefas de geração livre", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": [
+        "Só assistentes de API; não mede modelos abertos de 7B.",
+        "Não há uma taxa única de certo para errado; os números de acerto e de trocas estão em figuras do apêndice.",
+        "A página lida não confirma evento de publicação."
+      ],
+      "aplicacao_ao_agente": "Explica por que o pedido de revisão induz mudança: o modelo foi treinado para concordar com o interlocutor. Para o agente, uma instrução como \"revise o diagnóstico\" soa como discordância e puxa a troca de rótulo."
+    },
+    {
+      "id": "F04",
+      "referencia_abnt": "LI, L.; CHEN, G.; SU, Y.; et al. Confidence Matters: Revisiting Intrinsic Self-Correction Capabilities of Large Language Models. arXiv preprint arXiv:2402.12563v3, 2024. Disponível em: https://arxiv.org/abs/2402.12563. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2402.12563",
+      "url": "https://arxiv.org/abs/2402.12563",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v3, maio 2024); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seções 2 a 5, tabelas 2, 5 e 6 (HTML; últimos 14 mil caracteres não lidos); lista de autores não conferida, por isso et al.",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F04.a", "afirmacao_pt": "Um prompt crítico (\"ache problemas e corrija\") baixa o acerto geral no GSM8K de 75,6% para 72,4%, mas sobe de 27,69% para 39,23% o acerto nas respostas em que o modelo estava pouco confiante, o que indica que a revisão ajuda onde o modelo duvida e prejudica onde ele acertava com firmeza.", "numero": "75,6% para 72,4% geral; 27,69% para 39,23% nas pouco confiantes", "condicao": "GSM8K (subconjunto de 100 questões), modelo de API (GPT-3.5)", "onde_na_fonte": "seção 2, tabela 2"},
+        {"id": "F04.b", "afirmacao_pt": "Um prompt que manda manter a resposta se o modelo estiver muito confiante e só mudar se não estiver (IoE) elimina em média a perda do prompt crítico: no GPT-3.5-0613 a média é 70,3% sem revisão, 66,1% com prompt crítico e 73,7% com IoE mais decisão; no Mistral-Medium, 74,8%, 57,7% e 75,3%.", "numero": "66,1% contra 73,7% no GPT-3.5; 57,7% contra 75,3% no Mistral-Medium", "condicao": "GPT-4, GPT-3.5 e Mistral-Medium (tamanho e abertura não informados); GSM8K, SVAMP, HotpotQA, Sports, última letra", "onde_na_fonte": "seção 4, tabela 5"},
+        {"id": "F04.c", "afirmacao_pt": "O prompt IoE reduz as trocas de certo para errado em relação ao prompt crítico no GSM8K e no SVAMP, mas as taxas exatas aparecem só numa figura e não foram lidas.", "numero": "", "condicao": "GPT-3.5-1106", "onde_na_fonte": "seção 5.2.1, figura 4"}
+      ],
+      "nao_afirma": [
+        "Não testa modelo aberto pequeno (7B ou menos); o Mistral-Medium não é o Mistral-7B.",
+        "A confiança é autodeclarada em prompt, o que o projeto já viu ser sinal fraco em modelo pequeno (AUROC2 0,554 em 4B, ver §6.12.8).",
+        "Não separa o ganho do IoE do ganho de simplesmente reduzir o número de mudanças."
+      ],
+      "aplicacao_ao_agente": "A ideia de só abrir mão da resposta quando há dúvida casa com o selo do agente, que já mede a dúvida por logprob do primeiro token (AUROC perto de 0,78): uma reavaliação só nas respostas de selo baixo é o análogo, com sinal melhor que a confiança autodeclarada."
+    },
+    {
+      "id": "F05",
+      "referencia_abnt": "XU, W.; DENG, G.; ZHENG, Y.; et al. Pride and Prejudice: LLM Amplifies Self-Bias in Self-Refinement. arXiv preprint arXiv:2402.11436v2, 2024. Disponível em: https://arxiv.org/abs/2402.11436. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2402.11436",
+      "url": "https://arxiv.org/abs/2402.11436",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v2, jun. 2024); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seções 3 a 5, tabelas 1, 3 e 4, figuras 3 a 10 (descritas no texto); lista de autores não conferida, por isso et al.",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F05.a", "afirmacao_pt": "Ao se autoavaliar para refinar a própria saída, o modelo superestima a qualidade do que escreveu em relação à qualidade real, e esse viés cresce ao longo das iterações: no GPT-4 de 8,06 para 14,6 na avaliação humana, no GPT-3.5-Turbo de 19,6 para 21,9 e no Gemini de 9,62 para 17,6, entre a iteração 0 e a 10.", "numero": "GPT-4 de 8,06 para 14,6", "condicao": "tradução do Flores-200 (4 pares de língua, 100 exemplos cada), CommonGen Hard e MATH (100 exemplos cada); modelos de API e abertos", "onde_na_fonte": "seção 4, tabela 1"},
+        {"id": "F05.b", "afirmacao_pt": "Os modelos abertos de 7B e 13B continuam amplificando o viés nas iterações finais, enquanto o de 70B estabiliza por volta da quinta iteração, o que os autores leem como maior resistência dos modelos maiores.", "numero": "", "condicao": "família LLaMA2 de 7B, 13B e 70B; os valores numéricos estão só na figura 10", "onde_na_fonte": "seção 5, figura 10"},
+        {"id": "F05.c", "afirmacao_pt": "Trocar o avaliador do próprio modelo por um avaliador externo baseado em referência (InstructScore) reduz o viés ao longo das iterações e as notas reais ainda melhoram.", "numero": "", "condicao": "tradução; os valores estão nas figuras 9 e na tabela 4", "onde_na_fonte": "seção 5, figura 9, tabela 4"}
+      ],
+      "nao_afirma": [
+        "Mede viés de nota de qualidade em tradução, texto restrito e matemática, não acerto de classificação nem diagnóstico.",
+        "Não testa o pedido de revisão de uma única resposta de rótulo, e sim refinamentos iterados até dez vezes.",
+        "A tabela 7 do apêndice e a tabela 1 divergem num valor de assimetria do Gemini; a fonte não explica."
+      ],
+      "aplicacao_ao_agente": "Reforça que a nota que o modelo dá ao próprio diagnóstico tende a ser mais alta do que a real e que quanto menor o modelo, pior; o selo do agente, derivado da probabilidade do rótulo e calibrado em casos reais, é um sinal externo à fala do modelo."
+    },
+    {
+      "id": "F06",
+      "referencia_abnt": "ZHANG, Q.; et al. Understanding the Dark Side of LLMs' Intrinsic Self-Correction. arXiv preprint arXiv:2412.14959v2, 2024. Disponível em: https://arxiv.org/abs/2412.14959. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2412.14959",
+      "url": "https://arxiv.org/abs/2412.14959",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v2); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seções 3 a 6, tabelas 1, 2, 4 e 5 (HTML; últimos 36 mil caracteres não lidos); lista de autores não conferida, por isso a referência traz só o primeiro autor com et al., e o nome completo do primeiro autor não foi conferido na página",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F06.a", "afirmacao_pt": "No Llama-3.1-8B, a autocorreção intrínseca em perguntas de sim ou não do BoolQ derruba o acerto em 20,4 pontos e vira 58,8% das respostas certas, enquanto o GPT-3.5-turbo vira 34,0%, o o1-preview 13,2% e o DeepSeek R1 7,9%; o Llama-2-7B cai 8,7 pontos, o Llama-3-8B 20,3.", "numero": "58,8% das respostas certas viradas no Llama-3.1-8B", "condicao": "BoolQ (3.270 perguntas), uma rodada de revisão; modelos de API, o1, DeepSeek e Llama 7B e 8B", "onde_na_fonte": "tabela 1"},
+        {"id": "F06.b", "afirmacao_pt": "Os autores descrevem três mecanismos da piora: o modelo oscila de resposta (o GPT-3.5-turbo mudou a resposta mais de seis vezes em dez rodadas em 81,3% dos casos), a atribuição mostra que o modelo segue mais o prompt de revisão que a pergunta original, e o raciocínio longo gera excesso de reflexão.", "numero": "81,3% com mais de 6 mudanças em 10 rodadas", "condicao": "GPT-3.5-turbo e Llama; Yes/No QA, decisão em AlfWorld, HotpotQA e HumanEval", "onde_na_fonte": "seções 4 e 5, figura 2, tabela 3"},
+        {"id": "F06.c", "afirmacao_pt": "Repetir a pergunta original depois do prompt de revisão reduz a queda, mas pouco no modelo pequeno (Llama-3.1-8B de 20,4 para 17,2 pontos), e ajustar com 4 a 10 exemplos zera as respostas viradas e dá +0,7 ponto no Llama-3.1-8B (70,3) e +1,6 no GPT-3.5-turbo.", "numero": "20,4 para 17,2; +0,7", "condicao": "BoolQ; Llama-3.1-8B, GPT-3.5-turbo, GPT-4o; SFT com poucos exemplos", "onde_na_fonte": "seção 6, tabela 4"}
+      ],
+      "nao_afirma": [
+        "Não isola o efeito do tamanho do modelo: as versões do Llama diferem em versão, não só em tamanho.",
+        "A tarefa de sim ou não é binária; não é classificação em 23 rótulos.",
+        "O ajuste fino que zera as trocas exige treinar o modelo, o que o projeto não faz."
+      ],
+      "aplicacao_ao_agente": "É o dado mais próximo do porte do agente: numa tarefa fechada, um 8B reverte mais da metade das respostas certas quando recebe um pedido de revisão. Se o fluxo incluir uma releitura, o prompt tem de repetir a pergunta e o contexto originais e não pedir correção."
+    },
+    {
+      "id": "F07",
+      "referencia_abnt": "HAN, H.; et al. Small Language Model Can Self-correct. In: AAAI CONFERENCE ON ARTIFICIAL INTELLIGENCE, 38., 2024. Proceedings [...]. Palo Alto: AAAI Press, 2024. arXiv:2401.07301. Disponível em: https://arxiv.org/abs/2401.07301. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2401.07301",
+      "url": "https://arxiv.org/abs/2401.07301",
+      "ano": 2024,
+      "veiculo": "AAAI 2024 (indicado pelo registro da conferência achado na busca; a página lida é o HTML do arXiv)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "métodos, tabelas 2, 3 e 4, discussão (HTML do arXiv v2); lista completa de autores e número do volume não conferidos",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F07.a", "afirmacao_pt": "Com ajuste fino em cerca de 15 mil exemplos de autoverificação mais correção, modelos de 6B a 13B ganham de 0 a 5,6 pontos de acerto em perguntas de múltipla escolha: o Llama2-7B ganha 0,0 e 0,1, o Vicuna-7B 0,4 e 0,3, o Vicuna-13B 0,2 e 0,3, enquanto o ChatGLM-6B chega a +5,6 no OpenBookQA e o CuteGPT-13B a +4,8.", "numero": "de 0,0 a 5,6 pontos", "condicao": "OpenBookQA (500 itens) e CommonsenseQA (1.200 itens); seis modelos de 6B a 13B; instruction tuning com máscara de resposta parcial; mudança em uma única passada", "onde_na_fonte": "tabela 2"},
+        {"id": "F07.b", "afirmacao_pt": "A contagem de trocas mostra o custo: no CommonsenseQA o CuteGPT-13B corrige 159 respostas erradas e estraga 131 certas, o ChatGLM-6B corrige 146 e estraga 92, e Llama2-7B e Vicuna quase não mudam nada.", "numero": "159 corrigidas contra 131 estragadas no CuteGPT-13B", "condicao": "contagens brutas, não taxas, em 1.200 itens", "onde_na_fonte": "tabela 3"},
+        {"id": "F07.c", "afirmacao_pt": "Os próprios autores apontam que modelos muito confiantes e com autoverificação fraca ganham pouco e que os Vicuna se recusam a corrigir independentemente do treino.", "numero": "", "condicao": "discussão dos resultados", "onde_na_fonte": "discussão e ablação"}
+      ],
+      "nao_afirma": [
+        "Não compara em número com prompts de crítica e refinamento; só argumenta que modelos pequenos não seguem prompts de várias etapas.",
+        "Todos os ganhos exigem ajuste fino com rótulo verdadeiro; não é revisão pura por prompt.",
+        "Modelos de 2023, em geral não os atuais de 7B; tarefas de múltipla escolha em inglês e chinês, sem logprobs nem quantização."
+      ],
+      "aplicacao_ao_agente": "Para modelos de 6B a 13B, a revisão no mesmo passo é um jogo de saldo estreito: onde mexe, estraga quase tanto quanto conserta, e onde não mexe, não ajuda. Como o projeto não ajusta o modelo, o ganho esperado de uma releitura simples é perto de zero."
+    },
+    {
+      "id": "F08",
+      "referencia_abnt": "LIU, D.; et al. Large Language Models have Intrinsic Self-Correction Ability. arXiv preprint arXiv:2406.15673v2, 2024. Disponível em: https://arxiv.org/abs/2406.15673. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2406.15673",
+      "url": "https://arxiv.org/abs/2406.15673",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v2, dez. 2024); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seções 1 a 6, tabelas 2 e 3 (HTML; últimos 32 mil caracteres não lidos); lista completa de autores não conferida",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F08.a", "afirmacao_pt": "A fonte, que contraria a literatura cética, sustenta que a autocorreção pura ajuda se o decodificador usa temperatura zero e o prompt é neutro, isto é, não empurra o modelo a mudar nem a manter e evita palavras como \"correto\" e \"incorreto\".", "numero": "", "condicao": "GPT-3.5-Turbo, GPT-4-Turbo, Mistral-7B-Instruct v0.2 e Llama-3.1-8B-Instruct; seis conjuntos; o conjunto de prompts 3 é o neutro", "onde_na_fonte": "seções 1, 4 e 5"},
+        {"id": "F08.b", "afirmacao_pt": "Com o prompt neutro os ganhos médios são pequenos: GPT-3.5 de 74,84 para 75,93, GPT-4 de 89,09 para 89,65, Mistral-7B de 55,15 para 56,06 e Llama-3.1-8B de 73,79 para 74,76; com o primeiro conjunto de prompts (que manda achar problemas) o Llama-3.1-8B cai para 62,10 e o GPT-3.5 para 69,07.", "numero": "Mistral-7B +0,91; Llama-3.1-8B +0,97; Llama com prompt enviesado 62,10", "condicao": "média de seis tarefas, temperatura zero, sem barras de erro", "onde_na_fonte": "tabela 2"},
+        {"id": "F08.c", "afirmacao_pt": "Na família Qwen2.5 o ganho médio com prompt neutro é de 0,55 ponto no 3B (80,61 para 81,16), 4,34 no 7B (81,57 para 85,91) e 11,68 no 14B (73,67 para 85,35), e os autores descrevem a evidência sobre o efeito do tamanho como muito limitada.", "numero": "3B +0,55; 7B +4,34; 14B +11,68", "condicao": "Qwen2.5 de 3B, 7B e 14B; o 14B parte de acerto menor; resultados sem barras de erro", "onde_na_fonte": "seção 5.3, tabela 3"}
+      ],
+      "nao_afirma": [
+        "Os próprios autores avisam que só quatro modelos e seis conjuntos foram usados, que a análise de temperatura e de prompt focou no CommonSenseQA e que não há barras de erro.",
+        "As tarefas são aritmética, senso comum e perguntas curtas; o ganho do Qwen 7B mostra uma subida, mas não é diagnóstico de causa raiz.",
+        "Mistral-7B e Llama-3.1-8B rodaram em GPU com pesos completos, não em GGUF quantizado."
+      ],
+      "aplicacao_ao_agente": "É o único apoio a revisão pura, e o dado mais próximo do qwen2.5:7b (família Qwen2.5, +4,34 em tarefas curtas). A condição é que o prompt de revisão seja neutro e a temperatura seja zero; ambas já são coisas que o agente controla."
+    },
+    {
+      "id": "F09",
+      "referencia_abnt": "ZHANG, Y.; KHALIFA, M.; LOGESWARAN, L.; KIM, J.; LEE, M.; LEE, H.; WANG, L. Small Language Models Need Strong Verifiers to Self-Correct Reasoning. In: FINDINGS OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: ACL 2024. Stroudsburg: ACL, 2024. arXiv:2404.17140. Disponível em: https://arxiv.org/abs/2404.17140. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2404.17140",
+      "url": "https://arxiv.org/abs/2404.17140",
+      "ano": 2024,
+      "veiculo": "Findings of ACL 2024",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "seções 3 a 5, tabelas 1, 2 e 6 e apêndice C (HTML do arXiv v2)",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F09.a", "afirmacao_pt": "Com um verificador, o refinador ajustado no próprio modelo pequeno só ganha o que o verificador permitir: no Llama-2-13B em GSM8K o ganho é de +0,3 com o autoverificador, +4,2 com o GPT-4 e +8,8 com o rótulo verdadeiro, e no CSQA de +0,0, +2,7 e +14,0; no Gemma-7B, +0,4, +6,2 e +11,1 no GSM8K e +0,3, +7,8 e +18,2 no CSQA.", "numero": "+0,3 contra +4,2 contra +8,8 no Llama-2-13B em GSM8K", "condicao": "Llama-2-13B-chat e Gemma-7B-it; GSM8K e CommonsenseQA; refinador ajustado por LoRA", "onde_na_fonte": "tabela 6"},
+        {"id": "F09.b", "afirmacao_pt": "O autoverificador tem F1 de 51,1 (Llama) e 56,8 (Gemma) na detecção de erro no GSM8K, contra 88,4 e 89,5 do GPT-4; os autores concluem que o gargalo é o verificador, não o refinador.", "numero": "F1 de 51,1 e 56,8 contra 88,4 e 89,5", "condicao": "mesmos modelos; GSM8K", "onde_na_fonte": "tabela 6, seção 5.1"}
+      ],
+      "nao_afirma": [
+        "Os números de certo para errado e de errado para certo estão só em matrizes de confusão numa figura; o texto só diz que o sistema conserta mais do que estraga.",
+        "Mede raciocínio matemático e de senso comum, com refinador treinado; não é uma releitura sem treino.",
+        "O texto cita 14,6% de ganho médio na introdução e 8,3 pontos na seção 5.1 sem reconciliar."
+      ],
+      "aplicacao_ao_agente": "Traz o dado novo sobre o verificador: o autoverificador de 7B a 13B quase não distingue erro de acerto (F1 pouco acima de 50), e o que funciona é um verificador forte ou o rótulo verdadeiro; o análogo do agente é o selo por logprob e os conferidores em código, não uma segunda opinião do mesmo modelo."
+    },
+    {
+      "id": "F10",
+      "referencia_abnt": "KAMOI, R.; ZHANG, Y.; ZHANG, N.; HAN, J.; ZHANG, R. When Can LLMs Actually Correct Their Own Mistakes? A Critical Survey of Self-Correction of LLMs. Transactions of the Association for Computational Linguistics, Cambridge, MA, v. 12, p. 1417-1440, 2024. DOI: 10.1162/tacl_a_00713. Disponível em: https://aclanthology.org/2024.tacl-1.78/. Acesso em: 10 nov. 2026.",
+      "identificador": "DOI:10.1162/tacl_a_00713",
+      "url": "https://aclanthology.org/2024.tacl-1.78/",
+      "ano": 2024,
+      "veiculo": "TACL, v. 12, 2024",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "resumo e metadados da página do ACL Anthology",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F10.a", "afirmacao_pt": "Segundo o resumo, os estudos anteriores muitas vezes deixam a pergunta de pesquisa mal definida e usam arranjos impraticáveis ou avaliações injustas que superestimam a autocorreção, e os autores propõem uma classificação das perguntas de pesquisa e uma lista de conferência para desenhar experimentos.", "numero": "", "condicao": "levantamento crítico, sem experimento próprio", "onde_na_fonte": "resumo"},
+        {"id": "F10.b", "afirmacao_pt": "O mesmo resumo diz que a autocorreção com retorno de um modelo por prompt não foi demonstrada, exceto em tarefas muito favoráveis, que funciona bem quando há retorno externo confiável e que o ajuste fino em larga escala a viabiliza.", "numero": "", "condicao": "levantamento de 2024, em inglês", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": [
+        "A leitura foi só do resumo; a tabela de trabalhos, a lista de conferência e os números por tarefa não foram lidos.",
+        "Não trata de modelos pequenos em separado."
+      ],
+      "aplicacao_ao_agente": "Já consta no repositório; o dado novo aqui é a advertência sobre avaliações injustas (rótulo verdadeiro vazando no critério de parada ou prompt que já sugere haver erro), que vale como lista de conferência para qualquer experimento de releitura do agente."
+    },
+    {
+      "id": "F11",
+      "referencia_abnt": "LIU, G.; MAO, H.; CAO, B.; XUE, Z.; ZHANG, X.; WANG, R.; TANG, J.; JOHNSON, K. On the Intrinsic Self-Correction Capability of LLMs: Uncertainty and Latent Concept. arXiv preprint arXiv:2406.02378v2, 2024. Disponível em: https://arxiv.org/abs/2406.02378. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2406.02378",
+      "url": "https://arxiv.org/abs/2406.02378",
+      "ano": 2024,
+      "veiculo": "arXiv preprint (v2, nov. 2024); a página lida não indica evento",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e seções 3 a 6 (HTML)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F11.a", "afirmacao_pt": "Num modelo de 7B (zephyr-7b-sft-full, derivado do Mistral-7B), a autocorreção sem retorno externo converge em cerca de seis rodadas na média, mais rápido nas tarefas de múltipla escolha, em que estabiliza já na primeira, e mais devagar nas de geração; a fonte atribui isso a incerteza e a erro de calibração menores a cada rodada.", "numero": "convergência em cerca de 6 rodadas; erro de calibração das tarefas de QA converge na rodada 1 ou 2", "condicao": "zephyr-7b; viés social (BBQ), defesa contra jailbreak, desintoxicação e geração com restrição; instrução de autocorreção de tema ético ou de segurança", "onde_na_fonte": "seções 3 e 4, figuras 1, 3 e 4"},
+        {"id": "F11.b", "afirmacao_pt": "O efeito depende de quanto a primeira instrução ativa conceitos positivos, e injetar uma instrução ruim nas rodadas 2, 5 e 8 faz o modelo voltar a conceitos negativos, o que os autores leem como irreversível.", "numero": "", "condicao": "desintoxicação de texto, 7B; regressão logística de previsão do sentido da incerteza com 83,18% de acerto", "onde_na_fonte": "seções 5 e 6, figura 5"}
+      ],
+      "nao_afirma": [
+        "As tarefas são de segurança e de qualidade de texto, não de acerto de classificação; os números de acerto por rodada estão em figuras e não foram lidos.",
+        "Não conta trocas de certo para errado.",
+        "Não mede quantização nem CPU."
+      ],
+      "aplicacao_ao_agente": "Aponta que, no 7B, mais de uma rodada de revisão tende a convergir e que a primeira instrução pesa mais; para um agente de rótulo fechado isso sugere no máximo uma releitura, com o prompt neutro."
+    }
+  ],
+  "nao_achei": [
+    "Nenhuma medida de revisão da própria resposta em modelo de 7B quantizado em GGUF, só em CPU, e nenhuma em classificação de causa raiz com rótulo de lista fechada e documentação recuperada no contexto.",
+    "Nenhuma fonte mede o efeito de reapresentar o contexto do zero numa segunda chamada sem pedido de revisão (reamostrar com o mesmo contexto) contra pedir confirmação, em modelo pequeno.",
+    "As taxas exatas de certo para errado e de errado para certo do Llama-2-7B no FlipFlop (Laban et al., tabela 2) e de Li et al. (figura 4) não foram lidas: o texto lido só traz médias e figuras.",
+    "Tyen et al. (2024), Olausson et al. (2024), Madaan et al. (2023) e Huang et al. (2024) não foram reabertos: já constam no repositório e esta rodada não traz afirmação nova deles; Madaan e Olausson ficam fora por esse motivo.",
+    "A página do artigo de Sharma et al. e as de Xie, Li, Xu, Zhang (lado sombrio) e Liu não informam evento de publicação; Xu et al. e Sharma et al. parecem ter saído em evento (ACL 2024 e ICLR 2024), mas isso não foi conferido na fonte, por isso estão como sem revisão confirmada.",
+    "O nome completo do primeiro autor de Zhang (lado sombrio) e as listas completas de autores de Xie, Li, Xu, Sharma e Liu não foram conferidos nas páginas lidas; as referências trazem et al."
+  ],
+  "rascunho_de_sintese_pt": "O que as fontes juntas sustentam: pedir ao modelo que revise a própria resposta, sem informação nova, não tem ganho confiável, e o saldo depende de três coisas que o desenho do pedido controla.\n1) O pedido empurra a troca. Quando um segundo turno desafia a resposta (\"tem certeza?\"), todos os modelos testados trocam muito (46% em média, com queda média de 17% de acerto, F01.a; 44,7 pontos de queda no StrategyQA do ChatGPT e 75,9% de taxa de modificação no Vicuna-13B, F02.a; entre 32% e 86% de trocas nos assistentes de API, com as trocas de certo para errado acima das de errado para certo, F03.a). A causa apontada é o treino para concordar (F03.b) e o peso do prompt de revisão sobre a pergunta original (F06.b).\n2) Em modelo pequeno a revisão é um saldo estreito. No Llama-3.1-8B, uma rodada de autocorreção vira 58,8% das respostas certas num sim ou não (F06.a); em seis modelos de 6B a 13B ajustados para isso, o ganho vai de 0 a 5,6 pontos e o CuteGPT-13B estraga 131 certas ao corrigir 159 erradas (F07.a, F07.b); o autoverificador de 7B a 13B tem F1 perto de 51 a 57 e só um verificador forte ou o rótulo verdadeiro dá ganho (F09.a, F09.b). A autoavaliação do modelo também superestima a própria qualidade e esse viés cresce com as iterações, mais em 7B e 13B que em 70B (F05.a, F05.b).\n3) O que contraria. Com prompt neutro e temperatura zero, a revisão pura rende ganhos pequenos e positivos em Mistral-7B (+0,9), Llama-3.1-8B (+1,0) e Qwen2.5 7B (+4,3), mas o Qwen2.5 3B ganha só 0,55 (F08.b, F08.c), sem barras de erro e em tarefas curtas; o mesmo conjunto de modelos cai se o prompt manda achar problemas (F08.b). Um prompt que só deixa mudar quando o modelo duvida recupera a perda do prompt crítico (F04.a, F04.b), o que casa com a revisão só nas respostas de pouca confiança.\n4) O que a literatura diz que precisa existir: retorno externo confiável, tarefa favorável ou ajuste fino (F10.b); verificador mais forte que o modelo (F09); avaliador externo no lugar da nota do próprio modelo (F05.c); e prompt neutro (F08.a). Defesas do lado do modelo (cadeia de raciocínio, ajuste fino contra o desafio) reduzem a troca mas não a eliminam (F01.c, F02.c, F06.c).\nO que ninguém mediu em modelo pequeno: um 7B quantizado em CPU; classificação de causa raiz com rótulo fechado e documentação no contexto; a releitura em chamada nova sem pedido de revisão; e o custo em tempo da releitura (que aqui seria de cerca de 23 s por 100 tokens escritos a mais). A inferência prudente, que o integrador deve marcar como hipótese, é que a releitura só vale se for condicionada a um sinal externo (selo baixo, conferidor em código) e feita com prompt neutro."
+}

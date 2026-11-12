@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:45:29.453Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-5",
+  "comentario": "O diagnóstico cravou perfeitamente a causa real (corpo_vazio). As evidências do caso foram contundentes: a seção \"Corpo da resposta\" estava inteiramente vazia, o sintoma apontava Content-Length 0, e o erro de navegador correspondia a tentar dar parse em um JSON inexistente. Diferente dos relatórios anteriores, a busca RAG funcionou perfeitamente aqui: os três verbetes entregues (resposta_truncada, corpo_nao_e_json, corpo_vazio) cobriam exatamente o domínio do erro, o que resultou em uma análise livre de divergências sistêmicas (\"Nenhum nó registrou divergência\"). A escolha de não apontar um campo específico (nenhum) também está correta, já que o corpo todo falhou.",
+  "decidido_em": "2026-11-09T19:46:01.276Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 5,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:46:15.576Z",
+  "segundos": 32,
+  "segundos_relogio": 32,
+  "utilidade": 5
+}

@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:29:08.527Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-31",
+  "comentario": "O diagnóstico foi excelente. O relato descreve perfeitamente um problema de falta de idempotência: a primeira tentativa de criação (POST) falhou com erro 500, o frontend/script fez uma retentativa que retornou 201, mas na verdade a primeira requisição também havia inserido o dado no banco. O resultado ao listar (GET) são dois registros iguais (IDs 18 e 19). O agente classificou o caso perfeitamente como registro_duplicado, acertando a causa raiz, com altíssima confiança (1,00) e apontando as fontes corretamente, sem alucinar campo.",
+  "decidido_em": "2026-11-10T11:29:35.049Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 31,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:29:43.487Z",
+  "segundos": 27,
+  "segundos_relogio": 27,
+  "utilidade": 5
+}

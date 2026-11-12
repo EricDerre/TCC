@@ -1,0 +1,42 @@
+{
+ "etapa": "lex-15 · analista de documentação",
+ "modelo": "qwen2.5:7b",
+ "estado": "concluido",
+ "fase": "geracao",
+ "tokens_prompt": 1241,
+ "chars_prompt": 3873,
+ "teto_tokens": 700,
+ "tokens_gerados": 98,
+ "decorrido_s": 51.824,
+ "estimativa_s": 62.379,
+ "estimativa_refeita_s": 62.379,
+ "fracao": 1.0,
+ "estimativa": {
+  "tokens_prompt": 1241,
+  "prefill_s": 47.67,
+  "geracao_s": 14.709,
+  "geracao_maxima_s": 163.437,
+  "total_s": 62.379,
+  "maximo_s": 211.107,
+  "origem": {
+   "tokens_prompt": "3873 caracteres do prompt / 3.12 caracteres por token (mediana das corridas gravadas)",
+   "prefill_s": "1241 tokens / 26.033 tokens por segundo (mediana do prefill das corridas gravadas)",
+   "geracao_s": "63.0 tokens (mediana dos gerados nas corridas gravadas) / 4.283 tokens por segundo (mediana da geração)",
+   "geracao_maxima_s": "teto de 700 tokens / 4.283 tokens por segundo"
+  }
+ },
+ "medido": {
+  "prefill_s": 27.313,
+  "geracao_s": 22.418,
+  "carga_s": 0.03,
+  "total_s": 49.784,
+  "tokens_entrada": 1238,
+  "tokens_saida": 98,
+  "tokens_em_cache": 642,
+  "decorrido_s": 51.824
+ },
+ "inferencias_concluidas": 54,
+ "iniciado_em": "2026-11-12T00:59:08",
+ "gravado_em": "2026-11-12T01:00:00",
+ "versao": 1
+}

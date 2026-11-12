@@ -94,7 +94,29 @@
       ],
       "acerto_nova_pct": 82.9,
       "acerto_base_pct": 80.0
+    },
+    {
+      "versao": "0.40.15",
+      "corrida": "fase3b_ponte_04015",
+      "data": "2026-11-11",
+      "modelo": "qwen2.5:7b",
+      "completa": true,
+      "n": 35,
+      "b": 1,
+      "c": 0,
+      "discordantes": 1,
+      "ganhos": [
+        "sin-14"
+      ],
+      "perdas": [],
+      "pareavel": true,
+      "limite": 2,
+      "casos_de_texto_alterado": [
+        "efe-3"
+      ],
+      "acerto_nova_pct": 82.9,
+      "acerto_base_pct": 80.0
     }
   ],
-  "gravado_em": "2026-11-03T18:41:55"
+  "gravado_em": "2026-11-11T18:55:08"
 }

@@ -34,3 +34,15 @@ keywords:
   - modelos de linguagem locais
   - Ollama
   - Playwright
+# ! Alteração de IA - Revisar: (11/11/2026) referência nova ao Projeto CHULETA, de onde veio o site PHP da pasta Programacao/CobaiaFront.
+# ! Motivo: o Eric pediu a citação correta do projeto de origem da parte PHP da cobaia; o campo `references` é o lugar que o formato dá para o
+# trabalho de terceiros em que o repositório se apoia. Autor, endereço e ano conferidos pela API do GitHub em 11/11/2026 (repositório criado em 17/09/2024).
+references:
+  - type: software
+    title: "Projeto CHULETA"
+    authors:
+      - family-names: Gonçalves
+        given-names: Pedro Henrique Torres
+    year: 2024
+    repository-code: "https://github.com/pedrohtgoncalvesgit/Projeto-CHULETA"
+    notes: "Site PHP de um restaurante, cedido pelo autor e usado como sistema sob teste (pasta Programacao/CobaiaFront). O que este trabalho acrescentou e mudou nele está em Programacao/CobaiaFront/ORIGEM.md."

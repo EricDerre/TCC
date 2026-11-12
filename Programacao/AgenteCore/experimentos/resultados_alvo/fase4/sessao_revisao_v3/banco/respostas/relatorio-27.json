@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T22:27:14.805Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-27",
+  "comentario": "O diagnóstico está perfeitamente correto. O contrato da interface exigia explicitamente o formato de data ISO (AAAA-MM-DD), mas o corpo da resposta retornou a data no formato brasileiro tradicional (20/12/2026). Esse desalinhamento caracteriza de forma exemplar a falha formato_de_data_divergente. O sistema de busca recuperou o verbete correto, o agente apontou o campo data_pedido com alta precisão e fundamentou adequadamente a resposta sem desvios.",
+  "decidido_em": "2026-11-09T22:28:03.224Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 27,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T22:28:18.067Z",
+  "segundos": 48,
+  "segundos_relogio": 48,
+  "utilidade": 5
+}

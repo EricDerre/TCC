@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:27:09.363Z",
+  "avaliacao": "errado",
+  "caso": "relatorio-29",
+  "comentario": "O diagnóstico falhou na taxonomia ao apontar tipo_divergente. O contrato esperava um \"numero\", e o corpo da resposta enviou 600.0 e 4500.0, que são tipos numéricos perfeitamente válidos na estrutura JSON. O real problema, como o próprio modelo percebeu na análise do impacto (\"preços exibidos [...] são muito altos, sugerindo um erro na formatação ou conversão do valor\"), é que o backend converteu ou multiplicou os valores na resposta original, o que caracteriza a falha escala_ou_unidade_errada (que aliás estava como a segunda hipótese, porém com probabilidade baixa de 0,09). Novamente, o RAG contribuiu para a desorientação ao não entregar o verbete exato (os três entregues não abordavam nenhuma dessas causas formalmente). Contudo, o impacto e o campo preco apontado estão corretos, merecendo nota 4.",
+  "decidido_em": "2026-11-10T11:27:40.724Z",
+  "decisao": "recusar",
+  "erro_localizado": "sim",
+  "pausas": 0,
+  "posicao": 29,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:27:48.837Z",
+  "segundos": 31,
+  "segundos_relogio": 31,
+  "utilidade": 4
+}

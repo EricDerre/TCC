@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['Cobaia.py'],
+    ['C:/Users/Eric.Derre/Documents/TCC/Cobaia.py'],
     pathex=[],
     binaries=[],
     datas=[],

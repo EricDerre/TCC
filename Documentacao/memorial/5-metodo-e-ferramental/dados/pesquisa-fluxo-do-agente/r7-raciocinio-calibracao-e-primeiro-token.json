@@ -1,0 +1,278 @@
+{
+  "_tag": "! Alteração de IA - Revisar: leitura da rodada 7 da pesquisa (10/11/2026), tópico r7-raciocinio-calibracao-e-primeiro-token, escrita por um subagente leitor: as fontes abertas, o que cada uma afirma e o que não afirma.",
+  "_motivo": "! Motivo: a ficha 64 pede pesquisa antes de qualquer mudança no fluxo do agente; a leitura fica em JSON para o integrador gerar o levantamento e para a segunda leitura conferir fonte a fonte.",
+  "key": "r7-raciocinio-calibracao-e-primeiro-token",
+  "frente": 1,
+  "titulo": "O que o raciocínio escrito faz com a calibração e com a confiança lida da probabilidade do primeiro token da resposta",
+  "pesquisado_em": "10/11/2026",
+  "pergunta": "Quando o modelo escreve um raciocínio antes do rótulo, o que acontece com a calibração e com a confiança lida da probabilidade do token do rótulo; e a probabilidade do primeiro token representa a resposta que o modelo dá em texto?",
+  "ja_levantado": [
+    {"secao": "§6.14.10", "o_que_ja_dizia": "Em modelos ajustados por instrução, a probabilidade do primeiro token e a resposta em texto discordam (51,4% no Llama-2-7B-chat, 15,1% e 10,2% no Mistral-7B v0.1 e v0.2), e o agente deve ler o logprob no token que inicia o rótulo depois de CAUSA_RAIZ:. Também registra que a probabilidade do token detectou erro melhor que a confiança verbalizada em modelos locais, que a autoconsistência com 5 amostras custa cerca de 5 vezes mais e empata no ECE, e que o limiar deve ser recalibrado quando mudar modelo, quantização ou biblioteca. Não trata do que o raciocínio escrito faz com essa probabilidade."},
+    {"secao": "§6.14.6", "o_que_ja_dizia": "O raciocínio escrito não é fiel por padrão, e pedir raciocínio antes do rótulo não serve porque o ganho de acerto em tarefa não simbólica é pequeno (Sprague et al., 2025). A decisão de não ativar cadeia de raciocínio na Fase 4 já se apoia em acerto e custo em segundos; a calibração da probabilidade do rótulo depois do raciocínio não foi levantada."},
+    {"secao": "§6.13.6", "o_que_ja_dizia": "A confiança verbalizada satura perto do máximo (Xiong et al., 2024; Erol, 2026) e foi descartada como corte; a reconsulta barata (Second Guess) foi adotada como ideia, e a autoconsistência com K=5 foi vista como cara."},
+    {"secao": "§6.12.8", "o_que_ja_dizia": "Confiança verbalizada tem AUROC perto de 0,55 em modelo de 4B com 97,7% das respostas no teto, contra 0,701 da entropia de logits de passada única (Cacioli, 2026); k=1 é o padrão e a amostragem múltipla só entra como exceção disparada por sinal (Loo, 2025; Taubenfeld et al., 2025)."}
+  ],
+  "fontes": [
+    {
+      "id": "F01",
+      "referencia_abnt": "FU, Tairan; CONDE, Javier; MARTÍNEZ, Gonzalo; GRANDURY, María; REVIRIEGO, Pedro. Multiple choice questions: reasoning makes large language models (LLMs) more self-confident, especially when they are wrong. IEEE Intelligent Systems, 2026. DOI 10.1109/MIS.2026.3660833. arXiv:2501.09775v3. Disponível em: https://arxiv.org/abs/2501.09775. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2501.09775",
+      "url": "https://arxiv.org/abs/2501.09775",
+      "ano": 2026,
+      "veiculo": "IEEE Intelligent Systems, 2026",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML v3 completa: modelos, método de confiança, Tabela 1, discussão do mecanismo, conclusão e limitações",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F01.a", "afirmacao_pt": "Quando a confiança é a probabilidade do token da letra escolhida, pedir raciocínio de ao menos três passos antes da resposta aumenta a confiança em todos os sete modelos, e o aumento é maior nas respostas erradas que nas certas.", "numero": "diferença nas probabilidades com p < 1e-10 em todos os modelos", "condicao": "MMLU, 7 modelos (Llama3.1-8B, Llama3.2-11B, Mistral-7B, Gemma-2-9B, Yi-1.5-9B, GPT-4o-mini, GPT-4o), prompt direto contra prompt com raciocínio", "onde_na_fonte": "seção de avaliação, figuras 2 a 4"},
+        {"id": "F01.b", "afirmacao_pt": "O ECE sobe com o raciocínio em cinco dos sete modelos; nos de 7B e 8B, de 0,31 para 0,38 no Mistral-7B e de 0,11 para 0,28 no Llama3.1-8B; o Brier sobe em seis.", "numero": "ECE 0,11 para 0,28 (Llama3.1-8B); 0,31 para 0,38 (Mistral-7B)", "condicao": "MMLU, escolha múltipla, confiança pela probabilidade da letra, sem quantização informada", "onde_na_fonte": "Tabela 1"},
+        {"id": "F01.c", "afirmacao_pt": "Mesmo no subconjunto em que o prompt direto e o prompt com raciocínio escolhem a mesma opção, o ECE sobe nos sete modelos, o que os autores leem como efeito do raciocínio em si, e não só de trocar de resposta; o mecanismo proposto é que o texto escrito a favor de uma opção eleva a probabilidade dela no token seguinte, mesmo quando o raciocínio é falho.", "numero": "ECE 0,06 para 0,21 (Llama3.1-8B, subconjunto consistente)", "condicao": "MMLU; o mecanismo é uma interpretação qualitativa dos autores, ilustrada em duas figuras", "onde_na_fonte": "Tabela 1 (colunas entre parênteses) e discussão, figuras 6 e 7"}
+      ],
+      "nao_afirma": ["Não testou classificação de rótulo fechado de domínio técnico, só MMLU em inglês.", "Não testou modelo quantizado em GGUF nem CPU.", "Não recalibrou depois do raciocínio e não testou ler a confiança numa chamada separada sem raciocínio.", "Não controlou o comprimento da resposta, como os autores admitem."],
+      "aplicacao_ao_agente": "Se o agente passasse a escrever raciocínio antes do rótulo, a probabilidade do rótulo lida depois dele tenderia a ficar mais alta, sobretudo nos erros, e o limiar calibrado nos 90 casos sem raciocínio deixaria de valer."
+    },
+    {
+      "id": "F02",
+      "referencia_abnt": "CHENG, Jiahao et al. Chain-of-thought prompting obscures hallucination cues in large language models: an empirical evaluation. In: FINDINGS OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: EMNLP 2025, 2025. arXiv:2506.17088. Disponível em: https://arxiv.org/abs/2506.17088. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2506.17088",
+      "url": "https://arxiv.org/abs/2506.17088",
+      "ano": 2025,
+      "veiculo": "Findings of EMNLP 2025",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML v3: modelos, estudo piloto de escolha múltipla (Tabela 1), figura 2, contagens de queda de AUROC, limitações e apêndice",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F02.a", "afirmacao_pt": "No estudo piloto de escolha múltipla, o AUROC da probabilidade do token da resposta cai com raciocínio, por exemplo de 85,98 para 77,39 no Llama-3.1-8B em ARC-Challenge e de 78,15 para 70,15 no DeepSeek-R1-Distill-Llama-8B, enquanto o acerto sobe (90,50 para 97,67 no Llama em ARC).", "numero": "AUROC 85,98 para 77,39 (Llama-3.1-8B, ARC-C)", "condicao": "Llama-3.1-8B-Instruct, Mistral-7B-Instruct-v0.3, Llama-3.1-70B e R1-Distill-Llama-8B; CommonsenseQA, ARC-C e MMLU; zero-shot CoT e variantes", "onde_na_fonte": "Tabela 1 do piloto"},
+        {"id": "F02.b", "afirmacao_pt": "Com raciocínio, a entropia da distribuição da resposta cai muito (de 23,96 para 6,63 no Llama em ARC; de 67,70 para 4,86 no R1-Distill) e as respostas certas e as erradas passam a receber probabilidades igualmente altas, o que torna os erros mais difíceis de marcar.", "numero": "entropia 67,70 para 4,86 (R1-Distill-Llama-8B, ARC)", "condicao": "mesmos modelos do piloto; teste de Kolmogorov-Smirnov com p < 0,01", "onde_na_fonte": "Tabela 1 e figura 2"},
+        {"id": "F02.c", "afirmacao_pt": "Nos conjuntos de QA e resumo, o AUROC dos detectores caiu em 465 de 768 configurações com raciocínio; os métodos baseados em perplexidade e em estados internos sofreram mais, os de autoconsistência por amostragem foram os mais robustos, e o ECE subiu na maior parte dos casos.", "numero": "465 de 768 configurações", "condicao": "4 modelos de 7B a 70B, 3 formas de raciocínio, TruthfulQA, TriviaQA, PopQA, HaluEval e CNN/DailyMail; geração livre, não rótulo fechado", "onde_na_fonte": "resultados principais e tabelas do apêndice"}
+      ],
+      "nao_afirma": ["Não trata de classificação com rótulo fechado de 23 opções; o piloto é escolha múltipla de 3 a 4 opções e o principal é QA livre.", "Não testou quantização Q4 nem CPU.", "Não explica o mecanismo; os autores deixam o porquê para trabalho futuro.", "Não testou recalibração depois do raciocínio."],
+      "aplicacao_ao_agente": "Reforça que a probabilidade lida depois de um raciocínio separa pior o erro do acerto em modelos de 7B e 8B; a leitura segura é a da chamada sem raciocínio, e a autoconsistência é o sinal que menos se estraga."
+    },
+    {
+      "id": "F03",
+      "referencia_abnt": "ZHAO, Xinghao. Entropy trajectory shape predicts LLM reasoning reliability: a diagnostic study of uncertainty dynamics in chain-of-thought. arXiv:2603.18940v1, 2026. Disponível em: https://arxiv.org/abs/2603.18940. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2603.18940",
+      "url": "https://arxiv.org/abs/2603.18940",
+      "ano": 2026,
+      "veiculo": "preprint arXiv (sem revisão por pares)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML v1: modelos, ECE por profundidade, resultados principais e limitações (primeiros 100 mil caracteres de cerca de 110 mil)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F03.a", "afirmacao_pt": "Ao longo de um raciocínio em GSM8K, a confiança pela log-probabilidade dos tokens fica mais mal calibrada com a profundidade do passo: o ECE vai de cerca de 0,186 no passo 0 a cerca de 0,312 no passo 7, mas o autor diz que a tendência não foi confirmada estatisticamente com só oito faixas.", "numero": "ECE 0,186 para 0,312", "condicao": "Qwen2.5-7B-Instruct, GSM8K com 300 problemas, proxy de confiança por log-probabilidade, uma semente", "onde_na_fonte": "resultados sobre calibração por profundidade"},
+        {"id": "F03.b", "afirmacao_pt": "O que previu o acerto foi o formato da trajetória (entropia que cai a cada passo: cerca de 68,8% de acerto contra 46,8% nas demais no Qwen), e não o tamanho da queda; como filtro, deu cerca de 5,8 pontos de ganho com 73,7% de cobertura, sem superar a autoconsistência de 3 a 5 amostras em cobertura igual.", "numero": "68,8% contra 46,8%; +5,8 pontos a 73,7% de cobertura", "condicao": "Qwen2.5-7B e Mistral-7B-v0.3 (replicação), GSM8K, cerca de 1.500 tokens por pergunta", "onde_na_fonte": "resultados principais e comparação com autoconsistência"}
+      ],
+      "nao_afirma": ["É um piloto de autor único em dois modelos de 7B e uma tarefa de matemática, com diferença de 5 a 14 pontos entre sementes.", "Não trata de classificação de rótulo fechado nem de rótulos em português.", "Não usa o token do rótulo; usa distribuição de respostas por passo e um proxy de log-probabilidade."],
+      "aplicacao_ao_agente": "Medir a confiança ao longo de um raciocínio custaria milhares de tokens por caso (cerca de 1.500 por pergunta aqui), inviável a 4,3 tokens por segundo; o resultado serve só como indício de que a confiança lida no fim do raciocínio se degrada."
+    },
+    {
+      "id": "F04",
+      "referencia_abnt": "YOON, Dongkeun et al. Reasoning models better express their confidence. In: ADVANCES IN NEURAL INFORMATION PROCESSING SYSTEMS (NeurIPS), 2025. arXiv:2505.14489. Disponível em: https://arxiv.org/abs/2505.14489. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2505.14489",
+      "url": "https://arxiv.org/abs/2505.14489",
+      "ano": 2025,
+      "veiculo": "NeurIPS 2025",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML: modelos, conjuntos, métricas, evolução da calibração ao longo da cadeia e limitações (primeiros 100 mil caracteres de cerca de 121 mil)",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F04.a", "afirmacao_pt": "Seis modelos de raciocínio, todos na escala de 32B, calibraram a confiança verbalizada melhor que os pares sem raciocínio em 33 de 36 configurações (ECE, Brier e AUROC).", "numero": "33 de 36", "condicao": "pares como R1-Distill-Qwen e QwQ contra Qwen2.5-Instruct, Qwen3 com e sem raciocínio; TriviaQA, NonambigQA e subconjuntos de SuperGPQA e MMLU-Pro, 1.000 exemplos cada; confiança verbalizada em 10 faixas", "onde_na_fonte": "resumo e resultados principais"},
+        {"id": "F04.b", "afirmacao_pt": "Nos modelos de raciocínio a calibração melhora à medida que a cadeia avança (11 trechos cumulativos, tendência linear significativa na maioria), e remover os comportamentos de reflexão e retrocesso a piora; mesmo assim eles raramente dão confiança abaixo de cerca de 55%.", "numero": "11 trechos cumulativos; piso de cerca de 55%", "condicao": "modelos de 32B treinados para raciocinar em cadeias longas; o texto lido não traz resultado para 7B ou 8B", "onde_na_fonte": "análise da evolução da cadeia e limitações"}
+      ],
+      "nao_afirma": ["Mede confiança verbalizada, não a probabilidade do token.", "Só cobre modelos de cerca de 32B treinados para raciocinar; não cobre um 7B instruct comum com raciocínio por prompt.", "Não é classificação de rótulo fechado de domínio técnico."],
+      "aplicacao_ao_agente": "Contraria a ideia de que raciocínio sempre estraga a confiança, mas vale para a confiança dita pelo modelo em modelos treinados para raciocinar; não se transfere ao qwen2.5:7b com a probabilidade do rótulo."
+    },
+    {
+      "id": "F05",
+      "referencia_abnt": "WANG, Xinpeng; HU, Chengzhi; MA, Bolei; RÖTTGER, Paul; PLANK, Barbara. Look at the text: instruction-tuned language models are more robust multiple choice selectors than you think. In: CONFERENCE ON LANGUAGE MODELING (COLM), 2024. arXiv:2404.08382. Disponível em: https://arxiv.org/abs/2404.08382. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2404.08382",
+      "url": "https://arxiv.org/abs/2404.08382",
+      "ano": 2024,
+      "veiculo": "COLM 2024",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e versão HTML: seções 2, 3.1, 3.3, 3.5, tabelas 1, 4 e 5",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F05.a", "afirmacao_pt": "A taxa de discordância entre a escolha pelo primeiro token e a resposta em texto, em MMLU, foi de 56,8% no Gemma-7B-it, 51,4% no Llama2-7B-chat, 35,3% no Llama2-13B-chat e 10,2% no Mistral-7B-Instruct v0.2; a acurácia do primeiro token ficou abaixo da do texto em 20,6 pontos no Gemma (30,2 contra 50,8) e quase igual no Mistral (53,2 contra 53,6).", "numero": "56,8%; 51,4%; 35,3%; 10,2%", "condicao": "MMLU zero-shot, prompt que pede uma única letra", "onde_na_fonte": "seção 3.3, tabelas 1 e 4"},
+        {"id": "F05.b", "afirmacao_pt": "Quando as duas leituras discordam, a resposta em texto é mais estável sob perturbações (erros de digitação, troca de palavras e de ordem das opções): no Llama2-7B a entropia sob troca de opções foi de 1,04 pelo primeiro token e 0,68 pelo texto; no Mistral-7B a diferença é desprezível (0,52 nas duas).", "numero": "entropia 1,04 contra 0,68 (Llama2-7B, troca de opções)", "condicao": "MMLU; entropia menor significa resposta mais consistente", "onde_na_fonte": "seção 3.5, tabela 5"},
+        {"id": "F05.c", "afirmacao_pt": "Mesmo com o prompt restrito a uma letra, os modelos têm hábitos de começo de resposta que desviam a leitura do primeiro token (Llama2 costuma começar por um token de espaço, Gemma por 'Answer:'); ler o segundo ou o terceiro token melhorou um pouco a robustez, sem alcançar a do texto.", "numero": "", "condicao": "Llama2 e Gemma, MMLU", "onde_na_fonte": "seção 3.1, parte sobre o prompt"}
+      ],
+      "nao_afirma": ["Mede robustez da escolha e acurácia, não calibração nem AUROC de confiança.", "Não testou Qwen2.5 nem classificação em rótulos longos de vários tokens.", "O texto traz dois valores para o Gemma (56,8% e 56,6%); aqui vale o da tabela 4."],
+      "aplicacao_ao_agente": "Com o rótulo em primeiro lugar e o parse em código, o risco é que o primeiro token lido não seja o do rótulo (prefixo, espaço, rótulos que começam igual); o que decide é a variante do modelo, e o Qwen2.5 não foi medido."
+    },
+    {
+      "id": "F06",
+      "referencia_abnt": "WANG, Xinpeng et al. \"My answer is C\": first-token probabilities do not match text answers in instruction-tuned language models. In: FINDINGS OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: ACL 2024, 2024. arXiv:2402.14499. Disponível em: https://arxiv.org/abs/2402.14499. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2402.14499",
+      "url": "https://arxiv.org/abs/2402.14499",
+      "ano": 2024,
+      "veiculo": "Findings of ACL 2024",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML: seções 3, 4.1 e 4.2, tabelas 2 e 3, figura 2",
+      "ja_consta_em_referencias_md": true,
+      "afirmacoes": [
+        {"id": "F06.a", "afirmacao_pt": "A discordância diminui quando o prompt restringe mais a saída (de 'qualquer formato' para 'só uma letra' e 'comece pela letra') em todos os modelos menos o Mistral-7B v0.2, mas um exemplo de formato no prompt aumentou a discordância na maioria deles e enviesou a letra escolhida (Llama2-70B escolheu 'C' em cerca de 85% das vezes pelo primeiro token contra 32,1% com a restrição mais forte).", "numero": "85% contra 32,1%", "condicao": "6 modelos instruct (Llama2-Chat 7B, 13B, 70B; Mistral v0.1, v0.2; Mixtral), MMLU e OpinionQA", "onde_na_fonte": "seção 4.1, figura 2a"},
+        {"id": "F06.b", "afirmacao_pt": "A recusa explica parte da discordância em temas sensíveis, mas sobra discordância sem recusa; um classificador de extração do texto (QLoRA no Mistral-7B, 1.000 exemplos) chega a 99% de acerto contra 55% de regex e 35% zero-shot, ou seja, extrair a resposta do texto é a leitura que o artigo defende.", "numero": "99% contra 55% (regex) e 35% (zero-shot)", "condicao": "2.070 respostas anotadas, escolha múltipla", "onde_na_fonte": "seção 4.2, tabela 2"}
+      ],
+      "nao_afirma": ["Não mede calibração nem AUROC da probabilidade.", "Não testou Qwen2.5 nem rótulos de várias palavras.", "Ordem de grandeza da discordância é para escolha múltipla de 4 letras, não para 23 rótulos."],
+      "aplicacao_ao_agente": "A restrição do formato reduz a discordância, mas não a elimina, e um exemplo de formato no prompt pode viciar a escolha; vale checar nos 90 casos se o primeiro token lido coincide com o rótulo escrito."
+    },
+    {
+      "id": "F07",
+      "referencia_abnt": "KUMAR, Abhishek; MORABITO, Robert; UMBET, Sanzhar; KABBARA, Jad; EMAMI, Ali. Confidence under the hood: an investigation into the confidence-probability alignment in large language models. In: ANNUAL MEETING OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS (ACL), 62., 2024. arXiv:2405.16282. Disponível em: https://arxiv.org/abs/2405.16282. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2405.16282",
+      "url": "https://arxiv.org/abs/2405.16282",
+      "ano": 2024,
+      "veiculo": "ACL 2024 (principal)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML v5: seções 2 e 3, tabelas 1 a 4, limitações",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F07.a", "afirmacao_pt": "O alinhamento (Spearman) entre a probabilidade interna do token e a certeza que o modelo declara é moderado no GPT-4 (0,35 a 0,47) e fraco ou negativo nos modelos abertos pequenos: Zephyr-7B de -0,14 a 0,15 e Phi-2 de -0,05 a 0,07.", "numero": "Zephyr-7B -0,14 a 0,15; Phi-2 -0,05 a 0,07", "condicao": "5 conjuntos de escolha múltipla (CommonsenseQA, QASC, RiddleSense, OpenBookQA, ARC), certeza declarada em escala de 6 níveis", "onde_na_fonte": "tabela 1"},
+        {"id": "F07.b", "afirmacao_pt": "Os autores descrevem casos em que as duas medidas discordam fortemente (por exemplo 0,99 de probabilidade interna contra 0,20 declarado, ou 0,69 contra 1,00), e os modelos abertos muitas vezes nem produziram uma certeza declarada utilizável.", "numero": "0,99 contra 0,20; 0,69 contra 1,00", "condicao": "exemplos da tabela 2, GPT-4; falha de formato nos modelos abertos na tabela 3", "onde_na_fonte": "seção 4, tabelas 2 e 3"}
+      ],
+      "nao_afirma": ["Não mede ECE nem AUROC contra o acerto; mede alinhamento entre dois sinais de confiança.", "Não estuda raciocínio escrito.", "Só modelos com probabilidades acessíveis, em inglês, e os dois modelos pequenos são Phi-2 e Zephyr-7B."],
+      "aplicacao_ao_agente": "Num 7B, a certeza dita pelo modelo quase não acompanha a probabilidade do token; ler a probabilidade (sem pedir ao modelo que declare) é o caminho coerente com o que o projeto já decidiu."
+    },
+    {
+      "id": "F08",
+      "referencia_abnt": "ZHANG, Hanlin; ZHANG, Yi-Fan; YU, Yaodong; MADEKA, Dhruv; FOSTER, Dean; XING, Eric; LAKKARAJU, Himabindu; KAKADE, Sham. A study on the calibration of in-context learning. In: NORTH AMERICAN CHAPTER OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS (NAACL), 2024. arXiv:2312.04021. Disponível em: https://arxiv.org/abs/2312.04021. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2312.04021",
+      "url": "https://arxiv.org/abs/2312.04021",
+      "ano": 2024,
+      "veiculo": "NAACL 2024",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e versão HTML: seções 4.1 a 4.3, tabelas 1, 3 e 4",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F08.a", "afirmacao_pt": "Mudar o prompt muda a calibração: ao crescer o número de exemplos a calibração piora e depois melhora, e com exemplos de raciocínio (4 e 8 exemplos) o ECE do LLaMA-30B subiu, por exemplo, de 0,048 (zero exemplos) para 0,283 (4) no CommonsenseQA e de 0,036 para 0,206 no OpenBookQA, com excesso de confiança.", "numero": "ECE 0,048 para 0,283 (CommonsenseQA); 0,036 para 0,206 (OpenBookQA)", "condicao": "LLaMA-30B base, 0 contra 4 exemplos com raciocínio; modelos de 7B a 30B no estudo", "onde_na_fonte": "tabela 1, seções 4.2 e 4.3"},
+        {"id": "F08.b", "afirmacao_pt": "Um recalibrador de escala mais faixas (scaling-binning, 10 faixas) reduziu o ECE do LLaMA-2-7B, por exemplo de 0,099 para 0,010 no SST-2 e de 0,090 para 0,009 no AGNews, e foi melhor que a temperatura simples; o artigo não informa quantas amostras usou para ajustar.", "numero": "0,099 para 0,010; 0,090 para 0,009", "condicao": "classificação de texto (SST-2, AGNews, CB, RTE) com LLaMA-2-7B, média entre números de exemplos", "onde_na_fonte": "tabelas 3 e 4"}
+      ],
+      "nao_afirma": ["Não informa o tamanho do conjunto de calibração.", "Os recalibradores foram avaliados em tarefas de poucas classes, não em 23 rótulos.", "Sem quantização e sem CPU."],
+      "aplicacao_ao_agente": "Qualquer mudança no prompt (inclusive acrescentar um raciocínio ou exemplos) desloca a calibração; recalibrar com um mapeamento de escala depois da mudança é o remédio testado, mas o número de casos necessário não vem daqui."
+    },
+    {
+      "id": "F09",
+      "referencia_abnt": "SHEN, Jianru. Provable limits and certified deferral for verbalized uncertainty in small language models. arXiv:2608.05064, 2026. Aceito no MIWAI 2026. Disponível em: https://arxiv.org/abs/2608.05064. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2608.05064",
+      "url": "https://arxiv.org/abs/2608.05064",
+      "ano": 2026,
+      "veiculo": "MIWAI 2026 (aceito; Springer LNAI)",
+      "revisao_por_pares": true,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "resumo e versão HTML: seções 3.2, 3.5, 4.1, 4.2, 4.4 e 5",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F09.a", "afirmacao_pt": "Em 11 modelos instruct de 0,5B a 14B rodados localmente por Ollama, a confiança pedida em texto (inteiro de 0 a 100 junto com a letra) detecta erro mal: AUROC perto de 0,5 abaixo de 2B e no máximo cerca de 0,63 a 0,66 nos maiores.", "numero": "AUROC 0,468 a cerca de 0,66", "condicao": "Qwen2.5 0,5B a 14B, Llama 3.2/3.1, Gemma 3; ARC-Challenge e TruthfulQA, 25.168 previsões; confiança verbalizada, não probabilidade do token", "onde_na_fonte": "seção 4.2, tabela 1"},
+        {"id": "F09.b", "afirmacao_pt": "Escalonamento de temperatura, com um único parâmetro, não conserta modelos cuja confiança fica acima de 0,5 com acerto abaixo de 0,5 (oito de 22 pares bateram nesse piso, com ECE residual perto do previsto, 0,283 contra 0,276 no Qwen2.5-0,5B), enquanto Platt (com viés) levou o ECE a cerca de 0,02 a 0,1 na maioria das linhas.", "numero": "8 de 22 pares; Platt ECE 0,02 a 0,1", "condicao": "mesmos 11 modelos e 2 benchmarks, ajuste em 200 questões de calibração por benchmark", "onde_na_fonte": "corolário 1 (seção 3.5), seção 4.2 e tabela 1"},
+        {"id": "F09.c", "afirmacao_pt": "Com 200 questões de calibração, o limite de Clopper-Pearson só deu certificação de autonomia com risco de 20% em 3 de 22 pares (Qwen2.5-14B e 7B no ARC e 14B no TruthfulQA) e em nenhum com risco de 10%; isotônica colapsa níveis de confiança, enquanto Platt os preserva.", "numero": "3 de 22 pares a 20%; 0 a 10%; 200 questões", "condicao": "suposição de dados independentes e iguais na implantação; vale só sem mudança de distribuição", "onde_na_fonte": "seções 4.2 e 4.4, limitações"}
+      ],
+      "nao_afirma": ["Mede confiança verbalizada, não a probabilidade do token do rótulo.", "Só escolha múltipla (ARC e TruthfulQA), sem raciocínio escrito.", "Modelos até 14B com um só esquema de quantização."],
+      "aplicacao_ao_agente": "Dá uma ordem de grandeza para a recalibração: poucas centenas de casos bastam para Platt e para um limite de risco, mas a certificação a risco baixo é exigente; o agente tem 90 casos calibrados, abaixo dos 200 do estudo."
+    },
+    {
+      "id": "F10",
+      "referencia_abnt": "PLAUT, Benjamin; KHANH, Nguyen X.; TRINH, Tu. Probabilities of chat LLMs are miscalibrated but still predict correctness on multiple-choice Q&A. Transactions on Machine Learning Research (TMLR). arXiv:2402.13213v4, 2025. Disponível em: https://arxiv.org/abs/2402.13213. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2402.13213",
+      "url": "https://arxiv.org/abs/2402.13213",
+      "ano": 2025,
+      "veiculo": "TMLR",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "página do arXiv (resumo e metadados); o corpo do artigo não foi aberto",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F10.a", "afirmacao_pt": "Em 15 modelos de chat, a probabilidade máxima do softmax é mal calibrada em escolha múltipla, mas ainda carrega sinal: nos modelos que acertam bem a tarefa, as respostas erradas recebem probabilidade menor que as certas.", "numero": "15 modelos", "condicao": "escolha múltipla; o resumo não informa tamanhos nem valores de AUROC", "onde_na_fonte": "resumo"},
+        {"id": "F10.b", "afirmacao_pt": "A capacidade de prever o acerto acompanha a acurácia da tarefa, mas o erro de calibração não, e permitir abster-se com um limiar da probabilidade escolhido num conjunto rotulado pequeno melhora o desempenho.", "numero": "", "condicao": "escolha múltipla; versão v4 de 2025", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["Não trata de raciocínio escrito.", "Os números por modelo não foram lidos aqui.", "Escolha múltipla, não classificação de domínio técnico em rótulos longos."],
+      "aplicacao_ao_agente": "Sustenta a prática do agente de usar a probabilidade como ordenador de risco (AUROC) e escolher o limiar num conjunto pequeno, mesmo que a calibração em si seja ruim."
+    },
+    {
+      "id": "F11",
+      "referencia_abnt": "ZHANG, Boxuan; ZHANG, Ruqi. CoT-UQ: improving response-wise uncertainty quantification in LLMs with chain-of-thought. In: FINDINGS OF THE ASSOCIATION FOR COMPUTATIONAL LINGUISTICS: ACL 2025, 2025. arXiv:2502.17214. Disponível em: https://arxiv.org/abs/2502.17214. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2502.17214",
+      "url": "https://arxiv.org/abs/2502.17214",
+      "ano": 2025,
+      "veiculo": "Findings of ACL 2025",
+      "revisao_por_pares": true,
+      "como_li": "so_resumo",
+      "o_que_li": "página do arXiv (resumo e metadados); o corpo do artigo não foi aberto",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F11.a", "afirmacao_pt": "O método extrai palavras-chave de cada passo do raciocínio, estima o peso de cada uma para a resposta final e as combina numa estimativa de incerteza por resposta, sem várias amostras, com ganho médio de AUROC de 5,9% sobre métodos anteriores.", "numero": "+5,9% de AUROC em média", "condicao": "modelos da família Llama de 8B a 13B; tarefas de raciocínio lógico e matemático", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["Não foram lidos os valores absolutos de AUROC, nem a comparação com a probabilidade do token do rótulo.", "Não trata de classificação de rótulo fechado.", "Exige o raciocínio escrito e uma etapa de extração e pontuação das palavras-chave, de custo não lido."],
+      "aplicacao_ao_agente": "É o exemplo de método que mede a confiança dentro do raciocínio; só se aplicaria se o agente passasse a escrever raciocínio, e o ganho foi medido em matemática e lógica."
+    },
+    {
+      "id": "F12",
+      "referencia_abnt": "HIREMATH, Prakul Sunil; HIREMATH, Harshit R. Calibration drift under reasoning: how chain-of-thought budgets induce overconfidence in large language models. arXiv:2606.11211v1, 2026. Disponível em: https://arxiv.org/abs/2606.11211. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2606.11211",
+      "url": "https://arxiv.org/abs/2606.11211",
+      "ano": 2026,
+      "veiculo": "preprint arXiv (sem revisão por pares)",
+      "revisao_por_pares": false,
+      "como_li": "aberta_e_lida",
+      "o_que_li": "versão HTML: seções 5 a 7, tabela 3, limitações",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F12.a", "afirmacao_pt": "No Llama-3.1-8B, com confiança verbalizada de 0 a 1, o ECE não varia de forma monótona com o orçamento de raciocínio (0,044 sem raciocínio, 0,104 leve, 0,050 médio, 0,015 pesado), mas a confiança continuou acima do acerto em todos os orçamentos (excesso de 0,25 a 0,49).", "numero": "ECE 0,044; 0,104; 0,050; 0,015; excesso +0,493 a +0,245", "condicao": "47 perguntas armadilha, 3 sementes, cerca de 40 a 50 respostas válidas por orçamento, orçamento definido só por instrução no prompt", "onde_na_fonte": "seção 6.1, tabela 3"}
+      ],
+      "nao_afirma": ["Os valores sem raciocínio e com raciocínio pesado não se distinguem estatisticamente, como os autores admitem; amostra pequena.", "Mede confiança verbalizada, não a probabilidade do token.", "Não é classificação de rótulo fechado e o ECE é calculado com poucas dezenas de itens."],
+      "aplicacao_ao_agente": "Contraria o resultado de F01 só em aparência (outra medida, outra amostra): com 8B e confiança dita, o raciocínio não dá um efeito claro, e a amostra é pequena demais para concluir."
+    },
+    {
+      "id": "F13",
+      "referencia_abnt": "KUMARAN, Dharshan. Reported confidence in LLMs tracks commitment more than correctness. arXiv:2606.29490, 2026. Disponível em: https://arxiv.org/abs/2606.29490. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2606.29490",
+      "url": "https://arxiv.org/abs/2606.29490",
+      "ano": 2026,
+      "veiculo": "preprint arXiv (sem revisão por pares)",
+      "revisao_por_pares": false,
+      "como_li": "so_resumo",
+      "o_que_li": "página do arXiv (resumo e metadados); o corpo do artigo não foi aberto",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F13.a", "afirmacao_pt": "Numa tarefa de responder, dizer a confiança e depois decidir entre responder ou abster-se, a confiança verbalizada previu muito melhor a decisão de se comprometer do que o acerto, enquanto as log-probabilidades dos tokens ligaram a abstenção ao acerto.", "numero": "", "condicao": "quatro modelos sem raciocínio e quatro com raciocínio, quatro benchmarks de escolha múltipla difícil a perguntas livres; análise interna em Gemma 3 e 4", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["Números absolutos de AUROC ou ECE não foram lidos.", "Os tamanhos dos modelos não aparecem no resumo.", "Não trata de rótulo fechado de domínio técnico."],
+      "aplicacao_ao_agente": "Apoia ler a confiança da probabilidade do token e não pedir ao modelo que a verbalize, também quando há raciocínio, mas só como indício até que o corpo do artigo seja lido."
+    },
+    {
+      "id": "F14",
+      "referencia_abnt": "ZOLLO, Thomas; WANG, Jimmy; ZEMEL, Richard. Binary agreement for efficient unsupervised confidence calibration of reasoning LLMs. arXiv:2604.19444v2, 2026. Disponível em: https://arxiv.org/abs/2604.19444. Acesso em: 10 nov. 2026.",
+      "identificador": "arXiv:2604.19444",
+      "url": "https://arxiv.org/abs/2604.19444",
+      "ano": 2026,
+      "veiculo": "preprint arXiv (sem revisão por pares)",
+      "revisao_por_pares": false,
+      "como_li": "so_resumo",
+      "o_que_li": "página do arXiv (resumo e metadados); o corpo do artigo não foi aberto",
+      "ja_consta_em_referencias_md": false,
+      "afirmacoes": [
+        {"id": "F14.a", "afirmacao_pt": "O método BASC usa a concordância entre uma resposta âncora e uma única sonda independente como substituto, sem rótulos, da correção; precisa de duas respostas por consulta de calibração e de uma só na implantação, e recalibra a confiança por regressão isotônica binária, com ganhos de calibração em 5 tarefas e 9 modelos de raciocínio.", "numero": "2 respostas por consulta de calibração; 1 na implantação; 5 tarefas; 9 modelos", "condicao": "modelos de raciocínio, calibração sem rótulos de gabarito; o resumo não informa os modelos nem os números de ECE", "onde_na_fonte": "resumo"}
+      ],
+      "nao_afirma": ["Os tamanhos dos modelos e os valores de calibração não foram lidos.", "Foca em modelos de raciocínio, não em um 7B instruct de rótulo fechado.", "A recalibração aqui é sem rótulos; não diz quantos casos com gabarito seriam necessários."],
+      "aplicacao_ao_agente": "Mostra que recalibrar com pouca amostragem (2 respostas por caso de calibração) é possível quando falta gabarito; o agente tem 90 casos com gabarito, então o interesse é só se o gabarito faltar numa mudança de fluxo."
+    }
+  ],
+  "nao_achei": [
+    "Nenhum estudo que meça a probabilidade do token do rótulo lida DEPOIS de um raciocínio escrito num classificador de rótulo fechado com muitos rótulos (cerca de 23), em modelo de 7B quantizado em Q4_K_M rodando em CPU.",
+    "Nenhum estudo que compare, no mesmo modelo pequeno, a confiança lida numa chamada sem raciocínio com a lida na chamada com raciocínio sobre os mesmos casos e o mesmo conjunto de calibração, para decidir qual separa melhor erro de acerto (os dados de F01 e F02 vêm de escolha múltipla de 3 a 4 opções).",
+    "Nenhuma fonte que dê um número mínimo de casos para recalibrar a probabilidade de um rótulo por Platt, temperatura ou isotônica; só F09 (200 questões, Platt, em confiança verbalizada) e uma indicação de blog, não confiável, de que isotônica pede cerca de mil pontos. O artigo de F08 não diz quantas amostras usou.",
+    "O corpo dos artigos F10, F11, F13 e F14 não foi aberto (só a página do arXiv); o PDF de F09 não foi legível e a leitura foi pela versão HTML.",
+    "Não achei medição de discordância entre a probabilidade do primeiro token do rótulo e o rótulo em texto para a família Qwen2.5; F05 e F06 cobrem Llama2, Mistral, Mixtral e Gemma.",
+    "Não achei o que a restrição da resposta a um rótulo faz sobre a calibração (só sobre a discordância e o acerto, em F05 e F06)."
+  ],
+  "rascunho_de_sintese_pt": "O que as fontes sustentam. (1) Primeiro token contra texto: em modelos ajustados por instrução a leitura pelo primeiro token e a resposta em texto discordam muito em alguns modelos (56,8% no Gemma-7B, 51,4% no Llama2-7B, 35,3% no Llama2-13B) e pouco em outros (10,2% no Mistral-7B v0.2) em MMLU com prompt restrito a uma letra (F05.a); restringir mais a saída reduz a discordância sem eliminá-la, e um exemplo de formato no prompt pode piorar e viciar a letra (F06.a). Quando discordam, o texto é a leitura mais estável, e o hábito de começo de resposta do modelo (espaço, 'Answer:') desvia o primeiro token (F05.b, F05.c). Nada disso mede calibração nem foi medido em Qwen2.5.\n\n(2) Raciocínio e probabilidade do token: as duas fontes que medem a probabilidade do token ou a distribuição da resposta depois do raciocínio apontam a mesma direção em modelos de 7B a 9B. A confiança sobe, mais nos erros, e o ECE sobe em cinco de sete modelos, de 0,11 para 0,28 no Llama3.1-8B e de 0,31 para 0,38 no Mistral-7B (F01.a, F01.b), também no subconjunto em que o prompt direto e o com raciocínio escolhem a mesma opção (F01.c); o AUROC da resposta cai (85,98 para 77,39 no Llama-3.1-8B em ARC) e a entropia colapsa, com certos e errados recebendo probabilidades igualmente altas (F02.a, F02.b); em detecção de alucinação, 465 de 768 configurações pioraram com raciocínio, e a autoconsistência foi o método mais robusto (F02.c). Em GSM8K, o ECE da log-probabilidade subiu com a profundidade do passo, embora o autor mesmo diga que a tendência não está confirmada (F03.a). O mecanismo proposto (F01) é que o texto escrito a favor de uma opção eleva a probabilidade dela no token seguinte, mesmo quando o raciocínio é falho; é interpretação, não prova.\n\n(3) O que contraria: a confiança VERBALIZADA melhora com o raciocínio em modelos de 32B treinados para raciocinar (33 de 36 configurações, F04.a), mas isso é outra medida, outra escala de modelo e outra forma de treino; em 8B com confiança dita, o efeito não é claro e a amostra é pequena (F12.a). Mudar o prompt em geral muda a calibração, e exemplos de raciocínio elevaram o ECE do LLaMA-30B de 0,048 para 0,283 em CommonsenseQA (F08.a).\n\n(4) Confiança dita contra probabilidade: em modelos pequenos a confiança dita detecta erro mal (AUROC de 0,47 a cerca de 0,66 em 11 modelos de 0,5B a 14B, F09.a) e quase não acompanha a probabilidade do token (Spearman perto de zero em Zephyr-7B e Phi-2, F07.a); um preprint em modelos maiores concorda que ela acompanha o compromisso mais que o acerto (F13.a, só resumo). A probabilidade segue mal calibrada, mas ordena bem o risco (F10.a, só resumo).\n\n(5) O que fazer: a evidência favorece ler a confiança numa chamada sem raciocínio e pedir o raciocínio, se fosse necessário, numa chamada separada; a autoconsistência é o sinal que menos se degrada com raciocínio (F02.c), mas custa chamadas. Recalibrar depois de mudar o prompt é o remédio testado: scaling-binning derrubou o ECE do LLaMA-2-7B de 0,099 para 0,010 (F08.b), e Platt, que tem viés, funciona onde a temperatura sozinha falha (8 de 22 pares, F09.b), com 200 questões de calibração (F09.c); sem gabarito, dá para usar a concordância entre duas respostas (F14.a, só resumo).\n\nO que ninguém mediu em modelo pequeno: a probabilidade do token do rótulo depois de raciocínio num classificador de muitos rótulos, quantizado, em CPU; qual o mínimo de casos para recalibrar; e a discordância primeiro token contra texto no Qwen2.5. Quase tudo é escolha múltipla de 3 a 4 opções em inglês; a transposição para 23 rótulos em português é uma suposição."
+}

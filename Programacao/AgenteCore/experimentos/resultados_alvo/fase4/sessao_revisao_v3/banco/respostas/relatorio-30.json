@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-10T11:27:49.816Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-30",
+  "comentario": "O diagnóstico está perfeito e preciso. O relatório evidencia claramente que não há defeito na API (que retornou status 200 e o payload correto) e nem na renderização da interface (a árvore de acessibilidade mostra o botão construído com sucesso contendo data-id=\"3\"). A falha reside puramente no script de automação, que tentou localizar o botão pelo ID #saiba-mais-3. Isso é a exata definição de localizador_quebrado. O modelo identificou o problema corretamente, com confiança alta (0,99), e referenciou a fonte adequada.",
+  "decidido_em": "2026-11-10T11:28:55.445Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 30,
+  "retomadas": 0,
+  "salvo_em": "2026-11-10T11:29:07.536Z",
+  "segundos": 66,
+  "segundos_relogio": 66,
+  "utilidade": 5
+}

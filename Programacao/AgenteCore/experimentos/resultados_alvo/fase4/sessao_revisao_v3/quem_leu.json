@@ -1,0 +1,15 @@
+{
+  "_marcador": "! Alteração de IA - Revisar: arquivo escrito pelo Claude em 10/11/2026 com o que o Eric declarou no quadro de perguntas sobre quem leu os 36 relatórios da sessão de revisão de 09 e 10/11/2026 (ficha 62, decisão 117). ! Motivo: a leitura da sessão (avaliar_fase4.py --revisao_v3) dizia que quem leu não estava registrado; a declaração fica aqui, ao lado do registro da página, e a leitura a carrega. O que o Eric não soube dizer fica como null e sai escrito como não declarado.",
+  "declarado_em": "2026-11-10",
+  "declarado_por": "Eric, no quadro de perguntas da sessão principal",
+  "quem": "um analista de QA da empresa em que o Eric trabalha",
+  "relacao_com_o_projeto": "atua com teste de software e não participou do projeto nem conhecia o agente",
+  "ferramenta_de_ia": null,
+  "o_que_recebeu": null,
+  "respostas": "as 36 respostas são do analista; o Eric só digitou ou colou o que ele respondeu",
+  "opcoes_marcadas_no_quadro": {
+    "quem é o analista": "Analista de QA da empresa: Trabalha com teste de software e não participou do projeto nem conhecia o agente.",
+    "usou ferramenta de IA para ler ou redigir": "Não sei: Você não perguntou a ele; fica registrado como não declarado.",
+    "de quem são as respostas dos relatórios 1 e 2": "As duas são dele: Você só digitou ou colou o que ele respondeu; as 36 respostas são do analista."
+  }
+}

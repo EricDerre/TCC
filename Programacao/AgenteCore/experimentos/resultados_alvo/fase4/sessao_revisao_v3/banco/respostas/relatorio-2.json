@@ -1,0 +1,16 @@
+{
+  "aberto_em": "2026-11-09T19:32:56.481Z",
+  "avaliacao": "certo",
+  "caso": "relatorio-2",
+  "comentario": "O modelo Qwen2.5 acertou com precisão a causa raiz (nulo_inesperado) e o campo afetado (preco). O relatório apresentou as evidências do contrato exigindo numérico contra o payload entregando nulo, com a confiança do agente (0,999) totalmente justificada pelo cenário",
+  "decidido_em": "2026-11-09T19:36:30.023Z",
+  "decisao": "aceitar",
+  "erro_localizado": "n.a.",
+  "pausas": 0,
+  "posicao": 2,
+  "retomadas": 0,
+  "salvo_em": "2026-11-09T19:39:25.570Z",
+  "segundos": 214,
+  "segundos_relogio": 214,
+  "utilidade": 5
+}

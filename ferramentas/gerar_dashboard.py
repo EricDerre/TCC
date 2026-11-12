@@ -51,6 +51,13 @@ from pathlib import Path
 import painel_textos as pt
 import painel_leituras as pl
 import painel_topicos as tp
+# ! Alteração de IA - Revisar: (11/11/2026) três módulos novos entram na montagem da página: a organização por fase (painel_fases), o glossário
+# (painel_glossario) e a troca do nome do autor e de "você" por "grupo" (painel_grupo).
+# ! Motivo: pedido do Eric em 11/11/2026 (o Roadmap em cartões em linha, uma aba de visão por fase com as abas dos tópicos embaixo, o Início como resumo do
+# projeto, a explicação dos termos e dos métodos onde aparecem e o painel falando do grupo). Cada mudança ficou num módulo próprio, com os seus testes.
+import painel_fases as pf
+import painel_glossario as pglos
+import painel_grupo as pg
 
 RAIZ = Path(__file__).resolve().parent.parent
 EXP = RAIZ / "Programacao" / "AgenteCore" / "experimentos"
@@ -446,10 +453,6 @@ nav .grupo{font:600 11px var(--fb);text-transform:uppercase;letter-spacing:.06em
 .chip.pendente,.chip.aguarda,.chip.nao_iniciada,.chip.outro{background:color-mix(in srgb,var(--ink2) 14%,transparent);color:var(--ink2)}
 .chip.opcional{background:transparent;border:1px dashed var(--linha);color:var(--ink2)}
 .chip.quem,.chip.data{background:transparent;border:1px solid var(--linha);color:var(--ink2);text-transform:none;letter-spacing:0}
-.fases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr));gap:10px;margin:14px 0}
-.fase{background:var(--bg2);border:1px solid var(--linha);border-top:4px solid var(--ink2);border-radius:10px;padding:12px 14px}
-.fase.concluida{border-top-color:var(--bom)}.fase.andamento{border-top-color:var(--meio)}.fase.nao_iniciada{border-top-color:var(--linha)}
-.fase b{display:block;font:600 15px/1.25 var(--fd);margin-bottom:6px}.fase small{display:block;color:var(--ink2);font-size:12px;margin-top:8px}.fase p{font-size:13px;margin:6px 0 0}
 .lista-eric,.lista-corridas{padding-left:22px}.lista-eric li,.lista-corridas li{margin:8px 0}.lista-eric a{color:var(--acento);font-weight:600;text-decoration:none}.lista-eric a:hover{text-decoration:underline}
 .numero{display:inline-block;font:600 12px/1.4 var(--fm);background:var(--acento);color:var(--bg2);border-radius:6px;padding:1px 7px;vertical-align:middle}
 .filtros{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.filtros button{border:1px solid var(--linha);background:var(--bg2);color:var(--ink2);font:500 13px var(--fb);padding:6px 12px;border-radius:999px;cursor:pointer}
@@ -479,6 +482,7 @@ const abas = [...document.querySelectorAll('nav button')];
 function mostrar(id){document.querySelectorAll('main > section').forEach(s => s.hidden = s.id !== id);
   abas.forEach(b => b.setAttribute('aria-selected', b.dataset.alvo === id));
   try{history.replaceState(null,'','#'+id)}catch(e){} window.scrollTo({top:0});
+  if(window.aoMostrar) window.aoMostrar(id);
   desenhar(id);}
 abas.forEach(b => b.addEventListener('click', () => { mostrar(b.dataset.alvo); fecharMenu(); }));
 const botaoMenu = document.querySelector('.topo .menu');
@@ -656,7 +660,6 @@ def figura(figs: dict, num: str) -> str:
 
 # ------------------------------------------------------------------ projeto: início, pendências, roadmap
 
-ESTADO_FASE = {"concluida": "Concluída", "andamento": "Em andamento", "nao_iniciada": "Não iniciada", "outro": "—"}
 ESTADO_CORRIDA = {"feita": "Feita", "rodando": "Rodando", "pendente": "Pendente", "opcional": "Opcional",
                   "aguarda": "Aguarda decisão", "outro": "—"}
 
@@ -664,13 +667,6 @@ ESTADO_CORRIDA = {"feita": "Feita", "rodando": "Rodando", "pendente": "Pendente"
 def _chip(classe: str, texto: str) -> str:
     return f'<span class="chip {classe}">{html.escape(texto)}</span>'
 
-
-def faixa_fases(road: dict, compacta: bool = False) -> str:
-    itens = []
-    for f in road["fases"]:
-        corpo = "" if compacta else f"<small>{pt.inline(f.o_que_e)}</small><p>{pt.inline(f.estado)}</p>"
-        itens.append(f'<div class="fase {f.classe}"><b>{pt.inline(f.nome)}</b>{_chip(f.classe, ESTADO_FASE.get(f.classe, "—"))}{corpo}</div>')
-    return '<div class="fases">' + "".join(itens) + "</div>"
 
 
 def cartoes_corridas(road: dict, numeros: list[str] | None = None, sufixo: str = "") -> str:
@@ -707,66 +703,9 @@ def avisos_corridas(road: dict) -> list[str]:
     return avisos
 
 
-def secao_inicio(dados: dict, pend: list, road: dict) -> str:
-    fichas = [f for b in pend for f in b.fichas]
-    abertas = [f for f in fichas if f.aberta]
-    do_eric = [f for f in abertas if f.depende_do_eric]
-    corr = road["corridas"]
-    n_rod = sum(c.classe == "rodando" for c in corr)
-    n_pend = sum(c.classe in ("pendente", "aguarda") for c in corr)
-    n_feitas = sum(c.classe == "feita" for c in corr)
-    # ! Alteração de IA - Revisar: o cartão passa a mostrar a próxima fase a começar quando nenhuma fase numerada está em
-    # andamento (01/10/2026).
-    # ! Motivo: com a Fase 3-B concluída, a única linha "Em andamento" do roadmap é a Documentação, e o cartão dizia
-    # "Fase atual: Documentação" quando o projeto está na porta da Fase 4.
-    fase = next((f for f in road["fases"] if f.classe == "andamento" and not f.nome.lower().startswith("documenta")), None)
-    rotulo_fase = "Fase atual"
-    if fase is None:
-        fase = next((f for f in road["fases"] if f.classe == "nao_iniciada"), None)
-        rotulo_fase = "Próxima fase"
-    v = dados["vencedor"]
-    m = re.search(r"fim do \*\*(Mês \d+)\*\*", road["posicao"])
-    itens = [(rotulo_fase, fase.nome if fase else "—", f"cronograma do projeto: fim do {m.group(1)}" if m else ""),
-             ("Modelo escolhido", v["modelo"], f'biblioteca L{v["biblioteca_epoca"]} (decisão 52)'),
-             ("Pendências abertas", str(len(abertas)), f"{len(do_eric)} dependem de decisão do Eric"),
-             # ! Alteração de IA - Revisar: o cartão passa a se chamar "Corridas no roadmap" (01/10/2026).
-             # ! Motivo: ele sempre contou todas as linhas da tabela §2 do roadmap, e com as corridas 11 a 13 da
-             # Pré-Fase 4 o nome "Corridas da 3-B" passou a dizer uma coisa e contar outra.
-             ("Corridas no roadmap", f"{n_rod} rodando · {n_pend} pendentes", f"{n_feitas} feitas"),
-             ("Estado registrado em", road["data"] or "—", "roadmap.md e pendencias.md")]
-    kp = '<div class="kpis">' + "".join(f"<div class='kpi'><span>{html.escape(t)}</span><b>{html.escape(b)}</b><small>{html.escape(s)}</small></div>" for t, b, s in itens) + "</div>"
-    lista = "".join(f'<li><a href="#{f.id_html}" data-ir="pendencias|{f.id_html}"><span class="numero">{f.numero}</span> {pt.inline(f.titulo)}</a>'
-                    f'<br><span class="nota">Recomendação: {pt.inline(f.campos.get("Recomendação", "—"))}</span></li>' for f in do_eric)
-    corridas = "".join(f'<li>{_chip(c.classe, ESTADO_CORRIDA.get(c.classe, "—"))} <strong>{pt.inline(c.nome.split(" — ")[0])}</strong> — {pt.inline(c.estado)}</li>' for c in corr)
-    # ! Alteração de IA - Revisar: (06/10/2026) sem ficha aberta, a aba diz isso em vez de mostrar uma lista vazia, e aponta
-    # para as corridas pendentes do roadmap, que são o que resta combinado.
-    # ! Motivo: em 06/10 o Eric fechou as fichas 17 a 20 e a seção ficou com a frase de instrução e nenhum item embaixo.
-    if do_eric:
-        bloco_eric = ('<p>Cada item abre a ficha completa na aba Pendências: o que é, por que importa, opções e recomendação.</p>'
-                      f'<ol class="lista-eric">{lista}</ol>')
-    else:
-        bloco_eric = ('<p>Nenhuma decisão em aberto: todas as fichas estão fechadas (aba Pendências). O que resta combinado está nas corridas abaixo e no '
-                      f'<a href="#roadmap" data-ir="roadmap|">Roadmap</a>: {n_pend} pendente{"" if n_pend == 1 else "s"}, com o comando pronto.</p>')
-    mapa = "".join(
-        f'<div><h3>{html.escape(grupo)}</h3><ul>' + "".join(
-            f'<li><a href="#{sid}" data-ir="{sid}|">{html.escape(nome)}</a> — {html.escape(desc)}</li>' for sid, nome, desc in abas if sid != "inicio") + "</ul></div>"
-        for grupo, abas in tp.NAV)
-    return f'''<section id="inicio">
-<h1>Onde o projeto está</h1>
-<p class="lead">Painel único do TCC, o compilador das análises e dos dados: o estado de cada fase, as decisões que esperam resposta, as corridas que faltam e, em cada aba, um tópico dos testes com os números-chave, os gráficos e a leitura — tudo lido dos arquivos do repositório por script, nada digitado à mão.</p>
-{kp}
-<h2>Mapa do painel</h2>
-<div class="mapa-painel">{mapa}</div>
-<h2>Fases</h2>
-{faixa_fases(road, compacta=True)}
-{pt.md_doc_para_html(road["posicao"])}
-<h2>O que precisa de você</h2>
-{bloco_eric}
-<h2>Corridas da Fase 3-B</h2>
-<ul class="lista-corridas">{corridas}</ul>
-<p class="nota">Comandos, pré-requisitos e o que cada corrida fecha: aba Roadmap.</p>
-</section>'''
-
+# ! Alteração de IA - Revisar: (11/11/2026) saíram daqui `faixa_fases`, `secao_inicio`, `secao_roadmap`, `ESTADO_FASE` e o estilo dos cartões `.fases`/`.fase`.
+# ! Motivo: o Início e o Roadmap passaram a ser montados por painel_fases.py (o resumo do projeto e os cartões das fases em linha, pedidos pelo Eric em
+# 11/11/2026); os cartões antigos eram estreitos e altos, com o texto do estado descendo por várias rolagens. Deixar as funções antigas aqui seria código sem uso.
 
 def secao_pendencias(pend: list) -> str:
     fichas = [f for b in pend for f in b.fichas]
@@ -789,20 +728,6 @@ def secao_pendencias(pend: list) -> str:
 {"".join(blocos_html)}
 </section>'''
 
-
-def secao_roadmap(road: dict) -> str:
-    resto = "".join(f"<h2>{pt.inline(t)}</h2>{pt.md_doc_para_html(c)}" for t, c in road["secoes"])
-    return f'''<section id="roadmap" hidden>
-<h1>Roadmap — onde estamos e o que falta rodar</h1>
-<p class="lead">Estado por fase, corridas pendentes com o comando pronto, a sonda de correção, o esqueleto das Fases 4 e 5 e a tabela para encaixar pontos novos. Fonte: <code>roadmap.md</code> de {html.escape(road["data"])}.</p>
-<h2>1. Onde estamos, por fase</h2>
-{faixa_fases(road)}
-{pt.md_doc_para_html(road["posicao"])}
-<h2>2. O que precisamos rodar (máquina), em ordem</h2>
-{cartoes_corridas(road)}
-{pt.md_doc_para_html(road["fora_da_maquina"])}
-{resto}
-</section>'''
 
 
 def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topicos_html: str) -> str:
@@ -840,18 +765,22 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
                 "o ganho não acompanha a biblioteca quando muda quem a lê, e a cruzada não separa se ele é do par ou do leitor.")
     lim2, lim6, lim7 = html.escape(lim2), html.escape(lim6), html.escape(lim7)
     dados_json = json.dumps(dados, ensure_ascii=False, separators=(",", ":"))
+    # ! Alteração de IA - Revisar: (11/11/2026) a aba "Fases 2-A e 2-B" virou duas (`fase2a` e `fase2b`), cada uma com o seu gráfico; a navegação, o Início, o
+    # Roadmap, as abas de visão das fases e a do glossário passam a vir de painel_fases e painel_glossario, e o script deles entra antes do script base.
+    # ! Motivo: cada fase ganhou o seu grupo na navegação (pedido do Eric em 11/11/2026), e uma aba só para as duas fases ficaria fora de ambos; o script das
+    # fases precisa existir antes de `mostrar` rodar pela primeira vez, senão a fase da aba inicial não abre na lateral.
     mapa_desenho = {"visao": ["linhaCurvas", "barrasFases"], "fase3": ["documentacao", "rejeicoes", "recuperacao", "custo", "revisao"],
-                    "decisao": ["pareto", "bootstrap"], "fases2": ["f2b", "f2a"]} | tp.DESENHAR_TOPICOS
+                    "decisao": ["pareto", "bootstrap"], "fase2a": ["f2a"], "fase2b": ["f2b"]} | tp.DESENHAR_TOPICOS
     seletores = {"sel-conj": "linhaCurvas", "sel-met": "linhaCurvas", "sel-fases": "barrasFases", "sel-boot": "bootstrap", "sel-mod-l": "modGraficos", "sel-cmp-conj": "cmpEtapas", "sel-cmp-met": "cmpEtapas"} | tp.SELETORES_TOPICOS
-    js = (JS.replace("__JS_TOPICOS__", tp.JS_TOPICOS).replace("__MAPA_DESENHO__", json.dumps(mapa_desenho))
-          .replace("__SELETORES__", json.dumps(seletores)))
-    nav = "".join(f'<span class="grupo">{html.escape(grupo)}</span>' + "".join(f'<button data-alvo="{sid}">{html.escape(nome)}</button>' for sid, nome, _ in abas)
-                  for grupo, abas in tp.NAV)
+    js = pf.JS + (JS.replace("__JS_TOPICOS__", tp.JS_TOPICOS).replace("__MAPA_DESENHO__", json.dumps(mapa_desenho))
+                  .replace("__SELETORES__", json.dumps(seletores)))
+    nav = pf.html_navegacao(tp.NAV, road)
+    referencias_md = (MEMORIAL / "2-pesquisa-e-literatura" / "referencias.md").read_text(encoding="utf-8")
     return f"""<!-- ! Alteração de IA - Revisar: painel do projeto, GERADO por ferramentas/gerar_dashboard.py a partir de pendencias.md, roadmap.md e dos registros oficiais dos testes (não editar à mão; --check acusa diferença).
      ! Motivo: o Eric pediu as pendências e o roadmap em forma visual e um único painel do projeto, acessível de qualquer lugar; todo valor sai dos mesmos arquivos do Memorial. -->
 <title>Painel do Agente de QA</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>{CSS}</style>
+<style>{CSS}{pf.CSS}{pglos.CSS}</style>
 <div class="pagina">
 <aside class="lateral" id="lateral">
 <div class="marca">Painel do Agente de QA<small>TCC · agente de QA E2E autônomo com self-healing · estado em {html.escape(road["data"])} · registros dos testes de {html.escape(dados["meta"]["resumo_gerado_em"][:10])}</small></div>
@@ -860,9 +789,11 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <header class="topo"><button class="menu" aria-controls="lateral" aria-expanded="false">Seções</button><span class="marca-curta">Painel do Agente de QA</span></header>
 <div class="fundo"></div>
 <main>
-{secao_inicio(dados, pend, road)}
+{pf.secao_inicio(dados, pend, road, tp.NAV)}
 {secao_pendencias(pend)}
-{secao_roadmap(road)}
+{pf.secao_roadmap(road, tp.NAV, cartoes_corridas)}
+{pglos.secao_glossario(referencias_md)}
+{pf.secoes_das_fases(tp.NAV, road)}
 <section id="visao" hidden>
 <h1>O que os testes decidiram</h1>
 <p class="lead">Quatro modelos locais diagnosticaram 90 falhas de integração do sistema-cobaia em quatro versões da biblioteca de conhecimento (a original L0 e as três que cada modelo escreveu, L1–L3). Pela regra fixada antes da bateria, o padrão do agente passa a ser <strong>{html.escape(v["modelo"])}</strong> com a biblioteca no estado <strong>L{v["biblioteca_epoca"]}</strong>.</p>
@@ -970,17 +901,22 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 </ul>
 </section>
 
-<section id="fases2" hidden>
-<h1>Fases 2-A e 2-B</h1>
-<p class="lead">A Fase 2-A mediu os modelos sem documentação, com estratégias de prompt diferentes, numa máquina de desenvolvimento. A Fase 2-B, na máquina-alvo, mediu o efeito da biblioteca escrita à mão em seis condições: sem documentação (A0), biblioteca inteira no prompt (A1), recuperação por busca com três verbetes (A2), verbete de ouro forçado (A3, o teto), verbete distrator (A4) e verbete errado (A5, adversarial).</p>
-<h2>Fase 2-B — acerto por condição</h2>
-<div class="chart alto"><canvas id="g-f2b"></canvas></div>
-<p>A recuperação (A2) foi o modo adotado: a biblioteca inteira no prompt (A1) custa mais e não rende mais. A condição A5 mede a adesão cega a documentação errada — o risco que a validação em código da Fase 3 existe para conter.</p>
-{figura(figs, "07")}{figura(figs, "08")}{figura(figs, "11")}
-<details><summary>Mais figuras da Fase 2-B (prefill × acerto; quantização e trocas de rótulo)</summary>{figura(figs, "09")}{figura(figs, "10")}</details>
-<h2>Fase 2-A — acerto por estratégia de prompt</h2>
+<section id="fase2a" hidden>
+<h1>Fase 2-A: prompts sem documentação</h1>
+<p class="lead">A Fase 2-A mediu os modelos sem documentação, com estratégias de prompt diferentes, numa máquina de desenvolvimento.</p>
+<h2>Acerto por estratégia de prompt</h2>
 <div class="chart"><canvas id="g-f2a"></canvas></div>
 <details><summary>Figuras da Fase 2-A</summary>{figura(figs, "01")}{figura(figs, "02")}{figura(figs, "03")}{figura(figs, "04")}{figura(figs, "05")}{figura(figs, "06")}</details>
+</section>
+
+<section id="fase2b" hidden>
+<h1>Fase 2-B: a biblioteca em seis condições</h1>
+<p class="lead">A Fase 2-B, na máquina-alvo, mediu o efeito da biblioteca escrita à mão em seis condições: sem documentação (A0), biblioteca inteira no prompt (A1), recuperação por busca com três verbetes (A2), verbete de ouro forçado (A3, o teto), verbete distrator (A4) e verbete errado (A5, adversarial).</p>
+<h2>Acerto por condição</h2>
+<div class="chart alto"><canvas id="g-f2b"></canvas></div>
+<p>A recuperação (A2) foi o modo adotado: a biblioteca inteira no prompt (A1) custa mais e não rende mais. A condição A5 mede a adesão cega a documentação errada, o risco que a validação em código da Fase 3 existe para conter.</p>
+{figura(figs, "07")}{figura(figs, "08")}{figura(figs, "11")}
+<details><summary>Mais figuras da Fase 2-B (prefill × acerto; quantização e trocas de rótulo)</summary>{figura(figs, "09")}{figura(figs, "10")}</details>
 </section>
 
 <section id="comparacao" hidden>
@@ -1035,7 +971,21 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 <script>window.DADOS = {dados_json};</script>
 <script>{js}</script>
+{pglos.script()}
 """
+
+
+# ! Alteração de IA - Revisar: (11/11/2026) função nova com a montagem inteira da página, na ordem: as abas (`pagina`), "Como ler" e "Mais informações"
+# (painel_leituras), a faixa de sub-abas no alto de cada aba de fase (painel_fases), a marcação dos termos com a lista do fim de cada aba (painel_glossario) e,
+# por último, a troca do nome do autor e de "você" por "grupo" (painel_grupo).
+# ! Motivo: `main` aplicava só painel_leituras. A ordem importa: a faixa entra depois de painel_leituras, que procura o primeiro parágrafo de cada aba; o
+# glossário marca o texto já no lugar em que o leitor vai ver; e a troca por "grupo" vem no fim para alcançar também o que os passos anteriores escreveram.
+def montar(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topicos_html: str) -> str:
+    referencias_md = (MEMORIAL / "2-pesquisa-e-literatura" / "referencias.md").read_text(encoding="utf-8")
+    html_ = pl.aplicar(pagina(dados, blocos, figs, pend, road, topicos_html))
+    html_ = pf.com_trilho(html_, tp.NAV, road)
+    html_ = pglos.anotar(html_, referencias_md)
+    return pg.para_o_grupo(html_)
 
 
 # ! Alteração de IA - Revisar: leitura dos derivados da Pré-Fase 4 (01/10/2026) para a aba "Modelos grandes pelo disco".
@@ -1122,6 +1072,18 @@ def contexto_fase4() -> dict:
             "revisao_trilha_preenchida": bool(linhas_rev) and not any("| (em branco) |" in l for l in linhas_rev),
             "calibracao": le("calibracao.json"), "limiares": le("limiares.json"), "tela": le("tela.json"), "tela_v2": le("tela_v2.json"),
             "cura": le("cura.json"), "biblioteca": le("biblioteca.json"), "cenarios": le("cenarios.json"), "trilha": le("trilha.json"), "revisao_trilha": le("leitura_revisao_trilha.json"),
+            # ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a leitura da sessão com revisor humano dos relatórios v3 (leitura_revisao_v3.json), lida por painel_topicos.secao_revisao_v3.
+            # ! Motivo: a ficha 40 (opção b) fechou com a sessão na página, e pela regra do painel a análise vira uma aba lida do JSON gravado.
+            "revisao_v3": le("leitura_revisao_v3.json"),
+            # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) a prévia sem modelo e a leitura da corrida 25, lidas por painel_topicos.secao_sem_notas.
+            # ! Motivo: o experimento da ficha 63 (opção b) vira uma aba; a leitura só existe depois de o Eric rodar a corrida, e até lá a aba mostra a prévia.
+            "sem_notas_previa": le("sem_notas_previa.json"), "sem_notas": le("sem_notas.json"),
+            # ! Alteração de IA - Revisar: (10/11/2026, decisão 120) a prévia sem modelo e a leitura da corrida 26, lidas por painel_topicos.secao_segundo_passe.
+            # ! Motivo: o experimento da ficha 66 (opção b) vira uma aba; a leitura só existe depois de o Eric rodar a corrida, e até lá a aba mostra a prévia.
+            "segundo_passe_previa": le("segundo_passe_previa.json"), "segundo_passe": le("segundo_passe.json"),
+            # ! Alteração de IA - Revisar: (10/11/2026, decisão 121) a medida M1 (portoes_m1.json) e, da corrida 27, a prévia sem modelo e a leitura, lidas por painel_topicos.secao_analista.
+            # ! Motivo: as duas medidas da proposta do analista de documentação (ficha 67, opção b) viram uma aba; a leitura da corrida 27 só existe depois de o Eric rodar.
+            "portoes_m1": le("portoes_m1.json"), "analista_previa": le("analista_previa.json"), "analista": le("analista.json"),
             # ! Alteração de IA - Revisar: (04/11/2026) a leitura da corrida 21b (`cenarios_v2.json`), lida por painel_topicos.secao_cenarios.
             # ! Motivo: a repetição do ensaio com a correção da cura é a leitura vigente, e a aba mostra as duas corridas.
             "cenarios_v2": le("cenarios_v2.json"),
@@ -1140,6 +1102,12 @@ def contexto_fase4() -> dict:
             # ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) as leituras das corridas 18d, 21d e 18e e a conferência do teto nas listas do caso ao vivo.
             # ! Motivo: a 18d e a 21d passaram a valer no lugar da 18c e da 21c, e os inéditos são a conferência em casos que a busca nunca viu.
             "tela_v4": le("tela_v4.json"), "cenarios_v4": le("cenarios_v4.json"), "tela_ineditos": le("tela_ineditos.json"), "teto_prompt": le("teto_prompt_tela.json"),
+            # ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) a leitura dos filtros de texto (`texto.json`), lida por painel_topicos.secao_texto.
+            # ! Motivo: a leitura antes e depois dos textos que chegam ao analista é uma análise nova e, pela regra do painel, vira uma aba lida do JSON.
+            "texto": le("texto.json"),
+            # ! Alteração de IA - Revisar: (10/11/2026) as respostas e os consertos da curadoria das leituras, lidos por painel_topicos.secao_texto.
+            # ! Motivo: a regra do painel pede que toda curadoria apareça numa aba lida dos arquivos (decisão 115).
+            "curadoria_leituras": {"respostas": le("curadoria_leituras/respostas.json"), "consertos": le("curadoria_leituras/consertos.json")},
             # ! Alteração de IA - Revisar: (05/11/2026, P8) o relatório da fase, de onde a aba "Fechamento da fase" lê a tabela das regras e as limitações.
             # ! Motivo: a aba do fechamento mostra o que o relatório diz, sem repetir número nenhum no código do painel.
             "relatorio_f4": ((MEMORIAL / "3-resultados-e-analises" / "fase-4-relatorio.md").read_text(encoding="utf-8")
@@ -1154,8 +1122,51 @@ def contexto_pos_fase4() -> dict:
     plano = RAIZ / "claude-memoria" / "plano-aprovado-pos-fase-4.md"
     if not plano.exists():  # enquanto não aprovado, o plano vive como rascunho com o nome sem "aprovado"
         plano = RAIZ / "claude-memoria" / "plano-pos-fase-4.md"
+    # ! Alteração de IA - Revisar: (10/11/2026, decisão 118) o contexto ganhou os três arquivos da aba "Fluxo do agente": o resumo e as medidas da rodada 7 da pesquisa e a proposta de desenho.
+    # ! Motivo: a aba (painel_topicos.secao_fluxo) lê os JSON gerados por integrar_pesquisa_fluxo_do_agente.py e medidas_fluxo_do_agente.py; numa máquina sem eles, mostra o estado vazio.
+    fluxo = MEMORIAL / "5-metodo-e-ferramental" / "dados" / "pesquisa-fluxo-do-agente"
+    proposta = MEMORIAL / "5-metodo-e-ferramental" / "proposta-analista-de-documentacao.md"
+    resumo, medidas = fluxo / "resumo_para_o_painel.json", fluxo / "medidas_do_repositorio.json"
     return {"levantamento_pos4": lev.read_text(encoding="utf-8") if lev.exists() else None,
-            "plano_pos4": plano.read_text(encoding="utf-8") if plano.exists() else None}
+            "plano_pos4": plano.read_text(encoding="utf-8") if plano.exists() else None,
+            "fluxo_resumo": ler_json(resumo) if resumo.exists() else None, "fluxo_medidas": ler_json(medidas) if medidas.exists() else None,
+            "fluxo_proposta": proposta.read_text(encoding="utf-8") if proposta.exists() else None}
+
+
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) as árvores de decisão das três corridas vigentes, lidas por painel_topicos.secao_arvore:
+# o `arvores/INDICE.json` de cada corrida (os números da aba) e o JSON de cada trilha (o explorador). As corridas vêm de `metadados.corrida` das
+# três leituras vigentes, como nos testes da Pós-Fase 4.
+# ! Motivo: a árvore de decisão é uma análise nova da Pós-Fase 4 e, pela regra do painel, vira uma aba lida dos JSON gravados por script; numa
+# máquina sem as pastas `arvores/`, a aba mostra o estado vazio em vez de o painel inteiro falhar. O teste das abas usa esta mesma função.
+def contexto_arvores() -> dict:
+    pasta = EXP / "resultados_alvo"
+    corridas = []
+    for nome in ("tela_v4.json", "cenarios_v4.json", "ineditos.json"):
+        arq = pasta / "fase4" / nome
+        if not arq.exists():
+            continue
+        corrida = (ler_json(arq).get("metadados") or {}).get("corrida")
+        indice = pasta / corrida / "arvores" / "INDICE.json" if corrida else None
+        if indice is None or not indice.exists():
+            continue
+        dado = ler_json(indice)
+        casos = {a["nome"]: ler_json(indice.parent / a["arquivos"]["json"]) for a in dado.get("arvores", []) if (indice.parent / a["arquivos"]["json"]).exists()}
+        corridas.append({"corrida": corrida, "indice": dado, "casos": casos})
+    return {"arvores": corridas or None}
+
+
+# ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) os derivados da barra de progresso e do protótipo do Git, lidos por painel_topicos.secao_progresso:
+# taxas_progresso.json, erro_progresso.json, impacto_git.json e, quando a fumaça real tiver rodado, fumaca_progresso.json, todos em resultados_alvo/fase4/.
+# ! Motivo: a aba do Q4 é lida dos JSON gravados por script; sem os arquivos, a aba mostra o estado vazio em vez de o painel inteiro falhar. O teste das abas usa esta função.
+def contexto_progresso() -> dict:
+    pasta = EXP / "resultados_alvo" / "fase4"
+
+    def ler(nome: str):
+        arq = pasta / nome
+        return ler_json(arq) if arq.exists() else None
+
+    return {"taxas_progresso": ler("taxas_progresso.json"), "erro_progresso": ler("erro_progresso.json"), "impacto_git": ler("impacto_git.json"),
+            "fumaca_progresso": ler("fumaca_progresso.json")}
 
 
 def main() -> None:
@@ -1196,11 +1207,15 @@ def main() -> None:
         **contexto_pre_fase4(),
         **contexto_fase4(),
         **contexto_pos_fase4(),
+        **contexto_arvores(),
+        **contexto_progresso(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     # ! Alteração de IA - Revisar: (05/11/2026) a página montada passa por painel_leituras.aplicar: "Como ler" em cada gráfico e dados em "Mais informações".
     # ! Motivo: pedido do Eric em 05/11/2026; aplicar aqui vale para todas as abas, e o teste acusa gráfico que chegue sem explicação.
-    html_final = pl.aplicar(pagina(dados, blocos, figs, pend, road, topicos_html))
+    # ! Alteração de IA - Revisar: (11/11/2026) a página gravada passa a ser a de `montar`, que aplica também a faixa das fases, o glossário e a troca por "grupo".
+    # ! Motivo: pedido do Eric em 11/11/2026; a montagem inteira fica numa função só, que os testes também usam.
+    html_final = montar(dados, blocos, figs, pend, road, topicos_html)
     saida = Path(args.saida)
     if args.check:
         atual = saida.read_text(encoding="utf-8") if saida.exists() else ""
