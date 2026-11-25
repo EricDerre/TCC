@@ -53,7 +53,7 @@ def teste_tempo_da_cura_e_o_unico_sem_modelo():
 
 def teste_todos_os_nomes_tem_texto_sem_sigla_de_codigo():
     """O nome que aparece na figura é o texto simples, não o identificador do código."""
-    for nome in ("tempo-por-cenario",):
+    for nome in ("tempo-por-cenario", "agente-e-pessoas"):
         for linha in FIGS[nome]["linhas"]:
             assert "-" not in linha[0] and "_" not in linha[0], linha[0]
     assert all("_" not in l[0] for l in FIGS["sinais-da-trilha"]["linhas"])
@@ -90,6 +90,29 @@ def teste_figura_dos_ineditos_da_corrida_24():
     assert sum(l[2] for l in f["linhas"]) == d["resumo"]["acertos"] and sum(l[3] for l in f["linhas"]) == d["resumo"]["casos"] - d["resumo"]["acertos"], f["linhas"]
     assert f["resumo"]["casos"] == d["resumo"]["casos"] and f["referencia"]["acertos"] == d["referencia"]["acertos"]
     assert all("_" not in l[0] for l in f["linhas"]), "o nome na figura é o texto simples"
+
+
+# ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) teste novo da figura da medição de valor: o tempo de reparo do agente e o das pessoas, cenário a
+# cenário, com o menor e o maior tempo de cada lado, e o Task Success de cada lado na tabela de dados.
+# ! Motivo: é o resultado central do TCC e a descoberta nova do README. A figura só pode trazer o que a leitura `avaliar_fase5.py --comparar` gravou em
+# `fase5/medicao.json`: se uma coluna saísse de outro lugar, ou a média ficasse fora da faixa entre o menor e o maior tempo, o gráfico do resultado principal
+# sairia publicado errado sem ninguém notar. O Task Success vai só para a tabela, porque o veredito dele depende de uma sessão (a ressalva está no README).
+def teste_figura_do_agente_contra_as_pessoas_le_a_medicao_da_fase_5():
+    m = g._j("fase5/medicao.json")
+    f = FIGS["agente-e-pessoas"]
+    assert "fase5/medicao.json" in f["fonte"] and "28b" in f["fonte"], f["fonte"]
+    assert len(f["linhas"]) == len(m["tempo"]["por_cenario"]) == len(f["cab"]) - 1, (len(f["linhas"]), f["cab"])
+    sucesso = {x["cenario"]: x for x in m["task_success"]["por_cenario"]}
+    for linha, x in zip(f["linhas"], m["tempo"]["por_cenario"]):
+        assert linha[:2] == [g.NOME_CENARIO[x["cenario"]], x["tipo"]], linha
+        assert linha[2:9] == [x["agente_media_s"], x["agente_min_s"], x["agente_max_s"], x["pessoas_media_s"], x["pessoas_min_s"], x["pessoas_max_s"], x["diferenca_s"]], linha
+        assert linha[3] <= linha[2] <= linha[4] and linha[6] <= linha[5] <= linha[7], linha
+        s = sucesso[x["cenario"]]
+        assert linha[9:] == [f'{s["agente_sucessos"]} de {s["agente_n"]}', f'{s["pessoas_sucessos"]} de {s["pessoas_n"]}'], linha
+    geral = m["tempo"]["geral"]
+    assert f["geral"] == {"agente_s": m["lados"]["agente"]["geral"]["tempo_media_s"], "pessoas_s": m["lados"]["pessoas"]["geral"]["tempo_media_s"],
+                          "diferenca_media_s": geral["diferenca_media_s"], "agente_mais_rapido": geral["sinais"]["agente"], "pessoas_mais_rapidas": geral["sinais"]["pessoas"],
+                          "empates": geral["sinais"]["empates"], "cenarios": len(m["tempo"]["por_cenario"])}, f["geral"]
 
 
 def teste_titulos_sem_travessao_nem_seta():

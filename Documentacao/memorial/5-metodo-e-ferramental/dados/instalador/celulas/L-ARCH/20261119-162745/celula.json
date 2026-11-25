@@ -1,0 +1,29 @@
+{
+    "tag_ia":  {
+                   "alteracao":  "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_wsl.ps1: o que a celula rodou e com que codigo de saida.",
+                   "motivo":  "! Motivo: o plano do instalador unico (decisao 143) pede a evidencia de cada celula em arquivo, mesmo quando o instalador para antes de a prova rodar."
+               },
+    "id":  "L-ARCH",
+    "modo":  "como-esta",
+    "ate":  "N1",
+    "modelo_pequeno":  "qwen2.5:0.5b",
+    "sondas":  true,
+    "sem_systemd":  false,
+    "imagem":  "archlinux-2026.11.01.182233.wsl",
+    "imagem_sha256":  "f8b934f77d0afcbe6e3730d6e4f378e8ee3c90d51479395004e1d92fe3b3c9b1",
+    "pacote_sha256":  "c3db2ea3e998dda9aa57c1b2c6526dd2ea7a6e4484ca77bd649e5e17cd415a36",
+    "wsl":  [
+                "Versão do WSL: 2.5.10.0",
+                "Versão do kernel: 6.6.87.2-1"
+            ],
+    "inicio":  "2026-11-19T16:27:46",
+    "fim":  "2026-11-19T16:28:02",
+    "saidas":  {
+                   "abrir_pacote":  "0",
+                   "conferir":  "97",
+                   "install_bash":  "1",
+                   "install_direto":  "126",
+                   "preparo":  "0",
+                   "sondas":  "0"
+               }
+}

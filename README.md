@@ -12,7 +12,9 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
 
 <!-- ! Alteração de IA - Revisar: (11/11/2026) a linha de estado passa a dizer a Fase 4 concluída e a Pós-Fase 4 em andamento, como a tabela "Onde o projeto está".
      ! Motivo: a linha ainda dizia, com data de 05/11/2026, que a Fase 4 estava em andamento com uma corrida por fazer; a fase fechou em 06/11/2026, e a tabela logo abaixo já dizia isso. -->
-> **Em 11/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, está concluída. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento, com três corridas por rodar antes da Fase 5.
+<!-- ! Alteração de IA - Revisar: (16/11/2026) a linha de estado passa a dizer que as três corridas previstas antes da Fase 5 rodaram e que a revisão às cegas das propostas de uma delas foi feita.
+     ! Motivo: a linha dizia "com três corridas por rodar"; as corridas 25, 26 e 27 rodaram na noite de 11 para 12/11/2026, e a revisão às cegas foi gravada em 16/11/2026 (roadmap, §2.23 a §2.25); nenhuma muda o agente. -->
+> **Em 16/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, está concluída. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento: as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente; a revisão às cegas das propostas de uma delas, feita em 16/11/2026, também ficou dentro do ruído.
 
 | Quero... | Vá para |
 |---|---|
@@ -61,7 +63,17 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 <!-- ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) a linha da Pós-Fase 4 diz que o Q5 também está feito.
      ! Motivo: o pacote Q5 fez a medida com revisor humano dos relatórios; sem a frase, a tabela pararia no Q4. -->
 | Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Em andamento (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026) |
-| 5 | Ele resolve mais rápido que uma pessoa? | Não iniciada |
+<!-- ! Alteração de IA - Revisar: (16/11/2026) a linha da Fase 5 passa de "Não iniciada" a "Em andamento", com o que já existe: o plano aprovado; nenhuma medida feita ainda.
+     ! Motivo: o plano da Fase 5 foi aprovado em 16/11/2026 (decisão 133) e o roadmap passou a dizer "Em andamento"; o painel mostra o estado curto desta tabela ao lado da etiqueta do roadmap, e a visão da fase dizia "Em andamento" e "Não iniciada" ao mesmo tempo. -->
+<!-- ! Alteração de IA - Revisar: (18/11/2026, corrida 28) a linha da Fase 5 diz que a noite do agente rodou e vai ser refeita, e que falta a medida com as pessoas.
+     ! Motivo: a corrida 28 (a noite do agente) rodou em 18/11/2026 com o aplicativo Claude aberto, e o Eric decidiu refazê-la (decisão 145; roadmap §2.26); a linha dizia só que nenhuma medida tinha sido feita, e o painel mostra este estado curto na visão da Fase 5, ao lado da célula do roadmap que já fala da corrida. -->
+<!-- ! Alteração de IA - Revisar: (19/11/2026, corrida 28b) a linha da Fase 5 diz que o agente foi medido e que falta a medida com as pessoas.
+     ! Motivo: a noite do agente foi refeita em 18/11/2026 com o aplicativo Claude e o VS Code fechados e a frio (corrida 28b, decisões 145 e 146) e está lida no roadmap §2.27; a linha dizia que a noite ia ser refeita, e o painel mostra este estado curto na visão da Fase 5. -->
+<!-- ! Alteração de IA - Revisar: (24/11/2026, comparação da Fase 5) a linha da Fase 5 diz que as duas medidas estão feitas e o que a comparação deu no tempo.
+     ! Motivo: as sessões das pessoas chegaram em 24/11/2026 e a comparação foi lida no mesmo dia (roadmap §5); a linha dizia que a medida com as pessoas não tinha sido feita. O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. A fase segue em andamento porque faltam a descoberta com a figura, mais abaixo neste arquivo, e o texto do TCC. -->
+<!-- ! Alteração de IA - Revisar: (24/11/2026, à noite) a linha da Fase 5 deixou de dizer que falta a figura.
+     ! Motivo: a descoberta da fase entrou em "O que já descobrimos", com a figura `agente-e-pessoas.png`; da fase falta o texto do documento do TCC. -->
+| 5 | Ele resolve mais rápido que uma pessoa? | Em andamento (medido em 18 e 24/11/2026: o agente reparou mais rápido que as pessoas nos dez cenários, 66,3 s contra 219,7 s na média; falta o texto do TCC) |
 
 **O que falta antes da Fase 5:**
 
@@ -84,7 +96,7 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 
 Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados das figuras](Documentacao/figuras/dados-das-figuras.md), e as condições de cada rodada, em [Detalhes técnicos](DETALHES-TECNICOS.md).
 
-<!-- fonte dos números desta seção: Documentacao/figuras/dados-das-figuras.md, gerado de resultados_alvo/ por gerar_figuras_documentos.py; adesão ao verbete errado: fase3/comparacao_fases.json, adesao_cega_2B_A5_pct; margem do ensaio: fase4/cenarios_v4.json, geral; verbete certo no contexto: fase4/tela_v4.json e tela_ineditos.json, verbete_certo; a regra da tela: campos b e c de tela_v4.json e tela_ineditos.json; a corrida 24: fase4/ineditos.json; erros pegos pelo selo baixo: fase4/calibracao.json, limiares; lote nos inéditos: fase4/biblioteca.json, regra_r5 e relatório da Fase 4, seção 7. -->
+<!-- fonte dos números desta seção: Documentacao/figuras/dados-das-figuras.md, gerado de resultados_alvo/ por gerar_figuras_documentos.py; adesão ao verbete errado: fase3/comparacao_fases.json, adesao_cega_2B_A5_pct; margem do ensaio: fase4/cenarios_v4.json, geral; verbete certo no contexto: fase4/tela_v4.json e tela_ineditos.json, verbete_certo; a regra da tela: campos b e c de tela_v4.json e tela_ineditos.json; a corrida 24: fase4/ineditos.json; erros pegos pelo selo baixo: fase4/calibracao.json, limiares; lote nos inéditos: fase4/biblioteca.json, regra_r5 e relatório da Fase 4, seção 7; a medição da Fase 5: fase5/medicao.json (lados, tempo.geral e task_success) e fase5/manual.json (por_integrante). -->
 
 ### A documentação faz diferença?
 
@@ -156,12 +168,25 @@ A regra aceita que a tela perca no máximo 3 casos para o caso escrito. Ela perd
 
 **O que isso mostra:** das 92 propostas do modelo, 19 chegaram ao lote, e 11 ficaram na biblioteca depois da revisão. Esse lote não mudou nenhum acerto nos 36 casos inéditos. O que encurtou a distância da tela foi revisar a montagem do caso e a busca, não a biblioteca.
 
+<!-- ! Alteração de IA - Revisar: (24/11/2026) descoberta nova, a da Fase 5: o tempo de reparo do agente contra o das pessoas, com a figura `agente-e-pessoas.png`, o "Como ler" e o texto. Na lista do que não dá para afirmar, logo abaixo, saíram as duas frases que a medida respondeu (que não havia medida com pessoas; que os 10 de 10 do ensaio eram de uma repetição só) e entraram os limites da medida nova.
+     ! Motivo: a corrida 28b do agente e as três sessões das pessoas foram lidas em 24/11/2026 pelas regras fixadas antes. O Eric decidiu (ficha 91, decisão 151) que o resultado central é o do tempo e que o do Task Success é declarado com a ressalva de que depende da sessão de um integrante só: por isso o Task Success não tem figura e vem num parágrafo à parte, com a ressalva. Os números foram copiados por script de `resultados_alvo/fase5/medicao.json` e `manual.json`; o dado cru está em `Documentacao/figuras/dados-das-figuras.md`. -->
+### O agente repara mais rápido que uma pessoa?
+
+![Barras por cenário de falha, com o tempo do agente e o das pessoas e um traço do menor ao maior tempo de cada lado](Documentacao/figuras/agente-e-pessoas.png)
+
+**Como ler:** cada cenário de falha tem duas barras. A azul é o tempo médio do agente, em cinco repetições. A laranja é o tempo médio de três pessoas do grupo, cada uma resolvendo o cenário uma vez. O traço preto vai do menor ao maior tempo medido de cada lado. Barra mais curta é reparo mais rápido. Nos 6 cenários de cima, de falha de contrato, o resultado é o diagnóstico conferido; nos 4 de baixo, de localizador quebrado, é o teste passando de novo.
+
+**O que isso mostra:** o agente foi mais rápido nos 10 cenários. Na média, levou 66,3 segundos, e as pessoas, 219,7: cerca de um terço do tempo. É o resultado central do trabalho, e passa na regra escrita antes de medir: a diferença média por cenário foi de 153,4 segundos, com margem de 109,0 a 196,1, e, se os dois lados fossem iguais, dez cenários na mesma direção sairiam por acaso 2 vezes em mil.
+
+O agente também chegou ao resultado em mais cenários: 49 de 50 execuções, contra 14 de 30 tentativas das pessoas. Esse segundo resultado tem uma ressalva: ele depende da sessão de um integrante só, que não corrigiu nenhum cenário (os outros dois corrigiram 5 e 9 de 10). Sem essa sessão, numa conta feita depois de ver os números, a vantagem do agente em chegar ao resultado deixa de se separar do acaso, e a do tempo continua. Por isso o trabalho afirma o resultado do tempo e declara a ressalva no outro (decisão 151).
+
 <!-- ! Alteração de IA - Revisar: (05/11/2026) a medida com revisor humano passou a em aberto (decisão 95), e a lista do que falta antes da Fase 5 ganhou a Pós-Fase 4 (decisão 94).
      ! Motivo: o Eric pediu "em aberto" nesta data, porque a revisão será feita depois de as respostas serem normalizadas; o texto dizia só que ela não foi feita. -->
 ### O que ainda não dá para afirmar
 
-- **Que o agente é mais rápido que uma pessoa.** Ainda não há a medida com pessoas; ela é a Fase 5.
-- **Que os 10 de 10 se repetem.** Foi uma repetição por cenário, e com dez execuções a margem de incerteza vai de 72% a 100%.
+- **Que o agente é mais rápido que um analista de testes.** As três pessoas da medida são estudantes do grupo, e não analistas de fora; leram o material de cada cenário numa página, em vez de investigar o site no ar; e os dez cenários são falhas ligadas de propósito. O tempo do agente é o desta máquina, só com CPU.
+- **Que o agente resolve mais cenários que uma pessoa.** A medida deu essa vantagem, mas ela depende da sessão de um integrante que não corrigiu nenhum cenário; sem ela, numa conta feita depois de ver os números, a diferença não se separa do acaso (decisão 151).
+- **Que o agente chega sempre ao resultado.** Nas cinco repetições dos dez cenários, 1 das 50 execuções não chegou: foi no cenário da resposta cortada no meio.
 - **Que o conserto de localizador funciona em qualquer quebra.** As 160 quebras foram armadas de propósito, com o elemento certo ainda na página.
 - **Que o modelo lê melhor da tela do que de um caso escrito.** A tela passou à frente nas duas medidas, mas o caso da tela leva uma medida contra a tela normal que o caso escrito não tem, e a diferença não se separa do acaso nesse número de casos. A regra que compara os dois lados fechou sem folga: a tela perde 3 casos, e o limite é 3. Os sinais novos da busca foram escritos olhando os 37 casos, e a conferência são 25 casos inéditos.
 - **Que um exemplar resolvido ou os rótulos em palavras ajudam o modelo.** Testamos os dois nos 90 casos: trocam a resposta em alguns casos, para os dois lados, e o saldo não se separa do acaso (decisão 91).

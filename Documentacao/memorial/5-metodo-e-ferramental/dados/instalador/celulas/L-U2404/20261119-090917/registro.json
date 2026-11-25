@@ -1,0 +1,59 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "L-U2404",
+ "gravado_em": "2026-11-19T09:24:39",
+ "sistema": {
+  "sistema": "Linux",
+  "familia": "apt",
+  "id": "ubuntu",
+  "versao": "24.04",
+  "nome": "Ubuntu 24.04.5 LTS",
+  "suporte": "suportado"
+ },
+ "maquina": {
+  "plataforma": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "arquitetura": "x86_64",
+  "python": "3.12.3",
+  "nucleos": 12,
+  "memoria_total_gb": 3.8,
+  "memoria_livre_gb": 3.3,
+  "administrador": false,
+  "sudo_sem_senha": true
+ },
+ "niveis": {
+  "N1": {
+   "estado": "falhou",
+   "detalhe": "cliente do MariaDB não encontrado (find_mysql_cli)",
+   "segundos": 0.0
+  },
+  "N2": {
+   "estado": "nao_rodou",
+   "detalhe": "depende do N1, que não passou",
+   "segundos": null
+  },
+  "N3": {
+   "estado": "falhou",
+   "detalhe": "o executável do Ollama não foi encontrado (find_ollama)",
+   "segundos": 0.0
+  },
+  "N4": {
+   "estado": "nao_rodou",
+   "detalhe": "",
+   "segundos": null
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.12.3",
+   "testada": "3.14.7",
+   "estado": "na_faixa",
+   "impede": false
+  }
+ },
+ "alcancado": "N0",
+ "falhou": true,
+ "impedida_por_versao": []
+}

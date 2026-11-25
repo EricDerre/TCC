@@ -1,0 +1,523 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-18T20:40:27",
+    "corrida": "fase5_agente",
+    "gerado_por": "avaliar_fase5.py --incidente",
+    "incidente": "A corrida 28, de 18/11/2026, foi lançada com o aplicativo Claude aberto, e o plano pede a corrida com o aplicativo Claude e o VS Code fechados; o Eric decidiu refazer a noite (decisão 145). Nas repetições 2 a 5 dela, o Ollama reaproveitou o prompt lido na repetição 1, e por isso a noite nova, a corrida 28b, roda a frio (decisão 146). Os números ficam como registro do incidente e não entram na comparação com as pessoas."
+  },
+  "condicoes": {
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.16",
+    "k": 3,
+    "repeticoes": 5,
+    "parcial": false,
+    "execucoes": 50,
+    "biblioteca": "95af35290860"
+  },
+  "noite": {
+    "execucoes": 50,
+    "esperadas": 50,
+    "completa": true,
+    "faltam": [],
+    "versoes_ollama": [
+      "0.40.16"
+    ],
+    "navegador": {
+      "versoes": [
+        "156.0.8078.4"
+      ],
+      "unica": true
+    },
+    "banco": {
+      "hashes_de_inicio": [
+        "9fe5e7cb64288c9d"
+      ],
+      "unico": true
+    },
+    "linha_fim_no_log": true,
+    "ultima_linha_fim": "FIM cenarios: 50 de 50 execuções; Task Success 49; duração 1832 s; trilha 1619118 bytes",
+    "a_frio": false,
+    "frio": {
+      "limite_da_parcela_em_cache": 0.5,
+      "motivo": "as repetições 2, 3, 4 e 5 não rodaram a frio: a primeira inferência já veio com tokens guardados pelo Ollama, ou mais de 50% dos tokens de entrada da repetição vieram guardados",
+      "por_repeticao": [
+        {
+          "repeticao": 1,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 1505,
+          "parcela_em_cache_pct": 12.6,
+          "cache_na_primeira_inferencia": 0,
+          "prefill_s": 462.4,
+          "carga_s": 8.7,
+          "a_frio": true
+        },
+        {
+          "repeticao": 2,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 10975,
+          "parcela_em_cache_pct": 91.7,
+          "cache_na_primeira_inferencia": 1217,
+          "prefill_s": 45.3,
+          "carga_s": 0.3,
+          "a_frio": false
+        },
+        {
+          "repeticao": 3,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 10975,
+          "parcela_em_cache_pct": 91.7,
+          "cache_na_primeira_inferencia": 1217,
+          "prefill_s": 45.0,
+          "carga_s": 0.3,
+          "a_frio": false
+        },
+        {
+          "repeticao": 4,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 10975,
+          "parcela_em_cache_pct": 91.7,
+          "cache_na_primeira_inferencia": 1217,
+          "prefill_s": 44.3,
+          "carga_s": 0.3,
+          "a_frio": false
+        },
+        {
+          "repeticao": 5,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 10975,
+          "parcela_em_cache_pct": 91.7,
+          "cache_na_primeira_inferencia": 1217,
+          "prefill_s": 43.8,
+          "carga_s": 0.2,
+          "a_frio": false
+        }
+      ]
+    }
+  },
+  "mesmo_agente_da_21d": [
+    {
+      "item": "biblioteca",
+      "nome": "biblioteca de produção (hash)",
+      "hoje": "95af35290860",
+      "na_21d": "95af35290860",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "prompt_fixo",
+      "nome": "prompt fixo do diagnóstico (hash)",
+      "hoje": "2e42cf9c31826941",
+      "na_21d": "2e42cf9c31826941",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "indice_da_busca",
+      "nome": "índice da busca (hash)",
+      "hoje": "11e763ba9cb1fdf4",
+      "na_21d": "11e763ba9cb1fdf4",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "k",
+      "nome": "k (verbetes entregues ao modelo)",
+      "hoje": 3,
+      "na_21d": 3,
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "limiares",
+      "nome": "limiares do selo",
+      "hoje": "baixo até 0,8318, alto a partir de 0,9898, k 3 (conteúdo 13a02982)",
+      "na_21d": "baixo até 0,8318, alto a partir de 0,9898, k 3 (conteúdo 13a02982)",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "navegador",
+      "nome": "versão do navegador",
+      "hoje": "156.0.8078.4",
+      "na_21d": "156.0.8078.4",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "modelo",
+      "nome": "modelo",
+      "hoje": "qwen2.5:7b",
+      "na_21d": "qwen2.5:7b",
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "top_logprobs",
+      "nome": "alternativas por posição (top_logprobs)",
+      "hoje": 20,
+      "na_21d": 20,
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "teto_tokens",
+      "nome": "teto de tokens da resposta",
+      "hoje": 600,
+      "na_21d": 600,
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "playwright",
+      "nome": "Playwright",
+      "hoje": "1.64.1",
+      "na_21d": "1.64.1",
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "versao_do_caso_ao_vivo",
+      "nome": "versão do código do caso ao vivo",
+      "hoje": 5,
+      "na_21d": 4,
+      "igual": false,
+      "para": false
+    },
+    {
+      "item": "sinais_da_referencia_na_busca",
+      "nome": "busca com os sinais contra a referência",
+      "hoje": true,
+      "na_21d": true,
+      "igual": true,
+      "para": false
+    }
+  ],
+  "geral": {
+    "n": 50,
+    "sucessos": 49,
+    "task_success_pct": 98.0,
+    "wilson_lo_pct": 89.5,
+    "wilson_hi_pct": 99.6,
+    "cenarios": 10,
+    "cenarios_com_todas_certas": 9,
+    "com_fim": 49,
+    "sem_fim": 1,
+    "cenarios_com_tempo": 10,
+    "tempo_media_s": 30.5,
+    "tempo_ic_lo_s": 27.21,
+    "tempo_ic_hi_s": 33.8,
+    "piso_media_s": 42.05,
+    "piso_ic_lo_s": 28.8,
+    "piso_ic_hi_s": 64.93,
+    "estrita_cenarios": 10,
+    "estrita_media_s": 30.5
+  },
+  "por_tipo": [
+    {
+      "tipo": "contrato",
+      "n": 30,
+      "sucessos": 29,
+      "task_success_pct": 96.7,
+      "wilson_lo_pct": 83.3,
+      "wilson_hi_pct": 99.4,
+      "cenarios": 6,
+      "cenarios_com_todas_certas": 5,
+      "com_fim": 29,
+      "sem_fim": 1,
+      "cenarios_com_tempo": 6,
+      "tempo_media_s": 28.03,
+      "tempo_ic_lo_s": 25.45,
+      "tempo_ic_hi_s": 30.48,
+      "piso_media_s": 47.29,
+      "piso_ic_lo_s": 27.9,
+      "piso_ic_hi_s": 83.77,
+      "estrita_cenarios": 6,
+      "estrita_media_s": 28.03
+    },
+    {
+      "tipo": "localizador",
+      "n": 20,
+      "sucessos": 20,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 83.9,
+      "wilson_hi_pct": 100.0,
+      "cenarios": 4,
+      "cenarios_com_todas_certas": 4,
+      "com_fim": 20,
+      "sem_fim": 0,
+      "cenarios_com_tempo": 4,
+      "tempo_media_s": 34.19,
+      "tempo_ic_lo_s": 26.79,
+      "tempo_ic_hi_s": 41.6,
+      "piso_media_s": 34.19,
+      "piso_ic_lo_s": 26.79,
+      "piso_ic_hi_s": 41.6,
+      "estrita_cenarios": 4,
+      "estrita_media_s": 34.19
+    }
+  ],
+  "por_cenario": [
+    {
+      "cenario": "contrato-malformed_json",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 4,
+      "parcela_pct": 80.0,
+      "todas_certas": false,
+      "com_fim": 4,
+      "sem_fim": 1,
+      "tempo_media_s": 22.117,
+      "tempo_min_s": 21.913,
+      "tempo_max_s": 22.345,
+      "piso_media_s": 137.694,
+      "estrita_n": 4,
+      "estrita_media_s": 22.117,
+      "rotulos": [
+        "resposta_truncada",
+        "resposta_truncada",
+        "resposta_truncada",
+        "resposta_truncada",
+        "resposta_truncada"
+      ],
+      "segundos_media_s": 32.086
+    },
+    {
+      "cenario": "contrato-field_missing",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 27.567,
+      "tempo_min_s": 17.862,
+      "tempo_max_s": 66.202,
+      "piso_media_s": 27.567,
+      "estrita_n": 5,
+      "estrita_media_s": 27.567,
+      "rotulos": [
+        "campo_ausente",
+        "campo_ausente",
+        "campo_ausente",
+        "campo_ausente",
+        "campo_ausente"
+      ],
+      "segundos_media_s": 27.946
+    },
+    {
+      "cenario": "contrato-field_renamed",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 26.346,
+      "tempo_min_s": 16.324,
+      "tempo_max_s": 65.091,
+      "piso_media_s": 26.346,
+      "estrita_n": 5,
+      "estrita_media_s": 26.346,
+      "rotulos": [
+        "campo_renomeado",
+        "campo_renomeado",
+        "campo_renomeado",
+        "campo_renomeado",
+        "campo_renomeado"
+      ],
+      "segundos_media_s": 26.727
+    },
+    {
+      "cenario": "contrato-type_drift",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 28.966,
+      "tempo_min_s": 18.248,
+      "tempo_max_s": 67.53,
+      "piso_media_s": 28.966,
+      "estrita_n": 5,
+      "estrita_media_s": 28.966,
+      "rotulos": [
+        "tipo_divergente",
+        "tipo_divergente",
+        "tipo_divergente",
+        "tipo_divergente",
+        "tipo_divergente"
+      ],
+      "segundos_media_s": 29.364
+    },
+    {
+      "cenario": "contrato-escala_ou_unidade_errada",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 32.419,
+      "tempo_min_s": 19.279,
+      "tempo_max_s": 80.071,
+      "piso_media_s": 32.419,
+      "estrita_n": 5,
+      "estrita_media_s": 32.419,
+      "rotulos": [
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada"
+      ],
+      "segundos_media_s": 32.81
+    },
+    {
+      "cenario": "contrato-error_500",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 30.767,
+      "tempo_min_s": 18.155,
+      "tempo_max_s": 76.562,
+      "piso_media_s": 30.767,
+      "estrita_n": 5,
+      "estrita_media_s": 30.767,
+      "rotulos": [
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor"
+      ],
+      "segundos_media_s": 31.059
+    },
+    {
+      "cenario": "localizador-front-busca",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 44.35,
+      "tempo_min_s": 38.773,
+      "tempo_max_s": 65.212,
+      "piso_media_s": 44.35,
+      "estrita_n": 5,
+      "estrita_media_s": 44.35,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 49.777
+    },
+    {
+      "cenario": "localizador-front-admin-login",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 38.844,
+      "tempo_min_s": 38.329,
+      "tempo_max_s": 39.541,
+      "piso_media_s": 38.844,
+      "estrita_n": 5,
+      "estrita_media_s": 38.844,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 44.179
+    },
+    {
+      "cenario": "localizador-front-admin-produtos",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 27.42,
+      "tempo_min_s": 18.996,
+      "tempo_max_s": 60.284,
+      "piso_media_s": 27.42,
+      "estrita_n": 5,
+      "estrita_media_s": 27.42,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 33.193
+    },
+    {
+      "cenario": "localizador-front-cliente-reserva",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 26.158,
+      "tempo_min_s": 17.213,
+      "tempo_max_s": 60.039,
+      "piso_media_s": 26.158,
+      "estrita_n": 5,
+      "estrita_media_s": 26.158,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 32.454
+    }
+  ],
+  "tempo_total": {
+    "segundos_media_s": 33.96,
+    "segundos_total_s": 1698.0
+  },
+  "sem_task_success": [
+    {
+      "cenario": "contrato-malformed_json",
+      "repeticao": 1,
+      "tipo": "contrato",
+      "detectou": true,
+      "rotulo": "resposta_truncada",
+      "causa_esperada": "resposta_truncada",
+      "falha_da_cura": null,
+      "mttr_s": null,
+      "segundos": 70.917
+    }
+  ]
+}

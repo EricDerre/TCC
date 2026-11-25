@@ -1,0 +1,5 @@
+[boot]
+systemd=false
+
+[interop]
+appendWindowsPath=false

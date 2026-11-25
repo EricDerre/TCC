@@ -70,10 +70,37 @@ def arquivos_tocados() -> list[Path]:
     return arqs
 
 
+# ! Alteração de IA - Revisar: função nova (18/11/2026): diz se o arquivo é saída capturada de uma célula de teste do instalador, isto é,
+# se está dentro de uma pasta de rodada `dados/instalador/celulas/<id>/<data-hora>/` que tem um `celula.json` com a tag e o motivo.
+# ! Motivo: a célula L-U2404 gravou 23 arquivos `.txt` com a saída do que rodou (`os-release.txt`, `saida_*.txt`, `suspeitas/HL1.txt`...), e
+# esta conferência passou a acusar `sem tag de IA` em todos, para todas as sessões do projeto. Pôr a tag dentro deles mudaria a evidência.
+# O Eric decidiu em 18/11/2026 que eles ficam cobertos pela tag do `celula.json` da pasta, como os resultados de corrida em
+# `resultados_alvo/` já ficam de fora. O `celula.json` e o `registro.json` são gerados com a tag e continuam cobrados; pasta de rodada
+# sem `celula.json`, ou com um sem a tag, não dispensa nada.
+def evidencia_de_celula(a: Path) -> bool:
+    for pasta in a.parents:
+        acima = pasta.parents
+        if len(acima) >= 4 and (acima[1].name, acima[2].name, acima[3].name) == ("celulas", "instalador", "dados"):
+            if a.parent == pasta and a.name in ("celula.json", "registro.json"):
+                return False
+            manifesto = pasta / "celula.json"
+            if not manifesto.is_file():
+                return False
+            texto = manifesto.read_text(encoding="utf-8-sig", errors="replace")
+            return "de IA - Revisar" in texto and "! Motivo" in texto
+    return False
+
+
 def conferir_tags(arqs: list[Path]) -> list[str]:
     falhas = []
     for a in arqs:
         if a.suffix.lower() not in (".md", ".py", ".ps1", ".json", ".cmd", ".bat", ".php", ".js", ".yaml", ".yml", ".txt"):
+            continue
+        if evidencia_de_celula(a):
+            continue
+        # ! Alteração de IA - Revisar: `__init__.py` de 0 byte não é cobrado por tag.
+        # ! Motivo: o .claude/CLAUDE.md dispensa o arquivo vazio de propósito (marcar quebraria a vazidade), mas esta conferência acusava `instalador\__init__.py: sem tag de IA`.
+        if a.name == "__init__.py" and a.stat().st_size == 0:
             continue
         if "resultados_alvo" in a.as_posix() or ".superpowers" in a.as_posix():
             continue

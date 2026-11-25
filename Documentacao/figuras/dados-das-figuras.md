@@ -206,3 +206,20 @@ Os números de cada figura de [`Documentacao/figuras/`](.), lidos dos registros 
 | Diagnóstico de um caso da tela | 59,2 | sim |
 | Localizador, da detecção à reexecução | 67,6 | sim |
 | Contrato, da detecção ao diagnóstico conferido | 79,2 | sim |
+
+## O agente repara mais rápido que uma pessoa?
+
+[Figura](agente-e-pessoas.png). Fonte: `fase5/medicao.json` (`tempo.por_cenario`, `tempo.geral`, `lados` e `task_success.por_cenario`): a corrida 28b do agente, com cinco repetições por cenário, e as três sessões da linha de base manual, uma tentativa de cada integrante por cenário.
+
+| Cenário | Tipo | Agente: tempo médio (s) | Agente: menor tempo (s) | Agente: maior tempo (s) | Pessoas: tempo médio (s) | Pessoas: menor tempo (s) | Pessoas: maior tempo (s) | Diferença, pessoas menos agente (s) | Agente: chegou ao resultado | Pessoas: chegaram ao resultado |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Resposta cortada no meio | contrato | 81,7 | 78,7 | 85,9 | 109,6 | 50,2 | 151,5 | 27,9 | 4 de 5 | 1 de 3 |
+| Campo sumiu da resposta | contrato | 67,0 | 66,4 | 67,8 | 111,3 | 95,0 | 127,7 | 44,4 | 5 de 5 | 1 de 3 |
+| Campo mudou de nome | contrato | 65,3 | 64,9 | 65,9 | 236,5 | 211,5 | 261,5 | 171,2 | 5 de 5 | 2 de 3 |
+| Campo mudou de tipo | contrato | 66,7 | 66,0 | 67,6 | 189,0 | 51,4 | 260,6 | 122,3 | 5 de 5 | 0 de 3 |
+| Preço na escala errada | contrato | 80,4 | 78,8 | 82,9 | 280,6 | 35,2 | 454,5 | 200,2 | 5 de 5 | 1 de 3 |
+| API devolve erro 500 | contrato | 76,6 | 75,0 | 77,3 | 121,8 | 37,8 | 174,9 | 45,2 | 5 de 5 | 1 de 3 |
+| Busca | localizador | 65,4 | 64,9 | 65,8 | 385,3 | 289,5 | 481,0 | 319,8 | 5 de 5 | 2 de 3 |
+| Login do administrador | localizador | 39,0 | 38,5 | 40,3 | 150,1 | 144,6 | 155,7 | 111,2 | 5 de 5 | 2 de 3 |
+| Lista de produtos do administrador | localizador | 60,3 | 60,1 | 60,6 | 331,2 | 258,7 | 403,7 | 270,9 | 5 de 5 | 2 de 3 |
+| Reserva do cliente | localizador | 61,0 | 60,0 | 63,1 | 281,6 | 167,7 | 395,4 | 220,6 | 5 de 5 | 2 de 3 |

@@ -4,6 +4,11 @@
    "area": "fase3b_ponte_04015",
    "em": "2026-11-11T22:20:46",
    "por": "testar_fase4.py --registrar-ponte"
+  },
+  {
+   "area": "fase3b_ponte_04016",
+   "em": "2026-11-16T10:47:37",
+   "por": "testar_fase4.py --registrar-ponte"
   }
  ],
  "areas": {
@@ -20,6 +25,7 @@
   "fase3b_ponte_0344": "6e6cb9bb18b98833",
   "fase3b_ponte_04014": "d17147a70898f1e3",
   "fase3b_ponte_04015": "eca1d843b6960211",
+  "fase3b_ponte_04016": "760b5a95a6e66b0b",
   "fase3b_ponte_0402": "527bfd2e945e3613",
   "pre_fase4_confianca": "ebd5a7b29a5a0eb8"
  },

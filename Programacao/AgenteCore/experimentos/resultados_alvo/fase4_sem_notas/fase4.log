@@ -85,3 +85,13 @@
 [2026-11-11 23:39:38] FIM sem_notas: 72 casos; duração 4433 s; trilha 1602204 bytes
 [2026-11-11 23:39:40] avaliar_fase4.py --sem_notas --saida fase4_sem_notas
 [2026-11-11 23:39:41] FIM rodar_fase4.ps1 (modo sem_notas) - duracao total 01h14
+[2026-11-16 10:47:37] rodar_fase4.ps1: modo sem_notas, saida fase4_sem_notas, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-16 10:47:40] Ollama 0.40.16; modelo qwen2.5:7b; RAM livre 7,5 GB
+[2026-11-16 10:47:40] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_sem_notas\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-16 10:47:40] testar_fase4.py
+[2026-11-16 10:48:21] executar_fase4.py --modo sem_notas --saida fase4_sem_notas --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20
+[2026-11-16 10:48:24] a ponte da versão 0.40.16 é pareável com a Fase 3 (b + c = 1, limite 2)
+[2026-11-16 10:48:24] INÍCIO sem_notas: Ollama 0.40.16, qwen2.5:7b, biblioteca de produção (95af35290860) sem 26 notas e sem 3 verbetes aprendidos (ba5ff9f5f632), k = 3; 72 casos; 72 já feito(s)
+[2026-11-16 10:48:36] FIM sem_notas: 72 casos; duração 15 s; trilha 1602204 bytes
+[2026-11-16 10:48:36] avaliar_fase4.py --sem_notas --saida fase4_sem_notas
+[2026-11-16 10:48:37] FIM rodar_fase4.ps1 (modo sem_notas) - duracao total 00h00

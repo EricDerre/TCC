@@ -1,0 +1,34 @@
+### o systemd esta no ar? (processo 1 e estado)
+$ bash -c cat /proc/1/comm; systemctl is-system-running 2>&1
+init(cobaia-L-U
+offline
+[codigo de saida: 1]
+
+### servico mariadb
+$ bash -c systemctl is-enabled mariadb 2>&1; systemctl is-active mariadb 2>&1
+enabled
+System has not been booted with systemd as init system (PID 1). Can't operate.
+Failed to connect to bus: Host is down
+[codigo de saida: 1]
+
+### processos do banco
+$ bash -c ps -eo user,pid,args 2>/dev/null | grep -E "[m]ariadbd|[m]ysqld" || echo "nenhum mariadbd rodando"
+cobaia      8635 timeout 600 bash -c ps -eo user,pid,args 2>/dev/null | grep -E "[m]ariadbd|[m]ysqld" || echo "nenhum mariadbd rodando"
+cobaia      8636 bash -c ps -eo user,pid,args 2>/dev/null | grep -E "[m]ariadbd|[m]ysqld" || echo "nenhum mariadbd rodando"
+[codigo de saida: 0]
+
+### plano B do _env_common: o servidor direto, como usuario comum (25 s; codigo 124 = ficou no ar)
+$ /usr/sbin/mariadbd
+2026-11-19  8:58:36 0 [Warning] Can't create test file '/var/lib/mysql/TARGETTSP030.lower-test' (Errcode: 13 "Permission denied")
+2026-11-19  8:58:36 0 [Note] Starting MariaDB 10.11.14-MariaDB-0ubuntu0.24.04.1 source revision 053f9bcb5b147bf00edb99e1310bae9125b7f125 server_uid IwudXQowB/CR3/b+rvFUpxtzYyU= as process 8643
+2026-11-19  8:58:36 0 [ERROR] mariadbd: Can't create/write to file './ddl_recovery.log' (Errcode: 13 "Permission denied")
+2026-11-19  8:58:36 0 [ERROR] DDL_LOG: Failed to create ddl log file: ./ddl_recovery.log
+2026-11-19  8:58:36 0 [ERROR] Aborting
+[codigo de saida: 1]
+
+### contorno para as sondas seguintes: sudo service mariadb start
+$ sudo service mariadb start
+ * Starting MariaDB database server mariadbd
+   ...done.
+[codigo de saida: 0]
+

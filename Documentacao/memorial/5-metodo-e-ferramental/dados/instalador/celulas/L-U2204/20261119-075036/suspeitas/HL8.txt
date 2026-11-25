@@ -1,0 +1,26 @@
+### compilar os .py do projeto com o Python do sistema (so os erros aparecem)
+$ /usr/bin/python3 -m compileall -q -x [/]\.venv[/] Programacao/AgenteCore Programacao/CobaiaAPI ferramentas instalador
+*** Error compiling 'Programacao/AgenteCore/experimentos/executar_fase4.py'...
+  File "Programacao/AgenteCore/experimentos/executar_fase4.py", line 1329
+    f"em {r['segundos']} s; alvo {alvo['papel'] + ' \"' + alvo['nome'] + '\"' if alvo else 'NÃO descrito (' + str(ref['erro_descricao']) + ')'}")
+                                                                                                                                                 ^
+SyntaxError: f-string expression part cannot include a backslash
+
+*** Error compiling 'ferramentas/painel_textos.py'...
+  File "ferramentas/painel_textos.py", line 381
+    itens.append(f"<li>{inline(re.sub(r'^\d+\. ', '', linhas[i]))}</li>")
+                                                                        ^
+SyntaxError: f-string expression part cannot include a backslash
+
+*** Error compiling 'ferramentas/render_levantamento.py'...
+  File "ferramentas/render_levantamento.py", line 82
+    f"*Título da síntese:* {re.sub(r'^\s*\d+(\.\d+)+\s+', '', s.get('titulo', '(sem síntese)'))}",
+                                                                                                  ^
+SyntaxError: f-string expression part cannot include a backslash
+
+[codigo de saida: 1]
+
+### compilar os .py da raiz
+$ /usr/bin/python3 -m py_compile install.py _env_common.py run.py restaurar_banco.py Cobaia.py testar_instalador.py
+[codigo de saida: 0]
+

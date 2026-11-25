@@ -1,0 +1,2 @@
+/mnt/c/Users/Eric.Derre/Documents/TCC/Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/L-D12/20261119-161617/celula.sh: line 10: python3: command not found
+sem python3

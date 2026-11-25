@@ -1,0 +1,27 @@
+{
+    "tag_ia":  {
+                   "alteracao":  "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_wsl.ps1: o que a celula rodou e com que codigo de saida.",
+                   "motivo":  "! Motivo: o plano do instalador unico (decisao 143) pede a evidencia de cada celula em arquivo, mesmo quando o instalador para antes de a prova rodar."
+               },
+    "id":  "L-U2404",
+    "modo":  "novo",
+    "ate":  "N4",
+    "modelo_pequeno":  "qwen2.5:0.5b",
+    "sondas":  false,
+    "sem_systemd":  false,
+    "imagem":  "ubuntu-24.04.5-wsl-amd64.wsl",
+    "imagem_sha256":  "bb415d824822c4b878125729af451a5d18fb13d1cf5cbed9a7393ad64ac6039e",
+    "pacote_sha256":  "62fc427892f83309bcdfa45551ef98054acea8063dedd9a960cd70753d7270c0",
+    "wsl":  [
+                "Versão do WSL: 2.5.10.0",
+                "Versão do kernel: 6.6.87.2-1"
+            ],
+    "inicio":  "2026-11-19T16:33:26",
+    "fim":  "2026-11-19T16:56:47",
+    "saidas":  {
+                   "abrir_pacote":  "0",
+                   "conferir":  "0",
+                   "install_direto":  "0",
+                   "preparo":  "0"
+               }
+}

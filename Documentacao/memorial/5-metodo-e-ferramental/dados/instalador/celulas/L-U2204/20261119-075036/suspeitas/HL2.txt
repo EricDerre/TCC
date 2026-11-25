@@ -1,0 +1,94 @@
+### o Python que o install.sh usaria
+$ /usr/bin/python3 --version
+Python 3.10.12
+[codigo de saida: 0]
+
+### o pacote python3-venv esta instalado?
+$ bash -c dpkg-query -W -f "\${Status} \${Version}\n" python3-venv 2>&1 || true
+unknown ok not-installed 
+[codigo de saida: 0]
+
+### criar a venv como o install.py faz (python -m venv)
+$ /usr/bin/python3 -m venv /home/cobaia/sonda/venv
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.10-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/cobaia/sonda/venv/bin/python3
+
+[codigo de saida: 1]
+
+### contorno para as sondas seguintes: sudo apt-get install -y python3-venv
+$ sudo apt-get install -y python3-venv
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libpython3.10 libpython3.10-minimal libpython3.10-stdlib python3-pip-whl
+  python3-setuptools-whl python3.10 python3.10-minimal python3.10-venv
+Suggested packages:
+  python3.10-doc binfmt-support
+The following NEW packages will be installed:
+  python3-pip-whl python3-setuptools-whl python3-venv python3.10-venv
+The following packages will be upgraded:
+  libpython3.10 libpython3.10-minimal libpython3.10-stdlib python3.10
+  python3.10-minimal
+5 upgraded, 4 newly installed, 0 to remove and 162 not upgraded.
+Need to get 9881 kB of archives.
+After this operation, 2911 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10 amd64 3.10.12-1~22.04.18 [1950 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10 amd64 3.10.12-1~22.04.18 [508 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-stdlib amd64 3.10.12-1~22.04.18 [1850 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 python3.10-minimal amd64 3.10.12-1~22.04.18 [2277 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpython3.10-minimal amd64 3.10.12-1~22.04.18 [817 kB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-pip-whl all 22.0.2+dfsg-1ubuntu0.7 [1683 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-setuptools-whl all 59.6.0-1.2ubuntu0.22.04.3 [789 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3.10-venv amd64 3.10.12-1~22.04.18 [5724 B]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 python3-venv amd64 3.10.6-1~22.04.1 [1042 B]
+Fetched 9881 kB in 3s (3533 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 44455 files and directories currently installed.)
+Preparing to unpack .../0-libpython3.10_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking libpython3.10:amd64 (3.10.12-1~22.04.18) over (3.10.12-1~22.04.15) ...
+Preparing to unpack .../1-python3.10_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking python3.10 (3.10.12-1~22.04.18) over (3.10.12-1~22.04.15) ...
+Preparing to unpack .../2-libpython3.10-stdlib_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking libpython3.10-stdlib:amd64 (3.10.12-1~22.04.18) over (3.10.12-1~22.04.15) ...
+Preparing to unpack .../3-python3.10-minimal_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking python3.10-minimal (3.10.12-1~22.04.18) over (3.10.12-1~22.04.15) ...
+Preparing to unpack .../4-libpython3.10-minimal_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking libpython3.10-minimal:amd64 (3.10.12-1~22.04.18) over (3.10.12-1~22.04.15) ...
+Selecting previously unselected package python3-pip-whl.
+Preparing to unpack .../5-python3-pip-whl_22.0.2+dfsg-1ubuntu0.7_all.deb ...
+Unpacking python3-pip-whl (22.0.2+dfsg-1ubuntu0.7) ...
+Selecting previously unselected package python3-setuptools-whl.
+Preparing to unpack .../6-python3-setuptools-whl_59.6.0-1.2ubuntu0.22.04.3_all.deb ...
+Unpacking python3-setuptools-whl (59.6.0-1.2ubuntu0.22.04.3) ...
+Selecting previously unselected package python3.10-venv.
+Preparing to unpack .../7-python3.10-venv_3.10.12-1~22.04.18_amd64.deb ...
+Unpacking python3.10-venv (3.10.12-1~22.04.18) ...
+Selecting previously unselected package python3-venv.
+Preparing to unpack .../8-python3-venv_3.10.6-1~22.04.1_amd64.deb ...
+Unpacking python3-venv (3.10.6-1~22.04.1) ...
+Setting up python3-setuptools-whl (59.6.0-1.2ubuntu0.22.04.3) ...
+Setting up python3-pip-whl (22.0.2+dfsg-1ubuntu0.7) ...
+Setting up libpython3.10-minimal:amd64 (3.10.12-1~22.04.18) ...
+Setting up python3.10-minimal (3.10.12-1~22.04.18) ...
+Setting up libpython3.10-stdlib:amd64 (3.10.12-1~22.04.18) ...
+Setting up libpython3.10:amd64 (3.10.12-1~22.04.18) ...
+Setting up python3.10 (3.10.12-1~22.04.18) ...
+Setting up python3.10-venv (3.10.12-1~22.04.18) ...
+Setting up python3-venv (3.10.6-1~22.04.1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.13) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for mailcap (3.70+nmu1ubuntu1.22.04.1) ...
+[codigo de saida: 0]
+
+### criar a venv depois do contorno
+$ /usr/bin/python3 -m venv /home/cobaia/sonda/venv
+[codigo de saida: 0]
+

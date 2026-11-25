@@ -1,0 +1,9 @@
+### gerenciadores de pacote que a distribuicao tem
+$ bash -c for g in apt-get dnf pacman zypper apk; do command -v "$g" || echo "sem $g"; done
+/usr/bin/apt-get
+sem dnf
+sem pacman
+sem zypper
+sem apk
+[codigo de saida: 0]
+

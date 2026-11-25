@@ -1,0 +1,522 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-18T22:38:09",
+    "corrida": "fase5_agente_b",
+    "gerado_por": "avaliar_fase5.py --agente"
+  },
+  "condicoes": {
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.16",
+    "k": 3,
+    "repeticoes": 5,
+    "parcial": false,
+    "execucoes": 50,
+    "biblioteca": "95af35290860"
+  },
+  "noite": {
+    "execucoes": 50,
+    "esperadas": 50,
+    "completa": true,
+    "faltam": [],
+    "versoes_ollama": [
+      "0.40.16"
+    ],
+    "navegador": {
+      "versoes": [
+        "156.0.8078.4"
+      ],
+      "unica": true
+    },
+    "banco": {
+      "hashes_de_inicio": [
+        "9fe5e7cb64288c9d"
+      ],
+      "unico": true
+    },
+    "linha_fim_no_log": true,
+    "ultima_linha_fim": "FIM cenarios: 50 de 50 execuções; Task Success 49; duração 740 s; trilha 1631882 bytes",
+    "a_frio": true,
+    "frio": {
+      "limite_da_parcela_em_cache": 0.5,
+      "motivo": null,
+      "por_repeticao": [
+        {
+          "repeticao": 1,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 1505,
+          "parcela_em_cache_pct": 12.6,
+          "cache_na_primeira_inferencia": 0,
+          "prefill_s": 474.2,
+          "carga_s": 6.9,
+          "a_frio": true
+        },
+        {
+          "repeticao": 2,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 1505,
+          "parcela_em_cache_pct": 12.6,
+          "cache_na_primeira_inferencia": 0,
+          "prefill_s": 473.8,
+          "carga_s": 6.4,
+          "a_frio": true
+        },
+        {
+          "repeticao": 3,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 1505,
+          "parcela_em_cache_pct": 12.6,
+          "cache_na_primeira_inferencia": 0,
+          "prefill_s": 468.8,
+          "carga_s": 6.1,
+          "a_frio": true
+        },
+        {
+          "repeticao": 4,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 1505,
+          "parcela_em_cache_pct": 12.6,
+          "cache_na_primeira_inferencia": 0,
+          "prefill_s": 471.0,
+          "carga_s": 6.1,
+          "a_frio": true
+        },
+        {
+          "repeticao": 5,
+          "inferencias": 10,
+          "tokens_entrada": 11966,
+          "tokens_em_cache": 1505,
+          "parcela_em_cache_pct": 12.6,
+          "cache_na_primeira_inferencia": 0,
+          "prefill_s": 474.4,
+          "carga_s": 6.4,
+          "a_frio": true
+        }
+      ]
+    }
+  },
+  "mesmo_agente_da_21d": [
+    {
+      "item": "biblioteca",
+      "nome": "biblioteca de produção (hash)",
+      "hoje": "95af35290860",
+      "na_21d": "95af35290860",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "prompt_fixo",
+      "nome": "prompt fixo do diagnóstico (hash)",
+      "hoje": "2e42cf9c31826941",
+      "na_21d": "2e42cf9c31826941",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "indice_da_busca",
+      "nome": "índice da busca (hash)",
+      "hoje": "11e763ba9cb1fdf4",
+      "na_21d": "11e763ba9cb1fdf4",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "k",
+      "nome": "k (verbetes entregues ao modelo)",
+      "hoje": 3,
+      "na_21d": 3,
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "limiares",
+      "nome": "limiares do selo",
+      "hoje": "baixo até 0,8318, alto a partir de 0,9898, k 3 (conteúdo 13a02982)",
+      "na_21d": "baixo até 0,8318, alto a partir de 0,9898, k 3 (conteúdo 13a02982)",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "navegador",
+      "nome": "versão do navegador",
+      "hoje": "156.0.8078.4",
+      "na_21d": "156.0.8078.4",
+      "igual": true,
+      "para": true
+    },
+    {
+      "item": "modelo",
+      "nome": "modelo",
+      "hoje": "qwen2.5:7b",
+      "na_21d": "qwen2.5:7b",
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "top_logprobs",
+      "nome": "alternativas por posição (top_logprobs)",
+      "hoje": 20,
+      "na_21d": 20,
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "teto_tokens",
+      "nome": "teto de tokens da resposta",
+      "hoje": 600,
+      "na_21d": 600,
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "playwright",
+      "nome": "Playwright",
+      "hoje": "1.64.1",
+      "na_21d": "1.64.1",
+      "igual": true,
+      "para": false
+    },
+    {
+      "item": "versao_do_caso_ao_vivo",
+      "nome": "versão do código do caso ao vivo",
+      "hoje": 5,
+      "na_21d": 4,
+      "igual": false,
+      "para": false
+    },
+    {
+      "item": "sinais_da_referencia_na_busca",
+      "nome": "busca com os sinais contra a referência",
+      "hoje": true,
+      "na_21d": true,
+      "igual": true,
+      "para": false
+    }
+  ],
+  "geral": {
+    "n": 50,
+    "sucessos": 49,
+    "task_success_pct": 98.0,
+    "wilson_lo_pct": 89.5,
+    "wilson_hi_pct": 99.6,
+    "cenarios": 10,
+    "cenarios_com_todas_certas": 9,
+    "com_fim": 49,
+    "sem_fim": 1,
+    "cenarios_com_tempo": 10,
+    "tempo_media_s": 66.34,
+    "tempo_ic_lo_s": 60.88,
+    "tempo_ic_hi_s": 71.5,
+    "piso_media_s": 76.7,
+    "piso_ic_lo_s": 61.34,
+    "piso_ic_hi_s": 101.68,
+    "estrita_cenarios": 10,
+    "estrita_media_s": 66.34
+  },
+  "por_tipo": [
+    {
+      "tipo": "contrato",
+      "n": 30,
+      "sucessos": 29,
+      "task_success_pct": 96.7,
+      "wilson_lo_pct": 83.3,
+      "wilson_hi_pct": 99.4,
+      "cenarios": 6,
+      "cenarios_com_todas_certas": 5,
+      "com_fim": 29,
+      "sem_fim": 1,
+      "cenarios_com_tempo": 6,
+      "tempo_media_s": 72.95,
+      "tempo_ic_lo_s": 67.74,
+      "tempo_ic_hi_s": 78.37,
+      "piso_media_s": 90.22,
+      "piso_ic_lo_s": 67.74,
+      "piso_ic_hi_s": 129.72,
+      "estrita_cenarios": 6,
+      "estrita_media_s": 72.95
+    },
+    {
+      "tipo": "localizador",
+      "n": 20,
+      "sucessos": 20,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 83.9,
+      "wilson_hi_pct": 100.0,
+      "cenarios": 4,
+      "cenarios_com_todas_certas": 4,
+      "com_fim": 20,
+      "sem_fim": 0,
+      "cenarios_com_tempo": 4,
+      "tempo_media_s": 56.42,
+      "tempo_ic_lo_s": 44.47,
+      "tempo_ic_hi_s": 64.15,
+      "piso_media_s": 56.42,
+      "piso_ic_lo_s": 44.47,
+      "piso_ic_hi_s": 64.15,
+      "estrita_cenarios": 4,
+      "estrita_media_s": 56.42
+    }
+  ],
+  "por_cenario": [
+    {
+      "cenario": "contrato-malformed_json",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 4,
+      "parcela_pct": 80.0,
+      "todas_certas": false,
+      "com_fim": 4,
+      "sem_fim": 1,
+      "tempo_media_s": 81.667,
+      "tempo_min_s": 78.676,
+      "tempo_max_s": 85.921,
+      "piso_media_s": 185.333,
+      "estrita_n": 4,
+      "estrita_media_s": 81.667,
+      "rotulos": [
+        "resposta_truncada",
+        "resposta_truncada",
+        "resposta_truncada",
+        "resposta_truncada",
+        "resposta_truncada"
+      ],
+      "segundos_media_s": 80.748
+    },
+    {
+      "cenario": "contrato-field_missing",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 66.993,
+      "tempo_min_s": 66.39,
+      "tempo_max_s": 67.804,
+      "piso_media_s": 66.993,
+      "estrita_n": 5,
+      "estrita_media_s": 66.993,
+      "rotulos": [
+        "campo_ausente",
+        "campo_ausente",
+        "campo_ausente",
+        "campo_ausente",
+        "campo_ausente"
+      ],
+      "segundos_media_s": 67.472
+    },
+    {
+      "cenario": "contrato-field_renamed",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 65.288,
+      "tempo_min_s": 64.916,
+      "tempo_max_s": 65.929,
+      "piso_media_s": 65.288,
+      "estrita_n": 5,
+      "estrita_media_s": 65.288,
+      "rotulos": [
+        "campo_renomeado",
+        "campo_renomeado",
+        "campo_renomeado",
+        "campo_renomeado",
+        "campo_renomeado"
+      ],
+      "segundos_media_s": 65.665
+    },
+    {
+      "cenario": "contrato-type_drift",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 66.718,
+      "tempo_min_s": 65.988,
+      "tempo_max_s": 67.598,
+      "piso_media_s": 66.718,
+      "estrita_n": 5,
+      "estrita_media_s": 66.718,
+      "rotulos": [
+        "tipo_divergente",
+        "tipo_divergente",
+        "tipo_divergente",
+        "tipo_divergente",
+        "tipo_divergente"
+      ],
+      "segundos_media_s": 67.12
+    },
+    {
+      "cenario": "contrato-escala_ou_unidade_errada",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 80.42,
+      "tempo_min_s": 78.772,
+      "tempo_max_s": 82.948,
+      "piso_media_s": 80.42,
+      "estrita_n": 5,
+      "estrita_media_s": 80.42,
+      "rotulos": [
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada",
+        "escala_ou_unidade_errada"
+      ],
+      "segundos_media_s": 80.821
+    },
+    {
+      "cenario": "contrato-error_500",
+      "tipo": "contrato",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 76.585,
+      "tempo_min_s": 75.041,
+      "tempo_max_s": 77.341,
+      "piso_media_s": 76.585,
+      "estrita_n": 5,
+      "estrita_media_s": 76.585,
+      "rotulos": [
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor",
+        "erro_interno_do_servidor"
+      ],
+      "segundos_media_s": 76.87
+    },
+    {
+      "cenario": "localizador-front-busca",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 65.419,
+      "tempo_min_s": 64.883,
+      "tempo_max_s": 65.776,
+      "piso_media_s": 65.419,
+      "estrita_n": 5,
+      "estrita_media_s": 65.419,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 71.311
+    },
+    {
+      "cenario": "localizador-front-admin-login",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 38.976,
+      "tempo_min_s": 38.45,
+      "tempo_max_s": 40.263,
+      "piso_media_s": 38.976,
+      "estrita_n": 5,
+      "estrita_media_s": 38.976,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 44.697
+    },
+    {
+      "cenario": "localizador-front-admin-produtos",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 60.326,
+      "tempo_min_s": 60.088,
+      "tempo_max_s": 60.554,
+      "piso_media_s": 60.326,
+      "estrita_n": 5,
+      "estrita_media_s": 60.326,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 66.715
+    },
+    {
+      "cenario": "localizador-front-cliente-reserva",
+      "tipo": "localizador",
+      "n": 5,
+      "sucessos": 5,
+      "parcela_pct": 100.0,
+      "todas_certas": true,
+      "com_fim": 5,
+      "sem_fim": 0,
+      "tempo_media_s": 60.97,
+      "tempo_min_s": 59.993,
+      "tempo_max_s": 63.075,
+      "piso_media_s": 60.97,
+      "estrita_n": 5,
+      "estrita_media_s": 60.97,
+      "rotulos": [
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado",
+        "localizador_quebrado"
+      ],
+      "segundos_media_s": 68.298
+    }
+  ],
+  "tempo_total": {
+    "segundos_media_s": 68.97,
+    "segundos_total_s": 3448.6
+  },
+  "sem_task_success": [
+    {
+      "cenario": "contrato-malformed_json",
+      "repeticao": 1,
+      "tipo": "contrato",
+      "detectou": true,
+      "rotulo": "resposta_truncada",
+      "causa_esperada": "resposta_truncada",
+      "falha_da_cura": null,
+      "mttr_s": null,
+      "segundos": 76.083
+    }
+  ]
+}

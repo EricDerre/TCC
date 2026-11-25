@@ -111,18 +111,27 @@ FASES: list[dict] = [
          ("modelo", "Experimentos antes da Fase 5", "As notas do modelo ajudam? Um segundo pedido conserta mais do que estraga? Um analista de documentação escreve melhor?", "semnotas"),
      ]},
     {"grupo": "Fase 5", "sid": "f-5", "readme": "5", "roadmap": "5 ", "curto": "Medição de valor", "titulo": "Fase 5: o agente contra uma pessoa", "tcc": "5.7",
+     # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) os passos da visão da Fase 5 passam a apontar para a aba "medicao", e
+     # entrou um quinto passo, o da regra fixada antes. O passo dos cenários continua levando à aba do ensaio, que mostra os dez cenários e a ficha de cada um.
+     # ! Motivo: o plano aprovado da Fase 5 (seção 6) pede os passos da visão `f-5` apontando para a aba nova. A linha de base manual e as duas medidas não
+     # tinham atalho, o passo do agente levava ao ensaio de uma repetição (corrida 21d), que não é a medida da fase, e o texto da linha de base dizia "à mão",
+     # quando as sessões passaram a ser feitas por uma página publicada (decisão 136). Os textos continuam sem número de resultado.
      "passos": [
          ("codigo", "Os mesmos cenários de falha", "O agente e as pessoas recebem os mesmos cenários, com quebras de contrato e quebras de localizador.", "cenarios"),
-         ("pessoa", "Linha de base manual", "Integrantes do grupo resolvem cada cenário à mão, com o tempo cronometrado.", ""),
-         ("modelo", "O agente", "O agente roda os mesmos cenários, com repetições, e o banco de dados é restaurado entre uma e outra.", "cenarios"),
-         ("codigo", "As duas medidas", "O tempo médio de reparo e a parcela dos cenários resolvidos, lidos em separado para contrato e para localizador.", ""),
+         ("pessoa", "Linha de base manual", "Integrantes do grupo resolvem cada cenário, um por vez, numa página com o material capturado antes, e a página cronometra o tempo.", "medicao"),
+         ("modelo", "O agente", "O agente roda os mesmos cenários, com repetições, e o banco de dados é restaurado entre uma e outra.", "medicao"),
+         ("codigo", "As duas medidas", "O tempo médio de reparo e a parcela dos cenários resolvidos, lidos em separado para contrato e para localizador.", "medicao"),
+         ("codigo", "A regra fixada antes", "Como cada número é calculado e o que conta como diferença foi escrito e testado antes de qualquer medida, com o cenário como unidade.", "medicao"),
      ]},
 ]
 _POR_GRUPO = {f["grupo"]: f for f in FASES}
 
 # De que fase é cada corrida do roadmap, pelo número. As corridas 14 e 15 rodaram durante a Pré-Fase 4, mas fecham a Fase 3-B (ponte de versão e a repetição do
 # confronto nos inéditos); a de letra Q é da Pós-Fase 4.
-FAIXAS_DE_CORRIDAS = [(1, 10, "Fase 3-B"), (11, 13, "Pré-Fase 4"), (14, 15, "Fase 3-B"), (16, 24, "Fase 4"), (25, 27, "Pós-Fase 4")]
+# ! Alteração de IA - Revisar: (16/11/2026, plano aprovado da Fase 5, decisão 133) faixa nova: a corrida 28, a noite medida da Fase 5, é da Fase 5.
+# ! Motivo: a corrida 28 entrou na tabela do roadmap §2 depois da aprovação do plano, e `testar_painel_fases.py` recusa corrida do roadmap sem fase
+# ("corrida do roadmap sem fase: acrescentar em FAIXAS_DE_CORRIDAS"); sem a faixa, o cartão da noite que falta não apareceria na visão da Fase 5.
+FAIXAS_DE_CORRIDAS = [(1, 10, "Fase 3-B"), (11, 13, "Pré-Fase 4"), (14, 15, "Fase 3-B"), (16, 24, "Fase 4"), (25, 27, "Pós-Fase 4"), (28, 28, "Fase 5")]
 
 # Cada descoberta do README ("O que já descobrimos"): a fase em que foi medida e a aba com o detalhe.
 DESCOBERTAS = {
@@ -134,6 +143,10 @@ DESCOBERTAS = {
     "E em casos que a biblioteca nunca viu?": ("Fase 4", "ineditosf4"),
     "Quanto tempo o agente leva?": ("Fase 4", "cenarios"),
     "O que o agente escreve entra na biblioteca sem controle?": ("Fase 4", "biblioteca"),
+    # ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) entrada nova: a descoberta da Fase 5 do README, medida na Fase 5 e detalhada na aba "medicao".
+    # ! Motivo: a comparação do agente com as pessoas foi lida em 24/11/2026 e o README ganhou a descoberta com a figura; sem a entrada, o teste do painel acusa
+    # descoberta sem fase, e a visão da Fase 5 e o Início não mostrariam o resultado central do trabalho.
+    "O agente repara mais rápido que uma pessoa?": ("Fase 5", "medicao"),
 }
 TITULO_DOS_LIMITES = "O que ainda não dá para afirmar"
 

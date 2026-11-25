@@ -1,0 +1,38 @@
+{
+ "integrantes": {
+  "1": {
+   "conhece_o_codigo_das_cobaias": false,
+   "ja_leu_a_lista_dos_cenarios": false,
+   "ja_usou_as_ferramentas_do_desenvolvedor": true,
+   "o_que_conhece": "",
+   "pratica": "6 messes com programação web",
+   "respondido_em": "2026-11-24T20:48:49"
+  },
+  "2": {
+   "conhece_o_codigo_das_cobaias": false,
+   "ja_leu_a_lista_dos_cenarios": true,
+   "ja_usou_as_ferramentas_do_desenvolvedor": false,
+   "o_que_conhece": "",
+   "pratica": "Não muito tempo",
+   "respondido_em": "2026-11-24T20:48:51"
+  },
+  "3": {
+   "conhece_o_codigo_das_cobaias": false,
+   "ja_leu_a_lista_dos_cenarios": false,
+   "ja_usou_as_ferramentas_do_desenvolvedor": false,
+   "o_que_conhece": "",
+   "pratica": "pouco tempo com programação para a web, 1-2 meses",
+   "respondido_em": "2026-11-24T20:49:02"
+  }
+ },
+ "perguntas": {
+  "conhece_o_codigo_das_cobaias": "Anotação do facilitador, não é pergunta ao integrante: ele escreveu ou conhece o código das aplicações da sessão (o site legado ou a CobaiaAPI)?",
+  "ja_leu_a_lista_dos_cenarios": "Você já leu a lista dos 10 cenários ou as causas esperadas no painel, no README, no documento do TCC ou no repositório?",
+  "ja_usou_as_ferramentas_do_desenvolvedor": "Você já usou as ferramentas do desenvolvedor do navegador (a tecla F12)?",
+  "pratica": "Quanto tempo de prática você tem com teste de software ou com programação para a web?"
+ },
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: gravado por `linha_de_base_manual.py perfil` (Fase 5, pacote F2): as respostas de cada integrante da linha de base manual às três perguntas de perfil e a anotação do facilitador, pelo número do integrante.",
+  "motivo": "! Motivo: o plano da Fase 5 (seção 4.1) pede o perfil para a leitura declarar quem tinha prática e quem conhecia o código das cobaias; o nome não é gravado porque o repositório é público."
+ }
+}

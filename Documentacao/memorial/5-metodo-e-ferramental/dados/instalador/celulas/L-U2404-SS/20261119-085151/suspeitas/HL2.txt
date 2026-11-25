@@ -1,0 +1,94 @@
+### o Python que o install.sh usaria
+$ /usr/bin/python3 --version
+Python 3.12.3
+[codigo de saida: 0]
+
+### o pacote python3-venv esta instalado?
+$ bash -c dpkg-query -W -f "\${Status} \${Version}\n" python3-venv 2>&1 || true
+unknown ok not-installed 
+[codigo de saida: 0]
+
+### criar a venv como o install.py faz (python -m venv)
+$ /usr/bin/python3 -m venv /home/cobaia/sonda/venv
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.12-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/cobaia/sonda/venv/bin/python3
+
+[codigo de saida: 1]
+
+### contorno para as sondas seguintes: sudo apt-get install -y python3-venv
+$ sudo apt-get install -y python3-venv
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  libpython3.12-minimal libpython3.12-stdlib libpython3.12t64 python3-pip-whl
+  python3-setuptools-whl python3.12 python3.12-minimal python3.12-venv
+Suggested packages:
+  python3.12-doc binfmt-support
+The following NEW packages will be installed:
+  python3-pip-whl python3-setuptools-whl python3-venv python3.12-venv
+The following packages will be upgraded:
+  libpython3.12-minimal libpython3.12-stdlib libpython3.12t64 python3.12
+  python3.12-minimal
+5 upgraded, 4 newly installed, 0 to remove and 88 not upgraded.
+Need to get 10.7 MB of archives.
+After this operation, 2780 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12t64 amd64 3.12.3-1ubuntu0.17 [2348 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-pip-whl all 24.0+dfsg-1ubuntu1.3 [1707 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-setuptools-whl all 68.1.2-2ubuntu1.2 [716 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3.12-venv amd64 3.12.3-1ubuntu0.17 [5684 B]
+Get:9 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-venv amd64 3.12.3-0ubuntu2.1 [1032 B]
+Fetched 10.7 MB in 3s (3447 kB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 42645 files and directories currently installed.)
+Preparing to unpack .../0-libpython3.12t64_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12t64:amd64 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../1-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../2-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../3-python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../4-libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Selecting previously unselected package python3-pip-whl.
+Preparing to unpack .../5-python3-pip-whl_24.0+dfsg-1ubuntu1.3_all.deb ...
+Unpacking python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+Selecting previously unselected package python3-setuptools-whl.
+Preparing to unpack .../6-python3-setuptools-whl_68.1.2-2ubuntu1.2_all.deb ...
+Unpacking python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+Selecting previously unselected package python3.12-venv.
+Preparing to unpack .../7-python3.12-venv_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12-venv (3.12.3-1ubuntu0.17) ...
+Selecting previously unselected package python3-venv.
+Preparing to unpack .../8-python3-venv_3.12.3-0ubuntu2.1_amd64.deb ...
+Unpacking python3-venv (3.12.3-0ubuntu2.1) ...
+Setting up python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+Setting up python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
+Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up python3.12 (3.12.3-1ubuntu0.17) ...
+Setting up libpython3.12t64:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up python3.12-venv (3.12.3-1ubuntu0.17) ...
+Setting up python3-venv (3.12.3-0ubuntu2.1) ...
+Processing triggers for systemd (255.4-1ubuntu8.17) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.8) ...
+[codigo de saida: 0]
+
+### criar a venv depois do contorno
+$ /usr/bin/python3 -m venv /home/cobaia/sonda/venv
+[codigo de saida: 0]
+

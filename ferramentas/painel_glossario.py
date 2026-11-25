@@ -34,6 +34,16 @@ TERMOS: list[dict] = [
      "explicacao": "Quando duas condições leem os mesmos casos, o que as separa são os casos em que elas discordam: b conta os que só a condição nova acertou, e c os que só a antiga acertou. O teste pergunta se a diferença entre b e c poderia aparecer só por acaso, e a resposta é o valor p.",
      "no_projeto": "O projeto usa a forma exata, de dois lados, porque os casos discordantes são poucos. A forma aproximada, mais comum, não serve para tão poucos casos.",
      "fontes": ["ref:McNEMAR, Quinn.", "ref:RASCHKA, S.", "ref:DIETTERICH, T. G."]},
+    # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) entrada nova: o teste dos sinais, o método que a regra L8 do plano da Fase 5
+    # usa para dizer se o agente ou as pessoas foram mais rápidos.
+    # ! Motivo: o plano aprovado da Fase 5 (seção 6) pede o teste dos sinais no glossário, com o resumo, o que o projeto faz de diferente e a fonte original. A
+    # fonte (Dixon e Mood, 1946) foi conferida em 16/11/2026 no registro do DOI no Crossref antes de entrar em `referencias.md`, de onde é copiada pela chave; a
+    # de McNemar vem junto porque a conta é a do McNemar exato que o projeto já usa.
+    {"id": "sinais", "termo": "Teste dos sinais", "grupo": "metodo", "padroes": [r"teste exato dos sinais", r"teste dos sinais"],
+     "curto": "Conta em quantos pares cada lado foi melhor e pergunta se essa divisão poderia aparecer só por acaso. Olha só quem ganhou, e não por quanto.",
+     "explicacao": "Para cada par de medidas, o teste guarda só o sinal da diferença: qual dos dois lados foi melhor. Se os lados fossem iguais, cada um ganharia em cerca de metade dos pares, como numa moeda, e o valor p diz o quanto a divisão observada seria comum nesse caso. Por não usar o tamanho da diferença, ele não se deixa levar por um par muito fora do comum.",
+     "no_projeto": "Na comparação do agente com as pessoas, a unidade é o cenário, e não cada execução: as repetições do agente no mesmo cenário saem quase iguais e não contam como medidas independentes. Cenário em que a diferença das médias é menor que 5 s fica de fora, como empate, porque essa é a folga do cronômetro das pessoas. A conta é a mesma do teste de McNemar exato que o projeto já usa, de dois lados: a função avaliar.mcnemar_exato(b, c), com os cenários em que o agente foi mais rápido de um lado e os em que as pessoas foram do outro.",
+     "fontes": ["ref:DIXON, W. J.", "ref:McNEMAR, Quinn."]},
     {"id": "valor-p", "termo": "Valor p", "grupo": "metodo", "padroes": [r"valor[- ]p\b", r"p abaixo de 0,05", r"p &lt; 0,05", r"p < 0,05"],
      "curto": "A chance de uma diferença daquele tamanho aparecer só por acaso. Abaixo de 0,05, o projeto trata a diferença como fora do ruído.",
      "explicacao": "O valor p não diz o tamanho da diferença nem se ela importa: diz só o quanto ela seria comum se as duas condições fossem iguais.",

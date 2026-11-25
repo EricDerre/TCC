@@ -32,3 +32,11 @@
 [2026-11-12 00:09:58] FIM segundo_passe: 24 casos com sinal; duração 1773 s; trilha 580612 bytes
 [2026-11-12 00:10:00] avaliar_fase4.py --segundo_passe --saida fase4_segundo_passe
 [2026-11-12 00:10:00] FIM rodar_fase4.ps1 (modo segundo_passe) - duracao total 00h30
+[2026-11-16 10:48:40] rodar_fase4.ps1: modo segundo_passe, saida fase4_segundo_passe, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-16 10:48:43] Ollama 0.40.16; modelo qwen2.5:7b; RAM livre 7,5 GB
+[2026-11-16 10:48:43] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_segundo_passe\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-16 10:48:43] testar_fase4.py
+[2026-11-16 10:49:15] executar_fase4.py --modo segundo_passe --saida fase4_segundo_passe --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20
+[2026-11-16 10:49:17] a ponte da versão 0.40.16 é pareável com a Fase 3 (b + c = 1, limite 2)
+[2026-11-16 10:49:17] !! os registros já gravados nesta saída vieram do Ollama ['0.40.15'] e o atual é 0.40.16: use outra --saida (decisão 44)
+[2026-11-16 10:49:17] !! executar_fase4.py saiu com codigo 2

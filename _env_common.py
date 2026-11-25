@@ -1,4 +1,9 @@
 # ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) a docstring abaixo ganhou o parágrafo final, sobre o
+# caminho do Linux.
+# ! Motivo: ela dizia que no Linux o serviço do MariaDB tinha como plano B o servidor iniciado como processo direto e que esse
+# caminho não tinha sido testado; as células de 18 e 19/11/2026 testaram, e `ensure_mariadb_running` deixou de ter esse plano B
+# no Linux. É o primeiro texto que quem abre o arquivo lê.
 """
 Helpers compartilhados por install.py e run.py.
 
@@ -14,6 +19,11 @@ sozinhos — esse caminho não foi testado ao vivo nesta sessão (só a máquina
 Windows atual estava disponível), então mantém o fallback de systemctl/brew
 services, mas com o mesmo "iniciar como processo direto" como plano B caso o
 serviço não suba.
+
+Desde 19/11/2026 (pacote I3 do instalador único) o caminho do Linux está testado em células do WSL (Ubuntu 22.04, 24.04
+e 26.04, Debian 12 e 13, Fedora 45): lá o serviço sobe pelo systemd ou pelo `service` (`subir_servico_no_linux`), e o
+plano B do processo direto não existe mais, porque o `mariadbd` não consegue escrever na pasta de dados do pacote como
+usuário comum. No macOS, ainda sem teste, vale o que está escrito acima.
 """
 import glob
 import os
@@ -114,7 +124,7 @@ def php_extension_dir(php_path: str) -> Path:
     return Path(php_path).parent / "ext"
 
 
-def php_extension_flags(php_path: str) -> list[str]:
+def php_extension_flags(php_path: str, so: str | None = None) -> list[str]:
     """Confirmado nesta máquina: o build Windows do PHP tem um extension_dir
     default hardcoded (C:\\php\\ext) que não bate com o caminho real de
     instalação — sem forçar extension_dir explicitamente, as extensões abaixo
@@ -129,6 +139,16 @@ def php_extension_flags(php_path: str) -> list[str]:
     vem com output_buffering ligado por padrão, o que mascara esse bug
     pré-existente do código — aqui ligamos explicitamente pra reproduzir esse
     mesmo comportamento sem precisar de um php.ini."""
+    # ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) no Linux a função devolve só o
+    # `output_buffering`; `so=` troca o sistema só nos testes. No Windows e no macOS a lista é a de sempre.
+    # ! Motivo: célula L-U2404 de 18/11/2026 (suspeita HL4): com `-d extension_dir=/usr/bin/ext -d extension=mysqli ...` o
+    # `php -S` do Ubuntu subia com `mysqli: NAO carregada` e o site respondia `HTTP 500`, `Class "mysqli" not found in
+    # .../conn/connect.php:13`; a pasta `ext` ao lado do executável só existe no PHP do Windows. No Linux o pacote da
+    # distribuição já carrega mysqli, pdo_mysql e mbstring pelos arquivos de `conf.d`. Provado nas células de 19/11/2026
+    # (Ubuntu 22.04, 24.04 e 26.04, Debian 12 e 13, Fedora 45), quando a regra morava em `instalador/servicos.py`, um
+    # módulo provisório que trocava esta função só na memória porque este arquivo não podia mudar antes da corrida 28b.
+    if (so or OS_NAME) == "Linux":
+        return ["-d", "output_buffering=4096"]
     ext_dir = php_extension_dir(php_path)
     return [
         "-d", f"extension_dir={ext_dir}",
@@ -338,22 +358,91 @@ def wait_for_mariadb(cli: str, timeout_s: int = 60) -> bool:
     return False
 
 
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) funções novas `banco_no_ar`, `systemd_no_ar`,
+# `prefixo_de_root`, `comando_de_subir_o_banco` e `subir_servico_no_linux`, trazidas de `instalador/ferramentas.py`.
+# ! Motivo: células L-U2404 e L-U2404-SS de 18 e 19/11/2026. Suspeita HL12: `ensure_mariadb_running` usava "entrar como root
+# sem senha" como teste de "o banco está no ar"; no Ubuntu o root só entra pelo unix_socket (`ERROR 1698 (28000): Access
+# denied for user 'root'@'localhost'`), então o instalador esperava 30 s, subia um segundo `mariadbd` como usuário comum,
+# esperava 45 s e parava em "Não foi possível subir o MariaDB" com o serviço no ar. Suspeita HL7: sem o systemd, `sudo
+# systemctl enable --now mariadb` responde "System has not been booted with systemd as init system (PID 1). Can't operate.",
+# e o servidor direto como usuário comum dá `Can't create/write to file './ddl_recovery.log' (Errcode: 13 "Permission
+# denied")`; `sudo service mariadb start` sobe. Enquanto este arquivo não podia mudar (até a corrida 28b ser lida), as
+# funções moravam em `instalador/ferramentas.py`, e quem chama `ensure_mariadb_running` direto (o `run.py`, o
+# `restaurar_banco.py` e a prova, `instalador/conferir.py`) continuava sem ligar o banco num WSL sem systemd reiniciado.
+def banco_no_ar(cli: str) -> bool:
+    """O servidor responde? Entrar como root sem senha prova que sim. Quando a entrada é recusada, o `mariadb-admin ping`
+    ainda sai com código 0 se o servidor está no ar (ele conta a recusa como resposta do servidor) e com 1 se não está."""
+    if _can_connect(cli):
+        return True
+    admin = find_mariadb_admin()
+    if not admin:
+        return False
+    return subprocess.run([admin, "ping"], capture_output=True, check=False).returncode == 0
+
+
+def systemd_no_ar() -> bool:
+    """O systemd é quem sobe os serviços nesta máquina? No WSL e em contêiner ele pode estar desligado."""
+    return Path("/run/systemd/system").is_dir()
+
+
+def prefixo_de_root(uid: int | None = None, tem_sudo: bool | None = None) -> list[str] | None:
+    """O começo dos comandos que precisam de root: nada para quem já é root, `sudo` para os outros, None se não há sudo."""
+    if uid is None:
+        uid = os.geteuid() if hasattr(os, "geteuid") else 0
+    if uid == 0:
+        return []
+    if tem_sudo is None:
+        tem_sudo = bool(shutil.which("sudo"))
+    return ["sudo"] if tem_sudo else None
+
+
+def comando_de_subir_o_banco(com_systemd: bool, prefixo: list[str]) -> list[str]:
+    """Com o systemd, o serviço é ligado e marcado para subir no boot; sem ele, só ligado pelo `service`."""
+    if com_systemd:
+        return [*prefixo, "systemctl", "enable", "--now", "mariadb"]
+    return [*prefixo, "service", "mariadb", "start"]
+
+
+def subir_servico_no_linux(cli: str, espera_s: int = 40) -> bool:
+    """Liga o serviço do MariaDB no Linux, pelo systemd ou pelo `service`, e espera o servidor responder."""
+    if banco_no_ar(cli):
+        return True
+    prefixo = prefixo_de_root()
+    if prefixo is None:
+        log("Ligar o serviço do MariaDB precisa do sudo, e esta máquina não tem. Instale o sudo e rode de novo, como "
+            "usuário comum.")
+        return False
+    comando = comando_de_subir_o_banco(systemd_no_ar(), prefixo)
+    log("O MariaDB não está no ar; ligando o serviço...")
+    run(comando)
+    limite = time.time() + espera_s
+    while time.time() < limite:
+        if banco_no_ar(cli):
+            return True
+        time.sleep(2)
+    log(f"O MariaDB não respondeu depois de `{' '.join(comando)}`; a mensagem do comando está logo acima.")
+    return False
+
+
 def ensure_mariadb_running(cli: str) -> bool:
     """Garante que existe um mariadbd/mysqld respondendo em localhost:3306.
-    Tenta, em ordem: (1) já está rodando, (2) serviço do SO (systemd/brew
-    services no Linux/macOS — não aplicável no Windows, ver módulo docstring),
+    Tenta, em ordem: (1) já está rodando, (2) serviço do SO (systemd ou `service` no Linux, brew
+    services no macOS; não aplicável no Windows, ver módulo docstring),
     (3) inicia o binário do servidor diretamente como subprocesso (sempre o
-    caminho usado no Windows, já que winget não registra serviço)."""
+    caminho usado no Windows, já que winget não registra serviço; no Linux esse passo não existe mais)."""
     global _mariadbd_proc
 
     if _can_connect(cli):
         return True
 
     if OS_NAME == "Linux":
-        run(["sudo", "systemctl", "start", "mariadb"])
-        if wait_for_mariadb(cli, timeout_s=30):
-            return True
-    elif OS_NAME == "Darwin":
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) no Linux quem liga o banco é `subir_servico_no_linux`, e a
+        # função volta daqui: sem `sudo systemctl start mariadb` fixo e sem o servidor direto como plano B.
+        # ! Motivo: ver a tag de `banco_no_ar`, logo acima (HL12 e HL7): o teste antigo de "no ar" confundia acesso
+        # recusado com banco desligado, o `systemctl` não opera sem o systemd, e o `mariadbd` direto como usuário comum
+        # não consegue escrever na pasta de dados do pacote (`/var/lib/mysql`).
+        return subir_servico_no_linux(cli)
+    if OS_NAME == "Darwin":
         run(["brew", "services", "start", "mariadb"])
         if wait_for_mariadb(cli, timeout_s=30):
             return True

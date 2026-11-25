@@ -1,0 +1,16 @@
+### o Python que o install.sh usaria
+$ /usr/sbin/python3 --version
+Python 3.15.0
+[codigo de saida: 0]
+
+### o pacote python3-venv esta instalado?
+$ bash -c dpkg-query -W -f "\${Status} \${Version}\n" python3-venv 2>&1 || true
+bash: line 1: dpkg-query: command not found
+[codigo de saida: 0]
+
+### criar a venv como o install.py faz (python -m venv)
+$ /usr/sbin/python3 -m venv /home/cobaia/sonda/venv
+[codigo de saida: 0]
+
+### a venv foi criada sem contorno
+

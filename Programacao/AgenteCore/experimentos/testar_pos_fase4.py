@@ -1215,7 +1215,11 @@ RESPOSTA_OLLAMA_DE_TESTE = {"response": "CAUSA_RAIZ: campo_ausente\nCAMPO: preco
                             "prompt_eval_duration": 40_000_000_000, "eval_duration": 1_400_000_000, "total_duration": 41_430_000_000, "context": [1, 2, 3]}
 CAMPOS_DO_ESTADO = {"etapa", "modelo", "estado", "fase", "tokens_prompt", "chars_prompt", "teto_tokens", "tokens_gerados", "decorrido_s", "estimativa_s",
                     "estimativa_refeita_s", "fracao", "estimativa", "medido", "inferencias_concluidas", "iniciado_em", "gravado_em", "versao"}
-COMMITS_DA_APLICACAO = ["e854a0eb", "ab4da6a1", "26432d2c", "084fce09", "603c423e", "3e8cfc14", "4f3b3e26", "633ebb27"]   # git log -- Programacao/CobaiaAPI Programacao/CobaiaFront
+# ! Alteração de IA - Revisar: (16/11/2026) a lista ganhou o commit `717f68c2`, de 12/11/2026, e os testes abaixo passaram a esperar 8 pares em vez de 7.
+# ! Motivo: esse commit levou para a pasta do site a nota `Programacao/CobaiaFront/ORIGEM.md` (a origem do site, o Projeto CHULETA), e o protótipo conta todo commit que
+# mexe nas pastas das cobaias. A bateria parou em `teste_impacto_le_o_diff...` com a lista antiga. A prova foi regerada (`impacto_git.py --prova`): no par novo o único
+# arquivo da aplicação é a nota, que nenhum cenário declara, e a regra 1 manda rodar tudo.
+COMMITS_DA_APLICACAO = ["e854a0eb", "ab4da6a1", "26432d2c", "084fce09", "603c423e", "3e8cfc14", "4f3b3e26", "633ebb27", "717f68c2"]   # git log -- Programacao/CobaiaAPI Programacao/CobaiaFront
 
 
 class _Relogio:
@@ -1612,8 +1616,11 @@ def teste_impacto_prova_no_historico_do_repositorio_gravada_e_conferida_com_chec
     dado, md = ig.prova()
     assert [c["commit"][:8] for c in dado["commits"]] == COMMITS_DA_APLICACAO
     pares = dado["pares"]
-    assert len(pares) == 7 and pares[0]["testado"][:8] == "e854a0eb" and pares[0]["atual"][:8] == "ab4da6a1" and pares[-1]["atual"][:8] == "633ebb27"
+    assert len(pares) == 8 and pares[0]["testado"][:8] == "e854a0eb" and pares[0]["atual"][:8] == "ab4da6a1" and pares[-1]["atual"][:8] == "717f68c2"
     por = {p["atual"][:8]: p for p in pares}
+    # o commit de 12/11/2026 só trouxe a nota de origem do site: arquivo da aplicação que nenhum cenário declara, e a regra 1 manda rodar tudo
+    nota = [a["arquivo"] for a in por["717f68c2"]["selecao"]["arquivos"] if a["classe"] == "fora_do_mapa"]
+    assert por["717f68c2"]["selecao"]["rodar_tudo"] is True and nota == ["Programacao/CobaiaFront/ORIGEM.md"] and por["717f68c2"]["resumo"]["na_aplicacao"] == 1, por["717f68c2"]["resumo"]
     assert por["4f3b3e26"]["selecao"]["rodar_tudo"] is False and set(por["4f3b3e26"]["selecao"]["cenarios"]) == {"api-catalogo", "api-detalhe"}, por["4f3b3e26"]["selecao"]["cenarios"]
     assert por["4f3b3e26"]["resumo"]["ignorados"] == 1 and por["4f3b3e26"]["resumo"]["no_mapa"] == 2, por["4f3b3e26"]["resumo"]
     fora = [a["arquivo"] for a in por["084fce09"]["selecao"]["arquivos"] if a["classe"] == "fora_do_mapa"]
@@ -1625,7 +1632,7 @@ def teste_impacto_prova_no_historico_do_repositorio_gravada_e_conferida_com_chec
     assert por["633ebb27"]["selecao"]["deixados_de_fora"]["cenarios"] == [] and any("menu_publico.php" in x and "include" in x for x in por["633ebb27"]["selecao"]["cenarios"]["api-catalogo"])
     assert set(dado["regras"]) == set(ig.REGRAS) and dado["mapa"]["cenarios"] == len(ig.mapa()["cenarios"]) and dado["mapa"]["verbetes"] == 39
     resumo = dado["resumo"]
-    assert resumo["pares"] == 7 and resumo["rodar_tudo"] + resumo["selecao_parcial"] + resumo["nada_a_rodar"] == 7, resumo
+    assert resumo["pares"] == 8 and resumo["rodar_tudo"] + resumo["selecao_parcial"] + resumo["nada_a_rodar"] == 8, resumo
     assert resumo["rodar_tudo"] >= 2 and resumo["selecao_parcial"] >= 2 and resumo["nada_a_rodar"] >= 1, resumo
     assert "—" not in md and "→" not in md and "quebra.php" in md and "pyproject.toml" in md
     gravado = RA / "fase4" / "impacto_git.json"

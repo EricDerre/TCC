@@ -1,0 +1,29 @@
+{
+    "tag_ia":  {
+                   "alteracao":  "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_wsl.ps1: o que a celula rodou e com que codigo de saida.",
+                   "motivo":  "! Motivo: o plano do instalador unico (decisao 143) pede a evidencia de cada celula em arquivo, mesmo quando o instalador para antes de a prova rodar."
+               },
+    "id":  "L-SUSE",
+    "modo":  "como-esta",
+    "ate":  "N1",
+    "modelo_pequeno":  "qwen2.5:0.5b",
+    "sondas":  true,
+    "sem_systemd":  false,
+    "imagem":  "openSUSE-Tumbleweed-20261102.x86_64-3.329-Build3.329.wsl",
+    "imagem_sha256":  "8dc758983be62edd24ff55f5f0c99df211925b48d73b33765acc01b1967ce314",
+    "pacote_sha256":  "c3db2ea3e998dda9aa57c1b2c6526dd2ea7a6e4484ca77bd649e5e17cd415a36",
+    "wsl":  [
+                "Versão do WSL: 2.5.10.0",
+                "Versão do kernel: 6.6.87.2-1"
+            ],
+    "inicio":  "2026-11-19T16:31:22",
+    "fim":  "2026-11-19T16:31:32",
+    "saidas":  {
+                   "abrir_pacote":  "0",
+                   "conferir":  "97",
+                   "install_bash":  "1",
+                   "install_direto":  "126",
+                   "preparo":  "0",
+                   "sondas":  "0"
+               }
+}

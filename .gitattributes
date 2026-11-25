@@ -1,0 +1,9 @@
+# ! Alteração de IA - Revisar: arquivo novo (pacote I2 do instalador único): fixa o fim de linha dos roteiros no git.
+# ! Motivo: célula L-U2404 de 18/11/2026, suspeita HL9 confirmada: num clone feito no Windows o install.sh sai com CRLF, e
+# no Linux `./install.sh` dá "/usr/bin/env: 'bash\r': No such file or directory" e `bash install.sh` dá "set: pipefail\r:
+# invalid option name". Os .cmd e .ps1 ficam com o fim de linha do Windows, que é o que o cmd.exe espera.
+*.sh text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+instalador/uv_fixado.txt text eol=lf

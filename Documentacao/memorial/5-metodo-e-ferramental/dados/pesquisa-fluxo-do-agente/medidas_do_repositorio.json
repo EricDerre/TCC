@@ -2,7 +2,7 @@
  "_tag": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/medidas_fluxo_do_agente.py (10/11/2026): as medidas do repositório que a rodada 7 da pesquisa cita para as três ideias do Eric sobre o fluxo do agente (ficha 64), copiadas dos JSON das corridas 16, 20, 22, 23 e 24, da prévia da corrida 25, das taxas do modelo nesta máquina e da planilha de revisão do lote, mais o cruzamento, sem modelo, do acerto com o selo, os gatilhos e a posição do verbete da causa certa na busca refeita. NÃO editar à mão: `--check` compara com o regerado.",
  "_motivo": "! Motivo: o levantamento §6.16, a proposta de desenho do analista de documentação e a aba do painel não podem trazer número digitado à mão; cada bloco diz no campo `fonte` de que arquivo e de que campo saiu, e a conta da posição só vale porque a busca refeita devolve os três verbetes gravados em todos os casos (campo `busca_refeita_igual`).",
  "gerado_por": "ferramentas/medidas_fluxo_do_agente.py",
- "gerado_em": "2026-11-10T19:22:16",
+ "gerado_em": "2026-11-16T11:18:35",
  "maquina": {
   "modelo": "qwen2.5:7b",
   "registros": 120,
@@ -1376,8 +1376,41 @@
    "fonte": "evolucao_biblioteca.CODIGOS_REJEICAO e MAX_PROPOSTAS_POR_CASO; biblioteca_fase4.FILTROS e PARCELA_PARA_REVISAO"
   },
   "corrida_25": {
-   "rodou": false,
-   "fonte": "resultados_alvo/fase4/sem_notas.json ainda não existe: a corrida 25 espera o Eric"
+   "rodou": true,
+   "resumo": {
+    "casos": 72,
+    "acertos_sem_notas": 54,
+    "acerto_sem_notas_pct": 75.0,
+    "wilson_lo_pct": 63.9,
+    "wilson_hi_pct": 83.6,
+    "acertos_referencia": 56,
+    "acerto_referencia_pct": 77.8,
+    "b": 2,
+    "c": 4,
+    "saldo": -2,
+    "p": 0.6875,
+    "mesmo_rotulo": 64,
+    "ganhos": [
+     "run-26",
+     "sin-14"
+    ],
+    "perdas": [
+     "efe-3",
+     "run-10",
+     "sin-27",
+     "tra-24"
+    ],
+    "tokens_entrada_mediana": 1087.5,
+    "tokens_entrada_mediana_referencia": 1181.0,
+    "segundos_mediana": 57.63,
+    "segundos_mediana_referencia": 66.35,
+    "acuracia_balanceada_sem_notas_pct": 80.0,
+    "acuracia_balanceada_referencia_pct": 82.3,
+    "completo": true,
+    "sai_do_ruido": false,
+    "veredito": "dentro do ruído"
+   },
+   "fonte": "resultados_alvo/fase4/sem_notas.json, resumo"
   }
  }
 }

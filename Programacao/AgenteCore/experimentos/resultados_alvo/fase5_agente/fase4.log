@@ -1,0 +1,69 @@
+﻿[2026-11-18 18:46:16] rodar_fase4.ps1: modo cenarios, saida fase5_agente, canal chromium, resultados resultados_alvo, casos 0
+[2026-11-18 18:46:18] Ollama 0.40.16; modelo qwen2.5:7b; RAM livre 8,9 GB
+[2026-11-18 18:46:18] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase5_agente\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-18 18:46:18] testar_fase4.py
+[2026-11-18 18:47:02] executar_fase4.py --modo cenarios --saida fase5_agente --canal chromium --banco avaliacao --modelo qwen2.5:7b --top 20 --repeticoes 5
+[2026-11-18 18:47:05] INÍCIO cenarios: Ollama 0.40.16, qwen2.5:7b, biblioteca de produção (95af35290860, lote fase4_biblioteca), k = 3; 50 execução(ões) (10 cenários x 5 repetição(ões)); 0 já feita(s)
+[2026-11-18 18:47:25] referência api-catalogo: passou em 0.555 s; árvore 193 nós, 39 linhas
+[2026-11-18 18:47:26] repetição 1: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 18:48:38] [1/50] contrato-malformed_json#1 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success não; MTTR None s; 70.917 s
+[2026-11-18 18:49:47] [2/50] contrato-field_missing#1 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 66.202 s; 66.666 s
+[2026-11-18 18:50:55] [3/50] contrato-field_renamed#1 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 65.091 s; 65.495 s
+[2026-11-18 18:52:05] [4/50] contrato-type_drift#1 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 67.53 s; 67.925 s
+[2026-11-18 18:53:27] [5/50] contrato-escala_ou_unidade_errada#1 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 80.071 s; 80.442 s
+[2026-11-18 18:54:46] [6/50] contrato-error_500#1 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 76.562 s; 76.846 s
+[2026-11-18 18:54:47] referência front-busca (id_renomeado, localizador #buscar): passou em 0.497 s; alvo searchbox "search"
+[2026-11-18 18:55:59] [7/50] localizador-front-busca#1 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 65.212 s; 71.118 s
+[2026-11-18 18:56:00] referência front-admin-login (classe_trocada, localizador button.btn-primary): passou em 0.358 s; alvo button "Entrar"
+[2026-11-18 18:56:45] [8/50] localizador-front-admin-login#1 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 38.456 s; 44.134 s
+[2026-11-18 18:56:46] referência front-admin-produtos (texto_alterado, localizador role=button[name=/EXCLUIR$/] >> nth=0): passou em 0.8 s; alvo button " EXCLUIR"
+[2026-11-18 18:57:54] [9/50] localizador-front-admin-produtos#1 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 60.284 s; 66.738 s
+[2026-11-18 18:57:55] referência front-cliente-reserva (estrutura_alterada, localizador #reserva_login > input[type=submit]): passou em 0.693 s; alvo button "Reservar"
+[2026-11-18 18:59:04] [10/50] localizador-front-cliente-reserva#1 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 60.039 s; 67.414 s
+[2026-11-18 18:59:04] repetição 2: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 18:59:28] [11/50] contrato-malformed_json#2 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 21.913 s; 22.157 s
+[2026-11-18 18:59:49] [12/50] contrato-field_missing#2 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 17.872 s; 18.242 s
+[2026-11-18 19:00:07] [13/50] contrato-field_renamed#2 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 16.346 s; 16.737 s
+[2026-11-18 19:00:30] [14/50] contrato-type_drift#2 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 19.76 s; 20.151 s
+[2026-11-18 19:00:51] [15/50] contrato-escala_ou_unidade_errada#2 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 19.279 s; 19.68 s
+[2026-11-18 19:01:13] [16/50] contrato-error_500#2 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 19.785 s; 20.092 s
+[2026-11-18 19:02:00] [17/50] localizador-front-busca#2 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 39.571 s; 44.872 s
+[2026-11-18 19:02:47] [18/50] localizador-front-admin-login#2 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 39.541 s; 44.793 s
+[2026-11-18 19:03:14] [19/50] localizador-front-admin-produtos#2 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 18.996 s; 24.618 s
+[2026-11-18 19:03:40] [20/50] localizador-front-cliente-reserva#2 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 18.043 s; 24.156 s
+[2026-11-18 19:03:41] repetição 3: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 19:04:05] [21/50] contrato-malformed_json#3 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 22.267 s; 22.559 s
+[2026-11-18 19:04:26] [22/50] contrato-field_missing#3 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 17.976 s; 18.347 s
+[2026-11-18 19:04:44] [23/50] contrato-field_renamed#3 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 16.324 s; 16.681 s
+[2026-11-18 19:05:07] [24/50] contrato-type_drift#3 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 19.792 s; 20.194 s
+[2026-11-18 19:05:30] [25/50] contrato-escala_ou_unidade_errada#3 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 21.141 s; 21.536 s
+[2026-11-18 19:05:51] [26/50] contrato-error_500#3 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 18.155 s; 18.432 s
+[2026-11-18 19:06:37] [27/50] localizador-front-busca#3 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 39.328 s; 44.647 s
+[2026-11-18 19:07:24] [28/50] localizador-front-admin-login#3 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 39.074 s; 44.326 s
+[2026-11-18 19:07:51] [29/50] localizador-front-admin-produtos#3 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 19.293 s; 24.914 s
+[2026-11-18 19:08:16] [30/50] localizador-front-cliente-reserva#3 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 17.257 s; 23.223 s
+[2026-11-18 19:08:17] repetição 4: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 19:08:41] [31/50] contrato-malformed_json#4 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 21.944 s; 22.209 s
+[2026-11-18 19:09:01] [32/50] contrato-field_missing#4 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 17.922 s; 18.275 s
+[2026-11-18 19:09:20] [33/50] contrato-field_renamed#4 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 16.326 s; 16.673 s
+[2026-11-18 19:09:42] [34/50] contrato-type_drift#4 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 19.498 s; 19.866 s
+[2026-11-18 19:10:05] [35/50] contrato-escala_ou_unidade_errada#4 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 20.45 s; 20.816 s
+[2026-11-18 19:10:27] [36/50] contrato-error_500#4 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 19.78 s; 20.106 s
+[2026-11-18 19:11:13] [37/50] localizador-front-busca#4 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 38.864 s; 44.17 s
+[2026-11-18 19:11:59] [38/50] localizador-front-admin-login#4 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 38.818 s; 44.069 s
+[2026-11-18 19:12:26] [39/50] localizador-front-admin-produtos#4 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 19.251 s; 24.866 s
+[2026-11-18 19:12:51] [40/50] localizador-front-cliente-reserva#4 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 17.213 s; 23.227 s
+[2026-11-18 19:12:52] repetição 5: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 19:13:17] [41/50] contrato-malformed_json#5 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 22.345 s; 22.588 s
+[2026-11-18 19:13:37] [42/50] contrato-field_missing#5 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 17.862 s; 18.201 s
+[2026-11-18 19:13:57] [43/50] contrato-field_renamed#5 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 17.642 s; 18.051 s
+[2026-11-18 19:14:18] [44/50] contrato-type_drift#5 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 18.248 s; 18.684 s
+[2026-11-18 19:14:41] [45/50] contrato-escala_ou_unidade_errada#5 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 21.153 s; 21.576 s
+[2026-11-18 19:15:03] [46/50] contrato-error_500#5 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 19.555 s; 19.82 s
+[2026-11-18 19:15:49] [47/50] localizador-front-busca#5 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 38.773 s; 44.077 s
+[2026-11-18 19:16:35] [48/50] localizador-front-admin-login#5 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 38.329 s; 43.572 s
+[2026-11-18 19:17:02] [49/50] localizador-front-admin-produtos#5 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 19.277 s; 24.829 s
+[2026-11-18 19:17:28] [50/50] localizador-front-cliente-reserva#5 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 18.236 s; 24.252 s
+[2026-11-18 19:17:35] FIM cenarios: 50 de 50 execuções; Task Success 49; duração 1832 s; trilha 1619118 bytes
+[2026-11-18 19:17:37] avaliar_fase4.py --cenarios --saida fase5_agente --nome cenarios_fase5 --titulo Fase 5: os dez cenários com cinco repetições (corrida 28)
+[2026-11-18 19:17:38] FIM rodar_fase4.ps1 (modo cenarios) - duracao total 00h31

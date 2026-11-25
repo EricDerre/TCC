@@ -1,0 +1,10 @@
+### o ollama esta no PATH?
+$ bash -c command -v ollama || echo "sem ollama no PATH"
+sem ollama no PATH
+[codigo de saida: 0]
+
+### a rodada do instalador chegou a Instalacao concluida?
+$ bash -c grep -n "Instalação concluída" "$0"/instalacao*.log || echo "nenhum log da rodada tem a linha de conclusao" /home/cobaia/evidencia
+nenhum log da rodada tem a linha de conclusao
+[codigo de saida: 0]
+

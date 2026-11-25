@@ -1,0 +1,44 @@
+# ! Alteracao de IA - Revisar: medidas da maquina-alvo tiradas por comando do PowerShell em 18/11/2026 08:42, so de leitura, de dentro do aplicativo Claude.
+# ! Motivo: as fichas 78 a 82 de pendencias.md e o plano do instalador unico citam memoria, disco, recursos de virtualizacao e o tamanho de cada peca instalada; a regra do projeto e copiar numero de arquivo, nao digitar.
+
+== sistema
+SO: Microsoft Windows 11 Pro 10.0.26200 build 26200
+CPU: 12th Gen Intel(R) Core(TM) i5-1235U | nucleos 10 | logicos 12
+RAM total GB: 15,7 | livre GB (com o aplicativo Claude aberto): 4,2
+Hipervisor presente: True
+Disco C: total GB: 474,0 livre GB: 218,8
+
+== recursos opcionais do Windows (Win32_OptionalFeature)
+Microsoft-Hyper-V-All                    desativado
+Microsoft-Hyper-V                        desativado
+HypervisorPlatform                       desativado
+VirtualMachinePlatform                   ATIVADO
+Containers-DisposableClientVM            desativado
+Microsoft-Windows-Subsystem-Linux        ATIVADO
+
+== WSL
+Versão do WSL: 2.5.10.0
+Versão do kernel: 6.6.87.2-1
+Subsistema do Windows para Linux não tem distribuições instaladas.
+
+== Defender (Get-MpComputerStatus)
+AntivirusEnabled: True | RealTimeProtectionEnabled: True | IsTamperProtected: False
+
+== quanto ocupa cada peca de uma instalacao completa nesta maquina
+      718 MB  %USERPROFILE%\AppData\Local\ms-playwright
+      295 MB  %USERPROFILE%\AppData\Local\MariaDB\mariadb-11.8.9-winx64
+       93 MB  %USERPROFILE%\AppData\Local\MariaDB\download
+       86 MB  %USERPROFILE%\AppData\Local\Microsoft\WinGet\Packages\PHP.PHP.8.2_Microsoft.Winget.Source_8wekyb3d8bbwe
+    3.200 MB  %USERPROFILE%\AppData\Local\Programs\Ollama
+   12.125 MB  %USERPROFILE%\.ollama\models
+    4.466 MB  blob dos pesos do qwen2.5:7b (sha256-2bada8a74506...)
+       95 MB  %USERPROFILE%\Documents\TCC\Programacao\CobaiaAPI\.venv
+      242 MB  %USERPROFILE%\Documents\TCC\Programacao\AgenteCore\.venv
+      143 MB  %USERPROFILE%\Documents\TCC\.mariadb
+
+== python no PATH (o atalho da Store e o de WindowsApps)
+python.exe -> C:\Python314\python.exe
+python.exe -> C:\Python313\python.exe
+python.exe -> %USERPROFILE%\AppData\Local\Microsoft\WindowsApps\python.exe
+python3.exe -> %USERPROFILE%\AppData\Local\Microsoft\WindowsApps\python3.exe
+py.exe -> C:\WINDOWS\py.exe

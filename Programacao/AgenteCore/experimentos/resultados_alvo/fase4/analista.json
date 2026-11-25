@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-11-12T01:00:14",
+    "gerado_em": "2026-11-16T18:27:28",
     "corrida": "fase4_analista",
     "numero": 27,
     "medida": "M2"
@@ -172,13 +172,90 @@
       "leitura": "parcela_correta",
       "nome": "parcela correta",
       "teste": "Fisher",
-      "corrida_27": "sem revisão",
-      "corrida_20": "2 de 20",
-      "p": null,
-      "veredito": "sem veredito: falta a revisão humana às cegas das propostas"
+      "corrida_27": "3 de 8",
+      "corrida_20": "1 de 20",
+      "p": 0.0581,
+      "veredito": "dentro do ruído"
     }
   ],
-  "revisao": null,
+  "revisao": {
+    "quem": "um analista de QA da empresa em que o Eric trabalha, o mesmo da sessão de revisão dos relatórios, que julgou só pelo que a página mostra",
+    "revisadas": 8,
+    "pendentes": 0,
+    "corrida_27": {
+      "Correta": 3,
+      "Parcial": 4,
+      "Errada": 1
+    },
+    "corrida_20_pelo_mesmo_revisor": {
+      "Correta": 1,
+      "Parcial": 9,
+      "Errada": 10
+    },
+    "corrida_20_na_revisao_do_lote": {
+      "Correta": 2,
+      "Parcial": 9,
+      "Errada": 9
+    },
+    "portoes_contra_a_revisao": [
+      {
+        "portao": "forma",
+        "nome": "portão 3, a forma de instrução",
+        "avaliadas": 4,
+        "Correta": {
+          "recusa": 0,
+          "passa": 3
+        },
+        "Parcial": {
+          "recusa": 0,
+          "passa": 0
+        },
+        "Errada": {
+          "recusa": 0,
+          "passa": 1
+        }
+      },
+      {
+        "portao": "texto",
+        "nome": "portão 4, os filtros de texto",
+        "avaliadas": 4,
+        "Correta": {
+          "recusa": 0,
+          "passa": 3
+        },
+        "Parcial": {
+          "recusa": 0,
+          "passa": 0
+        },
+        "Errada": {
+          "recusa": 0,
+          "passa": 1
+        }
+      },
+      {
+        "portao": "busca",
+        "nome": "portão 5, a busca",
+        "avaliadas": 8,
+        "Correta": {
+          "recusa": 0,
+          "passa": 3
+        },
+        "Parcial": {
+          "recusa": 4,
+          "passa": 0
+        },
+        "Errada": {
+          "recusa": 0,
+          "passa": 1
+        }
+      }
+    ],
+    "passam_nos_cinco_por_veredito": {
+      "Correta": 3,
+      "Parcial": 0,
+      "Errada": 1
+    }
+  },
   "por_portao": [
     {
       "portao": "validador",

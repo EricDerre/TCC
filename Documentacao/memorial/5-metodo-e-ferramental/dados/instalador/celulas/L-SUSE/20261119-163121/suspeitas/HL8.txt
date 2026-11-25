@@ -1,0 +1,2 @@
+### nao rodou: nao ha python3 nem python no PATH
+

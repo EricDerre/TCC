@@ -1,0 +1,843 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-24T21:02:56",
+    "corrida": "fase5_agente_b",
+    "gerado_por": "avaliar_fase5.py --comparar"
+  },
+  "lados": {
+    "agente": {
+      "noite": {
+        "execucoes": 50,
+        "esperadas": 50,
+        "completa": true,
+        "faltam": [],
+        "versoes_ollama": [
+          "0.40.16"
+        ],
+        "navegador": {
+          "versoes": [
+            "156.0.8078.4"
+          ],
+          "unica": true
+        },
+        "banco": {
+          "hashes_de_inicio": [
+            "9fe5e7cb64288c9d"
+          ],
+          "unico": true
+        },
+        "linha_fim_no_log": true,
+        "ultima_linha_fim": "FIM cenarios: 50 de 50 execuções; Task Success 49; duração 740 s; trilha 1631882 bytes",
+        "a_frio": true,
+        "frio": {
+          "limite_da_parcela_em_cache": 0.5,
+          "motivo": null,
+          "por_repeticao": [
+            {
+              "repeticao": 1,
+              "inferencias": 10,
+              "tokens_entrada": 11966,
+              "tokens_em_cache": 1505,
+              "parcela_em_cache_pct": 12.6,
+              "cache_na_primeira_inferencia": 0,
+              "prefill_s": 474.2,
+              "carga_s": 6.9,
+              "a_frio": true
+            },
+            {
+              "repeticao": 2,
+              "inferencias": 10,
+              "tokens_entrada": 11966,
+              "tokens_em_cache": 1505,
+              "parcela_em_cache_pct": 12.6,
+              "cache_na_primeira_inferencia": 0,
+              "prefill_s": 473.8,
+              "carga_s": 6.4,
+              "a_frio": true
+            },
+            {
+              "repeticao": 3,
+              "inferencias": 10,
+              "tokens_entrada": 11966,
+              "tokens_em_cache": 1505,
+              "parcela_em_cache_pct": 12.6,
+              "cache_na_primeira_inferencia": 0,
+              "prefill_s": 468.8,
+              "carga_s": 6.1,
+              "a_frio": true
+            },
+            {
+              "repeticao": 4,
+              "inferencias": 10,
+              "tokens_entrada": 11966,
+              "tokens_em_cache": 1505,
+              "parcela_em_cache_pct": 12.6,
+              "cache_na_primeira_inferencia": 0,
+              "prefill_s": 471.0,
+              "carga_s": 6.1,
+              "a_frio": true
+            },
+            {
+              "repeticao": 5,
+              "inferencias": 10,
+              "tokens_entrada": 11966,
+              "tokens_em_cache": 1505,
+              "parcela_em_cache_pct": 12.6,
+              "cache_na_primeira_inferencia": 0,
+              "prefill_s": 474.4,
+              "carga_s": 6.4,
+              "a_frio": true
+            }
+          ]
+        }
+      },
+      "geral": {
+        "n": 50,
+        "sucessos": 49,
+        "task_success_pct": 98.0,
+        "wilson_lo_pct": 89.5,
+        "wilson_hi_pct": 99.6,
+        "cenarios": 10,
+        "cenarios_com_todas_certas": 9,
+        "com_fim": 49,
+        "sem_fim": 1,
+        "cenarios_com_tempo": 10,
+        "tempo_media_s": 66.34,
+        "tempo_ic_lo_s": 60.88,
+        "tempo_ic_hi_s": 71.5,
+        "piso_media_s": 76.7,
+        "piso_ic_lo_s": 61.34,
+        "piso_ic_hi_s": 101.68,
+        "estrita_cenarios": 10,
+        "estrita_media_s": 66.34
+      },
+      "por_tipo": [
+        {
+          "tipo": "contrato",
+          "n": 30,
+          "sucessos": 29,
+          "task_success_pct": 96.7,
+          "wilson_lo_pct": 83.3,
+          "wilson_hi_pct": 99.4,
+          "cenarios": 6,
+          "cenarios_com_todas_certas": 5,
+          "com_fim": 29,
+          "sem_fim": 1,
+          "cenarios_com_tempo": 6,
+          "tempo_media_s": 72.95,
+          "tempo_ic_lo_s": 67.74,
+          "tempo_ic_hi_s": 78.37,
+          "piso_media_s": 90.22,
+          "piso_ic_lo_s": 67.74,
+          "piso_ic_hi_s": 129.72,
+          "estrita_cenarios": 6,
+          "estrita_media_s": 72.95
+        },
+        {
+          "tipo": "localizador",
+          "n": 20,
+          "sucessos": 20,
+          "task_success_pct": 100.0,
+          "wilson_lo_pct": 83.9,
+          "wilson_hi_pct": 100.0,
+          "cenarios": 4,
+          "cenarios_com_todas_certas": 4,
+          "com_fim": 20,
+          "sem_fim": 0,
+          "cenarios_com_tempo": 4,
+          "tempo_media_s": 56.42,
+          "tempo_ic_lo_s": 44.47,
+          "tempo_ic_hi_s": 64.15,
+          "piso_media_s": 56.42,
+          "piso_ic_lo_s": 44.47,
+          "piso_ic_hi_s": 64.15,
+          "estrita_cenarios": 4,
+          "estrita_media_s": 56.42
+        }
+      ],
+      "tempo_total": {
+        "segundos_media_s": 68.97,
+        "segundos_total_s": 3448.6
+      }
+    },
+    "pessoas": {
+      "linhas": {
+        "esperadas": 30,
+        "preenchidas": 30,
+        "anuladas": [],
+        "anotadas_a_mao": [],
+        "sem_fim": [
+          {
+            "linha": 14,
+            "integrante": 2,
+            "ordem": 3,
+            "cenario": "localizador-front-busca"
+          },
+          {
+            "linha": 15,
+            "integrante": 2,
+            "ordem": 4,
+            "cenario": "localizador-front-admin-login"
+          },
+          {
+            "linha": 17,
+            "integrante": 2,
+            "ordem": 6,
+            "cenario": "localizador-front-cliente-reserva"
+          },
+          {
+            "linha": 18,
+            "integrante": 2,
+            "ordem": 7,
+            "cenario": "localizador-front-admin-produtos"
+          },
+          {
+            "linha": 19,
+            "integrante": 2,
+            "ordem": 8,
+            "cenario": "contrato-field_renamed"
+          },
+          {
+            "linha": 20,
+            "integrante": 2,
+            "ordem": 9,
+            "cenario": "contrato-field_missing"
+          }
+        ]
+      },
+      "geral": {
+        "n": 30,
+        "sucessos": 14,
+        "task_success_pct": 46.7,
+        "wilson_lo_pct": 30.2,
+        "wilson_hi_pct": 63.9,
+        "cenarios": 10,
+        "cenarios_com_todas_certas": 0,
+        "com_fim": 24,
+        "sem_fim": 6,
+        "cenarios_com_tempo": 10,
+        "tempo_media_s": 219.7,
+        "tempo_ic_lo_s": 172.29,
+        "tempo_ic_hi_s": 264.66,
+        "piso_media_s": 289.83,
+        "piso_ic_lo_s": 241.02,
+        "piso_ic_hi_s": 339.63,
+        "estrita_cenarios": 9,
+        "estrita_media_s": 246.0
+      },
+      "por_tipo": [
+        {
+          "tipo": "contrato",
+          "n": 18,
+          "sucessos": 6,
+          "task_success_pct": 33.3,
+          "wilson_lo_pct": 16.3,
+          "wilson_hi_pct": 56.3,
+          "cenarios": 6,
+          "cenarios_com_todas_certas": 0,
+          "com_fim": 16,
+          "sem_fim": 2,
+          "cenarios_com_tempo": 6,
+          "tempo_media_s": 174.81,
+          "tempo_ic_lo_s": 125.74,
+          "tempo_ic_hi_s": 228.59,
+          "piso_media_s": 222.15,
+          "piso_ic_lo_s": 153.36,
+          "piso_ic_hi_s": 291.03,
+          "estrita_cenarios": 5,
+          "estrita_media_s": 213.16
+        },
+        {
+          "tipo": "localizador",
+          "n": 12,
+          "sucessos": 8,
+          "task_success_pct": 66.7,
+          "wilson_lo_pct": 39.1,
+          "wilson_hi_pct": 86.2,
+          "cenarios": 4,
+          "cenarios_com_todas_certas": 0,
+          "com_fim": 8,
+          "sem_fim": 4,
+          "cenarios_com_tempo": 4,
+          "tempo_media_s": 287.04,
+          "tempo_ic_lo_s": 183.0,
+          "tempo_ic_hi_s": 359.34,
+          "piso_media_s": 391.36,
+          "piso_ic_lo_s": 322.0,
+          "piso_ic_hi_s": 439.56,
+          "estrita_cenarios": 4,
+          "estrita_media_s": 287.04
+        }
+      ]
+    }
+  },
+  "tempo": {
+    "por_cenario": [
+      {
+        "cenario": "contrato-malformed_json",
+        "tipo": "contrato",
+        "agente_media_s": 81.667,
+        "agente_min_s": 78.676,
+        "agente_max_s": 85.921,
+        "agente_com_fim": 4,
+        "pessoas_media_s": 109.617,
+        "pessoas_min_s": 50.211,
+        "pessoas_max_s": 151.48,
+        "pessoas_com_fim": 3,
+        "diferenca_s": 27.95,
+        "razao": 1.34,
+        "direcao": "agente",
+        "faixas_se_cruzam": true
+      },
+      {
+        "cenario": "contrato-field_missing",
+        "tipo": "contrato",
+        "agente_media_s": 66.993,
+        "agente_min_s": 66.39,
+        "agente_max_s": 67.804,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 111.34,
+        "pessoas_min_s": 94.974,
+        "pessoas_max_s": 127.707,
+        "pessoas_com_fim": 2,
+        "diferenca_s": 44.35,
+        "razao": 1.66,
+        "direcao": "agente",
+        "faixas_se_cruzam": false
+      },
+      {
+        "cenario": "contrato-field_renamed",
+        "tipo": "contrato",
+        "agente_media_s": 65.288,
+        "agente_min_s": 64.916,
+        "agente_max_s": 65.929,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 236.512,
+        "pessoas_min_s": 211.501,
+        "pessoas_max_s": 261.522,
+        "pessoas_com_fim": 2,
+        "diferenca_s": 171.22,
+        "razao": 3.62,
+        "direcao": "agente",
+        "faixas_se_cruzam": false
+      },
+      {
+        "cenario": "contrato-type_drift",
+        "tipo": "contrato",
+        "agente_media_s": 66.718,
+        "agente_min_s": 65.988,
+        "agente_max_s": 67.598,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 188.995,
+        "pessoas_min_s": 51.357,
+        "pessoas_max_s": 260.595,
+        "pessoas_com_fim": 3,
+        "diferenca_s": 122.28,
+        "razao": 2.83,
+        "direcao": "agente",
+        "faixas_se_cruzam": true
+      },
+      {
+        "cenario": "contrato-escala_ou_unidade_errada",
+        "tipo": "contrato",
+        "agente_media_s": 80.42,
+        "agente_min_s": 78.772,
+        "agente_max_s": 82.948,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 280.618,
+        "pessoas_min_s": 35.158,
+        "pessoas_max_s": 454.515,
+        "pessoas_com_fim": 3,
+        "diferenca_s": 200.2,
+        "razao": 3.49,
+        "direcao": "agente",
+        "faixas_se_cruzam": true
+      },
+      {
+        "cenario": "contrato-error_500",
+        "tipo": "contrato",
+        "agente_media_s": 76.585,
+        "agente_min_s": 75.041,
+        "agente_max_s": 77.341,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 121.777,
+        "pessoas_min_s": 37.766,
+        "pessoas_max_s": 174.927,
+        "pessoas_com_fim": 3,
+        "diferenca_s": 45.19,
+        "razao": 1.59,
+        "direcao": "agente",
+        "faixas_se_cruzam": true
+      },
+      {
+        "cenario": "localizador-front-busca",
+        "tipo": "localizador",
+        "agente_media_s": 65.419,
+        "agente_min_s": 64.883,
+        "agente_max_s": 65.776,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 385.26,
+        "pessoas_min_s": 289.476,
+        "pessoas_max_s": 481.043,
+        "pessoas_com_fim": 2,
+        "diferenca_s": 319.84,
+        "razao": 5.89,
+        "direcao": "agente",
+        "faixas_se_cruzam": false
+      },
+      {
+        "cenario": "localizador-front-admin-login",
+        "tipo": "localizador",
+        "agente_media_s": 38.976,
+        "agente_min_s": 38.45,
+        "agente_max_s": 40.263,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 150.139,
+        "pessoas_min_s": 144.581,
+        "pessoas_max_s": 155.698,
+        "pessoas_com_fim": 2,
+        "diferenca_s": 111.16,
+        "razao": 3.85,
+        "direcao": "agente",
+        "faixas_se_cruzam": false
+      },
+      {
+        "cenario": "localizador-front-admin-produtos",
+        "tipo": "localizador",
+        "agente_media_s": 60.326,
+        "agente_min_s": 60.088,
+        "agente_max_s": 60.554,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 331.2,
+        "pessoas_min_s": 258.687,
+        "pessoas_max_s": 403.713,
+        "pessoas_com_fim": 2,
+        "diferenca_s": 270.87,
+        "razao": 5.49,
+        "direcao": "agente",
+        "faixas_se_cruzam": false
+      },
+      {
+        "cenario": "localizador-front-cliente-reserva",
+        "tipo": "localizador",
+        "agente_media_s": 60.97,
+        "agente_min_s": 59.993,
+        "agente_max_s": 63.075,
+        "agente_com_fim": 5,
+        "pessoas_media_s": 281.562,
+        "pessoas_min_s": 167.738,
+        "pessoas_max_s": 395.385,
+        "pessoas_com_fim": 2,
+        "diferenca_s": 220.59,
+        "razao": 4.62,
+        "direcao": "agente",
+        "faixas_se_cruzam": false
+      }
+    ],
+    "geral": {
+      "cenarios_com_os_dois_lados": 10,
+      "diferenca_media_s": 153.37,
+      "ic_lo_s": 108.95,
+      "ic_hi_s": 196.13,
+      "razao_das_medias": 3.31,
+      "sinais": {
+        "agente": 10,
+        "pessoas": 0,
+        "empates": 0,
+        "sem_medida": 0,
+        "p": 0.002
+      },
+      "caso": "veredito",
+      "lado": "agente",
+      "frase": "O agente reparou mais rápido que as pessoas: a diferença média por cenário (tempo das pessoas menos MTTR do agente) foi de 153,4 s, com intervalo de 95% de 109,0 a 196,1 s, que não contém zero, e o teste dos sinais deu p = 0,0020 (10 cenários com o agente mais rápido, nenhum cenário com as pessoas mais rápidas e nenhum empate)."
+    },
+    "por_tipo": [
+      {
+        "tipo": "contrato",
+        "cenarios_com_os_dois_lados": 6,
+        "diferenca_media_s": 101.86,
+        "ic_lo_s": 52.01,
+        "ic_hi_s": 156.41,
+        "razao_das_medias": 2.4,
+        "agente_mais_rapido": 6,
+        "pessoas_mais_rapidas": 0,
+        "empates": 0,
+        "sem_medida": 0
+      },
+      {
+        "tipo": "localizador",
+        "cenarios_com_os_dois_lados": 4,
+        "diferenca_media_s": 230.62,
+        "ic_lo_s": 138.52,
+        "ic_hi_s": 295.36,
+        "razao_das_medias": 5.09,
+        "agente_mais_rapido": 4,
+        "pessoas_mais_rapidas": 0,
+        "empates": 0,
+        "sem_medida": 0
+      }
+    ],
+    "nota_por_tipo": "Por tipo de cenário a leitura mostra os números e fica sem veredito (regra L10): com 6 cenários de contrato o menor p que o teste dos sinais alcança é 0,0312, com os 6 na mesma direção e com 4 cenários de localizador o menor p que o teste dos sinais alcança é 0,1250, com os 4 na mesma direção; o veredito pede p abaixo de 0,05.",
+    "piso": {
+      "cenarios_com_os_dois_lados": 10,
+      "diferenca_media_s": 213.13,
+      "ic_lo_s": 149.17,
+      "ic_hi_s": 272.8,
+      "razao_das_medias": 3.78,
+      "sinais": {
+        "agente": 9,
+        "pessoas": 1,
+        "empates": 0,
+        "sem_medida": 0,
+        "p": 0.0215
+      },
+      "o_que_a_regra_l9_daria": "veredito",
+      "lado": "agente",
+      "por_cenario": [
+        {
+          "cenario": "contrato-malformed_json",
+          "tipo": "contrato",
+          "agente_s": 185.333,
+          "pessoas_s": 109.617,
+          "diferenca_s": -75.72
+        },
+        {
+          "cenario": "contrato-field_missing",
+          "tipo": "contrato",
+          "agente_s": 66.993,
+          "pessoas_s": 274.227,
+          "diferenca_s": 207.23
+        },
+        {
+          "cenario": "contrato-field_renamed",
+          "tipo": "contrato",
+          "agente_s": 65.288,
+          "pessoas_s": 357.674,
+          "diferenca_s": 292.39
+        },
+        {
+          "cenario": "contrato-type_drift",
+          "tipo": "contrato",
+          "agente_s": 66.718,
+          "pessoas_s": 188.995,
+          "diferenca_s": 122.28
+        },
+        {
+          "cenario": "contrato-escala_ou_unidade_errada",
+          "tipo": "contrato",
+          "agente_s": 80.42,
+          "pessoas_s": 280.618,
+          "diferenca_s": 200.2
+        },
+        {
+          "cenario": "contrato-error_500",
+          "tipo": "contrato",
+          "agente_s": 76.585,
+          "pessoas_s": 121.777,
+          "diferenca_s": 45.19
+        },
+        {
+          "cenario": "localizador-front-busca",
+          "tipo": "localizador",
+          "agente_s": 65.419,
+          "pessoas_s": 456.84,
+          "diferenca_s": 391.42
+        },
+        {
+          "cenario": "localizador-front-admin-login",
+          "tipo": "localizador",
+          "agente_s": 38.976,
+          "pessoas_s": 300.093,
+          "diferenca_s": 261.12
+        },
+        {
+          "cenario": "localizador-front-admin-produtos",
+          "tipo": "localizador",
+          "agente_s": 60.326,
+          "pessoas_s": 420.8,
+          "diferenca_s": 360.47
+        },
+        {
+          "cenario": "localizador-front-cliente-reserva",
+          "tipo": "localizador",
+          "agente_s": 60.97,
+          "pessoas_s": 387.708,
+          "diferenca_s": 326.74
+        }
+      ]
+    },
+    "estrita": {
+      "agente_media_s": 66.34,
+      "agente_cenarios": 10,
+      "pessoas_media_s": 246.0,
+      "pessoas_cenarios": 9,
+      "diferenca_s": 179.66
+    }
+  },
+  "task_success": {
+    "agente": {
+      "n": 50,
+      "sucessos": 49,
+      "task_success_pct": 98.0,
+      "wilson_lo_pct": 89.5,
+      "wilson_hi_pct": 99.6,
+      "cenarios": 10,
+      "cenarios_com_todas_certas": 9
+    },
+    "pessoas": {
+      "n": 30,
+      "sucessos": 14,
+      "task_success_pct": 46.7,
+      "wilson_lo_pct": 30.2,
+      "wilson_hi_pct": 63.9,
+      "cenarios": 10,
+      "cenarios_com_todas_certas": 0
+    },
+    "por_cenario": [
+      {
+        "cenario": "contrato-malformed_json",
+        "tipo": "contrato",
+        "agente_sucessos": 4,
+        "agente_n": 5,
+        "agente_pct": 80.0,
+        "pessoas_sucessos": 1,
+        "pessoas_n": 3,
+        "pessoas_pct": 33.3,
+        "diferenca_pp": 46.7,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "contrato-field_missing",
+        "tipo": "contrato",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 1,
+        "pessoas_n": 3,
+        "pessoas_pct": 33.3,
+        "diferenca_pp": 66.7,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "contrato-field_renamed",
+        "tipo": "contrato",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 2,
+        "pessoas_n": 3,
+        "pessoas_pct": 66.7,
+        "diferenca_pp": 33.3,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "contrato-type_drift",
+        "tipo": "contrato",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 0,
+        "pessoas_n": 3,
+        "pessoas_pct": 0.0,
+        "diferenca_pp": 100.0,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "contrato-escala_ou_unidade_errada",
+        "tipo": "contrato",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 1,
+        "pessoas_n": 3,
+        "pessoas_pct": 33.3,
+        "diferenca_pp": 66.7,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "contrato-error_500",
+        "tipo": "contrato",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 1,
+        "pessoas_n": 3,
+        "pessoas_pct": 33.3,
+        "diferenca_pp": 66.7,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "localizador-front-busca",
+        "tipo": "localizador",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 2,
+        "pessoas_n": 3,
+        "pessoas_pct": 66.7,
+        "diferenca_pp": 33.3,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "localizador-front-admin-login",
+        "tipo": "localizador",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 2,
+        "pessoas_n": 3,
+        "pessoas_pct": 66.7,
+        "diferenca_pp": 33.3,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "localizador-front-admin-produtos",
+        "tipo": "localizador",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 2,
+        "pessoas_n": 3,
+        "pessoas_pct": 66.7,
+        "diferenca_pp": 33.3,
+        "direcao": "agente"
+      },
+      {
+        "cenario": "localizador-front-cliente-reserva",
+        "tipo": "localizador",
+        "agente_sucessos": 5,
+        "agente_n": 5,
+        "agente_pct": 100.0,
+        "pessoas_sucessos": 2,
+        "pessoas_n": 3,
+        "pessoas_pct": 66.7,
+        "diferenca_pp": 33.3,
+        "direcao": "agente"
+      }
+    ],
+    "sinais": {
+      "agente": 10,
+      "pessoas": 0,
+      "iguais": 0,
+      "sem_medida": 0,
+      "p": 0.002
+    },
+    "minimo_para_veredito": 6,
+    "caso": "veredito",
+    "lado": "agente",
+    "frase": "O agente resolveu mais cenários que as pessoas: 10 cenários com a parcela do agente maior, nenhum cenário com a das pessoas maior e nenhum cenário igual; o teste dos sinais deu p = 0,0020."
+  },
+  "regras": {
+    "empate_s": 5.0,
+    "limite_s": 600.0,
+    "alfa": 0.05,
+    "reamostras": 2000,
+    "semente": 20261104,
+    "minimo_de_cenarios_no_task_success": 6
+  },
+  "sem_um_integrante": [
+    {
+      "sem_o_integrante": 1,
+      "pessoas": {
+        "tentativas": 20,
+        "corrigidas": 9,
+        "task_success_pct": 45.0,
+        "com_fim": 14,
+        "sem_fim": 6,
+        "tempo_media_s": 237.43
+      },
+      "tempo": {
+        "cenarios_com_os_dois_lados": 10,
+        "diferenca_media_s": 171.09,
+        "ic_lo_s": 112.25,
+        "ic_hi_s": 222.72,
+        "razao_das_medias": 3.58,
+        "agente_mais_rapido": 10,
+        "pessoas_mais_rapidas": 0,
+        "empates": 0,
+        "sem_medida": 0,
+        "p": 0.002,
+        "o_que_a_regra_l9_daria": "veredito",
+        "lado": "agente"
+      },
+      "task_success": {
+        "agente_maior": 10,
+        "pessoas_maior": 0,
+        "iguais": 0,
+        "sem_medida": 0,
+        "p": 0.002,
+        "o_que_a_regra_l11_daria": "veredito",
+        "lado": "agente"
+      }
+    },
+    {
+      "sem_o_integrante": 2,
+      "pessoas": {
+        "tentativas": 20,
+        "corrigidas": 14,
+        "task_success_pct": 70.0,
+        "com_fim": 20,
+        "sem_fim": 0,
+        "tempo_media_s": 246.03
+      },
+      "tempo": {
+        "cenarios_com_os_dois_lados": 10,
+        "diferenca_media_s": 179.69,
+        "ic_lo_s": 127.26,
+        "ic_hi_s": 235.6,
+        "razao_das_medias": 3.71,
+        "agente_mais_rapido": 10,
+        "pessoas_mais_rapidas": 0,
+        "empates": 0,
+        "sem_medida": 0,
+        "p": 0.002,
+        "o_que_a_regra_l9_daria": "veredito",
+        "lado": "agente"
+      },
+      "task_success": {
+        "agente_maior": 5,
+        "pessoas_maior": 0,
+        "iguais": 5,
+        "sem_medida": 0,
+        "p": 0.0625,
+        "o_que_a_regra_l11_daria": "sem_veredito",
+        "lado": null
+      }
+    },
+    {
+      "sem_o_integrante": 3,
+      "pessoas": {
+        "tentativas": 20,
+        "corrigidas": 5,
+        "task_success_pct": 25.0,
+        "com_fim": 14,
+        "sem_fim": 6,
+        "tempo_media_s": 175.65
+      },
+      "tempo": {
+        "cenarios_com_os_dois_lados": 10,
+        "diferenca_media_s": 109.32,
+        "ic_lo_s": 78.57,
+        "ic_hi_s": 139.17,
+        "razao_das_medias": 2.65,
+        "agente_mais_rapido": 10,
+        "pessoas_mais_rapidas": 0,
+        "empates": 0,
+        "sem_medida": 0,
+        "p": 0.002,
+        "o_que_a_regra_l9_daria": "veredito",
+        "lado": "agente"
+      },
+      "task_success": {
+        "agente_maior": 10,
+        "pessoas_maior": 0,
+        "iguais": 0,
+        "sem_medida": 0,
+        "p": 0.002,
+        "o_que_a_regra_l11_daria": "veredito",
+        "lado": "agente"
+      }
+    }
+  ],
+  "nota_sem_um_integrante": "Conta exploratória, acrescentada em 24/11/2026, depois de ver os números (ficha 91, decisão 151): a mesma comparação refeita sem a sessão de um integrante por vez, com as regras L2 a L11 aplicadas às medidas que sobram. Ela não é o veredito da leitura, que continua sendo o das três sessões, pelas regras fixadas antes das medidas; mostra de que sessão cada veredito depende. O p do Task Success aparece mesmo quando sobram menos cenários diferentes do que a regra L11 pede para o teste valer, e a coluna ao lado diz o que a regra daria."
+}

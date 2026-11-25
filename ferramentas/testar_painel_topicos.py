@@ -8,8 +8,12 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -50,6 +54,7 @@ def _ctx() -> dict:
         **gd.contexto_pos_fase4(),
         **gd.contexto_arvores(),
         **gd.contexto_progresso(),
+        **gd.contexto_fase5(),
     }
 
 
@@ -1609,6 +1614,10 @@ class TestesAbasPorTopico(unittest.TestCase):
         road_teste = {"corridas": [corrida("13", "aguarda"), corrida("16", "feita"), corrida("18c", "aguarda"), corrida("21c", "pendente"), corrida("22", "feita"), corrida("x", "aguarda")]}
         self.assertEqual(tp._corridas_que_faltam_f4(road_teste), ["18c", "21c"], "só da corrida 16 em diante, e só as que não estão feitas")
         self.assertEqual(tp._corridas_que_faltam_f4(None), [])
+        # ! Alteração de IA - Revisar: (16/11/2026, plano aprovado da Fase 5, decisão 133) a corrida 28, que é a própria noite da Fase 5, não entra na lista do que falta antes da Fase 5; a 27 pendente continua entrando.
+        # ! Motivo: a linha 28 entrou no roadmap como pendente depois da aprovação do plano, e a aba de fechamento da Fase 4 passou a dizer "Antes da Fase 5 faltam as corridas 28", o que é falso: a 28 é a medida da Fase 5.
+        road_fase5 = {"corridas": [corrida("27", "pendente"), corrida("28", "pendente"), corrida("28b", "aguarda")]}
+        self.assertEqual(tp._corridas_que_faltam_f4(road_fase5), ["27"], "da corrida 28 em diante é a Fase 5, e não o que falta antes dela")
         d, h = tp.secao_fechamento_f4(md, self.ctx["pend"], self.ctx["md_doc_para_html"], tela=tela, cura=cura, cenarios=cen, revisao=rev, road=self.ctx["road"], cartoes_corridas=self.ctx["cartoes_corridas"])
         self.assertIn("texto da seção treze", h)
         self.assertEqual(d["contagem"], {"cumprida": 1, "nao": 1, "ressalva": 1, "medida": 1})
@@ -1656,6 +1665,347 @@ class TestesAbasPorTopico(unittest.TestCase):
 
     def teste_dados_dos_topicos_sao_serializaveis(self):
         json.dumps(self.dados_t, ensure_ascii=False)
+
+
+# ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) testes da aba "medicao" (a medição de valor: o agente contra a linha de base
+# manual). O programa abaixo roda num processo à parte, na pasta dos experimentos, e gera numa pasta temporária os três derivados da leitura (`agente.json`,
+# `manual.json` e `medicao.json`) pelo próprio `avaliar_fase5.py`: a corrida 21d no lugar da noite do agente e uma sessão de mentira no lugar das pessoas, como o
+# teste de ponta a ponta de `testar_fase5.py`. Grava também as constantes das regras de leitura, para o teste comparar com as que o painel lê do código.
+# ! Motivo: a corrida 28 e as três sessões ainda não aconteceram, e a aba precisa estar pronta e testada antes delas. Os estados com dados só podem ser testados
+# com derivados de mentira, e eles têm de sair da leitura de verdade, para o teste acusar se o formato do derivado mudar. Nada é gravado em
+# `resultados_alvo/fase5`, e o processo não usa o banco, as cobaias nem o modelo. O texto do programa não tem acento, porque ele vai por `python -c`.
+_GERAR_DERIVADOS_F5 = r'''
+import json, sys
+from pathlib import Path
+import testar_fase5 as t5
+import avaliar_fase5 as f5
+pasta = Path(sys.argv[1])
+linhas, eventos = t5._sessao_de_mentira(tempo=lambda n, pos, cid: 240.0 + 15.0 * n)
+(pasta / "planilha.csv").write_text(t5._csv(linhas), encoding="utf-8-sig")
+(pasta / "sessao.jsonl").write_text("".join(json.dumps(e, ensure_ascii=False) + "\n" for e in eventos), encoding="utf-8")
+origem = ["--planilha", str(pasta / "planilha.csv"), "--sessao", str(pasta / "sessao.jsonl"), "--pasta", str(pasta)]
+codigos = [f5.main(["--agente", "--saida", t5.CORRIDA_21D, "--pasta", str(pasta)]), f5.main(["--manual", *origem]),
+           f5.main(["--comparar", "--saida", t5.CORRIDA_21D, *origem])]
+constantes = {"empate_s": f5.EMPATE_S, "limite_s": f5.LIMITE_S, "alfa": f5.ALFA, "reamostras": f5.REAMOSTRAS, "semente": f5.SEMENTE,
+              "repeticoes": f5.REPETICOES, "integrantes": f5.INTEGRANTES}
+(pasta / "constantes.json").write_text(json.dumps(constantes), encoding="utf-8")
+sys.exit(max(codigos))
+'''
+TITULO_DA_MEDICAO = "O agente repara mais rápido que uma pessoa, e resolve tantos cenários quanto ela?"
+
+
+def _secao(html_: str, sid: str) -> str:
+    return html_[html_.index(f'<section id="{sid}"'):].split("</section>")[0]
+
+
+class TestesDaMedicaoDaFase5(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.pasta = Path(tempfile.mkdtemp(prefix="painel_fase5_"))
+        r = subprocess.run([sys.executable, "-c", _GERAR_DERIVADOS_F5, str(cls.pasta)], cwd=str(gd.EXP), capture_output=True, text=True, encoding="utf-8", errors="replace", check=False,
+                           env={**os.environ, "RESULTADOS_DIR": "resultados_alvo", "PYTHONIOENCODING": "utf-8"})
+        assert r.returncode == 0, f"a leitura da Fase 5 não gerou os derivados na pasta temporária:\n{r.stdout[-2000:]}\n{r.stderr[-2000:]}"
+        cls.agente, cls.manual, cls.medicao, cls.constantes = (json.loads((cls.pasta / f"{n}.json").read_text(encoding="utf-8")) for n in ("agente", "manual", "medicao", "constantes"))
+        # ! Alteração de IA - Revisar: (24/11/2026, decisão 151) o derivado de mentira da comparação fica guardado como veio (`medicao_como_veio`), e os testes
+        # usam uma cópia sem o campo `sem_um_integrante` e sem a nota dele.
+        # ! Motivo: a leitura está ganhando esse campo (a conta exploratória sem a sessão de cada integrante). Os testes da aba têm de dar o mesmo resultado antes
+        # e depois de a leitura gravá-lo: os dois casos (com o campo e sem ele) são montados de propósito em cada teste.
+        cls.medicao_como_veio = cls.medicao
+        cls.medicao = {k: v for k, v in cls.medicao.items() if k not in ("sem_um_integrante", "nota_sem_um_integrante")}
+        cls.ctx5 = gd.contexto_fase5()
+        cls.custo, cls.desenho = cls.ctx5["f5_custo"], cls.ctx5["f5_desenho"]
+        cls.road = pt.ler_roadmap(gd.MEMORIAL / "roadmap.md")
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.pasta, ignore_errors=True)
+
+    def _aba(self, agente=None, manual=None, medicao=None, custo="real", desenho="real"):
+        return tp.secao_medicao(self.custo if custo == "real" else custo, agente, manual, medicao, self.desenho if desenho == "real" else desenho, self.road, gd.cartoes_corridas)
+
+    def teste_aba_registrada_no_grupo_da_fase_5_depois_da_visao(self):
+        grupo = dict(tp.NAV)["Fase 5"]
+        self.assertEqual([sid for sid, _, _ in grupo], ["f-5", "medicao"])
+        self.assertEqual(tp.DESENHAR_TOPICOS["medicao"], ["medTempo", "medSucesso"])
+        for f in tp.DESENHAR_TOPICOS["medicao"]:
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+        for g in ("g-med-tempo", "g-med-sucesso"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+            self.assertNotRegex(pl.COMO_LER_GRAFICO[g], "[—→↔]")
+        # as cores das séries vêm só da paleta validada (tokens --s1 a --s8) e das três cores de sentido do painel
+        self.assertTrue(set(tp.CORES_DA_MEDICAO.values()) <= {f"--s{i}" for i in range(1, 9)} | {"--bom", "--meio", "--ruim"}, tp.CORES_DA_MEDICAO)
+        self.assertEqual(tp.CORES_DA_MEDICAO["agente"], f"--s{tp.SLOTS['qwen2.5:7b']}", "o agente leva a cor do modelo dele na paleta")
+        trecho = tp.JS_TOPICOS[tp.JS_TOPICOS.index("function medTempo("):tp.JS_TOPICOS.index("function medSucesso(")]
+        self.assertNotRegex(trecho, r"#[0-9a-fA-F]{6}\b|rgb\(", "cor escrita no script, fora da paleta")
+
+    def teste_contexto_le_o_custo_a_planilha_e_as_constantes_do_codigo(self):
+        self.assertEqual(set(self.ctx5), {"f5_custo", "f5_agente", "f5_manual", "f5_medicao", "f5_desenho"})
+        self.assertEqual(self.custo, gd.ler_json(gd.EXP / "resultados_alvo" / "fase5" / "custo.json"))
+        d = self.desenho
+        self.assertEqual((d["integrantes"], d["tentativas"], len(d["cenarios"])), (self.constantes["integrantes"], 30, 10))
+        self.assertEqual(sorted(c["cenario"] for c in d["cenarios"]), sorted(x["cenario"] for x in self.agente["por_cenario"]))
+        self.assertEqual({c["cenario"]: c["tipo"] for c in d["cenarios"]}, {x["cenario"]: x["tipo"] for x in self.agente["por_cenario"]})
+        self.assertLessEqual(d["preenchidas"], d["tentativas"])
+        self.assertLessEqual(d["integrantes_completos"], d["integrantes"])
+        # as constantes das regras são lidas do código da leitura, e têm de ser as que o módulo usa
+        self.assertEqual(d["constantes"], self.constantes)
+        # derivado que aparece pela metade (a leitura ainda gravando) conta como ausente, em vez de derrubar o painel
+        (self.pasta / "cortado.json").write_text('{"geral": {"n": 5', encoding="utf-8")
+        self.assertIsNone(gd.ler_json_ou_nada(self.pasta / "cortado.json"))
+        self.assertIsNone(gd.ler_json_ou_nada(self.pasta / "nao_existe.json"))
+        self.assertEqual(gd.ler_json_ou_nada(self.pasta / "agente.json"), self.agente)
+
+    def teste_sem_os_derivados_mostra_o_que_vai_ser_medido_as_regras_o_custo_e_o_que_falta(self):
+        d, h = self._aba()
+        r, c = self.custo["resumo"], self.constantes
+        self.assertIn('<section id="medicao" hidden>', h)
+        self.assertIn(f"<h1>{TITULO_DA_MEDICAO}</h1>", h)
+        self.assertEqual(d["estado"], "sem_medida")
+        # ! Alteração de IA - Revisar: (18/11/2026, corrida 28b, decisões 145 e 146) a noite que falta é a corrida 28b, a frio, depois da sondagem; a aba diz que a
+        # corrida 28 não vale como medida e não mostra número dela.
+        # ! Motivo: a corrida 28 rodou em 18/11/2026 com o aplicativo Claude aberto e com o prompt reaproveitado nas repetições 2 a 5; a noite foi refeita em pasta
+        # nova, e a aba dizia "faltam a noite do agente (corrida 28)", que já tinha acontecido.
+        for trecho in ("corrida 28b", "a frio", "rodar_sondagem_frio.ps1", "A corrida 28, de 18/11/2026, não vale como medida", "decisões 145 e 146",
+                       f'{r["execucoes"]} execuções', f'{self.desenho["tentativas"]} tentativas', f'{self.desenho["integrantes"]} integrantes',
+                       f'{r["minutos_estimados_sem_ponte"]} minutos', f'{r["minutos_estimados_com_ponte"]} minutos', "rodar_fase5.ps1", "O que falta",
+                       "fixadas antes", "A unidade é o cenário", "teste dos sinais", "intervalo de Wilson", f'menor que {c["empate_s"]:.0f} s', f'{c["limite_s"]:.0f} s',
+                       "p abaixo de 0,05", f'{c["reamostras"]} vezes', str(c["semente"]), "sem veredito", "exploratória", "plano-aprovado-fase-5.md",
+                       "avaliar_fase5.py", "decisão 132", '<canvas id="g-med-tempo">', '<canvas id="g-med-sucesso">', "tb_f5_custo_resumo"):
+            self.assertIn(trecho, h, trecho)
+        for regra in range(1, 16):
+            self.assertRegex(h, rf"\bL{regra}\b", f"a regra L{regra} do plano não aparece na aba")
+        # nenhum número de resultado antes das medidas: os cartões dizem o que falta, e os gráficos vêm sem medida de nenhum lado
+        self.assertNotIn("Razão entre", h)
+        self.assertNotIn("Os dois lados estão lidos", h)
+        self.assertIn("A noite do agente (corrida 28b).", h)
+        self.assertNotIn("a primeira noite completa é a que vale", h, "a noite foi refeita por decisão do grupo: a frase do plano deixou de descrever o que aconteceu")
+        self.assertIn("As sessões da linha de base manual.", h)
+        self.assertEqual([x["cenario"] for x in d["tempo"]], [x["cenario"] for x in self.desenho["cenarios"]])
+        self.assertTrue(all(x["agente"] is None and x["pessoas"] is None for x in d["tempo"]))
+        self.assertTrue(all(x["agente"] is None and x["pessoas"] is None for x in d["sucesso"]))
+        self.assertEqual(d["previsto"], {"agente": c["repeticoes"], "pessoas": c["integrantes"]})
+        self.assertEqual(d["limite_s"], c["limite_s"])
+        self.assertTrue(d["aviso"], "sem medida, o gráfico do tempo diz por que está vazio")
+        self.assertNotRegex(re.sub(r"<!--.*?-->", "", h, flags=re.S), "[—→↔]")
+        # o texto da aba fala do grupo e não cita nomes; o cartão da corrida vem do roadmap, que a montagem da página troca depois, e por isso fica fora desta conferência
+        for derivados in ((None, None, None), (self.agente, self.manual, self.medicao)):
+            _, sem_cartao = tp.secao_medicao(self.custo, *derivados, self.desenho)
+            self.assertNotIn("A corrida no roadmap", sem_cartao)
+            self.assertNotRegex(sem_cartao, r"\bEric\b|\b[Vv]ocês?\b|Leandro|Pedro|Guilherme", "o painel fala do grupo e não cita nomes")
+        self.assertIn("A corrida no roadmap", h)
+        json.dumps(d, ensure_ascii=False)
+
+    def teste_sem_custo_e_sem_planilha_a_aba_ainda_sai(self):
+        d, h = self._aba(custo=None, desenho=None)
+        self.assertIn('<section id="medicao" hidden>', h)
+        self.assertIn('<canvas id="g-med-tempo">', h)
+        self.assertIn('<canvas id="g-med-sucesso">', h)
+        self.assertIn("avaliar_fase5.py --custo", h, "sem custo.json, a aba diz de onde ele sai")
+        self.assertEqual((d["estado"], d["tempo"], d["sucesso"]), ("sem_medida", [], []))
+
+    def teste_so_com_o_agente_mostra_o_agente_e_diz_que_faltam_as_pessoas(self):
+        d, h = self._aba(agente=self.agente)
+        g = self.agente["geral"]
+        self.assertEqual(d["estado"], "so_agente")
+        for trecho in (f'{g["sucessos"]} de {g["n"]}', f'{tp.fmt(g["tempo_media_s"])} s', "O que falta", f'{self.desenho["tentativas"]} tentativas', "tb_f5_agente_por_cenario",
+                       "tb_f5_agente_noite", "tb_f5_agente_identidade", "sem comparação"):
+            self.assertIn(trecho, h, trecho)
+        self.assertNotIn("Razão entre", h)
+        self.assertNotIn("tb_f5_medicao_tempo_por_cenario", h)
+        self.assertNotIn("A noite do agente (corrida 28b).", h, "com o agente lido, a noite sai da lista do que falta")
+        self.assertIn("medido na corrida 28b", h)
+        for x, linha in zip(d["tempo"], self.agente["por_cenario"]):
+            self.assertEqual((x["cenario"], x["agente"], x["pessoas"]), (linha["cenario"], [linha["tempo_media_s"], linha["tempo_min_s"], linha["tempo_max_s"]], None))
+        for x, linha in zip(d["sucesso"], self.agente["por_cenario"]):
+            self.assertEqual((x["agente"], x["pessoas"]), ([linha["sucessos"], linha["n"]], None))
+        self.assertFalse(d["aviso"])
+
+    def teste_so_com_as_pessoas_mostra_as_pessoas_e_diz_que_falta_a_noite(self):
+        d, h = self._aba(manual=self.manual)
+        g = self.manual["geral"]
+        self.assertEqual(d["estado"], "so_pessoas")
+        for trecho in (f'{g["sucessos"]} de {g["n"]}', f'{tp.fmt(g["tempo_media_s"])} s', "O que falta", "corrida 28b", "rodar_fase5.ps1", "tb_f5_manual_por_cenario",
+                       "tb_f5_manual_por_posicao", "tb_f5_manual_por_integrante", "tb_f5_manual_linhas", "sem comparação"):
+            self.assertIn(trecho, h, trecho)
+        self.assertNotIn("Razão entre", h)
+        self.assertNotIn("tb_f5_agente_por_cenario", h)
+        self.assertNotIn("As sessões da linha de base manual.", h, "com as pessoas lidas, as sessões saem da lista do que falta")
+        for x, linha in zip(d["tempo"], self.manual["por_cenario"]):
+            self.assertEqual((x["cenario"], x["agente"], x["pessoas"]), (linha["cenario"], None, [linha["tempo_media_s"], linha["tempo_min_s"], linha["tempo_max_s"]]))
+
+    def teste_com_os_dois_lados_e_sem_a_comparacao_nao_faz_a_conta_por_conta_propria(self):
+        d, h = self._aba(agente=self.agente, manual=self.manual)
+        self.assertEqual(d["estado"], "dois_lados")
+        self.assertIn("avaliar_fase5.py --comparar", h)
+        self.assertIn("O que falta", h)
+        self.assertNotIn("Razão entre", h, "sem medicao.json a aba não calcula a razão: a comparação é só a da leitura")
+        self.assertNotIn(tp.esc(self.medicao["tempo"]["geral"]["frase"]), h)
+        self.assertTrue(all(x["agente"] and x["pessoas"] for x in d["tempo"]))
+
+    def teste_com_a_comparacao_mostra_os_cartoes_as_frases_da_leitura_e_as_tabelas_recolhidas(self):
+        m = self.medicao
+        d, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+        a, p, g, ts = m["lados"]["agente"]["geral"], m["lados"]["pessoas"]["geral"], m["tempo"]["geral"], m["task_success"]
+        self.assertEqual(d["estado"], "comparado")
+        # a resposta da aba é a frase que a leitura escreveu pelas regras L9 e L11, sem ninguém redigir a conclusão depois de ver os números
+        lead = re.search(r'<p class="lead">(.*?)</p>', h, re.S).group(1)
+        self.assertIn(tp.esc(g["frase"]), lead)
+        self.assertIn(tp.esc(ts["frase"]), lead)
+        for trecho in (f'{tp.fmt(a["tempo_media_s"])} s', f'{tp.fmt(p["tempo_media_s"])} s', "Razão entre", tp.fmt(g["razao_das_medias"], 2), f'{a["sucessos"]} de {a["n"]}',
+                       f'{p["sucessos"]} de {p["n"]}', tp.esc(m["tempo"]["nota_por_tipo"]), "tb_f5_medicao_tempo_por_cenario", "tb_f5_medicao_tempo_por_tipo", "tb_f5_medicao_piso",
+                       "tb_f5_medicao_task_success_por_cenario", "tb_f5_medicao_descricao", "tb_f5_agente_por_cenario", "tb_f5_manual_por_cenario", "tb_f5_custo_resumo"):
+            self.assertIn(trecho, h, trecho)
+        self.assertNotIn("O que falta", h)
+        self.assertNotIn("ainda não", lead)
+        # toda tabela de dados da aba vem recolhida
+        fora = re.sub(r"<details>.*?</details>", "", h, flags=re.S)
+        self.assertNotIn("<table>", fora)
+        for x, linha, suc in zip(d["tempo"], m["tempo"]["por_cenario"], ts["por_cenario"]):
+            self.assertEqual(x["agente"], [linha["agente_media_s"], linha["agente_min_s"], linha["agente_max_s"]])
+            self.assertEqual(x["pessoas"], [linha["pessoas_media_s"], linha["pessoas_min_s"], linha["pessoas_max_s"]])
+        for x, suc in zip(d["sucesso"], ts["por_cenario"]):
+            self.assertEqual((x["agente"], x["pessoas"]), ([suc["agente_sucessos"], suc["agente_n"]], [suc["pessoas_sucessos"], suc["pessoas_n"]]))
+        # só com medicao.json (os outros dois derivados fora do lugar), os cartões e os gráficos saem dele
+        d2, h2 = self._aba(medicao=m)
+        self.assertEqual((d2["estado"], d2["tempo"], d2["sucesso"]), ("comparado", d["tempo"], d["sucesso"]))
+        self.assertIn(tp.esc(g["frase"]), h2)
+        json.dumps(d, ensure_ascii=False)
+
+    # ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) testes novos da aba "medicao" com a comparação gravada: o resultado do tempo aparece como o
+    # central, e a frase do Task Success vem com a ressalva de que o veredito dela depende da sessão de um integrante só.
+    # ! Motivo: a leitura de 24/11/2026 deu veredito nos dois lados, e a aba mostrava a frase do Task Success ("o agente resolveu mais cenários que as pessoas") sem
+    # dizer que, sem a sessão de um integrante que não corrigiu nenhum cenário, esse veredito some. O Eric decidiu (ficha 91, decisão 151) que a leitura fica como as
+    # regras deram, com a dependência declarada no relatório, no painel e no TCC, e que o resultado central é o do tempo. A ressalva é texto escrito à mão em
+    # `painel_leituras.py`, amarrado à corrida lida (`metadados.corrida`), para não aparecer colado a outra leitura; ela não traz número, e os números por
+    # integrante que a acompanham saem de `manual.json`.
+    def _medicao_com_veredito_no_task_success(self, corrida: str = "fase5_agente_b") -> dict:
+        m = json.loads(json.dumps(self.medicao))
+        m["metadados"]["corrida"] = corrida
+        m.pop("sem_um_integrante", None)
+        m.pop("nota_sem_um_integrante", None)
+        m["task_success"].update({"caso": "veredito", "lado": "agente", "frase": "O agente resolveu mais cenários que as pessoas: frase de teste da regra L11."})
+        return m
+
+    def teste_o_tempo_e_o_resultado_central_e_o_task_success_leva_a_ressalva_da_decisao_151(self):
+        ressalva = pl.RESSALVAS_DA_MEDICAO["fase5_agente_b"]
+        for trecho in ("decisão 151", "um integrante", "depois de ver os números"):
+            self.assertIn(trecho, ressalva, trecho)
+        self.assertNotRegex(ressalva.replace("decisão 151", ""), r"\d", "a ressalva escrita à mão não traz número: os números ficam nos derivados")
+        self.assertNotRegex(ressalva, r"[—→↔]|\bEric\b|\b[Vv]ocês?\b")
+        m = self._medicao_com_veredito_no_task_success()
+        _, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+        lead = re.search(r'<p class="lead">(.*?)</p>', h, re.S).group(1)
+        # no parágrafo do alto: a frase do tempo, dita como o resultado central, e só depois a do Task Success, com a ressalva colada nela
+        ordem = [lead.index(x) for x in (tp.esc(m["tempo"]["geral"]["frase"]), "resultado central", tp.esc(m["task_success"]["frase"]), tp.esc(ressalva))]
+        self.assertEqual(ordem, sorted(ordem), lead)
+        # junto do gráfico do Task Success, antes dele, com as tentativas corrigidas de cada integrante lidas de manual.json
+        bloco = h[h.index("<h2>Task Success por cenário, dos dois lados</h2>"):h.index('<canvas id="g-med-sucesso">')]
+        self.assertIn(tp.esc(ressalva), bloco)
+        for x in self.manual["por_integrante"]:
+            self.assertIn(f'integrante {x["integrante"]}, {x["sucessos"]} de {x["n"]}', bloco)
+        # e na leitura curta, no item do Task Success; o item do tempo diz que ele é o resultado central
+        lista = h[h.index("<h2>Leitura</h2>"):h.index("<h2>As tabelas completas</h2>")]
+        self.assertIn(tp.esc(ressalva), lista)
+        self.assertRegex(lista, r"<strong>Tempo de reparo, o resultado central\.</strong>")
+        # sem o campo da conta sem cada integrante, a aba fica só com a frase: nenhuma tabela exploratória e nenhuma conta feita aqui
+        self.assertNotIn("Conta exploratória", h)
+        self.assertNotIn("0,0625", h)
+
+    def teste_a_ressalva_so_acompanha_a_leitura_para_a_qual_foi_escrita(self):
+        ressalva = tp.esc(pl.RESSALVAS_DA_MEDICAO["fase5_agente_b"])
+        # outra corrida no derivado: o texto escrito à mão não se cola a ela, e o tempo continua sendo o resultado central
+        _, h = self._aba(agente=self.agente, manual=self.manual, medicao=self._medicao_com_veredito_no_task_success(corrida="fase5_agente_c"))
+        self.assertNotIn(ressalva, h)
+        self.assertIn("resultado central", re.search(r'<p class="lead">(.*?)</p>', h, re.S).group(1))
+        # a mesma corrida sem veredito no Task Success: não há veredito de que depender
+        m = self._medicao_com_veredito_no_task_success()
+        m["task_success"].update({"caso": "sem_veredito", "lado": None})
+        _, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+        self.assertNotIn(ressalva, h)
+        # antes da comparação a ressalva não aparece em estado nenhum
+        for derivados in ((None, None, None), (self.agente, None, None), (self.agente, self.manual, None)):
+            _, h = self._aba(*derivados)
+            self.assertNotIn(ressalva, h)
+
+    # ! Alteração de IA - Revisar: (24/11/2026, decisão 151) testes novos: quando `medicao.json` traz o campo `sem_um_integrante`, a aba mostra a tabela dele,
+    # com o rótulo de conta exploratória, feita depois de ver os números; sem o campo, ou com ele fora do formato, não mostra tabela nenhuma.
+    # ! Motivo: a conta que mostra de qual sessão cada veredito depende passa a sair da leitura (`avaliar_fase5.py`), e não de rascunho. A aba só a exibe: os
+    # números, o p e o que cada regra daria vêm do derivado. A forma das linhas de mentira abaixo é a que `avaliar_fase5.sem_um_integrante` grava (uma linha por
+    # integrante que sai, com `pessoas`, `tempo` e `task_success`).
+    @staticmethod
+    def _conta_sem_um_integrante() -> list[dict]:
+        linhas = []
+        for n, corrigidas, maior, p_ts, caso, lado in ((1, 9, 10, 0.002, "veredito", "agente"), (2, 14, 5, 0.0625, "sem_veredito", None), (3, 5, 10, 0.002, "veredito", "agente")):
+            linhas.append({"sem_o_integrante": n,
+                           "pessoas": {"tentativas": 20, "corrigidas": corrigidas, "task_success_pct": 5.0 * corrigidas, "com_fim": 20 - n, "sem_fim": n, "tempo_media_s": 200.5 + n},
+                           "tempo": {"cenarios_com_os_dois_lados": 10, "diferenca_media_s": 150.25 + n, "ic_lo_s": 100.0, "ic_hi_s": 190.0, "razao_das_medias": 3.0, "agente_mais_rapido": 10,
+                                     "pessoas_mais_rapidas": 0, "empates": 0, "sem_medida": 0, "p": 0.002, "o_que_a_regra_l9_daria": "veredito", "lado": "agente"},
+                           "task_success": {"agente_maior": maior, "pessoas_maior": 0, "iguais": 10 - maior, "sem_medida": 0, "p": p_ts, "o_que_a_regra_l11_daria": caso, "lado": lado}})
+        return linhas
+
+    def teste_com_o_campo_da_conta_sem_cada_integrante_a_aba_mostra_a_tabela_como_exploratoria(self):
+        m = self._medicao_com_veredito_no_task_success()
+        m["sem_um_integrante"] = self._conta_sem_um_integrante()
+        m["nota_sem_um_integrante"] = "Conta exploratória, acrescentada depois de ver os números: nota de teste que a leitura grava."
+        _, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+        bloco = h[h.index('<canvas id="g-med-sucesso">'):h.index("<h2>O que é medido</h2>")]
+        for trecho in ("Conta exploratória", "feita depois de ver os números", "não é o veredito da leitura", tp.esc(m["nota_sem_um_integrante"]), "tb_f5_medicao_sem_um_integrante",
+                       "<th>Sem a sessão do</th>", "integrante 2", "0,0625", "0,0020", "14 de 20", "sem veredito", "veredito: o agente resolveu mais", "veredito: o agente mais rápido",
+                       "152,2", "5 de 10"):
+            self.assertIn(trecho, bloco, trecho)
+        self.assertEqual(bloco.count("<tr><td>integrante "), 3, "uma linha por integrante que sai")
+        # a tabela fica à vista, fora de <details>, e por isso está na lista das tabelas que são conteúdo da aba
+        self.assertNotIn("<details", bloco[:bloco.index("<th>Sem a sessão do</th>")])
+        self.assertIn(("medicao", "Sem a sessão do"), pl.TABELAS_A_VISTA)
+        # a ressalva escrita à mão continua junto do gráfico, e a tabela vale também sem ela (outra corrida no derivado)
+        self.assertIn(tp.esc(pl.RESSALVAS_DA_MEDICAO["fase5_agente_b"]), h)
+        m["metadados"]["corrida"] = "fase5_agente_c"
+        _, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+        self.assertIn("<th>Sem a sessão do</th>", h)
+        self.assertNotIn(tp.esc(pl.RESSALVAS_DA_MEDICAO["fase5_agente_b"]), h)
+
+    def teste_sem_o_campo_ou_com_ele_fora_do_formato_nao_ha_tabela_exploratoria(self):
+        for campo in (None, [], "texto", [1, 2, 3], {"sem_o_integrante": 1}, [{"sem_o_integrante": 2}]):
+            m = self._medicao_com_veredito_no_task_success()
+            if campo is not None:
+                m["sem_um_integrante"] = campo
+            _, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+            if campo == [{"sem_o_integrante": 2}]:
+                # linha sem os três blocos: a tabela sai com "n/d" no que falta, em vez de derrubar a aba
+                self.assertIn("<th>Sem a sessão do</th>", h)
+                self.assertIn("n/d", h[h.index("<th>Sem a sessão do</th>"):])
+            else:
+                self.assertNotIn("Sem a sessão do", h, repr(campo))
+                self.assertNotIn("Conta exploratória", h, repr(campo))
+            self.assertIn(tp.esc(pl.RESSALVAS_DA_MEDICAO["fase5_agente_b"]), h, "a frase da ressalva não depende do campo")
+
+    def teste_o_derivado_de_mentira_como_a_leitura_grava_hoje_monta_a_aba(self):
+        # o que o `avaliar_fase5.py` de hoje gravou na pasta temporária, com ou sem o campo novo: a aba monta, e a tabela tem uma linha por linha do campo
+        m = self.medicao_como_veio
+        _, h = self._aba(agente=self.agente, manual=self.manual, medicao=m)
+        conta = m.get("sem_um_integrante")
+        self.assertEqual(h.count("<tr><td>integrante "), len(conta) if isinstance(conta, list) else 0)
+        self.assertEqual("Conta exploratória" in h, bool(conta))
+
+    def teste_aguenta_cenario_sem_tempo_e_derivado_fora_do_formato(self):
+        agente = json.loads(json.dumps(self.agente))
+        agente["por_cenario"][0].update({"tempo_media_s": None, "tempo_min_s": None, "tempo_max_s": None, "sucessos": 0, "com_fim": 0})
+        agente["geral"].update({"tempo_ic_lo_s": None, "tempo_ic_hi_s": None})
+        d, h = self._aba(agente=agente)
+        self.assertEqual(d["tempo"][0]["agente"], [None, None, None])
+        self.assertIn("n/d", h)
+        # um derivado sem as chaves da leitura (arquivo de outra coisa, ou gravado pela metade) conta como ausente
+        d, h = self._aba(agente={"metadados": {}}, manual={"geral": {}})
+        self.assertEqual(d["estado"], "sem_medida")
+
+    def teste_aba_real_do_repositorio_acompanha_os_arquivos_que_existem(self):
+        dados_t, html_ = tp.montar(_ctx())
+        secao, d = _secao(html_, "medicao"), dados_t["medicao"]
+        self.assertIn(f"<h1>{TITULO_DA_MEDICAO}</h1>", secao)
+        tem = {n: bool(self.ctx5[f"f5_{n}"]) for n in ("agente", "manual", "medicao")}
+        esperado = "comparado" if tem["medicao"] else "dois_lados" if tem["agente"] and tem["manual"] else "so_agente" if tem["agente"] else "so_pessoas" if tem["manual"] else "sem_medida"
+        self.assertEqual(d["estado"], esperado)
+        self.assertEqual("O que falta" in secao, esperado != "comparado")
 
 
 # ! Alteração de IA - Revisar: (05/11/2026) testes das duas regras de painel_leituras: todo gráfico com "Como ler" e nenhum dado cru à vista.

@@ -36,6 +36,9 @@ Sintaxe por linguagem: `#` (Python, shell, PowerShell, YAML) · `//` (PHP, JS) �
 - Arquivo vazio de propósito (`__init__.py` de 0 byte) — marcar quebraria a vazidade.
 - Binário (`Cobaia.exe`) — fica coberto pela tag no fonte que o gera (`Cobaia.py`).
 - Arquivo regenerado por ferramenta (`Cobaia.spec`, reescrito pelo PyInstaller a cada `build_exe.ps1`) — a tag seria apagada no próximo build; fica coberta pela tag no `build_exe.ps1`.
+<!-- ! Alteração de IA - Revisar: exceção nova (18/11/2026) para a saída capturada de uma célula de teste do instalador.
+     ! Motivo: decisão do Eric no quadro em 18/11/2026: a primeira célula do WSL gravou 23 arquivos `.txt` de saída capturada e `ferramentas/conferir_docs.py` passou a acusar `sem tag de IA` em todos; pôr a tag dentro deles mudaria a evidência. -->
+- Saída capturada de uma execução (os arquivos de uma pasta de rodada de célula de teste do instalador, `Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/<id>/<data-hora>/`): pôr a tag dentro mudaria a evidência; fica coberta pela tag do `celula.json` da mesma pasta e do roteiro que a gera. O `celula.json` e o `registro.json` continuam levando a tag (`ferramentas/conferir_docs.py`, `evidencia_de_celula`).
 
 **Caso especial `.cmd`/`.bat`:** usar o marcador **sem acento** (`! Alteracao de IA - Revisar`). Testado: o `cmd.exe` lê o arquivo na codepage OEM e os bytes UTF-8 de `ç`/`ã` re-tokenizam a linha `rem`, fazendo o script imprimir um erro espúrio antes de rodar. Por isso, ao procurar marcadores no repositório, buscar por **`de IA - Revisar`** (trecho comum às duas formas).
 

@@ -1,0 +1,230 @@
+{
+ "_marcador": "! Alteração de IA - Revisar: arquivo escrito pelo Claude em 16/11/2026 com as 28 respostas da revisão às cegas como estavam no banco da página publicada (https://claude.ai/artifact/DPJuv6tk1KastouupxDyHW, coleção revisao_propostas), lidas no mesmo dia. ! Motivo: `revisao_as_cegas.json` guarda o veredito e o comentário, mas não a hora em que cada resposta foi salva; sem este arquivo o registro da página só existiria fora do repositório. A lista `respostas`, sem as horas, é o que foi passado a `ferramentas/revisao_propostas.py --gravar`.",
+ "lido_do_banco_em": "2026-11-16",
+ "respostas": [
+  {
+   "id": "p01",
+   "n": 1,
+   "veredito": "Parcial",
+   "comentario": "A afirmação técnica sobre a falta de idempotência no POST /api/pedidos é verdadeira no código, mas está fora de lugar e é redundante. O comportamento já é descrito em detalhes no verbete registro_duplicado (que falhou apenas no ranqueamento da busca deste caso, ficando em 5º lugar). Injetar sintomas e causas desse erro dentro de contrato-pedido mistura a taxonomia de contrato com a de erro e duplica conteúdo na base vetorial.",
+   "salvo_em": "2026-11-16T18:14:50.438Z",
+   "editado_em": null
+  },
+  {
+   "id": "p02",
+   "n": 2,
+   "veredito": "Parcial",
+   "comentario": "A afirmação repete exatamente o que o verbete já diz na última frase (\"cancelar depende do redirect (cliente_cancelar.php:7)\"), sem acrescentar fato novo. Além disso, é completamente desconexa da ficha do caso efe-13, que trata de uma race condition em chamadas GET /api/produtos sobrescrevendo o innerHTML da tela — e não de cancelamento de reserva.",
+   "salvo_em": "2026-11-16T18:15:32.794Z",
+   "editado_em": null
+  },
+  {
+   "id": "p03",
+   "n": 3,
+   "veredito": "Parcial",
+   "comentario": "O verbete proposto apenas repete o que já está coberto no verbete existente estado_da_tela_divergente (que foi entregue na busca e resolveu corretamente o caso efe-8), além de usar tom prescritivo de refatoração (\"utilizando promises ou async/await\") em vez de descrever o sistema atual. Criar este arquivo geraria duplicidade e diluição na busca vetorial.",
+   "salvo_em": "2026-11-16T18:16:14.032Z",
+   "editado_em": null
+  },
+  {
+   "id": "p04",
+   "n": 4,
+   "veredito": "Parcial",
+   "comentario": "Os termos \"juncao\" e \"campo derivado incorreto\" até refletem o texto do verbete, mas \"registro\" e \"valor de registro errado\" são excessivamente vagos e genéricos, servindo para praticamente qualquer anomalia de dados (como dado desatualizado ou valor fora do domínio). Como sinal de busca, faltam sintomas concretos observáveis na resposta ou na interface (ex: \"categoria trocada\", \"dados de outro cliente/produto\").",
+   "salvo_em": "2026-11-16T18:16:56.239Z",
+   "editado_em": null
+  },
+  {
+   "id": "p05",
+   "n": 5,
+   "veredito": "Parcial",
+   "comentario": "O verbete novo (\"novo_verbete\") apenas repete o que já existe em chave_de_juncao_errada (que já documenta a junção via id_tipo_produto e foi inclusive entregue na busca deste caso). Além de redundante, o texto traz uma ordem imperativa de código (\"Corrigir a junção...\") em vez de descrição diagnóstica, e lista nomes de outras causas da taxonomia (tipo_divergente, chave_de_juncao_errada) no lugar de sintomas reais.",
+   "salvo_em": "2026-11-16T18:18:15.942Z",
+   "editado_em": null
+  },
+  {
+   "id": "p06",
+   "n": 6,
+   "veredito": "Parcial",
+   "comentario": "A proposta é uma recomendação vaga e imperativa (\"Adicionar nota sobre a necessidade...\") sem acrescentar nenhum fato técnico novo sobre o código. O verbete estado_da_tela_divergente já documenta exatamente os mecanismos de atualização da interface (fetch/then(), innerHTML e redirect) e seus sintomas, tendo inclusive permitido o diagnóstico correto do agente no caso efe-8.",
+   "salvo_em": "2026-11-16T18:18:48.031Z",
+   "editado_em": null
+  },
+  {
+   "id": "p07",
+   "n": 7,
+   "veredito": "Correta",
+   "comentario": "A afirmação é verdadeira sobre o sistema e útil para o diagnóstico literal da causa (espelhando inclusive a saída exata do medidor de contrato no caso lex-2). Vale anotar que o verbete corpo_nao_e_json já cobria essa mesma ideia ao descrever corpos em HTML, XML ou páginas de gateway no lugar do JSON, tendo inclusive ficado em 1º lugar na busca e acertado o diagnóstico do caso.",
+   "salvo_em": "2026-11-16T18:19:51.994Z",
+   "editado_em": "2026-11-16T18:20:09.333Z"
+  },
+  {
+   "id": "p08",
+   "n": 8,
+   "veredito": "Errada",
+   "comentario": "A proposta erra o componente e inverte a causa do problema. No caso tra-6, o front-end formatou o padrão brasileiro corretamente (\"R$ 8990,00\"); o defeito ocorreu na API, que enviou o valor em outra escala/unidade (8990.0 em vez de 89.9 — centavos vs. reais), cenário já coberto pelo verbete escala_ou_unidade_errada. Criar um verbete sobre formatação monetária no front-end desviaria o diagnóstico para um componente inocente.",
+   "salvo_em": "2026-11-16T18:20:49.954Z",
+   "editado_em": null
+  },
+  {
+   "id": "p09",
+   "n": 9,
+   "veredito": "Correta",
+   "comentario": "A afirmação técnica é verdadeira sobre o sistema e explica diretamente a falha intermitente de seletores posicionais (como nth-child) em casos como o efe-11. Contudo, vale anotar que o verbete localizador_quebrado já trazia exatamente essa mesma informação (\"a lista da API não tem ORDER BY (produtos.py:38)\"), além de o texto proposto estar escrito em formato imperativo (\"Adicionar que...\").",
+   "salvo_em": "2026-11-16T18:21:36.512Z",
+   "editado_em": null
+  },
+  {
+   "id": "p10",
+   "n": 10,
+   "veredito": "Errada",
+   "comentario": "A proposta inverte completamente o caso: o defeito ocorre quando o campo pessoas vem como string/texto em vez de número/inteiro (quebrando a soma), e não \"como número em vez de string\". Além disso, usa indevidamente a operação de retificação sobre um trecho do verbete tipo_divergente que já estava correto e inclusive já trazia o exemplo literal inteiro como texto (\"4\") e o sintoma da falha ao somar.",
+   "salvo_em": "2026-11-16T21:01:04.559Z",
+   "editado_em": null
+  },
+  {
+   "id": "p11",
+   "n": 11,
+   "veredito": "Errada",
+   "comentario": "A afirmação confunde o mecanismo do código: ErrorFault é a exceção artificial levantada exclusivamente pelo injetor de falhas (fault_injection), e não uma exceção gerada por bugs orgânicos na rota (que geram \"Internal Server Error\" sem passar por ErrorFault). Além disso, o caso run-12 trata de injeção intermitente (1 em cada 3 requisições), cenário que já estava perfeitamente coberto e que inclusive acertou o diagnóstico com o verbete em 1º lugar na busca.",
+   "salvo_em": "2026-11-16T21:01:41.761Z",
+   "editado_em": null
+  },
+  {
+   "id": "p12",
+   "n": 12,
+   "veredito": "Errada",
+   "comentario": "A proposta é incorreta por alucinar que a causa do problema está em diferenciar \"coleção ou objeto\" (uma tentativa de justificar o diagnóstico errado dado pelo agente no caso efe-4, já que a resposta da API seguiu o contrato e o sintoma ocorreu devido ao filtro de categoria selecionado na tela). Além disso, usa indevidamente uma retificação para apagar um trecho verdadeiro sobre cliente_cancelar.php:7 e substituí-lo por uma recomendação genérica de refatoração.",
+   "salvo_em": "2026-11-16T21:02:13.063Z",
+   "editado_em": null
+  },
+  {
+   "id": "p13",
+   "n": 13,
+   "veredito": "Parcial",
+   "comentario": "A afirmação técnica sobre o campo destaque vir como texto em vez de booleano é verdadeira no sistema, mas não acrescenta nenhum fato novo: o verbete tipo_divergente já documenta exatamente esse comportamento (\"destaque fora de true/false sai literal\") e explica sua origem no _to_dict e no type_drift (str()). Além de redundante, a proposta está redigida em tom prescritivo (\"Adicionar nota...\") e traz erro ortográfico (\"converção\").",
+   "salvo_em": "2026-11-16T21:02:40.680Z",
+   "editado_em": null
+  },
+  {
+   "id": "p14",
+   "n": 14,
+   "veredito": "Errada",
+   "comentario": "A afirmação está errada em relação ao código e ao contrato da API: o campo tipo no contrato real é estritamente um texto simples (string), nunca uma \"lista simples\", e vir como objeto constitui uma anomalia de contrato (estrutura_aninhada_divergente), não uma \"flexibilidade\" prevista. Além disso, o verbete já documenta explicitamente o caso de campo simples vindo como objeto e o contrato real em produtos.py.",
+   "salvo_em": "2026-11-16T21:03:20.365Z",
+   "editado_em": null
+  },
+  {
+   "id": "p15",
+   "n": 15,
+   "veredito": "Parcial",
+   "comentario": "Os termos \"carregamento_parado\" e \"grid_vazio\" refletem sinais reais da causa (ainda que repitam \"Carregando parado\" e \"lista vazia\" já presentes no verbete), e \"fetch\", \"innerhtml\" e \"cliente_cancelar.php\" apenas duplicam palavras do próprio texto. Porém, o sintoma \"preco_incorreto\" é vago e serve para várias outras causas (como escala/unidade errada, dado desatualizado ou chave de junção errada), além de usar underscores artificiais em vez de linguagem natural. Vale notar também que o motivo dado pelo modelo é falso: o verbete foi entregue em 3º lugar na busca deste caso.",
+   "salvo_em": "2026-11-16T21:04:34.739Z",
+   "editado_em": null
+  },
+  {
+   "id": "p16",
+   "n": 16,
+   "veredito": "Errada",
+   "comentario": "A proposta é incorreta porque trata o retorno de id como string como se fosse o comportamento normal do backend (\"considerando que o backend retorna como string\"), quando na verdade o contrato e o código da API (_to_dict) retornam id como inteiro — a string no caso semt-6 é uma anomalia injetada pelo modo type_drift (str()). Além disso, desloca a causa para uma recomendação de conversão no front-end e contém erro ortográfico (\"convercao\").",
+   "salvo_em": "2026-11-16T21:05:28.654Z",
+   "editado_em": null
+  },
+  {
+   "id": "p17",
+   "n": 17,
+   "veredito": "Correta",
+   "comentario": "A afirmação técnica é verdadeira sobre o comportamento do JavaScript no front-end e pertinente ao diagnóstico da causa campo_ausente. Contudo, vale anotar que o verbete já trazia exatamente essa mesma informação (\"No JavaScript a leitura vira undefined. Sinais: (...) preço ausente: botão imprime 'undefined'\"), tornando falso o motivo alegado pelo modelo de que o sintoma não estava mencionado — o verbete inclusive ficou em 1º lugar na busca e acertou o diagnóstico do caso sin-1.",
+   "salvo_em": "2026-11-16T21:05:58.924Z",
+   "editado_em": null
+  },
+  {
+   "id": "p18",
+   "n": 18,
+   "veredito": "Parcial",
+   "comentario": "Os termos \"juncao\", \"campo derivado\" e \"tipo de produto errado\" descrevem o cenário do caso, mas \"tipo\" e \"produto\" isolados são genéricos demais e o sintoma \"campo tipo divergente\" causa colisão semântica direta com a causa tipo_divergente (que foi exatamente o diagnóstico errado dado pelo agente no caso tra-3 por confundir o campo tipo com tipo de dado JSON).",
+   "salvo_em": "2026-11-16T21:06:29.839Z",
+   "editado_em": null
+  },
+  {
+   "id": "p19",
+   "n": 19,
+   "veredito": "Parcial",
+   "comentario": "A proposta é uma recomendação vaga e imperativa (\"Adicionar nota sobre a importância...\") que apenas repete palavra por palavra o que já consta no verbete interface-frontend, sem acrescentar nenhum fato técnico novo sobre o código. Além disso, o motivo dado pelo modelo distorce o caso efe-10, onde a tela exibia preço antigo simplesmente porque a página não havia sido recarregada após a alteração no cadastro (e não por falha de atualização do DOM ou redirect).",
+   "salvo_em": "2026-11-16T21:06:59.151Z",
+   "editado_em": null
+  },
+  {
+   "id": "p20",
+   "n": 20,
+   "veredito": "Correta",
+   "comentario": "A afirmação é verdadeira sobre o sistema e útil para o diagnóstico literal da causa (espelhando a saída exata do medidor de contrato no caso lex-9). Vale anotar que o verbete corpo_nao_e_json já cobria essa mesma ideia ao descrever corpos em HTML, XML ou páginas de gateway no lugar do JSON, tendo inclusive ficado em 1º lugar na busca e acertado o diagnóstico do caso.",
+   "salvo_em": "2026-11-16T21:07:33.203Z",
+   "editado_em": null
+  },
+  {
+   "id": "p21",
+   "n": 21,
+   "veredito": "Errada",
+   "comentario": "A proposta é incorreta porque alucina o campo afetado: o caso semt-15 trata do campo pessoas violando a regra mínima (min=1) do formulário, e não de \"status do pedido\" (que sequer está em questão na ficha). Além de errar o campo, o texto usa tom prescritivo de implementação (\"Adicionar validação...\") em vez de descrição diagnóstica, e cria um verbete redundante para um cenário já coberto por valor_fora_do_dominio.",
+   "salvo_em": "2026-11-16T21:08:32.697Z",
+   "editado_em": null
+  },
+  {
+   "id": "p22",
+   "n": 22,
+   "veredito": "Errada",
+   "comentario": "A proposta contradiz o próprio contrato da API e o verbete: GET /api/produtos foi projetado para retornar uma lista crua sem campo total (inclusive, envolver a lista em um envelope com total quebraria o contrato real). No caso tra-14, a inconsistência ocorreu porque faltou um registro do seed (vieram 13 produtos em vez de 14, faltando o id 14), e não pela ausência de metadado de total — tanto que \"lista crua sem total\" é o comportamento normal da API, e não um sintoma de falha.",
+   "salvo_em": "2026-11-16T21:10:12.544Z",
+   "editado_em": null
+  },
+  {
+   "id": "p23",
+   "n": 23,
+   "veredito": "Errada",
+   "comentario": "A proposta é incorreta porque confunde erro de conversão/escala na saída (escala_ou_unidade_errada) com falha de validação na entrada (valor_fora_do_dominio): no caso tra-5, o POST enviou pessoas=4 e o banco gravou 4, mas o GET devolveu 1, logo não há dado inválido a validar no cadastro. Além disso, inventa sintomas que não ocorrem no caso (\"pessoas menor que 1\", \"reserva nem ativa nem cancelada na tela\"), mistura duas causas distintas em um verbete novo e usa tom prescritivo (\"Adicionar validação...\").",
+   "salvo_em": "2026-11-16T21:10:42.742Z",
+   "editado_em": null
+  },
+  {
+   "id": "p24",
+   "n": 24,
+   "veredito": "Errada",
+   "comentario": "A afirmação contradiz frontalmente o próprio contrato descrito no verbete: GET /api/produtos devolve uma lista (e é exatamente uma lista que a tela de listagem espera, não um objeto — apenas GET /api/produtos/{id} devolve objeto). O modelo tentou justificar seu próprio diagnóstico errado no caso efe-4 (colecao_no_lugar_de_objeto), quando na verdade a resposta cumpriu o contrato e o grid ficou vazio devido ao filtro de categoria selecionado na tela (estado_da_tela_divergente).",
+   "salvo_em": "2026-11-16T21:11:14.322Z",
+   "editado_em": null
+  },
+  {
+   "id": "p25",
+   "n": 25,
+   "veredito": "Parcial",
+   "comentario": "Os sintomas \"soma errada\" e \"ordenacao incorreta\" correspondem a efeitos reais da causa tipo_divergente (ainda que apenas parafraseiem \"a falha aparece ao ordenar ou somar\", já presente no verbete). Porém, a proposta inventa um inexistente \"campo reservas como texto\" e a palavra-chave \"reservas\" — no contrato de /api/pedidos e no caso semt-7, o campo real é pessoas, não reservas — além de usar termos artificiais com underscores (soma_total, campo_inteiro).",
+   "salvo_em": "2026-11-16T21:11:47.537Z",
+   "editado_em": null
+  },
+  {
+   "id": "p26",
+   "n": 26,
+   "veredito": "Errada",
+   "comentario": "A proposta usa indevidamente a operação de retificação para apagar um fato verdadeiro e concreto do código (main.py realmente não possui limitador de taxa, logo o 429 vem de proxy, gateway ou servidor diferente do esperado) e substituí-lo por uma generalização vaga (\"pelo próprio servidor ou intermediários\"). Além de destruir informação útil do verbete, o motivo alegado é desnecessário, pois o agente já havia acertado o diagnóstico do caso run-3 com confiança alta.",
+   "salvo_em": "2026-11-16T21:16:56.884Z",
+   "editado_em": null
+  },
+  {
+   "id": "p27",
+   "n": 27,
+   "veredito": "Parcial",
+   "comentario": "A afirmação técnica sobre o comportamento da interface está correta (ausência de preco gera botões exibindo undefined), mas criar um verbete novo específico por campo (campo_preco_ausente) fragmenta e polui desnecessariamente a taxonomia da base RAG. O verbete campo_ausente já documenta literalmente esse mesmo sintoma (\"preço ausente: botão imprime 'undefined'\") e inclusive ficou em 1º lugar na busca do caso sin-1, acertando o diagnóstico com confiança alta.",
+   "salvo_em": "2026-11-16T21:17:23.336Z",
+   "editado_em": null
+  },
+  {
+   "id": "p28",
+   "n": 28,
+   "veredito": "Parcial",
+   "comentario": "A ideia subjacente está correta quanto ao contrato (o campo tipo — chamado de \"categoria\" no texto — é uma string escalar, não uma lista), mas a proposta usa tom prescritivo deslocando o problema para o front-end (\"necessidade de tratar... no front-end\"), quando a falha está na resposta da API que violou o contrato. Além disso, o verbete já documentava literalmente esse cenário (\"escalar como lista ([\"Carnes\"])\" e \"categoria com colchetes: campo veio como lista\"), tornando falso o motivo de haver uma lacuna — tanto que o diagnóstico do caso sin-15 foi aceito.",
+   "salvo_em": "2026-11-16T21:18:17.049Z",
+   "editado_em": null
+  }
+ ]
+}

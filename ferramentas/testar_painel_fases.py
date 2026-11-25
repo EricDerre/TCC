@@ -142,11 +142,45 @@ class TesteLeitura(unittest.TestCase):
         self.assertIn('<span class="rotulo">Para que serve</span>', cobaias)
         self.assertLess(cobaias.index("<p>"), cobaias.index('<div class="problema cobaias">'), "o parágrafo que apresenta os sistemas vem antes dos cartões")
 
+    # ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) teste novo: a descoberta da Fase 5 está no README, com a figura dela, e o painel a leva à
+    # aba "medicao"; o texto dela põe o tempo como o resultado central e o Task Success com a ressalva.
+    # ! Motivo: as duas medidas da fase foram lidas em 24/11/2026, e o README ainda dizia, na lista do que não dá para afirmar, que não havia medida com pessoas.
+    # O Eric decidiu que o resultado central é o do tempo e que o veredito do Task Success é declarado como dependente da sessão de um integrante: se o README
+    # apresentasse os dois como resultados iguais, a ressalva ficaria só no relatório.
+    def teste_descoberta_da_fase_5_esta_no_readme_com_a_figura_e_a_ressalva(self):
+        pergunta = "O agente repara mais rápido que uma pessoa?"
+        self.assertEqual(pf.DESCOBERTAS.get(pergunta), ("Fase 5", "medicao"))
+        achado = next(a for a in pf.descobertas_do_readme(README_REAL) if a["pergunta"] == pergunta)
+        self.assertEqual(achado["figura"], "Documentacao/figuras/agente-e-pessoas.png")
+        self.assertTrue(achado["como_ler"])
+        self.assertIn("resultado central", achado["mostra"][0], "o primeiro parágrafo, que vira o cartão do Início, é o do tempo")
+        self.assertNotIn("Task Success", achado["mostra"][0])
+        resto = " ".join(achado["mostra"][1:])
+        for trecho in ("ressalva", "um integrante", "depois de ver os números", "decisão 151"):
+            self.assertIn(trecho, resto, trecho)
+        self.assertNotRegex(achado["como_ler"] + " ".join(achado["mostra"]), r"[—→↔]|\bEric\b")
+        limites = " ".join(pf.limites_do_readme(README_REAL))
+        self.assertNotIn("Ainda não há a medida com pessoas", limites)
+        self.assertNotIn("Foi uma repetição por cenário", limites, "a corrida 28b rodou cinco repetições por cenário")
+
     def teste_roadmap_real_tem_linha_para_cada_fase_e_fase_para_cada_corrida(self):
         self.assertEqual([f["grupo"] for f in pf.FASES if pf.linha_do_roadmap(ROAD_REAL, f) is None], [])
         self.assertEqual([c.numero for c in ROAD_REAL["corridas"] if pf.fase_da_corrida(c.numero) is None], [], "corrida do roadmap sem fase: acrescentar em FAIXAS_DE_CORRIDAS")
         linhas = [pf.linha_do_roadmap(ROAD_REAL, f).nome for f in pf.FASES]
         self.assertEqual(len(linhas), len(set(linhas)), "duas fases não podem cair na mesma linha do roadmap")
+
+    # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) teste novo: os passos da visão da Fase 5 apontam para a aba "medicao".
+    # ! Motivo: o plano aprovado da Fase 5 (seção 6) pede os passos da visão `f-5` apontando para a aba nova. Antes, a linha de base manual e as duas medidas não
+    # tinham atalho, e o passo do agente levava à aba do ensaio de uma repetição (corrida 21d), que não é a medida da fase.
+    def teste_passos_da_fase_5_apontam_para_a_aba_da_medicao(self):
+        passos = {titulo: alvo for _, titulo, _, alvo in FASE["Fase 5"]["passos"]}
+        for titulo in ("Linha de base manual", "O agente", "As duas medidas", "A regra fixada antes"):
+            self.assertEqual(passos.get(titulo), "medicao", titulo)
+        self.assertEqual(passos.get("Os mesmos cenários de falha"), "cenarios", "os dez cenários e a ficha de cada um estão na aba do ensaio")
+        import painel_topicos as tp
+        self.assertEqual(pf.abas_fora_de_lugar(tp.NAV), [])
+        texto = " ".join(x for _, t, x, _ in FASE["Fase 5"]["passos"] for x in (t, x))
+        self.assertNotRegex(texto, r"\d", "os passos não trazem número de resultado")
 
     def teste_fase_da_corrida(self):
         casos = {"1": "Fase 3-B", "10": "Fase 3-B", "12": "Pré-Fase 4", "14": "Fase 3-B", "18b": "Fase 4", "24": "Fase 4", "25": "Pós-Fase 4", "Q4": "Pós-Fase 4", "99": None, "": None}

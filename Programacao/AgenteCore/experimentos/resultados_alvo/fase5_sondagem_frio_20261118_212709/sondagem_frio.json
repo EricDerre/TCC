@@ -1,0 +1,31 @@
+{
+  "gerado_em": "2026-11-18T21:32:12",
+  "gerado_por": "avaliar_fase5.py --sondagem",
+  "pasta": "fase5_sondagem_frio_20261118_212709",
+  "versoes_ollama": [
+    "0.40.16"
+  ],
+  "cenario": "contrato-malformed_json",
+  "inferencias": [
+    {
+      "etapa": "contrato-malformed_json#1@tela · diagnóstico",
+      "cenario": "contrato-malformed_json",
+      "concluido_em": "2026-11-18T21:29:31",
+      "tokens_entrada": 1218,
+      "tokens_em_cache": 0,
+      "prefill_s": 47.173,
+      "carga_s": 9.712
+    },
+    {
+      "etapa": "contrato-malformed_json#2@tela · diagnóstico",
+      "cenario": "contrato-malformed_json",
+      "concluido_em": "2026-11-18T21:31:58",
+      "tokens_entrada": 1218,
+      "tokens_em_cache": 0,
+      "prefill_s": 52.337,
+      "carga_s": 6.095
+    }
+  ],
+  "passou": true,
+  "frase": "Depois de o modelo ser descarregado, a inferência seguinte leu o prompt de novo: nenhum dos 1218 tokens de entrada veio do que o Ollama tinha guardado (leitura do prompt em 52,337 s; na primeira inferência, 47,173 s)."
+}

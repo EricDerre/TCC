@@ -1,0 +1,47 @@
+{
+  "tag_ia": {
+    "alteracao": "! Alteração de IA - Revisar: arquivo novo (24/11/2026, Fase 5) com o índice dos códigos de sessão da linha de base manual que chegaram: de qual página é cada um, o sha256 do arquivo, o dia da sessão e se ele foi importado para sessao.jsonl.",
+    "motivo": "! Motivo: chegaram quatro códigos para três páginas, e um deles não entrou na leitura (decisão 149). Os quatro ficam guardados como vieram, para a escolha poder ser conferida depois; sem o índice, quem abre a pasta não sabe qual dos dois códigos da página 1 foi importado nem por quê. Nenhum nome de integrante é escrito aqui."
+  },
+  "como_chegaram": "Cada integrante mandou ao Eric o código que a página da sessão mostra no fim; ele colou os quatro na sessão principal do Claude em 24/11/2026, e cada um foi tirado do registro da conversa por script, sem redigitar. O banco das três páginas estava vazio: tudo veio por código.",
+  "como_ler": "Cada arquivo é o texto SESSAO3. seguido do JSON da sessão em base64. O comando `python linha_de_base_manual.py importar --arquivo <arquivo> --conhece-o-codigo sim|nao` lê o código e grava a sessão em ../sessao.jsonl.",
+  "codigos": [
+    {
+      "arquivo": "codigo-1-pagina-3.txt",
+      "sha256": "63293c21960d8e35",
+      "pagina": 3,
+      "dia_da_sessao": "2026-11-24",
+      "importado": true,
+      "integrante_na_planilha": 3,
+      "observacao": "perfil: não tinha lido a lista dos cenários; treino de contrato e de seletor feitos; nenhum aviso"
+    },
+    {
+      "arquivo": "codigo-2-pagina-1.txt",
+      "sha256": "4acd67a1678008e9",
+      "pagina": 1,
+      "dia_da_sessao": "2026-11-23",
+      "importado": false,
+      "integrante_na_planilha": null,
+      "observacao": "primeira sessão da página 1: o perfil responde que a pessoa já tinha lido a lista dos cenários, e um substituto fez a página depois; não entrou na leitura (ficha 89, decisão 149). Os tempos e os acertos desta sessão não foram abertos. Trazia um aviso num cenário (\"duvida sobre a resposta\"), que não precisou de decisão de anulação."
+    },
+    {
+      "arquivo": "codigo-3-pagina-1.txt",
+      "sha256": "d588628e275eb741",
+      "pagina": 1,
+      "dia_da_sessao": "2026-11-23",
+      "importado": true,
+      "integrante_na_planilha": 1,
+      "observacao": "segunda sessão da página 1, do substituto (decisão 149): não tinha lido a lista; treino de contrato e de seletor feitos; nenhum aviso"
+    },
+    {
+      "arquivo": "codigo-4-pagina-2.txt",
+      "sha256": "1f566372639dcbcb",
+      "pagina": 2,
+      "dia_da_sessao": "2026-11-18",
+      "importado": true,
+      "integrante_na_planilha": 2,
+      "observacao": "o perfil responde que a pessoa já tinha lido a lista dos cenários, e o treino veio sem o exercício de seletor; entrou na leitura com as duas coisas declaradas (ficha 90, decisão 150); nenhum aviso"
+    }
+  ],
+  "sha256_de": "os 16 primeiros caracteres do sha256 dos bytes de cada arquivo, como gravado nesta pasta"
+}

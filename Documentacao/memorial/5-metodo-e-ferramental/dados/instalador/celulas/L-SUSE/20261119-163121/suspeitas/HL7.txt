@@ -1,0 +1,20 @@
+### o systemd esta no ar? (processo 1 e estado)
+$ bash -c cat /proc/1/comm; systemctl is-system-running 2>&1
+systemd
+running
+[codigo de saida: 0]
+
+### servico mariadb
+$ bash -c systemctl is-enabled mariadb 2>&1; systemctl is-active mariadb 2>&1
+not-found
+inactive
+[codigo de saida: 4]
+
+### processos do banco
+$ bash -c ps -eo user,pid,args 2>/dev/null | grep -E "[m]ariadbd|[m]ysqld" || echo "nenhum mariadbd rodando"
+cobaia       180 timeout 600 bash -c ps -eo user,pid,args 2>/dev/null | grep -E "[m]ariadbd|[m]ysqld" || echo "nenhum mariadbd rodando"
+cobaia       181 bash -c ps -eo user,pid,args 2>/dev/null | grep -E "[m]ariadbd|[m]ysqld" || echo "nenhum mariadbd rodando"
+[codigo de saida: 0]
+
+### plano B nao testado: o servidor do MariaDB nao esta instalado
+

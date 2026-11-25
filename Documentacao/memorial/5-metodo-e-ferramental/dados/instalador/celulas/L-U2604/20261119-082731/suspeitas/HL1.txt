@@ -1,0 +1,6 @@
+### modo do install.sh e do run.sh no pacote (644 = sem permissao de execucao)
+$ stat -c %a %n install.sh run.sh
+644 install.sh
+644 run.sh
+[codigo de saida: 0]
+

@@ -1,0 +1,2 @@
+### nao rodou: nao foi possivel criar a venv da sonda (ver HL2)
+

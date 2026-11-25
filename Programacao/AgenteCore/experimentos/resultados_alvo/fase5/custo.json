@@ -1,0 +1,42 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-16T19:27:49",
+    "corrida": "fase4_ensaio_v4",
+    "gerado_por": "avaliar_fase5.py --custo"
+  },
+  "resumo": {
+    "cenarios": 10,
+    "repeticoes": 5,
+    "execucoes": 50,
+    "execucoes_na_21d": 10,
+    "segundos_por_execucao_na_21d": 76.7,
+    "segundos_do_executor_na_21d": 808,
+    "segundos_fora_do_executor_na_21d": 26,
+    "horas_pelas_execucoes": 1.07,
+    "horas_pelo_executor": 1.12,
+    "ponte_minutos_min": 34,
+    "ponte_minutos_max": 42,
+    "minutos_estimados_sem_ponte": 68,
+    "minutos_estimados_com_ponte": 110
+  },
+  "pontes": [
+    {
+      "corrida": "fase3b_ponte_04014",
+      "versao": "0.40.14",
+      "data": "2026-11-03",
+      "minutos": 42
+    },
+    {
+      "corrida": "fase3b_ponte_04015",
+      "versao": "0.40.15",
+      "data": "2026-11-11",
+      "minutos": 34
+    },
+    {
+      "corrida": "fase3b_ponte_04016",
+      "versao": "0.40.16",
+      "data": "2026-11-16",
+      "minutos": 37
+    }
+  ]
+}

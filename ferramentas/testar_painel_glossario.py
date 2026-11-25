@@ -16,7 +16,7 @@ RAIZ = Path(__file__).resolve().parents[1]
 REFS = (RAIZ / "Documentacao" / "memorial" / "2-pesquisa-e-literatura" / "referencias.md").read_text(encoding="utf-8")
 # O método e o sobrenome que a fonte dele precisa trazer: a referência original de cada um, ou a que o documento do TCC cita na seção 5.7.
 FONTE_DO_METODO = {"wilson": "WILSON", "mcnemar": "McNEMAR", "bootstrap": "EFRON", "acuracia-balanceada": "BRODERSEN", "cochran": "COCHRAN", "holm": "HOLM", "g-cohen": "COHEN",
-                   "auroc": "FAWCETT", "bm25": "ROBERTSON", "hit-k": "VOORHEES", "tpr-tnr": "GUAN", "flesch": "FLESCH", "troca-de-rotulo": "DUTTA"}
+                   "auroc": "FAWCETT", "bm25": "ROBERTSON", "hit-k": "VOORHEES", "tpr-tnr": "GUAN", "flesch": "FLESCH", "troca-de-rotulo": "DUTTA", "sinais": "DIXON"}
 # As entradas do glossário do documento do TCC que o painel também precisa explicar (pelo id do termo aqui).
 DO_GLOSSARIO_DO_TCC = ["acuracia-balanceada", "api", "arvore-de-acessibilidade", "biblioteca", "carimbo", "caso-escrito", "ineditos", "ciclo-de-correcao", "corrida", "contrato",
                        "self-healing", "e2e", "epoca", "llm", "mttr", "ollama", "playwright", "poda", "ponte", "probabilidade-da-resposta", "qa", "quantizacao", "rag",
@@ -63,6 +63,24 @@ class TesteTermos(unittest.TestCase):
         for termo, sobrenome in FONTE_DO_METODO.items():
             fontes = [g.fonte(c, REFS) or "" for c in por_id[termo]["fontes"]]
             self.assertTrue(any(sobrenome in f for f in fontes), f"{termo}: falta a fonte de {sobrenome} ({fontes})")
+
+    # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) teste novo do teste dos sinais no glossário.
+    # ! Motivo: o plano aprovado da Fase 5 (seção 6) pede o teste dos sinais com o resumo, o que o projeto faz de diferente e a fonte original, conferida antes de
+    # entrar em `referencias.md`. Sem o teste, o método da comparação central do TCC poderia entrar no painel sem dizer que a unidade é o cenário, que o empate
+    # abaixo de 5 s fica de fora e que a conta é a de `avaliar.mcnemar_exato`, ou com a fonte fora do formato da norma.
+    def teste_teste_dos_sinais_diz_o_que_o_projeto_faz_de_diferente_e_cita_a_fonte(self):
+        t = {x["id"]: x for x in g.TERMOS}["sinais"]
+        self.assertEqual(t["grupo"], "metodo")
+        for trecho in ("cenário", "5 s", "mcnemar_exato", "McNemar"):
+            self.assertIn(trecho, t["no_projeto"], trecho)
+        fontes = [g.fonte(c, REFS) or "" for c in t["fontes"]]
+        dixon = next(f for f in fontes if f.startswith("DIXON"))
+        for trecho in ("MOOD, A. M.", "The statistical sign test", "Journal of the American Statistical Association", "v. 41", "n. 236", "p. 557-566", "1946",
+                       "10.1080/01621459.1946.10501898", "Disponível em:", "Acesso em:"):
+            self.assertIn(trecho, dixon, trecho)
+        self.assertTrue(any(f.startswith("McNEMAR") for f in fontes), "a conta é a do McNemar exato, e a fonte dele vem junto")
+        marcada = g.anotar(_aba("medicao", "<p>O teste exato dos sinais sobre os cenários. Depois, o teste dos sinais de novo.</p>"), REFS)
+        self.assertEqual([m for m in _marcas(marcada) if m[0] == "sinais"], [("sinais", "teste exato dos sinais")])
 
     def teste_fonte_sai_sem_negrito_e_sem_a_marca_de_conferencia(self):
         texto = g.fonte("ref:COHEN, J. **Statistical power", REFS)

@@ -1,0 +1,146 @@
+### pacotes do PHP que o instalador deixou
+$ bash -c dpkg-query -W -f "\${Package} \${Version}\n" "php*" 2>/dev/null || rpm -qa "php*" 2>/dev/null || echo "sem dpkg e sem rpm"
+php 2:8.1+92ubuntu1
+php-amqp 
+php-apcu 
+php-ast 
+php-calendar 
+php-cli 
+php-common 2:92ubuntu1
+php-crypt-gpg 
+php-ctype 
+php-ds 
+php-exif 
+php-facedetect 
+php-ffi 
+php-fileinfo 
+php-ftp 
+php-gearman 
+php-gmagick 
+php-gnupg 
+php-iconv 
+php-igbinary 
+php-imagick 
+php-libvirt-php 
+php-lua 
+php-mailparse 
+php-memcache 
+php-memcached 
+php-mongodb 
+php-msgpack 
+php-mysql 2:8.1+92ubuntu1
+php-mysqli 
+php-mysqlnd 
+php-mysqlnd-ms 
+php-oauth 
+php-opcache 
+php-pcov 
+php-pdo 
+php-pdo-mysql 
+php-pear 
+php-pecl-http 
+php-phar 
+php-posix 
+php-ps 
+php-psr 
+php-radius 
+php-raphf 
+php-readline 
+php-redis 
+php-rrd 
+php-shmop 
+php-smbclient 
+php-sockets 
+php-ssh2 
+php-stomp 
+php-sysvmsg 
+php-sysvsem 
+php-sysvshm 
+php-tideways 
+php-tokenizer 
+php-uopz 
+php-uploadprogress 
+php-uuid 
+php-xdebug 
+php-xmlrpc 
+php-yac 
+php-yaml 
+php-zmq 
+php5.6-common 
+php5.6-json 
+php7.0-common 
+php7.0-curl 
+php7.1-common 
+php7.2-common 
+php7.2-sodium 
+php7.3-common 
+php7.4-common 
+php8.0-common 
+php8.1 8.1.2-1ubuntu2.28
+php8.1-calendar 
+php8.1-cgi 
+php8.1-cli 8.1.2-1ubuntu2.28
+php8.1-common 8.1.2-1ubuntu2.28
+php8.1-ctype 
+php8.1-exif 
+php8.1-ffi 
+php8.1-fileinfo 
+php8.1-fpm 
+php8.1-ftp 
+php8.1-gettext 
+php8.1-iconv 
+php8.1-json 
+php8.1-mysql 8.1.2-1ubuntu2.28
+php8.1-mysqli 
+php8.1-mysqlnd 
+php8.1-opcache 8.1.2-1ubuntu2.28
+php8.1-pdo 
+php8.1-pdo-mysql 
+php8.1-phar 
+php8.1-posix 
+php8.1-readline 8.1.2-1ubuntu2.28
+php8.1-shmop 
+php8.1-sockets 
+php8.1-sysvmsg 
+php8.1-sysvsem 
+php8.1-sysvshm 
+php8.1-tokenizer 
+phpapi-20210902 
+[codigo de saida: 0]
+
+### extensoes que o php carrega sozinho
+$ /usr/bin/php -r foreach (["mysqli", "pdo_mysql", "mbstring"] as $x) { echo $x, ": ", extension_loaded($x) ? "carregada" : "NAO carregada", "\n"; }
+mysqli: carregada
+pdo_mysql: carregada
+mbstring: NAO carregada
+[codigo de saida: 0]
+
+### aplicar os .sql como o instalador (install.apply_sql_files)
+$ /usr/bin/python3 -c import install, _env_common as e; install.apply_sql_files(e.find_mysql_cli())
+[cobaia] Aplicando bancoatualizado.sql...
+[cobaia] Aplicando schema_completo.sql...
+[cobaia] Aplicando seed.sql...
+[cobaia] Banco pronto (schema completo + seed).
+[codigo de saida: 0]
+
+### produtos_geral.php sem as opcoes de extensao (so o output_buffering)
+$ /usr/bin/python3 /home/cobaia/sonda/buscar_pagina.py http://localhost:8081/produtos_geral.php
+HTTP 500 com 1364 caracteres
+nenhum Fatal error, Warning ou ERRO na pagina
+[codigo de saida: 0]
+
+### o que o php -S escreveu (produtos_geral.php sem as opcoes de extensao (so o output_buffering))
+$ tail -n 15 /home/cobaia/evidencia/suspeitas/php_servidor_8081.log
+[Thu Nov 19 07:54:23 2026] PHP 8.1.2-1ubuntu2.28 Development Server (http://localhost:8081) started
+[Thu Nov 19 07:54:26 2026] 127.0.0.1:33946 Accepted
+[Thu Nov 19 07:54:26 2026] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strimwidth() in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php:45
+Stack trace:
+#0 {main}
+  thrown in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php on line 45
+[Thu Nov 19 07:54:26 2026] 127.0.0.1:33946 [500]: GET /produtos_geral.php - Uncaught Error: Call to undefined function mb_strimwidth() in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php:45
+Stack trace:
+#0 {main}
+  thrown in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php on line 45
+[Thu Nov 19 07:54:26 2026] 127.0.0.1:33946 Closing
+[codigo de saida: 0]
+

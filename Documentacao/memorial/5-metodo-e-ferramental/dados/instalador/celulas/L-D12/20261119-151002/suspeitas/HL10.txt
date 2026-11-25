@@ -1,0 +1,38 @@
+### root sem senha pelo usuario comum, como o _can_connect do _env_common
+$ /usr/bin/mariadb -u root -e SELECT 1;
+ERROR 1698 (28000): Access denied for user 'root'@'localhost'
+[codigo de saida: 1]
+
+### como o root local esta cadastrado no servidor
+$ sudo /usr/bin/mariadb -u root -e SHOW GRANTS FOR 'root'@'localhost';
+Grants for root@localhost
+GRANT ALL PRIVILEGES ON *.* TO `root`@`localhost` IDENTIFIED VIA mysql_native_password USING 'invalid' OR unix_socket WITH GRANT OPTION
+GRANT PROXY ON ``@`%` TO `root`@`localhost` WITH GRANT OPTION
+[codigo de saida: 0]
+
+### o conserto que o instalador tenta (_env_common.ensure_root_no_password)
+$ /usr/bin/python3 -c import _env_common as e; print("ensure_root_no_password devolveu", e.ensure_root_no_password(e.find_mysql_cli()))
+[cobaia] root não acessível sem senha via TCP — tentando corrigir via socket local (sudo)...
+[cobaia] root ajustado para sem senha.
+ensure_root_no_password devolveu True
+[codigo de saida: 0]
+
+### root sem senha depois do conserto
+$ /usr/bin/mariadb -u root -e SELECT 1;
+1
+1
+[codigo de saida: 0]
+
+### como o root local ficou cadastrado
+$ sudo /usr/bin/mariadb -u root -e SHOW GRANTS FOR 'root'@'localhost';
+Grants for root@localhost
+GRANT ALL PRIVILEGES ON *.* TO `root`@`localhost` WITH GRANT OPTION
+GRANT PROXY ON ``@`%` TO `root`@`localhost` WITH GRANT OPTION
+[codigo de saida: 0]
+
+### root sem senha pela rede local (127.0.0.1:3306, por onde a CobaiaAPI entra)
+$ /usr/bin/mariadb -u root -h 127.0.0.1 -P 3306 --protocol=TCP -e SELECT CURRENT_USER();
+CURRENT_USER()
+root@localhost
+[codigo de saida: 0]
+

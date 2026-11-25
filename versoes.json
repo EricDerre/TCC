@@ -1,0 +1,87 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo novo (pacote I1 do instalador único, decisão 139): a versão que o projeto testou e a faixa que ele aceita de cada ferramenta, gerado por ferramentas/instalador_matriz/atualizar_versoes.py; não editar à mão.",
+  "motivo": "! Motivo: o instalador só escolhia a versão do Playwright e a série do MariaDB no Windows; o Ollama se atualiza sozinho e o PHP e o MariaDB mudam conforme o sistema. Com o registro, o instalador instala a versão testada quando a ferramenta falta, avisa quando a encontrada é outra e, no modo --reproduzir, exige a exata."
+ },
+ "gravado_em": "2026-11-18T11:32:53",
+ "ferramentas": {
+  "python": {
+   "testada": "3.14.7",
+   "aceita_de": "3.12",
+   "aceita_ate": "",
+   "afeta_medida": false,
+   "origem": "Programacao/AgenteCore/.venv/pyvenv.cfg (version), na máquina-alvo"
+  },
+  "php": {
+   "testada": "8.2.35",
+   "aceita_de": "8.1",
+   "aceita_ate": "8.5",
+   "afeta_medida": false,
+   "origem": "php -v do executável em uso na máquina-alvo"
+  },
+  "mariadb": {
+   "testada": "11.8.9",
+   "aceita_de": "10.6",
+   "aceita_ate": "13.0",
+   "afeta_medida": false,
+   "origem": "resultados_alvo/fase4/ambiente.json (cobaias.mariadbd)"
+  },
+  "playwright": {
+   "testada": "1.64.1",
+   "aceita_de": "1.64.1",
+   "aceita_ate": "1.64.1",
+   "afeta_medida": true,
+   "origem": "Programacao/AgenteCore/requirements.txt"
+  },
+  "chromium": {
+   "testada": "156.0.8078.4",
+   "aceita_de": "156.0.8078.4",
+   "aceita_ate": "156.0.8078.4",
+   "afeta_medida": true,
+   "origem": "resultados_alvo/fase4/ambiente.json (versoes.navegador)"
+  },
+  "ollama": {
+   "testada": "0.40.16",
+   "aceita_de": "0.40.2",
+   "aceita_ate": "",
+   "afeta_medida": true,
+   "origem": "resultados_alvo/fase4/pontes.json (última ponte pareável)"
+  },
+  "modelo": {
+   "testada": "845dbda0ea48",
+   "identificador": true,
+   "nome": "qwen2.5:7b",
+   "pesos_sha256": "2bada8a7450677000f678be90653b85d364de7db25eb5ea54136ada5f3933730",
+   "pesos_bytes": 4683073952,
+   "afeta_medida": true,
+   "origem": "manifesto do qwen2.5:7b gravado pelo Ollama no disco da máquina-alvo"
+  },
+  "uv": {
+   "testada": "0.13.9",
+   "afeta_medida": false,
+   "origem": "release do uv no GitHub (astral-sh/uv)",
+   "downloads": {
+    "windows-x86_64": {
+     "url": "https://github.com/astral-sh/uv/releases/download/0.13.9/uv-x86_64-pc-windows-msvc.zip",
+     "sha256": "edd61f7f5728a56cc62455386661860bdfc7bab65872f39b0c25bdcc1d8e1beb"
+    },
+    "linux-x86_64": {
+     "url": "https://github.com/astral-sh/uv/releases/download/0.13.9/uv-x86_64-unknown-linux-gnu.tar.gz",
+     "sha256": "a7fbaff2b9a271d85c1bdb540941090fd1ce011797b4abeb48e4dcd39c2471d5"
+    },
+    "linux-aarch64": {
+     "url": "https://github.com/astral-sh/uv/releases/download/0.13.9/uv-aarch64-unknown-linux-gnu.tar.gz",
+     "sha256": "0797542018e541a9288855df555c8077eed06f7a47d206362030480e8ecc9f3d"
+    },
+    "macos-aarch64": {
+     "url": "https://github.com/astral-sh/uv/releases/download/0.13.9/uv-aarch64-apple-darwin.tar.gz",
+     "sha256": "5aeca67f2283f75235de40d0bd9c0a5bbc5fce23b6d48b3bf9fa1b2db08382ca"
+    },
+    "macos-x86_64": {
+     "url": "https://github.com/astral-sh/uv/releases/download/0.13.9/uv-x86_64-apple-darwin.tar.gz",
+     "sha256": "617a3211261b0fc739562f0071aa34e9739797c510208ede8e2977c30903d041"
+    }
+   }
+  }
+ }
+}

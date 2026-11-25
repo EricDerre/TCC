@@ -1,0 +1,17 @@
+{
+    "tag_ia":  {
+                   "alteracao":  "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_alvo.ps1: o que a celula ALVO rodou e com que codigo de saida.",
+                   "motivo":  "! Motivo: o plano do instalador unico (decisao 143) pede a evidencia de cada celula em arquivo; a celula ALVO e a prova rodada na maquina-alvo como esta, depois de os tres arquivos do instalador mudarem."
+               },
+    "id":  "ALVO",
+    "modo":  "novo",
+    "ate":  "N4",
+    "modelo_pequeno":  "qwen2.5:0.5b-instruct",
+    "imagem":  "maquina-alvo como esta (sem imagem)",
+    "inicio":  "2026-11-19T18:47:52",
+    "fim":  "2026-11-19T18:48:42",
+    "saidas":  {
+                   "conferir":  "0",
+                   "restaurar_banco":  "0"
+               }
+}

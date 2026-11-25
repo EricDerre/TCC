@@ -1,6 +1,6 @@
 {
   "metadados": {
-    "gerado_em": "2026-11-08T12:40:20",
+    "gerado_em": "2026-11-16T11:06:44",
     "gerado_por": "impacto_git.py --prova",
     "repositorio": "TCC",
     "commits_lidos_por": "git log --reverse -- Programacao/CobaiaAPI Programacao/CobaiaFront",
@@ -137,6 +137,11 @@
       "commit": "633ebb2746e459bf77c6f6d102fd06e63b612480",
       "data": "2026-11-03",
       "assunto": "Fase 4 - Inicio das rodadas + ajustes de parâmetros"
+    },
+    {
+      "commit": "717f68c2d2bbfdd09effee6bccb09a881ca2e00c",
+      "data": "2026-11-12",
+      "assunto": "Pós Parte 4 - Rodadas Q1 a Q4 + Refatoração dos painéis de dados e documentação"
     }
   ],
   "pares": [
@@ -1295,11 +1300,102 @@
           "na_aplicacao": 5
         }
       }
+    },
+    {
+      "testado": "633ebb2746e459bf77c6f6d102fd06e63b612480",
+      "atual": "717f68c2d2bbfdd09effee6bccb09a881ca2e00c",
+      "data": "2026-11-12",
+      "assunto": "Pós Parte 4 - Rodadas Q1 a Q4 + Refatoração dos painéis de dados e documentação",
+      "veredito": "roda tudo",
+      "resumo": {
+        "alterados": 2219,
+        "fora_da_aplicacao": 2218,
+        "ignorados": 0,
+        "no_mapa": 0,
+        "fora_do_mapa": 1,
+        "na_aplicacao": 1
+      },
+      "selecao": {
+        "arquivos": [
+          {
+            "arquivo": "Programacao/CobaiaFront/ORIGEM.md",
+            "classe": "fora_do_mapa",
+            "motivo": "arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo"
+          }
+        ],
+        "cenarios": {
+          "api-catalogo": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md)"
+          ],
+          "api-detalhe": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md)"
+          ],
+          "front-admin-login": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md)"
+          ],
+          "front-admin-produtos": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md)"
+          ],
+          "front-busca": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md)"
+          ],
+          "front-cliente-reserva": [
+            "regra 1: arquivo da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md)"
+          ]
+        },
+        "verbetes": {},
+        "ensaio": [
+          "contrato-error_500",
+          "contrato-escala_ou_unidade_errada",
+          "contrato-field_missing",
+          "contrato-field_renamed",
+          "contrato-malformed_json",
+          "contrato-type_drift",
+          "localizador-front-admin-login",
+          "localizador-front-admin-produtos",
+          "localizador-front-busca",
+          "localizador-front-cliente-reserva"
+        ],
+        "rodar_tudo": true,
+        "motivo": "roda tudo: 1 arquivo(s) da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md); regra 1, arquivo fora do mapa roda tudo, nunca nada",
+        "deixados_de_fora": {
+          "cenarios": [],
+          "ensaio": []
+        },
+        "conferencia": {
+          "rodada_completa": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "selecionados": [
+            "api-catalogo",
+            "api-detalhe",
+            "front-admin-login",
+            "front-admin-produtos",
+            "front-busca",
+            "front-cliente-reserva"
+          ],
+          "deixados_de_fora": [],
+          "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)"
+        },
+        "resumo": {
+          "alterados": 2219,
+          "fora_da_aplicacao": 2218,
+          "ignorados": 0,
+          "no_mapa": 0,
+          "fora_do_mapa": 1,
+          "na_aplicacao": 1
+        }
+      }
     }
   ],
   "resumo": {
-    "pares": 7,
-    "rodar_tudo": 2,
+    "pares": 8,
+    "rodar_tudo": 3,
     "selecao_parcial": 3,
     "nada_a_rodar": 2,
     "cenarios_deixados_de_fora_no_total": 21

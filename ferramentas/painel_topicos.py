@@ -20,6 +20,9 @@ from pathlib import Path
 
 import painel_atlas as pa
 import painel_explorador as pe
+# ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) painel_topicos passa a importar painel_leituras, de onde a aba "medicao" lê a ressalva do Task Success.
+# ! Motivo: a ressalva é texto escrito à mão e mora com os outros textos escritos à mão do painel; painel_leituras só importa `re`, então a importação não fecha um ciclo.
+import painel_leituras as pl
 import painel_textos as pt
 
 # ! Alteração de IA - Revisar: (05/11/2026, sessão de revisão) o endereço da página da sessão, gerada por ferramentas/sessao_revisao.py.
@@ -205,6 +208,11 @@ NAV = [
         # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 5; a seção vem de painel_fases.secao_fase.
         # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
         ("f-5", "Visão da Fase 5", "A fase em uma página: o agente contra a linha de base manual."),
+        # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) aba da medição de valor; o id entra junto com a seção (secao_medicao).
+        # ! Motivo: o plano aprovado da Fase 5 (seção 6) pede a aba "medicao" no grupo da fase, depois da visão. Ela entra antes da corrida 28 e das sessões,
+        # dizendo o que vai ser medido e por quais regras, e passa a mostrar os números sozinha quando `avaliar_fase5.py` gravar os derivados.
+        ("medicao", "Agente contra pessoa", ("O agente repara mais rápido que uma pessoa, e resolve tantos cenários quanto ela? A corrida 28b e a linha de base manual nos mesmos dez cenários: "
+                                             "o tempo de reparo e o Task Success dos dois lados, com as regras de leitura fixadas antes de qualquer medida.")),
     ]),
     ("Pesquisa e documentação", [
         ("pesquisa", "Pesquisa", "As rodadas de literatura, as afirmações verificadas e os filtros adotados."),
@@ -2137,6 +2145,49 @@ function cenSucesso(){
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'execuções'}},
       y:{stacked:true, afterFit: s => { s.width = Math.max(s.width, 240); }}}}});
 }
+// ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) os dois gráficos da aba "medicao". No do tempo, uma barra por lado em cada
+// cenário (o MTTR médio do agente e o tempo médio das pessoas) e, por cima, um traço do menor ao maior tempo medido, desenhado por um plugin pequeno do Chart.js.
+// No do Task Success, uma barra empilhada por lado: as medidas que chegaram ao resultado, as que não chegaram e as que ainda não foram medidas.
+// ! Motivo: o plano da Fase 5 (seção 6) pede o tempo por cenário dos dois lados com a faixa entre o mínimo e o máximo, e o Task Success por cenário. Os dois
+// existem antes das medidas, porque todo gráfico da página tem a sua leitura em painel_leituras: o lado sem medida fica fora do primeiro e entra como "por medir"
+// no segundo. As cores vêm de CORES_DA_MEDICAO (tokens da paleta); o traço da faixa usa a cor do texto da página, para aparecer no tema claro e no escuro.
+// em tela estreita o nome do cenário vai em duas linhas e todos os dez aparecem: na largura de celular o nome numa linha só tomava mais da metade do gráfico
+// e o Chart.js escondia um nome sim, um não
+function medRotulo(c){ const s = nome(c); if(window.innerWidth >= 640 || s.length < 20) return s; const p = s.split(' '), m = Math.ceil(p.length / 2); return [p.slice(0, m).join(' '), p.slice(m).join(' ')]; }
+// com o nome em duas linhas, os dez cenários não cabem na altura padrão do gráfico (os nomes ficavam uns sobre os outros): em tela estreita a caixa cresce
+function medAltura(id){ const el = document.getElementById(id); if(el && window.innerWidth < 640) el.parentElement.style.height = '540px'; }
+function medTempo(){
+  const M = T.medicao||{}; const L = M.tempo||[]; const C = M.cores||{};
+  const lado = (k, rotulo) => ({label: rotulo, data: L.map(x => x[k] ? x[k][0] : null), faixas: L.map(x => x[k] ? [x[k][1], x[k][2]] : null), backgroundColor: css(C[k])});
+  const ds = [];
+  if(L.some(x => x.agente)) ds.push(lado('agente', 'agente: tempo médio de reparo (MTTR)'));
+  if(L.some(x => x.pessoas)) ds.push(lado('pessoas', 'pessoas: tempo médio'));
+  medAltura('g-med-tempo');
+  const faixas = {id:'medFaixas', afterDatasetsDraw(chart){
+    const eixo = chart.scales.x, ctx = chart.ctx; ctx.save(); ctx.lineWidth = 2; ctx.strokeStyle = css('--ink');
+    chart.data.datasets.forEach((d, i) => { if(!d.faixas || !chart.isDatasetVisible(i)) return;
+      chart.getDatasetMeta(i).data.forEach((barra, j) => { const f = d.faixas[j]; if(!f || f[0] == null || f[1] == null) return;
+        const a = eixo.getPixelForValue(f[0]), b = eixo.getPixelForValue(f[1]), y = barra.y, h = Math.min(6, (barra.height || 12) / 2);
+        ctx.beginPath(); ctx.moveTo(a, y); ctx.lineTo(b, y); ctx.moveTo(a, y - h); ctx.lineTo(a, y + h); ctx.moveTo(b, y - h); ctx.lineTo(b, y + h); ctx.stroke(); }); });
+    ctx.restore(); }};
+  grafico('g-med-tempo', {type:'bar', data:{labels: L.map(x => medRotulo(x.cenario)), datasets: ds}, plugins:[faixas],
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{title:{display: !!M.aviso, text: M.aviso||''}, legend:{display: ds.length > 0},
+        tooltip:{callbacks:{label: c => c.dataset.label+': '+c.formattedValue+' s', afterLabel: c => { const f = (c.dataset.faixas||[])[c.dataIndex]; return f && f[0] != null && f[1] != null ? 'do menor ao maior tempo: '+f[0]+' a '+f[1]+' s' : ''; }}}},
+      scales:{x:{beginAtZero:true, suggestedMax: ds.length ? undefined : (M.limite_s||undefined), title:{display:true, text:'segundos, da detecção até o resultado'}}, y:{ticks:{autoSkip:false}, afterFit: s => { s.width = Math.max(s.width, Math.min(240, s.chart.width * 0.42)); }}}}});
+}
+function medSucesso(){
+  const M = T.medicao||{}; const L = M.sucesso||[]; const C = M.cores||{}; const P = M.previsto||{};
+  const series = [];
+  [['agente', 'agente'], ['pessoas', 'pessoas']].forEach(([k, quem]) => {
+    series.push({label: quem+': chegou ao resultado (Task Success)', stack: k, data: L.map(x => x[k] ? x[k][0] : null), backgroundColor: css(C[k])});
+    series.push({label: quem+': não chegou', stack: k, data: L.map(x => x[k] ? x[k][1] - x[k][0] : null), backgroundColor: css(C.nao_chegou)});
+    series.push({label: quem+': por medir', stack: k, data: L.map(x => x[k] ? null : (P[k] || null)), backgroundColor: css(C.por_medir)}); });
+  medAltura('g-med-sucesso');
+  grafico('g-med-sucesso', {type:'bar', data:{labels: L.map(x => medRotulo(x.cenario)), datasets: series.filter(s => s.data.some(v => v))},
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'medidas: execuções do agente e tentativas das pessoas'}},
+      y:{stacked:true, ticks:{autoSkip:false}, afterFit: s => { s.width = Math.max(s.width, Math.min(240, s.chart.width * 0.42)); }}}}});
+}
 // aba Avaliação da trilha (04/11/2026, corrida 22): TPR, TNR e o produto por sinal (o acaso dá 0,25) e as mutações pelo nó apontado
 function triSinais(){
   const A = T.trilha||{}; const S = A.sinais||[];
@@ -2330,6 +2381,7 @@ DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pe
                     "fluxo": ["fluxoConferencia", "fluxoPosicao", "fluxoCusto", "fluxoAfirmacoes"],
                     "segpasse": ["segPasseAlcance", "segPasseResultado"],
                     "analista": ["analistaPortoes", "analistaSequencia", "analistaLeituras", "analistaCasos"],
+                    "medicao": ["medTempo", "medSucesso"],
                     "biblioteca": ["bibFiltros", "bibReavaliacao"], "cenarios": ["cenMttr", "cenSucesso"], "trilha": ["triSinais", "triMutacoes"], "experimento": ["expAcerto", "expTrocas"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
@@ -2351,6 +2403,8 @@ main > section{scroll-margin-top:120px}.kpi b.longo{font-size:20px}
 .tok{display:inline-flex;flex-direction:column;align-items:center;gap:2px;padding:4px 7px;border-radius:6px;border:1px solid var(--linha);background:color-mix(in srgb,var(--s1) var(--p,0%),transparent)}
 .tok code{background:none;padding:0;font:500 13px var(--fm);color:var(--ink)}.tok small{font:400 10px var(--fb);color:var(--ink2)}
 .tabela.estreita{max-width:420px}
+/* aba medicao (24/11/2026, decisão 151): a ressalva que acompanha o veredito do Task Success, com a cor de aviso do painel */
+.ressalva{border-left:3px solid var(--meio);background:color-mix(in srgb,var(--meio) 12%,transparent);border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0 14px;max-width:none}
 pre.bruto{margin:8px 0;background:var(--acento2);border-radius:6px;padding:10px 12px;font:12px/1.5 var(--fm);white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%}
 pre.bruto code{background:none;padding:0;font:inherit}
 .relatorio{border-left:3px solid var(--linha);padding:2px 0 8px 16px;margin:8px 0}.relatorio h3{margin-top:10px}.relatorio h5{font:600 13px var(--fb);margin:14px 0 6px}
@@ -5019,12 +5073,18 @@ def _celula_regra(estado: str) -> str:
 
 # ! Alteração de IA - Revisar: (05/11/2026, decisões 90 a 92) as corridas da Fase 4 que o roadmap ainda não marca como feitas viram um cartão de número, uma frase na resposta e os cartões de corrida, e a seção 13 do relatório fica à vista.
 # ! Motivo: com as fichas 42 a 45 fechadas, a aba dizia só "nenhuma ficha aberta", como se não restasse nada, e as corridas 18c, 21c, 23 e 24 ainda vão rodar. Lidas pelo estado no roadmap, elas saem da lista sozinhas quando a linha passar a `feita`.
+# ! Alteração de IA - Revisar: (16/11/2026, plano aprovado da Fase 5, decisão 133) a lista para na corrida 27: da 28 em diante as corridas são da própria Fase 5.
+# ! Motivo: a corrida 28 (a noite medida da Fase 5) entrou no roadmap como pendente, e a aba "Fechamento da fase" passou a mostrar o cartão "Corridas que faltam antes
+# da Fase 5: 1" e a frase "Antes da Fase 5 faltam as corridas 28", o que é falso. As faixas são as de `painel_fases.FAIXAS_DE_CORRIDAS`: Fase 4 de 16 a 24, Pós-Fase 4 de 25 a 27.
+ULTIMA_CORRIDA_ANTES_DA_FASE_5 = 27
+
+
 def _corridas_que_faltam_f4(road: dict | None) -> list[str]:
-    """As corridas da Fase 4 (da 16 em diante) que o roadmap ainda não marca como feitas."""
+    """As corridas da Fase 4 e da Pós-Fase 4 (da 16 à 27) que o roadmap ainda não marca como feitas."""
     faltam = []
     for c in (road or {}).get("corridas", []):
         m = re.match(r"\d+", c.numero)
-        if m and int(m.group()) >= 16 and c.classe != "feita":
+        if m and 16 <= int(m.group()) <= ULTIMA_CORRIDA_ANTES_DA_FASE_5 and c.classe != "feita":
             faltam.append(c.numero)
     return faltam
 
@@ -5466,6 +5526,412 @@ def secao_fluxo(resumo: dict | None, medidas: dict | None, pend: list, proposta:
     return dados, html_
 
 
+# ------------------------------------------------------------------ Fase 5: a medição de valor (o agente contra a linha de base manual)
+
+# ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) a aba "medicao", lida dos derivados de `avaliar_fase5.py` em
+# `resultados_alvo/fase5/` (`custo.json`, `agente.json`, `manual.json`, `medicao.json`) e do desenho da medida (gerar_dashboard.desenho_da_fase5). Ela tem cinco
+# estados, decididos só pelo que está gravado: nenhum lado medido, só o agente, só as pessoas, os dois lados sem a comparação, e a comparação gravada.
+# ! Motivo: o plano aprovado da Fase 5 (seção 6) pede a aba com a pergunta no título, os cartões, dois gráficos, a leitura curta e as tabelas recolhidas, e pede
+# que antes das medidas ela mostre o que vai ser medido e as regras da seção 5. A corrida 28 e as três sessões ainda não aconteceram, e a geração do painel é a
+# última etapa do `rodar_fase5.ps1`: a aba não pode falhar quando `agente.json` aparecer, nem mostrar um derivado lido pela metade. A aba não faz conta de
+# comparação: a razão, a diferença e as frases das regras L9 e L11 só aparecem quando `medicao.json` existe, copiadas dele. Os dois gráficos existem em todos
+# os estados, porque o teste do painel exige leitura para todo gráfico e gráfico para toda leitura; o lado ainda não medido fica fora do gráfico do tempo e entra
+# como "por medir" no do Task Success. As cores vêm da paleta validada: o agente com a cor do modelo dele, as pessoas com a posição seguinte.
+CORES_DA_MEDICAO = {"agente": f"--s{SLOTS['qwen2.5:7b']}", "pessoas": "--s2", "nao_chegou": "--ruim", "por_medir": "--s4"}
+TITULO_DA_MEDICAO = "O agente repara mais rápido que uma pessoa, e resolve tantos cenários quanto ela?"
+NOME_DO_ITEM_F5 = {"agente": "agente", "pessoas": "pessoas", "empate": "empate", "sem_medida": "sem medida", "igual": "igual"}
+
+
+def _nd(v, casas: int = 1) -> str:
+    return "n/d" if v is None else fmt(v, casas)
+
+
+def _constante(v) -> str:
+    """Uma constante das regras como se escreve no texto: 5.0 vira 5, 0.05 vira 0,05, e a que não foi achada vira n/d."""
+    if v is None:
+        return "n/d"
+    return str(int(v)) if float(v) == int(v) else str(v).replace(".", ",")
+
+
+def _entre(lo, hi, casas: int = 1) -> str:
+    return "n/d" if lo is None or hi is None else f"{fmt(lo, casas)} a {fmt(hi, casas)}"
+
+
+def _sim(v) -> str:
+    return "n/d" if v is None else ("sim" if v else "não")
+
+
+def _lado_da_medicao(derivado: dict | None, medicao: dict | None, lado: str) -> dict | None:
+    """Um lado da medição (`agente` ou `pessoas`) como a aba usa: o resumo geral e, por cenário, o tempo (média, mínimo, máximo) e o Task Success (sucessos,
+    medidas). Sai do derivado do próprio lado; sem ele, do que `medicao.json` guarda do lado. None quando nenhum dos dois traz as chaves da leitura."""
+    if derivado and (derivado.get("geral") or {}).get("n") and derivado.get("por_cenario"):
+        return {"geral": derivado["geral"], "por_cenario": [{"cenario": x.get("cenario"), "tipo": x.get("tipo"), "tempo": [x.get("tempo_media_s"), x.get("tempo_min_s"), x.get("tempo_max_s")],
+                                                             "sucesso": [x.get("sucessos"), x.get("n")]} for x in derivado["por_cenario"]]}
+    geral = (((medicao or {}).get("lados") or {}).get(lado) or {}).get("geral")
+    tempos, sucessos = ((medicao or {}).get("tempo") or {}).get("por_cenario"), ((medicao or {}).get("task_success") or {}).get("por_cenario")
+    if not (geral or {}).get("n") or not tempos or not sucessos:
+        return None
+    suc = {x.get("cenario"): x for x in sucessos}
+    return {"geral": geral, "por_cenario": [{"cenario": x.get("cenario"), "tipo": x.get("tipo"), "tempo": [x.get(f"{lado}_media_s"), x.get(f"{lado}_min_s"), x.get(f"{lado}_max_s")],
+                                             "sucesso": [(suc.get(x.get("cenario")) or {}).get(f"{lado}_sucessos"), (suc.get(x.get("cenario")) or {}).get(f"{lado}_n")]} for x in tempos]}
+
+
+def _regras_da_fase5(n: dict, k: dict) -> str:
+    """As regras de leitura L1 a L15 do plano aprovado (seção 5), em linguagem direta, com as contagens do desenho da medida e as constantes do código."""
+    c = {nome: _constante(k.get(nome)) for nome in ("empate_s", "limite_s", "alfa", "reamostras", "semente")}
+    itens = [
+        ("O que é uma medida (L1)", f"Do agente, cada execução de um cenário: {n['execucoes']} execuções, com {n['cenarios']} cenários e {n['repeticoes']} repetições. Das pessoas, cada tentativa: "
+                                    f"{n['tentativas']} tentativas, com {n['cenarios']} cenários e {n['integrantes']} integrantes. Uma pessoa não repete cenário, porque depois da primeira vez já sabe a resposta."),
+        ("A unidade é o cenário (L2)", f"As repetições do agente no mesmo cenário saem quase iguais, e os integrantes resolvem a mesma falha. Por isso toda margem de incerteza do tempo e todo "
+                                       f"veredito contam {n['cenarios']} cenários, {n['contrato']} de contrato e {n['localizador']} de localizador. Contar cada execução como uma medida solta "
+                                       "daria margens estreitas demais."),
+        ("O tempo de cada lado (L3 e L4)", "Por cenário, a média de quem chegou ao fim do cronômetro, com o mínimo e o máximo ao lado. No geral e por tipo, a média das médias dos cenários."),
+        ("O Task Success de cada lado (L5)", "Execuções com Task Success sobre o total, e tentativas corrigidas sobre o total, cada uma com o intervalo de Wilson de 95%. Ao lado, em quantos "
+                                             "cenários o agente acertou todas as repetições e em quantos todos os integrantes acertaram."),
+        ("Quem não chega ao fim (L6)", f"A execução sem fim de cronômetro e a tentativa que passa do limite de {c['limite_s']} s ficam fora da média do tempo e dentro do Task Success. Uma segunda "
+                                       f"conta, declarada como piso, põe {c['limite_s']} s no lugar de cada uma, dos dois lados."),
+        ("As margens de incerteza (L7)", f"A do tempo médio sai de sortear os cenários de novo, {c['reamostras']} vezes, com semente fixa ({c['semente']}), sempre dentro de cada tipo, para a "
+                                         "mistura de contrato e localizador não mudar de um sorteio para outro. Por cenário não há margem: mostram-se o mínimo, a média e o máximo."),
+        ("A comparação do tempo (L8)", f"Por cenário, o tempo das pessoas menos o do agente, e a razão entre os dois. No geral, a média dessas diferenças com a margem, a razão entre as duas médias "
+                                       f"e o teste dos sinais sobre os cenários. Diferença menor que {c['empate_s']} s, a folga do cronômetro das pessoas, conta como empate e sai do teste. Cenário "
+                                       "em que só um lado chegou ao fim conta para esse lado no teste e fica fora da média das diferenças."),
+        ("O que conta como diferença (L9)", f"A leitura só afirma que um lado repara mais rápido quando a margem de 95% da diferença média não contém zero e o teste dos sinais dá p abaixo de "
+                                            f"{c['alfa']}. Com tão poucos cenários, isso pede quase todos na mesma direção. Se a margem contém zero, a diferença está dentro do ruído. Se a margem "
+                                            "não contém zero e o teste não chega lá, a leitura diz que a média pende para um lado e não dá veredito. Nos três casos os números são mostrados."),
+        ("Por tipo de cenário, sem veredito (L10)", "Contrato e localizador aparecem lado a lado, com as margens, e o texto não afirma diferença por tipo: são cenários de menos para o teste "
+                                                    "separar os lados."),
+        ("A comparação do Task Success (L11)", "Os dois números lado a lado e, por cenário, a parcela do agente menos a das pessoas. O teste dos sinais entra só sobre os cenários em que as duas "
+                                               "parcelas diferem; com poucos cenários diferentes, a leitura diz que não há veredito."),
+        ("O que é só descrição (L12 e L13)", "A faixa de cada lado em cada cenário e se as duas se cruzam; o tempo das pessoas pela posição na ordem, que mostra o aprendizado ao longo da "
+                                             "sessão; o tempo total do agente, que inclui a detecção; e o tempo só das medidas com Task Success."),
+        ("O que anula uma medida (L14)", "Só uma falha do protocolo anotada na hora, antes de qualquer número ser lido. As anuladas são contadas à parte e não são substituídas. Do lado do "
+                                         "agente nenhuma execução é anulada: a que falhar aparece como falhou."),
+        ("Nada é escolhido depois (L15)", "As contas são as do código testado antes da noite do agente e da primeira sessão. Uma conta pensada depois de ver os números entra no relatório "
+                                          "marcada como exploratória."),
+    ]
+    return '<ol class="leitura">' + "".join(f"<li><strong>{esc(t)}.</strong> {esc(x)}</li>" for t, x in itens) + "</ol>"
+
+
+def _tabelas_da_medicao(medicao: dict) -> list[str]:
+    tempo, ts = medicao["tempo"], medicao["task_success"]
+    piso, estrita = tempo.get("piso") or {}, tempo.get("estrita") or {}
+    total = ((((medicao.get("lados") or {}).get("agente") or {}).get("tempo_total")) or {}).get("segundos_media_s")
+    return [
+        detalhes("Tempo por cenário, os dois lados", '<p class="nota">Bloco <code>tb_f5_medicao_tempo_por_cenario</code> de <code>medicao.md</code>. A diferença é o tempo das pessoas menos o do agente.</p>'
+                 + tabela(["Cenário", "Tipo", "MTTR médio do agente (s)", "Faixa do agente (s)", "Tempo médio das pessoas (s)", "Faixa das pessoas (s)", "Diferença (s)", "Razão", "Quem foi mais rápido",
+                           "As faixas se cruzam"],
+                          [[f"<code>{esc(x['cenario'])}</code>", esc(x["tipo"]), _nd(x["agente_media_s"]), _entre(x["agente_min_s"], x["agente_max_s"]), _nd(x["pessoas_media_s"]),
+                            _entre(x["pessoas_min_s"], x["pessoas_max_s"]), _nd(x["diferenca_s"]), _nd(x["razao"], 2), NOME_DO_ITEM_F5.get(x["direcao"], x["direcao"]), _sim(x["faixas_se_cruzam"])]
+                           for x in tempo["por_cenario"]], raw=True)),
+        detalhes("Tempo por tipo de cenário, sem veredito", '<p class="nota">Bloco <code>tb_f5_medicao_tempo_por_tipo</code> de <code>medicao.md</code>.</p>'
+                 + tabela(["Tipo", "Cenários com os dois lados", "Diferença média (s)", "Margem de 95% (s)", "Razão entre as médias", "Agente mais rápido", "Pessoas mais rápidas", "Empates", "Sem medida"],
+                          [[esc(x["tipo"]), x["cenarios_com_os_dois_lados"], _nd(x["diferenca_media_s"]), _entre(x["ic_lo_s"], x["ic_hi_s"]), _nd(x["razao_das_medias"], 2), x["agente_mais_rapido"],
+                            x["pessoas_mais_rapidas"], x["empates"], x["sem_medida"]] for x in tempo.get("por_tipo") or []], raw=True)),
+        detalhes("A segunda conta, com o limite no lugar de quem não chegou ao fim", '<p class="nota">Bloco <code>tb_f5_medicao_piso</code> de <code>medicao.md</code>. É um piso, e não o veredito da leitura.</p>'
+                 + tabela(["Cenários com os dois lados", "Diferença média (s)", "Margem de 95% (s)", "Razão entre as médias", "Agente mais rápido", "Pessoas mais rápidas", "Empates", "p do teste dos sinais",
+                           "O que a regra L9 daria nesta conta"],
+                          [[piso.get("cenarios_com_os_dois_lados"), _nd(piso.get("diferenca_media_s")), _entre(piso.get("ic_lo_s"), piso.get("ic_hi_s")), _nd(piso.get("razao_das_medias"), 2),
+                            (piso.get("sinais") or {}).get("agente"), (piso.get("sinais") or {}).get("pessoas"), (piso.get("sinais") or {}).get("empates"), _nd((piso.get("sinais") or {}).get("p"), 4),
+                            esc(str(piso.get("o_que_a_regra_l9_daria")) + (f" ({piso['lado']})" if piso.get("lado") else ""))]], raw=True)),
+        detalhes("Task Success por cenário, os dois lados", '<p class="nota">Bloco <code>tb_f5_medicao_task_success_por_cenario</code> de <code>medicao.md</code>.</p>'
+                 + tabela(["Cenário", "Tipo", "Agente", "Agente (%)", "Pessoas", "Pessoas (%)", "Diferença (pontos)", "Parcela maior"],
+                          [[f"<code>{esc(x['cenario'])}</code>", esc(x["tipo"]), f"{x['agente_sucessos']} de {x['agente_n']}", _nd(x["agente_pct"]), f"{x['pessoas_sucessos']} de {x['pessoas_n']}",
+                            _nd(x["pessoas_pct"]), _nd(x["diferenca_pp"]), NOME_DO_ITEM_F5.get(x["direcao"], x["direcao"])] for x in ts["por_cenario"]], raw=True)),
+        detalhes("O que é só descrição", '<p class="nota">Bloco <code>tb_f5_medicao_descricao</code> de <code>medicao.md</code> (regra L13).</p>'
+                 + tabela(["Medida", "Agente", "Pessoas", "Diferença (s)"],
+                          [["tempo médio só com as medidas que tiveram Task Success (s)", f"{_nd(estrita.get('agente_media_s'))} em {estrita.get('agente_cenarios')} cenários",
+                            f"{_nd(estrita.get('pessoas_media_s'))} em {estrita.get('pessoas_cenarios')} cenários", _nd(estrita.get("diferenca_s"))],
+                           ["tempo total médio da execução do agente, com a detecção (s)", _nd(total), "não se aplica", "não se aplica"]])),
+    ]
+
+
+def _tabelas_do_agente(agente: dict) -> list[str]:
+    noite, ident, sem = agente.get("noite") or {}, agente.get("mesmo_agente_da_21d") or [], agente.get("sem_task_success") or []
+    blocos = [
+        detalhes("O agente, cenário a cenário", '<p class="nota">Bloco <code>tb_f5_agente_por_cenario</code> de <code>agente.md</code>.</p>'
+                 + tabela(["Cenário", "Tipo", "Execuções", "Task Success", "Com fim de cronômetro", "MTTR médio (s)", "Mínimo (s)", "Máximo (s)", "Segunda conta (s)", "Rótulo do diagnóstico em cada repetição"],
+                          [[f"<code>{esc(x.get('cenario'))}</code>", esc(x.get("tipo")), x.get("n"), x.get("sucessos"), x.get("com_fim"), _nd(x.get("tempo_media_s")), _nd(x.get("tempo_min_s")),
+                            _nd(x.get("tempo_max_s")), _nd(x.get("piso_media_s")), ", ".join(f"<code>{esc(r)}</code>" for r in x.get("rotulos") or []) or "n/d"] for x in agente["por_cenario"]], raw=True)),
+        detalhes("A noite conferida", '<p class="nota">Bloco <code>tb_f5_agente_noite</code> de <code>agente.md</code>.</p>'
+                 + tabela(["Execuções gravadas", "Esperadas", "Noite completa", "Versões do Ollama", "Versões do navegador", "Hash do banco no começo das repetições", "Linha FIM no log"],
+                          [[noite.get("execucoes"), noite.get("esperadas"), _sim(noite.get("completa")), esc(", ".join(noite.get("versoes_ollama") or []) or "n/d"),
+                            esc(", ".join((noite.get("navegador") or {}).get("versoes") or []) or "n/d"), esc(", ".join((noite.get("banco") or {}).get("hashes_de_inicio") or []) or "n/d"),
+                            _sim(noite.get("linha_fim_no_log"))]], raw=True)),
+        detalhes("O agente medido é o da corrida 21d?", '<p class="nota">Bloco <code>tb_f5_agente_identidade</code> de <code>agente.md</code>. Os itens que param a noite quando diferem são os seis do plano.</p>'
+                 + tabela(["Item", "Na corrida", "Na corrida 21d", "Igual", "Para a noite se diferir"],
+                          [[esc(i.get("nome")), f"<code>{esc(i.get('hoje'))}</code>", f"<code>{esc(i.get('na_21d'))}</code>", _sim(i.get("igual")), _sim(i.get("para"))] for i in ident]
+                          or [["sem a corrida 21d para comparar", "", "", "", ""]], raw=True)),
+    ]
+    if sem:
+        blocos.append(detalhes("Execuções que não chegaram ao resultado", '<p class="nota">Bloco <code>tb_f5_agente_sem_sucesso</code> de <code>agente.md</code>. Nenhuma execução do agente é anulada.</p>'
+                               + tabela(["Cenário", "Repetição", "Tipo", "Detectou", "Rótulo do diagnóstico", "Causa esperada", "Falha da cura", "MTTR (s)"],
+                                        [[f"<code>{esc(x.get('cenario'))}</code>", x.get("repeticao"), esc(x.get("tipo")), _sim(x.get("detectou")), f"<code>{esc(x.get('rotulo') or 'n/d')}</code>",
+                                          f"<code>{esc(x.get('causa_esperada') or '')}</code>", f"<code>{esc(x.get('falha_da_cura') or 'n/d')}</code>", _nd(x.get("mttr_s"))] for x in sem], raw=True)))
+    return blocos
+
+
+def _tabelas_das_pessoas(manual: dict) -> list[str]:
+    linhas = manual.get("linhas") or {}
+
+    def quais(itens) -> str:
+        return "; ".join(f"integrante {i.get('integrante')}, ordem {i.get('ordem')}, <code>{esc(i.get('cenario'))}</code>" for i in itens or []) or "nenhuma"
+
+    return [
+        detalhes("As pessoas, cenário a cenário", '<p class="nota">Bloco <code>tb_f5_manual_por_cenario</code> de <code>manual.md</code>.</p>'
+                 + tabela(["Cenário", "Tipo", "Tentativas", "Corrigidas", "Com fim de cronômetro", "Tempo médio (s)", "Mínimo (s)", "Máximo (s)", "Segunda conta (s)"],
+                          [[f"<code>{esc(x.get('cenario'))}</code>", esc(x.get("tipo")), x.get("n"), x.get("sucessos"), x.get("com_fim"), _nd(x.get("tempo_media_s")), _nd(x.get("tempo_min_s")),
+                            _nd(x.get("tempo_max_s")), _nd(x.get("piso_media_s"))] for x in manual["por_cenario"]], raw=True)),
+        detalhes("As pessoas pela posição na ordem", '<p class="nota">Bloco <code>tb_f5_manual_por_posicao</code> de <code>manual.md</code>. É só descrição: mostra o aprendizado ao longo da sessão.</p>'
+                 + tabela(["Posição na ordem do integrante", "Tentativas", "Corrigidas", "Com fim de cronômetro", "Tempo médio (s)"],
+                          [[x.get("posicao"), x.get("n"), x.get("sucessos"), x.get("com_fim"), _nd(x.get("tempo_media_s"))] for x in manual.get("por_posicao") or []])),
+        detalhes("As pessoas, por integrante", '<p class="nota">Bloco <code>tb_f5_manual_por_integrante</code> de <code>manual.md</code>. O integrante é um número: a leitura não guarda nomes.</p>'
+                 + tabela(["Integrante", "Tentativas", "Corrigidas", "Com fim de cronômetro", "Tempo médio (s)", "Tempo somado (s)"],
+                          [[x.get("integrante"), x.get("n"), x.get("sucessos"), x.get("com_fim"), _nd(x.get("tempo_media_s")), _nd(x.get("tempo_total_s"))] for x in manual.get("por_integrante") or []])),
+        detalhes("As linhas da planilha", '<p class="nota">Bloco <code>tb_f5_manual_linhas</code> de <code>manual.md</code>. A linha anulada na hora fica fora de toda conta.</p>'
+                 + tabela(["Linhas esperadas", "Preenchidas", "Anuladas na hora", "Anotadas à mão", "Sem fim de cronômetro"],
+                          [[linhas.get("esperadas"), linhas.get("preenchidas"), quais(linhas.get("anuladas")), quais(linhas.get("anotadas_a_mao")), quais(linhas.get("sem_fim"))]], raw=True)),
+    ]
+
+
+# ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) `_conta_sem_um_integrante`: a tabela da comparação refeita sem a sessão de cada integrante, lida
+# do campo `sem_um_integrante` de `medicao.json` (e a nota `nota_sem_um_integrante`), com o rótulo de conta exploratória. Sem o campo, ou com ele fora do
+# formato, devolve vazio.
+# ! Motivo: o veredito do Task Success da leitura de 24/11/2026 depende da sessão de um integrante só (ficha 91). A conta que mostra isso foi pensada depois de
+# ver os números e, pela regra L15 do plano, entra marcada como exploratória: a tabela não pode chegar ao painel parecendo um segundo veredito. A aba só exibe
+# o que a leitura gravou (os números, o p e o que cada regra daria); o total de cenários de cada célula "x de y" é a soma das contagens da própria linha.
+ROTULO_DA_REGRA_L9 = {("veredito", "agente"): "veredito: o agente mais rápido", ("veredito", "pessoas"): "veredito: as pessoas mais rápidas", ("ruido", None): "dentro do ruído",
+                      ("pende", "agente"): "a média pende para o agente, sem veredito", ("pende", "pessoas"): "a média pende para as pessoas, sem veredito",
+                      ("sem_medida", None): "sem medida dos dois lados"}
+ROTULO_DA_REGRA_L11 = {("veredito", "agente"): "veredito: o agente resolveu mais", ("veredito", "pessoas"): "veredito: as pessoas resolveram mais", ("sem_veredito", None): "sem veredito",
+                       ("sem_diferenca", None): "sem diferença que a leitura afirme", ("sem_medida", None): "sem medida dos dois lados"}
+
+
+def _conta_sem_um_integrante(medicao: dict) -> str:
+    conta = medicao.get("sem_um_integrante")
+    if not isinstance(conta, list) or not conta or not all(isinstance(x, dict) and x.get("sem_o_integrante") is not None for x in conta):
+        return ""
+
+    def de(parte, partes: list) -> str:
+        return "n/d" if parte is None or any(v is None for v in partes) else f"{parte} de {sum(partes)}"
+
+    def rotulo(mapa: dict, caso, lado) -> str:
+        return "n/d" if caso is None else mapa.get((caso, lado), str(caso))
+
+    linhas = []
+    for x in conta:
+        pes, tempo, suc = (x.get(k) if isinstance(x.get(k), dict) else {} for k in ("pessoas", "tempo", "task_success"))
+        linhas.append([f"integrante {x['sem_o_integrante']}", "n/d" if None in (pes.get("corrigidas"), pes.get("tentativas")) else f"{pes['corrigidas']} de {pes['tentativas']}",
+                       # o Task Success vem antes do tempo: é dele que a ressalva fala, e numa tabela larga as primeiras colunas são as que ficam à vista
+                       de(suc.get("agente_maior"), [suc.get(k) for k in ("agente_maior", "pessoas_maior", "iguais", "sem_medida")]), _nd(suc.get("p"), 4),
+                       rotulo(ROTULO_DA_REGRA_L11, suc.get("o_que_a_regra_l11_daria"), suc.get("lado")),
+                       f'{_nd(tempo.get("diferenca_media_s"))} ({_entre(tempo.get("ic_lo_s"), tempo.get("ic_hi_s"))})',
+                       de(tempo.get("agente_mais_rapido"), [tempo.get(k) for k in ("agente_mais_rapido", "pessoas_mais_rapidas", "empates", "sem_medida")]), _nd(tempo.get("p"), 4),
+                       rotulo(ROTULO_DA_REGRA_L9, tempo.get("o_que_a_regra_l9_daria"), tempo.get("lado"))])
+    nota = medicao.get("nota_sem_um_integrante")
+    return ('<h3>Conta exploratória: a comparação sem a sessão de cada integrante</h3>\n'
+            '<p class="ressalva"><strong>Conta exploratória, feita depois de ver os números; não é o veredito da leitura.</strong> '
+            + (esc(nota) if isinstance(nota, str) and nota else "Cada linha refaz a comparação sem a sessão de um integrante, com as mesmas regras aplicadas às medidas que sobram.") + "</p>\n"
+            '<p class="nota">Bloco <code>tb_f5_medicao_sem_um_integrante</code> de <code>medicao.md</code>. O veredito da leitura continua sendo o das sessões todas, pelas regras fixadas antes.</p>\n'
+            + tabela(["Sem a sessão do", "Corrigidas pelas pessoas que sobram", "Task Success: cenários com a parcela do agente maior", "Task Success: p", "Task Success: o que a regra L11 daria",
+                      "Tempo: diferença média e margem de 95% (s)", "Tempo: cenários com o agente mais rápido", "Tempo: p", "Tempo: o que a regra L9 daria"], linhas) + "\n")
+
+
+def secao_medicao(custo: dict | None, agente: dict | None = None, manual: dict | None = None, medicao: dict | None = None, desenho: dict | None = None,
+                  road: dict | None = None, cartoes_corridas=None) -> tuple[dict, str]:
+    a, p = _lado_da_medicao(agente, medicao, "agente"), _lado_da_medicao(manual, medicao, "pessoas")
+    comparado = bool(a and p and ((medicao or {}).get("tempo") or {}).get("geral") and (medicao or {}).get("task_success"))
+    estado = "comparado" if comparado else "dois_lados" if a and p else "so_agente" if a else "so_pessoas" if p else "sem_medida"
+    des, r = desenho or {}, (custo or {}).get("resumo") or {}
+    k = dict(des.get("constantes") or {})
+    if comparado:
+        k.update({nome: v for nome, v in (medicao.get("regras") or {}).items() if v is not None})
+    cenarios = [(x["cenario"], x["tipo"]) for x in (a or p)["por_cenario"]] if a or p else [(c["cenario"], c["tipo"]) for c in des.get("cenarios") or []]
+
+    def q(v) -> str:
+        return "n/d" if v is None else str(v)
+
+    n = {"cenarios": q(len(cenarios) or r.get("cenarios")), "contrato": q(sum(1 for _, t in cenarios if t == "contrato") if cenarios else None),
+         "localizador": q(sum(1 for _, t in cenarios if t == "localizador") if cenarios else None), "repeticoes": q(k.get("repeticoes") or r.get("repeticoes")),
+         "execucoes": q(r.get("execucoes") or ((a or {}).get("geral") or {}).get("n")), "integrantes": q(des.get("integrantes") or k.get("integrantes")),
+         "tentativas": q(des.get("tentativas") or ((p or {}).get("geral") or {}).get("n"))}
+    limite = _constante(k.get("limite_s"))
+
+    def ts(g: dict) -> str:
+        return f'{g.get("sucessos")} de {g.get("n")}'
+
+    tempo_a, tempo_p = {x["cenario"]: x for x in (a or {}).get("por_cenario") or []}, {x["cenario"]: x for x in (p or {}).get("por_cenario") or []}
+    dados_js = {"estado": estado, "aviso": None if a or p else "Nenhum dos dois lados foi medido ainda: as barras entram quando a leitura for gravada", "limite_s": k.get("limite_s"),
+                "previsto": {"agente": k.get("repeticoes") or r.get("repeticoes"), "pessoas": des.get("integrantes") or k.get("integrantes")}, "cores": CORES_DA_MEDICAO,
+                "tempo": [{"cenario": c, "tipo": t, "agente": (tempo_a.get(c) or {}).get("tempo"), "pessoas": (tempo_p.get(c) or {}).get("tempo")} for c, t in cenarios],
+                "sucesso": [{"cenario": c, "tipo": t, "agente": (tempo_a.get(c) or {}).get("sucesso"), "pessoas": (tempo_p.get(c) or {}).get("sucesso")} for c, t in cenarios]}
+    ga, gp = (a or {}).get("geral") or {}, (p or {}).get("geral") or {}
+    do_agente = (f'Task Success em {ts(ga)} execuções ({_nd(ga.get("task_success_pct"))}%) e MTTR médio de {_nd(ga.get("tempo_media_s"))} s' if a else "")
+    das_pessoas = (f'{ts(gp)} tentativas corrigidas ({_nd(gp.get("task_success_pct"))}%) e tempo médio de {_nd(gp.get("tempo_media_s"))} s' if p else "")
+
+    # a resposta em uma frase, pelo estado dos arquivos; com a comparação gravada, são as frases que a leitura escreveu pelas regras L9 e L11
+    if comparado:
+        g, t_s = medicao["tempo"]["geral"], medicao["task_success"]
+        # ! Alteração de IA - Revisar: (24/11/2026, decisão 151) com a comparação gravada, a frase do tempo vem primeiro e é dita como o resultado central, e a do
+        # Task Success leva a ressalva escrita em painel_leituras.RESSALVAS_DA_MEDICAO, quando a corrida do derivado é a da ressalva e a leitura deu veredito.
+        # ! Motivo: a aba mostrava as duas frases com o mesmo peso e a do Task Success sem dizer que o veredito dela depende da sessão de um integrante só
+        # (ficha 91). O tempo é o centro por desenho: o projeto de pesquisa (seção 3.4) põe a comparação dos dois tempos como o resultado central da avaliação.
+        # A ressalva é copiada do texto escrito à mão; a aba não refaz a conta sem a sessão.
+        ressalva = pl.RESSALVAS_DA_MEDICAO.get((medicao.get("metadados") or {}).get("corrida")) if t_s.get("caso") == "veredito" else None
+        lead = (f'{esc(g.get("frase") or "")} É o resultado central da fase: a comparação dos dois tempos é a medida que o projeto de pesquisa pôs no centro da avaliação. '
+                f'{esc(t_s.get("frase") or "")}{" " + esc(ressalva) if ressalva else ""} As contas são as das regras de leitura do plano da fase, fixadas e testadas antes de qualquer medida.')
+    elif estado == "dois_lados":
+        lead = (f"Os dois lados estão lidos, e a comparação entre eles não foi gravada: falta rodar <code>avaliar_fase5.py --comparar</code>. O agente teve {do_agente}; as pessoas, {das_pessoas}. "
+                "A aba não calcula a diferença por conta própria: ela só mostra o que a leitura gravou.")
+    elif estado == "so_agente":
+        lead = (f"O agente já foi medido na corrida 28b: {do_agente} nos {n['cenarios']} cenários. Falta a linha de base manual, com as {n['tentativas']} tentativas das pessoas. Até lá a aba fica "
+                "sem comparação, e nenhum destes números diz se o agente é mais rápido ou mais lento que uma pessoa.")
+    elif estado == "so_pessoas":
+        lead = (f"As pessoas já foram medidas: {das_pessoas} nos {n['cenarios']} cenários. Falta a noite do agente (corrida 28b). Até lá a aba fica sem comparação, e nenhum destes números diz "
+                "se uma pessoa é mais rápida ou mais lenta que o agente.")
+    else:
+        # ! Alteração de IA - Revisar: (18/11/2026, corrida 28b, decisões 145 e 146) os textos da aba passaram a chamar de corrida 28b a noite do agente, dizem que
+        # ela roda a frio depois da sondagem e que a corrida 28 não vale como medida.
+        # ! Motivo: a corrida 28 rodou em 18/11/2026 com o aplicativo Claude aberto e com o prompt reaproveitado pelo Ollama nas repetições 2 a 5, e a noite foi
+        # refeita em pasta nova; a aba dizia que faltava a corrida 28 e que a primeira noite completa era a que valia. A leitura da corrida 28 saiu de
+        # `resultados_alvo/fase5/agente.json`, então a aba não mostra número dela.
+        lead = ("Ainda não há medida de nenhum dos dois lados: faltam a noite do agente (corrida 28b) e as sessões da linha de base manual. A corrida 28, de 18/11/2026, não vale como medida: "
+                "foi lançada com o aplicativo Claude aberto, e nas repetições 2 a 5 o Ollama reaproveitou o prompt que já tinha lido. A noite é refeita com tudo fechado e a frio "
+                "(decisões 145 e 146), e os números da corrida 28 ficam só como registro, no roadmap. A aba mostra o que vai ser medido, as regras de leitura, "
+                "fixadas antes de qualquer medida, e o tempo de máquina estimado para a noite. Os números entram sozinhos quando os arquivos da leitura forem gravados.")
+
+    # cartões
+    def cartao_do_tempo(titulo: str, g: dict, falta: str) -> tuple[str, str, str]:
+        if not g:
+            return (titulo, "aguarda", falta)
+        return (titulo, f'{_nd(g.get("tempo_media_s"))} s', f'margem de 95% de {_entre(g.get("tempo_ic_lo_s"), g.get("tempo_ic_hi_s"))} s; média das médias de {g.get("cenarios_com_tempo")} cenários')
+
+    def cartao_do_sucesso(titulo: str, g: dict, falta: str, todas: str) -> tuple[str, str, str]:
+        if not g:
+            return (titulo, "aguarda", falta)
+        return (titulo, ts(g), f'{_nd(g.get("task_success_pct"))}%, com Wilson 95% de {_entre(g.get("wilson_lo_pct"), g.get("wilson_hi_pct"))}; {todas} em {g.get("cenarios_com_todas_certas")} de {g.get("cenarios")} cenários')
+
+    falta_a, falta_p = "a corrida 28b ainda não foi lida", "as sessões da linha de base manual ainda não foram lidas"
+    itens_kpi = [cartao_do_tempo("Tempo de reparo do agente (MTTR)", ga, falta_a), cartao_do_tempo("Tempo das pessoas", gp, falta_p)]
+    if comparado:
+        sinais = g.get("sinais") or {}
+        itens_kpi.append(("Razão entre os tempos", f'{_nd(g.get("razao_das_medias"), 2)} vezes', (f'tempo médio das pessoas dividido pelo MTTR médio do agente; diferença média de '
+                                                                                                f'{_nd(g.get("diferenca_media_s"))} s por cenário (margem de 95% de {_entre(g.get("ic_lo_s"), g.get("ic_hi_s"))} s)')))
+        itens_kpi.append(("Teste dos sinais sobre os cenários", f'p = {_nd(sinais.get("p"), 4)}', (f'{sinais.get("agente")} cenários com o agente mais rápido, {sinais.get("pessoas")} com as pessoas '
+                                                                                                  f'mais rápidas e {sinais.get("empates")} empates')))
+    else:
+        itens_kpi.append(("Comparação do tempo", "aguarda", "a razão e a diferença saem da leitura que põe os dois lados na mesma tabela"))
+    itens_kpi += [cartao_do_sucesso("Task Success do agente", ga, falta_a, "todas as repetições certas"), cartao_do_sucesso("Task Success das pessoas", gp, falta_p, "todos os integrantes certos")]
+    if not a and r:
+        itens_kpi.append(("Noite do agente, estimada", f'{q(r.get("minutos_estimados_sem_ponte"))} min', f'{q(r.get("minutos_estimados_com_ponte"))} min se a ponte de versão rodar antes; pela corrida 21d'))
+
+    # o que falta
+    falta = []
+    if not a:
+        falta.append(f"<strong>A noite do agente (corrida 28b).</strong> São {n['execucoes']} execuções: {n['cenarios']} cenários com {n['repeticoes']} repetições, com o banco restaurado a cada repetição. "
+                     "Ela roda a frio: uma repetição por vez, com o modelo descarregado do Ollama entre elas, para o prompt ser lido de novo em cada repetição, como numa falha que aparece "
+                     "pela primeira vez. É lançada à mão, com <code>rodar_fase5.ps1</code>, depois de a sondagem <code>rodar_sondagem_frio.ps1</code> confirmar que descarregar o modelo apaga "
+                     "o prompt guardado; a leitura só aceita a noite completa e a frio. "
+                     + (f"Pelos registros da corrida 21d, leva cerca de {q(r.get('minutos_estimados_sem_ponte'))} minutos, ou {q(r.get('minutos_estimados_com_ponte'))} minutos se o Ollama tiver mudado de "
+                        "versão e a ponte de versão rodar antes." if r else ""))
+    if not p:
+        falta.append(f"<strong>As sessões da linha de base manual.</strong> São {n['tentativas']} tentativas: {n['integrantes']} integrantes, cada um nos {n['cenarios']} cenários, numa página publicada só "
+                     f"para ele, com o material de cada cenário capturado antes. Na planilha, {q(des.get('preenchidas'))} de {n['tentativas']} linhas estão preenchidas, e "
+                     f"{q(des.get('integrantes_completos'))} de {n['integrantes']} integrantes têm todas as linhas. Depois de cada sessão os dados são trazidos por "
+                     "<code>linha_de_base_manual.py importar</code> e a planilha é preenchida por <code>linha_de_base_manual.py planilha</code>; com todas as linhas, a leitura sai de "
+                     "<code>avaliar_fase5.py --manual</code>, que não mostra número nenhum antes de a planilha estar completa.")
+    if a and p and not comparado:
+        falta.append("<strong>A comparação.</strong> Os dois lados estão lidos, e falta gravar a comparação com <code>avaliar_fase5.py --comparar</code>.")
+    elif not comparado:
+        falta.append("<strong>A comparação.</strong> Com os dois lados lidos, <code>avaliar_fase5.py --comparar</code> põe os dois na mesma tabela, e a aba passa a mostrar a razão, a diferença e a "
+                     "frase da leitura.")
+    bloco_falta = f"<h2>O que falta</h2>\n{leitura(falta)}\n" if falta else ""
+
+    # leitura curta
+    itens_leitura = []
+    if comparado:
+        piso = medicao["tempo"].get("piso") or {}
+        itens_leitura += [f'<strong>Tempo de reparo, o resultado central.</strong> {esc(g.get("frase") or "")}',
+                          f'<strong>Task Success.</strong> {esc(t_s.get("frase") or "")}' + (f' <strong>Ressalva.</strong> {esc(ressalva)}' if ressalva else ""),
+                          f'<strong>Por tipo de cenário.</strong> {esc(medicao["tempo"].get("nota_por_tipo") or "")}',
+                          (f'<strong>A segunda conta.</strong> Com {limite} s no lugar de cada medida sem fim de cronômetro, a diferença média fica em {_nd(piso.get("diferenca_media_s"))} s por cenário '
+                           f'(margem de 95% de {_entre(piso.get("ic_lo_s"), piso.get("ic_hi_s"))} s). É um piso, declarado antes, e não o veredito da leitura.')]
+    if a and agente and agente.get("noite"):
+        noite = agente["noite"]
+        itens_leitura.append(f'<strong>A noite.</strong> {q(noite.get("execucoes"))} de {q(noite.get("esperadas"))} execuções gravadas; Ollama {esc(", ".join(noite.get("versoes_ollama") or []) or "n/d")}; '
+                             f'navegador {esc(", ".join((noite.get("navegador") or {}).get("versoes") or []) or "n/d")}; '
+                             f'{"o mesmo hash do banco no começo de todas as repetições" if (noite.get("banco") or {}).get("unico") else "hashes do banco diferentes entre as repetições"}.')
+    itens_leitura += [
+        ("<strong>O que o cronômetro mede.</strong> Nos cenários de contrato o agente não conserta a API: o tempo vai da detecção ao diagnóstico conferido em código, e a pessoa para o cronômetro "
+         "quando entrega a causa e o campo, certa ou errada. Nos de localizador, o tempo vai até o roteiro passar de novo com um seletor novo, descontada a restauração do banco. Os dois tipos não "
+         "medem a mesma coisa e são lidos em separado."),
+        ("<strong>A mesma régua dos dois lados.</strong> A falha é armada pelas mesmas funções, a pessoa parte da ficha da falha que a detecção do agente escreveu, e o que conta como corrigido é "
+         "a mesma regra em código."),
+        (f"<strong>O que a medida não diz.</strong> A falha é armada, e não ocorrida. As pessoas são {n['integrantes']} integrantes do grupo, e não analistas de teste de fora. O tempo do agente é o "
+         "desta máquina, só com CPU. As pessoas leem o material capturado numa página, em vez de investigar o site no ar. As limitações completas estão no relatório da fase."),
+    ]
+
+    # tabelas recolhidas
+    recolhidas: list[str] = []
+    if comparado:
+        recolhidas += _tabelas_da_medicao(medicao)
+    if a and agente and agente.get("por_cenario") and (agente.get("geral") or {}).get("n"):
+        recolhidas += _tabelas_do_agente(agente)
+    if p and manual and manual.get("por_cenario") and (manual.get("geral") or {}).get("n"):
+        recolhidas += _tabelas_das_pessoas(manual)
+    if r:
+        pontes = (custo or {}).get("pontes") or []
+        recolhidas.append(detalhes("O tempo de máquina da noite, estimado pela corrida 21d", '<p class="nota">Blocos <code>tb_f5_custo_resumo</code> e <code>tb_f5_custo_pontes</code> de <code>custo.md</code>.</p>'
+                                   + tabela(["Execuções da noite", "Segundos por execução na corrida 21d", "Horas pela média das execuções", "Horas pelo executor inteiro", "Ponte de versão (min)",
+                                             "Noite sem a ponte (min)", "Noite com a ponte (min)"],
+                                            [[q(r.get("execucoes")), _nd(r.get("segundos_por_execucao_na_21d")), _nd(r.get("horas_pelas_execucoes"), 2), _nd(r.get("horas_pelo_executor"), 2),
+                                              f'{q(r.get("ponte_minutos_min"))} a {q(r.get("ponte_minutos_max"))}', q(r.get("minutos_estimados_sem_ponte")), q(r.get("minutos_estimados_com_ponte"))]])
+                                   + tabela(["Ponte", "Versão do Ollama", "Data", "Duração (min)"], [[f"<code>{esc(x.get('corrida'))}</code>", esc(x.get("versao")), esc(x.get("data")), x.get("minutos")]
+                                                                                                     for x in pontes] or [["nenhuma", "", "", ""]], raw=True)))
+    else:
+        recolhidas.append("<p>O tempo de máquina da noite ainda não foi estimado: falta <code>custo.json</code> em <code>resultados_alvo/fase5/</code>, que sai de <code>avaliar_fase5.py --custo</code>.</p>")
+    corridas = f'<h2>A corrida no roadmap</h2>\n{cartoes_corridas(road, numeros=["28"], sufixo="-med")}\n' if road and cartoes_corridas else ""
+    o_que = (f"<p>Os mesmos {n['cenarios']} cenários de falha dos dois lados: {n['contrato']} de contrato, na página que consome a API, e {n['localizador']} de localizador, no site legado. O agente roda "
+             f"cada cenário {n['repeticoes']} vezes, o que dá {n['execucoes']} execuções. Cada um dos {n['integrantes']} integrantes resolve os {n['cenarios']} cenários uma vez, numa ordem sorteada, "
+             f"com limite de {limite} s por cenário, o que dá {n['tentativas']} tentativas.</p>"
+             "<p>São duas medidas. O MTTR é o tempo de reparo: da detecção da falha até o resultado conferido. O Task Success é a parcela das medidas que chegaram ao resultado certo. A linha de "
+             "base manual são as mesmas falhas resolvidas por pessoas, e a comparação entre os dois tempos é o resultado central do trabalho.</p>")
+    fontes_ = fontes(["<code>resultados_alvo/fase5/custo.json</code>, <code>agente.json</code>, <code>manual.json</code> e <code>medicao.json</code> (<code>avaliar_fase5.py</code>, com <code>--check</code>; "
+                      "blocos <code>tb_f5_*</code>)",
+                      "as regras de leitura L1 a L15: <code>claude-memoria/plano-aprovado-fase-5.md</code>, seção 5 (decisão 132 para o cenário como unidade, decisão 133 para o plano)",
+                      "<code>5-metodo-e-ferramental/protocolo-linha-de-base-manual.md</code> e <code>planilha-linha-de-base-manual.csv</code> (decisões 130, 131 e 136)",
+                      "<code>experimentos/rodar_fase5.ps1</code>, o lançador da noite, e <code>3-resultados-e-analises/fase-5-relatorio.md</code>, o relatório da fase"])
+    # ! Alteração de IA - Revisar: (24/11/2026, decisão 151) o bloco da ressalva, logo acima do gráfico do Task Success: o texto escrito à mão e, quando
+    # `manual.json` está lido, as tentativas corrigidas de cada integrante, pelo número dele.
+    # ! Motivo: quem olha o gráfico do Task Success vê a parcela do agente maior em todos os cenários e precisa ler, no mesmo lugar, que esse veredito depende de
+    # uma sessão. Os números por integrante saem do campo `por_integrante` de `manual.json`; a aba não cita nome nem calcula o que a leitura não gravou.
+    bloco_ressalva = ""
+    if comparado and ressalva:
+        por_integrante = (manual or {}).get("por_integrante") or []
+        corrigidas = ("; ".join(f"integrante {x.get('integrante')}, {x.get('sucessos')} de {x.get('n')}" for x in por_integrante))
+        bloco_ressalva = (f'<p class="ressalva"><strong>Ressalva.</strong> {esc(ressalva)}'
+                          + (f" Tentativas corrigidas por integrante, lidas de <code>manual.json</code>: {esc(corrigidas)}." if corrigidas else "") + "</p>\n")
+    html_ = f'''<section id="medicao" hidden>
+<h1>{TITULO_DA_MEDICAO}</h1>
+<p class="lead">{lead}</p>
+{kpis(itens_kpi)}
+<h2>Tempo por cenário, dos dois lados</h2>
+<div class="chart"><canvas id="g-med-tempo"></canvas></div>
+<h2>Task Success por cenário, dos dois lados</h2>
+{bloco_ressalva}<div class="chart"><canvas id="g-med-sucesso"></canvas></div>
+{_conta_sem_um_integrante(medicao) if comparado else ""}{bloco_falta}<h2>O que é medido</h2>
+{o_que}
+<h2>As regras de leitura, fixadas antes de qualquer medida</h2>
+<p>São as regras L1 a L15 do plano aprovado da fase, escritas em código e testadas com dados de mentira antes da noite do agente e da primeira sessão, para a comparação não ser escolhida depois de ver os números.</p>
+{_regras_da_fase5(n, k)}
+<h2>Leitura</h2>
+{leitura(itens_leitura)}
+<h2>As tabelas completas</h2>
+{"".join(recolhidas)}
+{corridas}{fontes_}
+</section>'''
+    return dados_js, html_
+
+
 def montar(ctx: dict) -> tuple[dict, str]:
     """ctx: dados (montar_dados), road, cartoes_corridas, md_para_html, md_doc_para_html, cq, blocos_cq, ineditos,
     curadoria, planilha_curadoria, recuperador, ablacao, medicao_mcp, readme. Devolve (dados_topicos, html)."""
@@ -5552,4 +6018,7 @@ def montar(ctx: dict) -> tuple[dict, str]:
     # a aba do analista de documentação existe sempre (o mapa de navegação a lista); sem portoes_m1.json ela mostra o estado vazio
     d, h = secao_analista(ctx.get("portoes_m1"), ctx.get("analista_previa"), ctx.get("analista"))
     partes.append(("analista", d, h))
+    # a aba da medição de valor existe sempre (o mapa de navegação a lista); sem os derivados de resultados_alvo/fase5 ela mostra o que vai ser medido e as regras
+    d, h = secao_medicao(ctx.get("f5_custo"), ctx.get("f5_agente"), ctx.get("f5_manual"), ctx.get("f5_medicao"), ctx.get("f5_desenho"), road, ctx["cartoes_corridas"])
+    partes.append(("medicao", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

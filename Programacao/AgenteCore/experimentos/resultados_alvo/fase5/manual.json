@@ -1,0 +1,376 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-24T20:49:35",
+    "gerado_por": "avaliar_fase5.py --manual",
+    "planilha": "planilha-linha-de-base-manual.csv",
+    "registro_da_sessao": "sessao.jsonl"
+  },
+  "linhas": {
+    "esperadas": 30,
+    "preenchidas": 30,
+    "anuladas": [],
+    "anotadas_a_mao": [],
+    "sem_fim": [
+      {
+        "linha": 14,
+        "integrante": 2,
+        "ordem": 3,
+        "cenario": "localizador-front-busca"
+      },
+      {
+        "linha": 15,
+        "integrante": 2,
+        "ordem": 4,
+        "cenario": "localizador-front-admin-login"
+      },
+      {
+        "linha": 17,
+        "integrante": 2,
+        "ordem": 6,
+        "cenario": "localizador-front-cliente-reserva"
+      },
+      {
+        "linha": 18,
+        "integrante": 2,
+        "ordem": 7,
+        "cenario": "localizador-front-admin-produtos"
+      },
+      {
+        "linha": 19,
+        "integrante": 2,
+        "ordem": 8,
+        "cenario": "contrato-field_renamed"
+      },
+      {
+        "linha": 20,
+        "integrante": 2,
+        "ordem": 9,
+        "cenario": "contrato-field_missing"
+      }
+    ]
+  },
+  "geral": {
+    "n": 30,
+    "sucessos": 14,
+    "task_success_pct": 46.7,
+    "wilson_lo_pct": 30.2,
+    "wilson_hi_pct": 63.9,
+    "cenarios": 10,
+    "cenarios_com_todas_certas": 0,
+    "com_fim": 24,
+    "sem_fim": 6,
+    "cenarios_com_tempo": 10,
+    "tempo_media_s": 219.7,
+    "tempo_ic_lo_s": 172.29,
+    "tempo_ic_hi_s": 264.66,
+    "piso_media_s": 289.83,
+    "piso_ic_lo_s": 241.02,
+    "piso_ic_hi_s": 339.63,
+    "estrita_cenarios": 9,
+    "estrita_media_s": 246.0
+  },
+  "por_tipo": [
+    {
+      "tipo": "contrato",
+      "n": 18,
+      "sucessos": 6,
+      "task_success_pct": 33.3,
+      "wilson_lo_pct": 16.3,
+      "wilson_hi_pct": 56.3,
+      "cenarios": 6,
+      "cenarios_com_todas_certas": 0,
+      "com_fim": 16,
+      "sem_fim": 2,
+      "cenarios_com_tempo": 6,
+      "tempo_media_s": 174.81,
+      "tempo_ic_lo_s": 125.74,
+      "tempo_ic_hi_s": 228.59,
+      "piso_media_s": 222.15,
+      "piso_ic_lo_s": 153.36,
+      "piso_ic_hi_s": 291.03,
+      "estrita_cenarios": 5,
+      "estrita_media_s": 213.16
+    },
+    {
+      "tipo": "localizador",
+      "n": 12,
+      "sucessos": 8,
+      "task_success_pct": 66.7,
+      "wilson_lo_pct": 39.1,
+      "wilson_hi_pct": 86.2,
+      "cenarios": 4,
+      "cenarios_com_todas_certas": 0,
+      "com_fim": 8,
+      "sem_fim": 4,
+      "cenarios_com_tempo": 4,
+      "tempo_media_s": 287.04,
+      "tempo_ic_lo_s": 183.0,
+      "tempo_ic_hi_s": 359.34,
+      "piso_media_s": 391.36,
+      "piso_ic_lo_s": 322.0,
+      "piso_ic_hi_s": 439.56,
+      "estrita_cenarios": 4,
+      "estrita_media_s": 287.04
+    }
+  ],
+  "por_cenario": [
+    {
+      "cenario": "contrato-malformed_json",
+      "tipo": "contrato",
+      "n": 3,
+      "sucessos": 1,
+      "parcela_pct": 33.3,
+      "todas_certas": false,
+      "com_fim": 3,
+      "sem_fim": 0,
+      "tempo_media_s": 109.617,
+      "tempo_min_s": 50.211,
+      "tempo_max_s": 151.48,
+      "piso_media_s": 109.617,
+      "estrita_n": 1,
+      "estrita_media_s": 127.161
+    },
+    {
+      "cenario": "contrato-field_missing",
+      "tipo": "contrato",
+      "n": 3,
+      "sucessos": 1,
+      "parcela_pct": 33.3,
+      "todas_certas": false,
+      "com_fim": 2,
+      "sem_fim": 1,
+      "tempo_media_s": 111.34,
+      "tempo_min_s": 94.974,
+      "tempo_max_s": 127.707,
+      "piso_media_s": 274.227,
+      "estrita_n": 1,
+      "estrita_media_s": 94.974
+    },
+    {
+      "cenario": "contrato-field_renamed",
+      "tipo": "contrato",
+      "n": 3,
+      "sucessos": 2,
+      "parcela_pct": 66.7,
+      "todas_certas": false,
+      "com_fim": 2,
+      "sem_fim": 1,
+      "tempo_media_s": 236.512,
+      "tempo_min_s": 211.501,
+      "tempo_max_s": 261.522,
+      "piso_media_s": 357.674,
+      "estrita_n": 2,
+      "estrita_media_s": 236.512
+    },
+    {
+      "cenario": "contrato-type_drift",
+      "tipo": "contrato",
+      "n": 3,
+      "sucessos": 0,
+      "parcela_pct": 0.0,
+      "todas_certas": false,
+      "com_fim": 3,
+      "sem_fim": 0,
+      "tempo_media_s": 188.995,
+      "tempo_min_s": 51.357,
+      "tempo_max_s": 260.595,
+      "piso_media_s": 188.995,
+      "estrita_n": 0,
+      "estrita_media_s": null
+    },
+    {
+      "cenario": "contrato-escala_ou_unidade_errada",
+      "tipo": "contrato",
+      "n": 3,
+      "sucessos": 1,
+      "parcela_pct": 33.3,
+      "todas_certas": false,
+      "com_fim": 3,
+      "sem_fim": 0,
+      "tempo_media_s": 280.618,
+      "tempo_min_s": 35.158,
+      "tempo_max_s": 454.515,
+      "piso_media_s": 280.618,
+      "estrita_n": 1,
+      "estrita_media_s": 454.515
+    },
+    {
+      "cenario": "contrato-error_500",
+      "tipo": "contrato",
+      "n": 3,
+      "sucessos": 1,
+      "parcela_pct": 33.3,
+      "todas_certas": false,
+      "com_fim": 3,
+      "sem_fim": 0,
+      "tempo_media_s": 121.777,
+      "tempo_min_s": 37.766,
+      "tempo_max_s": 174.927,
+      "piso_media_s": 121.777,
+      "estrita_n": 1,
+      "estrita_media_s": 152.639
+    },
+    {
+      "cenario": "localizador-front-busca",
+      "tipo": "localizador",
+      "n": 3,
+      "sucessos": 2,
+      "parcela_pct": 66.7,
+      "todas_certas": false,
+      "com_fim": 2,
+      "sem_fim": 1,
+      "tempo_media_s": 385.26,
+      "tempo_min_s": 289.476,
+      "tempo_max_s": 481.043,
+      "piso_media_s": 456.84,
+      "estrita_n": 2,
+      "estrita_media_s": 385.26
+    },
+    {
+      "cenario": "localizador-front-admin-login",
+      "tipo": "localizador",
+      "n": 3,
+      "sucessos": 2,
+      "parcela_pct": 66.7,
+      "todas_certas": false,
+      "com_fim": 2,
+      "sem_fim": 1,
+      "tempo_media_s": 150.139,
+      "tempo_min_s": 144.581,
+      "tempo_max_s": 155.698,
+      "piso_media_s": 300.093,
+      "estrita_n": 2,
+      "estrita_media_s": 150.139
+    },
+    {
+      "cenario": "localizador-front-admin-produtos",
+      "tipo": "localizador",
+      "n": 3,
+      "sucessos": 2,
+      "parcela_pct": 66.7,
+      "todas_certas": false,
+      "com_fim": 2,
+      "sem_fim": 1,
+      "tempo_media_s": 331.2,
+      "tempo_min_s": 258.687,
+      "tempo_max_s": 403.713,
+      "piso_media_s": 420.8,
+      "estrita_n": 2,
+      "estrita_media_s": 331.2
+    },
+    {
+      "cenario": "localizador-front-cliente-reserva",
+      "tipo": "localizador",
+      "n": 3,
+      "sucessos": 2,
+      "parcela_pct": 66.7,
+      "todas_certas": false,
+      "com_fim": 2,
+      "sem_fim": 1,
+      "tempo_media_s": 281.562,
+      "tempo_min_s": 167.738,
+      "tempo_max_s": 395.385,
+      "piso_media_s": 387.708,
+      "estrita_n": 2,
+      "estrita_media_s": 281.562
+    }
+  ],
+  "por_posicao": [
+    {
+      "posicao": 1,
+      "n": 3,
+      "com_fim": 3,
+      "sucessos": 2,
+      "tempo_media_s": 250.32
+    },
+    {
+      "posicao": 2,
+      "n": 3,
+      "com_fim": 3,
+      "sucessos": 0,
+      "tempo_media_s": 152.62
+    },
+    {
+      "posicao": 3,
+      "n": 3,
+      "com_fim": 2,
+      "sucessos": 1,
+      "tempo_media_s": 163.78
+    },
+    {
+      "posicao": 4,
+      "n": 3,
+      "com_fim": 2,
+      "sucessos": 2,
+      "tempo_media_s": 275.5
+    },
+    {
+      "posicao": 5,
+      "n": 3,
+      "com_fim": 3,
+      "sucessos": 2,
+      "tempo_media_s": 91.57
+    },
+    {
+      "posicao": 6,
+      "n": 3,
+      "com_fim": 2,
+      "sucessos": 1,
+      "tempo_media_s": 239.67
+    },
+    {
+      "posicao": 7,
+      "n": 3,
+      "com_fim": 2,
+      "sucessos": 1,
+      "tempo_media_s": 332.15
+    },
+    {
+      "posicao": 8,
+      "n": 3,
+      "com_fim": 2,
+      "sucessos": 1,
+      "tempo_media_s": 141.7
+    },
+    {
+      "posicao": 9,
+      "n": 3,
+      "com_fim": 2,
+      "sucessos": 2,
+      "tempo_media_s": 324.39
+    },
+    {
+      "posicao": 10,
+      "n": 3,
+      "com_fim": 3,
+      "sucessos": 2,
+      "tempo_media_s": 219.03
+    }
+  ],
+  "por_integrante": [
+    {
+      "integrante": 1,
+      "n": 10,
+      "sucessos": 5,
+      "com_fim": 10,
+      "tempo_media_s": 213.89,
+      "tempo_total_s": 2138.9
+    },
+    {
+      "integrante": 2,
+      "n": 10,
+      "sucessos": 0,
+      "com_fim": 4,
+      "tempo_media_s": 43.62,
+      "tempo_total_s": 174.5
+    },
+    {
+      "integrante": 3,
+      "n": 10,
+      "sucessos": 9,
+      "com_fim": 10,
+      "tempo_media_s": 278.17,
+      "tempo_total_s": 2781.7
+    }
+  ]
+}

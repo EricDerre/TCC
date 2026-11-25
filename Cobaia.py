@@ -15,6 +15,7 @@ Python do venv.
 
 Uso: python Cobaia.py  (ou Cobaia.exe depois de compilado)
 """
+import sys
 import webbrowser
 
 import install
@@ -23,7 +24,14 @@ from _env_common import log
 
 
 def main() -> None:
-    install.main()
+    # ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) o `Cobaia.py` para quando `install.main()`
+    # devolve um código diferente de zero.
+    # ! Motivo: `install.main()` passou a devolver o código de saída. No Windows um passo obrigatório que falha continua
+    # saindo por `sys.exit(1)`, como antes; mas rodando `python Cobaia.py` no Linux, uma instalação interrompida devolve 1,
+    # e sem esta conferência o launcher subiria o site e a API numa instalação pela metade.
+    codigo = install.main()
+    if codigo:
+        sys.exit(codigo)
 
     print()
     log("Iniciando CobaiaFront + CobaiaAPI...")

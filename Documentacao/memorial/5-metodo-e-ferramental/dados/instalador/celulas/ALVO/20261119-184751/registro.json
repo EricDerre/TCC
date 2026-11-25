@@ -1,0 +1,100 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "ALVO",
+ "gravado_em": "2026-11-19T18:48:00",
+ "sistema": {
+  "sistema": "Windows",
+  "familia": "windows",
+  "id": "windows",
+  "versao": "",
+  "nome": "Windows",
+  "suporte": "suportado"
+ },
+ "maquina": {
+  "plataforma": "Windows-11-10.0.26200-SP0",
+  "arquitetura": "AMD64",
+  "python": "3.14.7",
+  "nucleos": 12,
+  "memoria_total_gb": 15.7,
+  "memoria_livre_gb": 7.0,
+  "administrador": false,
+  "defender": {
+   "antivirus": "True",
+   "tempo_real": "True",
+   "protecao_contra_adulteracao": "False"
+  }
+ },
+ "niveis": {
+  "N1": {
+   "estado": "passou",
+   "detalhe": "14 produtos na API e na página do site",
+   "segundos": 15.8
+  },
+  "N2": {
+   "estado": "passou",
+   "detalhe": "Playwright 1.64.1, Chromium 156.0.8078.4, título da página: Churrascaria Fornalha",
+   "segundos": 12.1
+  },
+  "N3": {
+   "estado": "passou",
+   "detalhe": "Ollama 0.40.16, qwen2.5:0.5b-instruct respondeu: Pronto.",
+   "segundos": 3.7
+  },
+  "N4": {
+   "estado": "passou",
+   "detalhe": "Ollama 0.40.16, qwen2.5:7b respondeu: pronto; identificador 845dbda0ea48 confere",
+   "segundos": 9.9
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.14.7",
+   "testada": "3.14.7",
+   "estado": "igual",
+   "impede": false
+  },
+  "php": {
+   "encontrada": "8.2.35",
+   "testada": "8.2.35",
+   "estado": "igual",
+   "impede": false
+  },
+  "mariadb": {
+   "encontrada": "11.8.9",
+   "testada": "11.8.9",
+   "estado": "igual",
+   "impede": false
+  },
+  "playwright": {
+   "encontrada": "1.64.1",
+   "testada": "1.64.1",
+   "estado": "igual",
+   "impede": false
+  },
+  "chromium": {
+   "encontrada": "156.0.8078.4",
+   "testada": "156.0.8078.4",
+   "estado": "igual",
+   "impede": false
+  },
+  "ollama": {
+   "encontrada": "0.40.16",
+   "testada": "0.40.16",
+   "estado": "igual",
+   "impede": false
+  },
+  "modelo": {
+   "encontrada": "845dbda0ea48",
+   "testada": "845dbda0ea48",
+   "estado": "igual",
+   "impede": false
+  }
+ },
+ "instalacao": {},
+ "alcancado": "N4",
+ "falhou": false,
+ "impedida_por_versao": []
+}

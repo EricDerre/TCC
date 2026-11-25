@@ -1,0 +1,118 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-18T21:32:11",
+    "corrida": "fase5_sondagem_frio_20261118_212709",
+    "gerado_por": "avaliar_fase4.py --cenarios"
+  },
+  "condicoes": {
+    "repeticoes": 2,
+    "parcial": true,
+    "modelo": "qwen2.5:7b",
+    "versao_ollama": "0.40.16",
+    "k": 3,
+    "execucoes": 2,
+    "troca_da_ficha_36": {
+      "sai": "latency",
+      "entra": "escala_ou_unidade_errada",
+      "motivo": "os seis modos da opção (a) cobriam as classes 1, 2, 3 e 5; a decisão 79 pede trocar cenários de contrato por modos novos da ficha 28 que cubram mais classes. Sai latency, que repete a classe 5 de error_500 e tem o MTTR dominado pela espera do tempo limite; entra escala_ou_unidade_errada em preco, da classe 4 (tradução), que nenhum dos seis cobria."
+    },
+    "biblioteca": {
+      "hash": "95af35290860",
+      "origem": "Programacao/AgenteCore/biblioteca_producao",
+      "origem_do_lote": "fase4_biblioteca",
+      "epoca": 101
+    },
+    "mttr": {
+      "contrato": "da detecção (conferência do roteiro que falhou, ou o fio diferente do contrato e da referência, pela regra R1) ao diagnóstico conferido em código (ficha 35)",
+      "localizador": "da detecção (o passo do localizador falhou) à reexecução validada, com o diagnóstico entre as duas e a restauração do banco descontada"
+    },
+    "task_success": {
+      "contrato": "diagnóstico conferido com a causa e o campo certos (ficha 35)",
+      "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"
+    }
+  },
+  "geral": {
+    "n": 2,
+    "sucessos": 2,
+    "task_success_pct": 100.0,
+    "wilson_lo_pct": 34.2,
+    "wilson_hi_pct": 100.0,
+    "detectados": 2,
+    "mttr_n": 2,
+    "mttr_media_s": 79.3,
+    "mttr_mediana_s": 79.3,
+    "mttr_ic_lo_s": 77.81,
+    "mttr_ic_hi_s": 80.8
+  },
+  "por_tipo": [
+    {
+      "tipo": "contrato",
+      "n": 2,
+      "sucessos": 2,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 34.2,
+      "wilson_hi_pct": 100.0,
+      "detectados": 2,
+      "mttr_n": 2,
+      "mttr_media_s": 79.3,
+      "mttr_mediana_s": 79.3,
+      "mttr_ic_lo_s": 77.81,
+      "mttr_ic_hi_s": 80.8
+    }
+  ],
+  "por_cenario": [
+    {
+      "cenario": "contrato-malformed_json",
+      "tipo": "contrato",
+      "modo": "malformed_json",
+      "classe": 1,
+      "causa_esperada": "resposta_truncada",
+      "n": 2,
+      "sucessos": 2,
+      "task_success_pct": 100.0,
+      "wilson_lo_pct": 34.2,
+      "wilson_hi_pct": 100.0,
+      "detectados": 2,
+      "mttr_n": 2,
+      "mttr_media_s": 79.3,
+      "mttr_mediana_s": 79.3,
+      "mttr_ic_lo_s": 77.81,
+      "mttr_ic_hi_s": 80.8,
+      "rotulos": {
+        "resposta_truncada": 2
+      },
+      "segundos_media": 79.5,
+      "fichas_da_falha": [
+        "a conferência \"grid com 14 cartões\" (passo 3) falhou: esperado 14 elementos, observado 0 elementos"
+      ]
+    }
+  ],
+  "tempo": {
+    "execucoes": 2,
+    "segundos_media": 79.5,
+    "segundos_total": 159.1,
+    "estimativa_fase5_h": 1.1
+  },
+  "deteccao": {
+    "conferencia_do_roteiro": 2
+  },
+  "sem_task_success": [],
+  "navegador": {
+    "versoes": [
+      "156.0.8078.4"
+    ],
+    "unica": true
+  },
+  "banco": {
+    "hashes_de_inicio": [
+      "9fe5e7cb64288c9d"
+    ],
+    "unico": true
+  },
+  "prompt": {
+    "maximo_da_calibracao": 1281,
+    "limite_mais_10_pct": 1409,
+    "acima": [],
+    "maximo_da_tela": 1218
+  }
+}

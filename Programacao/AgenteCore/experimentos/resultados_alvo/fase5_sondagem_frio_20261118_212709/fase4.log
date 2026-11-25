@@ -1,0 +1,26 @@
+﻿[2026-11-18 21:27:10] rodar_fase4.ps1: modo cenarios, saida fase5_sondagem_frio_20261118_212709, canal chromium, resultados resultados_alvo, casos 1
+[2026-11-18 21:27:12] Ollama 0.40.16; modelo qwen2.5:7b; RAM livre 8,5 GB
+[2026-11-18 21:27:12] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase5_sondagem_frio_20261118_212709\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-18 21:27:12] testar_fase4.py
+[2026-11-18 21:27:46] executar_fase4.py --modo cenarios --saida fase5_sondagem_frio_20261118_212709 --canal chromium --banco avaliacao --casos 1 --modelo qwen2.5:7b --top 20 --repeticoes 1
+[2026-11-18 21:27:49] INÍCIO cenarios: Ollama 0.40.16, qwen2.5:7b, biblioteca de produção (95af35290860, lote fase4_biblioteca), k = 3; 1 execução(ões) (1 cenários x 1 repetição(ões)); corrida PARCIAL; 0 já feita(s)
+[2026-11-18 21:28:15] referência api-catalogo: passou em 0.43 s; árvore 193 nós, 39 linhas
+[2026-11-18 21:28:15] repetição 1: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 21:29:35] [1/1] contrato-malformed_json#1 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 77.805 s; 78.036 s
+[2026-11-18 21:29:42] FIM cenarios: 1 de 1 execuções; Task Success 1; duração 115 s; trilha 36795 bytes
+[2026-11-18 21:29:44] avaliar_fase4.py --cenarios --saida fase5_sondagem_frio_20261118_212709 --nome cenarios_sondagem --pasta C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase5_sondagem_frio_20261118_212709
+[2026-11-18 21:29:44] FIM rodar_fase4.ps1 (modo cenarios) - duracao total 00h02
+[2026-11-18 21:29:45] rodar_fase4.ps1: modo cenarios, saida fase5_sondagem_frio_20261118_212709, canal chromium, resultados resultados_alvo, casos 1
+[2026-11-18 21:29:48] Ollama 0.40.16; modelo qwen2.5:7b; RAM livre 8,8 GB
+[2026-11-18 21:29:48] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase5_sondagem_frio_20261118_212709\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-18 21:29:48] testar_fase4.py
+[2026-11-18 21:30:21] executar_fase4.py --modo cenarios --saida fase5_sondagem_frio_20261118_212709 --canal chromium --banco avaliacao --casos 1 --modelo qwen2.5:7b --top 20 --repeticoes 2
+[2026-11-18 21:30:23] INÍCIO cenarios: Ollama 0.40.16, qwen2.5:7b, biblioteca de produção (95af35290860, lote fase4_biblioteca), k = 3; 2 execução(ões) (1 cenários x 2 repetição(ões)); corrida PARCIAL; 1 já feita(s)
+[2026-11-18 21:30:38] retomando a trilha de trilha_cenarios.jsonl: 38 eventos
+[2026-11-18 21:30:38] referência api-catalogo: passou em 0.43 s; árvore 193 nós, 39 linhas
+[2026-11-18 21:30:38] [1/2] contrato-malformed_json#1: já feita, pulando
+[2026-11-18 21:30:39] repetição 2: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-18 21:32:02] [2/2] contrato-malformed_json#2 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 80.798 s; 81.06 s
+[2026-11-18 21:32:09] FIM cenarios: 2 de 2 execuções; Task Success 2; duração 107 s; trilha 60543 bytes
+[2026-11-18 21:32:11] avaliar_fase4.py --cenarios --saida fase5_sondagem_frio_20261118_212709 --nome cenarios_sondagem --pasta C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase5_sondagem_frio_20261118_212709
+[2026-11-18 21:32:11] FIM rodar_fase4.ps1 (modo cenarios) - duracao total 00h02

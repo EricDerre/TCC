@@ -1,0 +1,77 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "L-F45",
+ "gravado_em": "2026-11-19T14:52:23",
+ "sistema": {
+  "sistema": "Linux",
+  "familia": "dnf",
+  "id": "fedora",
+  "versao": "45",
+  "nome": "Fedora Linux 45 (WSL)",
+  "suporte": "melhor_esforco"
+ },
+ "maquina": {
+  "plataforma": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.44",
+  "arquitetura": "x86_64",
+  "python": "3.15.0",
+  "nucleos": 12,
+  "memoria_total_gb": 3.8,
+  "memoria_livre_gb": 3.2,
+  "administrador": false,
+  "sudo_sem_senha": true
+ },
+ "niveis": {
+  "N1": {
+   "estado": "passou",
+   "detalhe": "14 produtos na API e na página do site",
+   "segundos": 1.1
+  },
+  "N2": {
+   "estado": "falhou",
+   "detalhe": "eatures=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=/tmp/playwright_chromiumdev_profile-EbrT4d --remote-debugging-pipe --no-startup-window\n  - <launched> pid=1022\n  - [pid=1022][err] /home/cobaia/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell: error while loading shared libraries: libnspr4.so: cannot open shared object file: No such file or directory\n  - [pid=1022] <gracefully close start>\n  - [pid=1022] <kill>\n  - [pid=1022] <will force kill>\n  - [pid=1022] exception while trying to kill process: Error: kill ESRCH\n  - [pid=1022] <process did exit: exitCode=127, signal=null>\n  - [pid=1022] starting temporary directories cleanup\n  - [pid=1022] finished temporary directories cleanup\n  - [pid=1022] <gracefully close end>",
+   "segundos": 0.4
+  },
+  "N3": {
+   "estado": "passou",
+   "detalhe": "Ollama 0.40.16, qwen2.5:0.5b respondeu: Pronto.",
+   "segundos": 1.7
+  },
+  "N4": {
+   "estado": "nao_rodou",
+   "detalhe": "",
+   "segundos": null
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.15.0",
+   "testada": "3.14.7",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "php": {
+   "encontrada": "8.5.12",
+   "testada": "8.2.35",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "mariadb": {
+   "encontrada": "12.3.2",
+   "testada": "11.8.9",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "ollama": {
+   "encontrada": "0.40.16",
+   "testada": "0.40.16",
+   "estado": "igual",
+   "impede": false
+  }
+ },
+ "alcancado": "N1",
+ "falhou": true,
+ "impedida_por_versao": []
+}

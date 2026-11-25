@@ -1169,6 +1169,69 @@ def contexto_progresso() -> dict:
             "fumaca_progresso": ler("fumaca_progresso.json")}
 
 
+# ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) o contexto da aba "medicao", lido por painel_topicos.secao_medicao: os quatro
+# derivados de `resultados_alvo/fase5/` (`custo.json`, `agente.json`, `manual.json` e `medicao.json`, gravados por `avaliar_fase5.py`) e o desenho da medida, que
+# existe antes de qualquer número: os cenários, os integrantes e as linhas preenchidas da planilha da linha de base manual, e as constantes das regras de leitura.
+# ! Motivo: a aba nasce antes da corrida 28 e das três sessões, e tem de dizer o que vai ser medido sem número digitado. As constantes (o empate de 5 s, o limite
+# de 600 s, o corte de 0,05, as reamostras e a semente) são lidas do texto do código da leitura, e não importando o módulo: `avaliar_fase5.py` carrega o harness
+# inteiro dos experimentos, e uma falha de importação derrubaria a geração do painel, que é a última etapa do `rodar_fase5.ps1` na noite medida. O derivado lido
+# pela metade (a leitura ainda gravando o arquivo enquanto o painel é gerado) conta como ausente, e a aba mostra o estado anterior em vez de o painel falhar. A
+# pasta da corrida (`fase5_agente`) não é lida: ela muda a cada execução da noite, e o `--check` do painel acusaria diferença a cada minuto.
+def ler_json_ou_nada(caminho: Path):
+    """O JSON do arquivo, ou None quando ele não existe ou ainda não está inteiro."""
+    try:
+        return json.loads(caminho.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+CONSTANTES_DA_FASE5 = {"empate_s": ("avaliar_fase5.py", "EMPATE_S"), "alfa": ("avaliar_fase5.py", "ALFA"), "repeticoes": ("avaliar_fase5.py", "REPETICOES"),
+                       "limite_s": ("linha_de_base_manual.py", "LIMITE_S"), "integrantes": ("linha_de_base_manual.py", "INTEGRANTES"),
+                       "reamostras": ("avaliar_fase4.py", "REAMOSTRAS"), "semente": ("avaliar_fase4.py", "SEMENTE_DA_REAMOSTRAGEM")}
+
+
+def constantes_da_fase5(pasta: Path = EXP) -> dict:
+    """As constantes das regras de leitura da Fase 5, lidas da linha `NOME = número` de cada arquivo; None na que não for achada."""
+    textos: dict[str, str] = {}
+    saida = {}
+    for chave, (arquivo, nome) in CONSTANTES_DA_FASE5.items():
+        if arquivo not in textos:
+            try:
+                textos[arquivo] = (pasta / arquivo).read_text(encoding="utf-8")
+            except OSError:
+                textos[arquivo] = ""
+        m = re.search(rf"^{nome}\s*=\s*(\d[\d_]*(?:\.\d+)?)\b", textos[arquivo], re.M)
+        saida[chave] = None if not m else (float(m.group(1)) if "." in m.group(1) else int(m.group(1)))
+    return saida
+
+
+def desenho_da_fase5() -> dict:
+    """O que a Fase 5 vai medir, sem os derivados: os cenários e o tipo de cada um (contrato antes de localizador, em ordem alfabética), quantos integrantes e
+    quantas tentativas a planilha da linha de base manual prevê, quantas linhas já têm a coluna `corrigido` preenchida, e as constantes das regras."""
+    planilha = MEMORIAL / "5-metodo-e-ferramental" / "planilha-linha-de-base-manual.csv"
+    linhas: list[dict] = []
+    if planilha.exists():
+        cru = planilha.read_bytes()
+        try:
+            texto = cru.decode("utf-8-sig")
+        except UnicodeDecodeError:   # o Excel regrava a planilha na codificação do Windows
+            texto = cru.decode("cp1252")
+        cab, *resto = [l.split(";") for l in texto.splitlines() if l.strip()] or [[]]
+        linhas = [dict(zip(cab, r + [""] * (len(cab) - len(r)))) for r in resto]
+    cenarios = sorted({(l.get("tipo", ""), l.get("cenario", "")) for l in linhas})
+    integrantes = sorted({l.get("integrante", "") for l in linhas})
+    feitas = [l for l in linhas if l.get("corrigido", "").strip()]
+    completos = [n for n in integrantes if all(l.get("corrigido", "").strip() for l in linhas if l.get("integrante") == n)]
+    return {"cenarios": [{"cenario": c, "tipo": t} for t, c in cenarios], "integrantes": len(integrantes), "tentativas": len(linhas), "preenchidas": len(feitas),
+            "integrantes_completos": len(completos), "constantes": constantes_da_fase5()}
+
+
+def contexto_fase5() -> dict:
+    pasta = EXP / "resultados_alvo" / "fase5"
+    return {"f5_custo": ler_json_ou_nada(pasta / "custo.json"), "f5_agente": ler_json_ou_nada(pasta / "agente.json"), "f5_manual": ler_json_ou_nada(pasta / "manual.json"),
+            "f5_medicao": ler_json_ou_nada(pasta / "medicao.json"), "f5_desenho": desenho_da_fase5()}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", default=str(SAIDA_PADRAO))
@@ -1209,6 +1272,9 @@ def main() -> None:
         **contexto_pos_fase4(),
         **contexto_arvores(),
         **contexto_progresso(),
+        # ! Alteração de IA - Revisar: (16/11/2026, Fase 5) o contexto da aba "medicao": os derivados de resultados_alvo/fase5 e o desenho da medida.
+        # ! Motivo: a aba da medição de valor entra no painel antes da corrida 28 e das sessões; o teste das abas usa esta mesma função.
+        **contexto_fase5(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     # ! Alteração de IA - Revisar: (05/11/2026) a página montada passa por painel_leituras.aplicar: "Como ler" em cada gráfico e dados em "Mais informações".

@@ -1,0 +1,25 @@
+### comeco do install.sh do pacote, como o git entrega
+$ od -c -N 24 install.sh
+0000000   #   !   /   u   s   r   /   b   i   n   /   e   n   v       b
+0000020   a   s   h  \n   #       !    
+0000030
+[codigo de saida: 0]
+
+### comeco do install.sh do clone do Windows (so leitura; nunca executado)
+$ od -c -N 24 /mnt/c/Users/Eric.Derre/Documents/TCC/install.sh
+0000000   #   !   /   u   s   r   /   b   i   n   /   e   n   v       b
+0000020   a   s   h  \r  \n   #       !
+0000030
+[codigo de saida: 0]
+
+### bash install.sh com o fim de linha do Windows (install.py de mentira ao lado)
+$ bash /home/cobaia/sonda/crlf/install.sh
+/home/cobaia/sonda/crlf/install.sh: line 7: set: pipefail: invalid option name
+[codigo de saida: 2]
+
+### ./install.sh com o fim de linha do Windows
+$ /home/cobaia/sonda/crlf/install.sh
+/usr/bin/env: ‘bash\r’: No such file or directory
+/usr/bin/env: use -[v]S to pass options in shebang lines
+[codigo de saida: 127]
+

@@ -1,0 +1,19 @@
+### o ollama esta no PATH?
+$ bash -c command -v ollama || echo "sem ollama no PATH"
+sem ollama no PATH
+[codigo de saida: 0]
+
+### o que o install.ensure_ollama faz no Linux
+$ /usr/bin/python3 -c import install; print("ensure_ollama devolveu:", install.ensure_ollama())
+[cobaia] Ollama não encontrado — instalando...
+[cobaia] No Linux o Ollama é instalado pelo script oficial:
+[cobaia]   curl -fsSL https://ollama.com/install.sh | sh
+[cobaia] Rode o comando acima e execute o instalador de novo.
+ensure_ollama devolveu: None
+[codigo de saida: 0]
+
+### a rodada do instalador chegou a Instalacao concluida?
+$ bash -c grep -n "Instalação concluída" "$0"/instalacao*.log || echo "nenhum log da rodada tem a linha de conclusao" /home/cobaia/evidencia
+nenhum log da rodada tem a linha de conclusao
+[codigo de saida: 0]
+

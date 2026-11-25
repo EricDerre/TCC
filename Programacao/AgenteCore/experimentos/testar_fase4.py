@@ -5842,6 +5842,32 @@ def teste_corrida25_roda_de_ponta_a_ponta_e_retoma():
         assert "tb_f4_semnotas_resumo" in esn.render(dado)
 
 
+# ! Alteração de IA - Revisar: (16/11/2026) teste novo, escrito antes do conserto: relançar a corrida 25 numa versão do Ollama diferente da que gravou os registros
+# para antes de chamar o modelo e não regrava nenhum arquivo da corrida.
+# ! Motivo: em 16/11/2026 a fila foi relançada com o Ollama na 0.40.16, e a corrida 25, feita inteira em 11/11/2026 na 0.40.15, regravou `condicoes_fase4.json`, o
+# cabeçalho da trilha e a leitura (`sem_notas.json` e `.md`) dizendo 0.40.16 e a ponte dessa versão. As 72 respostas eram as de 11/11. A corrida 26, relançada no mesmo
+# minuto, parou certo ("use outra --saida", decisão 44): a corrida 25 era o único modo sem essa conferência antes de gravar as condições.
+def teste_corrida25_relancada_em_outra_versao_do_ollama_para_sem_regravar_nada():
+    import executar_fase4 as ex
+    import experimento_sem_notas as esn
+    chamadas: list = []
+    args = ex.montar_parser().parse_args(["--modo", "sem_notas", "--saida", "_fumaca_semnotas_versao", "--casos", "1"])
+    resposta = _RESPOSTA_DA_FUMACA.replace("campo ausente", "campo_ausente")
+    with _saida_temporaria_das_corridas() as tmp:
+        with _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.14"):
+            assert esn.rodar(args) == 0
+        assert len(chamadas) == 2
+        raiz = tmp / "_fumaca_semnotas_versao"
+        guardados = {p: p.read_bytes() for p in (raiz / "condicoes_fase4.json", raiz / "trilha_sem_notas.jsonl", raiz / "sem_notas.jsonl",
+                                                  raiz / "qwen2.5_7b" / "diagnosticos__sem_notas.jsonl")}
+        with _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.2"):
+            assert esn.rodar(args) == 2, "os registros são de outra versão do Ollama: a corrida para (decisão 44)"
+        assert len(chamadas) == 2, "o modelo não é chamado"
+        mudaram = [p.name for p, antes in guardados.items() if p.read_bytes() != antes]
+        assert not mudaram, f"arquivos da corrida regravados no relançamento em outra versão: {mudaram}"
+        assert "decisão 44" in (raiz / "fase4.log").read_text(encoding="utf-8")
+
+
 def teste_corrida25_inteira_nao_roda_numa_versao_do_ollama_sem_ponte():
     import contextlib
     import io

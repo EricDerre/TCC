@@ -29,6 +29,11 @@
 # o app Claude é um pacote MSIX: em AppData\Local a pasta virava duas (a real e a privada do pacote), e o servidor
 # subido de dentro do app misturava as duas camadas (erro 1932 em todas as tabelas). A pasta do projeto não é virtualizada.
 .mariadb/
+# ! Alteração de IA - Revisar: pasta `.ferramentas/` fora do versionamento (18/11/2026, plano do instalador único, decisão 143).
+# ! Motivo: é onde `ferramentas/instalador_matriz/empacotar.py` grava o pacote que entra nas células de teste (um zip de 63 MB
+# e um tar.gz de 56 MB, medidos em 18/11/2026) e onde, a partir do pacote I2, ficam o `uv`, o Python e o PHP que o instalador
+# baixa. Tudo ali é gerado ou baixado de novo em qualquer máquina; sem a linha, um `git add -A` levaria os pacotes para o commit.
+.ferramentas/
 # ! Alteração de IA - Revisar: resultados do piloto da Fase 3 (1 modelo, 10 casos, 1 época)
 # fora do versionamento.
 # ! Motivo: o piloto existe só para calibrar tempo e conferir o encanamento antes das

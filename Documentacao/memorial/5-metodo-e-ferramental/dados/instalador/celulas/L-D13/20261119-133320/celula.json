@@ -1,0 +1,27 @@
+{
+    "tag_ia":  {
+                   "alteracao":  "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_wsl.ps1: o que a celula rodou e com que codigo de saida.",
+                   "motivo":  "! Motivo: o plano do instalador unico (decisao 143) pede a evidencia de cada celula em arquivo, mesmo quando o instalador para antes de a prova rodar."
+               },
+    "id":  "L-D13",
+    "modo":  "novo",
+    "ate":  "N3",
+    "modelo_pequeno":  "qwen2.5:0.5b",
+    "sondas":  false,
+    "sem_systemd":  false,
+    "imagem":  "Debian_WSL_AMD64_v1.26.0.0.wsl",
+    "imagem_sha256":  "5ec7dc68216e75d1d4d4761474e99d8461a98d316537110314b137122a879e0f",
+    "pacote_sha256":  "5533496130644deb6e4a39c9193cb453775a324f3e39a8ef15aeb46510ebf4f0",
+    "wsl":  [
+                "Versão do WSL: 2.5.10.0",
+                "Versão do kernel: 6.6.87.2-1"
+            ],
+    "inicio":  "2026-11-19T13:33:38",
+    "fim":  "2026-11-19T13:36:15",
+    "saidas":  {
+                   "abrir_pacote":  "0",
+                   "conferir":  "0",
+                   "install_direto":  "0",
+                   "preparo":  "0"
+               }
+}

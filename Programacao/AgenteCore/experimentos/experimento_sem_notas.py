@@ -527,6 +527,15 @@ def rodar(args: argparse.Namespace) -> int:
     pasta_reg = saida / slug
     pasta_reg.mkdir(parents=True, exist_ok=True)
     arq_diag, arq_lat, arq_resumo, arq_trilha = pasta_reg / f"diagnosticos__{NOME}.jsonl", pasta_reg / f"logprobs__{NOME}.jsonl", saida / f"{NOME}.jsonl", saida / f"trilha_{NOME}.jsonl"
+    # ! Alteração de IA - Revisar: (16/11/2026) a corrida passa a parar, antes de gravar qualquer coisa, quando os registros já gravados nesta pasta vieram de outra
+    # versão do Ollama (`executar_fase4._conferir_versao_das_linhas`, a mesma conferência das corridas 26 e 27 e dos outros modos da Fase 4).
+    # ! Motivo: em 16/11/2026 a fila foi relançada com o Ollama na 0.40.16, e esta corrida, feita inteira em 11/11/2026 na 0.40.15, regravou `condicoes_fase4.json`, o
+    # cabeçalho da trilha e a leitura dizendo 0.40.16 e a ponte dessa versão, embora as 72 respostas fossem as de 11/11. A conferência faltava só aqui (decisão 44).
+    try:
+        ex._conferir_versao_das_linhas([arq_diag], versao)
+    except SystemExit as e:
+        marco(f"!! {e}")
+        return 2
     feitos = {r["caso"] for r in executar_bateria.ler_jsonl(arq_resumo)}
     fechamento = json.loads((dv.PASTA_CURADA / "fechamento.json").read_text(encoding="utf-8"))
     condicoes = {"modo": NOME, "corrida": CORRIDA, "criado_em": inicio, "saida": args.saida, "modelo": modelo, "versao_ollama": versao, "k": k, "limiares": limiares, "casos": len(pares),

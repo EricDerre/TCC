@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 # ! Alteração de IA - Revisar
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) a docstring do módulo ganha o uso (`python install.py [--conferir] [--reproduzir]`) e diz que no Linux os pacotes, o serviço do banco, o Chromium e o Ollama entram por `instalador/ferramentas.py`.
+# ! Motivo: até o pacote I2 o Linux tinha um ponto de entrada provisório (`instalador/nucleo.py`) e a docstring descrevia só o instalador do Windows; com os passos do Linux dentro deste arquivo, quem abre o módulo precisa saber para onde o Linux vai.
 """
 Instalador único "hit and run" do ambiente cobaia (CobaiaFront + CobaiaAPI).
 
@@ -8,17 +10,26 @@ banco `ti93phpdb01`, e o venv Python + dependências da CobaiaAPI.
 
 Idempotente: seguro rodar mais de uma vez na mesma máquina.
 
+Uso: python install.py [--conferir] [--reproduzir]. No Linux (apt e dnf) os pacotes do
+sistema, o serviço e o root do MariaDB, o Chromium do Playwright e o Ollama entram pelas
+funções de instalador/ferramentas.py, chamadas por instalar_no_linux.
+
 Chamado por install.ps1 (Windows) ou install.sh (Linux/macOS), que só
 garantem que existe um Python 3 disponível antes de chegar aqui.
 """
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3) entram `argparse`, `time`, `datetime` e `REPO_ROOT` nos imports.
+# ! Motivo: `main` passa a ler argumentos (`--conferir`, `--ate`, `--reproduzir`), `cronometrar` mede o tempo de cada passo com `time` e `gravar_passos` grava a data com `datetime` e a pasta `.ferramentas/instalacao` a partir de `REPO_ROOT`.
+import argparse
 import ctypes
 import hashlib
 import json
 import os
 import subprocess
 import sys
+import time
 import urllib.request
 import zipfile
+from datetime import datetime
 from pathlib import Path
 
 from _env_common import (
@@ -28,6 +39,7 @@ from _env_common import (
     DATADIR_DO_PROJETO,
     IS_FROZEN,
     OS_NAME,
+    REPO_ROOT,
     ensure_mariadb_running,
     ensure_root_no_password,
     find_mysql_cli,
@@ -53,13 +65,17 @@ def ensure_php() -> str:
             "winget", "install", "--id", "PHP.PHP.8.2", "-e",
             "--accept-package-agreements", "--accept-source-agreements",
         ])
-    elif OS_NAME == "Linux":
-        run(["sudo", "apt-get", "update"])
-        run(["sudo", "apt-get", "install", "-y", "php", "php-mysql"])
     elif OS_NAME == "Darwin":
         run(["brew", "install", "php"])
     else:
-        log(f"SO não reconhecido ({OS_NAME}) — instale PHP 8.x com mysqli/pdo_mysql manualmente.")
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) saiu daqui o ramo do Linux (`sudo apt-get
+        # install -y php php-mysql`), e a mensagem deste `else` diz onde o PHP entra fora do Windows e do macOS.
+        # ! Motivo: células de 18 e 19/11/2026. No Ubuntu esse comando trazia o Apache (`apache2`, um servidor web na porta 80
+        # que o projeto não usa, suspeita HL13) e não trazia o `php-mbstring` (`Call to undefined function
+        # mb_strimwidth()`, HL11); no Fedora ele dava `sudo: apt-get: command not found` e o instalador parava em "Feche e
+        # reabra o terminal" (HL3). No Linux os pacotes entram por `instalar_no_linux`, mais abaixo.
+        log(f"Este passo só instala o PHP no Windows e no macOS; em {OS_NAME} ele vem dos pacotes do sistema "
+            "(instalar_no_linux) ou é instalado à mão, na versão 8.x com mysqli, pdo_mysql e mbstring.")
         sys.exit(1)
 
     php = find_php()
@@ -184,6 +200,17 @@ def extrair_zip_seguro(zip_path: Path, destino: Path) -> None:
         z.extractall(destino)
 
 
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3) função nova `tamanho_legivel`, usada pela linha de progresso de
+# `baixar_arquivo`.
+# ! Motivo: célula L-F45 de 19/11/2026: ao baixar o script do Ollama (alguns kB) o instalador mostrava `0 MB de 0 MB`,
+# porque a linha só sabia contar em MB inteiros. Arquivo de 1 MB para cima continua aparecendo como antes (`1 MB de 97 MB`).
+def tamanho_legivel(nbytes: int) -> str:
+    """`21 kB` abaixo de 1 MB; daí para cima, MB inteiros (`25 MB`)."""
+    if nbytes < (1 << 20):
+        return f"{max(1, round(nbytes / 1024))} kB"
+    return f"{nbytes >> 20} MB"
+
+
 def baixar_arquivo(url: str, destino: Path) -> int:
     """! Alteração de IA - Revisar: baixa a URL para o arquivo em blocos de 1 MB, com uma linha de progresso a cada 10 MB.
     ! Motivo: o zip do MariaDB tem cerca de 100 MB; sem progresso o instalador parece travado na rede corporativa."""
@@ -201,7 +228,9 @@ def baixar_arquivo(url: str, destino: Path) -> int:
             lidos += len(bloco)
             if (lidos >> 20) // 10 != marco:
                 marco = (lidos >> 20) // 10
-                log(f"  {lidos >> 20} MB" + (f" de {total >> 20} MB" if total else ""))
+                # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) a linha de progresso usa `tamanho_legivel` (kB para arquivo pequeno, MB para o resto).
+                # ! Motivo: ver a tag de `tamanho_legivel`, acima (célula L-F45: `0 MB de 0 MB`).
+                log(f"  {tamanho_legivel(lidos)}" + (f" de {tamanho_legivel(total)}" if total else ""))
     return lidos
 
 
@@ -282,15 +311,17 @@ def ensure_mariadb_installed() -> str:
             if resultado.returncode != 0:
                 log("O winget não conseguiu instalar o MariaDB.Server; tentando o zip portátil...")
                 instalar_mariadb_portatil()
-    elif OS_NAME == "Linux":
-        run(["sudo", "apt-get", "update"])
-        run(["sudo", "apt-get", "install", "-y", "mariadb-server"])
-        run(["sudo", "systemctl", "enable", "--now", "mariadb"])
     elif OS_NAME == "Darwin":
         run(["brew", "install", "mariadb"])
         run(["brew", "services", "start", "mariadb"])
     else:
-        log(f"SO não reconhecido ({OS_NAME}) — instale MariaDB/MySQL Server manualmente.")
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) saiu daqui o ramo do Linux (`apt-get install -y mariadb-server`
+        # e `systemctl enable --now mariadb`).
+        # ! Motivo: célula L-U2404-SS de 19/11/2026 (suspeita HL7): sem o systemd o `systemctl` responde "System has not been
+        # booted with systemd as init system (PID 1). Can't operate."; e o `apt-get` sem `--no-remove` trocaria um
+        # `mysql-server` já instalado pelo MariaDB sem perguntar. No Linux o pacote e o serviço entram por `instalar_no_linux`.
+        log(f"Este passo só instala o MariaDB no Windows e no macOS; em {OS_NAME} ele vem dos pacotes do sistema "
+            "(instalar_no_linux) ou é instalado à mão.")
         sys.exit(1)
 
     cli = find_mysql_cli()
@@ -366,13 +397,15 @@ def ensure_ollama() -> str | None:
             "winget", "install", "--id", "Ollama.Ollama", "-e",
             "--accept-package-agreements", "--accept-source-agreements",
         ])
-    elif OS_NAME == "Linux":
-        log("No Linux o Ollama é instalado pelo script oficial:")
-        log("  curl -fsSL https://ollama.com/install.sh | sh")
-        log("Rode o comando acima e execute o instalador de novo.")
-        return None
     elif OS_NAME == "Darwin":
         run(["brew", "install", "--cask", "ollama"])
+    else:
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) saiu daqui o ramo do Linux, que só imprimia o comando do script
+        # oficial e devolvia None.
+        # ! Motivo: célula L-U2404 de 18/11/2026 (suspeita HL5): a instalação terminava em "Instalação concluída" sem o
+        # Ollama. No Linux quem instala o Ollama, na versão testada, é `instalador/ferramentas.py` (`preparar_ollama`).
+        log(f"Este passo só instala o Ollama no Windows e no macOS; em {OS_NAME} ele entra por instalador/ferramentas.py.")
+        return None
 
     ollama = find_ollama()
     if not ollama:
@@ -433,20 +466,126 @@ def setup_agente_core() -> None:
             run([ollama, "pull", modelo])
 
 
-def main() -> None:
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) entram aqui `eh_root`, `caminho_para`,
+# `instalar_no_linux`, `instalar_e_relatar_no_linux`, `relatar_versoes` e `_argumentos`, trazidos de `instalador/nucleo.py`, que deixa de existir; os passos do Windows e
+# do macOS saem do `main` e viram `instalar_no_windows_ou_mac`, na mesma ordem; e o `main` passa a receber argumentos
+# (`--conferir`, `--ate`, `--reproduzir`), a reconhecer a família do sistema e a devolver o código de saída.
+# ! Motivo: célula L-U2404 de 18/11/2026 (suspeitas HL10 e HL12): este arquivo aplicava os `.sql` antes de o serviço e o root
+# do MariaDB estarem prontos e parava em "Não foi possível subir o MariaDB" com o serviço no ar; no Fedora rodava `sudo
+# apt-get` ("command not found", HL3). A ordem certa (pacotes, PHP, serviço, root com a pergunta, `.sql`, venvs, Chromium,
+# Ollama) foi provada nas células de 19/11/2026 (Ubuntu 22.04, 24.04 e 26.04, Debian 12 e 13, Fedora 45) num ponto de
+# entrada provisório, porque este arquivo não podia mudar antes de a corrida 28b ser lida; `python install.py` chamado
+# direto ainda era o instalador antigo. Os módulos de `instalador/` são importados dentro das funções, e não no topo, para
+# que `import install` no Windows (o `restaurar_banco.py` das corridas e o `Cobaia.exe`) carregue o mesmo que carregava.
+USO = """Uso: python install.py [--conferir [--ate N1|N2|N3|N4]] [--reproduzir]
+Sem argumento, instala. Com --conferir, roda a prova da instalação e grava .ferramentas/prova/registro.json.
+--reproduzir exige, nas ferramentas que afetam as medidas, a versão exata do versoes.json."""
+
+_PASSOS: list[dict] = []
+
+
+def eh_root() -> bool:
+    """O processo roda como root? (No Windows não existe `geteuid`.)"""
+    return hasattr(os, "geteuid") and os.geteuid() == 0
+
+
+def caminho_para(info: dict) -> str:
+    """'apt' e 'dnf' (Debian, Ubuntu e derivados; Fedora) devolvem a própria família; 'nao_suportado' recebe a mensagem com a
+    lista do que instalar à mão; Windows e macOS seguem pelos passos de `instalar_no_windows_ou_mac`."""
+    if info["familia"] in ("apt", "dnf", "nao_suportado"):
+        return info["familia"]
+    return "como_estava"
+
+
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3) funções novas `cronometrar` e `gravar_passos`: o instalador anota
+# quanto cada passo levou e grava a lista em `.ferramentas/instalacao/passos.json`, que a prova copia para o `registro.json`.
+# ! Motivo: a seção 3.3 do plano aprovado pede no registro o tempo de cada passo; até aqui só havia o tempo de cada nível da
+# prova e o total da célula, porque este arquivo não podia mudar antes da corrida 28b (desvio 7 do anexo do plano). O
+# arquivo fica dentro do projeto, em `.ferramentas/`, que está fora do git.
+def cronometrar(nome: str, funcao, *argumentos):
+    """Roda um passo do instalador e anota quanto ele levou, também quando o passo falha."""
+    inicio = time.time()
+    try:
+        return funcao(*argumentos)
+    finally:
+        _PASSOS.append({"passo": nome, "segundos": round(time.time() - inicio, 1)})
+
+
+def gravar_passos(resultado: str, pasta: Path | None = None) -> Path | None:
+    """Grava os tempos dos passos e o resultado da instalação ('concluida' ou 'interrompida'). Não conseguir gravar vira
+    aviso, nunca erro: a instalação não depende deste arquivo."""
+    pasta = pasta or REPO_ROOT / ".ferramentas" / "instalacao"
+    dados = {
+        "tag_ia": {
+            "alteracao": "! Alteração de IA - Revisar: arquivo gerado pelo install.py: quanto levou cada passo da última "
+                         "instalação nesta pasta e como ela terminou.",
+            "motivo": "! Motivo: o plano do instalador único (decisão 143, seção 3.3) pede o tempo de cada passo no registro "
+                      "da prova; o instalador e a prova rodam em processos separados, e este arquivo leva um ao outro.",
+        },
+        "gravado_em": datetime.now().isoformat(timespec="seconds"),
+        "resultado": resultado,
+        "passos": list(_PASSOS),
+    }
+    try:
+        pasta.mkdir(parents=True, exist_ok=True)
+        caminho = pasta / "passos.json"
+        caminho.write_text(json.dumps(dados, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    except OSError as e:
+        log(f"Aviso: não foi possível gravar os tempos da instalação em {pasta}: {e}")
+        return None
+    return caminho
+
+
+def instalar_no_linux(info: dict, ferr: dict) -> None:
+    """Os passos do Linux, na ordem em que um depende do outro: o serviço e o root do banco vêm antes dos `.sql`. Valem para
+    o `apt` e para o `dnf`. Um passo que não dá certo levanta `ferramentas.Falha`."""
+    from instalador import ferramentas
+
+    def venv_da_api() -> None:
+        # Com a `.venv` presente e sem `pip` dentro (venv do Windows num clone usado pelo WSL, ou instalação que parou no
+        # `ensurepip is not available`), o `setup_cobaia_api` rodaria `.venv/bin/pip` e morreria em `FileNotFoundError`.
+        ferramentas.conferir_pasta_da_venv(COBAIA_API / ".venv")
+        setup_cobaia_api()
+        ferramentas.conferir_venv(COBAIA_API / ".venv", ("fastapi", "uvicorn", "pymysql"))
+
+    cronometrar("pacotes do sistema", ferramentas.instalar_pacotes_do_sistema, info)
+    cronometrar("PHP", ferramentas.conferir_php)
+    cli = find_mysql_cli()
+    if not cli:
+        raise ferramentas.Falha("o cliente do MariaDB não foi encontrado depois da instalação dos pacotes")
+    cronometrar("serviço do MariaDB", ferramentas.subir_banco, cli)
+    cronometrar("root do MariaDB", ferramentas.garantir_root_sem_senha, cli)
+    cronometrar("banco (os três .sql)", apply_sql_files, cli)
+    cronometrar("venv da CobaiaAPI", venv_da_api)
+    cronometrar("AgenteCore (venv, Chromium, Ollama e modelo)", ferramentas.preparar_agente, info, ferr)
+
+
+def relatar_versoes(ferr: dict, reproduzir: bool) -> list[str]:
+    """Imprime a versão encontrada de cada ferramenta contra o versoes.json e devolve as que impedem seguir."""
+    from instalador import conferir, versoes
+    julgadas = versoes.julgar(conferir._versoes_encontradas(), ferr, reproduzir=reproduzir)
+    log("Versões encontradas:")
+    for nome, dados in julgadas.items():
+        log(f"  {nome}: {dados['encontrada'] or 'não lida'} ({dados['estado']}; testada {dados['testada']}; "
+            f"aceita de {ferr[nome].get('aceita_de') or '?'} a {ferr[nome].get('aceita_ate') or 'a mais nova'})")
+    return sorted(nome for nome, dados in julgadas.items() if dados["impede"])
+
+
+def instalar_no_windows_ou_mac() -> None:
+    """Os passos do Windows e do macOS, na ordem em que sempre rodaram. Um passo obrigatório que falha chama `sys.exit(1)`."""
     log(f"Sistema operacional detectado: {OS_NAME}")
 
-    ensure_php()
+    cronometrar("PHP", ensure_php)
 
-    cli = ensure_mariadb_installed()
-    if not ensure_mariadb_running(cli):
+    cli = cronometrar("MariaDB", ensure_mariadb_installed)
+    if not cronometrar("serviço do MariaDB", ensure_mariadb_running, cli):
         log("Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo.")
         sys.exit(1)
-    ensure_root_no_password(cli)
-    apply_sql_files(cli)
+    cronometrar("root do MariaDB", ensure_root_no_password, cli)
+    cronometrar("banco (os três .sql)", apply_sql_files, cli)
 
-    setup_cobaia_api()
-    setup_agente_core()
+    cronometrar("venv da CobaiaAPI", setup_cobaia_api)
+    cronometrar("AgenteCore (venv, Chromium, Ollama e modelo)", setup_agente_core)
 
     log("")
     log("Instalação concluída. Para rodar o site, use:")
@@ -454,5 +593,127 @@ def main() -> None:
     log("  Linux/macOS:                          ./run.sh")
 
 
+# ! Alteração de IA - Revisar: (19/11/2026, pacote I3) função nova `codigo_de_saida`.
+# ! Motivo: item estacionado da revisão do pacote I2: o ponto de entrada provisório devolvia 1 para qualquer `SystemExit`
+# vindo de um passo, inclusive `sys.exit(0)` e `sys.exit()`, que são saída sem erro; uma instalação que terminasse assim
+# sairia com código de erro.
+def codigo_de_saida(e: SystemExit) -> int:
+    """O código com que um `sys.exit` de dentro de um passo termina o instalador: `sys.exit()` e `sys.exit(0)` são saída sem
+    erro (0); um número é ele mesmo; um texto (`sys.exit("mensagem")`) é erro (1)."""
+    if e.code is None:
+        return 0
+    if isinstance(e.code, int):
+        return e.code
+    return 1
+
+
+def instalar_e_relatar_no_linux(info: dict, reproduzir: bool) -> int:
+    """Roda os passos do Linux, transforma a falha de um passo em mensagem e código de saída, e confere as versões no fim."""
+    from instalador import ferramentas, versoes
+    if info["suporte"] == "melhor_esforco":
+        if info["familia"] == "dnf":
+            log("Aviso: o Fedora entra como melhor esforço: o instalador garante o site e a API; o navegador do agente "
+                "depende de bibliotecas que ele não instala aqui.")
+        else:
+            log("Aviso: esta distribuição não está entre as testadas (Ubuntu 22.04, 24.04 e 26.04; Debian 12 e 13); "
+                "o instalador segue pelo apt, como melhor esforço.")
+    ferr = versoes.carregar()
+    try:
+        instalar_no_linux(info, ferr)
+    except ferramentas.Falha as e:
+        log("")
+        log(f"Instalação interrompida: {e}")
+        return 1
+    except SystemExit as e:
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) captura do `SystemExit` dos passos de Linux em `instalar_e_relatar_no_linux`.
+        # ! Motivo: `apply_sql_files` e `setup_cobaia_api` chamam `sys.exit` quando falham; sem esta captura o instalador saía sem a
+        # linha "Instalação interrompida".
+        codigo = codigo_de_saida(e)
+        if codigo == 0:
+            log("Instalação encerrada por um passo do instalador, sem erro.")
+            return 0
+        log("")
+        log("Instalação interrompida: um passo do instalador parou; a mensagem dele está logo acima.")
+        return codigo
+    impedidas = relatar_versoes(ferr, reproduzir)
+    if impedidas:
+        log(f"Instalação interrompida: a versão de {', '.join(impedidas)} impede seguir (veja a lista acima e o versoes.json).")
+        return 1
+    log("")
+    log("Instalação concluída. Para rodar o site: ./run.sh")
+    log("Para conferir a instalação: ./install.sh --conferir")
+    return 0
+
+
+def _argumentos(argv: list[str] | None) -> argparse.Namespace:
+    """`argv=None` quer dizer "sem argumentos", e não "leia a linha de comando": o `Cobaia.py` chama `install.main()` e os
+    argumentos do `Cobaia.exe` não são do instalador."""
+    from instalador import registro
+    ap = argparse.ArgumentParser(prog="install.py", description=USO, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--conferir", action="store_true", help="roda a prova da instalação em vez de instalar")
+    ap.add_argument("--ate", choices=registro.NIVEIS, default="N4", help="último nível da prova (com --conferir)")
+    ap.add_argument("--reproduzir", action="store_true", help="exige a versão exata nas ferramentas que afetam as medidas")
+    return ap.parse_args([] if argv is None else argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Instala (sem argumento) ou roda a prova (`--conferir`). Devolve o código de saída; no Windows e no macOS um passo
+    obrigatório que falha ainda sai por `sys.exit(1)`, como sempre saiu."""
+    args = _argumentos(argv)
+    from instalador import sistema
+    if args.conferir:
+        from instalador import conferir
+        argumentos = ["--celula", "local", "--saida", str(REPO_ROOT / ".ferramentas" / "prova"), "--ate", args.ate]
+        return conferir.main(argumentos + (["--reproduzir"] if args.reproduzir else []))
+    info = sistema.detectar()
+    log(f"Sistema: {info['nome']} (família {info['familia']}, {info['suporte']})")
+    caminho = caminho_para(info)
+    if caminho == "nao_suportado":
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) o caso sem suporte imprime a lista do que instalar à mão e sai com 1.
+        # ! Motivo: célula L-F45 (HL3) e decisão 141: fora do `apt` e do `dnf` o instalador antigo rodava `sudo apt-get` ("command not
+        # found"); Arch e openSUSE recebem a lista do que instalar à mão, e o instalador sai com 1.
+        from instalador import versoes
+        for linha in sistema.mensagem_nao_suportado(info, versoes.carregar()).splitlines():
+            log(linha)
+        return 1
+    if caminho == "como_estava" and info["suporte"] == "falta_homebrew":
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) o macOS sem Homebrew avisa e sai com 1 antes de qualquer passo.
+        # ! Motivo: sem o Homebrew o `brew install` morria em `FileNotFoundError`; o lançador antigo dava esta mensagem.
+        log("Homebrew não encontrado. Instale em https://brew.sh e rode ./install.sh de novo.")
+        return 1
+    if caminho != "como_estava" and eh_root():
+        log("Rode o instalador como usuário comum, sem `sudo` na frente: ele mesmo chama o sudo nos passos que precisam.")
+        log("Como root, as venvs e o navegador ficariam na pasta do root, e a entrada do root do MariaDB passaria no "
+            "teste pelo unix_socket sem ser trocada, com o site e a API quebrados para o usuário comum.")
+        return 1
+    _PASSOS.clear()
+    resultado = "interrompida"
+    try:
+        if caminho == "como_estava":
+            if args.reproduzir:
+                # ! Alteração de IA - Revisar: (19/11/2026, revisão do pacote I3, achado 4) com `--reproduzir` no Windows ou no
+                # macOS, o instalador avisa que a conferência exata das versões só acontece na prova.
+                # ! Motivo: o argumento era aceito em silêncio e a instalação terminava em "Instalação concluída" sem conferir
+                # versão nenhuma, embora o texto de uso diga que o modo exige a versão exata; a regra de versões no caminho do
+                # Windows entra no pacote I4.
+                log("Aviso: no Windows e no macOS o --reproduzir ainda não confere as versões durante a instalação; para "
+                    "conferir, rode a prova: python install.py --conferir --reproduzir")
+            instalar_no_windows_ou_mac()
+            codigo = 0
+        else:
+            codigo = instalar_e_relatar_no_linux(info, args.reproduzir)
+        if codigo == 0:
+            resultado = "concluida"
+        return codigo
+    finally:
+        gravar_passos(resultado)
+
+
 if __name__ == "__main__":
-    main()
+    # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) chamado direto, o arquivo importa a si mesmo pelo nome `install`
+    # e roda o `main` desse módulo, com os argumentos da linha de comando.
+    # ! Motivo: `instalador/ferramentas.py` faz `import install` (usa `baixar_arquivo`). Rodando como `python install.py`,
+    # este arquivo é o módulo `__main__`, e o `import install` de lá carregaria uma segunda cópia dele, com outra lista de
+    # passos (`_PASSOS`) e outras funções; assim só existe uma.
+    import install
+    sys.exit(install.main(sys.argv[1:]))

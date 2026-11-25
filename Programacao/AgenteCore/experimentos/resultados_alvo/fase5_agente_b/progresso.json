@@ -1,0 +1,42 @@
+{
+ "etapa": "localizador-front-cliente-reserva@cenario · diagnóstico",
+ "modelo": "qwen2.5:7b",
+ "estado": "concluido",
+ "fase": "geracao",
+ "tokens_prompt": 1319,
+ "chars_prompt": 4116,
+ "teto_tokens": 600,
+ "tokens_gerados": 53,
+ "decorrido_s": 57.301,
+ "estimativa_s": 65.375,
+ "estimativa_refeita_s": 65.375,
+ "fracao": 1.0,
+ "estimativa": {
+  "tokens_prompt": 1319,
+  "prefill_s": 50.666,
+  "geracao_s": 14.709,
+  "geracao_maxima_s": 140.089,
+  "total_s": 65.375,
+  "maximo_s": 190.755,
+  "origem": {
+   "tokens_prompt": "4116 caracteres do prompt / 3.12 caracteres por token (mediana das corridas gravadas)",
+   "prefill_s": "1319 tokens / 26.033 tokens por segundo (mediana do prefill das corridas gravadas)",
+   "geracao_s": "63.0 tokens (mediana dos gerados nas corridas gravadas) / 4.283 tokens por segundo (mediana da geração)",
+   "geracao_maxima_s": "teto de 600 tokens / 4.283 tokens por segundo"
+  }
+ },
+ "medido": {
+  "prefill_s": 42.993,
+  "geracao_s": 12.195,
+  "carga_s": 0.032,
+  "total_s": 55.261,
+  "tokens_entrada": 1230,
+  "tokens_saida": 53,
+  "tokens_em_cache": 270,
+  "decorrido_s": 57.301
+ },
+ "inferencias_concluidas": 10,
+ "iniciado_em": "2026-11-18T22:36:56",
+ "gravado_em": "2026-11-18T22:37:54",
+ "versao": 1
+}

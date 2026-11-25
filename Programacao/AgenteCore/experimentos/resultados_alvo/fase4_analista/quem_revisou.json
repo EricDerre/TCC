@@ -1,0 +1,38 @@
+{
+ "_marcador": "! Alteração de IA - Revisar: arquivo escrito pelo Claude em 16/11/2026 com o que o Eric declarou no quadro de perguntas sobre quem fez a revisão às cegas das propostas de edição (corrida 27, medida M2; decisão 129, que revê a 123). ! Motivo: a decisão 123 dizia que o Eric revisaria; quem revisou foi o analista de QA, e o texto do TCC precisa dizer quem foi, o que ele tinha à mão e como os comentários entraram na página. O bloco `registro_da_pagina` é calculado por script de `revisao_as_cegas_respostas.json`.",
+ "declarado_em": "2026-11-16",
+ "declarado_por": "Eric, no quadro de perguntas da sessão principal",
+ "quem": "um analista de QA da empresa em que o Eric trabalha",
+ "relacao_com_o_projeto": "o mesmo analista da sessão de revisão dos relatórios e da curadoria das leituras (decisão 117): atua com teste de software e não participou do projeto",
+ "o_que_tinha_a_mao": "só o que a página mostra: a proposta, o verbete de destino e a ficha do caso; não abriu o repositório nem a chave da origem",
+ "comentarios": "escritos por ele fora da página e colados depois; nenhuma ferramenta de IA redigiu, pela declaração",
+ "opcoes_marcadas_no_quadro": {
+  "quem julgou as 28 propostas": "O analista de QA: A mesma pessoa que revisou os relatórios v3 e fez a curadoria das leituras; o registro sai como analista de QA.",
+  "os comentários foram escritos como": "Pela pessoa, colados depois: Quem julgou escreveu os textos fora da página e colou; nenhuma ferramenta de IA redigiu.",
+  "o que quem julgou tinha à mão além do que a página mostra": "Só a página: Julgou pelo que a página mostra, sem abrir o repositório nem a chave de origem."
+ },
+ "registro_da_pagina": {
+  "respostas": 28,
+  "com_comentario": 28,
+  "primeira_resposta_hora_local": "2026-11-16T15:14:50-03:00",
+  "ultima_resposta_hora_local": "2026-11-16T18:18:17-03:00",
+  "comentario_caracteres": {
+   "menor": 350,
+   "mediana": 431.5,
+   "maior": 580
+  },
+  "intervalo_entre_respostas_s": {
+   "menor": 26,
+   "mediana": 41,
+   "maior": 9568
+  },
+  "limite_caracteres_por_segundo": 10,
+  "respostas_acima_do_limite": 14,
+  "respostas_medidas": 26,
+  "mediana_caracteres_por_segundo": 10.4,
+  "editadas_depois_de_salvas": [
+   "p07"
+  ],
+  "como_foi_calculado": "de `revisao_as_cegas_respostas.json`: o intervalo é o tempo entre uma resposta salva e a anterior, e os caracteres por segundo dividem o tamanho do comentário por esse intervalo, que inclui a leitura da proposta (a velocidade real de entrada do texto é maior que a medida); ficam fora a primeira resposta, por não ter anterior, e as trocadas depois de salvas; o corte de 10 caracteres por segundo é o de `avaliar_fase4.resumo_da_pagina`"
+ }
+}

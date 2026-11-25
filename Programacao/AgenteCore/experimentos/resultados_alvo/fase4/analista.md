@@ -1,6 +1,6 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por avaliar_fase4.py --analista a partir de `fase4_analista` (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão; o relatório da Pré-Fase 4 do Memorial cola estes blocos. -->
-# O analista de documentação com a ficha curta do caso (corrida 27, medida M2), gerada em 2026-11-12
+# O analista de documentação com a ficha curta do caso (corrida 27, medida M2), gerada em 2026-11-16
 
 Medida M2 da proposta do analista de documentação (corrida 27, decisão 121). Nos casos de aprendizado da corrida 20, o modelo foi chamado no papel de analista de documentação: recebeu as instruções próprias (hash `cbc4505b3c2052f1`), o verbete da causa certa e a ficha curta do caso, montada por código a partir da trilha da corrida 20, com o gabarito no lugar da decisão da pessoa, e devolveu uma proposta só. A biblioteca é a de antes do lote da corrida 20 e só foi lida; nada do agente mudou.
 
@@ -9,6 +9,8 @@ Regra fixada antes da corrida (decisão 121). Três leituras contra a corrida 20
 A corrida rodou em outra versão do Ollama que a corrida 20; a ponte dessa versão (`fase3b_ponte_04015`) deu b = 1 e c = 0 em 35 casos, pareável com a Fase 3 (limite 2).
 
 O que o analista respondeu em 54 casos: 0 abstenções, 20 respostas sem proposta válida e 34 propostas (19 sinais de busca, 15 notas e 0 retificações). Das 15 propostas com texto, 14 afirmam um fato e passam no portão da forma; na corrida 20 eram 6 de 92. Passam nos filtros de hoje 8 (na corrida 20, 20 de 92), e nos cinco portões 4. Cada chamada leu 1153,5 tokens e escreveu 110 na mediana, em 49,36 s; na corrida 20 eram 2358, 361 e 158,22 s.
+
+A revisão humana às cegas julgou 8 propostas desta corrida: 3 corretas, 4 parciais e 1 erradas; faltam 0. As edições da corrida 20, julgadas de novo pelo mesmo revisor sem saber a origem, ficaram em 1 corretas, 9 parciais e 10 erradas.
 
 <!-- tabela:tb_f4_analista_resumo -->
 | Casos | Abstenções | Sem proposta válida | Propostas | Sinais de busca | Notas | Retificações | Com texto | Afirmam um fato | Passam nos filtros de hoje | Passam nos cinco portões | Cópias do exemplo das instruções | Tokens lidos (mediana) | Tokens escritos (mediana) | Segundos (mediana) |
@@ -20,7 +22,7 @@ O que o analista respondeu em 54 casos: 0 abstenções, 20 respostas sem propost
 |---|---|---|---|---|---|
 | abstenção | 0 de 54 | 0 de 54 | McNemar pareado por caso | 1,000 | dentro do ruído |
 | forma do texto | 14 de 15 | 6 de 92 | Fisher | 0,000 | sai do ruído: mais afirmações na corrida 27 |
-| parcela correta | sem revisão | 2 de 20 | Fisher | n/d | sem veredito: falta a revisão humana às cegas das propostas |
+| parcela correta | 3 de 8 | 1 de 20 | Fisher | 0,058 | dentro do ruído |
 <!-- /tabela:tb_f4_analista_leituras -->
 <!-- tabela:tb_f4_analista_portoes -->
 | Portão | Propostas avaliadas | Recusa | Passa | Não se aplica | Propostas que pararam aqui |

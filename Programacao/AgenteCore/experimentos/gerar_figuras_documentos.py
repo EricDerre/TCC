@@ -248,6 +248,32 @@ def coletar() -> dict[str, dict]:
                    ["Localizador, da detecção à reexecução", tipos["localizador"]["mttr_mediana_s"], "sim"],
                    ["Contrato, da detecção ao diagnóstico conferido", tipos["contrato"]["mttr_mediana_s"], "sim"]],
     }
+    # ! Alteração de IA - Revisar: (24/11/2026, Fase 5, decisão 151) figura nova, "agente-e-pessoas": o tempo de reparo do agente e o das pessoas em cada um dos
+    # dez cenários, com o menor e o maior tempo de cada lado, lidos de `fase5/medicao.json`. A tabela de dados leva também o Task Success de cada lado.
+    # ! Motivo: a comparação dos dois tempos é o resultado central do TCC, lido em 24/11/2026, e o README ganha a descoberta com a figura. A figura mostra só o
+    # tempo: o veredito do Task Success depende da sessão de um integrante só (ficha 91), e por isso ele entra no texto com a ressalva e na tabela de dados, e
+    # não como segundo resultado desenhado. O que falta de um lado num cenário sai escrito como "sem medida", em vez de quebrar a tabela.
+    med = _j("fase5/medicao.json")
+    sucesso = {x["cenario"]: x for x in med["task_success"]["por_cenario"]}
+
+    def ou_sem(v):
+        return "sem medida" if v is None else v
+
+    geral_f5 = med["tempo"]["geral"]
+    figs["agente-e-pessoas"] = {
+        "titulo": "O agente repara mais rápido que uma pessoa?",
+        "fonte": ("`fase5/medicao.json` (`tempo.por_cenario`, `tempo.geral`, `lados` e `task_success.por_cenario`): a corrida 28b do agente, com cinco repetições por cenário, "
+                  "e as três sessões da linha de base manual, uma tentativa de cada integrante por cenário"),
+        "cab": ["Cenário", "Tipo", "Agente: tempo médio (s)", "Agente: menor tempo (s)", "Agente: maior tempo (s)", "Pessoas: tempo médio (s)", "Pessoas: menor tempo (s)",
+                "Pessoas: maior tempo (s)", "Diferença, pessoas menos agente (s)", "Agente: chegou ao resultado", "Pessoas: chegaram ao resultado"],
+        "linhas": [[NOME_CENARIO[x["cenario"]], x["tipo"]] + [ou_sem(x[k]) for k in ("agente_media_s", "agente_min_s", "agente_max_s", "pessoas_media_s", "pessoas_min_s",
+                                                                                      "pessoas_max_s", "diferenca_s")]
+                   + [f'{sucesso[x["cenario"]]["agente_sucessos"]} de {sucesso[x["cenario"]]["agente_n"]}', f'{sucesso[x["cenario"]]["pessoas_sucessos"]} de {sucesso[x["cenario"]]["pessoas_n"]}']
+                   for x in med["tempo"]["por_cenario"]],
+        "geral": {"agente_s": med["lados"]["agente"]["geral"]["tempo_media_s"], "pessoas_s": med["lados"]["pessoas"]["geral"]["tempo_media_s"],
+                  "diferenca_media_s": geral_f5["diferenca_media_s"], "agente_mais_rapido": geral_f5["sinais"]["agente"], "pessoas_mais_rapidas": geral_f5["sinais"]["pessoas"],
+                  "empates": geral_f5["sinais"]["empates"], "cenarios": len(med["tempo"]["por_cenario"])},
+    }
     return figs
 
 
@@ -709,6 +735,48 @@ def desenhar(figs: dict[str, dict]) -> None:
     fig.savefig(SAIDA / "onde-vai-o-tempo.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
     plt.close(fig)
     print("  onde-vai-o-tempo.png")
+
+    # ---- o agente e as pessoas (Fase 5)
+    # ! Alteração de IA - Revisar: (24/11/2026, Fase 5) o desenho da figura "agente-e-pessoas": duas barras por cenário (o agente em azul, as pessoas em laranja),
+    # com um traço do menor ao maior tempo de cada lado; os cenários de contrato em cima e os de localizador embaixo, na ordem da leitura.
+    # ! Motivo: o plano da Fase 5 (seção 6) pede o tempo por cenário dos dois lados com a faixa entre o mínimo e o máximo. O subtítulo e a legenda são montados
+    # dos números da leitura; o lado sem tempo num cenário fica sem barra.
+    f = figs["agente-e-pessoas"]
+    fig, ax = base(8.6, 5.6)
+    limpar(ax, "x")
+    linhas = f["linhas"][::-1]
+    alt = 0.36
+    for i, l in enumerate(linhas):
+        for desloca, cor, media, menor, maior in ((alt / 2, AZUL, l[2], l[3], l[4]), (-alt / 2, LARANJA, l[5], l[6], l[7])):
+            if not isinstance(media, (int, float)):
+                continue
+            y = i + desloca
+            ax.barh(y, media, color=cor, height=alt, zorder=3)
+            if isinstance(menor, (int, float)) and isinstance(maior, (int, float)):
+                ax.plot([menor, maior], [y, y], color=TINTA, linewidth=1.1, zorder=4)
+                for ponta in (menor, maior):
+                    ax.plot([ponta, ponta], [y - alt * 0.28, y + alt * 0.28], color=TINTA, linewidth=1.1, zorder=4)
+            ax.text((maior if isinstance(maior, (int, float)) else media) + 6, y, f"{_num(media, 0)} s", va="center", fontsize=8.2, color=TINTA)
+    ax.set_yticks(range(len(linhas)))
+    ax.set_yticklabels(["\n".join(textwrap.wrap(l[0], 24)) for l in linhas], fontsize=9, color=TINTA)
+    maiores = [v for l in linhas for v in (l[4], l[7], l[2], l[5]) if isinstance(v, (int, float))]
+    ax.set_xlim(0, max(maiores) * 1.12)
+    ax.set_xlabel("segundos, da detecção da falha até o resultado", fontsize=9, color=TINTA_2)
+    n_contrato = sum(1 for l in linhas if l[1] == "contrato")
+    if 0 < n_contrato < len(linhas):
+        corte = len(linhas) - n_contrato - 0.5
+        ax.axhline(corte, color=GRADE, linewidth=1.0, zorder=1)
+        ax.text(ax.get_xlim()[1], corte + 0.08, "falha de contrato", ha="right", va="bottom", fontsize=8, color=TINTA_2)
+        ax.text(ax.get_xlim()[1], corte - 0.08, "localizador quebrado", ha="right", va="top", fontsize=8, color=TINTA_2)
+    g = f["geral"]
+    titular(fig, f["titulo"], (f"O agente foi mais rápido em {g['agente_mais_rapido']} dos {g['cenarios']} cenários; na média, {_num(g['agente_s'], 0)} s do agente "
+                               f"e {_num(g['pessoas_s'], 0)} s das pessoas"))
+    legenda(fig, [Patch(facecolor=AZUL, label="Agente: média das repetições"), Patch(facecolor=LARANJA, label="Pessoas: média dos integrantes"),
+                  Line2D([0], [0], color=TINTA, linewidth=1.1, label="do menor ao maior tempo medido")], y=-0.005)
+    fig.tight_layout(rect=(0, 0.06, 1, topo(fig)))
+    fig.savefig(SAIDA / "agente-e-pessoas.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
+    plt.close(fig)
+    print("  agente-e-pessoas.png")
 
 
 def main() -> int:

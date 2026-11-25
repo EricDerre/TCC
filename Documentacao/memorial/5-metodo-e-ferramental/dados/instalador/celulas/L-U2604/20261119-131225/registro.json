@@ -1,0 +1,89 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "L-U2604",
+ "gravado_em": "2026-11-19T13:15:08",
+ "sistema": {
+  "sistema": "Linux",
+  "familia": "apt",
+  "id": "ubuntu",
+  "versao": "26.04",
+  "nome": "Ubuntu 26.04.1 LTS",
+  "suporte": "suportado"
+ },
+ "maquina": {
+  "plataforma": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "arquitetura": "x86_64",
+  "python": "3.14.4",
+  "nucleos": 12,
+  "memoria_total_gb": 3.8,
+  "memoria_livre_gb": 3.2,
+  "administrador": false,
+  "sudo_sem_senha": true
+ },
+ "niveis": {
+  "N1": {
+   "estado": "passou",
+   "detalhe": "14 produtos na API e na página do site",
+   "segundos": 0.6
+  },
+  "N2": {
+   "estado": "passou",
+   "detalhe": "Playwright 1.64.1, Chromium 156.0.8078.4, título da página: Churrascaria Fornalha",
+   "segundos": 1.9
+  },
+  "N3": {
+   "estado": "passou",
+   "detalhe": "Ollama 0.40.16, qwen2.5:0.5b respondeu: Pronto.",
+   "segundos": 1.8
+  },
+  "N4": {
+   "estado": "nao_rodou",
+   "detalhe": "",
+   "segundos": null
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.14.4",
+   "testada": "3.14.7",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "php": {
+   "encontrada": "8.5.4",
+   "testada": "8.2.35",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "mariadb": {
+   "encontrada": "11.8.6",
+   "testada": "11.8.9",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "playwright": {
+   "encontrada": "1.64.1",
+   "testada": "1.64.1",
+   "estado": "igual",
+   "impede": false
+  },
+  "chromium": {
+   "encontrada": "156.0.8078.4",
+   "testada": "156.0.8078.4",
+   "estado": "igual",
+   "impede": false
+  },
+  "ollama": {
+   "encontrada": "0.40.16",
+   "testada": "0.40.16",
+   "estado": "igual",
+   "impede": false
+  }
+ },
+ "alcancado": "N3",
+ "falhou": false,
+ "impedida_por_versao": []
+}

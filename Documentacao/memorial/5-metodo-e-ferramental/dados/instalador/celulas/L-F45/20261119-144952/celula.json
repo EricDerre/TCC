@@ -1,0 +1,27 @@
+{
+    "tag_ia":  {
+                   "alteracao":  "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_wsl.ps1: o que a celula rodou e com que codigo de saida.",
+                   "motivo":  "! Motivo: o plano do instalador unico (decisao 143) pede a evidencia de cada celula em arquivo, mesmo quando o instalador para antes de a prova rodar."
+               },
+    "id":  "L-F45",
+    "modo":  "novo",
+    "ate":  "N3",
+    "modelo_pequeno":  "qwen2.5:0.5b",
+    "sondas":  false,
+    "sem_systemd":  false,
+    "imagem":  "Fedora-WSL-Base-45-1.4.x86_64.wsl",
+    "imagem_sha256":  "d20e476140d4cb121b85b1ad2b8fd6bf9fc2750140a7212ad4051ae3c6bd1e23",
+    "pacote_sha256":  "62fc427892f83309bcdfa45551ef98054acea8063dedd9a960cd70753d7270c0",
+    "wsl":  [
+                "Versão do WSL: 2.5.10.0",
+                "Versão do kernel: 6.6.87.2-1"
+            ],
+    "inicio":  "2026-11-19T14:50:03",
+    "fim":  "2026-11-19T14:52:27",
+    "saidas":  {
+                   "abrir_pacote":  "0",
+                   "conferir":  "1",
+                   "install_direto":  "0",
+                   "preparo":  "0"
+               }
+}

@@ -1,8 +1,8 @@
 <!-- ! Alteração de IA - Revisar: documento DERIVADO, gerado por impacto_git.py --prova a partir de git log e git diff --name-only do repositório, biblioteca_producao/ e cenarios_fase4.py (--check regera e compara); não editar à mão.
      ! Motivo: nenhum número digitado à mão; o relatório da Pré-Fase 4 do Memorial cola estes blocos. -->
-# Seleção de cenários pelo diff do Git: a prova sobre o histórico do repositório (Pós-Fase 4, pacote Q4), gerada em 2026-11-08
+# Seleção de cenários pelo diff do Git: a prova sobre o histórico do repositório (Pós-Fase 4, pacote Q4), gerada em 2026-11-16
 
-O mapa liga 6 cenários base (10 do ensaio da Fase 5) e 39 verbetes (38 com `arquivos:`, 24 com `endpoints:`) a 33 arquivos da aplicação. Nos 7 pares de commits consecutivos que mexeram nas cobaias, a seleção rodaria tudo em 2, parte dos cenários em 3 e nada em 2; 21 cenários ficaram registrados como deixados de fora, para a conferência contra a rodada completa.
+O mapa liga 6 cenários base (10 do ensaio da Fase 5) e 39 verbetes (38 com `arquivos:`, 24 com `endpoints:`) a 33 arquivos da aplicação. Nos 8 pares de commits consecutivos que mexeram nas cobaias, a seleção rodaria tudo em 3, parte dos cenários em 3 e nada em 2; 21 cenários ficaram registrados como deixados de fora, para a conferência contra a rodada completa.
 
 ## As três regras
 
@@ -22,6 +22,7 @@ O mapa liga 6 cenários base (10 do ensaio da Fase 5) e 39 verbetes (38 com `arq
 | `603c423e` | `3e8cfc14` | 2026-10-23 | Ajuste de gitignore com retirada de informações da venv e continuações das pesquisas pré fase 4 | 4381 | 2269 | 2112 | 0 | 0 | nada a rodar | nenhum | api-catalogo, api-detalhe, front-admin-login, front-admin-produtos, front-busca, front-cliente-reserva |
 | `3e8cfc14` | `4f3b3e26` | 2026-10-27 | Fase 4 - Inicialização | 240 | 237 | 1 | 2 | 0 | seleção parcial | api-catalogo, api-detalhe | front-admin-login, front-admin-produtos, front-busca, front-cliente-reserva |
 | `4f3b3e26` | `633ebb27` | 2026-11-03 | Fase 4 - Inicio das rodadas + ajustes de parâmetros | 555 | 550 | 0 | 5 | 0 | seleção parcial | api-catalogo, api-detalhe, front-admin-login, front-admin-produtos, front-busca, front-cliente-reserva | nenhum |
+| `633ebb27` | `717f68c2` | 2026-11-12 | Pós Parte 4 - Rodadas Q1 a Q4 + Refatoração dos painéis de dados e documentação | 2219 | 2218 | 0 | 0 | 1 | roda tudo | api-catalogo, api-detalhe, front-admin-login, front-admin-produtos, front-busca, front-cliente-reserva | nenhum |
 <!-- /tabela:tb_f4_impacto_pares -->
 
 ## Por que, em cada par
@@ -119,6 +120,14 @@ seleção parcial: 6 de 6 cenários, pelos arquivos no mapa; os 0 deixados de fo
 - `Programacao/CobaiaFront/quebra.php`: no mapa; no mapa: cenários api-catalogo, api-detalhe, front-admin-login, front-admin-produtos, front-busca, front-cliente-reserva; verbetes nenhum
 
 Verbetes atingidos: `consultas-sem-checagem` (1 arquivo(s)); `fluxo-reserva-e-cancelamento` (1 arquivo(s)); `registro_duplicado` (1 arquivo(s)); `senha-sem-hash` (1 arquivo(s)); `usuario-e-login` (1 arquivo(s)); `valor_fora_do_dominio` (1 arquivo(s)).
+
+Cenários do ensaio a rodar: contrato-error_500, contrato-escala_ou_unidade_errada, contrato-field_missing, contrato-field_renamed, contrato-malformed_json, contrato-type_drift, localizador-front-admin-login, localizador-front-admin-produtos, localizador-front-busca, localizador-front-cliente-reserva.
+
+### `633ebb27` para `717f68c2` (2026-11-12): roda tudo
+
+roda tudo: 1 arquivo(s) da aplicação fora do mapa (Programacao/CobaiaFront/ORIGEM.md); regra 1, arquivo fora do mapa roda tudo, nunca nada.
+
+- `Programacao/CobaiaFront/ORIGEM.md`: fora do mapa; arquivo da aplicação que nenhum cenário nem verbete declara: pela regra 1, roda tudo
 
 Cenários do ensaio a rodar: contrato-error_500, contrato-escala_ou_unidade_errada, contrato-field_missing, contrato-field_renamed, contrato-malformed_json, contrato-type_drift, localizador-front-admin-login, localizador-front-admin-produtos, localizador-front-busca, localizador-front-cliente-reserva.
 

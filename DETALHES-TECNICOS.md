@@ -929,6 +929,12 @@ O que não coube nas células da tabela:
      ! Motivo: o pacote Q4 é o da barra de progresso e do protótipo da seleção pelo diff do Git (plano da Pós-Fase 4, seções 3.5 e 3.7); quem abre o repositório precisa achar os módulos, os derivados e os testes pelo nome. -->
 <!-- ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q3) entrou a linha de `arvore_de_decisao.py`, e a de `testar_pos_fase4.py` passou a cobrir o Q3.
      ! Motivo: o pacote Q3 é o da árvore de decisão por caso (plano da Pós-Fase 4, seção 3.4); quem abre o repositório precisa achar o módulo, a pasta `arvores/` e os testes pelo nome. -->
+<!-- ! Alteração de IA - Revisar: (16/11/2026, Fase 5, pacote F2) a linha de `linha_de_base_manual.py` passou a dizer que o ajudante está na versão 2 do protocolo, entrou a linha de `testar_linha_de_base.py`, e a lista dos comandos do ajudante, mais abaixo, ganhou os da versão 2.
+     ! Motivo: (o tutorial do integrante, `tutorial_do_integrante.py` e o comando `tutorial`, entrou no mesmo dia pela decisão 135.) A linha dizia "quatro comandos", e o ajudante agora grava o registro da sessão e tem o `entregar`, o `treino`, o `planilha`, o `perfil` e os textos fixos (decisão 131); quem abre o repositório precisa achar pelo nome a bateria desses comandos e saber qual deles o facilitador usa em cada hora da sessão. -->
+<!-- ! Alteração de IA - Revisar: (18/11/2026, código da corrida 28b, decisões 145 e 146) entrou a linha de `rodar_sondagem_frio.ps1`, e a de `rodar_fase5.ps1` passou a dizer que a noite é a corrida 28b, a frio, e o que a leitura ganhou.
+     ! Motivo: a corrida 28 não vale como medida e a noite foi refeita em pasta nova, uma repetição por vez; quem abre o repositório precisa achar pelo nome a sondagem que vem antes da noite. -->
+<!-- ! Alteração de IA - Revisar: (16/11/2026, Fase 5, pacote F1) entraram as linhas de `avaliar_fase5.py`, `testar_fase5.py` e `rodar_fase5.ps1`.
+     ! Motivo: são a leitura da Fase 5, a bateria dela e o lançador da noite medida (plano aprovado da Fase 5, seções 3, 4.6 e 5); quem abre o repositório precisa achar pelo nome o arquivo que lê a corrida 28 e a planilha da linha de base manual e o comando que o Eric lança. -->
 <!-- ! Alteração de IA - Revisar: (11/11/2026, decisões 120 e 121) entraram as linhas de `experimento_segundo_passe.py` (corrida 26), `portoes_de_edicao.py` (medida M1), `experimento_analista.py` (corrida 27) e `rodar_fila_pre_fase5.ps1` (a fila das corridas 25, 26 e 27); os modos e as leituras das duas corridas entraram nas tabelas de `executar_fase4.py` e de `avaliar_fase4.py`, mais abaixo.
      ! Motivo: são os experimentos em texto e a medida sem modelo que o Eric pediu antes da Fase 5 (fichas 66 e 67); quem abre o repositório precisa achar os módulos, as prévias sem modelo e o lançador pelo nome. A corrida 25 (`experimento_sem_notas.py` e `rodar_experimento_sem_notas.ps1`) ainda não tem linha nesta tabela. -->
 | Script | O que faz | Como rodar |
@@ -946,7 +952,10 @@ O que não coube nas células da tabela:
 | `executar_fase4.py` (+ `rodar_fase4.ps1`) | Orquestrador no molde do da 3-B, com um modo por corrida (tabela de modos abaixo). | - |
 | `avaliar_fase4.py` | Lê as corridas e grava os derivados em `resultados_alvo/fase4/`, com uma opção por leitura (tabela abaixo). | - |
 | `testar_fase4.py` | Testes sem LLM da Fase 4, listados por pacote abaixo. | - |
-| `linha_de_base_manual.py` | (P6) O ajudante da sessão da linha de base manual da Fase 5 ([protocolo](Documentacao/memorial/5-metodo-e-ferramental/protocolo-linha-de-base-manual.md)), com quatro comandos (lista abaixo). | `python linha_de_base_manual.py armar --vez 1 3` |
+| `linha_de_base_manual.py` | (P6; Fase 5, F2) O ajudante da sessão da linha de base manual da Fase 5 ([protocolo](Documentacao/memorial/5-metodo-e-ferramental/protocolo-linha-de-base-manual.md), versão 2): arma cada cenário pelas mesmas funções da corrida, grava o tempo num registro da sessão (`resultados_alvo/fase5_manual/sessao.jsonl`) e preenche a planilha a partir dele (lista dos comandos abaixo). | `python linha_de_base_manual.py armar --vez 1 3` |
+| `tutorial_do_integrante.py` | (Fase 5, decisões 135 e 136) O tutorial que os integrantes da linha de base manual leem antes de começar: o conteúdo em blocos, de onde saem o Markdown do Memorial (`Documentacao/memorial/5-metodo-e-ferramental/tutorial-do-integrante.md`) e o trecho que abre a página de cada sessão, com o botão Começar no fim. Exemplos de um sistema inventado, nada das cobaias. | `python linha_de_base_manual.py tutorial --gravar` |
+| `sessao_pelo_artefato.py` | (Fase 5, decisão 136) A sessão da linha de base manual por uma página publicada: captura aqui o material dos dez cenários e do treino (`resultados_alvo/fase5_material/material.json`), monta a página de cada integrante (`Documentacao/dashboard/sessao-integrante-N.html`) e traz para o registro a sessão que a página gravou, rodando o roteiro de verdade com os seletores. | `python linha_de_base_manual.py paginas --gravar` |
+| `testar_linha_de_base.py` | Testes sem LLM do ajudante da linha de base manual (Fase 5, F2): o registro da sessão, o `entregar`, o `conferir`, a planilha preenchida pelo registro, o treino, o perfil, os textos fixos colados no protocolo, os comandos da versão 1 como eram, uma sessão inteira aceita pela leitura de `avaliar_fase5.py`, e o aviso do integrante com a anulação decidida na importação (decisão 137). Cobaias, banco, navegador, teclado e relógio são trocados por versões de teste. | `python testar_linha_de_base.py` |
 | `avaliacao_trilha.py` | (P7) A avaliação da própria trilha (especificação da trilha, seção 12); lista abaixo. | usado por `executar_fase4.py --modo avaliacao_trilha` e `avaliar_fase4.py --trilha` |
 | `corridas_em_texto.py` | (decisões 91 e 92) As corridas 23 e 24, em texto: as condições do experimento como transformação do prompt pronto, a leitura da linha CAUSA_RAIZ inteira e os resumos das duas. | modos `experimento_prompt` e `ineditos` de `executar_fase4.py` |
 | `conferir_corte_tela.py` | (decisões 90, 96, 97 e 99) Hoje compara com as corridas 18d, 18e e 21d, diz se o prompt ficou igual byte a byte, mede com o Ollama os que mudaram de tamanho (`--medir-tokens`) e grava `teto_prompt_tela.json`; as conferências anteriores ficam em `corte_prompt_tela.json` e `busca_prompt_tela.json`. Monta sem modelo, com as cobaias de verdade, o prompt das corridas 18c e 21c e compara com o guardado: tokens estimados, verbetes recuperados e verbete certo. | grava `resultados_alvo/fase4/corte_prompt_tela.json` |
@@ -963,6 +972,10 @@ O que não coube nas células da tabela:
 | `portoes_de_edicao.py` | (decisão 121) Os três portões por edição da proposta do analista de documentação (a forma de instrução, os filtros de texto e a busca) e a medida M1: os três aplicados, sem modelo, às propostas da corrida 20, contra a revisão humana do lote. | `python portoes_de_edicao.py --m1 [--check]` grava `portoes_m1.{json,md}` |
 | `experimento_analista.py` | (decisão 121) A corrida 27, a medida M2: o modelo como analista de documentação nos casos de aprendizado da corrida 20, com instruções próprias (hash gravado em cada registro), o verbete da causa certa e a ficha curta do caso; cada proposta passa por cinco portões em código. | modo `analista` de `executar_fase4.py`; `python experimento_analista.py --previa [--check]` grava `analista_previa.{json,md}` |
 | `rodar_fila_pre_fase5.ps1` | Fila das corridas 25, 26 e 27: o lançador da corrida 25 (com a ponte da versão do Ollama), `rodar_fase4.ps1` nos modos `segundo_passe` e `analista`, a página da revisão às cegas e o painel uma vez no fim. Confere a ponte antes de cada corrida e para na primeira etapa que falhar; `-Etapas`, `-SemPainel` e `-Simular`. | janela do Eric, com o VS Code e o aplicativo Claude fechados |
+| `avaliar_fase5.py` | (Fase 5, F1) A leitura da medição de valor pelas regras L1 a L15 do plano da fase, com o cenário como unidade: o custo da noite pelos registros da corrida 21d, a conferência de que o agente de hoje é o da corrida 21d, a leitura da corrida 28, a leitura da planilha da linha de base manual (recusa a planilha dizendo a linha) e a comparação dos dois lados (reamostragem dos cenários dentro de cada tipo, intervalo de Wilson e teste exato dos sinais); derivados em `resultados_alvo/fase5/`, blocos `tb_f5_*`. | `python avaliar_fase5.py --custo`, `--antes` (com o Python da venv), `--agente`, `--manual`, `--comparar` ou `--situacao`; `--check` e `--colar` nas que gravam |
+| `testar_fase5.py` | Testes sem LLM da Fase 5 (F1): as regras de leitura com dados de mentira, a planilha da linha de base manual em oito formas (completa, incompleta, com tempo que não fecha, com causa fora da lista, com estouro do limite, fora da ordem do sorteio, com linha anotada à mão e com linha anulada), a leitura sobre os registros da corrida 21d em pasta temporária, o custo da noite, a conferência do agente e o lançador em modo `-Simular`. | `PYTHONIOENCODING=utf-8 python testar_fase5.py` |
+| `rodar_sondagem_frio.ps1` | (Fase 5, corrida 28b, decisão 146) A sondagem do frio, que o Eric roda antes da noite: duas inferências do mesmo cenário pelo `rodar_fase4.ps1 -Modo cenarios -Casos 1`, com o modelo descarregado do Ollama entre elas, gravadas em `resultados_alvo/fase5_sondagem_frio_<data>_<hora>`; no fim, `avaliar_fase5.py --sondagem` diz PASSOU quando nenhuma das duas reaproveitou token do que o Ollama tinha guardado. Sem a última sondagem ter passado, o `rodar_fase5.ps1` não começa a corrida. | janela do Eric |
+| `rodar_fase5.ps1` | (Fase 5, F1; desde 18/11/2026 a noite é a corrida 28b, na pasta `fase5_agente_b`, com uma chamada do `rodar_fase4.ps1` por repetição e o modelo descarregado antes de cada uma, e `avaliar_fase5.py` ganhou a conferência a frio, `--incidente 28` e `--sondagem`) O lançador da noite medida (corrida 28), em seis etapas: memória livre e nenhum modelo residente, `avaliar_fase5.py --antes`, a ponte da versão do Ollama se faltar, `rodar_fase4.ps1 -Modo cenarios -Saida fase5_agente -Repeticoes 5 -Nome cenarios_fase5`, `avaliar_fase5.py --agente` e o painel com as cinco baterias dele; `-Simular` só imprime os comandos e `-SemPainel` pula o painel. | janela do Eric |
 | `gerar_figuras_documentos.py` (+ `testar_figuras_documentos.py`) | Figuras do README e do documento do TCC, em `Documentacao/figuras/`, e a tabela de cada uma em `dados-das-figuras.md`, tudo lido dos JSON de `resultados_alvo/`. | `../.venv/Scripts/python.exe gerar_figuras_documentos.py` (com matplotlib); `--check` confere sem desenhar |
 | `cache_respostas.py` (+ `testar_cache_respostas.py`) | Cache **exato** de respostas do Ollama (SQLite; chave = modelo, digest, prompt, opções) para reexecuções de conveniência e para o laço de desenvolvimento da Fase 4. | `set CACHE_RESPOSTAS=1` e `gerar_com_cache(...)` no lugar de `cliente_ollama.gerar` |
 
@@ -1055,12 +1068,31 @@ Os 13 filtros da decisão 65:
 12. Revisão humana amostral, com planilha.
 13. Regra dos 40%.
 
-#### `linha_de_base_manual.py` (P6), os quatro comandos
+#### `linha_de_base_manual.py` (P6 e F2), os comandos
+
+Os quatro da versão 1 do protocolo:
 
 - `ordem`: sorteia com semente fixa a ordem dos dez cenários de cada integrante e grava a planilha modelo.
 - `armar`: restaura o banco, liga a falha do cenário da vez pelas mesmas funções da corrida e abre o mesmo Chromium para o integrante, com a ficha da falha da corrida 21, o roteiro e, no contrato, o contrato esperado e as 23 causas, sem mostrar o nome do cenário.
 - `conferir`: roda o roteiro de localizador com o seletor do integrante e diz se ele chegou ao fim sem erro.
 - `desarmar`: volta a CobaiaAPI ao modo normal.
+
+Os da versão 2 (decisão 131). Chamados pela vez (`--vez <integrante> <posição>`), o `armar` e o `conferir` passam a gravar no registro da sessão; pelo nome (`--cenario`), nada é gravado.
+
+- `entregar`: o fim do cenário de contrato. Grava a hora no instante em que o facilitador dá Enter, antes de pedir a causa e o campo; recusa causa fora das 23; não mostra na tela se a resposta está certa.
+- `treino`: sem cronômetro e fora dos dez cenários. `treino contrato` usa o modo `latency` da CobaiaAPI, que saiu do catálogo; `treino seletor` pede um seletor para o botão "Saiba Mais..." de `produtos_api.php`.
+- `planilha`: preenche a planilha a partir do registro. Só célula vazia, só de cenário que acabou; avisa quando o registro e a planilha discordam e sai com código 1.
+- `perfil`: as três perguntas de perfil do integrante e a anotação do facilitador sobre o código das cobaias, em `participantes.json`, sem o nome.
+- `falas` e `folha`: imprimem o texto fixo do facilitador e a folha do integrante, com a explicação de uma linha de cada uma das 23 causas.
+- `protocolo --check` e `--colar`: conferem ou colam esses dois textos no protocolo.
+- `ensaio`: imprime o passo a passo do ensaio do facilitador, com os comandos dos dez cenários.
+- `tutorial`: imprime o tutorial do integrante (decisões 135 e 136); `--gravar` grava o Markdown no Memorial, e `--check` confere se ele é o que o código gera.
+- `material`: com as cobaias no ar e sem modelo, roda os dez cenários e o treino com a falha armada e guarda o que o teste e o navegador registraram; não regrava sem `--regravar` (decisão 136).
+- `paginas --gravar` e `--check`: montam ou conferem a página da sessão de cada integrante, a partir do material.
+- `importar --arquivo <arquivo> --conhece-o-codigo sim|nao`: traz para o registro a sessão que a página de um integrante gravou (o código da sessão ou o JSON lido do banco do artefato) e roda o roteiro de verdade com os seletores que passaram na página. Se o integrante deixou aviso de que algo de fora atrapalhou um cenário, o comando mostra os avisos e só grava com `--anular` e as posições que têm a linha anulada, ou `--anular nenhum` (decisão 137).
+
+<!-- ! Alteração de IA - Revisar: (17/11/2026, decisão 137) o item do `importar`, acima, passou a dizer o `--anular`, e a linha de `testar_linha_de_base.py`, na tabela dos arquivos, o teste do aviso do integrante.
+     ! Motivo: a ficha 77 pôs na importação a decisão de anular a linha de um cenário (regra L14 do plano da Fase 5); sem a frase, quem lê a lista dos comandos rodaria o `importar` sem saber por que ele recusa a sessão que tem aviso. -->
 
 #### `avaliacao_trilha.py` (P7)
 
@@ -1253,6 +1285,8 @@ modelo):
      ! Motivo: o Eric reclamou (05/11/2026) da leitura; a tabela segue com as colunas `Script | O que faz` e como primeira tabela da seção, porque o painel do projeto (`ferramentas/painel_topicos.py`) lê essa tabela por script. Nenhum fato foi tirado. -->
 <!-- ! Alteração de IA - Revisar: (11/11/2026, decisão 121) entrou a linha de `revisao_propostas.py`, a revisão humana às cegas das propostas de edição da corrida 27.
      ! Motivo: a medida M2 pede que a mesma pessoa julgue as propostas das corridas 20 e 27 sem saber a origem; quem abre o repositório precisa achar a página, a planilha e o comando que grava o resultado. -->
+<!-- ! Alteração de IA - Revisar: (16/11/2026) a linha de `revisao_propostas.py` passou a citar os dois arquivos que guardam as respostas com a hora e a declaração de quem revisou.
+     ! Motivo: a revisão foi gravada em 16/11/2026 (decisão 129), e `revisao_as_cegas.json` não guarda a hora de cada resposta nem o que o revisor tinha à mão; quem abre a pasta da corrida precisa saber o que é cada arquivo. -->
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: lê os JSON de resultado e as figuras 01–18, monta os gráficos e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
@@ -1268,7 +1302,7 @@ modelo):
 | `painel_glossario.py` (+ `testar_painel_glossario.py`) | Glossário do painel (11/11/2026): os termos e os métodos de medida, cada método com o resumo, o que o projeto faz de diferente e a fonte copiada de `referencias.md`; marca o termo na primeira vez em que aparece em cada aba e lista, no fim da aba, os termos que ela usou. |
 | `painel_grupo.py` (+ `testar_painel_grupo.py`) | Troca do nome do autor e de "você" por "grupo" no texto que o painel mostra, feita só na montagem da página; o Memorial continua registrando quem decidiu o quê. |
 | `sessao_revisao.py` (+ `testar_sessao_revisao.py`) | Sessão de revisão dos relatórios da trilha (Fase 4, P7): gera `Documentacao/dashboard/sessao-revisao-trilha.html` só da planilha `revisao_trilha.md` e dos relatórios dela, publicada como [página da sessão](https://claude.ai/artifact/7UrQ4gaqHj9qnvo22tfDgS); `--gravar` passa as respostas do banco da página para a planilha, conferindo os valores. |
-| `revisao_propostas.py` (+ `testar_revisao_propostas.py`) | Revisão humana às cegas das propostas de edição (corrida 27, medida M2): `--gerar` monta `Documentacao/dashboard/revisao-propostas.html` e a planilha, com as propostas da corrida 27 e as edições revisadas da corrida 20 em ordem embaralhada, sem a origem; `--gravar --quem` grava `revisao_as_cegas.json` na pasta da corrida. |
+| `revisao_propostas.py` (+ `testar_revisao_propostas.py`) | Revisão humana às cegas das propostas de edição (corrida 27, medida M2): `--gerar` monta `Documentacao/dashboard/revisao-propostas.html` e a planilha, com as propostas da corrida 27 e as edições revisadas da corrida 20 em ordem embaralhada, sem a origem; `--gravar --quem` grava `revisao_as_cegas.json` na pasta da corrida. Na mesma pasta ficam `revisao_as_cegas_respostas.json` (as respostas com a hora, como vieram do banco da página) e `quem_revisou.json` (quem revisou, pela declaração do Eric, e o registro da página). |
 | `painel_atlas.py` | Aba Atlas do painel (01/10/2026): o mapa dos verbetes pelas seis classes de defeito, desenhado em SVG no próprio Python; lê `resultados_alvo/pre_fase4/atlas.json`. |
 | `painel_explorador.py` | Explorador de casos da aba "Raciocínio aberto" do painel (01/10/2026): de cada trilha versionada, o recorte por caso das três camadas (o que o programa fez, o que o modelo declarou, o que o código conferiu) e, à parte e recolhida, a avaliação contra o gabarito. |
 | `medir_tokens.py` | Soma o consumo de tokens do Claude Code a partir dos transcritos locais, por dia, modelo e tipo de agente (linha de base e medição "depois" das medidas de economia). `--agentes rótulo=id,...` soma só os subagentes pedidos (usado na regra de permanência do servidor MCP, 29/09/2026). |
@@ -1367,7 +1401,20 @@ python ferramentas/testar_sessao_revisao.py
 python ferramentas/testar_revisao_propostas.py
 python ferramentas/testar_gerar_tcc_docx.py
 python ferramentas/gerar_dashboard.py --check
+python ferramentas/testar_conferir_docs.py
 python ferramentas/conferir_docs.py
+```
+
+<!-- ! Alteração de IA - Revisar: (18/11/2026) o bloco de comandos acima ganhou `testar_conferir_docs.py`, e entrou a frase abaixo sobre a evidência das células do instalador.
+     ! Motivo: `conferir_docs.py` passou a dispensar a tag na saída capturada de uma célula de teste do instalador (ficha 87, decisão 147), com teste próprio escrito antes; a lista precisa cobrir tudo o que roda sem modelo, e quem lê precisa saber por que esses arquivos não são cobrados. -->
+O `conferir_docs.py` não cobra a tag dos arquivos de saída capturada de uma célula de teste do instalador (`Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/<id>/<data-hora>/`), desde que a pasta da rodada tenha um `celula.json` com a tag; o `celula.json` e o `registro.json` continuam cobrados (decisão 147).
+
+<!-- ! Alteração de IA - Revisar: parágrafo novo (18/11/2026, pacote I1 do instalador único) sobre os testes novos de `testar_instalador.py` e a conferência do `versoes.json`.
+     ! Motivo: `testar_instalador.py` passou de 7 para 32 testes com as peças novas do instalador (pasta `instalador/` e `ferramentas/instalador_matriz/`), e o `versoes.json` tem uma conferência própria; sem o parágrafo, quem roda a lista acima não saberia que as versões testadas também são conferidas contra os registros do projeto, nem que essas peças ainda não são chamadas pelo `install.py`. -->
+`testar_instalador.py` cobre também as peças novas do instalador único (plano em `claude-memoria/plano-aprovado-instalador-unico.md`): a comparação de versões contra o `versoes.json`, a família do sistema, o registro da prova da instalação, o pacote que entra nas células de teste e o formato do roteiro da célula de WSL. Nenhum desses testes usa a rede, sobe serviço ou chama o Ollama. Essas peças ainda não são chamadas pelo `install.py`: a ligação é de um pacote posterior do plano. A conferência das versões testadas contra os registros do projeto é à parte:
+
+```powershell
+python ferramentas/instalador_matriz/atualizar_versoes.py --check
 ```
 
 Os testes da CobaiaAPI rodam contra o **banco real** (não há banco de testes isolado,

@@ -1,0 +1,2 @@
+### nao rodou: o cliente do MariaDB nao esta instalado
+
