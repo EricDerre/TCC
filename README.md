@@ -14,7 +14,9 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
      ! Motivo: a linha ainda dizia, com data de 05/11/2026, que a Fase 4 estava em andamento com uma corrida por fazer; a fase fechou em 06/11/2026, e a tabela logo abaixo já dizia isso. -->
 <!-- ! Alteração de IA - Revisar: (16/11/2026) a linha de estado passa a dizer que as três corridas previstas antes da Fase 5 rodaram e que a revisão às cegas das propostas de uma delas foi feita.
      ! Motivo: a linha dizia "com três corridas por rodar"; as corridas 25, 26 e 27 rodaram na noite de 11 para 12/11/2026, e a revisão às cegas foi gravada em 16/11/2026 (roadmap, §2.23 a §2.25); nenhuma muda o agente. -->
-> **Em 16/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, está concluída. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento: as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente; a revisão às cegas das propostas de uma delas, feita em 16/11/2026, também ficou dentro do ruído.
+<!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a frase de estado do alto passou de 16/11/2026 a 25/11/2026 e diz que a Fase 5 está concluída, com o resultado central.
+     ! Motivo: a frase parava na Pós-Fase 4 de 16/11/2026 e tratava a Fase 5 como futura; a fase foi medida em 18 e 24/11/2026 e fechada em 25/11/2026 (decisão 156). O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. -->
+> **Em 25/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, e a Fase 5, que mediu o agente contra pessoas, estão concluídas: nos dez cenários medidos o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento: as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente, e faltam o hub, a integração com o Git e a documentação final.
 
 | Quero... | Vá para |
 |---|---|
@@ -73,9 +75,15 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: as sessões das pessoas chegaram em 24/11/2026 e a comparação foi lida no mesmo dia (roadmap §5); a linha dizia que a medida com as pessoas não tinha sido feita. O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. A fase segue em andamento porque faltam a descoberta com a figura, mais abaixo neste arquivo, e o texto do TCC. -->
 <!-- ! Alteração de IA - Revisar: (24/11/2026, à noite) a linha da Fase 5 deixou de dizer que falta a figura.
      ! Motivo: a descoberta da fase entrou em "O que já descobrimos", com a figura `agente-e-pessoas.png`; da fase falta o texto do documento do TCC. -->
-| 5 | Ele resolve mais rápido que uma pessoa? | Em andamento (medido em 18 e 24/11/2026: o agente reparou mais rápido que as pessoas nos dez cenários, 66,3 s contra 219,7 s na média; falta o texto do TCC) |
+<!-- ! Alteração de IA - Revisar: (25/11/2026) a linha da Fase 5 deixou de dizer que falta o texto do TCC.
+     ! Motivo: as seções da Fase 5 entraram no documento do TCC em 24/11/2026 (pacote F6) e foram conferidas em 25/11/2026 contra os registros da fase; da fase falta o fechamento, que é decisão do Eric. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a linha da Fase 5 passou de "Em andamento" a "Concluída".
+     ! Motivo: o Eric fechou a fase em 25/11/2026 (ficha 96, decisão 156), com os pacotes F0 a F6 feitos; o painel mostra este estado curto na visão da fase, ao lado da célula do roadmap. -->
+| 5 | Ele resolve mais rápido que uma pessoa? | Concluída em 25/11/2026 (o agente reparou mais rápido que as pessoas nos dez cenários, 66,3 s contra 219,7 s na média) |
 
-**O que falta antes da Fase 5:**
+<!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) o título da lista abaixo deixou de dizer "antes da Fase 5".
+     ! Motivo: a Fase 5 foi concluída em 25/11/2026; os dois itens são da Pós-Fase 4, parte feita antes da Fase 5 e parte ainda por fazer. -->
+**O que a Pós-Fase 4 fez antes da Fase 5, e o que ainda falta dela:**
 
 <!-- ! Alteração de IA - Revisar: (07/11/2026, pacote Q2) a linha da Pós-Fase 4 na tabela acima diz que o Q2 também está feito, e o item abaixo ganhou os filtros de texto.
      ! Motivo: o pacote Q2 passou a medir em código cada texto que chega ao analista e ajustou o molde do relatório até passar; sem a frase, o leitor acharia que só a camada de leitura existe. -->
@@ -211,7 +219,42 @@ A avaliação usa 90 casos de falha com a resposta certa conhecida, e as regras 
 
 ## Instalar e rodar
 
-Precisa de Windows 10/11, Linux ou macOS e de internet: o instalador baixa PHP, MariaDB e os pacotes Python que faltarem. No Linux, ele usa `sudo` e `apt-get`; no macOS, o [Homebrew](https://brew.sh).
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7 do instalador único, decisão 153) a frase "Precisa de Windows 10/11, Linux ou macOS" saiu; no lugar entram o que o instalador pede em cada sistema hoje, o parágrafo "O que foi provado" com o bloco gerado por `ferramentas/instalador_matriz/relatorio.py`, o que não foi testado e como conferir a própria instalação.
+     ! Motivo: o texto prometia Windows 10/11, Linux e macOS, e a prova gravada cobre só o Windows da máquina-alvo e o Linux pelo WSL (o Linux do Windows); as células do GitHub Actions ainda não rodaram. No Linux o instalador é o novo (traz o próprio Python pelo `uv` quando falta); no Windows e no macOS ele ainda segue os passos antigos, que nunca rodaram em máquina nova. -->
+Precisa de internet: o instalador baixa PHP, MariaDB e os pacotes Python que faltarem. O que ele pede em cada sistema:
+
+- **Windows:** `install.cmd` ou `Cobaia.exe`. Usa o `winget` (o gerenciador de pacotes do Windows) para trazer o Python e o PHP quando faltam, e o MariaDB pelo `winget` ou, sem administrador, pelo zip oficial.
+- **Linux de `apt` (Ubuntu, Debian) ou de `dnf` (Fedora):** `./install.sh`. Usa o `sudo` para instalar os pacotes do sistema. Se não houver um Python 3.12 ou mais novo, o próprio `install.sh` traz um para dentro da pasta do projeto (`.ferramentas/`), sem mexer no Python do sistema. Outras distribuições recebem a lista do que instalar à mão.
+- **macOS:** `./install.sh`, com o [Homebrew](https://brew.sh) já instalado.
+
+<!-- ! Alteração de IA - Revisar: (25/11/2026, conserto da revisão do I5/I7) a frase de abertura de "O que foi provado" deixa de dizer que o instalador rodou em todas as linhas e passa a dizer que cada linha é uma célula de teste e que na `ALVO` só a prova rodou.
+     ! Motivo: a `ALVO` é a máquina do projeto com a instalação que já existia; o roteiro dela (`celula_alvo.ps1`) roda só a prova, e a frase antiga fazia o leitor entender que o instalador também tinha sido testado nela. -->
+**O que foi provado:** cada linha abaixo é uma célula de teste, e a coluna "Como a máquina nasce" diz o que ela é; nas máquinas e imagens novas o instalador rodou e a prova da instalação conferiu até que ponto o sistema subiu, mas na célula `ALVO` (a máquina do projeto) só a prova rodou, sobre a instalação que já existia (a tabela é gerada por `ferramentas/instalador_matriz/relatorio.py` a partir dos arquivos de evidência, nada é digitado à mão).
+
+<!-- tb_inst_resumo:inicio -->
+| Célula | Sistema | Como a máquina nasce | Onde rodou | Nível alcançado na última rodada | Prova pedida até | Maior nível em rodada novo |
+|---|---|---|---|---|---|---|
+| ALVO | Windows 11 da máquina-alvo | a máquina do projeto como está: o instalador não rodou nesta célula, só a prova, sobre a instalação que já existia | máquina-alvo | N4 | N4 | N4 |
+| L-U2404 | Ubuntu 24.04 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N4 |
+| L-U2404-SS | Ubuntu 24.04 sem systemd | WSL: imagem oficial, com o systemd desligado na instância | WSL | N3 | N3 | N3 |
+| L-U2204 | Ubuntu 22.04 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-U2604 | Ubuntu 26.04 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-D12 | Debian 12 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-D13 | Debian 13 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-F45 | Fedora 45 (melhor esforço) | WSL: imagem oficial importada e apagada no fim | WSL | N1 | N3 | N1 |
+| L-ARCH | Arch Linux (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
+| L-SUSE | openSUSE (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
+| CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| M-15I | macOS 15, Intel | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+
+Cada linha é uma célula de teste, e a coluna "Como a máquina nasce" diz o que ela é: na `ALVO` só a prova rodou. Nível alcançado é o maior nível da prova que passou sem nenhum nível abaixo dele ter falhado; N0 quer dizer que nenhum nível passou, "sem prova" quer dizer que a rodada parou antes de gravar o `registro.json`, e "não terminou" quer dizer que o GitHub cortou a tarefa antes do fim. Rodada `novo` é a que roda o instalador já com os consertos; `como-esta` é a que roda o instalador antes deles, para gravar a falha. A última coluna olha todas as rodadas `novo` da célula, porque a última rodada pode ter pedido menos níveis que uma anterior.
+<!-- tb_inst_resumo:fim -->
+
+Ficaram sem teste: Windows recém-instalado, Windows 10 e Linux instalado fora do WSL (decisão 153). No Windows e no macOS o instalador segue os passos antigos, que nunca rodaram em máquina nova; o fluxo do GitHub Actions (`.github/workflows/instalador.yml`) foi escrito para provar o Windows e o macOS, mas começa a rodar depois do commit e do push, e o resultado entra na tabela acima quando for trazido para o repositório. O relatório com cada rodada, o que falhou e o que nenhuma célula prova está em [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
+
+**Para conferir a sua instalação** depois de instalar: `./install.sh --conferir` (Linux e macOS) ou `python install.py --conferir` (Windows). A prova sobe o site e a API, abre o site no navegador do agente, pede uma resposta a um modelo pequeno e, por último, ao `qwen2.5:7b`, e grava o resultado em `.ferramentas/prova/registro.json`.
 
 **No Windows, o caminho mais curto** é dar dois cliques em `Cobaia.exe`: ele instala, sobe tudo e abre o navegador. Na primeira vez, o Windows pode mostrar "Windows protegeu seu PC", porque o arquivo não é assinado; clique em "Mais informações" e depois em "Executar assim mesmo".
 
@@ -245,12 +288,18 @@ Máquina sem administrador, o que o instalador faz passo a passo, os testes e as
 
 ## Estrutura do repositório
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) a árvore abaixo ganhou `instalador/`, `versoes.json`, `restaurar_banco.py` e `testar_instalador.py`, e a linha de `install.* / run.*` deixou de dizer "nos três sistemas".
+     ! Motivo: essas peças existem desde o pacote do instalador único e não apareciam na árvore; e a linha antiga prometia o instalador nos três sistemas, sem prova em Windows recém-instalado nem em macOS (decisão 153). -->
 ```
 TCC/
 ├── README.md                 # esta página
 ├── DETALHES-TECNICOS.md      # scripts, configurações e os valores de cada rodada
 ├── Cobaia.exe                # Windows: instala, roda e abre o navegador
-├── install.* / run.*         # instalador e inicialização, nos três sistemas
+├── install.* / run.*         # instalador e inicialização (o Windows e o macOS ainda sem prova em máquina nova)
+├── instalador/               # peças do instalador: sistema, ferramentas, versões e a prova (N1 a N4)
+├── versoes.json              # versão testada e faixa aceita de cada ferramenta
+├── restaurar_banco.py        # restaura o banco das corridas
+├── testar_instalador.py      # bateria de testes do instalador
 ├── ferramentas/              # scripts locais: painel, documento do TCC, conferências
 ├── claude-memoria/           # memória do Claude e os registros de passagem entre sessões
 ├── Documentacao/

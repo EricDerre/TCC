@@ -28,6 +28,16 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 EXP = Path(__file__).resolve().parent
 FIXTURES = EXP / "fixtures_fase4"
 CANAIS = ("chromium", "msedge")
+PASTA_DOS_TRACES = "traces"
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q6, etapa 3) `nome_do_trace` dá o nome do arquivo do trace de um caso: o último
+# trecho do identificador da trilha, com `#` (a repetição de um cenário) escrito como `__r`, mais `.zip`.
+# ! Motivo: é a mesma regra de `gerar_relatorio_raciocinio.nome_do_relatorio`, repetida aqui porque este módulo não importa o do relatório
+# (ele roda com o Python do sistema, sem os outros módulos do agente); o teste do hub confere que as duas dão o mesmo nome, e é por esse nome
+# que o hub acha o trace de um caso na pasta `traces/` da corrida.
+def nome_do_trace(tid: str) -> str:
+    return tid.rsplit("/", 1)[-1].replace("#", "__r") + ".zip"
 
 _LINHA = re.compile(
     r'^(?P<papel>[A-Za-z][\w-]*)'
@@ -94,11 +104,22 @@ class Navegador:
     """Abre o navegador uma vez por corrida (plano aprovado, seção 7): `with Navegador() as nav: pagina = nav.nova_pagina()`.
     `canal` é `chromium` (o Chromium que o próprio Playwright baixa e fixa) ou `msedge` (contingência do P0)."""
 
-    def __init__(self, canal: str = "chromium", headless: bool = True) -> None:
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q6, etapa 3) o trace do Playwright gravado só na falha (decisão 93, ficha 33):
+    # com `pasta_dos_traces`, cada página nasce num contexto próprio com a gravação ligada (tela e estrutura da página a cada ação);
+    # `reter_trace(pagina)` marca a página em que o roteiro falhou; `gravar_traces(tid)` grava em `<pasta>/<caso>.zip` o trace das páginas
+    # marcadas e joga fora o das outras; `descartar_traces()` joga fora tudo o que está pendente. Sem `pasta_dos_traces` (o padrão), a página
+    # é aberta por `new_page()` como sempre foi e os três métodos não fazem nada.
+    # ! Motivo: `navegador.py` só trazia o comentário que anunciava o trace, e nenhuma corrida o grava; o TCC não pode dizer que ele existe.
+    # A gravação custa tempo em cada passo do roteiro, e o tempo de reparo (MTTR) das corridas 21d e 28b foi medido sem ela: por isso ela
+    # só liga a pedido (`executar_fase4.py --trace-na-falha`), e o caminho desligado não muda uma linha. O arquivo só é gravado quando o
+    # executor diz de que caso ele é, porque a página é fechada antes de o identificador da trilha existir.
+    def __init__(self, canal: str = "chromium", headless: bool = True, pasta_dos_traces: Path | None = None) -> None:
         if canal not in CANAIS:
             raise ValueError(f"canal {canal!r} fora de {CANAIS}")
         self.canal = canal
         self.headless = headless
+        self.pasta_dos_traces = Path(pasta_dos_traces) if pasta_dos_traces else None
+        self._pendentes: list[dict] = []        # com o trace ligado: {"pagina", "contexto", "reter"} de cada página ainda sem destino
         self._pw = None
         self.navegador = None
 
@@ -113,6 +134,10 @@ class Navegador:
 
     def __exit__(self, *exc) -> None:
         try:
+            try:
+                self.descartar_traces()
+            except Exception:  # noqa: BLE001 - o navegador pode já ter caído; fechar o que resta vale mais que o trace pendente
+                pass
             if self.navegador is not None:
                 self.navegador.close()
         finally:
@@ -120,7 +145,51 @@ class Navegador:
                 self._pw.stop()
 
     def nova_pagina(self):
-        return self.navegador.new_page()
+        if self.pasta_dos_traces is None:
+            return self.navegador.new_page()
+        contexto = self.navegador.new_context()
+        contexto.tracing.start(screenshots=True, snapshots=True, sources=False)
+        pagina = contexto.new_page()
+        self._pendentes.append({"pagina": pagina, "contexto": contexto, "reter": False})
+        return pagina
+
+    def reter_trace(self, pagina) -> None:
+        """Marca a página em que o roteiro falhou: o trace dela é o que `gravar_traces` grava."""
+        for item in self._pendentes:
+            if item["pagina"] is pagina:
+                item["reter"] = True
+
+    def _encerrar(self, item: dict, destino: Path | None) -> None:
+        try:
+            if destino is not None:
+                destino.parent.mkdir(parents=True, exist_ok=True)
+                item["contexto"].tracing.stop(path=str(destino))
+            else:
+                item["contexto"].tracing.stop()
+        finally:
+            item["contexto"].close()
+
+    def gravar_traces(self, tid: str) -> list[Path]:
+        """Grava o trace das páginas marcadas por `reter_trace` com o nome do caso (o segundo em diante leva `__2`, `__3`) e joga fora o das
+        outras páginas abertas desde a última chamada. Devolve os arquivos gravados; sem trace ligado, lista vazia."""
+        pendentes, self._pendentes = self._pendentes, []
+        gravados: list[Path] = []
+        for item in pendentes:
+            destino = None
+            if item["reter"]:
+                nome = nome_do_trace(tid)
+                destino = self.pasta_dos_traces / (nome if not gravados else nome.replace(".zip", f"__{len(gravados) + 1}.zip"))
+            self._encerrar(item, destino)
+            if destino is not None:
+                gravados.append(destino)
+        return gravados
+
+    def descartar_traces(self) -> int:
+        """Joga fora o trace de todas as páginas pendentes (marcadas ou não) e devolve quantas eram."""
+        pendentes, self._pendentes = self._pendentes, []
+        for item in pendentes:
+            self._encerrar(item, None)
+        return len(pendentes)
 
     def versao(self) -> dict[str, str]:
         """Versões para o cabeçalho da trilha: Playwright (pacote), navegador (`Browser.version`), canal e executável."""

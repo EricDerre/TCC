@@ -1072,7 +1072,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
      ! Motivo: o Eric pediu em 16/11/2026 para começar a Fase 5, e o rito das fases pede o plano aprovado antes de qualquer código ou corrida; ele decide pelo painel e pelo quadro de perguntas, que leem estas fichas. Os números citados vêm da leitura da corrida 21d (`resultados_alvo/fase4/cenarios_v4.json`) e da linha FIM do `fase4.log` dela, lidos por script; os valores de p vêm de `avaliar.mcnemar_exato`. Nenhum código da fase foi escrito e nenhuma corrida rodou. -->
 <!-- ! Alteração de IA - Revisar: fichas 72 a 75 fechadas em 16/11/2026, com a resposta que o Eric deu no quadro (decisões 130 a 133): o Estado e a Decisão de cada uma.
      ! Motivo: ele respondeu as quatro no mesmo dia em que foram abertas, todas pela opção (a); o resto do texto das fichas fica como estava, porque é o que ele leu ao decidir. Por isso a ficha 75 ainda cita o rascunho pelo nome antigo, `plano-fase-5.md`: o arquivo passou a `claude-memoria/plano-aprovado-fase-5.md`, como a Decisão dela diz. -->
-<!-- ! Alteração de IA - Revisar: (16/11/2026, à noite) a Decisão da ficha 72 passou a dizer quem são os três integrantes da linha de base manual: Leandro, Pedro e Guilherme.
+<!-- ! Alteração de IA - Revisar: (16/11/2026, à noite) a Decisão da ficha 72 passou a dizer quem são os três integrantes da linha de base manual (os nomes saíram deste arquivo em 25/11/2026, decisão 154).
      ! Motivo: o Eric disse os três na sessão do plano, depois de aprovar; a Decisão dizia que os nomes ficavam por dizer. As datas das sessões continuam em aberto, e um dos três é o autor do site legado, o que o plano manda registrar no perfil dele. -->
 
 ### 72. Quem faz a linha de base manual da Fase 5, onde e até quando?
@@ -1086,7 +1086,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Cada integrante na própria máquina, com o ambiente instalado pelo `install.py`, e você conduzindo por chamada. Não depende de juntar ninguém, mas cada máquina precisa subir as cobaias e o mesmo navegador, e a ferramenta que grava o tempo roda fora do seu controle.
   - (c) Dois integrantes do grupo e uma pessoa de fora, por exemplo o analista de QA que revisou os relatórios, se não houver três integrantes disponíveis. Sai do que o projeto ABNT diz ("integrantes do grupo") e entra declarado como desvio.
 - **Recomendação:** (a). A falha é armada pelo mesmo código e no mesmo navegador do agente, e a ferramenta que mede o tempo fica na máquina que você controla. Na resposta, diga quem são os três e as datas; se um deles for o autor do site legado, o perfil dele registra isso.
-- **Decisão:** (a), pelo Eric em 16/11/2026, no quadro (decisão 130): "Três do grupo, máquina-alvo". Três integrantes do grupo que ainda não leram a lista dos cenários, um por vez, na máquina-alvo, com o Eric de facilitador, entre 19 e 24/11/2026. A resposta no quadro não trouxe os nomes nem as datas. No mesmo dia, depois da aprovação do plano, ele disse quem são os três: Leandro, Pedro e Guilherme. O Pedro é o autor do site legado (decisão 125) e conhece o HTML das quatro páginas dos cenários de localizador: participa, e o perfil dele registra isso, como o plano prevê (seção 4.1). Qual dos três é o integrante 1, o 2 e o 3 da planilha não fica gravado com o nome. As datas das sessões ficam por dizer antes do pacote F4, e na hora de cada sessão o perfil do integrante é gravado, com a pergunta sobre o que ele já leu da lista dos cenários.
+- **Decisão:** (a), pelo Eric em 16/11/2026, no quadro (decisão 130): "Três do grupo, máquina-alvo". Três integrantes do grupo que ainda não leram a lista dos cenários, um por vez, na máquina-alvo, com o Eric de facilitador, entre 19 e 24/11/2026. A resposta no quadro não trouxe os nomes nem as datas. No mesmo dia, depois da aprovação do plano, ele disse quem são os três. Um deles é o autor do site legado e conhece o HTML das quatro páginas dos cenários de localizador: participa, e o perfil dele registra isso, como o plano prevê (seção 4.1). Qual dos três é o integrante 1, o 2 e o 3 da planilha não fica gravado com o nome. As datas das sessões ficam por dizer antes do pacote F4, e na hora de cada sessão o perfil do integrante é gravado, com a pergunta sobre o que ele já leu da lista dos cenários.
 
 ### 73. O protocolo da sessão com as pessoas ganha uma versão 2 antes de as sessões serem marcadas?
 - **Estado:** fechada em 16/11/2026
@@ -1370,6 +1370,109 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (c) Outra pessoa do grupo, que não leu a lista, faz a página 2 até 27/11/2026, e a leitura é refeita com ela; a sessão de hoje fica registrada à parte. Também é escolha feita depois de ver os números, e adia o fechamento.
 - **Recomendação:** (a). As regras foram fixadas antes das medidas para o resultado não ser escolhido depois; o que cabe agora é dizer com clareza do que o veredito depende.
 - **Decisão:** (a), pelo Eric em 24/11/2026, no quadro (decisão 151): "Fica como está, declarado (Recomendado)". A conta sem cada integrante entra na leitura como tabela gerada por script, marcada como exploratória, em pacote próprio; até lá os números dela citados aqui são os da conta de rascunho.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (25/11/2026, revisão geral antes de fechar o projeto) com as fichas 92 a 95, perguntadas ao Eric no quadro e fechadas no mesmo dia (decisões 152 a 155): se o hub central e a integração com o Git entram antes da entrega, até onde provar o instalador único, se os nomes dos integrantes da linha de base continuam nos textos públicos e o que fazer com a senha de e-mail que está no código do site legado.
+     ! Motivo: o Eric pediu em 25/11/2026 uma revisão geral antes de fechar ("verificar se falta algo no geral do projeto"). A revisão comparou os planos aprovados, o documento do TCC, o README e as decisões adiadas com o que está feito, e estas quatro coisas são escolha dele, não acerto de texto; sem as fichas, o roadmap e o README continuariam prometendo o hub e o macOS sem ninguém ter decidido. Pela decisão 154, a Decisão da ficha 72 e o comentário dela deixaram de citar os nomes dos três integrantes da linha de base manual, que ficavam públicos ao lado do resultado de cada integrante. -->
+## Abertas em 25/11/2026 (revisão geral antes de fechar o projeto)
+
+### 92. O hub central e a integração com o Git entram antes da entrega de 02/12/2026?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O plano da Pós-Fase 4 (`claude-memoria/plano-aprovado-pos-fase-4.md`) deixou dois pacotes para depois da Fase 5: o Q6, o hub central (uma página que junta, para cada caso, o relatório, a árvore de decisão e a trilha, à imagem de uma pull request), e o Q7, que liga a escolha dos cenários pela mudança do Git ao executor e ao hub. A Fase 5 foi lida em 24/11/2026 e nenhum dos dois começou: do Q7 só existe o protótipo `Programacao/AgenteCore/experimentos/impacto_git.py`, feito no Q4. Esperam pelo hub o trace do Playwright na falha, a aba "Cérebro ao vivo" e o explorador da trilha (decisão 93) e o estudo do `visual-explainer` (decisão 126). Também ficaram para depois da Fase 5 a conferência em código que desmente a causa respondida (decisão 119) e o analista de documentação (decisão 121).
+- **Por que importa:** A última reunião com o orientador é 02/12/2026, e o documento do TCC ainda pede o pacote Q8: o texto final e o Word. O que não for feito precisa aparecer no texto como trabalho futuro, com o motivo; hoje o roadmap e o README ainda tratam o hub como o próximo passo.
+- **Opções:**
+  - (a) Os cinco viram trabalho futuro declarado no documento do TCC, no roadmap e no README, sem código novo. A Pós-Fase 4 fecha com os pacotes Q0 a Q5 e o Q8.
+  - (b) Sai só um hub mínimo: uma página parada por caso, com o relatório, a árvore e a trilha que já existem, sem Git e sem acompanhar a corrida ao vivo. O resto vira trabalho futuro.
+  - (c) O Q6 e o Q7 são feitos inteiros antes do Q8, com o risco de o texto final ficar para os últimos dias.
+- **Recomendação:** (a). Nada do que a Fase 5 mediu depende do hub, e a semana que resta é do texto final.
+- **Decisão:** (c), pelo Eric em 25/11/2026, no quadro (decisão 152): "Fazer Q6 e Q7 inteiros". Foi contra a recomendação. O Q6 e o Q7 passam a ser feitos antes do Q8, e o risco de o texto final ficar para os últimos dias fica registrado. A conferência em código (decisão 119) e o analista de documentação (decisão 121) continuam sem data; se não forem feitos, o Q8 os declara como trabalho futuro.
+
+### 93. Até onde provar o instalador único antes da entrega, e o que o README promete?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O `README.md` (seção "Instalar e rodar") diz "Precisa de Windows 10/11, Linux ou macOS". O que tem prova gravada em `Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/`: o Windows da máquina-alvo como ela está (célula ALVO, 19/11/2026, até o nível N4, o mais alto) e o Linux pelo WSL (Ubuntu 24.04 até o N4; as outras distribuições até o N3 ou o N1). Não há prova em Windows recém-instalado (pacote I4, pelo Sandbox e por máquina virtual), em macOS (pacote I5, pelas máquinas do GitHub Actions; a pasta `.github/workflows/` não existe) nem em Windows 10 (pacote I6, no computador de um integrante). O pacote I7 (relatório, README e `DETALHES-TECNICOS.md`) também não foi feito, e a seção "Instalação em detalhe" do DETALHES ainda descreve o instalador antigo.
+- **Por que importa:** Quem clona o repositório lê uma promessa que só tem prova em dois ambientes, e instalar em máquina nova é o que o instalador único se propôs a garantir (pedido do Eric de 18/11/2026).
+- **Opções:**
+  - (a) I5 e I7. Um fluxo do GitHub Actions instala e roda a prova em Windows, Ubuntu e macOS recém-criados, nas máquinas do GitHub; começa com um commit e um push do Eric. O README e o DETALHES passam a dizer o que foi provado em cada sistema. O I4 e o I6 ficam declarados como não testados.
+  - (b) Tudo: I4, I5, I6 e I7. Pede um reinício da máquina do Eric para ligar o Sandbox e o Hyper-V, as células rodadas pela janela dele e o computador de um integrante com Windows 10.
+  - (c) Só o I7. Nada novo é testado; o README passa a dizer que há prova no Windows da máquina-alvo e no Linux pelo WSL, e que macOS e Windows recém-instalado não foram testados.
+- **Recomendação:** (a). É a prova mais barata em máquina nova nos três sistemas, e não ocupa a máquina do Eric na semana do texto final.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 153): "Actions e texto (Recomendado)". O I4 e o I6 ficam declarados como não testados no README, no DETALHES e no relatório do instalador.
+
+### 94. Os nomes dos três integrantes da linha de base manual continuam nos textos públicos?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** A decisão 130 registrou quem faria a linha de base manual, e os três nomes aparecem juntos em `roadmap.md`, neste arquivo, em `1-decisoes-e-historico/decisoes.md` e no painel (`Documentacao/dashboard/painel-do-projeto.html`). Nenhum arquivo liga nome a número de integrante ou de página, e a decisão 149 diz que um dos três foi substituído por um quarto, sem dizer qual. Mas também são públicos o resultado de cada integrante pelo número (`resultados_alvo/fase5/manual.json`, campo `por_integrante`), o perfil que cada um respondeu (`resultados_alvo/fase5_manual/participantes.json`), a frase de que um integrante não corrigiu nenhum cenário e o registro de que um dos três conhece o código do site. Quem conhece o grupo consegue juntar as peças e reduzir os candidatos.
+- **Por que importa:** O plano da Fase 5 prometeu que a leitura não leva nome, porque o repositório é público. Os nomes entraram no histórico do Git com o commit de 25/11/2026 (`8f7b279e`), já enviado; tirá-los dos arquivos de hoje não os tira do histórico.
+- **Opções:**
+  - (a) Trocar os nomes por "três integrantes do grupo" nos arquivos de hoje (roadmap, pendências, decisões, painel e os testes que os citarem), com a tag dizendo o que mudou. O histórico do Git continua com eles, e isso fica dito.
+  - (b) Deixar como está e registrar que o grupo aceita aparecer.
+  - (c) Além de (a), reescrever o commit de 25/11/2026 para tirar os nomes do histórico. Pede `git push --force`, que é comando destrutivo e só o Eric roda.
+- **Recomendação:** (a). Custa pouco e tira os nomes da versão que as pessoas leem; (c) reescreve histórico público por um ganho pequeno.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 154): "Tirar dos textos (Recomendado)". Os nomes saíram do roadmap, deste arquivo e das decisões no mesmo dia, e o painel foi regerado. Os dois testes que citam os nomes ficam como estão, porque é com eles que a bateria acusa um nome que apareça na página da sessão ou no painel. O histórico do Git continua com os nomes.
+
+### 95. A senha de e-mail que está no código do site legado ainda vale?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** `Programacao/CobaiaFront/rodape_contato_envia.php` (linhas 13 e 14) traz o usuário e a senha de uma conta de e-mail, usada pelo formulário de contato do site legado, e `rodape.php` (linha 25) traz outro endereço. O arquivo está no repositório público pelo menos desde 31/08/2026. O `SECURITY.md` (linha 9) cita "credencial SMTP no código-fonte" como fraqueza conhecida do site, que é mantido como veio. O endereço aparece também em relatórios e trilhas gravados pelas corridas, em `Programacao/AgenteCore/experimentos/resultados_alvo/`.
+- **Por que importa:** Se a senha ainda vale, qualquer pessoa que abra o arquivo entra na conta. Apagar o valor do arquivo não resolve, porque ele continua no histórico do Git; o que resolve é o dono da conta trocar a senha.
+- **Opções:**
+  - (a) O dono da conta troca a senha, ou confirma que ela já não vale, e o `SECURITY.md` passa a dizer que a credencial do código não dá acesso a nada. O arquivo do site fica como veio.
+  - (b) Além de (a), o valor no arquivo vira um de mentira, com a tag explicando; o formulário de contato do site deixa de mandar e-mail, e o site deixa de estar exatamente como veio.
+  - (c) Deixar como está.
+- **Recomendação:** (a). Resolve o risco de verdade sem mexer no site que serve de cobaia.
+- **Decisão:** (c), pelo Eric em 25/11/2026, no quadro (decisão 155): "Deixar como está". Foi contra a recomendação. Não foi conferido se a senha ainda vale.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (25/11/2026) com a ficha 96, do fechamento da Fase 5, perguntada ao Eric no quadro e gravada já fechada.
+     ! Motivo: o rito das fases pede a decisão do Eric para fechar uma fase; ele pediu antes uma revisão geral do projeto, feita pela sessão principal em 25/11/2026, e depois respondeu a ficha. Sem ela, o estado "Concluída" do roadmap e do README e o anexo dos desvios no plano aprovado não teriam de onde sair. -->
+## Aberta pelo fechamento da Fase 5 (25/11/2026)
+
+### 96. A Fase 5 pode ser fechada?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** Os pacotes F0 a F6 do plano da Fase 5 (`claude-memoria/plano-aprovado-fase-5.md`) estão feitos: o agente foi medido na corrida 28b, as três sessões das pessoas foram lidas, a comparação saiu pelas regras fixadas antes, e o resultado está no relatório da fase, no painel, no README e no documento do TCC. Perguntado em 25/11/2026 se a fase fechava antes ou depois da reunião com o orientador, o Eric pediu primeiro uma revisão geral do projeto, que a sessão principal fez no mesmo dia. Fechar a fase é gravar no plano aprovado o anexo com os desvios 1 a 38, sem reescrever o texto, rodar a verificação da seção 14 do plano, com as baterias que usam o banco, limpar os textos antigos que tratavam a medida como futura e passar o estado a "Concluída" no roadmap e no README.
+- **Por que importa:** Enquanto a fase aparece "Em andamento", o painel e o README dizem que a medida central do TCC ainda está sendo feita. E três coisas do documento do TCC não são da fase e precisam ficar declaradas como pendentes em outro lugar, para não se perderem: o Word, o corte do resumo, que está acima das 500 palavras, e as frases da Fase 4 que ainda dão corridas como pendentes.
+- **Opções:**
+  - (a) Fechar agora: a fase passa a "Concluída em 25/11/2026", com o anexo dos desvios, e o Word, o corte do resumo e as frases da Fase 4 ficam declarados como trabalho do pacote Q8 da Pós-Fase 4.
+  - (b) Ainda não: a fase continua "Em andamento"; só os textos antigos são limpos e as baterias rodam, sem mudar o estado.
+- **Recomendação:** (a). O que o plano da fase pedia está feito e conferido, e o que falta no documento do TCC é do pacote Q8, que tem o Word como entrega.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 156): "Sim, fechar (Recomendado)". O anexo dos desvios foi gravado no plano aprovado no mesmo dia, copiado por script do livro-razão da fase, e o roadmap, o README e `DETALHES-TECNICOS.md` passaram a dar a fase como concluída.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (25/11/2026, Pós-Fase 4, pacote Q6) com a ficha 97, o desenho de construção do hub central, perguntada ao Eric no quadro e gravada já fechada.
+     ! Motivo: o plano aprovado (seção 3.6) diz o que o hub tem, mas não em que arquivos, em quantas etapas, como se testa nem o que sai primeiro se o prazo apertar; a decisão 152 pôs o hub antes do texto final, com a última reunião em 02/12/2026, e sem a ficha a ordem de corte ficaria só no quadro da sessão. -->
+## Aberta pelo pacote Q6 da Pós-Fase 4 (25/11/2026)
+
+### 97. O hub central (pacote Q6) pode ser construído pelo desenho apresentado?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O plano da Pós-Fase 4 (`claude-memoria/plano-aprovado-pos-fase-4.md`, seção 3.6) descreve o hub central: uma página local, à imagem da revisão de uma pull request (o pedido de revisão de uma mudança, no GitHub e no Azure DevOps), onde o analista lê o relatório de cada caso, comenta e dá o veredito. O desenho de construção apresentado no quadro tem cinco partes. (1) A página, servida pelo `http.server` do Python só em `127.0.0.1`, lista os casos com diagnóstico gravado nas trilhas das corridas 18d (`fase4_tela_v4`), 21d (`fase4_ensaio_v4`), 24 (`fase4_ineditos`) e 28b (`fase5_agente_b`) e mostra, por caso, o relatório v3 em blocos com a evidência ao lado (a resposta da API, a árvore da tela, o contrato e os verbetes pela camada de leitura), a árvore de decisão e a trilha; cada caso é montado na hora, da trilha gravada, pelas funções dos pacotes Q1 e Q3, e nada é escrito nas pastas das corridas. (2) A revisão: comentário preso a um trecho, comentário geral, conversas com estado (ativa, resolvida, não será tratada), rascunho enviado junto com o veredito de cinco valores, o agente só comenta, a sugestão "a causa é outra", os campos severidade, prioridade e estado da seção 5.5 do syllabus, e as iterações do mesmo caso com "o que mudou" e marca de lido que cai quando chega iteração nova; tudo gravado em um arquivo por caso, só com acréscimo, em `Programacao/AgenteCore/experimentos/resultados_alvo/hub/revisoes/`. (3) Os três itens da decisão 93: a gravação do Playwright (o trace) só quando o roteiro falha, como opção nova no `navegador.py` e no `executar_fase4.py`, desligada por padrão; a aba "Cérebro ao vivo", que lê `progresso.json` e o último diagnóstico da trilha da corrida em andamento; e o explorador da trilha v2. (4) Os botões: abrir a árvore, ver a barra de progresso e rodar os cenários; o de rodar só dispara o `rodar_fase4.ps1` quando o hub é aberto com `--permitir-execucao`, e sem isso mostra o comando para copiar. (5) O estudo do `visual-explainer` (decisão 126): leitura dos moldes do plugin e nota no Memorial com o que se aproveita na página. Arquivos novos em `Programacao/AgenteCore/experimentos/`: `hub_dados.py`, `hub_revisao.py`, `hub_pagina.py`, `hub.py` e `testar_hub.py`. Testes escritos antes, sem modelo e sem banco: Python puro para os dados e a revisão, e o Chromium do Playwright, sem janela, abrindo a página de verdade. Quatro etapas: dados e revisão; servidor e página; os três itens da decisão 93 e os botões; estudo, documentação e painel.
+- **Por que importa:** A decisão 152 pôs o hub e a integração com o Git antes do texto final, e a última reunião com o orientador é 02/12/2026. Se o desenho não disser o que sai primeiro quando o prazo apertar, o corte é decidido na pressa, e o texto do TCC pode descrever uma parte que não ficou pronta.
+- **Opções:**
+  - (a) Construir como está, nas quatro etapas, com a meta de fechar o Q6 em 27/11/2026 e o Q7 em 28/11/2026. Se o prazo apertar, o corte segue esta ordem, com aviso por ficha: o botão que dispara a corrida (fica o comando para copiar), a atualização automática do "Cérebro ao vivo" (fica a leitura do estado ao abrir a aba), o "o que mudou" entre iterações (fica a lista das iterações) e os rótulos de comentário.
+  - (b) Só o núcleo: começar já sem esses quatro itens, que viram trabalho futuro declarado, com mais folga para o Q7 e para o Q8.
+- **Recomendação:** (a). As quatro partes da lista de corte são pequenas e ficam por último na ordem de construção; se faltar tempo, sai o que ainda não foi feito, sem refazer nada.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 157): "Construir como está (Recomendado)".
+
+<!-- ! Alteração de IA - Revisar: ficha 98 acrescentada em 25/11/2026 (qual ODS da ONU o projeto declara nos slides e no banner da apresentação).
+     ! Motivo: o orientador pediu que cada equipe informe o ODS considerado no projeto, e o Eric pediu a pesquisa em 25/11/2026; a pesquisa (`2-pesquisa-e-literatura/ods-do-projeto.md`) achou três metas que se sustentam e descartou as que pedem medida que o projeto não fez, e a escolha entre elas é dele. -->
+### 98. Qual ODS da ONU o projeto declara nos slides e no banner?
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O orientador pediu que cada equipe informe qual Objetivo de Desenvolvimento Sustentável (ODS) da ONU foi considerado no projeto, nos slides e no banner da apresentação. A pesquisa está em `2-pesquisa-e-literatura/ods-do-projeto.md`: cruzou o texto oficial das metas, na página das Nações Unidas no Brasil, com o que o repositório mostra que o projeto fez e mediu. O encaixe mais forte é o ODS 9 (Indústria, Inovação e Infraestrutura), meta 9.5, que fala de fortalecer a pesquisa científica e as capacidades tecnológicas e de incentivar a inovação. Depois vêm o ODS 8 (Trabalho Decente e Crescimento Econômico), meta 8.2, de produtividade por modernização tecnológica e inovação, onde cai o tempo de reparo medido na Fase 5, e o ODS 17 (Parcerias e Meios de Implementação), meta 17.6, de acesso compartilhado à ciência e à tecnologia, pelo código aberto. Os ODS 4, 10, 12 e 13 foram descartados, com o motivo: o projeto não mediu energia, clima, inclusão nem formação de pessoas.
+- **Por que importa:** A banca pode perguntar por que aquele ODS. Nenhum deles tem indicador medido pelo projeto: o vínculo é por afinidade, e declarar um ODS que pede uma medida que o projeto não fez, como a de energia, abre uma pergunta sem resposta.
+- **Opções:**
+  - (a) ODS 9, meta 9.5, como o ODS do projeto, e ODS 8, meta 8.2, como apoio. O slide e o banner levam o 9 em destaque e o 8 numa linha.
+  - (b) Só o ODS 9, meta 9.5.
+  - (c) Os três: ODS 9 (9.5) em destaque, com ODS 8 (8.2) e ODS 17 (17.6) como apoio.
+- **Recomendação:** (a). A meta 9.5 descreve o que o trabalho é, e a 8.2 recebe o número central da Fase 5. A 17.6 é a mais fraca das três, porque fala de cooperação entre países, que o projeto não fez.
+- **Decisão:** em aberto
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

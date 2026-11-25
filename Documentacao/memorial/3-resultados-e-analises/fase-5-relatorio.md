@@ -1,7 +1,7 @@
 <!-- ! Alteração de IA - Revisar: arquivo novo (16/11/2026): o esqueleto do relatório da Fase 5 (a medição de valor: o agente contra a linha de base manual), com as partes que a seção 6 do plano aprovado lista. Está preenchido o que já se sabe sem número medido: o que a fase pergunta, como ela roda, os pacotes F0 a F2, as decisões 130 a 136, as regras de leitura, as limitações e os desvios do plano. Os blocos `tb_f5_custo_*` foram colados por `avaliar_fase5.py --custo --colar`. As seções do agente, das pessoas e da comparação têm os blocos `tb_f5_agente_*`, `tb_f5_manual_*` e `tb_f5_medicao_*` vazios, nos nomes que a leitura gera, e a palavra "aguarda" no lugar do texto.
      ! Motivo: o plano põe o relatório no pacote F5, em 25/11/2026, depois da corrida 28 e das três sessões. Esta parte foi adiantada enquanto as pessoas fazem as sessões, para o dia 25 ficar só com o que depende dos números. Nenhum número de resultado foi digitado: os do custo vêm dos blocos colados, e os demais entram por `--colar` quando os derivados existirem. Enquanto um bloco estiver vazio, o `--check` da leitura dele acusa diferença neste arquivo: é o esperado, e o conserto é rodar a mesma leitura com `--colar`. -->
 
-# Fase 5: a medição de valor, relatório (esqueleto de 16/11/2026)
+# Fase 5: a medição de valor, relatório da fase
 
 <!-- ! Alteração de IA - Revisar: (18/11/2026, leitura da corrida 28) o estado passou a dizer que a corrida 28 rodou e que o lado do agente está lido; as seções 2.3, 2.5, 4, 7 e 8 ganharam o texto da noite, e os seis blocos `tb_f5_agente_*` foram colados por `avaliar_fase5.py --agente --colar`.
      ! Motivo: o relatório dizia que a corrida 28 ainda não tinha acontecido e trazia "aguarda" no lado do agente. Os números do texto novo vêm de `resultados_alvo/fase5/agente.json`, de `fase5_agente/fase4.log` e de `fase5_agente/progresso_medidas.jsonl`, lidos por script; a média da primeira repetição e as faixas por repetição são contas feitas depois de ver os números, fora das regras L1 a L15, e estão marcadas assim onde aparecem. -->
@@ -13,7 +13,9 @@
      ! Motivo: o relatório dizia que a seção 4 aguardava a corrida 28b. Os números do texto novo vêm de `resultados_alvo/fase5/agente.json`, de `resultados_alvo/fase4/cenarios_v4.json`, de `fase5_agente_b/fase4.log` e de `fase5_agente_b/cenarios.jsonl`, lidos por script; como a noite foi lançada vem da resposta do Eric no quadro em 19/11/2026. -->
 <!-- ! Alteração de IA - Revisar: (24/11/2026, leitura das pessoas e comparação) o estado e as seções 1, 2.4, 2.5, 2.6, 5, 6, 7, 8 e 9 passaram a trazer as sessões da linha de base manual e a comparação; os blocos `tb_f5_manual_*` e `tb_f5_medicao_*` foram colados por `avaliar_fase5.py --manual --colar` e `--comparar --colar`.
      ! Motivo: o relatório dizia "aguarda" no lado das pessoas e na comparação. As sessões chegaram por código em 24/11/2026 e a leitura rodou no mesmo dia, depois de o Eric decidir no quadro quais sessões entram (decisões 149 e 150), antes de qualquer tempo ser aberto. Os números do texto vêm de `resultados_alvo/fase5/manual.json` e `medicao.json`, lidos por script; a conta sem a sessão de um integrante é de rascunho, feita depois de ver os números, e está marcada assim onde aparece (decisão 151). Nenhum nome de integrante é escrito com o número dele. -->
-> Estado em 24/11/2026: as duas medidas da fase estão feitas e lidas. O agente foi medido na corrida 28b, em 18/11/2026, com o aplicativo Claude e o VS Code fechados e a frio (decisões 145 e 146); a corrida 28, da mesma data, não vale como medida, e os números dela estão na seção 11, como registro do incidente. As sessões da linha de base manual chegaram em 24/11/2026, e a leitura pelas regras do plano deu o agente mais rápido que as pessoas nos dez cenários (seção 6). O veredito do Task Success depende da sessão de um integrante só, e é lido com essa ressalva (decisão 151). Faltam a descoberta no README com a figura, a tabela por script da conta sem cada integrante e as seções da fase no documento do TCC.
+<!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5, ficha 96 e decisão 156) o título deixou de dizer "esqueleto", o estado passou a dizer que a fase está concluída, a tabela dos pacotes e a das decisões foram fechadas, e a seção 8 aponta para o anexo do plano aprovado.
+     ! Motivo: o Eric fechou a fase em 25/11/2026, depois da revisão geral do projeto; o relatório ainda se chamava esqueleto e dizia que faltava o fechamento. As contagens das baterias vêm da última linha de cada uma, rodadas em 25/11/2026. -->
+> Estado em 25/11/2026: **fase concluída** (ficha 96, decisão 156), com os pacotes F0 a F6 feitos. O agente foi medido na corrida 28b, em 18/11/2026, com o aplicativo Claude e o VS Code fechados e a frio (decisões 145 e 146); a corrida 28, da mesma data, não vale como medida, e os números dela estão na seção 11, como registro do incidente. As sessões da linha de base manual chegaram em 24/11/2026, e a leitura pelas regras do plano deu o agente mais rápido que as pessoas nos dez cenários (seção 6). O veredito do Task Success depende da sessão de um integrante só, e é lido com essa ressalva (decisão 151). Os desvios do plano (seção 8) estão também no anexo do [plano aprovado](../../../claude-memoria/plano-aprovado-fase-5.md). Ficam para o pacote Q8 da Pós-Fase 4, fora da fase: o Word do documento do TCC, o corte do resumo e as frases da Fase 4 que ainda dão corridas como pendentes no documento.
 
 Plano da fase: [plano-aprovado-fase-5.md](../../../claude-memoria/plano-aprovado-fase-5.md), aprovado em 16/11/2026 (decisão 133). O texto do plano não é reescrito: o que desviou dele está na seção 8.
 
@@ -113,15 +115,15 @@ A importação rodou em 24/11/2026 com as cobaias no ar (`linha_de_base_manual.p
 
 ### 2.5 Os pacotes
 
-| Pacote | O que é | Estado em 24/11/2026 |
+| Pacote | O que é | Estado em 25/11/2026 |
 |---|---|---|
 | F0 | O plano, as fichas 72 a 75 e a aprovação | feito em 16/11/2026 |
 | F1 | A leitura (`avaliar_fase5.py`), os testes dela (`testar_fase5.py`) e o lançador da noite (`rodar_fase5.ps1`) | feito em 16/11/2026 |
 | F2 | O protocolo da sessão, o ajudante (`linha_de_base_manual.py`), o tutorial e as páginas da sessão (`sessao_pelo_artefato.py`), com os testes (`testar_linha_de_base.py`) | feito em 16/11/2026 |
 | F3 | A noite medida | a corrida 28 rodou em 18/11/2026 e não vale como medida (decisão 145); a corrida 28b, a frio (decisão 146), rodou em 18/11/2026 com tudo fechado e foi lida em 19/11/2026: é a medida do agente |
 | F4 | As três sessões da linha de base manual | feitas de 18 a 24/11/2026, pela página, e importadas em 24/11/2026 (decisões 149 e 150) |
-| F5 | A leitura dos dois lados, o painel, este relatório, o roadmap, o README e a figura | a leitura das pessoas e a comparação rodaram em 24/11/2026, com este relatório, o roadmap e o painel; faltam a descoberta no README com a figura e a tabela por script da conta sem cada integrante (decisão 151) |
-| F6 | As seções da Fase 5 no documento do TCC | previsto para 26 e 27/11/2026 |
+| F5 | A leitura dos dois lados, o painel, este relatório, o roadmap, o README e a figura | a leitura das pessoas e a comparação rodaram em 24/11/2026, com este relatório, o roadmap e o painel; a descoberta no README com a figura, a ressalva na aba do painel e a tabela por script da conta sem cada integrante entraram no mesmo dia (decisão 151) |
+| F6 | As seções da Fase 5 no documento do TCC | feito em 24/11/2026 e conferido em 25/11/2026 (seção 6.8 nova, resumo, abstract, 5.1, 5.7, Discussão, Análise aprofundada, Conclusão e glossário); o Word sai com o pacote Q8 |
 
 ### 2.6 As decisões da fase
 
@@ -141,6 +143,8 @@ A importação rodou em 24/11/2026 com as cobaias no ar (`linha_de_base_manual.p
 | 149 | Na página 1, onde vieram duas sessões, entra só a do substituto; a outra fica guardada sem ser importada (ficha 89) |
 | 150 | A sessão da página 2 entra, com duas coisas declaradas: a pessoa já tinha lido a lista e não fez o treino de seletor (ficha 90) |
 | 151 | A leitura fica como as regras deram, e o veredito do Task Success é declarado como dependente da sessão de um integrante; o resultado central é o do tempo (ficha 91) |
+| 154 | Os nomes dos integrantes da linha de base não ficam em arquivo do repositório |
+| 156 | A Fase 5 está concluída em 25/11/2026; o Word, o corte do resumo e as frases da Fase 4 no documento do TCC ficam para o pacote Q8 (ficha 96) |
 
 O texto completo de cada uma está em [decisoes.md](../1-decisoes-e-historico/decisoes.md).
 
@@ -467,7 +471,7 @@ O que as sessões das pessoas acrescentaram, em 24/11/2026:
 
 ## 8. Desvios do plano
 
-Do livro-razão da fase, na ordem em que aconteceram. No fechamento da fase eles viram o anexo do plano aprovado.
+Do livro-razão da fase, na ordem em que aconteceram. No fechamento da fase, em 25/11/2026, os 38 foram copiados por script para o anexo do [plano aprovado](../../../claude-memoria/plano-aprovado-fase-5.md), com o texto inteiro de cada um; aqui ficam resumidos.
 
 1. A faixa da corrida 28 no painel entrou no pacote F0, e não no F5: o teste do painel recusa corrida do roadmap sem fase.
 2. Dois consertos no painel que a linha da corrida 28 no roadmap pediu, fora da lista de entregas do plano.
@@ -506,6 +510,12 @@ Do livro-razão da fase, na ordem em que aconteceram. No fechamento da fase eles
 33. (F4) As sessões aconteceram de 18 a 24/11/2026, e não de 19 a 24/11/2026, como a decisão 130 previa: uma delas foi feita na véspera do intervalo. As datas não chegaram a ser marcadas antes das sessões.
 34. (F5) A leitura das pessoas e a comparação rodaram em 24/11/2026, um dia antes do calendário do plano, porque as sessões já tinham chegado.
 35. (F5, decisão 151) A leitura ganha uma conta que o plano não tinha: a comparação sem a sessão de cada integrante, feita depois de ver os números e marcada como exploratória. Ela não muda nenhum veredito das regras L9 e L11; serve para dizer do que cada veredito depende.
+
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote F6 conferido) os desvios 36 a 38 entraram na lista, e o estado e as linhas F5 e F6 da tabela dos pacotes passaram a dizer que a descoberta, a tabela exploratória e o texto do TCC estão feitos.
+     ! Motivo: a lista parava no desvio 35, e o livro-razão da fase já tinha o 36 e o 37, da sessão da aba do painel; o 38 é do pacote F6, feito em 24/11/2026. Sem eles o anexo de desvios do fechamento sairia incompleto. -->
+36. (F5, decisão 151) Na aba do painel, a ressalva do Task Success é um texto escrito à mão, amarrado à corrida lida, e o alto da aba continua sendo as frases das regras L9 e L11, com o tempo dito como o resultado central; o plano previa uma frase à mão no alto da aba.
+37. (F5, decisão 151) No README e na figura da descoberta da fase, o Task Success não é desenhado nem apresentado como segundo resultado central: entra num parágrafo à parte, com a ressalva, e na tabela de dados da figura.
+38. (F6) As seções da Fase 5 entraram no documento do TCC em 24/11/2026, e não em 26 e 27/11/2026, parte delas adiantada em 16/11/2026 (desvios 20 a 22). O Word não foi regerado: sai uma vez só, com o pacote Q8 da Pós-Fase 4, que também corta o resumo e acerta as frases da Fase 4 que ainda dão corridas como pendentes.
 
 ## 9. O que o documento do TCC precisa carregar
 

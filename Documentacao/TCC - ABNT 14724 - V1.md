@@ -5,6 +5,8 @@
      ! Motivo: o Eric pediu a atualização do texto formal com o que a Fase 4 mediu. A versão 1 parava em 01/11/2026 e dizia que faltavam pacotes que já rodaram, e as decisões 82 e 85 a 93 mandam levar as limitações e as corridas novas ao documento; quando as corridas pendentes rodarem, os números delas entram na versão seguinte. -->
 <!-- ! Alteração de IA - Revisar: versão 3 (05/11/2026): a seção 6 passa a contar os resultados com figuras e a explicação de como lê-las, e a análise aprofundada vira a seção 6.10. Nenhum número novo de corrida: as corridas 18c, 21c, 23 e 24 seguem pendentes.
      ! Motivo: pedido do Eric em 05/11/2026, depois da versão 2, para deixar o documento mais legível; a versão anterior tinha só tabelas e parágrafos com dezenas de números. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, decisão 158) o campo Orientador dos Dados abaixo passou a levar o nome e a titulação: "Prof. Me. Rafael Oliveira Cotrin".
+     ! Motivo: o campo estava com "[conferir o nome completo e a titulação do orientador]", e é ele que o gerador do Word (`ferramentas/gerar_tcc_docx.py`) escreve na folha de rosto; o Eric disse o nome e a titulação ("Mestre") na sessão principal em 25/11/2026. -->
 ## Dados
 
 - **Universidade:** Universidade Cidade de São Paulo - UNICID
@@ -13,7 +15,7 @@
 - **Título:** Desenvolvimento de um agente de QA end-to-end (E2E) autônomo com capacidades de self-healing
 - **Subtítulo:** Focado na fronteira de integração
 - **Natureza:** Trabalho de Conclusão de Curso apresentado ao Curso de Ciência da Computação da Universidade Cidade de São Paulo (UNICID), como requisito parcial para obtenção do título de Bacharel em Ciência da Computação.
-- **Orientador:** Orientador: Prof. [conferir o nome completo e a titulação do orientador]
+- **Orientador:** Orientador: Prof. Me. Rafael Oliveira Cotrin
 - **Local:** São Paulo
 - **Ano:** 2026
 - **Versão:** 3

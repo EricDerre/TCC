@@ -1,0 +1,84 @@
+# ! Alteração de IA - Revisar: arquivo novo (25/11/2026, pacote I5 do instalador único, decisões 138, 139 e 153): roda o
+# instalador e a prova da instalação em quatro máquinas recém-criadas do GitHub (Ubuntu, Windows, macOS em Apple Silicon e
+# macOS em Intel), a cada mudança nos arquivos do instalador, uma vez por semana e quando alguém pedir pela página do GitHub.
+# ! Motivo: o instalador nunca rodou em macOS nem em Windows recém-criado, e simular o macOS no PC do projeto não é permitido
+# pela licença da Apple. As máquinas do GitHub são de graça para repositório público. Elas não são máquinas limpas (já trazem
+# Python, PHP e banco), e por isso cada célula grava o que a máquina trazia antes do instalador. A rodada semanal avisa
+# quando uma versão nova de alguma ferramenta quebra a instalação.
+# ! Alteração de IA - Revisar: depois da revisão de 25/11/2026 o fluxo (1) deixa de cancelar a execução em curso quando entra um push novo, (2) passa o `--modo` de cada célula, (3) registra o que o fluxo custa.
+# ! Motivo: cancelando a execução em curso, um push novo cortava a rodada em andamento sem deixar evidência; agora o push novo espera. O modo vem da matriz porque no Windows e no macOS o instalador ainda segue os passos antigos (a rodada `como-esta` grava o que acontece) e só o Linux já roda com os consertos (`novo`). Custo: o repositório é público (conferido em 25/11/2026) e para repositório público os executores padrão são de graça; se o repositório virar privado, a rodada semanal passa a gastar a cota do plano, e as células de macOS custam mais minutos que as de Linux e Windows.
+name: Instalador em máquina nova
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "install.*"
+      - "run.*"
+      - "_env_common.py"
+      - "restaurar_banco.py"
+      - "versoes.json"
+      - "instalador/**"
+      - "Programacao/CobaiaAPI/requirements*.txt"
+      - "Programacao/AgenteCore/requirements.txt"
+      - "ferramentas/instalador_matriz/celula_actions.py"
+      - ".github/workflows/instalador.yml"
+  schedule:
+    - cron: "17 9 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: instalador-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  celula:
+    name: ${{ matrix.id }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      # O modo de CI-WIN, M-15 e M-15I muda para `novo` no mesmo commit que consertar o caminho de cada uma.
+      matrix:
+        include:
+          - id: CI-UBU
+            runner: ubuntu-24.04
+            python: python3
+            ate: N4
+            modo: novo
+            opcoes: "--forcar-uv"
+          - id: CI-WIN
+            runner: windows-2025
+            python: python
+            ate: N4
+            modo: como-esta
+            opcoes: ""
+          - id: M-15
+            runner: macos-15
+            python: python3
+            ate: N3
+            modo: como-esta
+            opcoes: "--forcar-uv"
+          - id: M-15I
+            runner: macos-15-intel
+            python: python3
+            ate: N4
+            modo: como-esta
+            opcoes: ""
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+      - name: Rodar a célula ${{ matrix.id }}
+        shell: bash
+        run: ${{ matrix.python }} ferramentas/instalador_matriz/celula_actions.py --id "${{ matrix.id }}" --modo "${{ matrix.modo }}" --ate "${{ matrix.ate }}" --saida "$RUNNER_TEMP/celulas" ${{ matrix.opcoes }}
+      - name: Guardar a evidência
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: celula-${{ matrix.id }}
+          path: ${{ runner.temp }}/celulas
+          if-no-files-found: error
+          retention-days: 30

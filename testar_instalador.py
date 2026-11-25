@@ -22,6 +22,7 @@ import tarfile
 import tempfile
 import traceback
 import zipfile
+from datetime import datetime
 from pathlib import Path
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
@@ -43,6 +44,16 @@ import run
 sys.path.insert(0, str(RAIZ / "ferramentas" / "instalador_matriz"))
 import atualizar_versoes
 import empacotar
+# ! Alteração de IA - Revisar: (25/11/2026, pacote I5) entra o import de `celula_actions` (roteiro da célula no GitHub Actions); `from datetime import datetime` entra junto dos imports padrão.
+# ! Motivo: os testes novos do roteiro do GitHub Actions chamam as funções dele e montam datas fixas; sem o import dão NameError.
+import celula_actions
+# ! Alteração de IA - Revisar: (25/11/2026, pacote I7) entram os imports de `importar_actions` e `ler_celula` (traz a evidência do GitHub para `celulas/` e lê o resumo dela).
+# ! Motivo: os testes novos do importador chamam as funções dele e conferem o que `ler_celula.resumir` lê da rodada gravada.
+import importar_actions
+import ler_celula
+# ! Alteração de IA - Revisar: (25/11/2026, pacote I7) entra o import de `relatorio` (lê todas as rodadas de `celulas/` e cola os blocos gerados no relatório do instalador, no README e no DETALHES-TECNICOS).
+# ! Motivo: os testes novos do relatório chamam `coletar`, `por_celula`, os blocos e `colar`; sem o import dão NameError.
+import relatorio
 
 # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) o import deixa de trazer `nucleo` e `servicos`; fica `conferir, ferramentas, registro, sistema, versoes`.
 # ! Motivo: `instalador/nucleo.py` e `instalador/servicos.py` (pontos de entrada provisórios do pacote I2) deixaram de existir; os testes chamam os passos de `instalador/ferramentas.py` direto e o resto pelo `install.py` e pelo `_env_common.py`.
@@ -2619,6 +2630,408 @@ def teste_fixa_cobaia_py_instala_sobe_e_abre():
                             ("wait_and_cleanup", "site", "api")], chamadas
     finally:
         _destrocar(original)
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, pacote I5, decisão 153) testes novos do roteiro `celula_actions.py` e do fluxo `.github/workflows/instalador.yml`: comando e ambiente por sistema, escolha do Python da prova, `celula.json` com a tag, veredito e resumo, e as quatro células do fluxo.
+# ! Motivo: cada execução de verdade do fluxo custa um commit e um push do dono do repositório; o que dá para conferir sem rede (que variável responde a que pergunta do instalador, que comando a prova roda, se o `celula.json` leva a tag exigida pela decisão 147) fica coberto aqui, para o erro aparecer antes do push e não na página do GitHub.
+def teste_celula_actions_comando_e_ambiente_por_sistema():
+    ca = celula_actions
+    assert ca.comando_do_instalador("Linux") == ["./install.sh"]
+    assert ca.comando_do_instalador("Darwin") == ["./install.sh"]
+    assert ca.comando_do_instalador("Windows") == ["cmd", "/c", "install.cmd"]
+    base = {"PATH": "x"}
+    linux = ca.ambiente_do_instalador("Linux", True, base)
+    assert linux["COBAIA_ROOT_SEM_SENHA"] == "1" and linux["COBAIA_FORCAR_UV"] == "1" and linux["PATH"] == "x"
+    assert "COBAIA_FORCAR_UV" not in ca.ambiente_do_instalador("Darwin", False, base)
+    windows = ca.ambiente_do_instalador("Windows", True, base)
+    assert windows["COBAIA_MARIADB_PORTATIL"] == "1" and "COBAIA_ROOT_SEM_SENHA" not in windows
+    assert base == {"PATH": "x"}, "o ambiente de entrada não pode ser alterado"
+    # C2: nos três sistemas a saída sai em UTF-8 e sem atraso (o executor do Windows usa a codepage e junta a saída em buffer)
+    for sistema in ("Linux", "Darwin", "Windows"):
+        amb = ca.ambiente_do_instalador(sistema, False, base)
+        assert (amb["PYTHONIOENCODING"], amb["PYTHONUTF8"], amb["PYTHONUNBUFFERED"]) == ("utf-8", "1", "1"), sistema
+    prova = ca.ambiente_da_prova(base)
+    assert (prova["PYTHONIOENCODING"], prova["PYTHONUTF8"], prova["PYTHONUNBUFFERED"], prova["PATH"]) == ("utf-8", "1", "1", "x")
+    assert "COBAIA_ROOT_SEM_SENHA" not in prova and base == {"PATH": "x"}
+
+
+def teste_celula_actions_limites_somam_menos_que_o_do_github():
+    assert celula_actions.LIMITE_DO_INSTALADOR_S == 3600 and celula_actions.LIMITE_DA_PROVA_S == 3600
+    assert celula_actions.CELULAS_DO_ACTIONS == ("CI-UBU", "CI-WIN", "M-15", "M-15I")
+
+
+def teste_celula_actions_python_da_prova_prefere_o_que_o_lancador_trouxe():
+    raiz = _pasta_temporaria()
+    assert celula_actions.python_da_prova(raiz, "Linux") == "python3"
+    assert celula_actions.python_da_prova(raiz, "Windows") == "python"
+    trazido = raiz / ".ferramentas" / "python" / "cpython-3.14.7-linux-x86_64-gnu" / "bin"
+    trazido.mkdir(parents=True)
+    (trazido / "python3").write_text("", encoding="utf-8")
+    assert celula_actions.python_da_prova(raiz, "Linux") == str(trazido / "python3")
+    assert celula_actions.python_da_prova(raiz, "Windows") == "python"
+    comando = celula_actions.comando_da_prova("python3", "M-15", Path("/tmp/e"), "N3", "qwen2.5:0.5b-instruct")
+    assert comando == ["python3", "-m", "instalador.conferir", "--celula", "M-15", "--saida", str(Path("/tmp/e")),
+                       "--ate", "N3", "--modelo-pequeno", "qwen2.5:0.5b-instruct"], comando
+
+
+def teste_celula_actions_celula_json_tem_tag_e_origem():
+    ambiente = {"RUNNER_OS": "macOS", "RUNNER_ARCH": "ARM64", "ImageOS": "macos15", "ImageVersion": "20261104.0514.1",
+                "GITHUB_REPOSITORY": "dono/repo", "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "123", "GITHUB_RUN_ATTEMPT": "2",
+                "GITHUB_EVENT_NAME": "push"}
+    inicio = datetime(2026, 11, 26, 12, 0, 0)
+    celula = celula_actions.montar_celula("M-15", "N3", "qwen2.5:0.5b-instruct", True, inicio, datetime(2026, 11, 26, 12, 30, 0),
+                                          {"instalador": 0, "conferir": 1}, ambiente, modo="como-esta", terminou=True,
+                                          resultado_do_instalador="ok")
+    assert celula["tag_ia"]["alteracao"].startswith("! Alteração de IA - Revisar: ")
+    assert celula["tag_ia"]["motivo"].startswith("! Motivo: ")
+    assert (celula["id"], celula["modo"], celula["ate"], celula["forcar_uv"]) == ("M-15", "como-esta", "N3", True)
+    assert (celula["terminou"], celula["fuso"], celula["resultado_do_instalador"]) == (True, "UTC", "ok")
+    parcial = celula_actions.montar_celula("M-15", "N3", "m", False, inicio, inicio, {}, {}, modo="novo", terminou=False)
+    assert parcial["terminou"] is False and parcial["modo"] == "novo" and parcial["saidas"] == {} and parcial["resultado_do_instalador"] == ""
+    assert celula["imagem"] == "GitHub Actions: macOS ARM64, imagem macos15 20261104.0514.1"
+    assert celula["actions"] == {"repositorio": "dono/repo", "commit": "a" * 40, "execucao": "123", "tentativa": "2", "evento": "push"}
+    assert celula["inicio"] == "2026-11-26T12:00:00" and celula["fim"] == "2026-11-26T12:30:00"
+    assert celula["saidas"] == {"instalador": "0", "conferir": "1"}      # texto, como nas outras células
+    assert celula_actions.carimbo(inicio) == "20261126-120000"
+    sem_actions = celula_actions.montar_celula("X", "N1", "m", False, inicio, inicio, {}, {}, modo="novo", terminou=True)
+    assert sem_actions["imagem"] == "GitHub Actions: sistema e imagem não informados" and sem_actions["actions"]["commit"] == ""
+
+
+def teste_celula_actions_veredito_e_resumo():
+    ca = celula_actions
+    assert ca.veredito(None) == 1
+    bom = {"falhou": False, "impedida_por_versao": [], "alcancado": "N3",
+           "niveis": {"N1": {"estado": "passou", "detalhe": "14 produtos", "segundos": 12.0},
+                      "N2": {"estado": "passou", "detalhe": "", "segundos": 3.0},
+                      "N3": {"estado": "passou", "detalhe": "", "segundos": 5.0},
+                      "N4": {"estado": "nao_coube", "detalhe": "3,1 GB livres", "segundos": 2.0}},
+           "versoes": {"php": {"encontrada": "8.4.1", "testada": "8.2.35", "estado": "na_faixa", "impede": False}}}
+    assert ca.veredito(bom) == 0                                          # não caber na memória não é falha
+    assert ca.veredito({**bom, "falhou": True}) == 1
+    assert ca.veredito({**bom, "impedida_por_versao": ["php"]}) == 1
+    celula = {"id": "M-15", "ate": "N3", "imagem": "GitHub Actions: macOS ARM64, imagem macos15 1", "saidas": {"instalador": "0", "conferir": "0"},
+              "resultado_do_instalador": "falhou_no_passo_x"}
+    texto = ca.resumo_em_markdown(celula, bom, "fim do log do instalador", "fim do log da prova")
+    for pedaco in ("M-15", "N3", "| N1 | passou |", "| N4 | nao_coube |", "14 produtos", "php", "8.4.1", "na_faixa",
+                   "fim do log do instalador", "fim do log da prova", "Resultado gravado pelo instalador: falhou_no_passo_x"):
+        assert pedaco in texto, pedaco
+    sem_prova = ca.resumo_em_markdown(celula, None, "x", "y")
+    assert "a prova não gravou o registro" in sem_prova
+    assert "—" not in texto and "→" not in texto
+
+
+def teste_instalador_yml_tem_as_quatro_celulas_e_guarda_a_evidencia():
+    texto = (RAIZ / ".github" / "workflows" / "instalador.yml").read_text(encoding="utf-8")
+    assert "\t" not in texto, "YAML não aceita tabulação"
+    assert "! Alteração de IA - Revisar:" in texto and "! Motivo:" in texto
+    for pedaco in ("workflow_dispatch:", "schedule:", "contents: read", "fail-fast: false",
+                   "id: CI-UBU", "id: CI-WIN", "id: M-15", "id: M-15I",
+                   "runner: ubuntu-24.04", "runner: windows-2025", "runner: macos-15", "runner: macos-15-intel",
+                   "ferramentas/instalador_matriz/celula_actions.py", "actions/upload-artifact@", "if: always()", "celula-${{ matrix.id }}",
+                   "modo: como-esta", "modo: novo", '--modo "${{ matrix.modo }}"', "cancel-in-progress: false", "repositório é público"):
+        assert pedaco in texto, pedaco
+    assert "cancel-in-progress: true" not in texto
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, pacote I7) testes novos do `importar_actions.py`: traz uma rodada de um zip para a pasta `celulas/`, e recusa o que não é evidência (sem `celula.json`, sem tag, `id` diferente da pasta, nome de pasta fora do formato, regravação, caminho que sai da pasta).
+# ! Motivo: o zip que o GitHub entrega é arquivo baixado; se o importador aceitasse pasta sem tag ou com `id` trocado, uma evidência errada entraria no repositório e no relatório sem ninguém perceber, e regravar uma rodada apagaria evidência que já foi lida.
+def _zip_de_rodada(destino: Path, arquivos: dict) -> Path:
+    caminho = destino / "celula-X.zip"
+    with zipfile.ZipFile(caminho, "w") as z:
+        for nome, conteudo in arquivos.items():
+            z.writestr(nome, conteudo)
+    return caminho
+
+
+_CELULA_JSON_CERTO = json.dumps({"tag_ia": {"alteracao": "! Alteração de IA - Revisar: x", "motivo": "! Motivo: y"},
+                                 "id": "CI-UBU", "modo": "novo", "ate": "N3", "actions": {"commit": "a" * 40},
+                                 "inicio": "2026-11-26T12:00:00",
+                                 "fim": "2026-11-26T12:30:00", "saidas": {"instalador": "0", "conferir": "0"}})
+
+
+def teste_importar_actions_traz_a_rodada():
+    base = _pasta_temporaria()
+    arquivos = {"CI-UBU/20261126-120000/celula.json": _CELULA_JSON_CERTO,
+                "CI-UBU/20261126-120000/instalacao.log": "linha 1\nlinha 2\n",
+                "CI-UBU/20261126-120000/registro.json": json.dumps({"alcancado": "N3", "niveis": {}})}
+    pacote = _zip_de_rodada(base, arquivos)
+    celulas = base / "celulas"
+    gravadas = importar_actions.importar(pacote, celulas)
+    assert gravadas == [celulas / "CI-UBU" / "20261126-120000"], gravadas
+    for nome, conteudo in arquivos.items():
+        assert (celulas / nome).read_text(encoding="utf-8") == conteudo, nome
+    # uma pasta já extraída também serve, e o resumo de ler_celula lê o que foi gravado
+    assert importar_actions.rodadas_do_pacote(celulas) == gravadas
+    assert ler_celula.resumir(gravadas[0])["alcancado"] == "N3"
+    assert importar_actions.conferir_rodada(gravadas[0]) == []
+
+
+def teste_importar_actions_recusa_o_que_nao_e_evidencia():
+    base = _pasta_temporaria()
+    celulas = base / "celulas"
+
+    def recusa(nome_do_zip: str, arquivos: dict, trecho: str) -> None:
+        pasta = base / nome_do_zip
+        pasta.mkdir()
+        try:
+            importar_actions.importar(_zip_de_rodada(pasta, arquivos), celulas)
+        except ValueError as e:
+            assert trecho in str(e), (trecho, str(e))
+        else:
+            raise AssertionError(f"devia recusar: {nome_do_zip}")
+        assert not celulas.exists() or not any(celulas.rglob("*.json")), "recusou mas gravou"
+
+    recusa("sem_celula_json", {"CI-UBU/20261126-120000/instalacao.log": "x"}, "celula.json")
+    sem_tag = json.dumps({"id": "CI-UBU", "modo": "novo"})
+    recusa("sem_tag", {"CI-UBU/20261126-120000/celula.json": sem_tag}, "tag")
+    recusa("id_trocado", {"CI-WIN/20261126-120000/celula.json": _CELULA_JSON_CERTO}, "id")
+    recusa("nome_ruim", {"CI-UBU/ontem/celula.json": _CELULA_JSON_CERTO}, "AAAAMMDD-HHMMSS")
+    recusa("fora_da_pasta", {"CI-UBU/20261126-120000/celula.json": _CELULA_JSON_CERTO, "../fora.txt": "x"}, "fora da pasta")
+    assert not (base / "fora.txt").exists()
+    # regravar a mesma rodada é recusado e não muda o que já está lá
+    pasta = base / "repete"
+    pasta.mkdir()
+    pacote = _zip_de_rodada(pasta, {"CI-UBU/20261126-120000/celula.json": _CELULA_JSON_CERTO})
+    importar_actions.importar(pacote, celulas)
+    antes = (celulas / "CI-UBU" / "20261126-120000" / "celula.json").read_bytes()
+    try:
+        importar_actions.importar(pacote, celulas)
+    except ValueError as e:
+        assert "já existe" in str(e), str(e)
+    else:
+        raise AssertionError("devia recusar a regravação")
+    assert (celulas / "CI-UBU" / "20261126-120000" / "celula.json").read_bytes() == antes
+
+
+def teste_importar_actions_so_aceita_celula_do_actions_e_nao_estoura():
+    base = _pasta_temporaria()
+    celulas = base / "celulas"
+
+    def recusa(nome_do_zip: str, arquivos: dict, trecho: str, **extra) -> None:
+        pasta = base / nome_do_zip
+        pasta.mkdir()
+        try:
+            importar_actions.importar(_zip_de_rodada(pasta, arquivos), celulas, **extra)
+        except ValueError as e:
+            assert trecho in str(e), (trecho, str(e))
+        else:
+            raise AssertionError(f"devia recusar: {nome_do_zip}")
+        assert not celulas.exists() or not any(celulas.rglob("*.json")), "recusou mas gravou"
+
+    recusa("json_lista", {"CI-UBU/20261126-120000/celula.json": "[1, 2]"}, "objeto")
+    recusa("json_quebrado", {"CI-UBU/20261126-120000/celula.json": "{ nao e json"}, "JSON")
+    sem_actions = json.loads(_CELULA_JSON_CERTO)
+    del sem_actions["actions"]
+    recusa("sem_actions", {"CI-UBU/20261126-120000/celula.json": json.dumps(sem_actions)}, "actions")
+    de_wsl = {**json.loads(_CELULA_JSON_CERTO), "id": "L-U2404"}
+    recusa("id_fora_da_lista", {"L-U2404/20261126-120000/celula.json": json.dumps(de_wsl)}, "L-U2404")
+    recusa("grande_demais", {"CI-UBU/20261126-120000/celula.json": _CELULA_JSON_CERTO,
+                             "CI-UBU/20261126-120000/instalacao.log": "x" * 500}, "grande", limite_descompactado=100)
+    # arquivo que não é zip
+    ruim = base / "nao_e_zip.zip"
+    ruim.write_bytes(b"isto nao e um zip")
+    try:
+        importar_actions.importar(ruim, celulas)
+    except ValueError as e:
+        assert "zip" in str(e), str(e)
+    else:
+        raise AssertionError("devia recusar o arquivo que não é zip")
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, pacote I7) testes do `relatorio.py`: `_celulas_de_mentira` monta uma pasta `celulas/` com quatro células (uma com duas rodadas, uma rodada sem `registro.json`, uma do GitHub Actions e uma com `celula.json` gravado com BOM), e cinco testes conferem a coleta, o resumo por célula, os blocos em Markdown, a troca do bloco marcado e a concordância do repositório real com as evidências.
+# ! Motivo: o relatório do instalador (`relatorio-instalador-maquina-limpa.md`) e os blocos do README e do DETALHES-TECNICOS saem de script e não de digitação; sem teste, uma rodada sem `registro.json` (a do Arch e a do openSUSE no modo `como-esta`, que param antes da prova), uma rodada do Actions ou um `|` dentro do erro literal de um nível quebrariam a tabela sem ninguém ver. O último teste é o `--check` rodado no repositório: se alguém trouxer uma rodada nova (`importar_actions.py`) e esquecer o `relatorio.py --colar`, a bateria acusa.
+def _celulas_de_mentira() -> Path:
+    celulas = _pasta_temporaria() / "celulas"
+
+    def rodada(ident: str, nome: str, celula: dict, registro: dict | None = None, bom: bool = False) -> None:
+        pasta = celulas / ident / nome
+        pasta.mkdir(parents=True)
+        texto = json.dumps({"id": ident, **celula}, ensure_ascii=False, indent=1)
+        (pasta / "celula.json").write_text(texto, encoding="utf-8-sig" if bom else "utf-8")
+        if registro is not None:
+            (pasta / "registro.json").write_text(json.dumps(registro, ensure_ascii=False), encoding="utf-8")
+
+    nao_rodou = {"estado": "nao_rodou", "detalhe": "", "segundos": None}
+    rodada("L-U2404", "20261119-094340",
+           {"modo": "novo", "ate": "N3", "imagem": "ubuntu.wsl"},
+           {"alcancado": "N3", "falhou": False, "impedida_por_versao": [], "sistema": {"nome": "Ubuntu 24.04.5 LTS"},
+            "niveis": {"N1": {"estado": "passou", "detalhe": "14 produtos", "segundos": 1.0},
+                       "N2": {"estado": "passou", "detalhe": "", "segundos": 1.0},
+                       "N3": {"estado": "passou", "detalhe": "", "segundos": 1.0}, "N4": nao_rodou}})
+    rodada("L-U2404", "20261118-193340",
+           {"modo": "como-esta", "ate": "N3", "imagem": "ubuntu.wsl"},
+           {"alcancado": "N0", "falhou": True, "impedida_por_versao": [], "sistema": {"nome": "Ubuntu 24.04.5 LTS"},
+            "niveis": {"N1": {"estado": "falhou", "detalhe": "o MariaDB não respondeu | sem resposta — de novo\nsegunda linha", "segundos": 76.3},
+                       "N2": nao_rodou, "N3": nao_rodou, "N4": nao_rodou}}, bom=True)
+    rodada("L-ARCH", "20261119-162745", {"modo": "como-esta", "ate": "N1", "imagem": "arch.wsl"})
+    rodada("M-15", "20261126-120000",
+           {"modo": "novo", "ate": "N3", "imagem": "GitHub Actions: macOS ARM64",
+            "actions": {"repositorio": "dono/repo", "commit": "a1b2c3d4e5f6" + "0" * 28, "execucao": "1", "tentativa": "1", "evento": "push"}},
+           {"alcancado": "N2", "falhou": True, "impedida_por_versao": ["php"], "sistema": {"nome": "macOS"},
+            "niveis": {"N1": {"estado": "passou", "detalhe": "", "segundos": 1.0},
+                       "N2": {"estado": "falhou", "detalhe": "x" * 300, "segundos": 2.0},
+                       "N3": nao_rodou, "N4": nao_rodou}})
+    return celulas
+
+
+def teste_relatorio_coleta_as_rodadas():
+    rodadas = relatorio.coletar(_celulas_de_mentira())
+    assert [(r["id"], r["rodada"]) for r in rodadas] == [
+        ("L-ARCH", "20261119-162745"), ("L-U2404", "20261118-193340"), ("L-U2404", "20261119-094340"),
+        ("M-15", "20261126-120000")], "ordem de id e de data"
+    arch, velha, nova, mac = rodadas
+    assert (arch["alcancado"], arch["falhou"], arch["niveis"], arch["primeira_falha"], arch["sistema"]) == ("sem prova", None, {}, "", "")
+    assert (arch["origem"], arch["modo"], arch["ate"], arch["commit"]) == ("WSL", "como-esta", "N1", "")
+    assert (velha["alcancado"], velha["falhou"], velha["sistema"]) == ("N0", True, "Ubuntu 24.04.5 LTS")
+    assert velha["niveis"] == {"N1": "falhou", "N2": "nao_rodou", "N3": "nao_rodou", "N4": "nao_rodou"}
+    assert velha["primeira_falha"] == "N1: o MariaDB não respondeu | sem resposta — de novo", velha["primeira_falha"]
+    assert (nova["alcancado"], nova["falhou"], nova["primeira_falha"], nova["impedida_por_versao"]) == ("N3", False, "", [])
+    assert (mac["origem"], mac["commit"], mac["impedida_por_versao"], mac["imagem"]) == ("GitHub Actions", "a1b2c3d4", ["php"], "GitHub Actions: macOS ARM64")
+    assert mac["primeira_falha"] == "N2: " + "x" * 200, "o detalhe é cortado em 200 caracteres"
+    assert relatorio.coletar(_pasta_temporaria() / "nao_existe") == []
+
+
+def teste_relatorio_resume_por_celula():
+    celulas = relatorio.por_celula(relatorio.coletar(_celulas_de_mentira()))
+    assert [c["id"] for c in celulas] == ["L-ARCH", "L-U2404", "M-15"]
+    u2404 = celulas[1]
+    assert (u2404["rodadas"], u2404["origem"], u2404["sistema"]) == (2, "WSL", relatorio.CELULAS["L-U2404"][0])
+    assert (u2404["primeira"]["rodada"], u2404["primeira"]["modo"], u2404["primeira"]["alcancado"]) == ("20261118-193340", "como-esta", "N0")
+    assert u2404["primeira"]["primeira_falha"].startswith("N1: ")
+    assert (u2404["ultima"]["rodada"], u2404["ultima"]["modo"], u2404["ultima"]["alcancado"], u2404["ultima"]["ate"]) == ("20261119-094340", "novo", "N3", "N3")
+    assert celulas[0]["rodadas"] == 1 and celulas[0]["primeira"] == celulas[0]["ultima"]
+    assert celulas[2]["origem"] == "GitHub Actions"
+    for fixa in ("ALVO", "L-U2404", "L-U2404-SS", "L-U2204", "L-U2604", "L-D12", "L-D13", "L-F45", "L-ARCH", "L-SUSE",
+                 "CI-UBU", "CI-WIN", "M-15", "M-15I"):
+        assert fixa in relatorio.CELULAS and len(relatorio.CELULAS[fixa]) == 2, fixa
+    assert relatorio.CELULAS["L-U2404-SS"][0] == "Ubuntu 24.04 sem systemd"
+    assert [n[0] for n in relatorio.NAO_TESTADAS] == ["W11-SB", "W11-VM-D1", "W11-VM-D0", "WS22-VM", "L-U2404-VM", "W10-USADO"]
+
+
+def teste_relatorio_blocos_em_markdown():
+    rodadas = relatorio.coletar(_celulas_de_mentira())
+    celulas = relatorio.por_celula(rodadas)
+    resumo, matriz, cru, nao = (relatorio.bloco_resumo(celulas), relatorio.bloco_matriz(celulas),
+                                relatorio.bloco_rodadas(rodadas), relatorio.bloco_nao_testadas())
+    assert ("| Célula | Sistema | Como a máquina nasce | Onde rodou | Nível alcançado na última rodada | Prova pedida até | "
+            "Maior nível em rodada novo |") in resumo
+    assert "| L-U2404 | " in resumo and "| N3 | N3 | N3 |" in resumo
+    assert f"| M-15 | macOS 15, Apple Silicon | {relatorio.CELULAS['M-15'][1]} | GitHub Actions | N2 | N3 | N2 |" in resumo
+    assert "só a prova, sobre a instalação que já existia" in relatorio.CELULAS["ALVO"][1]
+    assert "o instalador não rodou nesta célula" in relatorio.CELULAS["ALVO"][1]
+    assert "| L-ARCH | " in resumo and "| sem prova | N1 | - |" in resumo, "sem rodada novo, a última coluna fica em -"
+    assert "sem prova" in resumo, "a rodada sem registro.json"
+    assert "ainda sem rodada" in resumo and "| CI-UBU |" in resumo, "célula da matriz que ainda não rodou"
+    assert "GitHub Actions" in resumo and "WSL" in resumo
+    assert "| Célula | Rodadas | Primeira rodada | Última rodada |" in matriz
+    assert "20261118-193340" in matriz and "20261119-094340" in matriz
+    assert "\\|" in matriz, "o `|` do erro literal não pode quebrar a tabela"
+    assert "| Célula | Rodada | Onde | Modo | Até |" in cru and cru.count("\n| ") == 4, "uma linha por rodada"
+    assert "a1b2c3d4" in cru and "php" in cru
+    for nome in ("W11-SB", "W11-VM-D1", "W11-VM-D0", "WS22-VM", "L-U2404-VM", "W10-USADO", "decisão 153"):
+        assert nome in nao, nome
+    for texto in (resumo, matriz, cru, nao):
+        assert "—" not in texto and "→" not in texto
+        linhas = [linha for linha in texto.splitlines() if linha.startswith("|")]
+        colunas = {linha.replace("\\|", "").count("|") for linha in linhas[:1]}
+        assert all(linha.replace("\\|", "").count("|") in colunas for linha in linhas), "colunas diferentes na tabela"
+
+
+def teste_relatorio_colar_troca_so_o_bloco():
+    texto = "antes\n<!-- tb_inst_resumo:inicio -->\nvelho\n<!-- tb_inst_resumo:fim -->\ndepois\n<!-- tb_inst_outro:inicio -->\nx\n<!-- tb_inst_outro:fim -->\n"
+    novo = relatorio.colar(texto, "resumo", "linha 1\nlinha 2")
+    assert novo == ("antes\n<!-- tb_inst_resumo:inicio -->\nlinha 1\nlinha 2\n<!-- tb_inst_resumo:fim -->\ndepois\n"
+                    "<!-- tb_inst_outro:inicio -->\nx\n<!-- tb_inst_outro:fim -->\n"), novo
+    assert relatorio.colar(novo, "resumo", "linha 1\nlinha 2") == novo, "colar duas vezes dá o mesmo texto"
+    assert relatorio.colar(texto.replace("\n", "\r\n"), "resumo", "a\nb") == texto.replace("\n", "\r\n").replace("velho", "a\r\nb")
+    for ruim, pedaco in ((texto.replace("<!-- tb_inst_resumo:fim -->", ""), "fim"),
+                         (texto.replace("<!-- tb_inst_resumo:inicio -->", ""), "início"),
+                         (texto + texto, "mais de uma vez"),
+                         ("sem marcas\n", "marcas")):
+        try:
+            relatorio.colar(ruim, "resumo", "x")
+        except ValueError as e:
+            assert pedaco in str(e), str(e)
+        else:
+            raise AssertionError(f"devia recusar: {pedaco}")
+    # a marca de outro bloco não vale para este: `resumo` não encontra `nao_testadas`
+    try:
+        relatorio.colar(texto, "nao_testadas", "x")
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("bloco sem marca devia ser recusado")
+
+
+def teste_relatorio_rodada_que_nao_terminou_aparece_como_tal():
+    celulas = _pasta_temporaria() / "celulas"
+    pasta = celulas / "CI-WIN" / "20261126-120000"
+    pasta.mkdir(parents=True)
+    (pasta / "celula.json").write_text(json.dumps({"id": "CI-WIN", "modo": "como-esta", "ate": "N4", "terminou": False,
+                                                   "actions": {"commit": "b" * 40}}), encoding="utf-8")
+    antiga = celulas / "CI-UBU" / "20261126-120000"
+    antiga.mkdir(parents=True)
+    (antiga / "celula.json").write_text(json.dumps({"id": "CI-UBU", "modo": "novo", "ate": "N3", "actions": {}}), encoding="utf-8")
+    rodadas = relatorio.coletar(celulas)
+    win = [r for r in rodadas if r["id"] == "CI-WIN"][0]
+    ubu = [r for r in rodadas if r["id"] == "CI-UBU"][0]
+    assert win["alcancado"] == "não terminou" and ubu["alcancado"] == "sem prova", "rodada antiga sem a chave vale como terminada"
+    resumo = relatorio.bloco_resumo(relatorio.por_celula(rodadas))
+    assert "| não terminou |" in resumo
+    assert "não terminou" in relatorio.bloco_matriz(relatorio.por_celula(rodadas))
+
+
+def teste_relatorio_sincronizar_acusa_destino_sem_marca_e_o_check_acusa_diferenca():
+    raiz = _pasta_temporaria()
+    celulas = raiz / relatorio.CELULAS_RELATIVO
+    celulas.parent.mkdir(parents=True)
+    shutil.copytree(_celulas_de_mentira(), celulas)
+    caminho_relatorio = raiz / relatorio.RELATORIO_RELATIVO
+    caminho_relatorio.parent.mkdir(parents=True, exist_ok=True)
+    marcas = "".join(f"<!-- tb_inst_{n}:inicio -->\nvelho\n<!-- tb_inst_{n}:fim -->\n" for n in ("resumo", "matriz", "rodadas", "nao_testadas"))
+    caminho_relatorio.write_text("texto\n" + marcas + "fim\n", encoding="utf-8")
+    (raiz / "README.md").write_text("README sem marcas\n", encoding="utf-8")
+    (raiz / "DETALHES-TECNICOS.md").write_text("DETALHES com so uma marca\n<!-- tb_inst_resumo:inicio -->\nvelho\n<!-- tb_inst_resumo:fim -->\n", encoding="utf-8")
+    diferencas, avisos = relatorio.sincronizar(raiz, gravar=False)
+    assert any("matriz.json" in d for d in diferencas) and any("relatorio-instalador" in d and "resumo" in d for d in diferencas), diferencas
+    assert not (raiz / relatorio.MATRIZ_RELATIVO).exists(), "--check não grava"
+    assert any("README.md" in d and "resumo" in d and "marca" in d for d in diferencas), "destino sem marcas é diferença"
+    assert any("DETALHES-TECNICOS.md" in d and "nao_testadas" in d and "marca" in d for d in diferencas)
+    diferencas, avisos = relatorio.sincronizar(raiz, gravar=True)
+    assert (raiz / relatorio.MATRIZ_RELATIVO).exists()
+    matriz = json.loads((raiz / relatorio.MATRIZ_RELATIVO).read_text(encoding="utf-8"))
+    assert matriz["tag_ia"]["alteracao"].startswith("! Alteração de IA - Revisar: ") and matriz["tag_ia"]["motivo"].startswith("! Motivo: ")
+    assert len(matriz["rodadas"]) == 4 and matriz["rodadas"][0]["id"] == "L-ARCH"
+    assert (raiz / "README.md").read_text(encoding="utf-8") == "README sem marcas\n", "sem marcas, o arquivo fica como está"
+    detalhes = (raiz / "DETALHES-TECNICOS.md").read_text(encoding="utf-8")
+    assert "velho" in detalhes and "L-U2404" not in detalhes, "faltou marca de um bloco: nada é gravado naquele arquivo"
+    assert any("DETALHES-TECNICOS.md" in d and "nao_testadas" in d for d in diferencas), "o bloco sem marca continua acusado depois de colar"
+    # o que falta de marca continua falta: o check segue acusando só os dois arquivos incompletos
+    restantes, _ = relatorio.sincronizar(raiz, gravar=False)
+    assert len([d for d in restantes if "sem as marcas" in d]) == 2, restantes
+    # arquivo de destino que não existe também é diferença
+    (raiz / "README.md").unlink()
+    restantes, _ = relatorio.sincronizar(raiz, gravar=False)
+    assert any("README.md" in d and "não existe" in d for d in restantes), restantes
+    # com todas as marcas, depois de colar o check não acusa nada, e uma edição à mão no bloco é acusada
+    (raiz / "README.md").write_text("README\n<!-- tb_inst_resumo:inicio -->\nvelho\n<!-- tb_inst_resumo:fim -->\n", encoding="utf-8")
+    (raiz / "DETALHES-TECNICOS.md").write_text("D\n" + "".join(f"<!-- tb_inst_{n}:inicio -->\nv\n<!-- tb_inst_{n}:fim -->\n"
+                                                              for n in ("resumo", "nao_testadas")), encoding="utf-8")
+    relatorio.sincronizar(raiz, gravar=True)
+    assert relatorio.sincronizar(raiz, gravar=False) == ([], []), "depois de colar, o check não acusa nada"
+    caminho_relatorio.write_text(caminho_relatorio.read_text(encoding="utf-8").replace("L-ARCH", "L-OUTRA", 1), encoding="utf-8")
+    diferencas, _ = relatorio.sincronizar(raiz, gravar=False)
+    assert len(diferencas) == 1 and "relatorio-instalador" in diferencas[0], diferencas
+
+
+def teste_relatorio_do_repositorio_bate_com_as_evidencias():
+    diferencas, avisos = relatorio.sincronizar(RAIZ, gravar=False)
+    assert diferencas == [] and avisos == [], "rode `python ferramentas/instalador_matriz/relatorio.py --colar`: " + "; ".join(diferencas + avisos)
+    rodadas = relatorio.coletar(RAIZ / relatorio.CELULAS_RELATIVO)
+    assert rodadas, "nenhuma rodada encontrada no repositório"
+    for fixa in relatorio.CELULAS:
+        if fixa.startswith(("L-", "ALVO")):
+            assert any(r["id"] == fixa for r in rodadas), f"{fixa} devia ter rodada"
 
 
 def main() -> None:

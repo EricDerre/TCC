@@ -1,0 +1,527 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/relatorio.py: uma linha por rodada de célula de teste do instalador, lida dos `celula.json` e `registro.json` de `celulas/`.",
+  "motivo": "! Motivo: o relatório do instalador e os blocos do README e do DETALHES-TECNICOS saem destas linhas; escrever o nível à mão faria o texto divergir da evidência (rode `relatorio.py --colar` depois de importar uma rodada nova)."
+ },
+ "rodadas": [
+  {
+   "id": "ALVO",
+   "rodada": "20261119-184751",
+   "modo": "novo",
+   "origem": "máquina-alvo",
+   "imagem": "maquina-alvo como esta (sem imagem)",
+   "ate": "N4",
+   "terminou": true,
+   "alcancado": "N4",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "passou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Windows",
+   "commit": ""
+  },
+  {
+   "id": "L-ARCH",
+   "rodada": "20261119-162745",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "archlinux-2026.11.01.182233.wsl",
+   "ate": "N1",
+   "terminou": true,
+   "alcancado": "sem prova",
+   "falhou": null,
+   "niveis": {},
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "",
+   "commit": ""
+  },
+  {
+   "id": "L-ARCH",
+   "rodada": "20261119-162821",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "archlinux-2026.11.01.182233.wsl",
+   "ate": "N1",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "nao_rodou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: cliente do MariaDB não encontrado (find_mysql_cli)",
+   "impedida_por_versao": [],
+   "sistema": "Arch Linux",
+   "commit": ""
+  },
+  {
+   "id": "L-D12",
+   "rodada": "20261119-151002",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "Debian_WSL_AMD64_v1.20.0.0.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [
+    "python"
+   ],
+   "sistema": "Debian GNU/Linux 12 (bookworm)",
+   "commit": ""
+  },
+  {
+   "id": "L-D12",
+   "rodada": "20261119-161617",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "Debian_WSL_AMD64_v1.20.0.0.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Debian GNU/Linux 12 (bookworm)",
+   "commit": ""
+  },
+  {
+   "id": "L-D13",
+   "rodada": "20261119-083308",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "Debian_WSL_AMD64_v1.26.0.0.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [],
+   "sistema": "Debian GNU/Linux 13 (trixie)",
+   "commit": ""
+  },
+  {
+   "id": "L-D13",
+   "rodada": "20261119-133320",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "Debian_WSL_AMD64_v1.26.0.0.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Debian GNU/Linux 13 (trixie)",
+   "commit": ""
+  },
+  {
+   "id": "L-F45",
+   "rodada": "20261119-085043",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "Fedora-WSL-Base-45-1.4.x86_64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: cliente do MariaDB não encontrado (find_mysql_cli)",
+   "impedida_por_versao": [],
+   "sistema": "Fedora Linux 45 (WSL)",
+   "commit": ""
+  },
+  {
+   "id": "L-F45",
+   "rodada": "20261119-134801",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "Fedora-WSL-Base-45-1.4.x86_64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N1",
+   "falhou": true,
+   "niveis": {
+    "N1": "passou",
+    "N2": "falhou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N2: --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backg",
+   "impedida_por_versao": [],
+   "sistema": "Fedora Linux 45 (WSL)",
+   "commit": ""
+  },
+  {
+   "id": "L-F45",
+   "rodada": "20261119-144952",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "Fedora-WSL-Base-45-1.4.x86_64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N1",
+   "falhou": true,
+   "niveis": {
+    "N1": "passou",
+    "N2": "falhou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N2: eatures=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding -",
+   "impedida_por_versao": [],
+   "sistema": "Fedora Linux 45 (WSL)",
+   "commit": ""
+  },
+  {
+   "id": "L-SUSE",
+   "rodada": "20261119-163121",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "openSUSE-Tumbleweed-20261102.x86_64-3.329-Build3.329.wsl",
+   "ate": "N1",
+   "terminou": true,
+   "alcancado": "sem prova",
+   "falhou": null,
+   "niveis": {},
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "",
+   "commit": ""
+  },
+  {
+   "id": "L-SUSE",
+   "rodada": "20261119-163154",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "openSUSE-Tumbleweed-20261102.x86_64-3.329-Build3.329.wsl",
+   "ate": "N1",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "nao_rodou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: cliente do MariaDB não encontrado (find_mysql_cli)",
+   "impedida_por_versao": [],
+   "sistema": "openSUSE Tumbleweed",
+   "commit": ""
+  },
+  {
+   "id": "L-U2204",
+   "rodada": "20261119-075036",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "ubuntu-22.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [
+    "python"
+   ],
+   "sistema": "Ubuntu 22.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2204",
+   "rodada": "20261119-130456",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-22.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 22.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404",
+   "rodada": "20261118-193340",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404",
+   "rodada": "20261119-090917",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: cliente do MariaDB não encontrado (find_mysql_cli)",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404",
+   "rodada": "20261119-094340",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N1",
+   "falhou": true,
+   "niveis": {
+    "N1": "passou",
+    "N2": "falhou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N2: Traceback (most recent call last):",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404",
+   "rodada": "20261119-095322",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404",
+   "rodada": "20261119-163315",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N4",
+   "terminou": true,
+   "alcancado": "N4",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "passou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404",
+   "rodada": "20261119-185423",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404-SS",
+   "rodada": "20261119-085151",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404-SS",
+   "rodada": "20261119-095855",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2404-SS",
+   "rodada": "20261119-125404",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-24.04.5-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2604",
+   "rodada": "20261119-082731",
+   "modo": "como-esta",
+   "origem": "WSL",
+   "imagem": "ubuntu-26.04.1-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 26.04.1 LTS",
+   "commit": ""
+  },
+  {
+   "id": "L-U2604",
+   "rodada": "20261119-131225",
+   "modo": "novo",
+   "origem": "WSL",
+   "imagem": "ubuntu-26.04.1-wsl-amd64.wsl",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 26.04.1 LTS",
+   "commit": ""
+  }
+ ]
+}

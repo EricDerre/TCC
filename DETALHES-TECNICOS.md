@@ -56,6 +56,8 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
      ! Motivo: o pacote Q3 gerou a árvore de decisão de cada caso das corridas vigentes; sem a frase, a tabela pararia no Q2. -->
 <!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q2) a linha da Pós-Fase 4 diz o que a fase entrega e que os pacotes Q1 e Q2 estão feitos.
      ! Motivo: a linha ainda dizia "Não iniciada" com o texto da decisão 94; a fase foi especificada e planejada em 07/11/2026 (decisões 101 a 106) e dois pacotes já saíram. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a linha da Fase 5 passou de "Não iniciada" a "Concluída", e o item do documento do TCC, mais abaixo, diz que a fonte já traz a Fase 5.
+     ! Motivo: a fase foi medida em 18 e 24/11/2026 e fechada em 25/11/2026 (decisão 156); a tabela ainda a dava como não iniciada. O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. -->
 | Fase | O que é | Estado |
 |---|---|---|
 | 1 | Ambiente e sistemas cobaia | Concluída |
@@ -66,7 +68,7 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 | Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Concluída em 26/10/2026 (relatório fechado; parte B da pesquisa integrada; especificação da trilha aprovada; corrida 13 cancelada) |
 | 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Concluída em 06/11/2026: pacotes P0 a P8 e corridas 16 a 24 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 cumprida na corrida 18d, no limite exato, decisões 97 e 98; medida com revisor humano em aberto, decisão 95) |
 | Pós-Fase 4 | O que chega ao analista: relatório por caso no molde do relatório de defeitos da seção 5.5 do CTFL 4.0, camada de leitura dos verbetes, filtros determinísticos de prolixidade e objetividade, árvore de decisão e barra de progresso antes da Fase 5; hub central e integração com o Git depois dela (decisões 94 e 101 a 106) | Em andamento desde 07/11/2026: Q1 (relatório v3 e camada de leitura) e Q2 (filtros de texto, `filtros_de_texto.py`) feitos em 07/11/2026; Q3 (árvore de decisão por caso, `arvore_de_decisao.py`) e Q4 (barra de progresso, `progresso.py`, e protótipo da seleção pelo diff do Git, `impacto_git.py`) feitos em 08/11/2026; Q5 (a sessão de revisão dos 36 relatórios v3 com a árvore da corrida 24, lidos quase todos por um analista a quem o Eric passou os relatórios, `revisao_v3.py`, `sessao_revisao.py --perfil v3` e `avaliar_fase4.py --revisao_v3`) e a curadoria das 39 leituras dos verbetes (`ferramentas/curadoria_leituras.py`) feitos em 10/11/2026 |
-| 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Não iniciada |
+| 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Concluída em 25/11/2026: o agente medido na corrida 28b, a frio, e três sessões de pessoas pela página; o agente reparou mais rápido nos dez cenários, 66,3 s contra 219,7 s na média ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-5-relatorio.md)) |
 
 ### Resultado principal
 
@@ -148,7 +150,7 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 - [Roadmap](Documentacao/memorial/roadmap.md) e [pendências](Documentacao/memorial/pendencias.md): o que falta rodar e as decisões, em fichas.
 - [Relatório da Fase 4](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md): o agente na tela, corrida a corrida, as regras R1 a R8, as limitações declaradas e o que o documento do TCC precisa carregar.
 - [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
-- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) e o [.docx da versão 3](Documentacao/TCC_v3_20261105.docx), de 05/11/2026, gerado a partir dele por `ferramentas/gerar_tcc_docx.py` no molde do orientador: texto provisório, com a Fase 4 até a corrida 22, à espera da leitura do grupo e dos números das corridas 18c, 21c, 23 e 24; as corridas 18c, 21c e 23 já rodaram, e as figuras dela já mudaram em `Documentacao/figuras/`, com o texto ainda por atualizar. O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho.
+- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) e o [.docx da versão 3](Documentacao/TCC_v3_20261105.docx), de 05/11/2026, gerado a partir dele por `ferramentas/gerar_tcc_docx.py` no molde do orientador: texto provisório, com a Fase 4 até a corrida 22, à espera da leitura do grupo e dos números das corridas 18c, 21c, 23 e 24; as corridas 18c, 21c e 23 já rodaram, e as figuras dela já mudaram em `Documentacao/figuras/`, com o texto ainda por atualizar. Desde 24/11/2026 a fonte em Markdown traz também a Fase 5 (seção 6.8); o `.docx` continua o de 05/11/2026 e sai de novo com o pacote Q8 da Pós-Fase 4. O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho.
 - Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
 - Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório, sem a `.claude/` nem a `.venv` da CobaiaAPI, na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
 
@@ -219,30 +221,39 @@ dois clientes diferentes o consumindo).
 - **Testes:** pytest + `fastapi.testclient` (roda contra o banco real).
 - **Lint:** ruff.
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) a lista "Infraestrutura / instalador" passou a descrever o instalador de hoje: pacotes de Linux por família (`apt`, `dnf`) vindos de `instalador/sistema.py`, Python trazido pelo `uv` no Linux e no macOS, e o fim da frase "roda igual nos três sistemas".
+     ! Motivo: o texto antigo dizia `apt-get install php php-mysql mariadb-server` (o comando antigo, que trazia o Apache e não trazia o `php-mbstring`) e que o `install.py` roda igual nos três sistemas; no Linux ele segue `instalar_no_linux`, e no Windows e no macOS segue `instalar_no_windows_ou_mac`, com passos diferentes e sem a mesma prova (decisão 153). -->
 ### Infraestrutura / instalador
 - **Windows:** PHP e MariaDB instalados via `winget`
-  (`PHP.PHP.8.2`, `MariaDB.Server`).
-- **Linux:** `apt-get install php php-mysql mariadb-server`.
-- **macOS:** `brew install php mariadb`.
+  (`PHP.PHP.8.2`, `MariaDB.Server`) ou, sem administrador, o MariaDB pelo zip oficial. Passos antigos, sem prova em máquina nova.
+- **Linux (`apt` ou `dnf`):** os pacotes vêm de `instalador/sistema.py`: `php-cli`, `php-mysql` (no `dnf`, `php-mysqlnd`), `php-mbstring` e `mariadb-server`, mais o que o Python e o Chromium pedem. Se não há Python 3.12 ou mais novo, o `install.sh` traz um pelo `uv` para `.ferramentas/`.
+- **macOS:** `brew install php mariadb`, com o `uv` trazendo o Python como no Linux. Passos antigos, sem prova em máquina nova.
 - Todo o resto (schema, seed, venv, dependências Python) é feito por
-  `install.py`, que roda igual nos três sistemas.
+  `install.py`, mas por caminhos diferentes em cada sistema: ver
+  [Instalação em detalhe](#instalação-em-detalhe).
 
 ## Estrutura do repositório
 
 <!-- ! Alteração de IA - Revisar: (07/11/2026, Pós-Fase 4, pacote Q1) a árvore ganhou `biblioteca_producao_leitura/` ao lado de `biblioteca_producao/`.
      ! Motivo: a camada de leitura dos verbetes nasceu nesta data (decisão 103) e mora fora da biblioteca que o modelo lê; sem a linha, quem abre o repositório não saberia de qual das duas pastas o analista lê. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) a árvore abaixo ganhou `instalador/`, `versoes.json`, `restaurar_banco.py`, `testar_instalador.py` e `.github/workflows/`, e as linhas de `install.*` e `run.*` dizem o que cada lançador faz hoje.
+     ! Motivo: essas peças existem desde o pacote do instalador único e não estavam na árvore; `.github/` aparecia só com os modelos de issue e de pull request, sem o fluxo `instalador.yml` que roda o instalador no GitHub. -->
 ```
 TCC/
 ├── README.md                                # porta de entrada: o projeto, as figuras e como rodar
 ├── DETALHES-TECNICOS.md                     # este arquivo
 ├── Cobaia.exe                               # Windows: instala + roda + abre o navegador, tudo em 1
 ├── Cobaia.py / build_exe.ps1 / Cobaia.spec  # fonte do Cobaia.exe e script pra recompilar
-├── install.cmd / install.ps1 / install.sh / install.py   # instalador (chamado por Cobaia.exe também)
+├── install.cmd / install.ps1 / install.sh / install.py   # instalador: install.sh (Linux/macOS) traz o Python pelo uv; install.cmd/.ps1 (Windows) usam o winget; chamado por Cobaia.exe também
 ├── run.cmd / run.ps1 / run.sh / run.py                   # sobe CobaiaFront + CobaiaAPI juntos
+├── instalador/                             # peças do instalador: sistema.py (família e pacotes), ferramentas.py (passos do Linux), versoes.py, conferir.py (a prova N1 a N4), registro.py, uv_fixado.txt
+├── versoes.json                            # versão testada e faixa aceita de cada ferramenta (gerado por ferramentas/instalador_matriz/atualizar_versoes.py)
+├── restaurar_banco.py                      # recria o banco ti93phpdb01 a partir do seed
+├── testar_instalador.py                    # bateria de testes do instalador
 ├── _env_common.py                          # helpers compartilhados por install.py/run.py/Cobaia.py
 ├── LICENSE / CITATION.cff                  # licença MIT e citação do repositório
 ├── CONTRIBUTING.md / CODE_OF_CONDUCT.md / SECURITY.md    # como contribuir, conduta e política de segurança
-├── .github/                                # modelos de issue e de pull request
+├── .github/                                # modelos de issue e de pull request, e workflows/instalador.yml (o instalador em quatro máquinas do GitHub)
 ├── .claude/                                # CLAUDE.md, settings.json (hooks, permissões), rules/ e skills/ do Claude Code (versionados; só settings.local.json fica fora)
 ├── ferramentas/                            # scripts locais de apoio: painel do projeto, documento do TCC, medição de tokens, resumo de saídas, conferência da documentação, pesquisa, PDF do ABNT
 ├── claude-memoria/                         # memória do Claude + CLAUDE.md portáteis (importar/exportar.ps1) e os handoffs de sessão em contexto/
@@ -290,19 +301,23 @@ TCC/
 
 ## Instalação em detalhe
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7 do instalador único, decisões 140, 141 e 153) a lista de pré-requisitos foi reescrita por sistema, com o que cada um pede hoje e com a nota do que não foi provado; "Windows 10/11, Linux ou macOS" e "distro baseada em Debian/Ubuntu" saíram.
+     ! Motivo: a lista prometia Windows 10/11, Linux e macOS, e a prova gravada cobre só o Windows da máquina-alvo e o Linux pelo WSL; "distro baseada em Debian/Ubuntu" estava errada para o Linux de hoje, em que `instalador/sistema.py` reconhece `apt` (Ubuntu, Debian e derivados), `dnf` (Fedora, melhor esforço) e manda o resto instalar à mão. -->
 ### Pré-requisitos
 
-- Windows 10/11, Linux ou macOS.
-- Conexão com a internet (o instalador baixa PHP/MariaDB/pacotes Python se
-  não estiverem instalados).
-- **Windows:** `winget` (já vem no Windows 10 2004+/11). Não precisa rodar
-  como Administrador para PHP; a instalação do MariaDB Server foi testada
-  com sucesso **sem** elevação também.
-- **Linux:** `sudo` disponível (`apt-get`), distro baseada em Debian/Ubuntu.
-- **macOS:** [Homebrew](https://brew.sh) instalado.
+- Conexão com a internet (o instalador baixa PHP, MariaDB, pacotes Python, o
+  Chromium do Playwright, o Ollama e o modelo se não estiverem instalados).
+- **Windows:** `winget` (já vem no Windows 10 2004+ e no 11). O PHP vem do `winget` em escopo de usuário,
+  sem Administrador. O MariaDB vem do `winget` (MSI, que pede Administrador) ou, sem administrador, do zip oficial (ver abaixo).
+  O Windows 10 não foi testado: o texto diz o que o código faz, não o que uma máquina provou.
+- **Linux:** `sudo` disponível. Sistemas suportados (regra de `instalador/sistema.py`, decisão 141): Ubuntu 22.04, 24.04 e 26.04 e Debian 12 e 13, pelo `apt`.
+  Fedora entra pelo `dnf`, como melhor esforço. Outras distribuições recebem a lista do que instalar à mão e o instalador sai com erro.
+  O usuário deve rodar o instalador como comum, sem `sudo` na frente: o instalador recusa rodar como root.
+- **macOS:** [Homebrew](https://brew.sh) instalado. Sem ele o instalador avisa e sai.
+- **Python:** 3.12 ou mais novo (regra do `versoes.json`). No Linux e no macOS, se a máquina não tem um, o `install.sh` traz um.
 
-Nada precisa ser pré-instalado manualmente além disso, o instalador cuida
-do PHP, do MariaDB e do Python/venv.
+O restante (PHP, MariaDB, venvs, Chromium, Ollama e o modelo) o instalador cuida. O que foi provado em cada sistema
+está no bloco "O que foi provado" mais abaixo e no [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
 
 <!-- ! Alteração de IA - Revisar: parágrafo novo (26/10/2026, Fase 4, pacote P0) sobre a máquina sem administrador: PHP pelo winget em escopo de usuário e MariaDB pelo zip oficial em `%LOCALAPPDATA%`, que `_env_common.py` passou a procurar.
      ! Motivo: na máquina-alvo i5 (corporativa, sem administrador) as cobaias nunca tinham subido e o MSI do `MariaDB.Server` não foi tentado por exigir elevação; sem o parágrafo, quem clonar o repositório numa máquina assim rodaria o instalador e pararia no MariaDB. -->
@@ -339,29 +354,139 @@ erro comum de *Execution Policy* do PowerShell (ver
 [Troubleshooting](#troubleshooting)) sem precisar mudar nenhuma
 configuração do sistema. `install.cmd` só chama `install.ps1` por baixo.
 
-O que ele faz, em ordem (idempotente, pode rodar de novo a qualquer hora
-sem duplicar nada):
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7 do instalador único, decisões 138 a 143 e 153) a lista de passos foi reescrita a partir do código de hoje (`install.sh`, `install.ps1`, `install.py`: `instalar_no_linux` e `instalar_no_windows_ou_mac`, `instalador/ferramentas.py`, `instalador/conferir.py`, `versoes.json`) e ganhou as subseções "O lançador", "Passos do Linux", "Passos do Windows e do macOS", "Versões", "A prova", "Variáveis de ambiente", "O que foi provado" e "O que não foi testado".
+     ! Motivo: a lista antiga dizia que o `install.py` "roda igual nos três sistemas", que o Python vem do `winget`/`apt`/`brew` e que o MariaDB sobe por `systemctl` em qualquer Linux. Hoje o Linux segue outra ordem (o serviço e a entrada do root do MariaDB vêm antes dos `.sql`, porque aplicar os `.sql` antes parava em "Não foi possível subir o MariaDB"), o `install.sh` traz o Python pelo `uv` quando falta, e o Windows e o macOS seguem os passos antigos, que nunca rodaram em máquina nova. -->
+O instalador é idempotente: pode rodar de novo a qualquer hora, e o que já
+existe é reaproveitado. O caminho muda conforme o sistema, e por isso as
+subseções abaixo separam o lançador, o Linux e o Windows/macOS.
 
-1. Garante que existe Python 3 (instala via winget/apt/brew se faltar).
-2. Instala PHP 8.2 se não encontrar (`winget`/`apt`/`brew`).
-3. Instala MariaDB Server se não encontrar, e garante que está rodando,
-   no Windows, como processo direto (não há serviço registrado, ver
-   [Decisões técnicas](#decisões-técnicas-e-problemas-resolvidos)); no
-   Linux/macOS, via `systemctl`/`brew services`.
-4. Garante que o usuário `root` do banco está acessível sem senha (o que
-   `Programacao/CobaiaFront/conn/connect.php`, intocado, espera).
-5. Aplica, em ordem: `bancoatualizado.sql`, depois `schema_completo.sql` e
-   por fim `seed.sql`.
-6. Cria o venv em `Programacao/CobaiaAPI/.venv` e instala as dependências
-   (`requirements-dev.txt`, que já inclui as de produção).
-7. Prepara o ambiente do `AgenteCore`: venv própria, dependências, o
-   Chromium do Playwright, o Ollama e o download do modelo padrão
-   (`qwen2.5:7b`; a variável de ambiente `COBAIA_MODELO_LLM` troca o modelo).
-   São alguns GB, então esse passo é o último e pode ser interrompido por quem
-   só quer rodar o site.
+#### O lançador
 
-Se algo faltar automatizar no seu SO específico, o script imprime uma
-mensagem clara em vez de travar silenciosamente.
+- **Linux e macOS (`install.sh`):** procura um Python 3.12 ou mais novo que rode de
+  verdade (`python3` e `python`). Se não acha, baixa o `uv` (um instalador de
+  Python), na versão fixada em `instalador/uv_fixado.txt`, confere o SHA-256
+  do arquivo baixado contra o que está nesse arquivo e instala o Python em
+  `.ferramentas/python`, dentro da pasta do projeto; nada muda no Python do
+  sistema. Sem `curl` nem `wget`, em distribuição de `apt` ele instala o `curl` pelo `apt`; nas outras, diz o que instalar.
+  Com `COBAIA_FORCAR_UV=1` ignora o Python do sistema e usa o do `uv`. Depois chama `python install.py`.
+- **Windows (`install.cmd` e `install.ps1`, e `Cobaia.exe`):** ainda é o lançador antigo. O `install.cmd` chama o
+  `install.ps1` com a política de execução liberada só para aquela execução; o `install.ps1` usa o primeiro `python`,
+  `python3` ou `py` que achar, sem conferir a versão, e se não achar instala o Python 3.14 pelo `winget`. O `uv` não é usado no Windows.
+
+#### Passos do Linux (`instalar_no_linux`)
+
+Valem para `apt` e para `dnf`, na ordem em que um depende do outro. Um passo que falha para o instalador com a mensagem dele
+(`Instalação interrompida: ...`), e cada passo tem o tempo gravado em `.ferramentas/instalacao/passos.json`.
+
+1. Pacotes do sistema, com `sudo` (`instalador/sistema.py`): `curl`, `ca-certificates` e `zstd` (e `gawk` no `dnf`), o módulo `venv` do Python, `php-cli`, o driver
+   MySQL do PHP (`php-mysql` no `apt`, `php-mysqlnd` no `dnf`), `php-mbstring` e `mariadb-server`. Só instala o que falta.
+2. Confere o PHP: as extensões `mysqli`, `pdo_mysql` e `mbstring` precisam estar ligadas.
+3. Sobe o serviço do MariaDB, se ele não responde (`_env_common.ensure_mariadb_running`, que também cobre máquina sem systemd).
+4. Garante que o `root` do banco entra sem senha, o que o `connect.php` do CobaiaFront espera. Se precisa trocar a entrada,
+   pergunta antes (`COBAIA_ROOT_SEM_SENHA=1` aceita sem pergunta, `=0` recusa).
+5. Aplica `bancoatualizado.sql`, `schema_completo.sql` e `seed.sql`, nessa ordem.
+6. Confere e cria a venv da CobaiaAPI e instala `requirements-dev.txt`.
+7. Prepara o `AgenteCore`: venv própria, dependências, o Chromium do Playwright (com as bibliotecas de sistema que ele pede),
+   o Ollama (na versão testada, pelo script oficial, se faltar; um Ollama que já existe nunca é trocado) e o modelo padrão
+   (`qwen2.5:7b`; `COBAIA_MODELO_LLM` troca o modelo). São alguns GB, e esse passo é o último: quem só quer o site pode interromper.
+
+No fim ele imprime a versão encontrada de cada ferramenta contra o `versoes.json` e sai com erro se alguma impede seguir.
+
+#### Passos do Windows e do macOS (`instalar_no_windows_ou_mac`)
+
+**Estes são os passos antigos, e nunca rodaram em máquina nova.** O Windows da máquina-alvo (uma máquina em uso, onde a
+instalação já estava feita) e o macOS não têm prova de instalação do zero; as células do GitHub Actions (`CI-WIN`, `M-15`, `M-15I`) foram
+escritas para gravar o que acontece, e a primeira execução vem depois do commit e do push. A ordem, no código:
+
+1. PHP: `winget install PHP.PHP.8.2` no Windows, `brew install php` no macOS.
+2. MariaDB: no Windows, o MSI do `winget` ou, sem administrador (ou com `COBAIA_MARIADB_PORTATIL=1`), o zip oficial, extraído em `%LOCALAPPDATA%\MariaDB` com a pasta
+   de dados em `.mariadb\data` dentro do projeto; no macOS, `brew install mariadb` e `brew services start mariadb`.
+3. Sobe o MariaDB (no Windows, como processo direto, sem serviço; ver [Decisões técnicas](#decisões-técnicas-e-problemas-resolvidos)).
+4. Garante o `root` sem senha, aplica os três `.sql`, cria a venv da CobaiaAPI e prepara o `AgenteCore` (venv, Chromium, Ollama pelo `winget` ou `brew`, e o modelo).
+
+Nesses dois sistemas o instalador ainda não confere as versões contra o `versoes.json` durante a instalação, e `--reproduzir` só avisa disso; a conferência
+fica para a prova (`--conferir`).
+
+#### Versões (`versoes.json` e `--reproduzir`)
+
+O `versoes.json`, na raiz, guarda de cada ferramenta (Python, PHP, MariaDB, Playwright, Chromium, Ollama, o modelo e o `uv`) a versão que o projeto
+<!-- ! Alteração de IA - Revisar: (25/11/2026, conserto da revisão do I5/I7) a frase sobre o Linux passa a dizer que só o Ollama é instalado na versão testada, e que o PHP e o MariaDB vêm da distribuição.
+     ! Motivo: a frase antiga dizia que o instalador instalava "a versão testada" de qualquer ferramenta que faltasse, mas no código do Linux só o Ollama tem a versão escolhida; o PHP e o MariaDB vêm do `apt` ou do `dnf`, e o Python vem pelo `uv` na série fixada em `instalador/uv_fixado.txt` (`PYTHON_VERSAO`). -->
+testou e a faixa que aceita. No Linux, o instalador instala a versão testada do Ollama quando ele falta; o PHP e o MariaDB vêm na versão que a distribuição tiver, e o
+Python trazido pelo `uv` é o da série fixada em `instalador/uv_fixado.txt` (`PYTHON_VERSAO`). Com o que já existe dentro da faixa ele segue e avisa a diferença, e
+para se a ferramenta está fora da faixa. Com `--reproduzir`, as ferramentas que afetam as medidas (Ollama, Playwright, Chromium e o modelo) precisam estar na versão exata.
+O arquivo é gerado por `ferramentas/instalador_matriz/atualizar_versoes.py`; não se edita à mão.
+
+#### A prova (`--conferir`)
+
+`./install.sh --conferir` (Linux e macOS) e `python install.py --conferir` (Windows) rodam a prova da instalação em vez de instalar, em quatro níveis, e gravam
+`.ferramentas/prova/registro.json`. `--ate N1`, `N2`, `N3` ou `N4` escolhe o último nível (o padrão é N4); um nível só roda se o anterior da sua cadeia passou.
+
+- **N1:** o banco com o seed, o CobaiaFront na porta 8080 e a CobaiaAPI na 8000 respondem.
+- **N2:** o Chromium do Playwright abre o site.
+- **N3:** o Ollama responde com um modelo pequeno (`qwen2.5:0.5b` por padrão).
+<!-- ! Alteração de IA - Revisar: (25/11/2026, conserto da revisão do I5/I7) o N4 "não coube" passa a valer só para falta de memória.
+     ! Motivo: em `instalador/conferir.py`, `classificar_erro_do_ollama` só devolve "não coube" quando o Ollama diz que falta memória; falta de disco é falha. -->
+- **N4:** o `qwen2.5:7b` baixa e responde; quando a máquina não tem memória para isso, o nível sai como "não coube", e não como falha.
+
+O mesmo roteiro é o que as células de teste usam: `python -m instalador.conferir --celula <id> --saida <pasta> --ate <nível>`, a partir da raiz.
+
+#### Variáveis de ambiente
+
+| Variável | Efeito |
+|---|---|
+| `COBAIA_ROOT_SEM_SENHA` | `1` aceita, `0` recusa, sem pergunta, a troca da entrada do `root` do MariaDB para senha vazia (Linux) |
+| `COBAIA_MARIADB_PORTATIL` | `1` usa o zip do MariaDB sem a pergunta e mesmo com administrador; `0` força o MSI do `winget` (Windows) |
+| `COBAIA_MODELO_LLM` | troca o modelo que o instalador baixa (padrão `qwen2.5:7b`) |
+| `COBAIA_FORCAR_UV` | `1` faz o `install.sh` ignorar o Python do sistema e trazer o dele pelo `uv` (Linux e macOS) |
+
+#### O que foi provado
+
+A tabela vem dos arquivos de evidência (`Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/`), gerada por
+`ferramentas/instalador_matriz/relatorio.py`; nenhum nível é digitado à mão. Cada rodada, a primeira falha e as suspeitas levantadas estão no
+[relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
+
+<!-- tb_inst_resumo:inicio -->
+| Célula | Sistema | Como a máquina nasce | Onde rodou | Nível alcançado na última rodada | Prova pedida até | Maior nível em rodada novo |
+|---|---|---|---|---|---|---|
+| ALVO | Windows 11 da máquina-alvo | a máquina do projeto como está: o instalador não rodou nesta célula, só a prova, sobre a instalação que já existia | máquina-alvo | N4 | N4 | N4 |
+| L-U2404 | Ubuntu 24.04 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N4 |
+| L-U2404-SS | Ubuntu 24.04 sem systemd | WSL: imagem oficial, com o systemd desligado na instância | WSL | N3 | N3 | N3 |
+| L-U2204 | Ubuntu 22.04 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-U2604 | Ubuntu 26.04 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-D12 | Debian 12 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-D13 | Debian 13 | WSL: imagem oficial importada e apagada no fim | WSL | N3 | N3 | N3 |
+| L-F45 | Fedora 45 (melhor esforço) | WSL: imagem oficial importada e apagada no fim | WSL | N1 | N3 | N1 |
+| L-ARCH | Arch Linux (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
+| L-SUSE | openSUSE (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
+| CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| M-15I | macOS 15, Intel | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+
+Cada linha é uma célula de teste, e a coluna "Como a máquina nasce" diz o que ela é: na `ALVO` só a prova rodou. Nível alcançado é o maior nível da prova que passou sem nenhum nível abaixo dele ter falhado; N0 quer dizer que nenhum nível passou, "sem prova" quer dizer que a rodada parou antes de gravar o `registro.json`, e "não terminou" quer dizer que o GitHub cortou a tarefa antes do fim. Rodada `novo` é a que roda o instalador já com os consertos; `como-esta` é a que roda o instalador antes deles, para gravar a falha. A última coluna olha todas as rodadas `novo` da célula, porque a última rodada pode ter pedido menos níveis que uma anterior.
+<!-- tb_inst_resumo:fim -->
+
+O fluxo [`.github/workflows/instalador.yml`](.github/workflows/instalador.yml) roda o instalador e a prova em quatro máquinas do GitHub Actions
+(Ubuntu, Windows, macOS em Apple Silicon e macOS em Intel) a cada mudança nos arquivos do instalador, uma vez por semana e a pedido. Essas quatro células
+**ainda não rodaram**: o fluxo começa depois de um commit e de um push. Os executores do GitHub também não são máquinas limpas (já trazem Python, PHP e banco), e por isso cada célula grava
+o que a máquina trazia antes do instalador. A evidência baixada do GitHub entra no repositório por `ferramentas/instalador_matriz/importar_actions.py`.
+
+#### O que não foi testado
+
+<!-- tb_inst_nao_testadas:inicio -->
+| Célula | Sistema | Por que não foi testada |
+|---|---|---|
+| W11-SB | Windows 11 no Windows Sandbox | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia ligar um recurso do Windows e reiniciar a máquina do projeto |
+| W11-VM-D1 | Windows 11 Enterprise de avaliação em máquina virtual, com o Defender ligado | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| W11-VM-D0 | Windows 11 Enterprise de avaliação em máquina virtual, com o Defender desligado | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| WS22-VM | Windows Server 2022 de avaliação em máquina virtual | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| L-U2404-VM | Ubuntu 24.04 de mesa em máquina virtual | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem do Ubuntu de mesa e criar uma máquina virtual no Hyper-V |
+| W10-USADO | Windows 10 de um integrante | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia o computador de um integrante |
+<!-- tb_inst_nao_testadas:fim -->
+
+Também não há prova de: Windows recém-instalado, Windows 10 e Linux instalado fora do WSL (o WSL não é um Linux instalado); processador ARM em Windows e Linux. As
+quatro células do GitHub Actions entram na tabela acima só depois de rodarem e de a evidência ser importada.
 
 ### Como rodar
 
@@ -451,9 +576,11 @@ O motor é Chromium em qualquer um dos casos; a diferença é *qual build*.
 Motivos, considerando que o projeto precisa rodar em Windows **e Linux**, de
 graça e localmente:
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) "cada um dos 9 integrantes" passou a "cada um dos 7 integrantes".
+     ! Motivo: o `CITATION.cff` lista 7 autores (e o README também, na seção Autores); o 9 não tinha origem em arquivo nenhum. O número foi contado nos autores do `CITATION.cff` em 25/11/2026. -->
 - **Reprodutibilidade dos resultados (o argumento decisivo pra um TCC).** A
   pesquisa mede MTTR e Task Success. O Chrome/Edge do sistema se
-  autoatualiza sozinho e é diferente na máquina de cada um dos 9
+  autoatualiza sozinho e é diferente na máquina de cada um dos 7
   integrantes, dois runs do mesmo experimento podem cair em versões
   diferentes do navegador. O Playwright **fixa uma build exata de Chromium
   por versão do Playwright**: todo mundo (e a banca, meses depois) roda
@@ -1436,9 +1563,11 @@ ajudar.
      quem procurasse aqui o motivo de o piloto não estar versionado não achava. -->
 <!-- ! Alteração de IA - Revisar: na tabela abaixo, a linha de `.mcp.json`/`.cbmignore` passou a "Não, removidos" (29/09/2026).
      ! Motivo: a linha dizia que os dois ficavam se a regra de permanência fosse cumprida; ela foi medida e o servidor saiu. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) na primeira linha da tabela abaixo, `Cobaia.exe (8.6 MB)` passou a `Cobaia.exe`, sem o tamanho.
+     ! Motivo: o texto dizia 8.6 MB e o arquivo estava com outro tamanho; ele muda a cada recompilação (`build_exe.ps1`), então o número ficaria errado de novo. O tamanho atual se vê com `ls -l Cobaia.exe`. -->
 | Item | Versionado? | Por quê |
 |---|---|---|
-| `Cobaia.exe` (8.6 MB) | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou, sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
+| `Cobaia.exe` | **Sim** | É o próprio entregável "hit and run" do Windows: clonou, deu duplo clique, rodou, sem precisar nem de Python instalado pra compilar. Elimina o risco de "o build falhou 5 min antes da banca". Precisa ser recompilado (`build_exe.ps1`) quando `Cobaia.py`/`install.py`/`run.py`/`_env_common.py` mudarem. |
 | `Cobaia.spec` | **Sim** | Receita de recompilação (arquivo texto pequeno). |
 | `Programacao/CobaiaFront/` inteiro (16 MB, sendo 13 MB de imagens) | **Sim** | Imagens, CSS/JS do Bootstrap e PHPMailer são carregados localmente pelo site, sem eles o CobaiaFront não renderiza. Não há passo de build/download que os recupere. |
 | `banco/*.sql` | **Sim** | Schema + seed. É o que faz o site funcionar de verdade. |
@@ -1458,8 +1587,10 @@ ajudar.
 
 O "hit and run" continua íntegro sem a venv, porque os dois caminhos a
 recriam automaticamente:
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) a lista abaixo diz que o Linux e o macOS usam `./install.sh && ./run.sh` e aponta o relatório para o que foi provado em cada um.
+     ! Motivo: "faz a mesma coisa" prometia o mesmo resultado nos dois caminhos; a prova gravada cobre o Linux pelo WSL e o Windows da máquina-alvo, e o macOS ainda não rodou (decisão 153). -->
 - **Windows:** duplo clique em `Cobaia.exe`: instala (inclui criar a venv), sobe tudo e abre o navegador.
-- **Linux/macOS:** `./install.sh && ./run.sh` faz a mesma coisa.
+- **Linux/macOS:** `./install.sh && ./run.sh` recria a venv pelo mesmo caminho. O que foi provado em cada sistema está em [Instalação em detalhe](#instalação-em-detalhe) e no [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
 
 ## Decisões técnicas e problemas resolvidos
 
@@ -1467,10 +1598,12 @@ Documentado aqui porque cada um foi descoberto testando ao vivo, não
 teorizado, importante pra quem for mexer no ambiente depois entender o
 porquê:
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) no item do XAMPP, "em 3 SOs" passou a "em Windows, Linux e macOS" e a lista de gerenciadores ganhou o `dnf`.
+     ! Motivo: o instalador de Linux hoje reconhece `apt` e `dnf` (`instalador/sistema.py`); a lista antiga só citava `apt`. O objetivo (instalar em três sistemas) continua sendo o objetivo, não uma prova: o que foi provado está em "Instalação em detalhe". -->
 - **XAMPP foi descartado.** O objetivo era um instalador silencioso e
-  roteirizável em 3 SOs; o instalador GUI do XAMPP não se presta bem a
+  roteirizável em Windows, Linux e macOS; o instalador GUI do XAMPP não se presta bem a
   isso. PHP e MariaDB nativos, instalados via linha de comando
-  (`winget`/`apt`/`brew`), resolvem sem essa fricção.
+  (`winget`/`apt`/`dnf`/`brew`), resolvem sem essa fricção.
 - **MariaDB no Windows não registra serviço.** Testado nesta máquina sem
   privilégios de administrador: o `winget install MariaDB.Server` instala
   os binários e já inicializa o data dir (root sem senha), mas não registra
@@ -1544,5 +1677,18 @@ instaladores e nas ferramentas, está em [SECURITY.md](SECURITY.md).
   `connect.php` do CobaiaFront espera `root` sem senha. Rode o instalador
   de novo, ele tenta corrigir isso automaticamente; se persistir, ajuste
   manualmente (`ALTER USER 'root'@'localhost' IDENTIFIED BY '';`).
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) o item do `ModuleNotFoundError` manda rodar `install.cmd` (Windows) ou `./install.sh` (Linux e macOS); o item novo do `--conferir` diz como ver até onde a instalação chegou.
+     ! Motivo: o item antigo mandava rodar `install.ps1`, que no Windows esbarra na política de execução do PowerShell (o primeiro item desta lista); o nome certo é `install.cmd`. O `--conferir` e o `registro.json` não tinham menção no Troubleshooting. -->
 - **`ModuleNotFoundError` ao rodar a CobaiaAPI:** o venv não foi
-  criado/atualizado. Rode `install.ps1`/`install.sh` de novo.
+  criado/atualizado. Rode `install.cmd` (Windows) ou `./install.sh` (Linux e
+  macOS) de novo.
+- **Não sei até onde a instalação chegou:** rode `./install.sh --conferir`
+  (Linux e macOS) ou `python install.py --conferir` (Windows). A prova diz,
+  nível a nível (N1 a N4), o que subiu e o que falhou, e grava o resultado
+  em `.ferramentas/prova/registro.json`; `--ate N1` para no primeiro nível.
+- **`Instalação interrompida: a versão de ... impede seguir` (Linux):** o
+  `versoes.json` marca uma ferramenta fora da faixa aceita. A lista impressa
+  logo acima da mensagem mostra a versão encontrada, a testada e a faixa.
+- **`Rode o instalador como usuário comum` (Linux):** o instalador recusa rodar
+  como root e chama o `sudo` sozinho nos passos que precisam; rode sem `sudo`
+  na frente.
