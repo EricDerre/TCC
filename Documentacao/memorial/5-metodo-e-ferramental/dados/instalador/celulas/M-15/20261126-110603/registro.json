@@ -1,0 +1,122 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "M-15",
+ "gravado_em": "2026-11-26T11:08:12",
+ "sistema": {
+  "sistema": "Darwin",
+  "familia": "brew",
+  "id": "macos",
+  "versao": "",
+  "nome": "macOS",
+  "suporte": "suportado"
+ },
+ "maquina": {
+  "plataforma": "macOS-15.8.2-arm64-arm-64bit-Mach-O",
+  "arquitetura": "arm64",
+  "python": "3.14.10",
+  "nucleos": 3,
+  "memoria_total_gb": 7.0,
+  "administrador": false,
+  "sudo_sem_senha": true
+ },
+ "niveis": {
+  "N1": {
+   "estado": "passou",
+   "detalhe": "14 produtos na API e na página do site",
+   "segundos": 1.3
+  },
+  "N2": {
+   "estado": "passou",
+   "detalhe": "Playwright 1.64.1, Chromium 156.0.8078.4, título da página: Churrascaria Fornalha",
+   "segundos": 2.4
+  },
+  "N3": {
+   "estado": "passou",
+   "detalhe": "Ollama 0.40.16, qwen2.5:0.5b-instruct respondeu: Pronto.",
+   "segundos": 2.2
+  },
+  "N4": {
+   "estado": "nao_rodou",
+   "detalhe": "",
+   "segundos": null
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.14.10",
+   "testada": "3.14.7",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "php": {
+   "encontrada": "8.5.12",
+   "testada": "8.2.35",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "mariadb": {
+   "encontrada": "11.8.10",
+   "testada": "11.8.9",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "playwright": {
+   "encontrada": "1.64.1",
+   "testada": "1.64.1",
+   "estado": "igual",
+   "impede": false
+  },
+  "chromium": {
+   "encontrada": "156.0.8078.4",
+   "testada": "156.0.8078.4",
+   "estado": "igual",
+   "impede": false
+  },
+  "ollama": {
+   "encontrada": "0.40.16",
+   "testada": "0.40.16",
+   "estado": "igual",
+   "impede": false
+  }
+ },
+ "instalacao": {
+  "gravado_em": "2026-11-26T11:08:12",
+  "resultado": "concluida",
+  "passos": [
+   {
+    "passo": "pacotes do sistema",
+    "segundos": 56.0
+   },
+   {
+    "passo": "PHP",
+    "segundos": 0.2
+   },
+   {
+    "passo": "serviço do MariaDB",
+    "segundos": 2.7
+   },
+   {
+    "passo": "root do MariaDB",
+    "segundos": 0.1
+   },
+   {
+    "passo": "banco (os três .sql)",
+    "segundos": 0.1
+   },
+   {
+    "passo": "venv da CobaiaAPI",
+    "segundos": 8.3
+   },
+   {
+    "passo": "AgenteCore (venv, Chromium, Ollama e modelo)",
+    "segundos": 58.5
+   }
+  ]
+ },
+ "alcancado": "N3",
+ "falhou": false,
+ "impedida_por_versao": []
+}

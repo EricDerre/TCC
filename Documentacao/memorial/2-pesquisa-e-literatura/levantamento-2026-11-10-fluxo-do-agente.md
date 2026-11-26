@@ -589,7 +589,7 @@ Cada linha é uma afirmação do primeiro leitor que a segunda leitura não conf
 
 #### 6.16.9 O que o repositório já mediu sobre cada ideia
 
-As tabelas abaixo são geradas de `5-metodo-e-ferramental/dados/pesquisa-fluxo-do-agente/medidas_do_repositorio.json`, que `ferramentas/medidas_fluxo_do_agente.py` monta copiando os números dos JSON das corridas, sem rodar o modelo. Três contas são novas e também não gastam modelo: a posição do verbete da causa certa na busca refeita de cada caso (a busca refeita devolve os três verbetes gravados em todos os casos das duas corridas), o cruzamento dessa posição com o selo e com os dois gatilhos, e o efeito de cada edição do lote da corrida 20 sobre a busca. A corrida 25, que mede quanto pesam as notas que o modelo escreveu, ainda não rodou quando este levantamento foi gerado.
+As tabelas abaixo são geradas de `5-metodo-e-ferramental/dados/pesquisa-fluxo-do-agente/medidas_do_repositorio.json`, que `ferramentas/medidas_fluxo_do_agente.py` monta copiando os números dos JSON das corridas, sem rodar o modelo. Três contas são novas e também não gastam modelo: a posição do verbete da causa certa na busca refeita de cada caso (a busca refeita devolve os três verbetes gravados em todos os casos das duas corridas), o cruzamento dessa posição com o selo e com os dois gatilhos, e o efeito de cada edição do lote da corrida 20 sobre a busca. A corrida 25 já rodou; o resultado dela está em `resultados_alvo/fase4/sem_notas.json` e é registrado no roadmap pela sessão principal.
 
 **A máquina.**
 

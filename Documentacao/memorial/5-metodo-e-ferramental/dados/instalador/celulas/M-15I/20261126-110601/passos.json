@@ -1,0 +1,38 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado pelo install.py: quanto levou cada passo da última instalação nesta pasta e como ela terminou.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143, seção 3.3) pede o tempo de cada passo no registro da prova; o instalador e a prova rodam em processos separados, e este arquivo leva um ao outro."
+ },
+ "gravado_em": "2026-11-26T11:08:19",
+ "resultado": "interrompida",
+ "passos": [
+  {
+   "passo": "pacotes do sistema",
+   "segundos": 32.2
+  },
+  {
+   "passo": "PHP",
+   "segundos": 0.2
+  },
+  {
+   "passo": "serviço do MariaDB",
+   "segundos": 3.6
+  },
+  {
+   "passo": "root do MariaDB",
+   "segundos": 0.3
+  },
+  {
+   "passo": "banco (os três .sql)",
+   "segundos": 0.4
+  },
+  {
+   "passo": "venv da CobaiaAPI",
+   "segundos": 23.9
+  },
+  {
+   "passo": "AgenteCore (venv, Chromium, Ollama e modelo)",
+   "segundos": 76.0
+  }
+ ]
+}

@@ -76,6 +76,11 @@ NAV = [
         # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 1; a seção vem de painel_fases.secao_fase.
         # ! Motivo: o Eric pediu uma aba que detalhe cada fase; é ela que abre o grupo, e o cabeçalho da fase na lateral leva a ela.
         ("f-1", "Visão da Fase 1", "A fase em uma página: o instalador, os dois sistemas de teste, as falhas ligadas de propósito e o banco de casos."),
+        # ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) aba da prova do instalador em máquinas novas; o id entra junto com a seção (secao_instalador).
+        # ! Motivo: a regra do projeto pede uma aba para toda análise nova, e a matriz de testes do instalador só existia no relatório em Markdown; o painel não mostrava em que sistemas o
+        # instalador foi provado. Ela entra no grupo da Fase 1, que é a do instalador, logo depois da visão.
+        ("instalador", "Instalador em máquina nova", ("O instalador funciona numa máquina que nunca viu o projeto? A matriz de testes: cada célula (uma máquina e o que se pede dela), "
+                                                      "o nível da prova que ela alcançou na primeira e na última rodada, e o que ficou de fora.")),
     ]),
     ("Fase 2-A", [
         # ! Alteração de IA - Revisar: (11/11/2026) aba de visão da Fase 2-A; a seção vem de painel_fases.secao_fase.
@@ -2191,6 +2196,27 @@ function medSucesso(){
     options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', scales:{x:{stacked:true, beginAtZero:true, ticks:{stepSize:1}, title:{display:true, text:'medidas: execuções do agente e tentativas das pessoas'}},
       y:{stacked:true, ticks:{autoSkip:false}, afterFit: s => { s.width = Math.max(s.width, Math.min(240, s.chart.width * 0.42)); }}}}});
 }
+// ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) o gráfico da aba "instalador": uma barra dupla por célula de teste, o nível da prova (0 a 4, com N0 como zero)
+// que ela alcançou na primeira rodada e na última, e um traço preto no nível que se pedia dela, desenhado por um plugin pequeno do Chart.js, como o traço da faixa do gráfico do tempo da aba "medicao".
+// ! Motivo: a matriz de testes do instalador só existia no relatório em Markdown. As barras são horizontais e a caixa cresce com o número de células, porque 14 pares de barras na vertical, com
+// o nome da célula embaixo, não cabem na largura de um celular. As cores vêm de CORES_DO_INSTALADOR (tokens da paleta); o traço usa a cor do texto da página, para aparecer no tema claro e no escuro.
+function instNiveis(){
+  const I = T.instalador||{}; const L = I.celulas||[]; const C = I.cores||{};
+  if(!L.length) return;
+  const caixa = document.getElementById('g-inst-niveis'); if(caixa) caixa.parentElement.style.height = Math.max(320, L.length * 46 + 100) + 'px';
+  const pedido = {id:'instPedido', afterDatasetsDraw(chart){
+    const eixo = chart.scales.x, ctx = chart.ctx, a = chart.getDatasetMeta(0).data, b = chart.getDatasetMeta(1).data; ctx.save(); ctx.fillStyle = css('--ink');
+    L.forEach((c, j) => { if(!a[j] || !b[j]) return; const x = eixo.getPixelForValue(c.pedido);
+      const y0 = Math.min(a[j].y - a[j].height / 2, b[j].y - b[j].height / 2), y1 = Math.max(a[j].y + a[j].height / 2, b[j].y + b[j].height / 2); ctx.fillRect(x - 1.5, y0 - 3, 3, y1 - y0 + 6); });
+    ctx.restore(); }};
+  grafico('g-inst-niveis', {type:'bar', data:{labels: L.map(c => c.id), datasets:[
+      {label:'primeira rodada', data: L.map(c => c.primeira), backgroundColor: css(C.primeira)},
+      {label:'última rodada', data: L.map(c => c.ultima), backgroundColor: css(C.ultima)}]}, plugins:[pedido],
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{legend:{onClick: () => {}, labels:{generateLabels: ch => Chart.defaults.plugins.legend.labels.generateLabels(ch).concat([{text:'traço preto: nível pedido', fillStyle: css('--ink'), strokeStyle: css('--ink'), lineWidth:0, hidden:false}])}},
+        tooltip:{callbacks:{label: c => c.dataset.label+': '+(c.datasetIndex === 0 ? L[c.dataIndex].primeira_texto : L[c.dataIndex].ultima_texto), footer: it => { const c = L[it[0].dataIndex]; return c.sistema+'; pedido até N'+c.pedido+'; '+c.rodadas+(c.rodadas === 1 ? ' rodada' : ' rodadas'); }}}},
+      scales:{x:{min:0, max:4, ticks:{stepSize:1, callback: v => 'N'+v}, title:{display:true, text:'nível da prova alcançado (N0: nenhum passou)'}}, y:{ticks:{autoSkip:false}}}}});
+}
 // aba Avaliação da trilha (04/11/2026, corrida 22): TPR, TNR e o produto por sinal (o acaso dá 0,25) e as mutações pelo nó apontado
 function triSinais(){
   const A = T.trilha||{}; const S = A.sinais||[];
@@ -2402,6 +2428,7 @@ DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pe
                     "segpasse": ["segPasseAlcance", "segPasseResultado"],
                     "analista": ["analistaPortoes", "analistaSequencia", "analistaLeituras", "analistaCasos"],
                     "medicao": ["medTempo", "medSucesso"],
+                    "instalador": ["instNiveis"],
                     "biblioteca": ["bibFiltros", "bibReavaliacao"], "cenarios": ["cenMttr", "cenSucesso"], "trilha": ["triSinais", "triMutacoes"], "experimento": ["expAcerto", "expTrocas"]}
 SELETORES_TOPICOS = {"sel-cq-conj": "cqTrajetoria", "sel-cq-met": "cqTrajetoria", "sel-cq-conf": "cqConfronto", "sel-tb-met": "tbGeneraliza", "sel-cz-met": "czLeitores",
                      "sel-rec-bib": "recMetodos", "sel-rec-met": "recMetodos", "sel-fer-met": "ferMcp"}
@@ -6096,6 +6123,112 @@ def secao_medicao(custo: dict | None, agente: dict | None = None, manual: dict |
     return dados_js, html_
 
 
+# ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) a aba "instalador", lida só do `matriz.json` (uma linha por rodada de cada célula de teste do instalador): quantas
+# células tiveram rodada, em quantas a última rodada chegou ao nível da prova que se pedia dela, as rodadas no total, as células por origem (WSL, GitHub Actions, máquina-alvo), o gráfico do
+# nível alcançado na primeira e na última rodada de cada célula, a leitura curta e a tabela de todas as rodadas recolhida. Nenhum número de resultado é digitado: tudo é contado do arquivo.
+# ! Motivo: a regra do projeto pede uma aba para toda análise nova, e a matriz de testes do instalador só existia no relatório em Markdown (seções 2, 3 e 6); o painel não mostrava em que
+# sistemas o instalador foi provado. A única coisa que não vem do arquivo é `CELULAS_SEM_SUPORTE_PLENO`, a lista das células que o plano declara de melhor esforço ou sem suporte de propósito
+# (Fedora e Mac Intel, Arch Linux e openSUSE): o `matriz.json` não traz essa classificação, e o teste compara a lista com os rótulos de `ferramentas/instalador_matriz/relatorio.py`, para a
+# lista não ficar para trás. Rodada com `alcancado` "sem prova" (a rodada parou antes de gravar o `registro.json`) conta como nível 0, como o N0. Sem o arquivo, ou com ele vazio, a aba
+# sai com o aviso de onde ele vem, em vez de quebrar a geração do painel.
+NIVEL_DA_PROVA = {"N0": 0, "N1": 1, "N2": 2, "N3": 3, "N4": 4}
+CORES_DO_INSTALADOR = {"primeira": "--s2", "ultima": f"--s{SLOTS['qwen2.5:7b']}"}
+ORDEM_DA_ORIGEM = ("WSL", "GitHub Actions", "máquina-alvo")
+ORIGEM_SO_PROVA = "máquina-alvo"
+CELULAS_SEM_SUPORTE_PLENO = {"L-F45": "melhor esforço", "M-15I": "melhor esforço", "L-ARCH": "sem suporte", "L-SUSE": "sem suporte"}
+TITULO_DO_INSTALADOR = "O instalador funciona numa máquina que nunca viu o projeto?"
+FALHA_CURTA_DO_INSTALADOR = 90
+
+
+def _nivel_do_instalador(texto) -> int:
+    return NIVEL_DA_PROVA.get(texto, 0)
+
+
+def _data_da_rodada(rodada: str) -> str:
+    m = re.fullmatch(r"(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})", rodada or "")
+    return f"{m[3]}/{m[2]}/{m[1]} {m[4]}:{m[5]}:{m[6]}" if m else str(rodada)
+
+
+def _celulas_do_instalador(matriz: dict) -> list[dict]:
+    """Uma entrada por célula: o nível da primeira e o da última rodada (as rodadas em ordem de data e hora), o nível pedido na última e a origem. Ordem: origem e id."""
+    por_celula: dict[str, list[dict]] = {}
+    for r in sorted(matriz.get("rodadas") or [], key=lambda x: x.get("rodada", "")):
+        por_celula.setdefault(r["id"], []).append(r)
+    ordem = {o: i for i, o in enumerate(ORDEM_DA_ORIGEM)}
+    celulas = []
+    for cid, rs in por_celula.items():
+        p, u = rs[0], rs[-1]
+        celulas.append({"id": cid, "sistema": u.get("sistema") or p.get("sistema") or "", "origem": u["origem"], "primeira": _nivel_do_instalador(p["alcancado"]),
+                        "ultima": _nivel_do_instalador(u["alcancado"]), "pedido": _nivel_do_instalador(u["ate"]), "rodadas": len(rs), "primeira_texto": str(p["alcancado"]),
+                        "ultima_texto": str(u["alcancado"]), "suporte": CELULAS_SEM_SUPORTE_PLENO.get(cid)})
+    return sorted(celulas, key=lambda c: (ordem.get(c["origem"], len(ordem)), c["id"]))
+
+
+def secao_instalador(matriz: dict | None) -> tuple[dict, str]:
+    rodadas = (matriz or {}).get("rodadas") or []
+    if not rodadas:
+        return {}, (f'<section id="instalador" hidden>\n<h1>{TITULO_DO_INSTALADOR}</h1>\n<p class="lead">A matriz de testes do instalador ainda não está disponível: falta o arquivo '
+                    '<code>Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/matriz.json</code>, ou ele está vazio. Ele é gravado por '
+                    '<code>python ferramentas/instalador_matriz/relatorio.py --colar</code>, a partir das pastas de rodada em <code>dados/instalador/celulas/</code>.</p>\n</section>')
+    celulas = _celulas_do_instalador(matriz)
+    chegou = lambda c: c["ultima"] >= c["pedido"]
+    plenas = [c for c in celulas if c["suporte"] is None and c["origem"] != ORIGEM_SO_PROVA]
+    abaixo = [c for c in celulas if not chegou(c)]
+    origens: dict[str, int] = {}
+    rodadas_por_origem: dict[str, int] = {}
+    for c in celulas:
+        origens[c["origem"]] = origens.get(c["origem"], 0) + 1
+        rodadas_por_origem[c["origem"]] = rodadas_por_origem.get(c["origem"], 0) + c["rodadas"]
+    n_chegaram, n_plenas_chegaram = sum(1 for c in celulas if chegou(c)), sum(1 for c in plenas if chegou(c))
+    totais = {"celulas": len(celulas), "chegaram": n_chegaram, "rodadas": len(rodadas)}
+    dados_js = {"celulas": celulas, "totais": totais, "origens": origens, "cores": CORES_DO_INSTALADOR}
+
+    def nome_da_celula(c: dict) -> str:
+        return f"{c['sistema']} ({c['suporte']})" if c["suporte"] else c["sistema"]
+
+    abaixo_txt = ", ".join(esc(nome_da_celula(c)) for c in abaixo)
+    comeco = "Sim" if plenas and n_plenas_chegaram == len(plenas) else "Em parte"
+    lead_ = (f"{comeco}, nos sistemas com suporte pleno: a última rodada chegou ao nível pedido em {n_plenas_chegaram} de {len(plenas)} células. Contando todas as células, são "
+             f"{n_chegaram} de {len(celulas)}; " + (f"ficaram abaixo do pedido: {abaixo_txt}." if abaixo else "nenhuma ficou abaixo do pedido."))
+    itens_kpi = [("Células com rodada", str(len(celulas)), "cada célula é uma máquina e o que se pede dela"),
+                 ("Última rodada no nível pedido", f"{n_chegaram} de {len(celulas)}", f"{n_plenas_chegaram} de {len(plenas)} nas células com suporte pleno, sem a máquina-alvo"),
+                 ("Rodadas no total", str(len(rodadas)), "cada vez que uma célula roda, sai uma rodada")]
+    for o in sorted(origens, key=lambda x: (ORDEM_DA_ORIGEM.index(x) if x in ORDEM_DA_ORIGEM else len(ORDEM_DA_ORIGEM), x)):
+        itens_kpi.append((f"Células: {o}", str(origens[o]), f"{rodadas_por_origem[o]} rodada" + ("" if rodadas_por_origem[o] == 1 else "s")))
+    linhas = []
+    for r in sorted(rodadas, key=lambda x: (x["id"], x.get("rodada", ""))):
+        falha = re.sub(r"\s+", " ", r.get("primeira_falha") or "").strip()
+        falha = (falha[:FALHA_CURTA_DO_INSTALADOR].rstrip() + "…") if len(falha) > FALHA_CURTA_DO_INSTALADOR else falha
+        linhas.append([r["id"], r.get("sistema") or "", r["origem"], _data_da_rodada(r.get("rodada", "")), r.get("modo", ""), r["ate"], r["alcancado"], falha or "nenhuma"])
+    tab = tabela(["Célula", "Sistema", "Origem", "Data e hora", "Modo", "Nível pedido", "Nível alcançado", "Primeira falha (encurtada)"], linhas)
+    itens_leitura = [
+        "<strong>O que a prova diz.</strong> O nível alcançado é o último que passou antes da primeira falha: N1 prova o site e a API no ar com o banco, N2 o navegador do agente, N3 o Ollama com um "
+        "modelo pequeno e N4 o modelo do projeto. As barras da primeira rodada mostram a falha gravada antes do conserto (modo <code>como-esta</code>); as da última, o instalador depois dele (modo <code>novo</code>).",
+        # ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador, ajuste do controlador) a leitura passa a dizer o que as máquinas do GitHub trazem de fato e separa o nível da prova do fim do instalador: no Mac com processador Intel a prova passa, mas o instalador para ao baixar o modelo.
+        # ! Motivo: a frase "já trazem Python, PHP e banco" não vale para todas (o estado inicial das células mostra que a de macOS em Apple Silicon não trazia PHP, e as de macOS não trazem banco), e a aba mede o nível da prova, que no Mac Intel passou com o instalador interrompido em "Error: unexpected EOF" (linha HM8 da seção 5 do relatório); sem o aviso, o gráfico faria crer que o instalador foi até o fim nessa máquina.
+        "<strong>As máquinas do GitHub e a máquina-alvo não são máquinas limpas.</strong> As do GitHub já trazem o Python e, conforme o sistema, o PHP, o MySQL ou o Homebrew, e a máquina-alvo é o computador do projeto, onde só a prova rodou e o "
+        "instalador não (célula <code>ALVO</code>). O WSL é um Linux dentro do Windows: não prova o serviço que sobe no boot nem o navegador numa área de trabalho real.",
+        "<strong>Nível baixo nem sempre é defeito, e nível alto não quer dizer que o instalador foi até o fim.</strong> Fedora e o Mac com processador Intel são de melhor esforço. Arch Linux e openSUSE não têm suporte de propósito: o resultado esperado "
+        "nelas é a mensagem de “sem suporte”, com a lista do que instalar à mão. O gráfico mostra o nível da prova: no Mac com processador Intel a prova passa, mas o instalador ainda para ao baixar o modelo do projeto, e a prova baixa o modelo em seguida "
+        "(seção 5 do relatório, linha HM8). O Windows Sandbox, as máquinas virtuais e o Windows 10 de um integrante não foram testados (seção 6 do relatório)."]
+    fontes_ = ["<code>Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/matriz.json</code> (<code>ferramentas/instalador_matriz/relatorio.py --colar</code>, com <code>--check</code>)",
+               "<code>5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md</code>, seções 2, 3, 5 e 6",
+               "plano aprovado do instalador único (<code>claude-memoria/plano-aprovado-instalador-unico.md</code>); decisões 138 a 143 e 153 a 162"]
+    html_ = f"""<section id="instalador" hidden>
+<h1>{TITULO_DO_INSTALADOR}</h1>
+<p class="lead">{lead_}</p>
+<p class="nota">Uma célula de teste do instalador é uma máquina e o que se pede dela; cada vez que ela roda, sai uma rodada. Os níveis da prova da instalação vão de N1 (o site e a API no ar) a N4 (o modelo
+do projeto respondendo); N0 quer dizer que nenhum passou, e nem toda célula pede o N4.</p>
+{kpis(itens_kpi)}
+<h2>O nível que cada célula alcançou na primeira e na última rodada</h2>
+<div class="chart alto"><canvas id="g-inst-niveis"></canvas></div>
+{detalhes("Todas as rodadas", tab)}
+{leitura(itens_leitura)}
+{fontes(fontes_)}
+</section>"""
+    return dados_js, html_
+
+
 def montar(ctx: dict) -> tuple[dict, str]:
     """ctx: dados (montar_dados), road, cartoes_corridas, md_para_html, md_doc_para_html, cq, blocos_cq, ineditos,
     curadoria, planilha_curadoria, recuperador, ablacao, medicao_mcp, readme. Devolve (dados_topicos, html)."""
@@ -6188,4 +6321,8 @@ def montar(ctx: dict) -> tuple[dict, str]:
     # a aba da medição de valor existe sempre (o mapa de navegação a lista); sem os derivados de resultados_alvo/fase5 ela mostra o que vai ser medido e as regras
     d, h = secao_medicao(ctx.get("f5_custo"), ctx.get("f5_agente"), ctx.get("f5_manual"), ctx.get("f5_medicao"), ctx.get("f5_desenho"), road, ctx["cartoes_corridas"])
     partes.append(("medicao", d, h))
+    # ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) a aba do instalador entra na montagem; ela existe sempre (o mapa de navegação a lista) e, sem o `matriz.json`, mostra o aviso.
+    # ! Motivo: sem esta linha o id "instalador" estaria no mapa de navegação sem a seção correspondente, e o teste que confere as duas coisas falharia.
+    d, h = secao_instalador(ctx.get("instalador_matriz"))
+    partes.append(("instalador", d, h))
     return {k: d for k, d, _ in partes}, "\n".join(h for _, _, h in partes)

@@ -16,13 +16,17 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
      ! Motivo: a linha dizia "com três corridas por rodar"; as corridas 25, 26 e 27 rodaram na noite de 11 para 12/11/2026, e a revisão às cegas foi gravada em 16/11/2026 (roadmap, §2.23 a §2.25); nenhuma muda o agente. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a frase de estado do alto passou de 16/11/2026 a 25/11/2026 e diz que a Fase 5 está concluída, com o resultado central.
      ! Motivo: a frase parava na Pós-Fase 4 de 16/11/2026 e tratava a Fase 5 como futura; a fase foi medida em 18 e 24/11/2026 e fechada em 25/11/2026 (decisão 156). O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. -->
-> **Em 25/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, e a Fase 5, que mediu o agente contra pessoas, estão concluídas: nos dez cenários medidos o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento: as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente; o hub de revisão e a seleção de cenários pelo Git foram feitos em 25/11/2026, uma corrida curta com o modelo confirmou os dois em 25/11/2026, e falta a documentação final.
+<!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4, ficha 117 e decisão 179) a frase de estado do alto passou de 25/11/2026 a 26/11/2026 e diz que a Pós-Fase 4 está concluída; a linha dela na tabela "Onde o projeto está" também.
+     ! Motivo: a frase dizia que a Pós-Fase 4 estava em andamento e que faltava a documentação final; o Eric fechou a fase em 26/11/2026 (decisão 179), com o texto final do TCC escrito e o hub aprovado. Os números da Fase 5 são os que já estavam na frase. -->
+> **Em 26/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, a Fase 5, que mediu o agente contra pessoas, e a Pós-Fase 4, que cuida do que o agente entrega a quem lê, estão concluídas. Nos dez cenários medidos o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. Na Pós-Fase 4, as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente; o hub, que é a central do projeto, e a seleção de cenários pelo Git foram feitos em 25/11/2026 e confirmados por uma corrida curta com o modelo. O que resta é documentação: o Word e o PDF finais do TCC e a leitura do texto pelo grupo.
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4) a linha "Ler o trabalho formal" passa a dizer que o texto final está na fonte em Markdown e que o Word e o PDF da versão 5 ainda não foram gerados; o Word de 05/11/2026 fica dito como a versão 3.
+     ! Motivo: o Eric pediu, no fechamento, que o README traga o documento do TCC na versão final; a fase fechou antes de o Word e o PDF da versão 5 serem gerados (decisão 179), e a página apontava o Word de 05/11/2026 como "o documento do TCC", quando ele é a versão 3, sem a Fase 5 nem a Pós-Fase 4. O `TCC_v4_20261105.docx` é de um coautor e não é a versão oficial (decisões 173 e 174). -->
 | Quero... | Vá para |
 |---|---|
 | Entender o projeto e ver os resultados | as seções abaixo |
 | Explorar cada resultado, um assunto por aba | [Painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN) |
-| Ler o trabalho formal, nas normas da ABNT | [Documento do TCC em Word](Documentacao/TCC_v3_20261105.docx) e a [fonte em Markdown](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) |
+| Ler o trabalho formal, nas normas da ABNT | A [fonte do documento do TCC, em Markdown](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md), traz o texto final, com a Fase 5 e a Pós-Fase 4. O Word e o PDF da versão final, a 5, saem dela e ainda não foram gerados; o [Word de 05/11/2026](Documentacao/TCC_v3_20261105.docx) é a versão 3, de antes da Fase 5 <!-- TROCAR NA GERAÇÃO: pôr os links do Word e do PDF da versão 5 e tirar a frase da versão 3 --> |
 | Ver scripts, configurações e os valores de cada rodada | [Detalhes técnicos](DETALHES-TECNICOS.md) |
 | Ver o número exato por trás de cada figura | [Dados das figuras](Documentacao/figuras/dados-das-figuras.md) |
 | Saber o que foi decidido e por quê | [Memorial](Documentacao/Memorial%20de%20Desenvolvimento.md), [roadmap](Documentacao/memorial/roadmap.md), [pendências](Documentacao/memorial/pendencias.md) e [relatório da Fase 4](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md) |
@@ -66,7 +70,7 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: o pacote Q4 entregou a barra de progresso e o protótipo da seleção pelo diff do Git; sem a frase, a tabela pararia no Q3. -->
 <!-- ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) a linha da Pós-Fase 4 diz que o Q5 também está feito.
      ! Motivo: o pacote Q5 fez a medida com revisor humano dos relatórios; sem a frase, a tabela pararia no Q4. -->
-| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Em andamento (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026; Q6 e Q7 em 25/11/2026) |
+| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Concluída em 26/11/2026 (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026; Q6 e Q7 em 25/11/2026; Q8 em 26/11/2026) |
 <!-- ! Alteração de IA - Revisar: (16/11/2026) a linha da Fase 5 passa de "Não iniciada" a "Em andamento", com o que já existe: o plano aprovado; nenhuma medida feita ainda.
      ! Motivo: o plano da Fase 5 foi aprovado em 16/11/2026 (decisão 133) e o roadmap passou a dizer "Em andamento"; o painel mostra o estado curto desta tabela ao lado da etiqueta do roadmap, e a visão da fase dizia "Em andamento" e "Não iniciada" ao mesmo tempo. -->
 <!-- ! Alteração de IA - Revisar: (18/11/2026, corrida 28) a linha da Fase 5 diz que a noite do agente rodou e vai ser refeita, e que falta a medida com as pessoas.
@@ -274,14 +278,16 @@ Precisa de internet: o instalador baixa PHP, MariaDB e os pacotes Python que fal
 | L-ARCH | Arch Linux (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
 | L-SUSE | openSUSE (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
 | CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e o MySQL 8.0, e a célula remove o MySQL antes do instalador; não é limpo | GitHub Actions | N4 | N4 | N4 |
-| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions | N0 | N4 | N0 |
+| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions | N4 | N4 | N4 |
 | M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N3 | N3 | N3 |
 | M-15I | macOS 15, Intel (melhor esforço) | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N4 | N4 | N4 |
 
 Cada linha é uma célula de teste, e a coluna "Como a máquina nasce" diz o que ela é: na `ALVO` só a prova rodou. Nível alcançado é o maior nível da prova que passou sem nenhum nível abaixo dele ter falhado; N0 quer dizer que nenhum nível passou, "sem prova" quer dizer que a rodada parou antes de gravar o `registro.json`, e "não terminou" quer dizer que o GitHub cortou a tarefa antes do fim. Rodada `novo` é a que roda o instalador já com os consertos; `como-esta` é a que roda o instalador antes deles, para gravar a falha. A última coluna olha todas as rodadas `novo` da célula, porque a última rodada pode ter pedido menos níveis que uma anterior.
 <!-- tb_inst_resumo:fim -->
 
-Ficaram sem teste: Windows recém-instalado, Windows 10 e Linux instalado fora do WSL (decisão 153). No Windows e no macOS o instalador segue os passos antigos, que nunca rodaram em máquina nova; o fluxo do GitHub Actions (`.github/workflows/instalador.yml`) foi escrito para provar o Windows e o macOS, mas começa a rodar depois do commit e do push, e o resultado entra na tabela acima quando for trazido para o repositório. O relatório com cada rodada, o que falhou e o que nenhuma célula prova está em [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
+<!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) o parágrafo deixa de dizer que o Windows e o macOS seguem os passos antigos e que o fluxo do GitHub Actions ainda vai rodar; passa a dizer que a prova em máquina nova desses dois é a do GitHub Actions, que essas máquinas não são limpas e o que ficou sem conserto no Mac Intel.
+     ! Motivo: o fluxo rodou quatro vezes entre 25 e 26/11/2026; na terceira e na quarta execução (45731004628 e 45807394622) a instalação foi até o fim no Windows Server 2025, no Ubuntu e no macOS de Apple Silicon, e no macOS Intel o instalador parou em "Error: unexpected EOF" ao baixar o modelo, com a prova passando. O texto antigo contradizia a tabela gerada logo acima. -->
+Ficaram sem teste: Windows recém-instalado fora do GitHub, Windows 10 e Linux instalado fora do WSL (decisão 153). No Windows e no macOS, a prova em máquina nova é a do GitHub Actions (`.github/workflows/instalador.yml`), em máquinas que o GitHub cria para cada execução e que não são limpas: já trazem o Python e, conforme o sistema, o PHP, o MySQL ou o Homebrew. O nível de cada uma está na tabela acima. No Mac com processador Intel a prova passa, mas o instalador ainda para ao baixar o `qwen2.5:7b`, e a prova baixa o modelo em seguida; isso ficou sem conserto. O relatório com cada rodada, o que falhou e o que nenhuma célula prova está em [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
 
 **Para conferir a sua instalação** depois de instalar: `./install.sh --conferir` (Linux e macOS) ou `python install.py --conferir` (Windows). A prova sobe o site e a API, abre o site no navegador do agente, pede uma resposta a um modelo pequeno e, por último, ao `qwen2.5:7b`, e grava o resultado em `.ferramentas/prova/registro.json`.
 
@@ -321,12 +327,16 @@ Máquina sem administrador, o que o instalador faz passo a passo, os testes e as
 
 <!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) a árvore abaixo ganhou `instalador/`, `versoes.json`, `restaurar_banco.py` e `testar_instalador.py`, e a linha de `install.* / run.*` deixou de dizer "nos três sistemas".
      ! Motivo: essas peças existem desde o pacote do instalador único e não apareciam na árvore; e a linha antiga prometia o instalador nos três sistemas, sem prova em Windows recém-instalado nem em macOS (decisão 153). -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) na árvore abaixo, a linha de `install.* / run.*` deixa de dizer "o Windows e o macOS ainda sem prova em máquina nova" e aponta para a seção "Instalar e rodar".
+     ! Motivo: na terceira e na quarta execução do fluxo do GitHub Actions (45731004628 e 45807394622) o Windows Server 2025 e o macOS passaram na prova; o comentário da árvore contradizia a tabela "O que foi provado". -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4) na árvore abaixo, a linha do Word do TCC passa a dizer que ele é a versão 3, e entra a linha do Word entregue por um coautor.
+     ! Motivo: o Eric pediu, no fechamento, que o README traga o documento do TCC na versão final; a fase fechou antes de o Word e o PDF da versão 5 serem gerados (decisão 179), e a página apontava o Word de 05/11/2026 como "o documento do TCC", quando ele é a versão 3, sem a Fase 5 nem a Pós-Fase 4. O `TCC_v4_20261105.docx` é de um coautor e não é a versão oficial (decisões 173 e 174). -->
 ```
 TCC/
 ├── README.md                 # esta página
 ├── DETALHES-TECNICOS.md      # scripts, configurações e os valores de cada rodada
 ├── Cobaia.exe                # Windows: instala, roda e abre o navegador
-├── install.* / run.*         # instalador e inicialização (o Windows e o macOS ainda sem prova em máquina nova)
+├── install.* / run.*         # instalador e inicialização (o que foi provado em cada sistema está em "Instalar e rodar")
 ├── instalador/               # peças do instalador: sistema, ferramentas, versões e a prova (N1 a N4)
 ├── versoes.json              # versão testada e faixa aceita de cada ferramenta
 ├── restaurar_banco.py        # restaura o banco das corridas
@@ -335,7 +345,8 @@ TCC/
 ├── claude-memoria/           # memória do Claude e os registros de passagem entre sessões
 ├── Documentacao/
 │   ├── TCC - ABNT 14724 - V1.md   # fonte do documento do TCC (o nome fica "V1" em todas as versões)
-│   ├── TCC_v3_20261105.docx       # documento do TCC em Word
+│   ├── TCC_v3_20261105.docx       # Word da versão 3, de 05/11/2026 (a versão final, a 5, ainda não foi gerada)
+│   ├── TCC_v4_20261105.docx       # Word de um coautor sobre a versão 3; a seção 1.1 dele já está na fonte
 │   ├── figuras/                   # as figuras desta página e a tabela de cada uma
 │   ├── dashboard/                 # o painel do projeto
 │   └── memorial/                  # decisões, pesquisa, relatórios, roadmap e pendências

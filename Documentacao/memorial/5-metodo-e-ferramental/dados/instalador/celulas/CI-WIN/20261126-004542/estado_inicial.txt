@@ -1,0 +1,68 @@
+plataforma: Windows-2025Server-10.0.26100-SP0
+processador: AMD64
+núcleos: 4
+
+== porta 3306 (banco): livre
+== python3: código 0, em C:\hostedtoolcache\windows\Python\3.12.10\x64\python3.EXE
+   Python 3.12.10
+== python: código 0, em C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE
+   Python 3.12.10
+== py (Windows): código 0, em C:\Windows\py.EXE
+   -V:3.15 *        C:\hostedtoolcache\windows\Python\3.15.2\x64\python.exe
+    -V:3.14          C:\hostedtoolcache\windows\Python\3.14.10\x64\python.exe
+    -V:3.13          C:\hostedtoolcache\windows\Python\3.13.17\x64\python.exe
+== php: código 0, em c:\tools\php\php.EXE
+   PHP 8.5.12 (cli) (built: Oct 20 2026 04:19:56) (NTS Visual C++ 2022 x64)
+   Copyright (c) The PHP Group
+   Built by The PHP Group
+== php, extensões: código 0, em c:\tools\php\php.EXE
+   [PHP Modules]
+   bcmath
+   calendar
+   Core
+   ctype
+   curl
+   date
+   dom
+   filter
+   hash
+   iconv
+   json
+   lexbor
+   libxml
+   mbstring
+   mysqlnd
+   openssl
+   pcre
+   PDO
+   Phar
+   random
+   readline
+   Reflection
+   session
+   SimpleXML
+   SPL
+   standard
+   tokenizer
+   uri
+   xml
+   xmlreader
+   xmlwriter
+   Zend OPcache
+   zlib
+   
+   [Zend Modules]
+   Zend OPcache
+== mysql: código 0, em C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE
+   mysql  Ver 8.4.13 for Win64 on x86_64 (MySQL Community Server - GPL)
+== mariadb: ausente
+== brew: ausente
+== winget: código 0, em C:\Users\runneradmin\AppData\Local\Microsoft\WindowsApps\winget.EXE
+   v1.11.510
+== ollama: ausente
+== curl: código 0, em C:\Program Files\Git\ucrt64\bin\curl.EXE
+   curl 8.21.0 (Windows) libcurl/8.21.0 Schannel zlib/1.3.2 WinIDN WinLDAP
+   Release-Date: 2026-06-24
+   Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt mqtts pop3 pop3s smtp smtps telnet tftp ws wss
+== sudo sem senha: ausente
+== serviços de banco (Windows): código 0, em C:\Windows\System32\WindowsPowerShell\v1.0\powershell.EXE

@@ -1,0 +1,69 @@
+plataforma: macOS-15.7.9-x86_64-i386-64bit-Mach-O
+processador: x86_64
+núcleos: 4
+
+== porta 3306 (banco): livre
+== python3: código 0, em /usr/local/bin/python3
+   Python 3.14.7
+== python: código 0, em /Library/Frameworks/Python.framework/Versions/Current/bin/python
+   Python 3.14.7
+== py (Windows): ausente
+== php: código 0, em /usr/local/bin/php
+   PHP 8.5.9 (cli) (built: Jul 28 2026 13:06:52) (NTS)
+   Copyright (c) The PHP Group
+   Built by Homebrew
+== php, extensões: código 0, em /usr/local/bin/php
+   [PHP Modules]
+   bcmath
+   bz2
+   calendar
+   Core
+   ctype
+   curl
+   date
+   dba
+   dom
+   exif
+   FFI
+   fileinfo
+   filter
+   ftp
+   gd
+   gettext
+   gmp
+   hash
+   iconv
+   intl
+   json
+   ldap
+   lexbor
+   libxml
+   mbstring
+   mysqli
+   mysqlnd
+   odbc
+   openssl
+   pcntl
+   pcre
+   PDO
+   pdo_dblib
+   pdo_mysql
+   PDO_ODBC
+   pdo_pgsql
+   pdo_sqlite
+   pgsql
+   Phar
+== mysql: ausente
+== mariadb: ausente
+== brew: código 0, em /usr/local/bin/brew
+   Homebrew 6.0.18
+   Homebrew/homebrew-core (git revision a18de1aa60a; last commit 2026-08-24)
+   Homebrew/homebrew-cask (git revision 012c48f6314; last commit 2026-08-24)
+== winget: ausente
+== ollama: ausente
+== curl: código 0, em /usr/local/opt/curl/bin/curl
+   curl 8.21.0 (x86_64-apple-darwin23.6.0) libcurl/8.21.0 OpenSSL/3.6.3 zlib/1.2.12 brotli/1.2.0 zstd/1.5.7 AppleIDN libpsl/0.23.3 libssh2/1.11.1 nghttp2/1.70.0 ngtcp2/1.25.0 nghttp3/1.18.0 mit-krb5/1.7-prerelease OpenLDAP/2.4.28/Apple
+   Release-Date: 2026-06-24
+   Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt mqtts pop3 pop3s rtsp scp sftp smtp smtps telnet tftp ws wss
+== sudo sem senha: código 0, em /usr/bin/sudo
+== serviços de banco (Windows): não se aplica

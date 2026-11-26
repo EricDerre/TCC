@@ -1,0 +1,32 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_actions.py: o que a célula rodou num executor do GitHub Actions e com que código de saída.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula em arquivo, e a pasta da rodada só fica dispensada da tag nos arquivos de saída capturada se tiver este arquivo (decisão 147)."
+ },
+ "id": "M-15",
+ "modo": "novo",
+ "ate": "N3",
+ "modelo_pequeno": "qwen2.5:0.5b-instruct",
+ "forcar_uv": true,
+ "imagem": "GitHub Actions: macOS ARM64, imagem macos15 20261118.0550.1",
+ "terminou": true,
+ "fuso": "UTC",
+ "resultado_do_instalador": "concluida",
+ "preparo": {
+  "nome": "nenhum",
+  "comandos": []
+ },
+ "actions": {
+  "repositorio": "EricDerre/TCC",
+  "commit": "77fad23219ead377f3125b0c7718b9f451e51bde",
+  "execucao": "45807394622",
+  "tentativa": "1",
+  "evento": "push"
+ },
+ "inicio": "2026-11-26T11:06:03",
+ "fim": "2026-11-26T11:08:18",
+ "saidas": {
+  "instalador": "0",
+  "conferir": "0"
+ }
+}

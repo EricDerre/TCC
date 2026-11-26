@@ -55,6 +55,9 @@ def _ctx() -> dict:
         **gd.contexto_arvores(),
         **gd.contexto_progresso(),
         **gd.contexto_fase5(),
+        # ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) o contexto de teste passa a levar também o `matriz.json` do instalador, como o `gerar_dashboard.py` leva.
+        # ! Motivo: a regra do projeto pede uma aba para toda análise nova, e a matriz de testes do instalador só existia no relatório em Markdown; sem esta linha, o teste de montagem do painel não veria a aba nova.
+        **gd.contexto_instalador(),
     }
 
 
@@ -2155,6 +2158,135 @@ class TestesDaMedicaoDaFase5(unittest.TestCase):
         esperado = "comparado" if tem["medicao"] else "dois_lados" if tem["agente"] and tem["manual"] else "so_agente" if tem["agente"] else "so_pessoas" if tem["manual"] else "sem_medida"
         self.assertEqual(d["estado"], esperado)
         self.assertEqual("O que falta" in secao, esperado != "comparado")
+
+
+# ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) testes da aba "instalador" (o instalador posto à prova em máquinas que nunca viram o projeto): o lugar dela
+# no NAV, os cartões e o gráfico conferidos contra o `matriz.json` lido aqui, de forma independente do código da aba, uma matriz de mentira para provar que nenhum número está digitado,
+# o aviso quando o arquivo falta, o texto sem travessão, seta e nome, e os termos novos no glossário.
+# ! Motivo: a regra do projeto pede uma aba para toda análise nova, e a matriz de testes do instalador só existia no relatório em Markdown; o painel não mostrava em que sistemas o
+# instalador foi provado. Os testes foram escritos antes da aba e falhavam sem ela.
+NIVEL_DE_TESTE = {"N0": 0, "N1": 1, "N2": 2, "N3": 3, "N4": 4, "sem prova": 0}
+
+
+def _matriz_de_teste(rodadas: list[tuple]) -> dict:
+    """Uma matriz de mentira: (id, rodada, modo, origem, ate, alcancado, sistema, primeira_falha) por rodada."""
+    return {"rodadas": [{"id": i, "rodada": r, "modo": m, "origem": o, "imagem": "x", "ate": a, "terminou": True, "alcancado": c, "falhou": c != a, "niveis": {}, "primeira_falha": f,
+                         "impedida_por_versao": [], "sistema": s, "commit": "", "preparo": "nenhum"} for i, r, m, o, a, c, s, f in rodadas]}
+
+
+class TestesDaAbaDoInstalador(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.caminho = gd.MEMORIAL / "5-metodo-e-ferramental" / "dados" / "instalador" / "matriz.json"
+        cls.matriz = json.loads(cls.caminho.read_text(encoding="utf-8"))
+        porcelula: dict[str, list] = {}
+        for r in sorted(cls.matriz["rodadas"], key=lambda x: x["rodada"]):
+            porcelula.setdefault(r["id"], []).append(r)
+        cls.porcelula = porcelula
+
+    def teste_aba_no_grupo_da_fase_1_depois_da_visao_e_com_o_grafico_registrado(self):
+        grupo = dict(tp.NAV)["Fase 1"]
+        self.assertEqual([sid for sid, _, _ in grupo], ["f-1", "instalador"])
+        self.assertEqual(grupo[1][1], "Instalador em máquina nova")
+        self.assertEqual(tp.DESENHAR_TOPICOS["instalador"], ["instNiveis"])
+        self.assertIn("function instNiveis(", tp.JS_TOPICOS)
+        self.assertIn("g-inst-niveis", pl.COMO_LER_GRAFICO)
+        self.assertNotRegex(pl.COMO_LER_GRAFICO["g-inst-niveis"], "[—→↔]")
+        self.assertEqual(pf.abas_fora_de_lugar(tp.NAV), [])
+        # as cores das séries vêm só da paleta validada (tokens --s1 a --s8)
+        self.assertTrue(set(tp.CORES_DO_INSTALADOR.values()) <= {f"--s{i}" for i in range(1, 9)}, tp.CORES_DO_INSTALADOR)
+        trecho = tp.JS_TOPICOS[tp.JS_TOPICOS.index("function instNiveis("):]
+        trecho = trecho[:trecho.index("\n}\n")]
+        self.assertNotRegex(trecho, r"#[0-9a-fA-F]{6}\b|rgb\(", "cor escrita no script, fora da paleta")
+
+    def teste_contexto_le_a_matriz_e_devolve_nada_quando_falta(self):
+        self.assertEqual(gd.contexto_instalador(), {"instalador_matriz": self.matriz})
+        self.assertIsNone(gd.ler_json_ou_nada(self.caminho.with_name("nao_existe.json")))
+
+    def teste_cartoes_e_resposta_batem_com_o_matriz_json(self):
+        d, h = tp.secao_instalador(self.matriz)
+        celulas = list(self.porcelula)
+        ultima = {c: rs[-1] for c, rs in self.porcelula.items()}
+        chegou = [c for c in celulas if NIVEL_DE_TESTE[ultima[c]["alcancado"]] >= NIVEL_DE_TESTE[ultima[c]["ate"]]]
+        origens = {c: ultima[c]["origem"] for c in celulas}
+        self.assertIn('<section id="instalador" hidden>', h)
+        self.assertIn("<h1>O instalador funciona numa máquina que nunca viu o projeto?</h1>", h)
+        self.assertEqual(d["totais"], {"celulas": len(celulas), "chegaram": len(chegou), "rodadas": len(self.matriz["rodadas"])})
+        self.assertIn(f"{len(chegou)} de {len(celulas)}", h)
+        self.assertIn(f"<b>{len(self.matriz['rodadas'])}</b>", h)
+        for origem in sorted(set(origens.values())):
+            n = sum(1 for o in origens.values() if o == origem)
+            self.assertIn(f"<span>Células: {origem}</span><b>{n}</b>", h, origem)
+        self.assertEqual(d["origens"], {o: sum(1 for x in origens.values() if x == o) for o in set(origens.values())})
+        lead = re.search(r'<p class="lead">(.*?)</p>', h, re.S).group(1)
+        self.assertRegex(lead, r"\d+ de \d+")
+        self.assertEqual(h.count('<p class="lead">'), 1, "a resposta é uma frase só, em um parágrafo")
+
+    def teste_grafico_traz_a_primeira_e_a_ultima_rodada_de_cada_celula_e_o_nivel_pedido(self):
+        d, h = tp.secao_instalador(self.matriz)
+        self.assertIn('<canvas id="g-inst-niveis">', h)
+        self.assertEqual(sorted(x["id"] for x in d["celulas"]), sorted(self.porcelula))
+        for x in d["celulas"]:
+            rs = self.porcelula[x["id"]]
+            self.assertEqual((x["primeira"], x["ultima"], x["pedido"], x["rodadas"]),
+                             (NIVEL_DE_TESTE[rs[0]["alcancado"]], NIVEL_DE_TESTE[rs[-1]["alcancado"]], NIVEL_DE_TESTE[rs[-1]["ate"]], len(rs)), x["id"])
+            self.assertEqual((x["primeira_texto"], x["ultima_texto"]), (rs[0]["alcancado"], rs[-1]["alcancado"]))
+        self.assertEqual(d["cores"], tp.CORES_DO_INSTALADOR)
+        json.dumps(d, ensure_ascii=False)
+
+    def teste_nenhum_numero_e_digitado_uma_matriz_de_mentira_muda_tudo(self):
+        m = _matriz_de_teste([("A", "20260101-000000", "como-esta", "WSL", "N3", "N0", "Sistema A", "N1: deu ruim"), ("A", "20260102-000000", "novo", "WSL", "N3", "N3", "Sistema A", ""),
+                              ("B", "20260101-000000", "novo", "GitHub Actions", "N4", "N2", "Sistema B", "N3: " + "x" * 300)])
+        d, h = tp.secao_instalador(m)
+        self.assertEqual(d["totais"], {"celulas": 2, "chegaram": 1, "rodadas": 3})
+        self.assertEqual(d["origens"], {"WSL": 1, "GitHub Actions": 1})
+        self.assertIn("1 de 2", h)
+        a = next(x for x in d["celulas"] if x["id"] == "A")
+        self.assertEqual((a["primeira"], a["ultima"], a["pedido"], a["rodadas"]), (0, 3, 3, 2))
+        self.assertIn("Sistema B", h)
+        self.assertNotIn("x" * 150, h, "a primeira falha vai encurtada na tabela")
+        self.assertIn("01/01/2026 00:00:00", h)
+        # nenhuma das duas fontes de números do painel real aparece na matriz de mentira
+        self.assertNotIn("L-U2404", h)
+
+    def teste_sem_a_matriz_ou_vazia_a_aba_sai_com_aviso(self):
+        for origem in (None, {}, {"rodadas": []}):
+            d, h = tp.secao_instalador(origem)
+            self.assertEqual(d, {})
+            self.assertIn('<section id="instalador" hidden>', h)
+            self.assertIn("<h1>O instalador funciona numa máquina que nunca viu o projeto?</h1>", h)
+            self.assertIn("matriz.json", h)
+            self.assertIn("relatorio.py", h, "o aviso diz de onde o arquivo sai")
+            self.assertNotIn("<canvas", h)
+
+    def teste_texto_sem_travessao_seta_nome_ou_voce_e_com_as_ressalvas_do_relatorio(self):
+        _, h = tp.secao_instalador(self.matriz)
+        sem_marcas = re.sub(r"<!--.*?-->", "", h, flags=re.S)
+        self.assertNotRegex(sem_marcas, "[—→↔]")
+        self.assertNotRegex(sem_marcas, r"\bEric\b|\b[Vv]ocês?\b|Leandro|Pedro|Guilherme")
+        for trecho in ("N1", "N2", "N3", "N4", "N0", "como-esta", "novo", "ALVO", "Fedora", "melhor esforço", "Arch", "openSUSE", "sem suporte", "Intel",
+                       "não são máquinas limpas", "relatorio-instalador-maquina-limpa.md", "matriz.json", "Todas as rodadas"):
+            self.assertIn(trecho, sem_marcas, trecho)
+        # a tabela completa tem uma linha por rodada
+        self.assertEqual(sem_marcas.count("<tr><td>"), len(self.matriz["rodadas"]))
+
+    def teste_classificacao_de_suporte_acompanha_o_relatorio(self):
+        # a classificação das células de melhor esforço e sem suporte é a única coisa que não vem do matriz.json; ela tem de bater com os rótulos do relatorio.py
+        texto = (gd.RAIZ / "ferramentas" / "instalador_matriz" / "relatorio.py").read_text(encoding="utf-8")
+        rotulos = dict(re.findall(r'^\s*"([A-Z0-9-]+)":\s*\("([^"]+)",', texto, re.M))
+        achadas = {i for i, nome in rotulos.items() if "(sem suporte)" in nome or "(melhor esforço)" in nome}
+        self.assertEqual(achadas, set(tp.CELULAS_SEM_SUPORTE_PLENO), "painel_topicos.CELULAS_SEM_SUPORTE_PLENO ficou diferente dos rótulos de relatorio.py")
+
+    def teste_termos_novos_no_glossario(self):
+        import painel_glossario as g
+        por_id = {t["id"]: t for t in g.TERMOS}
+        for termo in ("celula-instalador", "niveis-da-prova"):
+            self.assertIn(termo, por_id)
+            self.assertEqual(por_id[termo]["grupo"], "projeto")
+        pagina = g.anotar("<main>" + tp.secao_instalador(self.matriz)[1] + "</main>", "")
+        marcados = {m[0] for m in re.findall(r'<span class="termo" tabindex="0" data-termo="([^"]+)">([^<]*)</span>', pagina)}
+        self.assertEqual({"celula-instalador", "niveis-da-prova"} - marcados, set(), "os dois termos novos são marcados na primeira vez em que a aba os usa")
+        self.assertIn("Termos e métodos desta aba", pagina)
 
 
 # ! Alteração de IA - Revisar: (05/11/2026) testes das duas regras de painel_leituras: todo gráfico com "Como ler" e nenhum dado cru à vista.

@@ -308,6 +308,13 @@ TERMOS: list[dict] = [
      "curto": "A tela em que uma pessoa revisa os relatórios do agente, no estilo de uma revisão de código.", "explicacao": "", "no_projeto": "", "fontes": []},
     {"id": "limiar", "termo": "Limiar", "grupo": "projeto", "padroes": [r"\blimiar(?:es)?\b"],
      "curto": "O valor de corte de uma medida: acima dele vale uma coisa, abaixo vale outra.", "explicacao": "", "no_projeto": "", "fontes": []},
+    # ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) duas entradas novas, do grupo do projeto: a célula de teste do instalador e os níveis da prova da instalação (N1 a N4).
+    # ! Motivo: a aba "instalador" do painel usa os dois termos, e o glossário ainda não os tinha; sem a entrada, quem lê a aba sem ter acompanhado a frente do instalador não saberia o que é uma célula
+    # nem o que cada nível prova. O texto segue o relatório do instalador em máquina limpa (seção 2), sem número de resultado. Termos que não são método ficam só com o resumo curto, como os vizinhos.
+    {"id": "celula-instalador", "termo": "Célula de teste do instalador", "grupo": "projeto", "padroes": [r"células? de teste do instalador"],
+     "curto": "Um jeito de rodar o teste do instalador: uma máquina e o que se pede dela. Cada vez que a célula roda, sai uma rodada, com o resultado de cada nível.", "explicacao": "", "no_projeto": "", "fontes": []},
+    {"id": "niveis-da-prova", "termo": "Níveis da prova da instalação (N1 a N4)", "grupo": "projeto", "padroes": [r"níveis? da prova da instalação"],
+     "curto": "N1: o site e a API no ar, com o banco. N2: o navegador do agente abre o site. N3: o Ollama responde com um modelo pequeno. N4: o modelo do projeto responde. N0: nenhum passou.", "explicacao": "", "no_projeto": "", "fontes": []},
 ]
 
 _POR_ID = {t["id"]: t for t in TERMOS}

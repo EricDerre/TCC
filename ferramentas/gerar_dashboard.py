@@ -1290,6 +1290,17 @@ def contexto_fase5() -> dict:
             "f5_medicao": ler_json_ou_nada(pasta / "medicao.json"), "f5_desenho": desenho_da_fase5()}
 
 
+# ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) o contexto da aba "instalador", lido por painel_topicos.secao_instalador: o `matriz.json` da prova do
+# instalador em máquinas que nunca viram o projeto (uma linha por rodada de cada célula de teste), gravado por `ferramentas/instalador_matriz/relatorio.py --colar`.
+# ! Motivo: a regra do projeto pede uma aba para toda análise nova, e a matriz de testes do instalador só existia no relatório em Markdown; o painel não mostrava em que sistemas o
+# instalador foi provado. O arquivo que falta ou que está pela metade vira None (a aba mostra o aviso), e não uma falha que derrube a geração do painel inteiro.
+MATRIZ_DO_INSTALADOR = MEMORIAL / "5-metodo-e-ferramental" / "dados" / "instalador" / "matriz.json"
+
+
+def contexto_instalador() -> dict:
+    return {"instalador_matriz": ler_json_ou_nada(MATRIZ_DO_INSTALADOR)}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--saida", default=str(SAIDA_PADRAO))
@@ -1333,6 +1344,9 @@ def main() -> None:
         # ! Alteração de IA - Revisar: (16/11/2026, Fase 5) o contexto da aba "medicao": os derivados de resultados_alvo/fase5 e o desenho da medida.
         # ! Motivo: a aba da medição de valor entra no painel antes da corrida 28 e das sessões; o teste das abas usa esta mesma função.
         **contexto_fase5(),
+        # ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) o contexto da aba "instalador": o `matriz.json` da prova do instalador.
+        # ! Motivo: a aba nova lê esse arquivo; o teste das abas usa esta mesma função.
+        **contexto_instalador(),
     }
     dados["topicos"], topicos_html = tp.montar(ctx)
     # ! Alteração de IA - Revisar: (05/11/2026) a página montada passa por painel_leituras.aplicar: "Como ler" em cada gráfico e dados em "Mais informações".

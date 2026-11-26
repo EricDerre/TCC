@@ -309,3 +309,70 @@ Nenhum cartão foi recusado pelo GitHub, e a sessão do navegador interno ficou 
 - **Issues do professor.** #76 (atendimento de 06/11), #77 (cota de Actions da organização esgotada) e #78 (apresentação em 04/12/2026, das 19h às 22h) estão abertas e não foram tocadas. O #64, de 04/11, aparece fechado.
 - **Cartões abertos.** Fecham quando a corrida curta da ficha 99 for lida (#91 e #73), quando o Word e o PDF saírem (#92), quando a próxima execução do instalador for lida (#93 e #94) e quando o push dos três commits sair (#95).
 - Nada foi commitado nem replicado; este registro é o único arquivo do repositório principal tocado por esta sessão.
+
+<!-- ! Alteração de IA - Revisar: seção nova (26/11/2026) com o ajuste de encerramento do Kanban do orientador: 4 cartões criados (issues #96 a #99), 12 cartões existentes fechados ou comentados, o segundo comentário no Status Report #12 e o estado do quadro ao fim.
+     ! Motivo: o Eric pediu o Kanban ajustado para o fechamento do projeto, e o quadro ainda tinha o Q7, a interface do analista, a réplica, a Pós-Fase 4 e as features abertas, sem cartão para o hub de 25 e 26/11; sem esta seção a próxima sessão não saberia o que já foi fechado nem por quê. A lista foi aprovada pelo Eric no quadro de perguntas, e o #71 seguiu a decisão 179, que saiu durante a execução. -->
+## 10. Encerramento do projeto no Kanban (26/11/2026)
+
+Pedido do Eric em 26/11/2026, repassado pela sessão principal: "Também atualizar o readme com o documento/versão final dele, além de ajustar o kanban". Levantamento, só leitura, no roadmap, no README e nas fichas 99 e 109 a 117 de `pendencias.md`, com as decisões 169 a 179. O Eric aprovou no quadro de perguntas: "Sim, aplicar tudo", "Sim, criar os 3", "Sim, em Fazendo" para o cartão da banca e "Sim, acrescentar" para o Status Report #12.
+
+### 10.1 Os 4 cartões criados
+
+| Issue | ID | Título | Tipo | Feature | Coluna |
+|---|---|---|---|---|---|
+| #96 | TSK-POS4-007 | Pós-Fase 4: o hub vira a central aberta pelo Cobaia.exe, com Início, Métricas e o botão de rodar os cenários (fichas 109 e 110, decisões 170 e 171) | Desenvolvimento | FT004 | Producao, fechada |
+| #97 | TSK-POS4-008 | Pós-Fase 4: molde visual do hub em diagramas e a hora de cada etapa nas corridas do botão (fichas 113 e 114, decisões 175 e 176) | Desenvolvimento | FT004 | Producao, fechada |
+| #98 | TSK-POS4-009 | Pós-Fase 4: molde aprovado, painel local aberto pelo hub e gráficos sem internet (fichas 115 e 116, decisões 177 e 178) | Desenvolvimento | EP001 | Producao, fechada |
+| #99 | TSK-POS4-010 | Testes de campo para a banca (decisão 170, a especificar pelo Eric) | Testes | EP001 | Fazendo |
+
+Todos na Sprint 3 (Novembro), e o módulo POS4 continua de TSK-POS4-006. O #99 tem só a decisão 170 como fonte: os commits de 26/11 falam em casos e interface para a banca, sem registro ainda no roadmap nem nas fichas.
+
+### 10.2 Cartões existentes mudados no mesmo dia
+
+| Issue | ID | O que mudou |
+|---|---|---|
+| #91 | TSK-POS4-005 (Q7) | De Testes em DEV para Producao; fechada; critério 2 marcado: a corrida curta rodou e foi lida em 25/11 (ficha 99), e a seleção parcial ainda não rodou de verdade. |
+| #73 | TSK-F4-016 (interface do analista) | De Testes em DEV para Producao; fechada; os três critérios marcados: o hub do Q6 virou a central, e o trace na falha ficou provado na corrida curta. |
+| #95 | TSK-DOC-015 (réplica) | De Fazendo para Producao; fechada; critério 2 marcado: as réplicas até 4c98bf72 estão no main do orientador, inclusive as de 26/11. |
+| #18 | FT004 | De Fazendo para Producao; fechada: todas as tarefas da feature estão fechadas, e a nota diz que as duas pré-condições foram cumpridas, sem editar o corpo. |
+| #15, #16, #17 | FT001 a FT003 | Já estavam em Producao; fechadas no encerramento, com os critérios já marcados. |
+| #71 | TSK-DOC-011 (Pós-Fase 4) | De Fazendo para Producao; fechada pela decisão 179 (seção 10.3). |
+| #92 | TSK-POS4-006 (Q8) | Continua em Fazendo; comentário: o Word e o PDF da versão 5 saem hoje (decisões 174 e 179), e a seção 1.1 tem o texto de um coautor (decisão 173). |
+| #93 | TSK-INS-003 (I5) | Continua em Testes em DEV; comentário: a terceira execução ainda não foi lida. |
+| #28 | TSK-DOC-002 (.docx do TCC) | Continua em Fazendo; comentário: a versão final é a 5 e sai hoje (decisões 174 e 179). |
+
+Ficaram como estavam: #14 (EP001, Fazendo), #27 (TSK-DOC-001, Fazendo) e #94 (TSK-INS-004, Fazendo).
+
+### 10.3 O que mudou durante a execução
+
+- **O #71 foi fechado.** A ficha 117 estava aberta quando a lista foi ao quadro, e o #71 ia só ganhar um comentário. Durante a execução, a sessão do texto final fechou a ficha (decisão 179): a Pós-Fase 4 fechou em 26/11/2026, e o Word e o PDF saem no mesmo dia. A sessão principal tinha pedido para mover o cartão se o roadmap já desse a fase como concluída, e o roadmap passou a dizer isso.
+- **Três comentários editados.** Os de #92, #93 e #28, publicados minutos antes com o prazo de 30/11 da decisão 172, foram editados para a decisão 179.
+
+### 10.4 Status Report #12
+
+Com o sim do Eric, um segundo comentário no Status Report #12 (reunião de 27/11/2026), com o que mudou em 26/11, ao lado do de 25/11. O corpo da issue, que é do professor, ficou intacto, e o comentário não cita nome de integrante.
+
+### 10.5 Estado do quadro ao fim (contagem por coluna no próprio quadro, 26/11/2026 à tarde)
+
+- No Status: 5 (Status Reports #9 a #13).
+- Fazendo: 6 (#14, #27, #28, #92, #94, #99).
+- Testes em DEV: 1 (#93).
+- Producao: 83 (os 75 de 25/11, mais #18, #71, #73, #91, #95 e os três cartões novos fechados).
+- Backlog, Refinamento, A Fazer, Merge e Testes em HOM: 0.
+
+São 95 itens no quadro. As issues abertas no repositório são 16, conferidas pela busca de issues abertas.
+
+### 10.6 Falhas
+
+Nenhum cartão foi recusado pelo GitHub, e a sessão do navegador interno ficou válida até o fim. O que deu errado:
+
+- **Área de transferência.** Em três cliques, no menu de status do #91 e do #95 e no fechamento do #95, a página do GitHub escreveu na área de transferência do Windows; o aplicativo avisou, e o status e o fechamento ficaram certos.
+- **Caixas de critério desabilitadas.** Nas issues criadas pelo formulário, as caixas não aceitam clique; os critérios foram marcados pela edição do corpo, com conferência por JavaScript antes de salvar.
+
+### 10.7 O que fica
+
+- #92 e #28 fecham quando o Word e o PDF da versão 5 saírem.
+- #93 e #94 fecham quando a terceira execução do instalador for lida e entrar no relatório, ou ficam com a segunda no texto, pela decisão 179.
+- #99 depende do escopo dos testes de campo, que é do Eric.
+- #14 (o épico) e #27 (a cópia e a sincronização) seguem até a última réplica.
+- Nada foi commitado nem replicado; os commits do principal foram lidos no arquivo `.git/logs/HEAD`, sem rodar git; este registro é o único arquivo do repositório principal tocado por esta sessão.
