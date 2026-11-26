@@ -1001,8 +1001,33 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertEqual(d["selecao"]["selecionados"], [len(p["selecionados"]) for p in conf["pares"]])
         for proibido in ("—", "→", "Eric", "você"):
             self.assertNotIn(proibido, h, proibido)
+        # ! Alteração de IA - Revisar: (25/11/2026, noite; fichas 99 e 109) a aba passa a contar a corrida curta dos pacotes Q6 e Q7, lida de
+        # `resultados_alvo/fase4_fumaca_q7/` (a decisão da seleção, os traces gravados e o Task Success), e o hub como central aberta pelo `Cobaia.exe`.
+        # ! Motivo: a aba dizia que a prova com as cobaias e o modelo "fica para a máquina livre", e a corrida rodou em 25/11/2026; e o hub deixou de abrir só pela
+        # linha de comando (decisão 170). Sem a pasta da corrida curta, a aba continua dizendo o que falta provar, em vez de inventar número.
+        self.assertIn("Cobaia.exe", h, "o hub como central aberta pelo launcher")
+        self.assertIn("fica para a máquina livre", h, "sem a corrida curta lida, a aba diz o que falta")
+        fumaca = self.ctx.get("fumaca_q7")
+        self.assertTrue(fumaca, "a corrida curta está em resultados_alvo/fase4_fumaca_q7")
+        _, h2 = tp.secao_hub(hub, conf, fumaca)
+        self.assertNotIn("fica para a máquina livre", h2)
+        for trecho in (f"em {fumaca['traces']} cenários", f"{fumaca['task_success']} de {fumaca['execucoes']} execuções", "nenhuma seleção parcial rodou de verdade", "Cobaia.exe"):
+            self.assertIn(trecho, h2, trecho)
+        pasta = gd.EXP / "resultados_alvo" / "fase4_fumaca_q7"
+        registros = [json.loads(l) for l in (pasta / "cenarios.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+        self.assertEqual(fumaca["traces"], len(list((pasta / "traces").glob("*.zip"))))
+        self.assertEqual((fumaca["execucoes"], fumaca["task_success"]), (len(registros), sum(1 for r in registros if r["task_success"])))
+        self.assertEqual(fumaca["modo"], json.loads((pasta / "impacto_git.json").read_text(encoding="utf-8"))["decisao"]["modo"])
+        for proibido in ("—", "→", "Eric", "você"):
+            self.assertNotIn(proibido, h2, proibido)
+        # numa cópia do repositório sem a pasta `traces/` da corrida curta, a aba não conta traces: diz onde eles são gravados, sem número
+        _, h3 = tp.secao_hub(hub, conf, {**fumaca, "traces": None})
+        self.assertNotIn("None", h3)
+        self.assertNotIn(f"em {fumaca['traces']} cenários", h3)
+        self.assertIn("nos cenários em que o roteiro falhou", h3)
         secao = self.html[self.html.index('<section id="hub"'):].split("</section>")[0]
         self.assertIn(f"{t['casos']} casos", secao, "a página real traz a leitura")
+        self.assertIn(f"em {fumaca['traces']} cenários", secao, "a página real traz a corrida curta")
         self.assertEqual(json.dumps(self.dados_t["hub"], ensure_ascii=False)[:1], "{")
 
     def teste_revisao_v3_usa_os_numeros_do_json(self):

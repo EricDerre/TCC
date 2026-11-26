@@ -1,0 +1,156 @@
+{
+ "regra": "cada seleção registra os cenários que deixou de rodar, e a rodada completa seguinte confere se algum deles falhou (Azure DevOps TIA: comparar T1, os selecionados, com T2, todos)",
+ "decisao": {
+  "modo": "completa",
+  "commit_testado": "717f68c2",
+  "commit_atual": "35617a473461f2fab8dfef23a99ab5cab6cd14d9",
+  "arvore_suja": false,
+  "motivo": "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+ },
+ "cenarios": [
+  {
+   "cenario": "contrato-error_500",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "contrato-escala_ou_unidade_errada",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "contrato-field_missing",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "contrato-field_renamed",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "contrato-malformed_json",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 4
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado não é o mesmo"
+  },
+  {
+   "cenario": "contrato-type_drift",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "localizador-front-admin-login",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "localizador-front-admin-produtos",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "localizador-front-busca",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  },
+  {
+   "cenario": "localizador-front-cliente-reserva",
+   "na_selecao": true,
+   "completa": {
+    "execucoes": 5,
+    "task_success": 5
+   },
+   "selecionada": {
+    "execucoes": 1,
+    "task_success": 1
+   },
+   "situacao": "rodou nas duas e o resultado é o mesmo"
+  }
+ ],
+ "resumo": {
+  "selecionados": 10,
+  "deixados_de_fora": 0,
+  "falhas_perdidas": [],
+  "discordancias": [
+   "contrato-malformed_json"
+  ],
+  "sem_rodada_completa": [],
+  "segura": true
+ },
+ "corridas": {
+  "selecionada": "fase4_fumaca_q7",
+  "completa": "fase5_agente_b"
+ }
+}

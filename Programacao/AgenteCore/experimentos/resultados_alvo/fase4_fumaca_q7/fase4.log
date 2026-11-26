@@ -1,0 +1,26 @@
+﻿[2026-11-25 22:27:32] rodar_fase4.ps1: modo cenarios, saida fase4_fumaca_q7, canal chromium, resultados resultados_alvo, casos 10
+[2026-11-25 22:27:35] Ollama 0.40.16; modelo qwen2.5:7b; RAM livre 7,8 GB
+[2026-11-25 22:27:35] barra de progresso: estado em C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_fumaca_q7\progresso.json; no console a barra se redesenha, no log ficam so os marcos de cada inferencia
+[2026-11-25 22:27:36] testar_fase4.py
+[2026-11-25 22:28:17] executar_fase4.py --modo cenarios --saida fase4_fumaca_q7 --canal chromium --banco avaliacao --casos 10 --modelo qwen2.5:7b --top 20 --repeticoes 1 --selecao git --desde 717f68c2 --trace-na-falha
+[2026-11-25 22:28:18] seleção pelo Git: completa; nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)
+[2026-11-25 22:28:20] INÍCIO cenarios: Ollama 0.40.16, qwen2.5:7b, biblioteca de produção (95af35290860, lote fase4_biblioteca), k = 3; 10 execução(ões) (10 cenários x 1 repetição(ões)); corrida PARCIAL; 0 já feita(s)
+[2026-11-25 22:28:44] referência api-catalogo: passou em 0.616 s; árvore 193 nós, 39 linhas
+[2026-11-25 22:28:45] repetição 1: banco restaurado e conferido (hash 9fe5e7cb64288c9d); navegador 156.0.8078.4
+[2026-11-25 22:30:21] [1/10] contrato-malformed_json#1 (contrato, malformed_json): detectou (conferencia_do_roteiro); resposta_truncada; Task Success sim; MTTR 93.326 s; 93.704 s
+[2026-11-25 22:31:37] [2/10] contrato-field_missing#1 (contrato, field_missing): detectou (conferencia_do_roteiro); campo_ausente; Task Success sim; MTTR 73.954 s; 74.619 s
+[2026-11-25 22:32:55] [3/10] contrato-field_renamed#1 (contrato, field_renamed): detectou (conferencia_do_roteiro); campo_renomeado; Task Success sim; MTTR 74.544 s; 75.201 s
+[2026-11-25 22:34:11] [4/10] contrato-type_drift#1 (contrato, type_drift): detectou (contrato_no_fio); tipo_divergente; Task Success sim; MTTR 73.445 s; 74.107 s
+[2026-11-25 22:35:41] [5/10] contrato-escala_ou_unidade_errada#1 (contrato, escala_ou_unidade_errada): detectou (contrato_no_fio); escala_ou_unidade_errada; Task Success sim; MTTR 88.066 s; 88.659 s
+[2026-11-25 22:37:08] [6/10] contrato-error_500#1 (contrato, error_500): detectou (conferencia_do_roteiro); erro_interno_do_servidor; Task Success sim; MTTR 84.224 s; 84.577 s
+[2026-11-25 22:37:09] referência front-busca (id_renomeado, localizador #buscar): passou em 0.734 s; alvo searchbox "search"
+[2026-11-25 22:38:30] [7/10] localizador-front-busca#1 (localizador, id_renomeado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 72.607 s; 79.452 s
+[2026-11-25 22:38:30] referência front-admin-login (classe_trocada, localizador button.btn-primary): passou em 0.617 s; alvo button "Entrar"
+[2026-11-25 22:39:22] [8/10] localizador-front-admin-login#1 (localizador, classe_trocada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 43.48 s; 49.934 s
+[2026-11-25 22:39:23] referência front-admin-produtos (texto_alterado, localizador role=button[name=/EXCLUIR$/] >> nth=0): passou em 1.076 s; alvo button " EXCLUIR"
+[2026-11-25 22:40:38] [9/10] localizador-front-admin-produtos#1 (localizador, texto_alterado): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 67.377 s; 74.685 s
+[2026-11-25 22:40:40] referência front-cliente-reserva (estrutura_alterada, localizador #reserva_login > input[type=submit]): passou em 0.947 s; alvo button "Reservar"
+[2026-11-25 22:41:55] [10/10] localizador-front-cliente-reserva#1 (localizador, estrutura_alterada): detectou (passo_do_localizador); localizador_quebrado; Task Success sim; MTTR 67.015 s; 74.918 s
+[2026-11-25 22:42:02] FIM cenarios: 10 de 10 execuções; Task Success 10; duração 824 s; trilha 393868 bytes
+[2026-11-25 22:42:04] avaliar_fase4.py --cenarios --saida fase4_fumaca_q7 --pasta C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\resultados_alvo\fase4_fumaca_q7
+[2026-11-25 22:42:04] FIM rodar_fase4.ps1 (modo cenarios) - duracao total 00h14

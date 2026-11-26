@@ -1,14 +1,18 @@
 <!-- ! Alteração de IA - Revisar: arquivo novo (25/11/2026): o relatório da Pós-Fase 4 (o que chega ao analista), escrito a partir do plano aprovado, do anexo de desvios dele, das decisões 94 a 129, 152, 157 e 163 e das leituras de `resultados_alvo/fase4/` e `resultados_alvo/fase4_analista/`. As tabelas são coladas por `colar_pos_fase4.py` (blocos `tb_f4_*`, conferidos por `colar_pos_fase4.py --check`); no texto corrido, cada número leva a origem num comentário HTML que começa por `fonte:`, logo depois da frase.
      ! Motivo: o plano põe o relatório no pacote Q8 e a fase passou por dez pacotes e três corridas com modelo, cada um com a sua leitura e o seu `--check`, mas sem um texto que diga, num lugar só, o que a fase perguntou, o que respondeu e o que ficou de fora. Nenhum número de resultado foi digitado à mão: o que não tem origem em leitura, em decisão ou no plano não entrou. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) o relatório passa ao estado de 26/11/2026: a corrida curta da ficha 99 lida (seção 3.11), o hub como central aberta pelo `Cobaia.exe` (seção 3.10), os desvios 12 a 16 na seção 6 e as linhas novas da rastreabilidade; sai a marca de espera da ficha 99.
+     ! Motivo: o relatório dizia que a corrida com as cobaias estava pendente e descrevia um hub que só abria por comando; a ficha 99 foi fechada em 25/11/2026 e a decisão 170 mudou o que o `.exe` abre. Os números da corrida curta vêm dos registros da pasta `fase4_fumaca_q7`, conferidos por script antes de entrar no texto. -->
 
 # Pós-Fase 4: o que chega ao analista, relatório da fase
 
-Estado em 25/11/2026: os pacotes Q0 a Q7 estão feitos; o pacote Q8 (este relatório, o texto final do TCC e o arquivo Word) está em andamento. Uma coisa ainda depende de uma corrida com o modelo que o Eric lança na janela dele: a prova do trace e da seleção pelo Git com as cobaias (ficha 99, seção 3.9).
+Estado em 26/11/2026: os pacotes Q0 a Q7 estão feitos. A corrida curta que prova o trace e a seleção pelo Git com as cobaias rodou em 25/11/2026 (ficha 99, seção 3.11), e na mesma noite o hub virou a central aberta pelo `Cobaia.exe` (decisão 170, seção 3.10). Do pacote Q8 (este relatório, o texto final do TCC e o arquivo Word), o texto está escrito, e o Word e o PDF saem uma vez só, no fim: quando a terceira execução do instalador e a prova do botão do hub estiverem lidas, ou em 30/11/2026 com o que estiver lido (decisões 158, 168 e 172).
 
 ## 1. O que a fase perguntou e o que respondeu
 
 A Fase 4 fechou com o agente lendo a tela, diagnosticando, curando o localizador em código e gravando a trilha de cada passo. Ela não cuidou de quem lê: o relatório por caso e os verbetes chegavam ao analista em texto corrido, com jargão da IA, e a espera de cada diagnóstico não dava sinal de que a máquina não tinha travado. A Pós-Fase 4 muda o que chega ao analista sem mudar o que o agente mede: o prompt, a biblioteca de produção, a busca, a poda e a cura ficaram como estavam.<!-- fonte: plano-aprovado-pos-fase-4.md, seções 1.1 e 2, princípio 1 -->
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) as linhas do Q6, do Q7 e do Q8 passam ao estado de 26/11/2026.
+     ! Motivo: a linha do Q7 dizia que a corrida com o modelo ainda não tinha rodado, a do Q6 não contava a central (decisão 170) e a do Q8 dava o texto como em andamento. -->
 | Pacote | O que perguntou | O que respondeu |
 |---|---|---|
 | Q1 | O relatório por caso cabe no molde do relatório de defeitos do syllabus CTFL 4.0 (seção 5.5)? Os verbetes podem ser lidos sem jargão sem mudar o que o modelo lê? | Sim nos dois: relatório v3 gerado da trilha, e uma camada de leitura fora da biblioteca |
@@ -19,9 +23,9 @@ A Fase 4 fechou com o agente lendo a tela, diagnosticando, curando o localizador
 | Corrida 25 | As notas que o modelo escreveu na biblioteca pesam no diagnóstico? | Não saiu do ruído |
 | Corrida 26 | Um segundo passe do diagnóstico, só nos casos com sinal, melhora o agente? | Não saiu do ruído |
 | M1 e corrida 27 | Um analista de documentação (o modelo no papel de quem propõe edição de verbete) produz proposta aproveitável? | A forma melhora; a parcela correta ficou dentro do ruído |
-| Q6 | Um hub à imagem de uma pull request reúne relatório, evidência, árvore, comentário e veredito? | Sim, provado em teste |
-| Q7 | A seleção de cenários pelo Git é segura e foi conferida? | Provada em teste e em conta retrospectiva; a corrida com o modelo ainda não rodou |
-| Q8 | O texto final e o Word | Em andamento em 25/11/2026 |
+| Q6 | Um hub à imagem de uma pull request reúne relatório, evidência, árvore, comentário e veredito? | Sim, provado em teste; desde 25/11/2026 é também a central aberta pelo `Cobaia.exe` (decisão 170) |
+| Q7 | A seleção de cenários pelo Git é segura e foi conferida? | Provada em teste, em conta retrospectiva e numa corrida curta com o modelo, em que a regra mandou rodar os dez cenários; nenhuma seleção parcial rodou |
+| Q8 | O texto final e o Word | Texto final escrito em 25 e 26/11/2026; o Word e o PDF saem uma vez só, no fim (decisões 158, 168 e 172) |
 
 ## 2. Como rodou
 
@@ -304,7 +308,11 @@ A pedido do Eric em 11/11/2026, o painel do projeto passou a ser organizado por 
 
 **Resultado.** O hub junta 170 casos com diagnóstico de 4 corridas, que são 83 casos distintos: 47 têm mais de uma iteração. O runner `testar_hub.py` tem 44 testes, 11 deles abrindo a página no navegador sem janela.<!-- fonte: hub.md, parágrafo de abertura -->
 
-**Limites.** O estudo do `visual-explainer` para o hub (decisão 126) está em `estudo-visual-explainer-para-o-hub.md` e rendeu duas ideias aplicadas. O trace foi provado numa página local que falha de propósito e nos pontos em que o executor o chama, sem as cobaias e sem o banco (desvio 10). A prova do hub é por teste, não por uso de um analista.<!-- fonte: plano-aprovado-pos-fase-4.md, anexo, desvio 10 -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) parágrafo novo, "O hub como central", e o parágrafo dos limites passa a contar a corrida curta e o botão.
+     ! Motivo: em 25/11/2026 o Eric pediu o hub como central de tudo, aberta quando o `.exe` roda (ficha 109, decisão 170, desvio 16), e a seção só descrevia a página de revisão aberta por comando; o limite do trace dizia "sem as cobaias", o que a corrida curta mudou. -->
+**O hub como central.** Em 25/11/2026, depois da corrida curta, o Eric pediu que o hub fosse a central do projeto, aberta quando o `Cobaia.exe` roda, e escolheu no quadro a central completa (ficha 109, decisão 170; desvio 16 do plano). O `run.py` passou a subir o hub junto com o site e a API (`start_hub`), com o Python da venv do AgenteCore, e o `Cobaia.py`, de que sai o `Cobaia.exe`, abre uma aba só, no hub; se o hub não sobe, abre o site e a API, como antes. O hub ganhou a vista "Início" (o que está no ar e os atalhos para o site, a API e o painel) e a vista "Métricas" (por corrida, lida dos registros gravados, com o resultado da Fase 5 no alto e a ressalva do Task Success). Aberto com `--pelo-exe`, ele libera o botão de rodar os dez cenários, e a corrida chama o `executar_fase4.py` com `--cobaias-no-ar`, opção nova e desligada por padrão, que usa o site, a API e o banco já no ar; `python hub.py` sozinho continua só mostrando o comando. O agente medido não muda, e a corrida lançada pela página é uso do produto, não medida do TCC. O runner `testar_central.py` tem 9 testes, sem modelo, sem banco e sem bater nas portas de verdade. O botão não foi visto lançando uma corrida com o modelo: nenhuma corrida com modelo sai de dentro do aplicativo do agente de apoio, e a prova fica para um clique do Eric no `.exe` recompilado.<!-- fonte: pendencias.md, ficha 109; decisoes.md, decisão 170; plano-aprovado-pos-fase-4.md, anexo, desvio 16 -->
+
+**Limites.** O estudo do `visual-explainer` para o hub (decisão 126) está em `estudo-visual-explainer-para-o-hub.md` e rendeu duas ideias aplicadas. O trace foi provado primeiro numa página local que falha de propósito e nos pontos em que o executor o chama, sem as cobaias e sem o banco (desvio 10), e depois na corrida curta de 25/11/2026, com as cobaias e o modelo (seção 3.11). A prova do hub é por teste, não por uso de um analista, e o botão de rodar os cenários não foi provado numa corrida com o modelo.<!-- fonte: plano-aprovado-pos-fase-4.md, anexo, desvio 10 -->
 
 ### 3.11 Q7: a seleção de cenários pelo Git
 
@@ -327,10 +335,11 @@ A pedido do Eric em 11/11/2026, o painel do projeto passou a ser organizado por 
 
 **Como ler.** "Falhas perdidas" é o cenário que falhou na rodada completa e que a seleção teria deixado de fora; "Segura" é "sim" quando nenhuma falha seria perdida.
 
-**Limite.** Nenhuma seleção rodou de verdade: desde o último commit que tocou as cobaias, nada do mapa mudou, e qualquer ponto de partida anterior inclui um arquivo fora do mapa, que manda rodar tudo.<!-- fonte: plano-aprovado-pos-fase-4.md, anexo, desvio 11 -->
+**Limite.** Nenhuma das seleções da tabela rodou de verdade, e nenhuma seleção parcial rodou até 26/11/2026: desde o último commit que tocou as cobaias, nada do mapa mudou, e qualquer ponto de partida anterior inclui um arquivo fora do mapa, que manda rodar tudo.<!-- fonte: plano-aprovado-pos-fase-4.md, anexo, desvio 11 -->
 
-<!-- A_PREENCHER: ficha 99 -->
-**A corrida curta da ficha 99.** Até 25/11/2026 a corrida curta que prova o trace do Playwright e a seleção pelo Git com as cobaias (lançador `rodar_fumaca_q7.ps1`, ficha 99, autorizada na decisão 163) não tinha rodado. Até aqui o trace e a seleção foram provados em teste e numa conta retrospectiva sobre o histórico do repositório.<!-- fonte: pendencias.md, ficha 99; decisoes.md, decisão 163 -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) o parágrafo da corrida curta passa ao resultado lido, e sai a marca de espera.
+     ! Motivo: o parágrafo dizia que a corrida curta estava por rodar; ela rodou em 25/11/2026, pela janela do Eric, e a ficha 99 foi fechada com a leitura dos registros da pasta `fase4_fumaca_q7`. -->
+**A corrida curta da ficha 99.** A corrida curta que prova o trace do Playwright e a seleção pelo Git com as cobaias (lançador `rodar_fumaca_q7.ps1`, ficha 99, autorizada na decisão 163) rodou em 25/11/2026, pela janela do Eric, e gravou a pasta `resultados_alvo/fase4_fumaca_q7`: os dez cenários, uma execução de cada, com a seleção ligada desde o commit `717f68c2` e o trace na falha ligado. A seleção decidiu a corrida: do commit `717f68c2` ao `35617a47` mudaram 1034 arquivos, nenhum das cobaias, e, como nenhuma rodada completa estava registrada, a regra 2 mandou rodar os 10 cenários, sem deixar nenhum de fora.<!-- fonte: impacto_git.json de fase4_fumaca_q7, campo decisao --> O commit testado entrou no registro (`resultados_alvo/hub/commits_testados.jsonl`), e a decisão seguinte, com ele registrado, é "nada a rodar".<!-- fonte: commits_testados.jsonl; pendencias.md, ficha 99 --> O trace foi gravado em 8 das 10 execuções, as dos cenários em que a conferência do roteiro ou o passo do localizador falhou, cerca de 40 MB ao todo, e em nenhuma das 2 detectadas só pela resposta da API (`contrato-escala_ou_unidade_errada` e `contrato-type_drift`), em que o roteiro passa.<!-- fonte: cenarios.jsonl de fase4_fumaca_q7, campo origem_deteccao; pendencias.md, ficha 110 --> A conferência contra a corrida 28b não tem cenário deixado de fora e tem um resultado diferente: `contrato-malformed_json` teve Task Success aqui e em 4 de 5 execuções lá.<!-- fonte: conferencia_git.json de fase4_fumaca_q7, campo resumo --> As 10 execuções tiveram Task Success; os tempos não valem como medida, porque o trace estava ligado e a corrida é parcial. Continua sem prova uma seleção parcial rodando de verdade (desvio 11).
 
 ## 4. O que nenhuma medida mudou no agente
 
@@ -340,18 +349,22 @@ O que saiu do ruído foi a forma: os filtros de texto, o relatório v3 e a camad
 
 ## 5. Limitações
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) o item do hub e da seleção pelo Git passa ao que a corrida curta provou e ao limite do botão do hub.
+     ! Motivo: o item dizia que a corrida com as cobaias estava pendente; ela rodou em 25/11/2026, e o que continua sem prova é o uso do hub por um analista, o botão lançando uma corrida com o modelo e uma seleção parcial. -->
 - **Um leitor humano, que não é do grupo e não é o autor, e sem tempo medido** (seção 3.5): a adesão e a localização do erro têm um leitor só; o tempo até a decisão não foi medido.
 - **Revisão às cegas com 8 propostas da corrida 27** (seção 3.8): a parcela correta tem pouco poder estatístico.
 - **Versão do Ollama:** as corridas 25, 26 e 27 rodaram numa versão do Ollama diferente das de referência, com a ponte pareável; vale a conferência da ponte, e não uma comparação de tempo.<!-- fonte: sem_notas.md, parágrafo do veredito; segundo_passe.md, parágrafo do veredito -->
 - **Filtros medem forma, não verdade** (seção 3.2); o limiar de palavras por frase é calibrado, não de fonte.
 - **A árvore não separa os sinais da busca** (seção 3.3).
-- **O hub e a seleção pelo Git foram provados em teste;** a corrida com as cobaias está pendente (seção 3.11).
+- **O hub foi provado em teste, sem uso por um analista,** e o botão de rodar os cenários não foi provado numa corrida com o modelo (seção 3.10); **a seleção pelo Git só decidiu uma corrida curta,** em que a regra mandou rodar os dez cenários, e nenhuma seleção parcial rodou (seção 3.11).
 - **A barra erra por mais de 10 s na mediana** (10,3 s de erro absoluto em prefill mais geração), e a primeira chamada ainda inclui a carga do modelo (seção 3.4).<!-- fonte: erro_progresso.md, tb_f4_progresso_erro_fora_da_corrida_qwen2_5_7b -->
 - **O texto do syllabus CTFL 4.0 não define "E2E" como nível de teste:** o agente é de teste de sistema e de integração de sistema, sobre tarefas de ponta a ponta (plano, parte 2).<!-- fonte: plano-aprovado-pos-fase-4.md, seção 4 -->
 
 ## 6. O que o plano previa e não saiu, ou saiu de outro jeito
 
-O plano aprovado não muda depois da aprovação; os desvios 1 a 11 estão no anexo dele (`claude-memoria/plano-aprovado-pos-fase-4.md`), com data e decisão. Resumo:<!-- fonte: plano-aprovado-pos-fase-4.md, anexo -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) a seção 6 passa a contar os desvios 12 a 16 do anexo do plano, e o parágrafo "Ficou sem data" passa ao estado de 26/11/2026.
+     ! Motivo: o anexo do plano ganhou os desvios 12 a 15 no pacote Q8 e o 16 com o hub como central, e a seção parava no 11; o parágrafo final dava o texto do TCC como em andamento. -->
+O plano aprovado não muda depois da aprovação; os desvios 1 a 18 estão no anexo dele (`claude-memoria/plano-aprovado-pos-fase-4.md`), com data e decisão. Resumo:<!-- fonte: plano-aprovado-pos-fase-4.md, anexo -->
 
 | Desvio | O que mudou | Decisão |
 |---|---|---|
@@ -366,16 +379,25 @@ O plano aprovado não muda depois da aprovação; os desvios 1 a 11 estão no an
 | 9 | Um botão só para ativar o agente e rodar os cenários; iteração é cada diagnóstico do mesmo caso | 157 |
 | 10 | O trace provado em página local, sem as cobaias | 157 |
 | 11 | A conferência da seleção como conta retrospectiva | 152 e 157 |
+| 12 | A fase entrou no documento do TCC nas seções 4.1.11, 4.1.12, 5.8, 6.7, 6.10.11 e 6.10.12, e não na 6.9 | nenhuma (pacote Q8) |
+| 13 | As figuras: uma que já existia sem uso, duas geradas por script e a captura de tela do hub | nenhuma (pacote Q8) |
+| 14 | O Q8 não coube numa sessão: o Word e o PDF esperaram a corrida curta e a segunda execução do instalador | 158 e 168 |
+| 15 | O relatório 1 da sessão de revisão de 05/11/2026 foi respondido pelo analista de QA, e não pelo Eric | 166 |
+| 16 | O hub como central aberta pelo `Cobaia.exe`, que o plano não previa | 170 |
+| 17 | A geração do Word e do PDF passou a esperar a terceira execução do instalador e a prova do botão do hub, com data limite em 30/11/2026 | 172 |
+| 18 | A seção 1.1 do documento recebeu o texto de um coautor, e o Word e o PDF finais saem como versão 5 | 173 e 174 |
 
-**Ficou sem data:** a conferência em código que desmente a causa respondida pelo modelo vira regra do agente depois da Fase 5 (decisão 119), e o analista de documentação como regra do agente é base de desenho para depois da Fase 5 (decisão 121); nenhum dos dois tem data. Também fica sem data a medida do tempo da revisão, num revisor do grupo lendo na página; o texto do TCC e o Word são o pacote Q8, em andamento em 25/11/2026.<!-- fonte: decisoes.md, decisões 119 e 121 -->
+**Ficou sem data:** a conferência em código que desmente a causa respondida pelo modelo vira regra do agente depois da Fase 5 (decisão 119), e o analista de documentação como regra do agente é base de desenho para depois da Fase 5 (decisão 121); nenhum dos dois tem data. Também ficam sem data a medida do tempo da revisão, num revisor do grupo lendo na página, a prova do botão do hub numa corrida com o modelo e uma seleção parcial rodando de verdade. O texto do TCC está escrito (pacote Q8), e o Word e o PDF saem uma vez só, no fim, com data limite em 30/11/2026 (decisões 158, 168 e 172).<!-- fonte: decisoes.md, decisões 119 e 121 -->
 
 ## 7. Rastreabilidade
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) as linhas do plano, das decisões, das fichas e do hub passam ao estado de 26/11/2026, e entra a linha da corrida curta.
+     ! Motivo: a tabela parava nos desvios 1 a 11, na decisão 163 e na ficha 99, e não dizia onde estão os registros da corrida curta nem os testes da central. -->
 | O quê | Onde |
 |---|---|
-| Plano e desvios 1 a 11 | `claude-memoria/plano-aprovado-pos-fase-4.md` |
-| Decisões 94 a 129, 152, 157 e 163 | `Documentacao/memorial/1-decisoes-e-historico/decisoes.md` |
-| Fichas 49 a 99 | `Documentacao/memorial/pendencias.md` |
+| Plano e desvios 1 a 18 | `claude-memoria/plano-aprovado-pos-fase-4.md` |
+| Decisões 94 a 129, 152, 157, 163, 164 a 168 e 170 a 174 | `Documentacao/memorial/1-decisoes-e-historico/decisoes.md` |
+| Fichas 49 a 99, 103 a 107 e 109 a 112 | `Documentacao/memorial/pendencias.md` |
 | Roadmap | `Documentacao/memorial/roadmap.md`, §4.8 e §2.23 a §2.25 |
 | Filtros de texto (todos os blocos, inclusive critérios, termos e a tabela por texto) | `resultados_alvo/fase4/texto.{json,md}` |
 | Revisão humana dos relatórios (os blocos de tempo, utilidade, avaliação e por caso) | `resultados_alvo/fase4/leitura_revisao_v3.{json,md}` |
@@ -386,7 +408,8 @@ O plano aprovado não muda depois da aprovação; os desvios 1 a 11 estão no an
 | Medida M1 (os demais blocos) | `resultados_alvo/fase4/portoes_m1.{json,md}` |
 | Corrida 27 (portões, lacuna, origem, códigos e caso) | `resultados_alvo/fase4/analista.{json,md}` |
 | Revisão às cegas e quem revisou | `resultados_alvo/fase4_analista/revisao_as_cegas.{json,md}` e `quem_revisou.json` |
-| Hub | `resultados_alvo/fase4/hub.{json,md}`, `testar_hub.py`, `estudo-visual-explainer-para-o-hub.md` |
+| Hub | `resultados_alvo/fase4/hub.{json,md}`, `testar_hub.py`, `testar_central.py` (a central), `estudo-visual-explainer-para-o-hub.md` |
+| Corrida curta dos pacotes Q6 e Q7 (ficha 99) | `resultados_alvo/fase4_fumaca_q7/` (`impacto_git.json`, `conferencia_git.{json,md}`, `cenarios.jsonl`, `traces/`) e `resultados_alvo/hub/commits_testados.jsonl` |
 | Curadoria das 39 leituras | `resultados_alvo/fase4/curadoria_leituras/` e `Programacao/AgenteCore/biblioteca_producao_leitura/` |
 | Árvores de decisão e relatórios v3 | `arvores/` e `relatorios_v3/` na pasta de cada corrida (18d, 21d e 24) |
 | Parecer do analista | `Documentacao/memorial/3-resultados-e-analises/parecer-do-analista-2026-11-10.md` |

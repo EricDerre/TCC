@@ -18,6 +18,7 @@ import time
 from pathlib import Path
 
 from _env_common import (
+    AGENTE_CORE,
     COBAIA_API,
     COBAIA_FRONT,
     OS_NAME,
@@ -93,9 +94,48 @@ def wait_until_ready(timeout_s: int = 30) -> bool:
     return False
 
 
-def wait_and_cleanup(front_proc: subprocess.Popen, api_proc: subprocess.Popen) -> None:
-    """Bloqueia até Ctrl+C (ou um dos processos cair sozinho), depois encerra
-    tudo de forma limpa."""
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) o hub central passa a subir junto com o site e a API: `HUB_PORT`,
+# `comando_do_hub` (o Python da venv do AgenteCore rodando `Programacao/AgenteCore/experimentos/hub.py --sem-abrir --porta 8765 --pelo-exe`),
+# `start_hub` (lança o processo, ou devolve None e avisa quando a venv ou o `hub.py` não existem) e `wait_for_port`; `wait_and_cleanup`
+# passou a aceitar outros processos depois do site e da API e a encerrá-los junto; o `main` deste arquivo também sobe o hub e diz o endereço.
+# ! Motivo: o Eric pediu que o hub seja a central de tudo, aberta quando o `.exe` roda, de onde se rodam os testes e se veem as métricas. O
+# hub roda como processo à parte, com o Python da venv do AgenteCore (que o `install.py` cria e que tem o Playwright), porque o `.exe` só
+# orquestra processos e não carrega o código do agente dentro dele. Se o hub cair sozinho, o site e a API continuam: só a queda de um dos
+# dois encerra tudo, como antes. `--pelo-exe` diz ao hub que o site e a API já estão no ar e libera o botão de rodar os cenários.
+HUB_PORT = 8765
+
+
+def comando_do_hub(agente: Path = AGENTE_CORE, so: str = OS_NAME) -> list[str] | None:
+    """O comando que sobe o hub, ou None quando a venv do AgenteCore ou o `hub.py` ainda não existem."""
+    python_venv = agente / ".venv" / ("Scripts/python.exe" if so == "Windows" else "bin/python")
+    script = agente / "experimentos" / "hub.py"
+    if not python_venv.exists() or not script.exists():
+        return None
+    return [str(python_venv), str(script), "--sem-abrir", "--porta", str(HUB_PORT), "--pelo-exe"]
+
+
+def start_hub(agente: Path = AGENTE_CORE) -> subprocess.Popen | None:
+    """Sobe o hub central como processo à parte; None (com aviso) quando não há como."""
+    comando = comando_do_hub(agente)
+    if comando is None:
+        log("Hub central não iniciado: a venv do AgenteCore ou o hub.py não foram encontrados (rode o instalador).")
+        return None
+    return subprocess.Popen(comando, cwd=str(agente / "experimentos"))
+
+
+def wait_for_port(port: int, timeout_s: int = 30) -> bool:
+    """Espera uma porta desta máquina aceitar conexão."""
+    deadline = time.time() + timeout_s
+    while time.time() < deadline:
+        if _port_responds(port):
+            return True
+        time.sleep(0.5)
+    return False
+
+
+def wait_and_cleanup(front_proc: subprocess.Popen, api_proc: subprocess.Popen, *outros) -> None:
+    """Bloqueia até Ctrl+C (ou o site ou a API cair sozinho), depois encerra
+    tudo de forma limpa, inclusive os outros processos passados (o hub)."""
     try:
         while True:
             time.sleep(1)
@@ -104,8 +144,8 @@ def wait_and_cleanup(front_proc: subprocess.Popen, api_proc: subprocess.Popen) -
     except KeyboardInterrupt:
         pass
     finally:
-        for proc in (front_proc, api_proc):
-            if proc.poll() is None:
+        for proc in (front_proc, api_proc, *outros):
+            if proc is not None and proc.poll() is None:
                 proc.terminate()
         stop_managed_mariadbd()
 
@@ -114,8 +154,11 @@ def main() -> None:
     front_proc, api_proc = start_services()
     log(f"CobaiaFront: http://localhost:{FRONT_PORT}")
     log(f"CobaiaAPI:   http://localhost:{API_PORT}/docs")
+    hub_proc = start_hub()
+    if hub_proc is not None:
+        log(f"Hub central: http://127.0.0.1:{HUB_PORT}/")
     log("Ctrl+C encerra tudo.")
-    wait_and_cleanup(front_proc, api_proc)
+    wait_and_cleanup(front_proc, api_proc, hub_proc)
 
 
 if __name__ == "__main__":

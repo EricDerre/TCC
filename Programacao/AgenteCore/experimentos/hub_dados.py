@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import json
 import re
+import statistics
 import threading
 import time
 from pathlib import Path
@@ -55,27 +56,72 @@ def _em_palavras(valor) -> str:
     return "nenhum" if valor is None else str(valor)
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) o acervo passa a achar sozinho as corridas lançadas pelo botão do hub: toda
+# pasta `hub_<data>_<hora>` de `resultados_alvo/` que já tem trilha entra depois das corridas fixas, com o rótulo "lançada pelo hub em ...".
+# A procura é refeita a cada leitura, e `descobrir=False` a desliga.
+# ! Motivo: o Eric pediu o hub como central, de onde se rodam os testes; sem isso a corrida lançada da página terminava e os casos dela não
+# apareciam na lista sem fechar o hub e abri-lo de novo com `--corridas`. Só o prefixo `hub_` entra, porque é o nome que o próprio servidor dá
+# à pasta (`Execucao._nome_da_saida`); as outras pastas de `resultados_alvo/` continuam fora, a menos que sejam pedidas. Uma pasta nova cuja
+# trilha ainda está sendo gravada e não dá para ler é pulada naquela leitura, sem derrubar a lista. O resumo do pacote Q6
+# (`hub.py --resumo`), a vista "Corrida ao vivo" e os testes das quatro corridas oficiais desligam a procura, para continuarem falando só
+# das corridas que nomeiam.
+PREFIXO_DO_HUB = "hub_"
+_DATA_DO_HUB = re.compile(r"^hub_(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})\d{2}$")
+
+
+def rotulo_da_corrida_do_hub(nome: str) -> str:
+    """O rótulo de uma corrida lançada pelo botão do hub, com a data e a hora tiradas do nome da pasta."""
+    m = _DATA_DO_HUB.match(nome)
+    return f"lançada pelo hub em {m[3]}/{m[2]}/{m[1]} às {m[4]}:{m[5]}" if m else f"lançada pelo hub ({nome})"
+
+
 class Acervo:
     """As corridas que o hub mostra, lidas das pastas em `raiz` (o `resultados_alvo/`); nada é escrito nelas."""
 
     def __init__(self, raiz: Path, corridas: tuple[str, ...] | None = None, leituras: dict | None = None, calibracao: dict | None = None,
-                 limiares: dict | None = None) -> None:
+                 limiares: dict | None = None, descobrir: bool = True) -> None:
         self.raiz = Path(raiz)
         padrao = {c["pasta"]: c for c in CORRIDAS_PADRAO}
         nomes = tuple(corridas) if corridas else tuple(padrao)
-        self._corridas: list[dict] = []
+        self._fixas: list[dict] = []
+        self._descobrir = bool(descobrir)
         for nome in nomes:
             if not isinstance(nome, str) or not _NOME_DE_CORRIDA.match(nome):
                 raise ValueError(f"corrida: {nome!r} não é nome de pasta de corrida")
             pasta = self.raiz / nome
             if not pasta.is_dir() or self._arquivo_da_trilha(pasta) is None:
                 raise ValueError(f"corrida: a pasta {nome!r} não existe em {self.raiz} ou não tem trilha gravada")
-            self._corridas.append({"pasta": nome, "rotulo": padrao.get(nome, {}).get("rotulo", nome), "descricao": padrao.get(nome, {}).get("descricao", "")})
+            self._fixas.append({"pasta": nome, "rotulo": padrao.get(nome, {}).get("rotulo", nome), "descricao": padrao.get(nome, {}).get("descricao", "")})
         self.leituras = leituras if leituras is not None else bl.carregar()
         self.calibracao = calibracao if calibracao is not None else ad.carregar_calibracao(self.raiz / "fase4" / "calibracao.json")
         self.limiares = limiares if limiares is not None else ad.carregar_limiares(self.raiz / "fase4" / "limiares.json")
         self._cache: dict[str, dict] = {}
         self._trava = threading.RLock()
+
+    def _descobertas(self) -> list[dict]:
+        """As corridas lançadas pelo botão do hub que já têm trilha legível, em ordem de nome (que é a ordem de data)."""
+        if not self._descobrir:
+            return []
+        fixas = {c["pasta"] for c in self._fixas}
+        try:
+            pastas = sorted(p for p in self.raiz.glob(PREFIXO_DO_HUB + "*") if p.is_dir())
+        except OSError:
+            return []
+        achadas = []
+        for pasta in pastas:
+            if pasta.name in fixas or not _NOME_DE_CORRIDA.match(pasta.name) or self._arquivo_da_trilha(pasta) is None:
+                continue
+            corrida = {"pasta": pasta.name, "rotulo": rotulo_da_corrida_do_hub(pasta.name), "descricao": "os cenários rodados a partir do botão do hub; não é medida do TCC"}
+            try:
+                self._carregar(corrida)
+            except (OSError, ValueError, KeyError):
+                continue            # a corrida está gravando a trilha agora: entra na próxima leitura
+            achadas.append(corrida)
+        return achadas
+
+    @property
+    def _corridas(self) -> list[dict]:
+        return self._fixas + self._descobertas()
 
     # ------------------------------------------------------------------ a leitura de uma corrida
 
@@ -143,8 +189,9 @@ class Acervo:
         return saida
 
     def _todas(self) -> list[dict]:
-        ordem = {c["pasta"]: i for i, c in enumerate(self._corridas)}
-        linhas = [dict(l) for corrida in self._corridas for l in self._carregar(corrida)["linhas"]]
+        corridas = self._corridas
+        ordem = {c["pasta"]: i for i, c in enumerate(corridas)}
+        linhas = [dict(l) for corrida in corridas for l in self._carregar(corrida)["linhas"]]
         por_caso: dict[str, list[dict]] = {}
         for l in linhas:
             por_caso.setdefault(l["caso"], []).append(l)
@@ -350,7 +397,7 @@ class AoVivo:
             return None, 0
         try:
             if nome not in self._acervos:
-                self._acervos[nome] = Acervo(self.raiz, corridas=(nome,), leituras=self.leituras, calibracao=self.calibracao, limiares=self.limiares)
+                self._acervos[nome] = Acervo(self.raiz, corridas=(nome,), leituras=self.leituras, calibracao=self.calibracao, limiares=self.limiares, descobrir=False)
             acervo = self._acervos[nome]
             linhas = acervo.indice()
             if not linhas:
@@ -382,3 +429,99 @@ class AoVivo:
             rodando = idade <= LIMITE_DE_IDADE_S and (progresso is None or progresso.get("estado") in ESTADOS_RODANDO)
             return {"ha_corrida": True, "pasta": arq.parent.name, "progresso": progresso if isinstance(progresso, dict) else None, "idade_s": round(idade, 1),
                     "em_andamento": rodando, "ultimo_diagnostico": ultimo, "diagnosticos": quantos}
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `metricas` monta o que a vista "Métricas" do hub mostra. Por corrida do
+# acervo: quantos casos têm diagnóstico e a confiança deles (da trilha) e, quando a corrida rodou cenários, quantas execuções, em quantas o
+# agente chegou ao resultado (Task Success), em quantas a falha foi detectada e o tempo médio de reparo, tudo lido do `cenarios.jsonl` da
+# pasta. No alto, o resultado da Fase 5 (o agente contra as pessoas), com as frases e as contagens copiadas de `fase5/medicao.json` e a
+# ressalva do Task Success.
+# ! Motivo: o Eric pediu que do hub se vejam as métricas. Nenhum número é digitado: tudo sai dos registros gravados, a cada pedido. O tempo de
+# reparo é a média dos cenários (primeiro a média das execuções de cada cenário, depois a média entre os cenários), a mesma conta da leitura da
+# Fase 5; a média simples das execuções da corrida 28b daria 66,0 s ao lado dos 66,3 s que o TCC cita. `vale_como_medida` separa as corridas
+# que são leitura do TCC (as quatro que o hub abre por padrão) das lançadas pelo botão do hub, que são uso do produto e não medida; de uma
+# pasta pedida por `--corridas` o hub não sabe dizer, e devolve None. A ressalva só aparece quando o próprio `medicao.json` traz a conta sem a
+# sessão de um integrante e ela muda o veredito do Task Success (decisão 151); o texto não cita número nem nome.
+def _registros_dos_cenarios(pasta: Path) -> list[dict] | None:
+    """As linhas de `cenarios.jsonl` de uma corrida; None quando ela não rodou cenários. Uma linha pela metade (corrida gravando) é pulada."""
+    try:
+        linhas = (pasta / "cenarios.jsonl").read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return None
+    registros = []
+    for linha in linhas:
+        try:
+            registro = json.loads(linha) if linha.strip() else None
+        except ValueError:
+            continue
+        if isinstance(registro, dict):
+            registros.append(registro)
+    return registros
+
+
+def _tempo(registro: dict) -> float | None:
+    valor = registro.get("mttr_s")
+    return float(valor) if isinstance(valor, (int, float)) and not isinstance(valor, bool) else None
+
+
+def _metricas_dos_cenarios(registros: list[dict]) -> dict:
+    por_cenario: dict[str, list[dict]] = {}
+    for r in registros:
+        por_cenario.setdefault(str(r.get("cenario")), []).append(r)
+    linhas, medias = [], []
+    for nome, grupo in por_cenario.items():
+        tempos = [t for t in (_tempo(r) for r in grupo) if t is not None]
+        media = statistics.fmean(tempos) if tempos else None
+        if media is not None:
+            medias.append(media)
+        linhas.append({"cenario": nome, "tipo": grupo[0].get("tipo"), "execucoes": len(grupo), "task_success": sum(1 for r in grupo if r.get("task_success") is True),
+                       "detectou": sum(1 for r in grupo if r.get("detectou") is True), "mttr_media_s": round(media, 1) if media is not None else None})
+    return {"execucoes": len(registros), "task_success": sum(1 for r in registros if r.get("task_success") is True),
+            "detectou": sum(1 for r in registros if r.get("detectou") is True), "mttr_media_s": round(statistics.fmean(medias), 1) if medias else None,
+            "cenarios_com_tempo": len(medias), "por_cenario": linhas}
+
+
+def _resultado_da_fase_5(raiz: Path) -> dict | None:
+    """As frases e as contagens da comparação do agente com as pessoas, copiadas de `fase5/medicao.json`; None se a leitura não existe ou não está completa."""
+    try:
+        medicao = json.loads((raiz / "fase5" / "medicao.json").read_text(encoding="utf-8"))
+        tempo, sucesso = medicao["tempo"]["geral"]["frase"], medicao["task_success"]
+        lados = {lado: {"sucessos": sucesso[lado]["sucessos"], "n": sucesso[lado]["n"]} for lado in ("agente", "pessoas")}
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    conta = medicao.get("sem_um_integrante")
+    mudam = [x for x in conta if isinstance(x, dict) and (x.get("task_success") or {}).get("o_que_a_regra_l11_daria") not in (None, "veredito")] if isinstance(conta, list) else []
+    ressalva = None
+    if sucesso.get("caso") == "veredito" and mudam:
+        quem = "de um integrante só" if len(mudam) == 1 else "de mais de um integrante"
+        ressalva = (f"Esse veredito depende da sessão {quem}: sem ela, numa conta feita depois de ver os números e fora das regras fixadas antes, o Task Success "
+                    "fica sem veredito, e o resultado do tempo continua o mesmo (decisão 151).")
+    def tempo_medio(lado: str) -> float | None:
+        valor = (((medicao.get("lados") or {}).get(lado) or {}).get("geral") or {}).get("tempo_media_s")
+        return round(float(valor), 1) if isinstance(valor, (int, float)) and not isinstance(valor, bool) else None
+
+    return {"tempo": tempo, "task_success": sucesso.get("frase"), **lados, "ressalva": ressalva, "tempo_medio_s": {"agente": tempo_medio("agente"), "pessoas": tempo_medio("pessoas")},
+            "corrida": (medicao.get("metadados") or {}).get("corrida")}
+
+
+def metricas(acervo: Acervo) -> dict:
+    """O que a vista "Métricas" mostra: o resultado da Fase 5 no alto e uma linha por corrida do acervo, tudo lido dos arquivos gravados."""
+    oficiais = {c["pasta"] for c in CORRIDAS_PADRAO}
+    por_corrida: dict[str, list[dict]] = {}
+    for linha in acervo.indice():
+        por_corrida.setdefault(linha["corrida"], []).append(linha)
+    corridas = []
+    for corrida in acervo.corridas():
+        pasta = corrida["pasta"]
+        registros = _registros_dos_cenarios(acervo.raiz / pasta)
+        dos_cenarios = _metricas_dos_cenarios(registros) if registros else {"execucoes": None, "task_success": None, "detectou": None, "mttr_media_s": None,
+                                                                             "cenarios_com_tempo": 0, "por_cenario": []}
+        contagem: dict[str, int] = {}
+        for linha in por_corrida.get(pasta, []):
+            contagem[linha["confianca"]] = contagem.get(linha["confianca"], 0) + 1
+        ordem = [*ad.CONFIANCA_EM_PALAVRAS.values(), *sorted(set(contagem) - set(ad.CONFIANCA_EM_PALAVRAS.values()))]     # alta, média, baixa e o que mais houver
+        confianca = {nome: contagem[nome] for nome in ordem if nome in contagem}
+        corridas.append({"pasta": pasta, "rotulo": corrida["rotulo"], "descricao": corrida["descricao"], "inicio": corrida.get("inicio"), "casos": corrida["casos"],
+                         "confianca": confianca, **dos_cenarios,
+                         "vale_como_medida": True if pasta in oficiais else (False if pasta.startswith(PREFIXO_DO_HUB) else None)})
+    return {"fase5": _resultado_da_fase_5(acervo.raiz), "corridas": corridas}

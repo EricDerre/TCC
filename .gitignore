@@ -118,6 +118,20 @@ Thumbs.db
 !Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/**/*.log
 
 # ---------------------------------------------------------------------------
+# Corridas lançadas pelo botão do hub: fora do versionamento
+# ---------------------------------------------------------------------------
+# ! Alteração de IA - Revisar: ficam fora do git as pastas `hub_<data>_<hora>/` das corridas lançadas pelo botão do hub e os
+# logs delas em `hub/execucoes/` (26/11/2026, ficha 110, decisão 171).
+# ! Motivo: desde a decisão 170 o hub aberto pelo `Cobaia.exe` lança a corrida dos dez cenários, e cada clique cria uma pasta
+# `resultados_alvo/hub_<data>_<hora>/` e um log em `resultados_alvo/hub/execucoes/`. Essas corridas são uso do produto, não
+# medida do TCC; sem a regra, cada clique viraria arquivo novo no `git status`. As duas regras ficam depois da exceção dos
+# `.log` das baterias e ignoram a pasta inteira, porque o git não reinclui arquivo de pasta ignorada: assim o `fase4.log` de
+# uma corrida do botão também fica fora. Continuam entrando o registro dos commits testados (`hub/commits_testados.jsonl`),
+# as revisões do analista (`hub/revisoes/`) e a corrida curta dos pacotes Q6 e Q7 (`fase4_fumaca_q7/`, com os traces).
+Programacao/AgenteCore/experimentos/resultados_alvo/hub_*/
+Programacao/AgenteCore/experimentos/resultados_alvo/hub/execucoes/
+
+# ---------------------------------------------------------------------------
 # Material de apoio do livro-texto (Faceli et al., 3. ed., 2025)
 # ---------------------------------------------------------------------------
 # ! Alteração de IA - Revisar: `Documentacao/notebooks/` inteira fora do versionamento (noite de 30/09/2026, decisão 68),

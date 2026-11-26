@@ -1168,7 +1168,25 @@ def contexto_progresso() -> dict:
     # ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) o contexto ganhou `hub.json` e `conferencia_git.json`, lidos pela aba "Hub e Git".
     # ! Motivo: a aba nova lê os números dos derivados gravados por `hub.py --resumo` e `impacto_git.py --conferir-historico`; sem eles, mostra o estado vazio.
     return {"taxas_progresso": ler("taxas_progresso.json"), "erro_progresso": ler("erro_progresso.json"), "impacto_git": ler("impacto_git.json"),
-            "fumaca_progresso": ler("fumaca_progresso.json"), "hub": ler("hub.json"), "conferencia_git": ler("conferencia_git.json")}
+            "fumaca_progresso": ler("fumaca_progresso.json"), "hub": ler("hub.json"), "conferencia_git": ler("conferencia_git.json"), "fumaca_q7": fumaca_q7()}
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, noite; ficha 99) `fumaca_q7` lê a corrida curta dos pacotes Q6 e Q7 da pasta dela
+# (`resultados_alvo/fase4_fumaca_q7/`): o que a seleção pelo Git decidiu (`impacto_git.json`), quantos traces do Playwright foram gravados (os `.zip` de
+# `traces/`) e em quantas execuções o agente chegou ao resultado (`cenarios.jsonl`). Sem a pasta, devolve None.
+# ! Motivo: a aba "Hub e Git" dizia que a prova com as cobaias e o modelo ainda ia rodar; a corrida rodou em 25/11/2026 e a ficha 99 foi fechada. Os números
+# da frase saem dos arquivos da corrida, e não do texto do roadmap; numa cópia do repositório sem a pasta, a aba continua dizendo o que falta provar.
+def fumaca_q7() -> dict | None:
+    pasta = EXP / "resultados_alvo" / "fase4_fumaca_q7"
+    decisao, cenarios = pasta / "impacto_git.json", pasta / "cenarios.jsonl"
+    if not (decisao.exists() and cenarios.exists()):
+        return None
+    dado = ler_json(decisao)
+    registros = [json.loads(linha) for linha in cenarios.read_text(encoding="utf-8").splitlines() if linha.strip()]
+    return {"modo": dado["decisao"]["modo"], "cenarios": len(dado["rodados"]), "execucoes": len(registros),
+            "task_success": sum(1 for r in registros if r.get("task_success")),
+            "traces": len(list((pasta / "traces").glob("*.zip"))) if (pasta / "traces").is_dir() else None,       # None: a pasta dos traces não veio nesta cópia
+            "data": dado["gravado_em"][:10]}
 
 
 # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) o contexto da aba "medicao", lido por painel_topicos.secao_medicao: os quatro

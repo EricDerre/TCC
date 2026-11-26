@@ -39,17 +39,28 @@ def main() -> None:
 
     front_url = f"http://localhost:{run.FRONT_PORT}"
     api_docs_url = f"http://localhost:{run.API_PORT}/docs"
+    hub_url = f"http://127.0.0.1:{run.HUB_PORT}/"
     log(f"CobaiaFront: {front_url}")
     log(f"CobaiaAPI:   {api_docs_url}")
 
+    # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) o launcher passa a subir também o hub central e a abrir uma aba só,
+    # nele; se o hub não for lançado ou a porta dele não responder, abre o site e a documentação da API, como antes, e avisa.
+    # ! Motivo: o Eric pediu que o hub seja a central de tudo, aberta quando o `.exe` roda: é dele que se chega ao site e à API, se rodam
+    # os testes e se veem as métricas. O hub sobe por `run.start_hub`, como processo à parte, e é encerrado junto com os outros.
+    hub_proc = run.start_hub()
     if run.wait_until_ready():
-        webbrowser.open(front_url)
-        webbrowser.open(api_docs_url)
+        if hub_proc is not None and run.wait_for_port(run.HUB_PORT, timeout_s=30):
+            log(f"Hub central: {hub_url}")
+            webbrowser.open(hub_url)
+        else:
+            log("O hub central não respondeu; abrindo o site e a API, como antes.")
+            webbrowser.open(front_url)
+            webbrowser.open(api_docs_url)
     else:
         log("Os serviços demoraram a responder — abra manualmente as URLs acima.")
 
     log("Ctrl+C (ou feche esta janela) encerra tudo.")
-    run.wait_and_cleanup(front_proc, api_proc)
+    run.wait_and_cleanup(front_proc, api_proc, hub_proc)
 
 
 if __name__ == "__main__":

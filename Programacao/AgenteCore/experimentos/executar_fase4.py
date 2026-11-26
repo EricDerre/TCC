@@ -590,9 +590,23 @@ def _contrato_do_produto() -> str:
     return cv.contrato_do_openapi(openapi, "ProdutoOut", cv.AJUSTES_PRODUTO)
 
 
-def derrubar_cobaias(front, api, token: str) -> None:
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `subir_cobaias` sobe o site e a API como sempre, ou não sobe nada quando a
+# corrida pede `--cobaias-no-ar`; `derrubar_cobaias` ganhou `parar_banco`, que por padrão continua desligando o MariaDB.
+# ! Motivo: a corrida lançada pelo hub aberto pelo `Cobaia.exe` encontra o site, a API e o banco já no ar. Ela só devolve a API ao modo
+# normal no fim; os processos e o banco são do `.exe`, que os encerra quando a janela dele fecha. Sem a opção, nada muda.
+def subir_cobaias(args: argparse.Namespace, iniciar=None) -> tuple:
+    """O front e a API da corrida: os processos lançados agora, ou (None, None) quando eles já estão no ar (`--cobaias-no-ar`)."""
+    if getattr(args, "cobaias_no_ar", False):
+        return None, None
+    if iniciar is None:
+        import run
+        iniciar = run.start_services
+    return iniciar()
+
+
+def derrubar_cobaias(front, api, token: str, parar_banco: bool = True) -> None:
     """O fim de toda corrida com tela: a API volta ao modo normal, os processos do front e da API são encerrados e o
-    MariaDB que a corrida subiu é desligado."""
+    MariaDB que a corrida subiu é desligado (a menos que `parar_banco` diga que ele não é da corrida)."""
     import _env_common as env
     try:
         ligar_modo("normal", None, token)
@@ -601,7 +615,8 @@ def derrubar_cobaias(front, api, token: str) -> None:
     for proc in (front, api):
         if proc is not None and proc.poll() is None:
             proc.terminate()
-    env.stop_managed_mariadbd()
+    if parar_banco:
+        env.stop_managed_mariadbd()
 
 
 def _conferir_versao(esperada: str | None) -> None:
@@ -2289,7 +2304,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
     marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
           f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "
           f"({len({c['cenario']['id'] for c in celulas})} cenários x {args.repeticoes} repetição(ões)){'; corrida PARCIAL' if parcial else ''}; {len(feitos)} já feita(s)")
-    front, api = run.start_services()
+    front, api = subir_cobaias(args)
     trilha: tr.Trilha | None = None
     try:
         if not run.wait_until_ready(timeout_s=90):
@@ -2419,7 +2434,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
         marco(f"!! corrida parou: {e}")
         return 1
     finally:
-        derrubar_cobaias(front, api, args.token)
+        derrubar_cobaias(front, api, args.token, parar_banco=not args.cobaias_no_ar)
     fim = cen.agora()
     if trilha is not None:
         trilha.fechar(fim)
@@ -2762,6 +2777,11 @@ def montar_parser() -> argparse.ArgumentParser:
     # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) `--selecao git`, `--desde` e `--completa-a-cada-dias`, do modo `cenarios`; o
     # padrão de `--selecao` é `todos`, a corrida de sempre.
     # ! Motivo: plano, seção 3.7: a seleção dos cenários pelo que mudou no Git passa a decidir a corrida, com as três regras da base E.
+    # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `--cobaias-no-ar`, do modo `cenarios`, desligada por padrão.
+    # ! Motivo: o hub aberto pelo `Cobaia.exe` lança a corrida com o site, a API e o banco já no ar; sem a opção, a corrida tentaria subir
+    # outro site e outra API nas mesmas portas e, no fim, desligaria o banco do site que a pessoa está usando.
+    ap.add_argument("--cobaias-no-ar", action="store_true",
+                    help="cenarios: usa o site, a API e o banco que já estão no ar (não sobe nem derruba nada); é o que o hub aberto pelo Cobaia.exe usa")
     ap.add_argument("--selecao", choices=("todos", "git"), default="todos",
                     help="cenarios: `git` roda só os cenários atingidos pelo que mudou nas cobaias desde o último commit testado (ou desde --desde); padrão: todos")
     ap.add_argument("--desde", default=None, help="cenarios com --selecao git: o commit testado de onde o diff parte (padrão: o último do registro de commits testados)")

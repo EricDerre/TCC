@@ -102,7 +102,7 @@ def _acervo_de_teste() -> tuple["hd.Acervo", Path]:
         t.fechar(fim=inicio[:11] + "11:00:00")
         t.gravar(pasta / "trilha_tela.jsonl")
         (pasta / "condicoes_fase4.json").write_text(json.dumps({"modo": "tela", "saida": nome, "k": 3, "modelo": "qwen2.5:7b"}), encoding="utf-8")
-    return hd.Acervo(raiz, corridas=("c1", "c2"), leituras=tp4._leituras_de_teste()), raiz
+    return hd.Acervo(raiz, corridas=("c1", "c2"), leituras=tp4._leituras_de_teste(), descobrir=False), raiz
 
 
 # ------------------------------------------------------------------ etapa 1: os dados do hub
@@ -114,7 +114,7 @@ def teste_hub_chave_do_caso_tira_a_repeticao_e_a_origem():
 
 
 def teste_hub_acervo_lista_as_corridas_padrao_e_todo_caso_com_diagnostico():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     corridas = acervo.corridas()
     assert [c["pasta"] for c in corridas] == [c["pasta"] for c in hd.CORRIDAS_PADRAO] == ["fase4_tela_v4", "fase4_ensaio_v4", "fase4_ineditos", "fase5_agente_b"]
     indice = acervo.indice()
@@ -132,7 +132,7 @@ def teste_hub_acervo_lista_as_corridas_padrao_e_todo_caso_com_diagnostico():
 
 
 def teste_hub_iteracoes_do_mesmo_caso_saem_em_ordem_de_tempo():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     its = acervo.iteracoes("contrato-field_missing")
     esperadas = [t for pasta in ("fase4_ensaio_v4", "fase5_agente_b") for t in _trilhas_com_decisao(RA / pasta) if hd.chave_do_caso(t) == "contrato-field_missing"]
     assert sorted(i["tid"] for i in its) == sorted(esperadas) and len(its) >= 2, its
@@ -144,7 +144,7 @@ def teste_hub_iteracoes_do_mesmo_caso_saem_em_ordem_de_tempo():
 
 
 def teste_hub_caso_traz_o_relatorio_em_blocos_a_evidencia_a_arvore_e_a_trilha():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     tid = "fase5_agente_b/qwen2.5_7b/contrato-field_missing#1"
     caso = acervo.caso(tid)
     blocos = caso["relatorio"]["blocos"]
@@ -174,7 +174,7 @@ def teste_hub_caso_traz_o_relatorio_em_blocos_a_evidencia_a_arvore_e_a_trilha():
 
 
 def teste_hub_caso_com_cura_traz_a_quarta_decisao_e_caso_de_texto_nao_inventa_tela():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     cura = acervo.caso("fase5_agente_b/qwen2.5_7b/localizador-front-busca#1")
     assert [d["chave"] for d in cura["arvore"]["decisoes"]] == ["leitura", "verbetes", "causa", "cura"] and cura["resumo"]["cura"] is True
     texto = acervo.caso("fase4_ineditos/qwen2.5_7b/lex-22")
@@ -183,7 +183,7 @@ def teste_hub_caso_com_cura_traz_a_quarta_decisao_e_caso_de_texto_nao_inventa_te
 
 
 def teste_hub_tid_desconhecido_ou_com_caminho_e_recusado():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     for ruim in ("../../Windows/win.ini", "fase4_ineditos/../../x", "fase4_ineditos/qwen2.5_7b/nao-existe", "", "C:\\Windows\\win.ini", "fase4_fumaca_progresso/qwen2.5_7b/lex-22"):
         _erro(acervo.caso, ruim, tipo=KeyError)
     _erro(hd.Acervo, RA, corridas=("../fora",))
@@ -196,7 +196,7 @@ def teste_hub_tid_desconhecido_ou_com_caminho_e_recusado():
 def teste_hub_nao_escreve_nas_pastas_das_corridas():
     pastas = [RA / c["pasta"] for c in hd.CORRIDAS_PADRAO]
     antes = _retrato(pastas)
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     for linha in acervo.indice():
         acervo.caso(linha["tid"])
     assert _retrato(pastas) == antes, "o hub só lê: nenhum arquivo novo, apagado ou alterado nas pastas das corridas"
@@ -412,10 +412,18 @@ def teste_revisao_arquivo_so_cresce_e_nome_de_caso_com_caminho_e_recusado():
 _PULADOS: list[str] = []
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) os ajudantes deste arquivo passaram a abrir o acervo com `descobrir=False`
+# (o de teste e os das quatro corridas oficiais) e o servidor com a sonda dos serviços e a conferência do Ollama de mentira, quando o teste
+# não dá as suas.
+# ! Motivo: o acervo passou a achar sozinho as pastas `hub_...` das corridas lançadas pelo botão, e a tela "Início" passou a perguntar se o
+# site, a API e o Ollama respondem. Os testes daqui falam de corridas fixas (a corrida de mentira copia a trilha de `c2`, com os mesmos
+# identificadores, e as contas das corridas oficiais não podem mudar quando alguém rodar os cenários pelo hub nesta máquina), e nenhum teste
+# pode bater nas portas de verdade. A descoberta e a tela "Início" têm os testes delas em `testar_central.py`.
 @contextlib.contextmanager
 def _hub_no_ar(acervo, **opcoes):
     """O servidor do hub numa porta livre, com as revisões numa pasta temporária; devolve o endereço, as revisões e o servidor."""
     rev = hr.Revisoes(tp4._temp() / "revisoes")
+    opcoes = {"sonda": lambda porta: False, "ollama_no_ar": lambda: False, "garantir_ollama": lambda: None, **opcoes}
     srv = hub.criar_servidor(acervo, rev, porta=0, **opcoes)
     fio = threading.Thread(target=srv.serve_forever, daemon=True)
     fio.start()
@@ -602,7 +610,7 @@ def teste_hub_conferir_monta_todos_os_casos_das_corridas_padrao_sem_subir_servid
 
 
 def teste_arvore_em_html_traz_cada_afirmacao_com_a_origem_e_o_texto_do_modelo_a_parte():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     arvore = acervo.caso("fase5_agente_b/qwen2.5_7b/localizador-front-busca#1")["arvore"]
     h = hp.arvore_para_html(arvore)
     for rotulo, n in arvore["resumo"]["rotulos"].items():
@@ -615,7 +623,7 @@ def teste_pagina_lista_os_casos_reais_e_abre_um_caso_com_relatorio_evidencia_arv
     with _navegador() as (pagina, erros):
         if pagina is None:
             return
-        acervo = hd.Acervo(RA)
+        acervo = hd.Acervo(RA, descobrir=False)
         with _hub_no_ar(acervo) as (base, _, _srv):
             tid = "fase5_agente_b/qwen2.5_7b/contrato-field_missing#1"
             pagina.goto(base + "/")
@@ -1290,7 +1298,7 @@ def teste_pagina_selecao_pelo_git_mostra_o_que_rodaria_e_muda_o_comando():
 # ! Motivo: a aba do painel e os textos do roadmap e do README citam esses números, e a regra do projeto é que nenhum número seja digitado à
 # mão: eles saem deste arquivo, que o teste compara com o acervo de verdade.
 def teste_hub_resumo_gravado_e_conferido_contra_o_acervo():
-    acervo = hd.Acervo(RA)
+    acervo = hd.Acervo(RA, descobrir=False)
     indice = acervo.indice()
     dado, md = hub.resumo(acervo)
     assert [c["pasta"] for c in dado["corridas"]] == [c["pasta"] for c in hd.CORRIDAS_PADRAO] and sum(c["casos"] for c in dado["corridas"]) == len(indice)

@@ -1478,10 +1478,12 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
      ! Motivo: os dois pacotes foram provados sem o modelo e sem as cobaias, e a corrida com o modelo só o Eric lança, da janela dele, com o aplicativo fechado (decisão 112); sem a ficha, o que falta provar ficaria só no relato da sessão. -->
 ## Aberta pelos pacotes Q6 e Q7 da Pós-Fase 4 (25/11/2026)
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026) a ficha 99 foi fechada com a leitura da corrida curta; os números vêm de `resultados_alvo/fase4_fumaca_q7/` (`fase4.log`, `impacto_git.json`, `cenarios.jsonl`, `conferencia_git.json`, `traces/`) e de `resultados_alvo/hub/commits_testados.jsonl`, lidos por script.
+     ! Motivo: a corrida rodou inteira e a leitura não acusou problema; a ficha previa fechar quando a corrida fosse lida. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, noite) a ficha 99 ganhou a resposta do Eric, pela opção (a), decisão 163; o Estado continua `aberta`.
      ! Motivo: a própria ficha diz que ela fecha depois de a corrida ser lida; o que falta agora é a corrida, que o Eric lança da janela dele. -->
 ### 99. A corrida curta que prova a seleção pelo Git e o trace na falha roda agora?
-- **Estado:** aberta
+- **Estado:** fechada em 25/11/2026
 - **Quem decide:** Eric
 - **Aberta em:** 25/11/2026
 - **O que é:** O hub central (pacote Q6) e a seleção de cenários pelo Git (pacote Q7) foram feitos e testados sem o modelo e sem as cobaias. Duas coisas só uma corrida de verdade prova. A primeira é o trace do Playwright (a gravação que o navegador faz de cada passo do roteiro) gravado só quando o roteiro falha: ele foi provado numa página local que falha de propósito e nos pontos em que o `executar_fase4.py` o chama, mas nenhuma corrida com as cobaias o gravou. A segunda é a seleção decidindo a corrida: os testes usam um repositório temporário, e a conta sobre o histórico (`resultados_alvo/fase4/conferencia_git.json`) é retrospectiva, porque nenhuma seleção rodou. O lançador `Programacao/AgenteCore/experimentos/rodar_fumaca_q7.ps1` faz a prova em quatro passos: roda os dez cenários do ensaio, uma repetição de cada, com `-Selecao git -Desde 717f68c2 -TraceNaFalha` (como nenhuma rodada completa está registrada, a regra 2 manda rodar os dez); mostra o que a seleção decidiria em seguida, com o commit da corrida já registrado (o esperado é "nada a rodar"); confere a corrida contra a rodada completa da corrida 28b (`impacto_git.py --conferir`); e lista os traces gravados. A corrida 28b levou 64 minutos para 50 execuções, então dez execuções ficam perto de um quarto de hora, mais a bateria `testar_fase4.py`, que o `rodar_fase4.ps1` roda antes. Com o trace ligado os tempos não valem como medida, e a leitura vai para a pasta da própria corrida (`fase4_fumaca_q7`), nunca para `resultados_alvo/fase4`.
@@ -1491,7 +1493,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Rodar depois do texto final, se sobrar tempo antes de 02/12/2026; até lá o roadmap e o TCC dizem "provado em teste".
   - (c) Não rodar: o trace com as cobaias e a seleção numa corrida de verdade ficam declarados como não exercitados, com o motivo.
 - **Recomendação:** (a). São minutos de máquina, o lançador faz tudo num comando, e é a única prova dos dois pacotes que não depende de mim.
-- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro da sessão principal (decisão 163): "Rodar agora (Recomendado)". A ficha continua aberta até a corrida rodar na janela dele e ser lida: o resultado entra aqui, com a decisão gravada em `fase4_fumaca_q7/impacto_git.json`, a conferência contra a corrida 28b e os traces da pasta `traces/`.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro da sessão principal (decisão 163): "Rodar agora (Recomendado)". A corrida rodou em 25/11/2026, das 22:27 às 22:42 (14 minutos pelo `.ps1`, com a bateria `testar_fase4.py`; 824 s medidos pelo executor), lançada pelo Eric com o `rodar_fumaca_q7.ps1`; o log registra o Ollama 0.40.16 e 7,8 GB de RAM livre na checagem. O que ela provou: (1) a seleção decidiu a corrida: como nenhuma rodada completa estava registrada, a regra 2 mandou rodar os 10 cenários (`impacto_git.json`, modo `completa`; do commit `717f68c2` ao `35617a47`, 1034 arquivos alterados, 0 nas pastas das cobaias); (2) o commit testado entrou no registro (`resultados_alvo/hub/commits_testados.jsonl`), e a decisão seguinte, com ele registrado, é "nada a rodar"; (3) o trace do Playwright foi gravado só onde o roteiro falhou: 8 arquivos em `traces/` (39,6 MB ao todo), um para cada cenário em que a conferência do roteiro ou o passo do localizador falhou, e nenhum nos 2 cenários detectados só pela resposta da API (`contrato-escala_ou_unidade_errada` e `contrato-type_drift`), em que o roteiro passa; (4) a conferência contra a corrida 28b não tem cenário deixado de fora, e tem um resultado diferente: `contrato-malformed_json` teve Task Success aqui e 4 de 5 na 28b. Task Success em 10 de 10 execuções; os tempos não valem como medida, porque o trace estava ligado e a corrida é parcial. O hub abre a corrida com `python hub.py --corridas fase4_fumaca_q7` e entrega os traces. Continua sem prova uma seleção parcial rodando de verdade (desvio 11 do plano).
 
 ## Abertas pela primeira execução do instalador no GitHub Actions (25/11/2026)
 
@@ -1629,6 +1631,73 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (c) Deixar fora e tirar os links. Os logs continuam fora do repositório; o relatório perde os links e fica só com a linha do erro citada no texto.
 - **Recomendação:** (a). São 4,1 MB, o log é a evidência do erro literal, e a regra fica igual à dos logs das corridas. Nenhum dos 88 arquivos tem senha, chave ou e-mail de pessoa (conferido por busca em 25/11/2026).
 - **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 169): "Versionar os logs (Recomendado)".
+
+<!-- ! Alteração de IA - Revisar: bloco novo (25/11/2026) com a ficha 109: o hub como central aberta pelo `Cobaia.exe`, pedida pelo Eric depois da corrida curta dos pacotes Q6 e Q7, perguntada no quadro e gravada já fechada.
+     ! Motivo: o pedido muda o que o `.exe` faz ao rodar, libera o botão de rodar os cenários quando o hub é aberto por ele (o que a decisão 157 só permitia com uma opção) e acrescenta uma opção ao executor; sem a ficha, o desenho e o que ficou de fora ficariam só no quadro da sessão. -->
+## Aberta pelo pedido do hub como central (25/11/2026)
+
+### 109. Como o hub vira a central aberta pelo `Cobaia.exe`?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O Eric pediu, depois da corrida curta dos pacotes Q6 e Q7: "ele é a 'central' de tudo, então deve ser aberta quando rodar o .exe tbm (e de lá poderemos rodar testes, ver metricas, etc)". Hoje o `Cobaia.exe` (fonte `Cobaia.py`) instala, sobe o site (porta 8080) e a API (porta 8000) e abre as duas no navegador; o hub (porta 8765) só abre por `python hub.py`, e o botão de rodar os cenários só lança a corrida com `--permitir-execucao` (decisão 157). O executor de hoje sobe e derruba o site, a API e o banco por conta própria, e o `.exe` já os deixa no ar. O desenho apresentado: o `Cobaia.py` passa a subir também o hub, com o Python da venv do AgenteCore (o `.exe` só orquestra processos, não carrega o hub dentro dele), e abre uma aba só, no hub; se o hub não subir, abre o site e a API como hoje e avisa. O hub ganha a tela "Início" (o estado do site, da API e do Ollama, e os atalhos para o site, a API e o painel publicado), a vista "Métricas" (por corrida, execuções, Task Success e tempo de reparo, lidos dos registros gravados, e no alto o resultado da Fase 5, lido de `resultados_alvo/fase5/medicao.json`) e o botão dos dez cenários liberado quando é aberto pelo `.exe`. A corrida lançada por ele chama o `executar_fase4.py` com a opção nova `--cobaias-no-ar`, desligada por padrão, que usa o site e a API já no ar e não desliga o banco no fim; ela restaura o banco de demonstração, leva cerca de um minuto por cenário e aparece na lista de casos ao acabar.
+- **Por que importa:** O hub é o que a banca vai ver, e a decisão 157 tinha deixado o botão de rodar só com uma opção de linha de comando, que quem dá dois cliques no `.exe` não tem como passar. A corrida lançada da página é uso do produto na máquina de quem clicou; a corrida que vira medida do TCC continua sendo só pelo `rodar_fase4.ps1`, na janela do Eric, com o aplicativo Claude fechado. O `.exe` é binário, e quem recompila é o Eric (`build_exe.ps1`).
+- **Opções:**
+  - (a) Central completa: o `.exe` sobe o hub e abre nele; a tela "Início", a vista "Métricas" e o botão de rodar liberado, com a corrida usando o site e a API que o `.exe` já subiu. A prova do botão com o modelo fica para um clique do Eric, depois de recompilar.
+  - (b) Só abrir pelo `.exe`: a tela "Início" e a vista "Métricas" entram, o botão de rodar continua mostrando o comando para copiar e o executor não muda.
+- **Recomendação:** (a). É o que o pedido descreve, e a mudança no executor entra desligada por padrão; o que não dá para provar de dentro do aplicativo fica dito.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 170): "Central completa (Recomendado)". Ficam de fora os testes de campo para a banca, que ele traz depois, senha e acesso de outra máquina. `python hub.py` sozinho continua só mostrando o comando.
+
+<!-- ! Alteração de IA - Revisar: (26/11/2026) a ficha 110 foi fechada pela opção (a), com a resposta do Eric de 25/11/2026 e os caminhos que entram e que ficam fora do git.
+     ! Motivo: a resposta veio pelo quadro da sessão principal; sem o fechamento, a ficha continuaria aberta no painel e a regra nova do `.gitignore` não teria a decisão ao lado. -->
+<!-- ! Alteração de IA - Revisar: bloco novo (25/11/2026) com a ficha 110: o que da corrida curta dos pacotes Q6 e Q7 e das corridas lançadas pelo botão do hub entra no git.
+     ! Motivo: a pasta da corrida curta e o registro dos commits testados ainda estão fora do git, e o hub como central (decisão 170) passa a criar uma pasta por corrida lançada da página; quem commita é o Eric, e sem a ficha a escolha ficaria para a hora do `git add`, com cerca de 40 MB de traces no meio. -->
+## Aberta pelo fechamento dos pacotes Q6 e Q7 (25/11/2026)
+
+### 110. A corrida curta e as corridas lançadas pelo hub entram no git?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** A pasta da corrida curta dos pacotes Q6 e Q7 (`Programacao/AgenteCore/experimentos/resultados_alvo/fase4_fumaca_q7/`) ainda não está no git. Quase todo o tamanho dela, cerca de 40 MB, são os traces do Playwright das falhas (`traces/*.zip`, o maior com cerca de 16 MB); o resto é a trilha, os relatórios e os registros que a ficha 99, o roadmap e o painel citam. O registro dos commits testados (`resultados_alvo/hub/commits_testados.jsonl`) também está fora. E, desde a decisão 170, cada corrida lançada pelo botão do hub cria uma pasta `resultados_alvo/hub_<data>_<hora>/` e um log em `resultados_alvo/hub/execucoes/`, que aparecem como arquivos novos no `git status`.
+- **Por que importa:** Sem a pasta da corrida curta no git, o que a ficha 99 e o painel dizem dela não tem registro no repositório, e numa cópia nova a aba "Hub e Git" do painel volta a dizer que a prova falta. Os traces são a única parte grande: com eles no git, qualquer cópia abre pelo hub o trace da falha de um caso; sem eles, só a máquina do Eric abre. As corridas do botão são uso do produto, não medida do TCC; se entrarem, cada clique vira arquivo novo para commitar.
+- **Opções:**
+  - (a) A corrida curta entra inteira, com os traces, e o registro dos commits testados também; as pastas `hub_...` e os logs das corridas do botão ficam fora, por uma regra no `.gitignore`.
+  - (b) A corrida curta entra sem os traces (a regra do `.gitignore` deixa `traces/` de fora); o resto como em (a). Nas cópias sem a pasta, o painel diz que o trace foi gravado, sem a contagem.
+  - (c) Entra tudo, inclusive as corridas lançadas pelo botão.
+- **Recomendação:** (a). É um custo de cerca de 40 MB uma vez só, com nenhum arquivo perto do limite do GitHub, e é a prova dos pacotes Q6 e Q7; as corridas do botão não são registro do TCC.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro da sessão principal (decisão 171): "Inteira, com traces (Recomendado)". A regra do `.gitignore` foi escrita em 26/11/2026: ficam fora as pastas `Programacao/AgenteCore/experimentos/resultados_alvo/hub_*/` e a pasta `resultados_alvo/hub/execucoes/`. Entram a pasta `resultados_alvo/fase4_fumaca_q7/` inteira e o arquivo `resultados_alvo/hub/commits_testados.jsonl`. O `git add` e o commit são do Eric.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (26/11/2026) com a ficha 111: se o Word e o PDF do TCC saem agora ou esperam a terceira execução do instalador no GitHub Actions e a prova do botão do hub.
+     ! Motivo: a decisão 168 prendia a geração à corrida curta da ficha 99 e à segunda execução do instalador, e as duas estão lidas; mas a segunda execução deixou o Windows de máquina nova sem passar, e o hub como central (decisão 170) abriu uma prova que só um clique do Eric fecha. A geração é uma só (decisão 158), e a sessão principal pediu que a escolha fosse dele, no quadro. -->
+## Aberta pelo pacote Q8 antes de gerar o Word e o PDF (26/11/2026)
+
+### 111. O Word e o PDF do TCC saem agora, ou esperam a terceira execução do instalador e a prova do botão do hub?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** A decisão 168 mandou gerar o Word e o PDF do TCC só depois de lidas a corrida curta da ficha 99 e a segunda execução do instalador no GitHub Actions. As duas estão lidas, e o texto do documento (`Documentacao/TCC - ABNT 14724 - V1.md`) já conta as duas: a corrida curta nas seções 6.7 e 6.10.12, e a segunda execução na seção 6.1, em que a prova passou no Ubuntu 24.04 e no macOS 15 e não passou no Windows Server 2025, onde a instalação parou ao criar a pasta de dados do MariaDB e o conserto foi escrito sem ter sido visto rodando. Desde então abriram-se duas provas que só a máquina do Eric fecha. A primeira é a terceira execução do instalador, que sai do commit e do push dele (o `Cobaia.exe` já foi recompilado, em 26/11/2026 às 07:33). A segunda é o botão de rodar os cenários pelo hub, com o modelo, num clique no `.exe` recompilado (ficha 109). O texto diz as duas como não vistas rodando, e cinco trechos têm um lembrete em comentário (`RECONFERIR NA GERAÇÃO`) para trocar a frase se a prova chegar antes. A geração é uma só (decisão 158): `ferramentas/gerar_tcc_docx.py`, `ferramentas/tcc_docx_para_pdf.py` e `ferramentas/conferir_entrega_tcc.py`, que confere que os dois arquivos saem sem nenhuma marcação de IA, nem as ocultas (decisão 164).
+- **Por que importa:** A última reunião com o orientador é em 02/12/2026. Gerar agora entrega um documento que diz, com verdade para a data, que o instalador não passou no Windows de máquina nova e que o botão do hub não foi provado; se as provas chegarem depois, o documento entregue fica atrás do repositório, ou a geração única vira duas. Esperar custa o commit, o push e o clique do Eric, mais uma leitura; se a terceira execução falhar de novo, a espera se estende.
+- **Opções:**
+  - (a) Esperar as duas provas, com data limite. O Word e o PDF saem assim que a terceira execução do instalador e o clique no botão do hub estiverem lidos; se até 30/11/2026 faltar alguma, saem nesse dia com o que estiver lido, e o texto dizendo o que não foi visto rodando.
+  - (b) Gerar agora, com a segunda execução do instalador no texto e o botão do hub declarado como não provado.
+  - (c) Esperar as duas provas sem data limite, como na decisão 168.
+- **Recomendação:** (a). O commit e o push já são o próximo passo do Eric por causa do hub como central, a terceira execução sai deles sem trabalho a mais, e as duas frases mais fracas do documento podem virar prova na geração única. A data limite deixa dois dias antes da reunião de 02/12/2026.
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 172): "Esperar até 30/11 (Recomendado)". O Word e o PDF saem assim que a terceira execução do instalador no GitHub Actions e o clique no botão do hub estiverem lidos; se em 30/11/2026 faltar alguma das duas, saem nesse dia com o que estiver lido, e o texto dizendo o que não foi visto rodando.
+
+<!-- ! Alteração de IA - Revisar: ficha 112 acrescentada em 26/11/2026: o número da versão do Word e do PDF finais do TCC.
+     ! Motivo: o gerador nomeia a saída pela versão do bloco de dados do documento, e o plano era a versão 4; em 26/11/2026 entrou no repositório, por pull request de um coautor, um `TCC_v4_20261105.docx` que não é a versão oficial (decisão 173). Sem a escolha, a pasta e a cópia do orientador ficariam com dois arquivos "v4" de conteúdo diferente. -->
+### 112. Que número de versão levam o Word e o PDF finais do TCC, agora que existe um `TCC_v4_20261105.docx` do coautor?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O gerador (`ferramentas/gerar_tcc_docx.py`) nomeia a saída pela versão e pela data do bloco de dados do documento: `Documentacao/TCC_v<versão>_<data>.docx`. O plano era a versão 4 (decisões 158, 168 e 172; roadmap §1 e §6). Em 26/11/2026 entrou no repositório, por pull request de um coautor (commit `761c777f`), o arquivo `Documentacao/TCC_v4_20261105.docx`: é a versão 3, de 05/11/2026, com a seção 1.1 reescrita e três referências novas, sem a Fase 5, a Pós-Fase 4, o instalador nem o hub. O texto dele já foi juntado à fonte em Markdown (decisão 173). Se o gerador sair com a versão 4, a pasta `Documentacao/` e a pasta `TCC/` do clone do orientador ficam com dois arquivos "v4" de conteúdo muito diferente: o do coautor e o oficial, distinguidos só pela data no nome.
+- **Por que importa:** O orientador e os sete autores abrem o arquivo pelo nome, e dois "v4" convidam a ler ou a entregar o errado. Renomear ou tirar o arquivo do coautor mexe num arquivo já commitado, o que é do Eric.
+- **Opções:**
+  - (a) O oficial sai como versão 5 (`TCC_v5_<data>.docx` e `.pdf`). O arquivo do coautor fica como está, e o roadmap passa a dizer que a versão 4 é a do coautor, feita sobre a versão 3, e que o conteúdo dela está na versão 5.
+  - (b) O oficial sai como versão 4, e o Eric renomeia antes o arquivo do coautor (por exemplo, para `TCC_v3_20261105_secao-1-1-do-coautor.docx`), com `git mv`.
+  - (c) O oficial sai como versão 4 e os dois arquivos convivem, distinguidos só pela data no nome.
+- **Recomendação:** (a). Não mexe em arquivo commitado, não deixa dois arquivos com o mesmo número, e a ordem das versões continua contando a história: a 4 trouxe a seção 1.1, e a 5 junta tudo.
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 174): "Versão 5 (Recomendado)". O Word e o PDF finais saem como `TCC_v5_<data>.docx` e `.pdf`; o `TCC_v4_20261105.docx` do coautor fica como está, e o roadmap diz que o conteúdo dele está na versão 5.
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

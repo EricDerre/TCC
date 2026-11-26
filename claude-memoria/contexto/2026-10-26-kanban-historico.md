@@ -223,3 +223,89 @@ Depois da atualização do quadro, a sessão principal repassou a decisão do Er
 - **Cartão da Pós-Fase 4.** O #71 já era esse cartão e manteve o título. "Painel do analista" não está na decisão 94: a interface para o analista é a decisão 93, no #73. O corpo do #71 ganhou a frase que o liga a #72 e #73, como no roadmap §4.8.
 
 A contagem por coluna da seção 8.3 não mudou, e as duas edições foram conferidas nas próprias issues.
+
+<!-- ! Alteração de IA - Revisar: seção nova (25/11/2026) com os 17 cartões criados no Kanban do orientador (issues #79 a #95), os 13 cartões existentes movidos ou corrigidos, o comentário no Status Report #12 e o estado do quadro ao fim, com número, ID, título, tipo, feature e coluna.
+     ! Motivo: o quadro tinha parado em 05/11, com a Fase 4 ainda aberta e sem cartão para a Pós-Fase 4, a Fase 5, o instalador único e a revisão geral de 25/11; sem esta seção a próxima atualização não saberia quais cartões existem nem com que número. A lista foi aprovada pelo Eric no quadro de perguntas antes de qualquer mudança, e os títulos da tabela 9.1 são os das issues criadas. -->
+## 9. Fase 4 fechada, Pós-Fase 4, Fase 5 e instalador único (25/11/2026)
+
+Pedido do Eric em 25/11/2026, repassado pela sessão principal: "vamos atualizar o kanban agora". Levantamento, só leitura, no roadmap (§1, §2 e §6), no README (seção Onde o projeto está), nos livros-razão de `.superpowers/sdd/` (fase-4, pos-fase-4, fase-5 e instalador), nas decisões 96 a 169 e nas fichas 92 a 108. O Eric aprovou as três partes no quadro de perguntas: "Sim, aplicar os 13", "Sim, criar os 17" e "Sim, comentar no #12".
+
+### 9.1 Os 17 cartões criados
+
+| Issue | ID | Título | Tipo | Feature | Coluna |
+|---|---|---|---|---|---|
+| #79 | TSK-F4-018 | Fase 4: busca do caso ao vivo com os sinais novos e corridas 18d, 21d e 18e; fase concluída em 06/11/2026 (fichas 47 e 48, decisões 96 a 99) | Testes | FT004 | Producao, fechada |
+| #80 | TSK-POS4-001 | Pós-Fase 4, pacote Q0: especificação, pesquisa (levantamento §6.15) e plano aprovado (fichas 49 a 54, decisões 101 a 106) | Pesquisa/Spike | EP001 | Producao, fechada |
+| #81 | TSK-POS4-002 | Pós-Fase 4, pacotes Q1 e Q2: relatório v3 no molde da seção 5.5 do CTFL 4.0, camada de leitura dos verbetes com a curadoria e filtros de texto (decisões 103, 104, 108 e 115) | Desenvolvimento | FT004 | Producao, fechada |
+| #82 | TSK-POS4-003 | Pós-Fase 4, pacotes Q3 e Q4: árvore de decisão por caso e barra de progresso, com a fumaça real (decisões 109 a 112) | Desenvolvimento | FT004 | Producao, fechada |
+| #83 | TSK-POS4-004 | Pós-Fase 4: corridas 25, 26 e 27 em texto, sem mudar o agente, e a revisão às cegas da 27 (decisões 116, 120 a 123 e 129) | Testes | FT003 | Producao, fechada |
+| #84 | TSK-DOC-013 | Painel do projeto por fase, glossário e citação do Projeto CHULETA (decisões 124, 125 e 128) | Documentacao | EP001 | Producao, fechada |
+| #85 | TSK-F5-002 | Fase 5, pacotes F0 e F1: plano aprovado, leitura em código e lançador da noite (decisões 130 a 133) | Desenvolvimento | FT006 | Producao, fechada |
+| #86 | TSK-F5-003 | Fase 5, pacote F2: protocolo versão 2, tutorial do integrante e sessões pela página publicada (decisões 131 e 134 a 137) | Testes | FT006 | Producao, fechada |
+| #87 | TSK-F5-004 | Fase 5, pacotes F5 e F6: leitura, painel, relatório da fase e seções do TCC; fase concluída em 25/11/2026 (fichas 91 e 96, decisões 151 e 156) | Documentacao | FT006 | Producao, fechada |
+| #88 | TSK-INS-001 | Instalador único, pacotes I0 e I1: plano aprovado, versoes.json e as peças sem rede (decisões 138 a 143) | Infraestrutura | EP001 | Producao, fechada |
+| #89 | TSK-INS-002 | Instalador único, pacotes I2 e I3: Linux pelo WSL e consertos no install.py e no `_env_common.py` (decisões 147 e 148) | Infraestrutura | EP001 | Producao, fechada |
+| #90 | TSK-DOC-014 | Revisão geral de 25/11/2026: fichas 92 a 98 e os ODS 9, 8 e 17 (decisões 152 a 159) | Documentacao | EP001 | Producao, fechada |
+| #91 | TSK-POS4-005 | Pós-Fase 4, pacote Q7: seleção de cenários pelo Git, à espera da corrida curta da ficha 99 (decisões 152 e 163) | Desenvolvimento | EP001 | Testes em DEV |
+| #92 | TSK-POS4-006 | Pós-Fase 4, pacote Q8: texto final do TCC e relatório da fase; Word e PDF pela decisão 168 (decisões 158 e 164 a 168) | Documentacao | EP001 | Fazendo |
+| #93 | TSK-INS-003 | Instalador único, pacote I5: GitHub Actions em Windows, Ubuntu e macOS recém-criados (decisões 153 e 160 a 162) | Testes | EP001 | Testes em DEV |
+| #94 | TSK-INS-004 | Instalador único, pacote I7: relatório e texto do que foi provado em cada sistema; I4 e I6 declarados como não testados (decisão 153) | Documentacao | EP001 | Fazendo |
+| #95 | TSK-DOC-015 | Réplica dos commits de 07/11 a 25/11/2026 na pasta projeto/ deste repositório (decisão 84) | Deploy | EP001 | Fazendo |
+
+Todos na Sprint 3 (Novembro). F4 continua de TSK-F4-017, DOC de TSK-DOC-012 e F5 de TSK-F5-001; TSK-POS4 abre o módulo da Pós-Fase 4, porque TSK-PF4 já é a Pré-Fase 4, e TSK-INS abre o do instalador único. A numeração começa no #79 porque o professor abriu #76 a #78 depois de 05/11. Os caminhos de evidência usam o prefixo `projeto/` e foram achados no disco antes de entrar nos cartões. Nenhum cartão cita nome de integrante da linha de base (decisão 154).
+
+Como a lista foi montada:
+
+- **Sem cartão novo para o Q5 e para o hub.** A revisão humana do Q5 fechou o #74, e o hub do Q6 levou o #73 a Testes em DEV, porque os dois cartões já descreviam esse trabalho.
+- **Sem cartão novo para as corridas 28 e 28b e para as sessões das pessoas.** Elas ficaram no #75, que já era a sessão da linha de base manual com o grupo e a noite medida.
+- **I4 e I6 sem cartão.** Estão declarados como não testados no #94 (decisão 153).
+
+### 9.2 Cartões existentes mudados no mesmo dia
+
+| Issue | ID | O que mudou |
+|---|---|---|
+| #67 | TSK-F4-013 (corridas 18c e 21c) | De Fazendo para Producao; fechada como concluída; nota de fechamento com o roadmap §2.16 e §2.17. |
+| #68 | TSK-F4-014 (corrida 23) | De A Fazer para Producao; fechada como concluída; nota com o roadmap §2.18. |
+| #69 | TSK-F4-015 (inéditos e corrida 24) | De A Fazer para Producao; fechada como concluída; nota com a decisão 100 e o roadmap §2.22. |
+| #70 | TSK-DOC-010 (réplica de 05/11) | De Fazendo para Producao; fechada como concluída: os commits de 05/11 estão no main do orientador. |
+| #72 | TSK-DOC-012 (entregável ao analista) | Do Backlog para Producao; fechada como concluída: atendido pela camada de leitura (decisões 103 e 115). |
+| #74 | TSK-F4-017 (revisão humana) | Do Backlog para Producao; fechada como concluída: feita no Q5 (decisões 113, 114 e 117). O corpo foi corrigido pela decisão 166 e os dois critérios foram marcados, o segundo com o tempo de leitura como não medido. |
+| #75 | TSK-F5-001 (sessões e noite medida) | Do Backlog para Producao; fechada como concluída: corrida 28b e sessões lidas em 24/11 (decisões 145, 146 e 149 a 151). |
+| #19 | FT005 | De Testes em DEV para Producao; fechada como concluída: medido na Fase 5 (decisão 156). |
+| #20 | FT006 | De Fazendo para Producao; fechada como concluída: Fase 5 concluída (ficha 96, decisão 156). |
+| #71 | TSK-DOC-011 (Pós-Fase 4) | Do Backlog para Fazendo, aberta, com comentário que aponta os cartões TSK-POS4. |
+| #73 | TSK-F4-016 (interface do analista) | Do Backlog para Testes em DEV, aberta: feita no hub do Q6; o trace na falha espera a corrida curta da ficha 99. |
+| #60 | TSK-F4-010 | Critério 3 corrigido pela decisão 166: o relatório 1 foi respondido pelo analista de QA e colado pelo Eric, e a medida com revisor humano foi feita depois, no Q5. |
+| #65 | TSK-F4-012 | Corpo e critério 1 corrigidos pela decisão 166, e a frase da medida passou a dizer que ela foi feita no Q5. |
+
+Ficaram como estavam: #14 (EP001, Fazendo), #18 (FT004, Fazendo), #27 (TSK-DOC-001, Fazendo) e #28 (TSK-DOC-002, Fazendo). Nos nove cartões fechados nesta rodada, só o #74 teve os critérios marcados; as notas de fechamento dizem onde está cada leitura.
+
+### 9.3 Status Report #12
+
+Com o sim do Eric, um comentário no Status Report #12 (reunião de 27/11/2026), nas quatro seções do modelo do professor: status do projeto, em andamento, impedimentos e próximos passos. O corpo da issue, que é do professor, ficou intacto, e o comentário não cita nome de integrante. A issue continua aberta.
+
+### 9.4 Estado do quadro ao fim (contagem por coluna no próprio quadro, 25/11/2026 à noite)
+
+- No Status: 5 (Status Reports #9 a #13).
+- Backlog, Refinamento, A Fazer, Merge e Testes em HOM: 0.
+- Fazendo: 8 (#14, #18, #27, #28, #71, #92, #94, #95).
+- Testes em DEV: 3 (#73, #91, #93).
+- Producao: 75 (os 54 de antes, mais os 9 fechados e os 12 criados já fechados).
+
+São 91 itens no quadro. As issues abertas no repositório são 23, conferidas pela busca de issues abertas e fechadas.
+
+### 9.5 Falhas
+
+Nenhum cartão foi recusado pelo GitHub, e a sessão do navegador interno ficou válida até o fim. O que deu errado:
+
+- **Status que não pegou.** No #87, o primeiro clique em Producao não mudou o status; a conferência por JavaScript parou o lote, e o segundo clique resolveu.
+- **Painel de projeto ausente.** No #91 ele não apareceu logo após a criação; recarregar a página resolveu, como nas rodadas anteriores.
+- **Identificador velho.** Nos #72 e #74 o lote parou porque o identificador previsto do menu não existia mais; nada foi clicado fora do lugar.
+- **Leitura do estado.** O estado lido do JSON da página deu "aberta" em todas as issues novas; a busca de issues fechadas confirmou #79 a #90 fechadas e #91 a #95 abertas.
+
+### 9.6 Divergências e o que fica para o Eric
+
+- **Réplica.** A sessão principal anotou que a cópia do orientador estava no commit de 05/11, mas o main do orientador já tinha as réplicas até 8f7b279e, feitas em 25/11. Faltam 9badcba8, f305dee1 e 35617a47 (#95). Os commits do principal foram lidos no arquivo `.git/logs/HEAD`, sem rodar git.
+- **Issues do professor.** #76 (atendimento de 06/11), #77 (cota de Actions da organização esgotada) e #78 (apresentação em 04/12/2026, das 19h às 22h) estão abertas e não foram tocadas. O #64, de 04/11, aparece fechado.
+- **Cartões abertos.** Fecham quando a corrida curta da ficha 99 for lida (#91 e #73), quando o Word e o PDF saírem (#92), quando a próxima execução do instalador for lida (#93 e #94) e quando o push dos três commits sair (#95).
+- Nada foi commitado nem replicado; este registro é o único arquivo do repositório principal tocado por esta sessão.

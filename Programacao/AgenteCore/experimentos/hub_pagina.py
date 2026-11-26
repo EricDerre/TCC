@@ -228,15 +228,19 @@ def pagina() -> str:
 
     return "\n".join([
         "<!doctype html>", '<html lang="pt-BR">', "<head>", '<meta charset="utf-8">', '<meta name="viewport" content="width=device-width, initial-scale=1">',
-        "<title>Hub de revisão do agente de QA</title>", '<link rel="stylesheet" href="/hub.css">', "</head>", "<body>",
+        "<title>Hub central do agente de QA</title>", '<link rel="stylesheet" href="/hub.css">', "</head>", "<body>",
         '<header class="topo">',
-        '<div class="marca"><strong>Hub de revisão</strong><span>o agente comenta; o veredito é do analista</span></div>',
+        '<div class="marca"><strong>Hub central</strong><span>o agente comenta; o veredito é do analista</span></div>',
+        '<nav class="vistas" aria-label="Vistas do hub">',
+        '<button type="button" id="abrir-inicio">Início</button>',
+        '<button type="button" id="abrir-metricas">Métricas</button>',
+        '<button type="button" id="abrir-ao-vivo">Corrida ao vivo</button>',
+        "</nav>",
         '<label class="campo">Quem está revisando <input id="nome-do-revisor" type="text" maxlength="80" autocomplete="off" placeholder="seu nome"></label>',
         f'<label class="campo">Corrida <select id="filtro-corrida">{opcao_vazia("todas")}</select></label>',
         '<label class="campo">Procurar <input id="filtro-texto" type="search" placeholder="caso, causa, título"></label>',
         '<label class="campo marcar"><input id="filtro-sem-veredito" type="checkbox"> só sem veredito</label>',
         '<span id="contagem-de-casos" class="contagem"></span>',
-        '<button type="button" id="abrir-ao-vivo">Corrida ao vivo</button>',
         '<p id="erro" role="alert" aria-live="assertive"></p>',
         "</header>",
         '<div class="corpo">',
@@ -335,7 +339,40 @@ def pagina() -> str:
         '<pre id="log-da-execucao" hidden></pre>',
         "</div>",
         "</section>",
-        '<p id="vazio" class="nota">Escolha um caso na lista.</p>',
+        '<section id="inicio" hidden>',
+        "<h1>Central do agente de QA</h1>",
+        '<p id="resumo-do-inicio" class="nota"></p>',
+        '<div class="cartao">',
+        "<h2>O que está no ar</h2>",
+        '<div id="servicos" class="servicos"></div>',
+        '<p id="nota-dos-servicos" class="nota"></p>',
+        "</div>",
+        '<div class="cartao">',
+        "<h2>O que dá para fazer daqui</h2>",
+        '<div class="atalhos">',
+        ('<div class="atalho"><button type="button" id="ir-para-rodar" class="principal">Rodar os cenários</button>'
+         '<p class="nota" id="nota-de-rodar"></p></div>'),
+        ('<div class="atalho"><button type="button" id="ir-para-metricas">Ver as métricas</button>'
+         '<p class="nota">O que cada corrida mediu, lido dos registros gravados, e o resultado da comparação com as pessoas.</p></div>'),
+        ('<div class="atalho"><a class="painel" id="abrir-painel" target="_blank" rel="noopener noreferrer">Abrir o painel do projeto</a>'
+         '<p class="nota">Os gráficos e a leitura de cada resultado, um assunto por aba. Abre em outra aba e precisa de internet.</p></div>'),
+        "</div>",
+        '<p class="nota">Para revisar um diagnóstico do agente, escolha um caso na lista ao lado.</p>',
+        "</div>",
+        "</section>",
+        '<section id="metricas" hidden>',
+        "<h1>Métricas</h1>",
+        '<div id="metricas-da-fase-5" class="cartao" hidden></div>',
+        '<div class="cartao">',
+        "<h2>Por corrida</h2>",
+        ('<p class="nota">Cada linha é lida agora dos arquivos da corrida: os casos e a confiança vêm da trilha; as execuções, o Task Success (em quantas o agente '
+         'chegou ao resultado) e o tempo de reparo vêm do <code>cenarios.jsonl</code>. O tempo de reparo é a média dos cenários: primeiro a média das execuções de '
+         'cada cenário, depois a média entre eles. Clique numa corrida para ver cenário por cenário.</p>'),
+        ('<div class="tabela"><table><thead><tr><th>Corrida</th><th>Casos com diagnóstico</th><th>Confiança</th><th>Execuções de cenário</th><th>Task Success</th>'
+         '<th>Falha detectada</th><th>Tempo médio de reparo</th><th>Medida do TCC</th></tr></thead><tbody id="metricas-por-corrida"></tbody></table></div>'),
+        "</div>",
+        '<div id="metricas-por-cenario" class="cartao" hidden></div>',
+        "</section>",
         "</div>",
         '<button type="button" id="comentar-trecho" hidden>Comentar o trecho</button>',
         '<div id="form-comentario" class="cartao" hidden>',
@@ -400,15 +437,31 @@ textarea{width:100%;resize:vertical}
 .etiqueta,.origem,.legenda-origem,.estado-da-conversa,.tipo,.rotulo,.bloqueante,.selo-modelo{display:inline-block;font:500 11px/1.5 var(--fm);border:1px solid var(--linha);border-radius:999px;padding:0 7px;white-space:nowrap}
 .conf-alto{color:var(--bom);border-color:var(--bom)}.conf-medio{color:var(--meio);border-color:var(--meio)}.conf-baixo,.alerta,.bloqueante{color:var(--ruim);border-color:var(--ruim)}
 .veredito{background:var(--acento);color:var(--bg2);border-color:var(--acento)}.conversa-ativa{color:var(--acento);border-color:var(--acento)}
-main,#ao-vivo{overflow-y:auto;padding:16px 20px 60px}
-#abrir-ao-vivo.ativa{background:var(--acento);color:var(--bg2);border-color:var(--acento)}
+main,#ao-vivo,#inicio,#metricas{overflow-y:auto;padding:16px 20px 60px}
+.vistas{display:flex;gap:6px}
+.vistas button{font-weight:600}.vistas button.ativa{background:var(--acento);color:var(--bg2);border-color:var(--acento)}
+.servicos{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:8px 0}
+.servico{border:1px solid var(--linha);border-left:4px solid var(--ruim);border-radius:8px;padding:10px 12px;background:var(--bg);display:flex;flex-direction:column;gap:4px}
+.servico.no-ar{border-left-color:var(--bom)}
+.servico .nome{font-weight:600;line-height:1.3}
+.servico .estado{font:600 12px var(--fm);color:var(--ruim)}.servico.no-ar .estado{color:var(--bom)}
+.servico a{font-size:13px;overflow-wrap:anywhere}
+.atalhos{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:10px 0}
+.atalho{display:flex;flex-direction:column;align-items:flex-start;gap:6px}.atalho p{margin:0}
+.atalho button,.atalho a.painel{font:600 14px var(--fb);padding:7px 14px;border:1px solid var(--linha);border-radius:6px;background:var(--bg2);color:var(--ink);text-decoration:none}
+.atalho button.principal{background:var(--acento);color:var(--bg2);border-color:var(--acento)}
+.atalho a.painel:hover{border-color:var(--acento)}
+tr.corrida{cursor:pointer}tr.corrida:hover,tr.corrida.aberta{background:var(--acento2)}
+tr.corrida td:first-child strong{display:block}
+.ressalva{border-left:3px solid var(--meio);padding:4px 12px;margin:8px 0;color:var(--ink)}
+.placar{display:flex;flex-wrap:wrap;gap:10px 28px;margin:10px 0}
+.placar div{display:flex;flex-direction:column}.placar .numero{font:600 24px var(--fd);font-variant-numeric:tabular-nums}.placar .rotulo-do-numero{font-size:12px;color:var(--ink2)}
 .barra,.trilho{height:14px;border:1px solid var(--linha);border-radius:999px;background:var(--bg);overflow:hidden}
 #barra-cheia{height:100%;width:0;background:var(--acento)}
 .alternativa{display:grid;grid-template-columns:minmax(120px,260px) minmax(60px,1fr) 150px;gap:10px;align-items:center;margin:5px 0}
 .trilho{height:10px}.trilho div{height:100%;background:var(--ink2)}.alternativa.escolhida .trilho div{background:var(--acento)}
 .alternativa .valor{font:13px var(--fm);color:var(--ink2)}
 #comando-da-corrida{user-select:all}
-#vazio{padding:24px}
 .nota{color:var(--ink2);font-size:13px}
 .aviso{font-size:13px;color:var(--meio)}
 .linha-da-iteracao,.linha-de-campos{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 16px;margin:8px 0}
@@ -481,7 +534,8 @@ details{border:1px solid var(--linha);border-radius:8px;padding:6px 10px;margin:
 JS = r"""'use strict';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const E = {indice: null, caso: null, aba: 'relatorio', evidencia: null, ancora: null, selecao: null, vista: 'casos', relogio: null, ultimo: null};
+const E = {indice: null, caso: null, aba: 'relatorio', evidencia: null, ancora: null, selecao: null, vista: 'inicio', relogio: null, ultimo: null,
+  relogioDoInicio: null, metricas: null, corridaDasMetricas: null, corridaRodando: false};
 const ABAS = ['relatorio', 'arvore', 'trilha'];
 
 function el(tag, props = {}, ...filhos) {
@@ -588,14 +642,15 @@ function atualizarItens(caso, resumo) {
 
 function lerEndereco() {
   const p = new URLSearchParams(location.hash.slice(1));
-  return {tid: p.get('caso'), aba: ABAS.includes(p.get('aba')) ? p.get('aba') : 'relatorio', vista: p.get('vista') === 'ao-vivo' ? 'ao-vivo' : 'casos'};
+  const vista = ['ao-vivo', 'metricas'].includes(p.get('vista')) ? p.get('vista') : (p.get('caso') ? 'casos' : 'inicio');
+  return {tid: p.get('caso'), aba: ABAS.includes(p.get('aba')) ? p.get('aba') : 'relatorio', vista};
 }
 
 function gravarEndereco() {
   const p = new URLSearchParams();
-  if (E.caso) p.set('caso', E.caso.tid);
+  if (E.caso && E.vista !== 'inicio') p.set('caso', E.caso.tid);
   p.set('aba', E.aba);
-  if (E.vista === 'ao-vivo') p.set('vista', 'ao-vivo');
+  if (E.vista === 'ao-vivo' || E.vista === 'metricas') p.set('vista', E.vista);
   history.replaceState(null, '', '#' + p.toString());
 }
 
@@ -649,13 +704,22 @@ function desenharCaso() {
 
 // ---------------------------------------------------------------- a corrida ao vivo
 
+// ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) a página passou a ter quatro vistas: "Início" (a que abre), o caso, "Corrida
+// ao vivo" e "Métricas". `mostrarVista` mostra uma e esconde as outras; sem caso aberto, a vista do caso cai no "Início".
+// ! Motivo: o Eric pediu o hub como central de tudo, aberta pelo `.exe`: a primeira tela diz o que está no ar e leva ao site, à API, ao
+// painel, a rodar os cenários e às métricas. Antes a página abria numa frase ("Escolha um caso na lista"), que não dizia nada a quem acabou
+// de dar dois cliques no `.exe`. O "Início" relê o estado dos serviços a cada cinco segundos só enquanto está à vista.
 function mostrarVista(vista) {
+  if (vista === 'casos' && !E.caso) vista = 'inicio';
   E.vista = vista;
-  const vivo = vista === 'ao-vivo';
+  const vivo = vista === 'ao-vivo', inicio = vista === 'inicio', metricas = vista === 'metricas';
   $('#ao-vivo').hidden = !vivo;
-  $('#caso').hidden = vivo || !E.caso;
-  $('#vazio').hidden = vivo || Boolean(E.caso);
+  $('#inicio').hidden = !inicio;
+  $('#metricas').hidden = !metricas;
+  $('#caso').hidden = vista !== 'casos';
   $('#abrir-ao-vivo').classList.toggle('ativa', vivo);
+  $('#abrir-inicio').classList.toggle('ativa', inicio);
+  $('#abrir-metricas').classList.toggle('ativa', metricas);
   $('#comentar-trecho').hidden = true;
   if (vivo) {
     atualizarAoVivo();
@@ -664,7 +728,124 @@ function mostrarVista(vista) {
     clearInterval(E.relogio);
     E.relogio = null;
   }
+  if (inicio) {
+    atualizarInicio();
+    if (!E.relogioDoInicio) E.relogioDoInicio = setInterval(atualizarInicio, 5000);
+  } else if (E.relogioDoInicio) {
+    clearInterval(E.relogioDoInicio);
+    E.relogioDoInicio = null;
+  }
+  if (metricas) atualizarMetricas();
   gravarEndereco();
+}
+
+// ---------------------------------------------------------------- o início e as métricas
+
+async function recarregarIndice() {
+  let indice;
+  try { indice = await api('/api/indice'); } catch (e) { return; }
+  E.indice = indice;
+  const seletor = $('#filtro-corrida'), escolhida = seletor.value;
+  seletor.replaceChildren(el('option', {value: '', text: 'todas'}));
+  preencher('#filtro-corrida', indice.corridas.map(c => [c.pasta, c.rotulo + ' (' + c.casos + ')']));
+  seletor.value = [...seletor.options].some(o => o.value === escolhida) ? escolhida : '';
+  desenharLista();
+  if (E.caso) for (const li of $$('#lista-de-casos .item-caso')) li.classList.toggle('aberto', li.dataset.tid === E.caso.tid);
+}
+
+async function atualizarInicio() {
+  if (document.hidden) return;
+  let c;
+  try { c = await api('/api/central'); } catch (e) { mostrarErro(e.message); return; }
+  desenharInicio(c);
+  if (E.indice && c.casos !== E.indice.casos.length) recarregarIndice();     // uma corrida gravou caso novo desde que a lista foi lida
+}
+
+function desenharInicio(c) {
+  const plural = (n, um, varios) => n + ' ' + (n === 1 ? um : varios);
+  $('#resumo-do-inicio').textContent = plural(c.casos, 'caso', 'casos') + ' com diagnóstico do agente em ' + plural(c.corridas, 'corrida', 'corridas') + '. '
+    + (c.pelo_exe ? 'Aberta pelo Cobaia.exe: o site e a API de demonstração sobem junto, e fechar a janela dele encerra tudo.'
+      : 'Aberta por python hub.py: o site e a API de demonstração só aparecem no ar se alguém os subiu (o Cobaia.exe sobe tudo de uma vez).');
+  const quadro = $('#servicos');
+  if (quadro.children.length !== c.servicos.length) {
+    quadro.replaceChildren(...c.servicos.map(s => el('div', {class: 'servico', data: {servico: s.id}},
+      el('span', {class: 'nome', text: s.nome}), el('span', {class: 'estado'}),
+      s.url ? el('a', {href: s.url, target: '_blank', rel: 'noopener noreferrer', text: s.url.replace('http://', '')}) : null)));
+  }
+  for (const s of c.servicos) {       // o cartão é atualizado no lugar: trocá-lo a cada releitura podia engolir um clique no endereço
+    const cartao = quadro.querySelector('.servico[data-servico="' + CSS.escape(s.id) + '"]');
+    cartao.classList.toggle('no-ar', s.no_ar);
+    $('.estado', cartao).textContent = s.no_ar ? 'no ar' : 'fora do ar';
+  }
+  const fora = id => c.servicos.some(s => s.id === id && !s.no_ar);
+  $('#nota-dos-servicos').textContent = [
+    (fora('site') || fora('api')) ? 'Para subir o site e a API, abra o Cobaia.exe (ou rode python run.py na raiz do repositório).' : '',
+    fora('ollama') ? (c.pelo_exe ? 'O Ollama só precisa estar no ar para rodar os cenários: ao lançar a corrida, o hub tenta iniciá-lo.'
+      : 'O Ollama só precisa estar no ar para rodar os cenários.') : ''].filter(Boolean).join(' ');
+  $('#ir-para-rodar').textContent = c.execucao_permitida ? 'Rodar os cenários' : 'Ver como rodar os cenários';
+  $('#nota-de-rodar').textContent = c.execucao_permitida
+    ? 'Ativa o agente nos dez cenários de quebra do site, com o modelo local. Leva cerca de um minuto por cenário, e a corrida aparece na lista de casos.'
+    : 'Sem o Cobaia.exe, o hub mostra o comando para copiar e rodar na sua janela do PowerShell.';
+  if (c.painel) $('#abrir-painel').setAttribute('href', c.painel);
+}
+
+async function atualizarMetricas() {
+  let m;
+  try { m = await api('/api/metricas'); } catch (e) { mostrarErro(e.message); return; }
+  E.metricas = m;
+  desenharMetricas();
+}
+
+function comVirgula(v, casas) { return typeof v === 'number' ? v.toFixed(casas).replace('.', ',') : ''; }
+
+function desenharMetricas() {
+  const m = E.metricas, f = m.fase5, alto = $('#metricas-da-fase-5');
+  alto.hidden = !f;
+  if (f) {
+    const t = f.tempo_medio_s || {};
+    const placar = (typeof t.agente === 'number' && typeof t.pessoas === 'number') ? el('div', {class: 'placar'},
+      el('div', {}, el('span', {class: 'numero', text: comVirgula(t.agente, 1) + ' s'}), el('span', {class: 'rotulo-do-numero', text: 'tempo médio de reparo do agente'})),
+      el('div', {}, el('span', {class: 'numero', text: comVirgula(t.pessoas, 1) + ' s'}), el('span', {class: 'rotulo-do-numero', text: 'tempo médio de reparo das pessoas'}))) : null;
+    alto.replaceChildren(
+      el('h2', {text: 'O agente contra as pessoas (Fase 5)'}),
+      el('h3', {text: 'Tempo de reparo, o resultado central'}), placar, el('p', {text: f.tempo}),
+      el('h3', {text: 'Task Success'}),
+      el('p', {text: f.task_success + ' O agente chegou ao resultado em ' + f.agente.sucessos + ' de ' + f.agente.n + ' execuções; as pessoas, em '
+        + f.pessoas.sucessos + ' de ' + f.pessoas.n + ' tentativas.'}),
+      f.ressalva ? el('p', {class: 'ressalva', text: f.ressalva}) : null,
+      el('p', {class: 'nota'}, 'Frases e números copiados de ', el('code', {text: 'resultados_alvo/fase5/medicao.json'}),
+        ', a leitura da comparação pelas regras fixadas antes das medidas' + (f.corrida ? ' (corrida do agente: ' + f.corrida + ').' : '.')));
+  }
+  $('#metricas-por-corrida').replaceChildren(...m.corridas.map(c => {
+    const confianca = Object.entries(c.confianca).map(([nome, n]) => nome + ' ' + n).join(' · ') || 'sem casos';
+    const medida = c.vale_como_medida === true ? 'sim' : c.vale_como_medida === false ? 'não' : 'não declarada';
+    const dosCenarios = typeof c.execucoes === 'number'
+      ? [el('td', {text: String(c.execucoes)}), el('td', {text: c.task_success + ' de ' + c.execucoes}), el('td', {text: c.detectou + ' de ' + c.execucoes}),
+        el('td', {text: c.mttr_media_s === null ? 'sem reparo medido' : comVirgula(c.mttr_media_s, 1) + ' s'})]
+      : [el('td', {colspan: '4', class: 'nota', text: 'não rodou cenários: diagnostica os casos em texto ou na tela'})];
+    const tr = el('tr', {class: 'corrida' + (E.corridaDasMetricas === c.pasta ? ' aberta' : ''), data: {corrida: c.pasta}, tabindex: '0', role: 'button'},
+      el('td', {}, el('strong', {text: c.rotulo}), el('code', {text: c.pasta})), el('td', {text: String(c.casos)}), el('td', {text: confianca}), ...dosCenarios,
+      el('td', {text: medida}));
+    const abrir = () => { E.corridaDasMetricas = c.pasta; desenharMetricas(); };
+    tr.addEventListener('click', abrir);
+    tr.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrir(); } });
+    return tr;
+  }));
+  const aberta = m.corridas.find(c => c.pasta === E.corridaDasMetricas), detalhe = $('#metricas-por-cenario');
+  detalhe.hidden = !aberta;
+  if (!aberta) return;
+  const verCasos = el('button', {type: 'button', id: 'ver-casos-da-corrida', text: 'Mostrar só os casos desta corrida na lista'});
+  verCasos.addEventListener('click', () => { $('#filtro-corrida').value = aberta.pasta; filtrar(); });
+  const linhas = aberta.por_cenario.map(x => el('tr', {}, el('td', {}, el('code', {text: x.cenario})), el('td', {text: x.tipo || ''}), el('td', {text: String(x.execucoes)}),
+    el('td', {text: x.task_success + ' de ' + x.execucoes}), el('td', {text: x.detectou + ' de ' + x.execucoes}),
+    el('td', {text: x.mttr_media_s === null ? 'sem reparo medido' : comVirgula(x.mttr_media_s, 1) + ' s'})));
+  detalhe.replaceChildren(
+    el('h2', {text: 'Cenário por cenário: ' + aberta.rotulo}),
+    aberta.descricao ? el('p', {class: 'nota', text: aberta.descricao}) : null,
+    linhas.length ? el('div', {class: 'tabela'}, el('table', {},
+      el('thead', {}, el('tr', {}, ...['Cenário', 'Tipo', 'Execuções', 'Task Success', 'Falha detectada', 'Tempo médio de reparo'].map(t => el('th', {text: t})))),
+      el('tbody', {}, linhas))) : el('p', {class: 'nota', text: 'Esta corrida não rodou cenários; os casos dela estão na lista ao lado.'}),
+    verCasos);
 }
 
 function segundos(s) {
@@ -780,9 +961,12 @@ function desenharExecucao(x) {
     ? 'O hub foi aberto sem --permitir-execucao: copie o comando e rode na sua janela do PowerShell, na pasta experimentos, com o aplicativo Claude fechado.'
     : x.em_andamento ? 'Corrida ' + x.saida + ' em andamento desde ' + quando(x.inicio) + '.'
       : x.terminou ? 'A corrida ' + x.saida + ' terminou em ' + quando(x.fim) + ', com código ' + x.codigo + (x.parada_pelo_hub ? ' (parada pelo hub)' : '') + '.'
-        : 'Nenhuma corrida lançada pelo hub desde que ele foi aberto. A corrida chama o modelo e leva cerca de um minuto por cenário e repetição.';
+        : 'Nenhuma corrida lançada pelo hub desde que ele foi aberto. A corrida chama o modelo e leva cerca de um minuto por cenário e repetição.'
+          + (x.pelo_exe ? ' Ela usa o site e a API que o Cobaia.exe já subiu, e não vale como medida do TCC.' : '');
   $('#log-da-execucao').hidden = !x.log;
   $('#log-da-execucao').textContent = x.log;
+  if (E.corridaRodando && !x.em_andamento) recarregarIndice();      // a corrida lançada daqui acabou: os casos dela entram na lista
+  E.corridaRodando = x.em_andamento;
 }
 
 async function mandarExecucao(pedido) {
@@ -1155,6 +1339,10 @@ async function iniciar() {
     $('#aba-relatorio').addEventListener(evento, ev => acender(ev, ligado));
   }
   $('#abrir-ao-vivo').addEventListener('click', () => mostrarVista(E.vista === 'ao-vivo' ? 'casos' : 'ao-vivo'));
+  $('#abrir-inicio').addEventListener('click', () => mostrarVista('inicio'));
+  $('#abrir-metricas').addEventListener('click', () => mostrarVista(E.vista === 'metricas' ? 'casos' : 'metricas'));
+  $('#ir-para-metricas').addEventListener('click', () => mostrarVista('metricas'));
+  $('#ir-para-rodar').addEventListener('click', () => { mostrarVista('ao-vivo'); $('#execucao').scrollIntoView({block: 'start'}); });
   $('#abrir-ultimo').addEventListener('click', () => { if (E.ultimo) abrirCaso(E.ultimo); });
   $('#rodar-cenarios').addEventListener('click', () => mandarExecucao({acao: 'rodar', ...opcoesDaCorrida()}));
   for (const id of ['#selecao-da-corrida', '#desde-da-corrida', '#repeticoes']) {
@@ -1167,7 +1355,7 @@ async function iniciar() {
   });
   const {tid, aba, vista} = lerEndereco();
   if (tid) await abrirCaso(tid, aba);
-  if (vista === 'ao-vivo') mostrarVista('ao-vivo');
+  mostrarVista(vista);
 }
 
 iniciar();

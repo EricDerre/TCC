@@ -1,0 +1,82 @@
+{
+ "decisao": {
+  "commit_testado": "717f68c2",
+  "commit_atual": "35617a473461f2fab8dfef23a99ab5cab6cd14d9",
+  "arvore_suja": false,
+  "alterados": {
+   "alterados": 1034,
+   "fora_da_aplicacao": 1034,
+   "ignorados": 0,
+   "no_mapa": 0,
+   "fora_do_mapa": 0,
+   "na_aplicacao": 0
+  },
+  "arquivos": [],
+  "verbetes": [],
+  "completa_a_cada_dias": 7,
+  "modo": "completa",
+  "regras": [
+   "rodada_completa_periodica"
+  ],
+  "motivo": "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)",
+  "cenarios": [
+   "contrato-error_500",
+   "contrato-escala_ou_unidade_errada",
+   "contrato-field_missing",
+   "contrato-field_renamed",
+   "contrato-malformed_json",
+   "contrato-type_drift",
+   "localizador-front-admin-login",
+   "localizador-front-admin-produtos",
+   "localizador-front-busca",
+   "localizador-front-cliente-reserva"
+  ],
+  "deixados_de_fora": [],
+  "por_que": {
+   "contrato-error_500": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "contrato-escala_ou_unidade_errada": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "contrato-field_missing": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "contrato-field_renamed": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "contrato-malformed_json": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "contrato-type_drift": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "localizador-front-admin-login": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "localizador-front-admin-produtos": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "localizador-front-busca": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ],
+   "localizador-front-cliente-reserva": [
+    "nenhuma rodada completa está registrada: a seleção só vale entre duas rodadas completas (regra 2)"
+   ]
+  }
+ },
+ "rodados": [
+  "contrato-error_500",
+  "contrato-escala_ou_unidade_errada",
+  "contrato-field_missing",
+  "contrato-field_renamed",
+  "contrato-malformed_json",
+  "contrato-type_drift",
+  "localizador-front-admin-login",
+  "localizador-front-admin-produtos",
+  "localizador-front-busca",
+  "localizador-front-cliente-reserva"
+ ],
+ "execucoes": 10,
+ "gravado_em": "2026-11-25T22:42:02"
+}

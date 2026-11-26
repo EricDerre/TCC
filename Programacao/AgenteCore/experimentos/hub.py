@@ -12,21 +12,34 @@
 # corrida em andamento (`/api/ao-vivo`) e a execução dos cenários (`GET` e `POST /api/execucao`); são nove endereços, e o resto continua 404.
 # ! Motivo: decisão 93 (trace na falha e "Cérebro ao vivo") e plano, seção 3.6, item 7 (os botões). O trace é o único arquivo que o servidor
 # entrega do disco, e o caminho dele é montado pelo acervo a partir da trilha achada, nunca do texto do pedido.
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) o hub passa a ser a central aberta pelo `Cobaia.exe`. Entram: a opção
+# `--pelo-exe` (o `run.py` a passa ao subir o hub junto com o site e a API); dois endereços novos, `/api/central` (o estado do site, da API,
+# do Ollama e do próprio hub, e os atalhos) e `/api/metricas` (as métricas por corrida e o resultado da Fase 5, de `hub_dados.metricas`); e,
+# com `--pelo-exe`, o botão de rodar os cenários liberado, chamando o `executar_fase4.py` direto com `--cobaias-no-ar`, depois de conferir
+# que o Ollama responde. São onze endereços, e o resto continua 404.
+# ! Motivo: o Eric pediu que o hub seja a central de tudo, aberta quando o `.exe` roda, de onde se rodam os testes e se veem as métricas.
+# Quem dá dois cliques no `.exe` não passa `--permitir-execucao`, e o `rodar_fase4.ps1` não serve a esse caminho: ele roda antes as baterias
+# com banco, confere a memória livre e sobe e derruba o site, a API e o banco, que o `.exe` já deixou no ar. `python hub.py` sozinho continua
+# só mostrando o comando para copiar (decisão 157).
 """O hub central (Pós-Fase 4, pacote Q6). Uso (em Programacao/AgenteCore/experimentos):
   python hub.py                       # sobe em http://127.0.0.1:8765 com as corridas 18d, 21d, 24 e 28b e abre o navegador
   python hub.py --porta 8770 --sem-abrir
   python hub.py --corridas fase5_agente_b,fase4_ineditos
   python hub.py --conferir            # monta todos os casos sem subir servidor e diz quantos são
+  python hub.py --pelo-exe            # como o Cobaia.exe o abre: o site e a API já estão no ar, e o botão de rodar os cenários fica liberado
 As revisões ficam em resultados_alvo/hub/revisoes/<caso>.jsonl. Nada é escrito nas pastas das corridas.
 """
 from __future__ import annotations
 
 import argparse
+import concurrent.futures
 import contextlib
 import datetime as dt
 import json
 import os
 import re
+import shutil
+import socket
 import subprocess
 import sys
 import threading
@@ -52,6 +65,7 @@ LIMITE_DO_CORPO = 1_000_000
 POLITICA = "default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
 BLOCOS_DO_RELATORIO = tuple(f"b{n}-{hp.slug(nome)}" for n, nome in enumerate(grr.CAMPOS_55 + grr.SECOES_MANTIDAS_V3, start=1))
 CAMPOS_DO_RASCUNHO = ("texto", "ancora", "rotulo", "bloqueante", "conversa")
+PAINEL_PUBLICADO = "https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN"     # o painel do projeto, o mesmo endereço que o README cita
 
 
 class Recusa(Exception):
@@ -115,12 +129,100 @@ def comando_padrao(saida: str, opcoes: dict) -> list[str]:
     return comando
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) o que a corrida lançada pelo hub aberto pelo `Cobaia.exe` usa:
+# `comando_direto` (o `executar_fase4.py` chamado pelo mesmo Python que roda o hub, no modo `cenarios`, com `--cobaias-no-ar`),
+# `pasta_dos_resultados` (o valor de `RESULTADOS_DIR` que a corrida recebe), `porta_responde` (a sonda dos serviços) e
+# `garantir_ollama_no_ar` (inicia o servidor do Ollama se a porta 11434 não responde e espera até 30 s).
+# ! Motivo: o `.exe` já deixou o site (8080), a API (8000) e o banco no ar, e o `rodar_fase4.ps1` subiria tudo de novo nas mesmas portas e
+# desligaria o banco no fim. `--casos 10` deixa a corrida marcada como parcial nas condições gravadas, como a corrida curta do pacote Q7:
+# ela é uso do produto, não medida do TCC, e não pode ser confundida com uma noite completa. O Ollama é conferido aqui porque o lançador
+# `.ps1`, que fazia essa conferência, não participa deste caminho; sem ele no ar a corrida morreria no primeiro diagnóstico, e a página só
+# mostraria o fim do log. A sonda só abre e fecha a conexão: não faz pedido nenhum ao site, à API ou ao modelo.
+PORTA_DO_SITE, PORTA_DA_API, PORTA_DO_OLLAMA = 8080, 8000, 11434
+ESPERA_DO_OLLAMA_S = 30
+CENARIOS_DA_CORRIDA_DO_HUB = 10
+
+
+def comando_direto(saida: str, opcoes: dict, python: str | None = None) -> list[str]:
+    comando = [python or sys.executable, "executar_fase4.py", "--modo", "cenarios", "--saida", saida, "--casos", str(CENARIOS_DA_CORRIDA_DO_HUB),
+               "--repeticoes", str(opcoes["repeticoes"]), "--cobaias-no-ar"]
+    if opcoes.get("selecao") == "git":
+        comando += ["--selecao", "git"]
+        if opcoes.get("desde"):
+            comando += ["--desde", opcoes["desde"]]
+    return comando
+
+
+def pasta_dos_resultados(raiz: Path) -> str:
+    """O `RESULTADOS_DIR` da corrida: o nome da pasta quando ela fica em `experimentos/` (como o `rodar_fase4.ps1` manda), ou o caminho inteiro."""
+    raiz = Path(raiz)
+    return raiz.name if raiz.resolve().parent == EXP else str(raiz)
+
+
+def porta_responde(porta: int, espera_s: float = 0.5) -> bool:
+    """Diz se alguma coisa aceita conexão nesta porta desta máquina."""
+    for nome in ("127.0.0.1", "::1"):
+        try:
+            with socket.create_connection((nome, porta), timeout=espera_s):
+                return True
+        except OSError:
+            continue
+    return False
+
+
+def _achar_ollama() -> str | None:
+    """O programa do Ollama: o do PATH, ou o que o instalador do projeto sabe achar (`_env_common.find_ollama`, na raiz do repositório)."""
+    achado = shutil.which("ollama")
+    if achado:
+        return achado
+    raiz = str(EXP.parent.parent.parent)
+    if raiz not in sys.path:
+        sys.path.append(raiz)
+    try:
+        import _env_common
+        return _env_common.find_ollama()
+    except Exception:  # noqa: BLE001 - sem o módulo do instalador (ou com ele quebrado), o hub só diz que não achou o Ollama
+        return None
+
+
+def _iniciar_ollama(programa: str) -> None:
+    escondido = {"creationflags": subprocess.CREATE_NO_WINDOW} if os.name == "nt" else {"start_new_session": True}
+    subprocess.Popen([programa, "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, **escondido)
+
+
+def garantir_ollama_no_ar(espera_s: float = ESPERA_DO_OLLAMA_S, sonda=porta_responde, achar=_achar_ollama, lancar=_iniciar_ollama, pausa_s: float = 0.5) -> str | None:
+    """Deixa o Ollama no ar antes da corrida: devolve None quando ele responde, ou a frase que a página mostra quando não deu."""
+    if sonda(PORTA_DO_OLLAMA):
+        return None
+    programa = achar()
+    if not programa:
+        return "o Ollama não foi encontrado nesta máquina: rode o instalador (o Cobaia.exe instala o Ollama e o modelo) e tente de novo"
+    try:
+        lancar(programa)
+    except OSError as e:
+        return f"o Ollama não pôde ser iniciado ({e}): abra o Ollama e tente de novo"
+    limite = time.monotonic() + espera_s
+    while time.monotonic() < limite:
+        if sonda(PORTA_DO_OLLAMA):
+            return None
+        time.sleep(pausa_s)
+    return f"o Ollama não respondeu em {espera_s:g} s depois de iniciado: abra o Ollama e tente de novo"
+
+
 class Execucao:
     """A corrida de cenários lançada pelo hub: uma por vez, só com permissão."""
 
-    def __init__(self, raiz: Path, permitida: bool = False, comando_da_corrida=None) -> None:
-        self.raiz, self.permitida = Path(raiz), bool(permitida)
-        self._comando = comando_da_corrida or comando_padrao
+    # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `pelo_exe` libera o botão sem `--permitir-execucao`, troca o comando
+    # padrão pelo `comando_direto` e faz `rodar` conferir o Ollama (`garantir_ollama`, trocável nos testes) antes de lançar; a corrida recebe
+    # `RESULTADOS_DIR` e `PYTHONUNBUFFERED` no ambiente, como o `rodar_fase4.ps1` dava.
+    # ! Motivo: é o caminho de quem abriu o hub pelo `Cobaia.exe` (ver o comentário de `comando_direto`). A conferência do Ollama fica fora
+    # da trava da execução: ela pode esperar até 30 s, e a página relê o estado da corrida a cada dois segundos.
+    def __init__(self, raiz: Path, permitida: bool = False, comando_da_corrida=None, pelo_exe: bool = False, garantir_ollama=None) -> None:
+        self.raiz, self.pelo_exe = Path(raiz), bool(pelo_exe)
+        self.permitida = bool(permitida) or self.pelo_exe
+        self._padrao = comando_direto if self.pelo_exe else comando_padrao
+        self._comando = comando_da_corrida or self._padrao
+        self._garantir_ollama = garantir_ollama or garantir_ollama_no_ar
         self._trava = threading.Lock()
         self._processo: subprocess.Popen | None = None
         self._arquivo_do_log = None
@@ -154,8 +256,8 @@ class Execucao:
             self._atualizar()
             u = self._ultima
             rodando = bool(u and u["codigo"] is None)
-            sugerido = " ".join(comando_padrao(self._nome_da_saida(), opcoes))
-            return {"permitida": self.permitida, "em_andamento": rodando, "terminou": bool(u and u["codigo"] is not None), "codigo": u["codigo"] if u else None,
+            sugerido = " ".join(self._padrao(self._nome_da_saida(), opcoes))
+            return {"permitida": self.permitida, "pelo_exe": self.pelo_exe, "em_andamento": rodando, "terminou": bool(u and u["codigo"] is not None), "codigo": u["codigo"] if u else None,
                     "saida": u["saida"] if u else None, "inicio": u["inicio"] if u else None, "fim": u["fim"] if u else None,
                     "parada_pelo_hub": bool(u and u["parada_pelo_hub"]), "comando": u["comando"] if u else sugerido, "comando_sugerido": sugerido,
                     "repeticoes": list(REPETICOES_PERMITIDAS), "selecoes": list(SELECOES), "log": self._log()}
@@ -165,10 +267,22 @@ class Execucao:
             raise Recusa(403, "o hub foi aberto sem --permitir-execucao: copie o comando e rode na sua janela, na pasta experimentos")
         opcoes = opcoes_da_corrida(repeticoes, selecao, desde)
         n = opcoes["repeticoes"]
-        with self._trava:
+
+        def recusar_se_rodando() -> None:
             self._atualizar()
             if self._ultima and self._ultima["codigo"] is None:
                 raise Recusa(409, f"a corrida {self._ultima['saida']} ainda está rodando: uma corrida por vez")
+
+        ambiente = {**os.environ, "PYTHONIOENCODING": "utf-8"}
+        if self.pelo_exe:
+            with self._trava:
+                recusar_se_rodando()
+            problema = self._garantir_ollama()
+            if problema:
+                raise Recusa(409, problema)
+            ambiente.update({"RESULTADOS_DIR": pasta_dos_resultados(self.raiz), "PYTHONUNBUFFERED": "1"})
+        with self._trava:
+            recusar_se_rodando()
             saida = self._nome_da_saida()
             while (self.raiz / saida).exists() or (self._ultima and self._ultima["saida"] == saida):
                 time.sleep(0.2)
@@ -178,9 +292,8 @@ class Execucao:
             pasta_dos_logs.mkdir(parents=True, exist_ok=True)
             arquivo = pasta_dos_logs / f"{saida}.log"
             self._arquivo_do_log = arquivo.open("wb")
-            self._processo = subprocess.Popen(comando, cwd=str(EXP), stdout=self._arquivo_do_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
-                                              env={**os.environ, "PYTHONIOENCODING": "utf-8"})
-            self._ultima = {"saida": saida, "comando": " ".join(comando) if self._comando is comando_padrao else "(lançador de teste)", "inicio": dt.datetime.now().isoformat(timespec="seconds"),
+            self._processo = subprocess.Popen(comando, cwd=str(EXP), stdout=self._arquivo_do_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, env=ambiente)
+            self._ultima = {"saida": saida, "comando": " ".join(comando) if self._comando is self._padrao else "(lançador de teste)", "inicio": dt.datetime.now().isoformat(timespec="seconds"),
                             "fim": None, "codigo": None, "parada_pelo_hub": False, "arquivo_do_log": str(arquivo), "repeticoes": n}
         return self.estado()
 
@@ -203,12 +316,31 @@ class Execucao:
 class Hub:
     """O que o servidor responde: o acervo das corridas e as revisões, juntos."""
 
-    def __init__(self, acervo: hd.Acervo, revisoes: hr.Revisoes, execucao: Execucao | None = None, selecao_git=None) -> None:
+    def __init__(self, acervo: hd.Acervo, revisoes: hr.Revisoes, execucao: Execucao | None = None, selecao_git=None, sonda=None, ollama_no_ar=None) -> None:
         self.acervo = acervo
         self.revisoes = revisoes
         self.execucao = execucao or Execucao(acervo.raiz)
         self.vivo = hd.AoVivo(acervo.raiz, leituras=acervo.leituras, calibracao=acervo.calibracao, limiares=acervo.limiares)
         self._selecao_git = selecao_git
+        self._sonda = sonda or porta_responde
+        self._ollama_no_ar = ollama_no_ar or (lambda: self._sonda(PORTA_DO_OLLAMA))
+
+    # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `central` é a tela "Início" do hub: diz se o site (porta 8080), a API
+    # (8000) e o Ollama (11434) respondem agora, dá os endereços do site, da documentação da API e do painel publicado, e diz quantos casos e
+    # corridas o hub tem e se o botão de rodar os cenários está liberado.
+    # ! Motivo: o Eric pediu o hub como central de tudo, aberta pelo `.exe`: é dela que se chega ao site e à API. As três sondas correm ao
+    # mesmo tempo porque, no Windows, uma porta fechada só é dada como fechada no fim do tempo de espera, e em fila a tela levaria segundos
+    # para aparecer. A sonda só abre e fecha a conexão. O endereço do painel é o do artefato publicado do projeto, o mesmo do README.
+    def central(self) -> dict:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as fila:
+            site, api, ollama = fila.submit(self._sonda, PORTA_DO_SITE), fila.submit(self._sonda, PORTA_DA_API), fila.submit(self._ollama_no_ar)
+            no_ar = {"site": bool(site.result()), "api": bool(api.result()), "ollama": bool(ollama.result()), "hub": True}
+        servicos = [{"id": "site", "nome": "Site de demonstração (CobaiaFront)", "url": f"http://localhost:{PORTA_DO_SITE}"},
+                    {"id": "api", "nome": "API do site (CobaiaAPI)", "url": f"http://localhost:{PORTA_DA_API}/docs"},
+                    {"id": "ollama", "nome": "Ollama, que roda o modelo do agente", "url": None},
+                    {"id": "hub", "nome": "Hub central", "url": None}]
+        return {"servicos": [{**s, "no_ar": no_ar[s["id"]]} for s in servicos], "painel": PAINEL_PUBLICADO, "pelo_exe": self.execucao.pelo_exe,
+                "execucao_permitida": self.execucao.permitida, "casos": len(self.acervo.indice()), "corridas": len(self.acervo.corridas())}
 
     # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) `selecao` devolve o que a seleção pelo Git rodaria agora: a decisão de
     # `impacto_git.decidir_para_a_corrida` para o diff do commit de partida (o `desde` pedido, ou o último commit testado do registro em
@@ -439,6 +571,10 @@ def _tratador(hub: Hub, falar: bool):
                     self._json(200, hub.caso((consulta.get("tid") or [""])[0]))
                 elif partes.path == "/api/ao-vivo":
                     self._json(200, hub.ao_vivo())
+                elif partes.path == "/api/central":
+                    self._json(200, hub.central())
+                elif partes.path == "/api/metricas":
+                    self._json(200, hd.metricas(hub.acervo))
                 elif partes.path == "/api/execucao":
                     um = lambda chave: (consulta.get(chave) or [None])[0]
                     try:
@@ -483,13 +619,16 @@ class Servidor(ThreadingHTTPServer):
 
 
 def criar_servidor(acervo: hd.Acervo, revisoes: hr.Revisoes, porta: int = PORTA_PADRAO, endereco: str = ENDERECO, falar: bool = False,
-                   permitir_execucao: bool = False, comando_da_corrida=None, selecao_git=None) -> ThreadingHTTPServer:
+                   permitir_execucao: bool = False, comando_da_corrida=None, selecao_git=None, pelo_exe: bool = False, garantir_ollama=None,
+                   sonda=None, ollama_no_ar=None) -> ThreadingHTTPServer:
     """O servidor do hub, pronto para `serve_forever()`; `porta=0` pede uma porta livre ao sistema. Só aceita escutar na própria máquina.
-    `permitir_execucao` libera o botão que lança a corrida de cenários; `comando_da_corrida(saida, opcoes)` troca o lançador e
-    `selecao_git(desde)` troca a leitura do Git (os dois, nos testes)."""
+    `permitir_execucao` libera o botão que lança a corrida de cenários; `pelo_exe` também libera, e faz a corrida usar o site e a API que
+    o `Cobaia.exe` já subiu. `comando_da_corrida(saida, opcoes)` troca o lançador, `selecao_git(desde)` troca a leitura do Git,
+    `garantir_ollama()` troca a conferência do Ollama e `sonda(porta)` e `ollama_no_ar()` trocam a leitura dos serviços (todos, nos testes)."""
     if endereco != ENDERECO:
         raise ValueError(f"o hub só escuta em {ENDERECO}: ele grava em disco e não tem senha")
-    return Servidor((endereco, porta), _tratador(Hub(acervo, revisoes, Execucao(acervo.raiz, permitir_execucao, comando_da_corrida), selecao_git), falar))
+    execucao = Execucao(acervo.raiz, permitir_execucao, comando_da_corrida, pelo_exe=pelo_exe, garantir_ollama=garantir_ollama)
+    return Servidor((endereco, porta), _tratador(Hub(acervo, revisoes, execucao, selecao_git, sonda=sonda, ollama_no_ar=ollama_no_ar), falar))
 
 
 def conferir(acervo: hd.Acervo) -> int:
@@ -551,7 +690,8 @@ def resumo(acervo: hd.Acervo) -> tuple[dict, str]:
     return dado, "\n".join(linhas)
 
 
-def main(argv: list[str] | None = None) -> int:
+def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
+    """As opções da linha de comando do hub."""
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--porta", type=int, default=PORTA_PADRAO, help=f"porta em {ENDERECO} (padrão {PORTA_PADRAO}; as cobaias usam 8080 e 8000)")
     ap.add_argument("--corridas", default=None, help="pastas de corrida em resultados_alvo/, separadas por vírgula (padrão: 18d, 21d, 24 e 28b)")
@@ -564,10 +704,17 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--check", action="store_true", help="com --resumo: regera e compara com o gravado, sem gravar")
     ap.add_argument("--permitir-execucao", action="store_true", help="libera o botão que lança a corrida de cenários (rodar_fase4.ps1) a partir da página; "
                                                                       "sem a opção, a página só mostra o comando para copiar")
-    args = ap.parse_args(argv)
+    ap.add_argument("--pelo-exe", action="store_true", help="como o Cobaia.exe abre o hub: o site, a API e o banco já estão no ar, e o botão de rodar os cenários "
+                                                             "fica liberado e chama o executar_fase4.py com --cobaias-no-ar")
+    return ap.parse_args(argv)
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = argumentos(argv)
     raiz = Path(args.resultados)
     corridas = tuple(c.strip() for c in args.corridas.split(",") if c.strip()) if args.corridas else None
-    acervo = hd.Acervo(raiz, corridas=corridas)
+    # quem pede as corridas pelo nome, ou o resumo gravado do pacote Q6, fala só delas; sem isso o hub também mostra as corridas lançadas pelo botão
+    acervo = hd.Acervo(raiz, corridas=corridas, descobrir=corridas is None and not args.resumo)
     if args.conferir:
         return conferir(acervo)
     if args.resumo:
@@ -575,10 +722,12 @@ def main(argv: list[str] | None = None) -> int:
         return pf.fechar(NOME_DO_RESUMO, dado, md, PREFIXO_DO_RESUMO, check=args.check, pasta=raiz / "fase4",
                          doc=EXP.parent.parent.parent / "Documentacao" / "memorial" / "3-resultados-e-analises" / "fase-4-relatorio.md")
     revisoes = hr.Revisoes(Path(args.revisoes) if args.revisoes else raiz / "hub" / "revisoes")
-    servidor = criar_servidor(acervo, revisoes, porta=args.porta, falar=args.falar, permitir_execucao=args.permitir_execucao)
+    servidor = criar_servidor(acervo, revisoes, porta=args.porta, falar=args.falar, permitir_execucao=args.permitir_execucao, pelo_exe=args.pelo_exe)
     url = f"http://{ENDERECO}:{servidor.server_address[1]}/"
-    print(f"Hub no ar em {url} ({len(acervo.indice())} casos). As revisões ficam em {revisoes.pasta}. Ctrl+C encerra.")
-    print("O botão de rodar os cenários está liberado." if args.permitir_execucao else "O botão de rodar os cenários mostra o comando para copiar (abra com --permitir-execucao para ele lançar a corrida).")
+    print(f"Hub no ar em {url} ({len(acervo.indice())} casos). As revisões ficam em {revisoes.pasta}. Ctrl+C encerra.", flush=True)
+    print("O botão de rodar os cenários está liberado e usa o site e a API que já estão no ar." if args.pelo_exe
+          else "O botão de rodar os cenários está liberado." if args.permitir_execucao
+          else "O botão de rodar os cenários mostra o comando para copiar (abra com --permitir-execucao para ele lançar a corrida).", flush=True)
     if not args.sem_abrir:
         with contextlib.suppress(Exception):
             webbrowser.open(url)

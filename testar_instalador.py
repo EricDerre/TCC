@@ -2926,19 +2926,26 @@ def teste_fixa_run_wait_and_cleanup():
         _destrocar(original)
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) o teste que fixa o `Cobaia.main` passa a esperar o hub: depois do site e da
+# API o launcher chama `run.start_hub`, espera a porta 8765 e abre uma aba só, no hub; `run.start_hub` e `run.wait_for_port` entram na troca.
+# ! Motivo: o Eric pediu que o hub seja a central aberta pelo `.exe`, e o teste fixava o comportamento anterior (abrir o site e a
+# documentação da API). Sem a troca de `run.start_hub`, o teste subiria um hub de verdade na porta 8765. O caminho em que o hub não sobe (o
+# launcher volta a abrir o site e a API) está em `Programacao/AgenteCore/experimentos/testar_central.py`.
 def teste_fixa_cobaia_py_instala_sobe_e_abre():
     import Cobaia
     chamadas: list = []
     original = _trocar([(install, "main", lambda: chamadas.append(("install.main",))),
                         (run, "start_services", lambda: chamadas.append(("start_services",)) or ("site", "api")),
+                        (run, "start_hub", lambda: chamadas.append(("start_hub",)) or "hub"),
                         (run, "wait_until_ready", lambda *a, **k: chamadas.append(("wait_until_ready",)) or True),
+                        (run, "wait_for_port", lambda porta, **k: chamadas.append(("wait_for_port", porta)) or True),
                         (Cobaia.webbrowser, "open", lambda url, *a, **k: chamadas.append(("open", url))),
-                        (run, "wait_and_cleanup", lambda f, a: chamadas.append(("wait_and_cleanup", f, a)))])
+                        (run, "wait_and_cleanup", lambda f, a, *outros: chamadas.append(("wait_and_cleanup", f, a, *outros)))])
     try:
         Cobaia.main()
-        assert chamadas == [("install.main",), ("start_services",), ("wait_until_ready",),
-                            ("open", "http://localhost:8080"), ("open", "http://localhost:8000/docs"),
-                            ("wait_and_cleanup", "site", "api")], chamadas
+        assert chamadas == [("install.main",), ("start_services",), ("start_hub",), ("wait_until_ready",), ("wait_for_port", 8765),
+                            ("open", "http://127.0.0.1:8765/"),
+                            ("wait_and_cleanup", "site", "api", "hub")], chamadas
     finally:
         _destrocar(original)
 

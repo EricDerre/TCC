@@ -147,10 +147,24 @@ def teste_relatorio_sem_travessao_seta_e_marcador_de_conferir() -> None:
     assert "[conferir]" not in RELATORIO.read_text(encoding="utf-8")
 
 
-def teste_relatorio_tem_a_tag_e_o_paragrafo_a_preencher_da_ficha_99() -> None:
+# ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) o teste deixa de exigir a marca de espera da ficha 99 e passa a exigir
+# o parágrafo da corrida curta já lida: sem marca de espera no arquivo, com a pasta `fase4_fumaca_q7` citada e dizendo que a seleção
+# parcial continua sem prova; e a seção do hub tem de contar a central aberta pelo `Cobaia.exe` com o limite do botão.
+# ! Motivo: a ficha 99 foi fechada em 25/11/2026 com a corrida curta rodada e o hub virou a central (ficha 109, decisão 170); o teste
+# antigo exigia a marca `A_PREENCHER` e falharia no relatório atualizado, e nada conferia que o relatório não dá como provado o que não
+# foi visto rodando (uma seleção parcial e o botão do hub lançando uma corrida com o modelo).
+def teste_relatorio_tem_a_tag_e_a_corrida_curta_da_ficha_99_lida() -> None:
     texto = RELATORIO.read_text(encoding="utf-8")
     assert "Alteração de IA - Revisar" in texto.split("\n\n", 1)[0] and "! Motivo:" in texto.split("\n\n", 1)[0]
-    assert texto.count("<!-- A_PREENCHER: ficha 99 -->") == 1
+    assert "A_PREENCHER" not in texto, "sobrou marca de espera no relatório"
+    paragrafos = texto.split("\n\n")
+    curta = [p for p in paragrafos if "**A corrida curta da ficha 99.**" in p]
+    assert len(curta) == 1, len(curta)
+    assert "fase4_fumaca_q7" in curta[0] and "seleção parcial" in curta[0] and "não tinha rodado" not in curta[0]
+    assert "a corrida com as cobaias está pendente" not in texto and "a corrida com o modelo ainda não rodou" not in texto
+    central = [p for p in paragrafos if "**O hub como central.**" in p]
+    assert len(central) == 1, len(central)
+    assert "Cobaia.exe" in central[0] and "decisão 170" in central[0] and "não foi visto lançando uma corrida com o modelo" in central[0]
 
 
 def teste_relatorio_nao_cita_integrante_nem_atribui_a_revisao_ao_eric() -> None:

@@ -4303,7 +4303,29 @@ def secao_progresso(taxas: dict | None, erro: dict | None, impacto: dict | None,
 # (de `hub.py --resumo`) e `conferencia_git.json` (de `impacto_git.py --conferir-historico`); dois gráficos pela paleta, cartões, "Como ler" e as tabelas recolhidas.
 # ! Motivo: a decisão 152 pôs os dois pacotes antes do texto final, e a regra do painel é uma aba por análise, lida dos arquivos gravados. O hub é uma página local,
 # que não cabe dentro do painel publicado; a aba diz o que ele junta, como abri-lo e o que foi e o que não foi provado.
-def secao_hub(hub: dict | None, conferencia: dict | None) -> tuple[dict, str]:
+# ! Alteração de IA - Revisar: (25/11/2026, noite; ficha 99) `_item_da_corrida_curta` escreve o item de leitura da corrida curta na aba "Hub e Git".
+# ! Motivo: a frase precisa dos números da corrida (cenários, traces, execuções com sucesso) e da decisão da seleção, todos lidos da pasta
+# `resultados_alvo/fase4_fumaca_q7/` por `gerar_dashboard.fumaca_q7`; nenhum é digitado aqui.
+def _item_da_corrida_curta(fumaca: dict) -> str:
+    """O item de leitura da corrida curta dos pacotes Q6 e Q7, com os números lidos da pasta dela."""
+    dia = "/".join(reversed(fumaca["data"].split("-")))
+    decidiu = {"completa": "mandou rodar tudo, porque nenhuma rodada completa estava registrada", "selecionada": "escolheu parte dos cenários",
+               "nada": "não mandou rodar nada"}.get(fumaca["modo"], fumaca["modo"])
+    # sem a pasta `traces/` nesta cópia do repositório (os arquivos são grandes e podem ficar fora do git), a frase não traz a contagem
+    onde = f"em {fumaca['traces']} cenários, aqueles em que o roteiro falhou" if fumaca.get("traces") is not None else "nos cenários em que o roteiro falhou"
+    return ("<strong>O que a corrida curta provou, e o que continua sem prova.</strong> "
+            f"Em {dia} uma corrida curta com o modelo rodou {fumaca['cenarios']} cenários, uma vez cada. A seleção pelo Git decidiu a corrida: {decidiu}. O trace do Playwright foi gravado "
+            f"{onde}, e não nos que foram detectados só pela resposta da API. O agente chegou ao resultado em "
+            f"{fumaca['task_success']} de {fumaca['execucoes']} execuções, o que não vale como medida, porque o trace estava ligado. Continua sem prova a seleção escolhendo só parte dos "
+            "cenários: nenhuma seleção parcial rodou de verdade, porque desde a última mudança nas cobaias nada do mapa foi tocado.")
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, noite; fichas 99 e 109) a aba ganhou o parâmetro `fumaca` (a corrida curta dos pacotes Q6 e Q7, de
+# `gerar_dashboard.fumaca_q7`) e dois textos: o item do que foi provado passa a contar a corrida curta quando ela existe, e entra o item do hub como central
+# aberta pelo `Cobaia.exe`; o item dos botões passa a dizer que o botão de rodar também funciona quando o hub é aberto pelo launcher.
+# ! Motivo: a corrida curta rodou em 25/11/2026 (ficha 99, fechada), e a aba ainda dizia que ela ia rodar; e o grupo pediu o hub como central de tudo, aberta
+# pelo `.exe` (decisão 170). A frase da corrida curta só usa números lidos da pasta dela; sem a pasta, a aba diz o que falta, como antes.
+def secao_hub(hub: dict | None, conferencia: dict | None, fumaca: dict | None = None) -> tuple[dict, str]:
     titulo = ("O analista consegue rever um diagnóstico do agente como se revê uma mudança de código, e a corrida consegue escolher os cenários pelo que mudou? "
               "O hub central, que junta o relatório, a evidência, a árvore de decisão e a trilha de cada caso numa página de revisão, e a seleção pelo Git ligada "
               "ao executor, conferida contra a rodada completa.")
@@ -4344,12 +4366,17 @@ def secao_hub(hub: dict | None, conferencia: dict | None) -> tuple[dict, str]:
          "em nome do agente, e o veredito nunca vem escolhido."),
         ("<strong>Os três itens que a Fase 4 tinha deixado para a interface entraram.</strong> O trace do Playwright só na falha (<code>--trace-na-falha</code>, desligado por padrão, porque gravar a tela "
          "a cada passo muda o tempo do roteiro), a vista da corrida ao vivo, com a barra de progresso e o último diagnóstico, e o explorador da trilha de cada caso. O botão que lança a corrida só "
-         "funciona quando o hub é aberto com <code>--permitir-execucao</code>; sem isso a página mostra o comando para copiar."),
+         "funciona quando o hub é aberto com <code>--permitir-execucao</code> ou pelo <code>Cobaia.exe</code>; sem isso a página mostra o comando para copiar."),
+        ("<strong>O hub é também a central aberta pelo <code>Cobaia.exe</code>.</strong> Desde 25/11/2026 o launcher sobe o hub junto com o site e a API e abre o navegador nele. A primeira tela diz "
+         "o que está no ar e leva ao site, à API e a este painel; a vista de métricas mostra, por corrida, as execuções, o Task Success e o tempo de reparo, lidos dos registros gravados; e o botão de "
+         "rodar os dez cenários usa o site e a API que o launcher já subiu. A corrida lançada dali é uso do produto, não medida. Esse botão está coberto por teste sem o modelo; com o modelo, ele "
+         "ainda não rodou."),
         (f"<strong>A seleção pelo Git passou a decidir a corrida.</strong> Com <code>--selecao git</code>, o executor roda só os cenários atingidos pelo que mudou nas cobaias desde o último commit "
          "testado, roda tudo quando um arquivo da aplicação está fora do mapa ou quando a última rodada completa passou do prazo, e grava o que deixou de fora. Na conta sobre o histórico, "
          f"{r['pares_que_rodam_tudo']} de {r['pares']} mudanças rodam tudo, e {r['pares_com_falha_perdida']} deixariam de fora o cenário que falhou na {rotulo_comp} "
          f"({comp['task_success']} de {comp['execucoes']} execuções com sucesso nessa rodada)."),
-        ("<strong>O que ainda não foi provado.</strong> A conta acima é retrospectiva: nenhuma seleção parcial rodou de verdade, porque desde a última mudança nas cobaias nada do mapa foi tocado. "
+        (_item_da_corrida_curta(fumaca) if fumaca else
+         "<strong>O que ainda não foi provado.</strong> A conta acima é retrospectiva: nenhuma seleção parcial rodou de verdade, porque desde a última mudança nas cobaias nada do mapa foi tocado. "
          "O trace foi provado numa página local que falha de propósito; a prova com as cobaias e o modelo é uma corrida curta, que fica para a máquina livre."),
     ]
     dados_js = {"corridas": {"rotulos": [c["rotulo"] for c in corridas], "casos": [c["casos"] for c in corridas]},
@@ -4369,7 +4396,8 @@ def secao_hub(hub: dict | None, conferencia: dict | None) -> tuple[dict, str]:
 {leitura(itens_leitura)}
 {fontes(["<code>resultados_alvo/fase4/hub.json</code> (<code>hub.py --resumo</code>, com <code>--check</code>)", "<code>conferencia_git.json</code> (<code>impacto_git.py --conferir-historico</code>)",
          "<code>experimentos/hub.py</code>, <code>hub_dados.py</code>, <code>hub_revisao.py</code>, <code>hub_pagina.py</code> e <code>impacto_git.py</code>",
-         "plano aprovado da Pós-Fase 4, seções 3.6 e 3.7 (pacotes Q6 e Q7); decisões 93, 152 e 157", "levantamento §6.15.1 (revisão no estilo de pull request) e §6.15.5 (seleção pelo diff)",
+         "<code>resultados_alvo/fase4_fumaca_q7/</code> (a corrida curta: <code>impacto_git.json</code>, <code>cenarios.jsonl</code> e <code>traces/</code>)",
+         "plano aprovado da Pós-Fase 4, seções 3.6 e 3.7 (pacotes Q6 e Q7); decisões 93, 152, 157, 163 e 170", "levantamento §6.15.1 (revisão no estilo de pull request) e §6.15.5 (seleção pelo diff)",
          "<code>5-metodo-e-ferramental/estudo-visual-explainer-para-o-hub.md</code>"])}
 </section>"""
     return dados_js, html_
@@ -6120,7 +6148,7 @@ def montar(ctx: dict) -> tuple[dict, str]:
     d, h = secao_progresso(ctx.get("taxas_progresso"), ctx.get("erro_progresso"), ctx.get("impacto_git"), ctx.get("fumaca_progresso"))
     partes.append(("progresso", d, h))
     # a aba do hub e da seleção pelo Git existe sempre (o mapa de navegação a lista); sem hub.json e conferencia_git.json ela mostra o estado vazio
-    d, h = secao_hub(ctx.get("hub"), ctx.get("conferencia_git"))
+    d, h = secao_hub(ctx.get("hub"), ctx.get("conferencia_git"), ctx.get("fumaca_q7"))
     partes.append(("hub", d, h))
     # a aba da revisão humana existe sempre (o mapa de navegação a lista); sem leitura_revisao_v3.json ela mostra o estado vazio
     d, h = secao_revisao_v3(ctx.get("revisao_v3"), ctx.get("revisao_trilha"))
