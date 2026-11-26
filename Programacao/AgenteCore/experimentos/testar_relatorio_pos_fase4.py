@@ -164,7 +164,18 @@ def teste_relatorio_tem_a_tag_e_a_corrida_curta_da_ficha_99_lida() -> None:
     assert "a corrida com as cobaias está pendente" not in texto and "a corrida com o modelo ainda não rodou" not in texto
     central = [p for p in paragrafos if "**O hub como central.**" in p]
     assert len(central) == 1, len(central)
-    assert "Cobaia.exe" in central[0] and "decisão 170" in central[0] and "não foi visto lançando uma corrida com o modelo" in central[0]
+    assert "Cobaia.exe" in central[0] and "decisão 170" in central[0]
+    # ! Alteração de IA - Revisar: (26/11/2026, tarde, Pós-Fase 4, pacote Q8) o parágrafo da central tem de citar o registro da prova do
+    # botão e dizer que ela é uso do produto; a frase antiga, do botão ainda não visto rodando, não pode sobrar; e o relatório tem de ter
+    # o parágrafo do molde visual, com as decisões 175 e 176 e dizendo que as corridas de medida não gravam a hora de cada etapa.
+    # ! Motivo: o botão do hub lançou duas corridas com o modelo em 26/11/2026 (`resultados_alvo/fase4/botao_do_hub.json`), e o hub foi
+    # refeito em diagramas; o teste exigia a frase "não foi visto lançando uma corrida com o modelo", que deixou de ser verdade, e nada
+    # impedia o relatório de dar o tempo das seis etapas como medida do TCC.
+    assert "botao_do_hub" in central[0] and "uso do produto" in central[0]
+    assert "não foi visto lançando uma corrida com o modelo" not in texto and "não foi provado numa corrida com o modelo" not in texto
+    molde = [p for p in paragrafos if "**O molde visual.**" in p]
+    assert len(molde) == 1, len(molde)
+    assert "decisão 175" in molde[0] and "decisão 176" in molde[0] and "corridas de medida" in molde[0] and "não é resultado" in molde[0]
 
 
 def teste_relatorio_nao_cita_integrante_nem_atribui_a_revisao_ao_eric() -> None:

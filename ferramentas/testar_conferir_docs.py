@@ -6,6 +6,7 @@
 # (`sem tag de IA`) para todas as sessões do projeto. Pôr a tag dentro desses arquivos mudaria a evidência; o Eric decidiu em 18/11/2026 que a
 # saída capturada fica coberta pela tag do `celula.json` da pasta. Sem teste, a dispensa poderia engolir arquivo que deve continuar cobrado.
 """Testes de conferir_docs.py. Uso: python ferramentas/testar_conferir_docs.py"""
+import json
 import shutil
 import sys
 import tempfile
@@ -51,6 +52,38 @@ class TesteEvidenciaDeCelula(unittest.TestCase):
         self.assertFalse(cd.evidencia_de_celula(arquivo), "sem celula.json na pasta da rodada")
         self._grava("celula.json", '{"id": "L-U2404"}')
         self.assertFalse(cd.evidencia_de_celula(arquivo), "celula.json sem a tag")
+
+    def teste_copia_de_terceiros_fica_coberta_pelo_registro_da_pasta(self):
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 116) teste novo, escrito antes do código: a cópia de uma biblioteca de terceiros, guardada numa pasta
+        # `terceiros/` ao lado de um `terceiros.json` com a tag, o motivo e a ficha do arquivo, não é cobrada por tag; o registro continua cobrado.
+        # ! Motivo: a biblioteca de gráficos do painel entrou no repositório como foi baixada; pôr a tag dentro dela mudaria o arquivo e o código de integridade
+        # deixaria de bater. Fora dessa pasta, sem o registro, com o registro sem a tag ou com o arquivo fora da lista, nada é dispensado.
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            pasta = Path(tmp) / "ferramentas" / "terceiros"
+            pasta.mkdir(parents=True)
+            copia, registro = pasta / "biblioteca.js", pasta / "terceiros.json"
+            copia.write_text("var x = 1;", encoding="utf-8")
+            self.assertFalse(cd.copia_de_terceiros(copia), "sem o registro, a cópia continua cobrada")
+            registro.write_text(json.dumps({"arquivos": {"biblioteca.js": {"sha256": "x"}}}), encoding="utf-8")
+            self.assertFalse(cd.copia_de_terceiros(copia), "registro sem a tag e o motivo não dispensa nada")
+            registro.write_text(json.dumps({"tag_ia": {"alteracao": "! Alteração de IA - Revisar: registro", "motivo": "! Motivo: teste"},
+                                            "arquivos": {"biblioteca.js": {"sha256": "x"}}}, ensure_ascii=False), encoding="utf-8")
+            self.assertTrue(cd.copia_de_terceiros(copia))
+            self.assertFalse(cd.copia_de_terceiros(registro), "o registro leva a tag e continua cobrado")
+            outro = pasta / "outro.js"
+            outro.write_text("var y = 2;", encoding="utf-8")
+            self.assertFalse(cd.copia_de_terceiros(outro), "arquivo que o registro não lista continua cobrado")
+            fora = Path(tmp) / "ferramentas" / "biblioteca.js"
+            fora.write_text("var x = 1;", encoding="utf-8")
+            self.assertFalse(cd.copia_de_terceiros(fora), "fora da pasta `terceiros`, nada muda")
+            raiz_de_antes = cd.RAIZ
+            try:                    # a conferência diz o caminho de cada falha a partir da raiz do repositório; aqui a raiz é a pasta do teste
+                cd.RAIZ = Path(tmp)
+                self.assertEqual(cd.conferir_tags([copia]), [], "a cópia listada não vira falha de tag")
+                self.assertEqual(len(cd.conferir_tags([outro])), 1, "a que não está listada vira")
+            finally:
+                cd.RAIZ = raiz_de_antes
 
     def teste_fora_de_uma_pasta_de_rodada_nada_muda(self):
         outra = self.raiz / "Documentacao" / "memorial" / "celulas" / "x" / "y"

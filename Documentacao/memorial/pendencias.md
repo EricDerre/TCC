@@ -1699,6 +1699,70 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). Não mexe em arquivo commitado, não deixa dois arquivos com o mesmo número, e a ordem das versões continua contando a história: a 4 trouxe a seção 1.1, e a 5 junta tudo.
 - **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 174): "Versão 5 (Recomendado)". O Word e o PDF finais saem como `TCC_v5_<data>.docx` e `.pdf`; o `TCC_v4_20261105.docx` do coautor fica como está, e o roadmap diz que o conteúdo dele está na versão 5.
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026) o campo Decisão da ficha 114 passou a trazer as duas respostas do Eric, uma em cada quadro.
+     ! Motivo: a ficha foi perguntada em duas sessões; numa ele escolheu a opção (a) e na outra disse que não tinha preferência. O campo dizia só a primeira. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026) a ficha 114 foi fechada pela opção (a), com a resposta do Eric e o nome da opção do executor.
+     ! Motivo: sem o fechamento, a ficha continuaria aberta no painel e a opção nova do executor não teria a decisão ao lado. -->
+<!-- ! Alteração de IA - Revisar: bloco novo (26/11/2026) com as fichas 113 e 114: o molde visual do hub, pedido pelo Eric depois de testar a página (gravada já fechada), e a pergunta que o molde deixou aberta, se o agente passa a gravar a hora de cada etapa.
+     ! Motivo: o pedido muda a página inteira do hub e cria um arquivo novo (`hub_molde.py`); e o diagrama mostrou que quatro das seis etapas não têm tempo gravado, o que só o Eric decide como resolver, porque gravar mexe no caminho do agente medido. -->
+## Abertas pelo molde visual do hub (26/11/2026)
+
+### 113. O molde visual do hub: diagramas no lugar do texto
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O Eric testou o hub em 26/11/2026 e pediu um molde visual novo. Nas palavras dele: "tem muita informação na tela e não está facil o entendimento do que aparece ali (como os campos da esquerda que não têm uma explicação do que são e uma barra de rolagem quase infinita)"; a árvore de decisão "ser apenas um texto corrido cansa a leitura rapidamente"; "acho interessante criarmos um diagrama interativo que mostra justamente o processo rodando dentro dele, incluindo o tempo que passou em cada um e os resultados (para ver os resultados, fazer a mesma ideia do 'zoom' no card, mostrando as especificações e dados especificos daquela parte, mas também de uma maneira 'simplificada' para um entendimento visual)"; "devemos mostrar gráficos e árvores visuais / 'rede de neuronios' sempre de maneira visual, pois por escrito é muito denso"; "isso tudo deve ser gerado por código dentro da máquina e o diagrama tem que ser em tempo real". Ele mandou seis imagens: cinco de terceiros, só como referência da ideia, e a figura do próprio projeto (`Documentacao/figuras/como-o-agente-trabalha.png`), sobre a qual quis o diagrama.
+- **Por que importa:** O hub é o que a banca vai ver. A página listava todos os diagnósticos numa coluna só, sem dizer o que era cada campo, e a árvore de decisão era texto corrido.
+- **Opções:**
+  - (a) Construir o molde com o que a corrida já grava, sem mudar o agente, e mostrar para ele validar e melhorar.
+  - (b) Desenhar o molde em rodadas de aprovação antes de construir.
+- **Recomendação:** (a), que é o que ele pediu.
+- **Decisão:** (a), pelo Eric em 26/11/2026, pela sessão principal (decisão 175): "Vamos fazer esse molde com o que eu passei e depois vou validando e melhorando". Feito no mesmo dia, com os testes escritos antes: a linha de produção de cada caso (as seis etapas da figura, as três saídas e a trilha, com o estado e o tempo gravado de cada uma, e o cartão que amplia ao clicar), no alto do caso e na vista "Corrida ao vivo", onde a etapa do modelo aparece acesa durante a inferência; a rede que liga o que o agente viu, os verbetes, as causas possíveis e o resultado, no lugar da árvore em texto, que fica recolhida; o desenho de como as peças se ligam, na tela "Início", com o que está no ar aceso; gráficos de barras na vista "Métricas", com a tabela recolhida; e a lista de casos em grupos por corrida, com quinze casos por vez e a legenda de cada campo. Tudo em SVG gerado pelo programa da página, sem biblioteca de fora e sem internet (`hub_molde.py`). O agente não mudou. O `Cobaia.exe` não precisa ser recompilado. As capturas `hub-de-revisao.png` e `hub-central-inicio.png`, usadas no documento do TCC, são de antes do molde.
+
+### 114. O agente passa a gravar a hora de cada etapa, para o diagrama mostrar o tempo das seis e acender a etapa em andamento?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O diagrama da linha de produção mostra o tempo de cada etapa com o que a corrida já grava. Têm tempo os passos do roteiro, a inferência do modelo (com a leitura do caso e a escrita da resposta) e a cura do localizador. A detecção da falha, a poda, a busca na biblioteca e a conferência aparecem como "sem tempo gravado": a trilha marca a hora do bloco em que os eventos foram gravados, e não a de cada etapa. Ao vivo, a única etapa que o diagrama acende é a do modelo, porque a corrida só regrava o arquivo de estado durante a inferência; fora dela, o diagrama diz que não sabe em que etapa a corrida está. Para ter o tempo das seis e a etapa acesa em tempo real, o executor (`executar_fase4.py`) e o diagnóstico (`diagnostico_ao_vivo.py`) teriam de gravar a hora no começo e no fim de cada etapa.
+- **Por que importa:** O pedido do molde fala em "o tempo que passou em cada um" e em "tempo real". Gravar a hora de cada etapa mexe no caminho do agente medido nas corridas 18d, 21d e 28b, e pela regra do projeto isso só entra desligado por padrão. As quatro etapas sem tempo são feitas em código, sem chamar o modelo.
+- **Opções:**
+  - (a) Gravar, por uma opção nova desligada por padrão, usada só nas corridas lançadas pelo botão do hub, que não são medida. As corridas de medida continuam como estão, e as corridas antigas continuam mostrando "sem tempo gravado".
+  - (b) Não gravar: o diagrama fica como está, com o tempo do roteiro, do modelo e da cura.
+  - (c) Gravar em todas as corridas daqui para a frente. Muda o caminho do agente medido, e uma medida nova só seria comparável às anteriores depois de conferida.
+- **Recomendação:** (a). Dá ao diagrama o tempo das seis etapas e a etapa acesa em tempo real nas corridas que a banca vai ver, sem tocar no que foi medido.
+- **Decisão:** (a), em 26/11/2026 (decisão 176). A ficha foi perguntada ao Eric em dois quadros, com as mesmas três opções: no da sessão do hub, pelo botão da pergunta, ele respondeu "Sim, só no botão (a)"; no da sessão principal, às 09:25, respondeu "[No preference]", sem preferência, e a opção recomendada foi seguida. As duas respostas dão a opção (a); se ele quiser outra depois, a decisão é revista. A opção do executor é `--etapas-ao-vivo`, desligada por padrão; o botão do hub a passa. As marcas ficam em `etapas_ao_vivo.jsonl`, na pasta da corrida.
+
+<!-- ! Alteração de IA - Revisar: (26/11/2026) a ficha 116 foi fechada pela opção (a), com as duas respostas do Eric, o que foi baixado e onde ficou o registro.
+     ! Motivo: sem o fechamento, a ficha continuaria aberta no painel, e o arquivo de terceiros que entrou em `ferramentas/terceiros/` não teria a decisão ao lado. -->
+<!-- ! Alteração de IA - Revisar: bloco novo (26/11/2026) com as fichas 115 e 116: o painel local aberto pelo hub, pedido pelo Eric ao aprovar o molde (gravada já fechada), e a pergunta que ficou, se os gráficos do painel devem funcionar sem internet.
+     ! Motivo: o pedido troca o endereço de um botão do hub e mexe no gerador do painel; e o teste sem internet mostrou que o painel dependia de uma biblioteca baixada na hora, o que só o Eric decide como resolver, porque a saída é trazer um arquivo de fora para o repositório. -->
+## Abertas pelo painel local no hub (26/11/2026)
+
+### 115. O botão do hub abre o painel desta máquina, e não o do claude.ai
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** Ao validar o molde visual do hub, o Eric disse: "Está perfeito, não tenho oq mudar sobre esse ponto". E pediu uma coisa só: "o 'Abrir o Painel do Projeto', faz abrir o .html local, não o do claude (esse local tem que estar atualizado certinho tambem)". O botão levava ao painel publicado no claude.ai, que precisa de internet e de acesso à página.
+- **Por que importa:** O hub abre pelo `Cobaia.exe` e é o que a banca vai ver. Um botão que leva para fora da máquina falha sem internet e mostra uma cópia que pode não ser a do repositório.
+- **Opções:**
+  - (a) O hub serve o arquivo `Documentacao/dashboard/painel-do-projeto.html` desta máquina, no endereço `/painel`, e avisa quando ele está atrás das fontes.
+  - (b) O hub manda o sistema abrir o arquivo do disco, fora do navegador em que o hub está.
+- **Recomendação:** (a). Abre no mesmo navegador, em outra aba, e o painel fica isolado do hub.
+- **Decisão:** (a), pelo Eric em 26/11/2026, pela sessão principal (decisão 177); ele pediu o HTML local, e o modo de abrir foi escolha da implementação. O hub serve o painel em `/painel`, lido do disco a cada pedido, com regras próprias e isolado: o que roda dentro do painel não lê nem grava o que o hub serve. A tela "Início" avisa quando o painel foi gerado antes da última mudança em `pendencias.md`, `roadmap.md` ou `decisoes.md`, com o comando para regerar. O painel deixou de quebrar sem a biblioteca de gráficos: sem internet as abas trocam, e no lugar de cada gráfico fica um aviso. O `Cobaia.exe` não precisa ser recompilado.
+
+### 116. Os gráficos do painel local devem funcionar sem internet?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O painel do projeto desenha os gráficos com uma biblioteca de terceiros, a Chart.js, que a página baixa da internet toda vez que abre (de `cdn.jsdelivr.net`, versão 4.4.1). Sem internet, o painel abria e parava no primeiro erro: as abas nem trocavam. Isso foi consertado: agora, sem internet, o texto, as tabelas e as figuras aparecem, as abas trocam, e no lugar de cada gráfico fica um aviso. Os gráficos continuam dependendo da internet. As fontes das letras também vêm de fora, mas sem elas o navegador usa as da máquina.
+- **Por que importa:** Se a apresentação à banca for num lugar sem internet, ou com a rede bloqueando esse endereço, o painel aberto pelo hub aparece sem os gráficos. O hub não tem esse problema: os diagramas dele são desenhados por código próprio.
+- **Opções:**
+  - (a) Trazer a biblioteca para dentro do repositório: baixar uma vez o arquivo `chart.umd.js` da versão 4.4.1 (cerca de 200 KB, licença MIT), conferir o código de integridade e embutir no HTML que o gerador grava. O painel passa a funcionar inteiro sem internet, aqui e no claude.ai. É baixar um arquivo de fora, e só acontece com o sim do Eric.
+  - (b) Deixar como está: sem internet o painel abre sem os gráficos, com o aviso, e isso fica dito.
+  - (c) Redesenhar os gráficos do painel em código próprio, como os do hub. É o maior dos três trabalhos, e mexe em todas as abas do painel.
+- **Recomendação:** (a). É um arquivo só, de uma biblioteca aberta e de versão fixa, e tira a única dependência de internet do que a banca vai ver.
+- **Decisão:** (a), pelo Eric em 26/11/2026 (decisão 178): no quadro da sessão principal, às 10:40, "Trazer a biblioteca (Recomendado)"; e, no quadro da sessão do hub, à pergunta de confirmação do download, "Sim, baixar (Recomendado)". A autorização vale para um arquivo só: `chart.umd.js`, da versão 4.4.1, de `cdn.jsdelivr.net`. `ferramentas/trazer_chart_js.py` baixou o arquivo, conferiu o que veio contra o código de integridade que o jsDelivr publica para o pacote e contra o que o cdnjs publica, e gravou a cópia em `ferramentas/terceiros/chart.umd.js` (205.125 bytes) e a ficha dela em `ferramentas/terceiros/terceiros.json`: origem, versão, licença MIT, tamanho e códigos de integridade. O gerador do painel embute a cópia no HTML e para se ela não bater com a ficha. Conferido com a internet barrada: no painel aberto pelo hub, a biblioteca carrega e os gráficos são desenhados (`testar_central.py`). O HTML do painel cresceu o tamanho da biblioteca, cerca de 200 KB, e continua longe do limite da publicação. A cópia não leva a tag de IA dentro, porque a tag mudaria o arquivo; fica coberta pela ficha em `terceiros.json`, e `conferir_docs.py` só a aceita por isso. O `Cobaia.exe` não precisa ser recompilado.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

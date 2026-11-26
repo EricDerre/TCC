@@ -42,6 +42,7 @@ from __future__ import annotations
 import argparse
 import base64
 import html
+import hashlib
 import json
 import re
 import sys
@@ -491,10 +492,21 @@ if(botaoMenu){botaoMenu.addEventListener('click', () => { const aberto = documen
   document.querySelector('.fundo').addEventListener('click', fecharMenu);
   document.addEventListener('keydown', e => { if(e.key === 'Escape') fecharMenu(); });}
 const feitos = new Set();
-Chart.defaults.font.family = getComputedStyle(document.body).getPropertyValue('--fb');
-Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--ink2').trim();
-Chart.defaults.borderColor = getComputedStyle(document.body).getPropertyValue('--linha').trim();
-function grafico(id, cfg){const el = document.getElementById(id); if(!el) return; if(el._chart) el._chart.destroy(); el._chart = new Chart(el, cfg);}
+// ! Alteração de IA - Revisar: (26/11/2026) o painel deixa de quebrar quando a biblioteca de gráficos não carrega: sem ela, cada gráfico vira um aviso, e o resto da página funciona.
+// ! Motivo: o Chart.js vem da internet; aberto sem conexão (pelo hub ou do disco), a linha `Chart.defaults...` dava "Chart is not defined" e parava o programa inteiro, e as abas não trocavam mais.
+const SEM_CHART = typeof Chart === 'undefined';
+if(!SEM_CHART){
+  Chart.defaults.font.family = getComputedStyle(document.body).getPropertyValue('--fb');
+  Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--ink2').trim();
+  Chart.defaults.borderColor = getComputedStyle(document.body).getPropertyValue('--linha').trim();
+}
+function grafico(id, cfg){const el = document.getElementById(id); if(!el) return;
+  if(SEM_CHART){
+    if(!el.dataset.semChart){ el.dataset.semChart = '1'; el.hidden = true; const p = document.createElement('p'); p.className = 'nota sem-chart';
+      p.textContent = 'Este gráfico não foi desenhado: ele usa uma biblioteca que o painel carrega da internet. Os números dele estão no texto e nas tabelas desta aba.'; el.parentElement.appendChild(p); }
+    return;
+  }
+  if(el._chart) el._chart.destroy(); el._chart = new Chart(el, cfg);}
 const Ls = ['0','1','2','3'];
 function linhaCurvas(){
   const conj = document.getElementById('sel-conj').value, met = document.getElementById('sel-met').value;
@@ -558,7 +570,7 @@ __JS_TOPICOS__
 const MAPA_DESENHO = __MAPA_DESENHO__;
 function desenhar(id){
   if(feitos.has(id)) return; feitos.add(id);
-  Chart.defaults.color = css('--ink2'); Chart.defaults.borderColor = css('--linha');
+  if(!SEM_CHART){ Chart.defaults.color = css('--ink2'); Chart.defaults.borderColor = css('--linha'); }
   (MAPA_DESENHO[id]||[]).forEach(nome => { try{ window[nome](); }catch(e){ console.error(nome, e); } });
 }
 const SELETORES = __SELETORES__;
@@ -968,7 +980,7 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 {topicos_html}
 </main>
 </div></div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+{biblioteca_de_graficos()}
 <script>window.DADOS = {dados_json};</script>
 <script>{js}</script>
 {pglos.script()}
@@ -980,6 +992,30 @@ def pagina(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topico
 # por último, a troca do nome do autor e de "você" por "grupo" (painel_grupo).
 # ! Motivo: `main` aplicava só painel_leituras. A ordem importa: a faixa entra depois de painel_leituras, que procura o primeiro parágrafo de cada aba; o
 # glossário marca o texto já no lugar em que o leitor vai ver; e a troca por "grupo" vem no fim para alcançar também o que os passos anteriores escreveram.
+# ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) `biblioteca_de_graficos` devolve o que o painel põe no lugar do pedido da Chart.js à internet:
+# o conteúdo da cópia local (`ferramentas/terceiros/chart.umd.js`), embutido num bloco de script, quando o arquivo bate com o SHA-256 da ficha ao lado
+# (`terceiros.json`, gravada por `trazer_chart_js.py`); sem a cópia, o pedido à internet de antes; com a cópia diferente da ficha, a geração para.
+# ! Motivo: o grupo decidiu trazer a biblioteca para o repositório, para os gráficos do painel funcionarem sem internet, aqui e no painel publicado. Um arquivo de
+# terceiros só entra no HTML se for exatamente o que foi baixado e conferido. O `</script` de dentro da biblioteca vira `<\/script`, que para o JavaScript é a
+# mesma coisa e não fecha o bloco no meio.
+PASTA_DE_TERCEIROS = RAIZ / "ferramentas" / "terceiros"
+TAG_DO_CDN = '<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>'
+
+
+def biblioteca_de_graficos(pasta: Path = PASTA_DE_TERCEIROS) -> str:
+    arquivo, registro = pasta / "chart.umd.js", pasta / "terceiros.json"
+    if not arquivo.exists():
+        return TAG_DO_CDN
+    dados = arquivo.read_bytes()
+    try:
+        esperado = json.loads(registro.read_text(encoding="utf-8"))["arquivos"]["chart.umd.js"]["sha256"]
+    except (OSError, ValueError, KeyError):
+        raise ValueError(f"{arquivo} existe, mas não há ficha dele em {registro}: rode python ferramentas/trazer_chart_js.py") from None
+    if hashlib.sha256(dados).hexdigest() != esperado:
+        raise ValueError(f"{arquivo} não bate com o código de integridade da ficha em {registro}: o arquivo foi alterado; rode python ferramentas/trazer_chart_js.py")
+    return "<script>" + dados.decode("utf-8").replace("</script", "<\\/script") + "</script>"
+
+
 def montar(dados: dict, blocos: dict, figs: dict, pend: list, road: dict, topicos_html: str) -> str:
     referencias_md = (MEMORIAL / "2-pesquisa-e-literatura" / "referencias.md").read_text(encoding="utf-8")
     html_ = pl.aplicar(pagina(dados, blocos, figs, pend, road, topicos_html))
@@ -1168,7 +1204,9 @@ def contexto_progresso() -> dict:
     # ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) o contexto ganhou `hub.json` e `conferencia_git.json`, lidos pela aba "Hub e Git".
     # ! Motivo: a aba nova lê os números dos derivados gravados por `hub.py --resumo` e `impacto_git.py --conferir-historico`; sem eles, mostra o estado vazio.
     return {"taxas_progresso": ler("taxas_progresso.json"), "erro_progresso": ler("erro_progresso.json"), "impacto_git": ler("impacto_git.json"),
-            "fumaca_progresso": ler("fumaca_progresso.json"), "hub": ler("hub.json"), "conferencia_git": ler("conferencia_git.json"), "fumaca_q7": fumaca_q7()}
+            "fumaca_progresso": ler("fumaca_progresso.json"), "hub": ler("hub.json"), "conferencia_git": ler("conferencia_git.json"), "fumaca_q7": fumaca_q7(),
+            # (26/11/2026, ficha 113) o resumo das corridas lançadas pelo botão do hub, gravado por `hub.py --botao`; as pastas delas ficam fora do git
+            "botao_do_hub": ler("botao_do_hub.json")}
 
 
 # ! Alteração de IA - Revisar: (25/11/2026, noite; ficha 99) `fumaca_q7` lê a corrida curta dos pacotes Q6 e Q7 da pasta dela

@@ -1,0 +1,36 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-26T10:30:55",
+    "gerado_por": "hub.py --botao",
+    "fonte": "as pastas hub_<data>_<hora> de resultados_alvo/ (cenarios.jsonl e o cabeçalho da trilha)"
+  },
+  "total": 2,
+  "corridas": [
+    {
+      "pasta": "hub_20261126_080944",
+      "inicio": "2026-11-26T08:09:45",
+      "fim": "2026-11-26T08:23:22",
+      "modelo": "qwen2.5:7b",
+      "versao_ollama": "0.40.16",
+      "marcas": 0,
+      "casos_com_o_tempo_das_seis_etapas": 0,
+      "execucoes": 10,
+      "cenarios": 10,
+      "task_success": 10,
+      "detectou": 10
+    },
+    {
+      "pasta": "hub_20261126_100447",
+      "inicio": "2026-11-26T10:04:47",
+      "fim": "2026-11-26T10:18:11",
+      "modelo": "qwen2.5:7b",
+      "versao_ollama": "0.40.16",
+      "marcas": 80,
+      "casos_com_o_tempo_das_seis_etapas": 10,
+      "execucoes": 10,
+      "cenarios": 10,
+      "task_success": 10,
+      "detectou": 10
+    }
+  ]
+}

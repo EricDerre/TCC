@@ -7,3 +7,9 @@
 *.bat text eol=crlf
 *.ps1 text eol=crlf
 instalador/uv_fixado.txt text eol=lf
+
+# ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) os arquivos de terceiros guardados em `ferramentas/terceiros/` não têm o fim de linha trocado.
+# ! Motivo: a biblioteca de gráficos do painel (`chart.umd.js`) entra como foi baixada, e o gerador do painel só a embute se o SHA-256 bater com o da ficha em
+# `terceiros.json`. Com a troca automática de fim de linha do git no Windows, o arquivo sairia do repositório diferente do que entrou, o código deixaria de
+# bater e o painel não seria gerado numa cópia nova.
+ferramentas/terceiros/*.js -text

@@ -109,7 +109,12 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 - o hub de revisão, desde 25/11/2026: uma página local, à imagem da revisão de uma mudança de código, que junta 170 casos diagnosticados pelo agente e mostra, para cada um, o relatório em blocos, a evidência ao lado, a árvore de decisão e os eventos gravados. O analista comenta um trecho, responde, resolve a conversa e dá o veredito; o agente só comenta. Para abrir: `python hub.py`, em `Programacao/AgenteCore/experimentos`. Detalhes no painel, aba "Hub e Git", e em [DETALHES-TECNICOS.md](DETALHES-TECNICOS.md);
 <!-- ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) item novo: o hub como central aberta pelo `Cobaia.exe`.
      ! Motivo: o Eric pediu que o hub seja a central de tudo, aberta quando o `.exe` roda, de onde se rodam os testes e se veem as métricas; sem o item, o leitor continuaria achando que o `.exe` abre o site e a API e que o hub só abre pela linha de comando. -->
-- o hub como central do projeto, também desde 25/11/2026: o `Cobaia.exe` sobe o hub junto com o site e a API e abre o navegador nele. A primeira tela diz o que está no ar (o site, a API, o Ollama e o próprio hub) e leva ao site, à API e ao painel; a vista "Métricas" mostra, por corrida, as execuções, o Task Success e o tempo de reparo, lidos dos registros gravados, e o resultado da comparação com as pessoas; e o botão de rodar os dez cenários usa o site e a API que o `.exe` já subiu. A corrida lançada dali é uso do produto, não medida do TCC, e aparece na lista de casos. O caminho do botão está coberto por teste sem o modelo; com o modelo, ele ainda não rodou;
+- o hub como central do projeto, também desde 25/11/2026: o `Cobaia.exe` sobe o hub junto com o site e a API e abre o navegador nele. A primeira tela diz o que está no ar (o site, a API, o Ollama e o próprio hub) e leva ao site, à API e ao painel do projeto desta máquina, que o hub serve do disco e avisa quando está atrás das fichas ou do roadmap, e que funciona sem internet, com os gráficos, porque a biblioteca que os desenha vai dentro do próprio arquivo; a vista "Métricas" mostra, por corrida, as execuções, o Task Success e o tempo de reparo, lidos dos registros gravados, e o resultado da comparação com as pessoas; e o botão de rodar os dez cenários usa o site e a API que o `.exe` já subiu. A corrida lançada dali é uso do produto, não medida do TCC, e aparece na lista de casos. Em 26/11/2026 o botão rodou os dez cenários com o modelo, e o agente chegou ao resultado nos dez;
+<!-- ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) o item acima passou a dizer que o painel aberto pelo hub funciona sem internet, com os gráficos.
+     ! Motivo: a biblioteca de gráficos do painel entrou no repositório e vai embutida no HTML; sem a frase, o leitor não saberia que a única coisa que o painel buscava na internet para funcionar deixou de ser buscada. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, ficha 113, decisão 175) item novo: o molde visual do hub; e o item acima passou a dizer que o botão rodou com o modelo (número de `resultados_alvo/fase4/botao_do_hub.json`).
+     ! Motivo: o Eric testou o hub e pediu diagramas no lugar do texto; sem o item, o leitor não saberia que a página abre no desenho do processo, nem que duas etapas e a cura têm tempo e as outras não. -->
+- o hub em diagramas, desde 26/11/2026: cada caso abre com a linha de produção dele, as seis etapas do agente com o tempo gravado de cada uma e um cartão que amplia ao clicar; a árvore de decisão virou uma rede que liga o que o agente viu, os verbetes, as causas possíveis e o resultado; a tela inicial desenha como as peças se ligam e o que está no ar; e as métricas saem em gráficos. Tudo é desenhado por código na própria máquina, sem internet. Nas corridas lançadas pelo botão do hub, o agente grava a hora em que cada etapa começa (uma opção desligada por padrão, que as corridas de medida não usam), e o diagrama mostra o tempo das seis etapas e acende a que está rodando. Nas outras corridas a trilha só tem o tempo do roteiro, da inferência do modelo e da cura, e a detecção, a poda, a busca e a conferência aparecem sem tempo;
 - a escolha dos cenários pelo que mudou no código, também desde 25/11/2026: com `--selecao git`, a corrida roda só os cenários atingidos pelo que mudou nas cobaias, roda tudo na dúvida e registra o que deixou de fora. Numa conta sobre o histórico do repositório, 2 de 8 mudanças deixariam de fora um cenário que falhou na rodada completa, e é por isso que a rodada completa volta em prazo fixo. Nenhuma seleção parcial rodou de verdade ainda;
 <!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o último item da lista passa a contar o painel por fase, no lugar da Pós-Fase 4 descrita como ideia.
      ! Motivo: o item repetia o texto da decisão 94, de 05/11/2026, que anunciava a Pós-Fase 4 como "ajustes e ideias" e "talvez gráficos"; a fase foi planejada em 07/11/2026 e feita. -->
@@ -390,6 +395,8 @@ também o projeto de onde ele veio:
 ## Licença
 
 O código e a documentação deste repositório estão sob a [licença MIT](LICENSE).
+<!-- ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) a frase dos componentes de terceiros passou a dizer que a Chart.js 4.4.1 está numa cópia dentro do repositório, embutida no painel, e não mais carregada de CDN.
+     ! Motivo: o parágrafo dizia que a Chart.js era carregada de CDN; desde a decisão 178 o arquivo dela é distribuído junto com o repositório, e a seção de licença tem de dizer onde ele está e onde ficam a origem e o código de integridade. -->
 <!-- ! Alteração de IA - Revisar: (11/11/2026) frase nova sobre a licença do CobaiaFront, que vem do Projeto CHULETA.
      ! Motivo: o repositório de origem não traz arquivo de licença (conferido em 11/11/2026); sem a frase, não ficava dito sob que licença o site é distribuído aqui nem que o autor dele assina a licença deste repositório. -->
 O CobaiaFront vem do Projeto CHULETA
@@ -398,8 +405,11 @@ arquivo de licença, e aqui o site é distribuído sob a licença MIT deste
 repositório, da qual o autor do site é um dos titulares.
 Componentes de terceiros mantêm as próprias licenças: Bootstrap 3.3.7 e jQuery
 (MIT) e PHPMailer 5.2.27 (LGPL 2.1, com o texto em
-`Programacao/CobaiaFront/PHPMailer/LICENSE`) no CobaiaFront; AngularJS 1.6.9 e
-Chart.js 4.4.1 carregados de CDN (MIT). Os notebooks de apoio do livro-texto
+`Programacao/CobaiaFront/PHPMailer/LICENSE`) no CobaiaFront; AngularJS 1.6.9,
+carregado de CDN (MIT); e Chart.js 4.4.1 (MIT), numa cópia sem alteração em
+`ferramentas/terceiros/chart.umd.js`, que o gerador embute no painel do projeto,
+com a origem e o código de integridade em `ferramentas/terceiros/terceiros.json`.
+Os notebooks de apoio do livro-texto
 (Faceli et al., 3. ed., 2025) são material dos autores e da editora, ficam fora
 do repositório e não estão cobertos por esta licença. Os modelos de
 linguagem não são distribuídos aqui: o Ollama os baixa sob a licença de cada um

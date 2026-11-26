@@ -521,7 +521,10 @@ class TestePaginaGerada(unittest.TestCase):
         self.assertGreaterEqual(len(vistos), 12, "os métodos citados no painel aparecem nas listas")
 
     def teste_ids_sem_repeticao(self):
-        ids = re.findall(r' id="([^"]+)"', self.pagina)
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 116) os ids são procurados fora dos blocos de script.
+        # ! Motivo: a biblioteca de gráficos passou a ir embutida no painel, e o código dela tem trechos como `id="bar"` e `id="line"`, que não são elementos
+        # da página; o teste, que procura dois elementos com o mesmo id, passou a acusá-los.
+        ids = re.findall(r' id="([^"]+)"', re.sub(r"<script\b.*?</script>", "", self.pagina, flags=re.DOTALL))
         self.assertEqual(sorted({i for i in ids if ids.count(i) > 1}), [])
 
 

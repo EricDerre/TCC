@@ -23,6 +23,7 @@ from pathlib import Path
 
 import arvore_de_decisao as ad
 import biblioteca_leitura as bl
+import etapas_ao_vivo as ea
 import gerar_relatorio_raciocinio as grr
 import hub_pagina as hp
 import trilha as tr
@@ -242,6 +243,13 @@ class Acervo:
             dado, _ = self._achar(tid)
             return ad.arvore_do_caso(dado["eventos"], tid, pasta_blobs=dado["pasta"] / "blobs", leituras=self.leituras, calibracao=self.calibracao, limiares=self.limiares)
 
+    def processo(self, tid: str) -> dict:
+        """A linha de produção de um caso (as seis etapas, as três saídas e a rede), montada dos eventos da trilha dele; ver `processo_do_caso`."""
+        with self._trava:
+            dado, _ = self._achar(tid)
+            c = grr._contexto_v3(dado["eventos"], tid, dado["pasta"] / "blobs", self.leituras)
+            return processo_do_caso(c, self.arvore(tid), _registro_do_cenario(dado["pasta"], tid), dado["cab"].get("modelo"), _tempos_das_marcas(dado["pasta"], tid))
+
     def mudancas(self, tid_de: str, tid_para: str) -> list[dict]:
         """O que mudou de uma iteração para outra, campo a campo, só o que é diferente."""
         _, antes = self._achar(tid_de)
@@ -356,9 +364,212 @@ class Acervo:
                     "resumo": {k: v for k, v in linha.items() if k != "seq"}, "iteracao": linha["iteracao"], "iteracoes": iteracoes,
                     "mudancas_desde_a_anterior": self.mudancas(anterior["tid"], tid) if anterior else [],
                     "relatorio": self._relatorio(dado, tid), "evidencia": self._evidencia(c), "arvore": arvore, "trilha": trilha_, "blobs": blobs,
+                    "processo": processo_do_caso(c, arvore, _registro_do_cenario(pasta, tid), cab.get("modelo"), _tempos_das_marcas(pasta, tid)),
                     "comentario_do_agente": {"autor": {"nome": f"agente ({cab.get('modelo')}, biblioteca {cab.get('hash_biblioteca')})", "papel": "agente"},
                                              "veredito": "comentar", "ts": linha["ts"], "texto": comentario},
                     "trace": {"existe": trace is not None, "arquivo": trace.name if trace is not None else None}}
+
+
+# ! Alteração de IA - Revisar: (26/11/2026, molde visual do hub, ficha 113) `processo_do_caso` monta a linha de produção de um caso para o diagrama
+# da página: as seis etapas da figura "Como o agente trabalha" (roda o roteiro, detecta a falha, reduz o que viu, busca na biblioteca, o modelo
+# diagnostica, confere e dá um selo), cada uma com o estado, o tempo que a trilha grava, uma frase curta e o detalhe que o cartão ampliado mostra;
+# as três saídas (falha de contrato, localizador quebrado, aprendizado); a contagem dos eventos da trilha; a linha do cenário, quando a corrida
+# gravou `cenarios.jsonl`; e a rede que liga os sinais do caso, os verbetes pontuados, as causas possíveis e o resultado.
+# ! Motivo: o Eric testou o hub e pediu o processo em diagrama, com o tempo de cada etapa e o resultado ao abrir cada cartão, no lugar do texto
+# corrido. Tudo sai dos eventos já gravados, sem mudar o agente. A trilha só traz tempo para os passos do roteiro (`acao.tempo_ms`), para a
+# inferência (`inferencia.segundos`, com a leitura do caso e a escrita da resposta) e para a cura (`cura.mttr_s`); a detecção, a poda, a busca e a
+# conferência saem sem tempo (`tempo_gravado` falso), porque a hora dos eventos é a do bloco em que foram gravados, e não a de cada etapa. Num
+# caso em texto não houve roteiro, detecção nem poda, e essas etapas saem como "não se aplica" em vez de inventadas.
+ETAPAS_DO_PROCESSO = (("roteiro", "Roda o roteiro", "codigo"), ("deteccao", "Detecta a falha", "codigo"), ("poda", "Reduz o que viu", "codigo"),
+                      ("busca", "Busca na biblioteca", "codigo"), ("modelo", "O modelo diagnostica", "modelo"), ("selo", "Confere e dá um selo", "codigo"))
+TEMPO_NAO_GRAVADO = ("A trilha grava o tempo dos passos do roteiro, da inferência do modelo e da cura. A detecção, a poda, a busca e a conferência são "
+                     "feitas em código e a corrida não cronometra cada uma: elas aparecem sem tempo, sem estimativa no lugar.")
+NOS_POR_CAMADA = 6
+
+
+def _registro_do_cenario(pasta: Path, tid: str) -> dict | None:
+    """A linha de `cenarios.jsonl` da execução deste caso (o cenário e a repetição do identificador), ou None."""
+    registros = _registros_dos_cenarios(pasta)
+    if not registros:
+        return None
+    cenario, _, repeticao = tid.rsplit("/", 1)[-1].split("@")[0].partition("#")
+    numero = int(repeticao) if repeticao.isdigit() else 1
+    return next((r for r in registros if r.get("cenario") == cenario and (r.get("repeticao") or 1) == numero), None)
+
+
+def _medida(valor: dict | None) -> str:
+    """`{"nos": 193}` vira "193 nós"; é o tamanho antes e depois da poda, como o evento grava."""
+    nomes = {"nos": "nós", "linhas": "linhas", "chars": "caracteres", "itens": "itens", "bytes": "bytes"}
+    return ", ".join(f"{v} {nomes.get(k, k)}" for k, v in (valor or {}).items()) or "sem medida"
+
+
+def _rede_do_caso(arvore: dict, decisao_do_diagnostico: dict | None, cura: dict | None) -> dict:
+    por_chave = {d["chave"]: d for d in arvore["decisoes"]}
+    d_verbetes, d_causa = por_chave.get("verbetes") or {}, por_chave.get("causa") or {}
+    sinais = d_verbetes.get("sinais") or {}
+    nos_sinais = [{"id": f"s-{chave}", "rotulo": rotulo, "valor": None, "destaque": False}
+                  for chave, rotulo in (("endpoint", sinais.get("endpoint")), ("entidade", sinais.get("entidade")),
+                                        ("status", f"status {sinais['status']}" if sinais.get("status") is not None else None),
+                                        ("termos", f"{sinais['termos']} termos do caso" if sinais.get("termos") is not None else None)) if rotulo]
+    verbetes = [a for a in d_verbetes.get("alternativas") or [] if a.get("opcao")][:NOS_POR_CAMADA]
+    teto = max((a.get("pontuacao") or 0 for a in verbetes), default=0) or 1
+    nos_verbetes = [{"id": f"v-{a['opcao']}", "rotulo": a["opcao"], "valor": a.get("pontuacao"), "destaque": bool(a.get("escolhida"))} for a in verbetes]
+    causas = [a for a in d_causa.get("alternativas") or [] if a.get("opcao")][:NOS_POR_CAMADA]
+    nos_causas = [{"id": f"c-{a['opcao']}", "rotulo": a["opcao"], "valor": a.get("probabilidade"), "destaque": bool(a.get("escolhida"))} for a in causas]
+    resultado = []
+    if d_causa.get("escolha"):
+        confianca = (d_causa.get("confianca") or {}).get("palavra")
+        resultado.append({"id": "r-causa", "rotulo": d_causa.get("causa_em_palavras") or d_causa["escolha"], "valor": d_causa.get("probabilidade"), "destaque": True,
+                          "nota": f"confiança {confianca}" if confianca else None})
+    if cura:
+        resultado.append({"id": "r-cura", "rotulo": f"curado por {cura.get('escolha')}" if cura.get("curado") else "localizador não curado", "valor": None,
+                          "destaque": bool(cura.get("curado")), "nota": None})
+    arestas = []
+    for v, no in zip(verbetes, nos_verbetes):
+        if v.get("escolhida"):
+            arestas += [{"de": s["id"], "para": no["id"], "peso": round(min(1.0, max(0.0, (v.get("pontuacao") or 0) / teto)), 3)} for s in nos_sinais]
+    ids_dos_verbetes = {n["id"] for n in nos_verbetes}
+    sustenta = {a.get("opcao"): a.get("sustentada_por") or [] for a in (decisao_do_diagnostico or {}).get("alternativas") or []}
+    for a, no in zip(causas, nos_causas):
+        peso = round(min(1.0, max(0.0, a.get("probabilidade") or 0)), 3)
+        arestas += [{"de": f"v-{vid}", "para": no["id"], "peso": peso} for vid in sustenta.get(a["opcao"], []) if f"v-{vid}" in ids_dos_verbetes]
+        if a.get("escolhida") and resultado and resultado[0]["id"] == "r-causa":
+            arestas.append({"de": no["id"], "para": "r-causa", "peso": peso})
+    if len(resultado) == 2:
+        arestas.append({"de": "r-causa", "para": "r-cura", "peso": 1.0})
+    elif resultado and resultado[0]["id"] == "r-cura" and nos_causas:
+        arestas.append({"de": nos_causas[0]["id"], "para": "r-cura", "peso": 1.0})
+    return {"camadas": [{"id": "sinais", "titulo": "O que o agente viu", "nos": nos_sinais},
+                        {"id": "verbetes", "titulo": "Verbetes da biblioteca", "nos": nos_verbetes},
+                        {"id": "causas", "titulo": "Causas possíveis", "nos": nos_causas},
+                        {"id": "resultado", "titulo": "Resultado", "nos": resultado}], "arestas": arestas}
+
+
+# ! Alteração de IA - Revisar: (26/11/2026, ficha 114, decisão 176) quando a corrida gravou as marcas da hora de cada etapa (`etapas_ao_vivo.jsonl`, só nas
+# corridas lançadas pelo botão do hub), o tempo das seis etapas do caso passa a ser o das marcas (`tempo_de` = "marcas"), e o tempo que a trilha
+# grava para o roteiro e para a inferência fica ao lado, em `tempo_pela_trilha_s`. Sem marcas para o caso, tudo continua como antes.
+# ! Motivo: a decisão 176 manda gravar a hora de cada etapa só nessas corridas. As duas fontes medem coisas diferentes (a marca do roteiro inclui
+# abrir e fechar a página; a trilha soma só os passos), então o cartão mostra uma só, a das marcas, que vale para as seis, e o cartão ampliado diz a outra.
+def _tempos_das_marcas(pasta: Path, tid: str) -> dict | None:
+    """O tempo de cada etapa deste caso pelas marcas da corrida, ou None quando a corrida não as gravou para ele."""
+    return ea.tempos_por_caso(ea.ler(pasta)).get(tid.rsplit("/", 1)[-1])
+
+
+def processo_do_caso(c: dict, arvore: dict, registro: dict | None = None, modelo: str | None = None, das_marcas: dict | None = None) -> dict:
+    seq, por_tipo = c["seq"], c["por_tipo"]
+    tipo = "localizador" if c["eh_localizador"] else ("texto" if c["eh_texto"] else "contrato")
+    por_chave = {d["chave"]: d for d in arvore["decisoes"]}
+    d_causa, d_cura = por_chave.get("causa") or {}, por_chave.get("cura")
+    inferencia = next((e for e in seq if e["tipo"] == "inferencia" and e["dados"].get("etapa") in (None, "diagnostico", "diagnóstico")), None)
+    seq_da_inferencia = inferencia["seq"] if inferencia else None
+    decisao = next((e["dados"] for e in por_tipo.get("decisao", []) if e["dados"].get("decisao") == "diagnostico"), None)
+    entrada = c["entrada"] or {}
+
+    def etapa(numero: int, estado: str, tempo_s, resumo: str, detalhe: dict) -> dict:
+        ident, titulo, feito_por = ETAPAS_DO_PROCESSO[numero - 1]
+        return {"id": ident, "numero": numero, "titulo": titulo, "feito_por": feito_por, "estado": estado, "tempo_s": tempo_s, "tempo_gravado": tempo_s is not None,
+                "tempo_de": "trilha" if tempo_s is not None else None, "tempo_pela_trilha_s": None, "resumo": resumo, "detalhe": detalhe}
+
+    # 1. o roteiro: os passos de antes do diagnóstico, com o tempo de cada um, e as chamadas à API que o navegador fez
+    acoes = [e["dados"] for e in seq if e["tipo"] == "acao" and not e["dados"].get("reexecucao")]
+    chamadas = [{"metodo": d.get("metodo"), "caminho": d.get("caminho"), "status": d.get("status"), "tempo_ms": d.get("tempo_ms")} for d in (e["dados"] for e in por_tipo.get("interceptacao", []))]
+    nome_do_roteiro = entrada.get("roteiro") or entrada.get("cenario")
+    if acoes:
+        tempos = [a["tempo_ms"] for a in acoes if isinstance(a.get("tempo_ms"), (int, float))]
+        e1 = etapa(1, "feita", round(sum(tempos) / 1000, 2) if tempos else None,
+                   f"{len(acoes)} {'passo' if len(acoes) == 1 else 'passos'}" + (f" do roteiro {nome_do_roteiro}" if nome_do_roteiro else "")
+                   + (f"; {len(chamadas)} {'chamada' if len(chamadas) == 1 else 'chamadas'} à API" if chamadas else ""),
+                   {"roteiro": nome_do_roteiro, "chamadas": chamadas,
+                    "passos": [{"passo": a.get("passo"), "acao": a.get("acao"), "seletor": a.get("seletor") or a.get("url"), "tempo_ms": a.get("tempo_ms"), "falhou": bool(a.get("falhou"))} for a in acoes]})
+    else:
+        e1 = etapa(1, "nao_se_aplica", None, "caso em texto: não houve roteiro" if tipo == "texto" else "a trilha não tem os passos do roteiro", {"roteiro": nome_do_roteiro, "passos": [], "chamadas": chamadas})
+
+    # 2. a detecção: as conferências do roteiro (de antes da inferência), o passo que falhou ou o que a corrida gravou como motivo
+    antes = [e["dados"] for e in por_tipo.get("verificacao", []) if e.get("pai") is None and (seq_da_inferencia is None or e["seq"] < seq_da_inferencia)]
+    conferencias = [{"alvo": d.get("alvo"), "regra": d.get("regra"), "resultado": d.get("resultado"), "esperado": (d.get("evidencia") or {}).get("esperado"),
+                     "observado": (d.get("evidencia") or {}).get("observado")} for d in antes]
+    passo_que_falhou = next((a for a in acoes if a.get("falhou")), None)
+    erro = (d_cura or {}).get("erro")
+    motivo = (registro or {}).get("motivo_deteccao")
+    if motivo or conferencias or passo_que_falhou or erro:
+        nao_passaram = [x for x in conferencias if x["resultado"] != "confere"]
+        frase = (motivo or (f"o passo {passo_que_falhou.get('passo')} não achou o localizador" if passo_que_falhou
+                            else (f"{len(nao_passaram)} de {len(conferencias)} conferências do roteiro não passaram" if nao_passaram else "as conferências do roteiro passaram; a falha veio da resposta da API")))
+        e2 = etapa(2, "feita", None, frase, {"origem": (registro or {}).get("origem_deteccao"), "conferencias": conferencias, "erro": erro.split("\n")[0] if erro else None,
+                                            "passo": passo_que_falhou.get("passo") if passo_que_falhou else None})
+    else:
+        e2 = etapa(2, "nao_se_aplica", None, "o caso já chega como falha: esta corrida não registra a detecção", {"origem": None, "conferencias": [], "erro": None, "passo": None})
+
+    # 3. a poda: o tamanho antes e depois, e as regras que tiraram o que não muda
+    podas = [e["dados"] for e in por_tipo.get("poda", [])]
+    if podas:
+        itens = [{"alvo": d.get("alvo"), "antes": d.get("antes"), "depois": d.get("depois"), "antes_em_palavras": _medida(d.get("antes")), "depois_em_palavras": _medida(d.get("depois")),
+                  "regras": d.get("regras") or {}} for d in podas]
+        e3 = etapa(3, "feita", None, "; ".join(f"{i['alvo']}: {i['antes_em_palavras']} viram {i['depois_em_palavras']}" for i in itens[:2]), {"itens": itens})
+    else:
+        e3 = etapa(3, "nao_se_aplica", None, "caso em texto: não houve tela para reduzir" if tipo == "texto" else "a trilha não tem a poda deste caso", {"itens": []})
+
+    # 4. a busca: os verbetes pontuados e os k entregues ao modelo
+    candidatos = next((e["dados"] for e in por_tipo.get("candidatos", [])), None)
+    if candidatos:
+        itens = sorted((i for i in candidatos.get("itens") or [] if isinstance(i, dict)), key=lambda i: i.get("posicao") or 10 ** 6)
+        entregues = [i["id"] for i in itens if i.get("escolhido")]
+        e4 = etapa(4, "feita", None, f"{len(entregues)} de {len(itens)} verbetes entregues ao modelo",
+                   {"k": candidatos.get("k"), "pontuados": len(itens), "sinais": candidatos.get("sinais") or {},
+                    "verbetes": [{"id": i.get("id"), "pontuacao": i.get("pontuacao"), "entregue": bool(i.get("escolhido"))} for i in itens[:8]]})
+    else:
+        e4 = etapa(4, "nao_se_aplica", None, "a trilha não tem a busca deste caso", {"k": None, "pontuados": 0, "sinais": {}, "verbetes": []})
+
+    # 5. o modelo: a causa respondida, as alternativas com a probabilidade lida e o tempo da inferência
+    alternativas = [{"opcao": a.get("opcao"), "probabilidade": a.get("probabilidade"), "escolhida": bool(a.get("escolhida"))} for a in d_causa.get("alternativas") or []]
+    if inferencia:
+        i = inferencia["dados"]
+        em_segundos = lambda ms: round(ms / 1000, 1) if isinstance(ms, (int, float)) else None
+        e5 = etapa(5, "feita", i.get("segundos"), (f"respondeu {d_causa['escolha']}" if d_causa.get("escolha") else "não respondeu uma causa da lista"),
+                   {"modelo": modelo, "segundos": i.get("segundos"), "prefill_s": em_segundos(i.get("prefill_ms")), "geracao_s": em_segundos(i.get("geracao_ms")),
+                    "tokens_entrada": i.get("tokens_entrada"), "tokens_saida": i.get("tokens_saida"), "causa": d_causa.get("escolha"),
+                    "causa_em_palavras": d_causa.get("causa_em_palavras"), "campo": d_causa.get("campo"), "alternativas": alternativas})
+    else:
+        e5 = etapa(5, "nao_se_aplica", None, "a trilha não tem a inferência deste caso", {"modelo": modelo, "alternativas": alternativas, "causa": d_causa.get("escolha")})
+
+    # 6. a conferência e o selo: o que o código checou do que o modelo disse, e a confiança
+    depois = [e["dados"] for e in por_tipo.get("verificacao", []) if seq_da_inferencia is not None and e.get("pai") == seq_da_inferencia]
+    confianca = d_causa.get("confianca") or {}
+    if depois or confianca.get("palavra"):
+        conferem = sum(1 for d in depois if d.get("resultado") == "confere")
+        gatilhos = [nome for nome, ligado in (d_causa.get("gatilhos") or {}).items() if ligado and nome != "algum"]
+        divergencia = d_causa.get("divergencia")
+        e6 = etapa(6, "feita", None, (f"confiança {confianca['palavra']}" if confianca.get("palavra") else "sem selo de confiança") + f"; {conferem} de {len(depois)} conferências passaram",
+                   {"confianca": confianca.get("palavra"), "selo": confianca.get("selo"), "probabilidade": confianca.get("p_rotulo"),
+                    "conferencias": {"total": len(depois), "conferem": conferem,
+                                     "itens": [{"alvo": d.get("alvo"), "regra": d.get("regra"), "resultado": d.get("resultado")} for d in depois[:24]]},
+                    "divergencia": bool(divergencia), "detalhe_da_divergencia": (divergencia or {}).get("detalhe") if isinstance(divergencia, dict) else None, "gatilhos": gatilhos})
+    else:
+        e6 = etapa(6, "nao_se_aplica", None, "a trilha não tem a conferência deste caso", {"confianca": None, "selo": None, "probabilidade": None,
+                                                                                         "conferencias": {"total": 0, "conferem": 0, "itens": []}, "divergencia": False, "gatilhos": []})
+
+    # as três saídas da figura
+    saida = lambda ident, titulo, estado, resumo, tempo_s=None, detalhe=None: {"id": ident, "titulo": titulo, "estado": estado, "resumo": resumo, "tempo_s": tempo_s, "detalhe": detalhe or {}}
+    if tipo != "localizador" and d_causa.get("escolha"):
+        s1 = saida("contrato", "Falha de contrato", "saiu", f"relatório para o analista: {d_causa.get('causa_em_palavras') or d_causa['escolha']}",
+                   detalhe={"causa": d_causa["escolha"], "causa_em_palavras": d_causa.get("causa_em_palavras"), "campo": d_causa.get("campo"), "confianca": confianca.get("palavra")})
+    else:
+        s1 = saida("contrato", "Falha de contrato", "nao_se_aplica", "a falha deste caso é da tela, não da API" if tipo == "localizador" else "o modelo não respondeu uma causa")
+    if d_cura:
+        s2 = saida("localizador", "Localizador quebrado", "saiu", (f"curado por {d_cura.get('escolha')}" if d_cura.get("curado") else "nenhum candidato serviu"), d_cura.get("mttr_s"),
+                   {"curado": bool(d_cura.get("curado")), "estrategia": d_cura.get("escolha"), "seletor": d_cura.get("seletor"), "localizador": d_cura.get("localizador"),
+                    "reexecucao": d_cura.get("reexecucao"), "candidatos": len(d_cura.get("alternativas") or []), "mttr_s": d_cura.get("mttr_s")})
+    else:
+        s2 = saida("localizador", "Localizador quebrado", "nao_se_aplica", "não houve localizador a consertar neste caso")
+    s3 = saida("aprendizado", "Aprendizado", "nao_se_aplica", "esta corrida não propõe acréscimo à biblioteca")
+    cenario = ({k: registro.get(k) for k in ("segundos", "segundos_diagnostico", "mttr_s", "task_success", "detectou", "origem_deteccao")} if registro else None)
+    etapas = [e1, e2, e3, e4, e5, e6]
+    for e in etapas:            # as marcas da corrida, quando existem para este caso (decisão 176)
+        if das_marcas and isinstance(das_marcas.get(e["id"]), (int, float)):
+            e.update({"tempo_pela_trilha_s": e["tempo_s"], "tempo_s": das_marcas[e["id"]], "tempo_gravado": True, "tempo_de": "marcas"})
+    falta_tempo = any(e["estado"] == "feita" and not e["tempo_gravado"] for e in etapas)
+    return {"tipo": tipo, "etapas": etapas, "saidas": [s1, s2, s3], "trilha": {"eventos": len(seq), "hash": arvore["eventos"]["hash"]},
+            "cenario": cenario, "tempo_nao_gravado": TEMPO_NAO_GRAVADO if falta_tempo else None, "rede": _rede_do_caso(arvore, decisao, d_cura)}
 
 
 # ! Alteração de IA - Revisar: (25/11/2026, pacote Q6, etapa 3) `AoVivo` lê a corrida em andamento para a vista "Corrida ao vivo" do hub: acha
@@ -384,11 +595,12 @@ class AoVivo:
 
     def _mais_recente(self) -> Path | None:
         candidatos = []
-        for arq in self.raiz.glob("*/progresso.json"):
-            try:
-                candidatos.append((arq.stat().st_mtime, arq))
-            except OSError:
-                continue
+        for padrao in ("*/progresso.json", "*/" + ea.NOME_DO_ARQUIVO):      # o estado da barra de progresso e as marcas das etapas (decisão 176)
+            for arq in self.raiz.glob(padrao):
+                try:
+                    candidatos.append((arq.stat().st_mtime, arq))
+                except OSError:
+                    continue
         return max(candidatos)[1] if candidatos else None
 
     def _ultimo_diagnostico(self, pasta: Path) -> tuple[dict | None, int]:
@@ -408,27 +620,57 @@ class AoVivo:
             return None, 0          # a corrida ainda não gravou trilha, ou gravou um arquivo que não dá para ler agora
         alternativas = [{"opcao": a.get("opcao"), "probabilidade": a.get("probabilidade"), "escolhida": bool(a.get("escolhida"))} for a in causa.get("alternativas") or []]
         verbetes = [{"id": v, "titulo": (acervo.leituras.get(v) or {}).get("titulo") or v} for v in linha["verbetes"]]
+        try:        # a linha de produção do último caso diagnosticado, para o diagrama da vista ao vivo (molde visual, ficha 113)
+            processo = acervo.processo(linha["tid"])
+        except (OSError, ValueError, KeyError):
+            processo = None
         return ({"tid": linha["tid"], "caso": linha["caso"], "nome": linha["nome"], "titulo": linha["titulo"], "escolha": linha["escolha"],
                  "causa_em_palavras": linha["causa_em_palavras"], "campo": linha["campo"], "confianca": linha["confianca"], "divergencia": linha["divergencia"],
-                 "cura": linha["cura"], "ts": linha["ts"], "alternativas": alternativas, "verbetes": verbetes}, len(linhas))
+                 "cura": linha["cura"], "ts": linha["ts"], "alternativas": alternativas, "verbetes": verbetes, "processo": processo}, len(linhas))
 
+    # ! Alteração de IA - Revisar: (26/11/2026, ficha 114, decisão 176) a leitura ao vivo passa a usar também as marcas da hora de cada etapa, quando a
+    # corrida as grava: a etapa acesa (`etapa_agora`) é a da última marca, se ela tem menos de meio minuto e o caso não terminou, ou a do modelo,
+    # enquanto a barra de progresso diz que a inferência está rodando; `tempos_agora` traz o tempo das etapas que o caso em andamento já passou.
+    # ! Motivo: sem as marcas, a corrida só regrava o estado durante a inferência, e só a etapa do modelo podia aparecer acesa (ver o molde visual,
+    # ficha 113). Durante a inferência a marca do modelo fica parada por mais de meio minuto, e é a barra que diz que a corrida está viva; fora
+    # dela, uma marca parada há mais de meio minuto quer dizer que a corrida parou ou morreu, e nada fica aceso.
     def ler(self) -> dict:
         with self._trava:
             arq = self._mais_recente()
             if arq is None:
                 return {"ha_corrida": False}
+            pasta, agora = arq.parent, time.time()
+            arq_da_barra = pasta / "progresso.json"
             try:
-                progresso = json.loads(arq.read_text(encoding="utf-8"))
+                progresso = json.loads(arq_da_barra.read_text(encoding="utf-8"))
             except (OSError, ValueError):
                 progresso = None
             try:
-                idade = max(0.0, time.time() - arq.stat().st_mtime)
+                idade = max(0.0, agora - arq_da_barra.stat().st_mtime)
+                rodando = idade <= LIMITE_DE_IDADE_S and (progresso is None or progresso.get("estado") in ESTADOS_RODANDO)
             except OSError:
-                idade = 0.0
-            ultimo, quantos = self._ultimo_diagnostico(arq.parent)
-            rodando = idade <= LIMITE_DE_IDADE_S and (progresso is None or progresso.get("estado") in ESTADOS_RODANDO)
-            return {"ha_corrida": True, "pasta": arq.parent.name, "progresso": progresso if isinstance(progresso, dict) else None, "idade_s": round(idade, 1),
-                    "em_andamento": rodando, "ultimo_diagnostico": ultimo, "diagnosticos": quantos}
+                idade, rodando = None, False
+            marcas = ea.ler(pasta)
+            try:
+                idade_das_marcas = max(0.0, agora - (pasta / ea.NOME_DO_ARQUIVO).stat().st_mtime)
+            except OSError:
+                idade_das_marcas = None
+            ultima = marcas[-1] if marcas else None
+            pela_marca = bool(ultima and ultima["etapa"] != "fim" and idade_das_marcas is not None and idade_das_marcas <= LIMITE_DE_IDADE_S)
+            no_modelo = bool(rodando and isinstance(progresso, dict) and progresso.get("estado") in ESTADOS_RODANDO)
+            etapa_agora = caso_agora = None
+            if no_modelo:
+                etapa_agora = "modelo"
+                caso_agora = ultima.get("caso") if ultima and ultima["etapa"] == "modelo" else (str(progresso.get("etapa") or "").split(" · ")[0] or None)
+            elif pela_marca:
+                etapa_agora, caso_agora = ultima["etapa"], ultima.get("caso")
+            ultimo, quantos = self._ultimo_diagnostico(pasta)
+            return {"ha_corrida": True, "pasta": pasta.name, "progresso": progresso if isinstance(progresso, dict) else None,
+                    "idade_s": round(idade if idade is not None else (idade_das_marcas or 0.0), 1), "em_andamento": bool(rodando or pela_marca),
+                    "etapa_agora": etapa_agora, "caso_agora": caso_agora,
+                    "tempos_agora": ea.tempos_por_caso(marcas).get(str(caso_agora), {}) if caso_agora is not None else {},
+                    "ultimo_diagnostico": ultimo, "diagnosticos": quantos}
+
 
 
 # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `metricas` monta o que a vista "Métricas" do hub mostra. Por corrida do

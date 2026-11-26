@@ -49,6 +49,7 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+import etapas_ao_vivo as ea
 import gerar_relatorio_raciocinio as grr
 import hub_dados as hd
 import hub_pagina as hp
@@ -65,7 +66,44 @@ LIMITE_DO_CORPO = 1_000_000
 POLITICA = "default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
 BLOCOS_DO_RELATORIO = tuple(f"b{n}-{hp.slug(nome)}" for n, nome in enumerate(grr.CAMPOS_55 + grr.SECOES_MANTIDAS_V3, start=1))
 CAMPOS_DO_RASCUNHO = ("texto", "ancora", "rotulo", "bloqueante", "conversa")
-PAINEL_PUBLICADO = "https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN"     # o painel do projeto, o mesmo endereço que o README cita
+# ! Alteração de IA - Revisar: (26/11/2026) o hub passa a servir o painel do projeto desta máquina em `/painel` (o arquivo que
+# `ferramentas/gerar_dashboard.py` grava) e deixa de apontar para o painel publicado no claude.ai. `estado_do_painel` diz se o arquivo existe,
+# quando foi gerado e se alguma das três fontes que mais mudam (as fichas, o roadmap e as decisões) foi alterada depois dele.
+# ! Motivo: o Eric aprovou o molde do hub e pediu que "Abrir o painel do projeto" abra o HTML local, e que esse local esteja em dia. O painel
+# traz script e estilo embutidos e carrega a biblioteca de gráficos e as fontes de fora, o que as regras da página do hub proíbem; por isso ele
+# sai com regras próprias (`POLITICA_DO_PAINEL`), numa caixa separada (`sandbox`, sem `allow-same-origin`): o que roda dentro do painel não lê nem
+# grava nada do que o hub serve, e um pedido de gravação vindo dele é recusado pela conferência de origem. O aviso de atraso compara a hora dos
+# arquivos, e não o conteúdo: é um lembrete para regerar; a conferência exata continua sendo `python ferramentas/gerar_dashboard.py --check`.
+# ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) nota acrescentada, sem mudar as regras: desde a decisão 178 a biblioteca de
+# gráficos vai embutida no painel, e o painel gerado no repositório não pede mais nada a `cdn.jsdelivr.net`.
+# ! Motivo: o comentário acima diz que o painel carrega a biblioteca de fora, o que deixou de valer para o painel gerado aqui. O endereço continua
+# permitido em `POLITICA_DO_PAINEL` só para o painel gerado numa cópia sem `ferramentas/terceiros/chart.umd.js`, caso em que o gerador volta a
+# pedir a biblioteca à internet; tirar o endereço faria esse painel abrir sem gráficos mesmo com internet.
+RAIZ_DO_REPOSITORIO = EXP.parent.parent.parent
+PAINEL_LOCAL = RAIZ_DO_REPOSITORIO / "Documentacao" / "dashboard" / "painel-do-projeto.html"
+FONTES_DO_PAINEL = (RAIZ_DO_REPOSITORIO / "Documentacao" / "memorial" / "pendencias.md", RAIZ_DO_REPOSITORIO / "Documentacao" / "memorial" / "roadmap.md",
+                    RAIZ_DO_REPOSITORIO / "Documentacao" / "memorial" / "1-decisoes-e-historico" / "decisoes.md")
+POLITICA_DO_PAINEL = ("default-src 'none'; script-src 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'unsafe-inline' https://fonts.googleapis.com; "
+                      "font-src https://fonts.gstatic.com data:; img-src data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; "
+                      "frame-ancestors 'none'; sandbox allow-scripts allow-popups allow-popups-to-escape-sandbox")
+
+
+def estado_do_painel(painel: Path, fontes=()) -> dict:
+    """Se o painel local existe, quando foi gerado e se alguma fonte foi alterada depois dele (pela hora dos arquivos)."""
+    try:
+        gerado = painel.stat().st_mtime
+    except OSError:
+        return {"url": "/painel", "existe": False, "gerado_em": None, "atrasado": False, "fonte_mais_nova": None}
+    mais_nova = None
+    for fonte in fontes:
+        try:
+            alterada = fonte.stat().st_mtime
+        except OSError:
+            continue
+        if alterada > gerado and (mais_nova is None or alterada > mais_nova[0]):
+            mais_nova = (alterada, fonte.name)
+    return {"url": "/painel", "existe": True, "gerado_em": dt.datetime.fromtimestamp(gerado).isoformat(timespec="seconds"), "atrasado": mais_nova is not None,
+            "fonte_mais_nova": mais_nova[1] if mais_nova else None}
 
 
 class Recusa(Exception):
@@ -145,7 +183,7 @@ CENARIOS_DA_CORRIDA_DO_HUB = 10
 
 def comando_direto(saida: str, opcoes: dict, python: str | None = None) -> list[str]:
     comando = [python or sys.executable, "executar_fase4.py", "--modo", "cenarios", "--saida", saida, "--casos", str(CENARIOS_DA_CORRIDA_DO_HUB),
-               "--repeticoes", str(opcoes["repeticoes"]), "--cobaias-no-ar"]
+               "--repeticoes", str(opcoes["repeticoes"]), "--cobaias-no-ar", "--etapas-ao-vivo"]      # a hora de cada etapa, só nas corridas do botão (decisão 176)
     if opcoes.get("selecao") == "git":
         comando += ["--selecao", "git"]
         if opcoes.get("desde"):
@@ -316,7 +354,8 @@ class Execucao:
 class Hub:
     """O que o servidor responde: o acervo das corridas e as revisões, juntos."""
 
-    def __init__(self, acervo: hd.Acervo, revisoes: hr.Revisoes, execucao: Execucao | None = None, selecao_git=None, sonda=None, ollama_no_ar=None) -> None:
+    def __init__(self, acervo: hd.Acervo, revisoes: hr.Revisoes, execucao: Execucao | None = None, selecao_git=None, sonda=None, ollama_no_ar=None,
+                 painel: Path | None = None, fontes_do_painel=None) -> None:
         self.acervo = acervo
         self.revisoes = revisoes
         self.execucao = execucao or Execucao(acervo.raiz)
@@ -324,6 +363,8 @@ class Hub:
         self._selecao_git = selecao_git
         self._sonda = sonda or porta_responde
         self._ollama_no_ar = ollama_no_ar or (lambda: self._sonda(PORTA_DO_OLLAMA))
+        self.painel = Path(painel) if painel is not None else PAINEL_LOCAL
+        self.fontes_do_painel = tuple(fontes_do_painel) if fontes_do_painel is not None else FONTES_DO_PAINEL
 
     # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `central` é a tela "Início" do hub: diz se o site (porta 8080), a API
     # (8000) e o Ollama (11434) respondem agora, dá os endereços do site, da documentação da API e do painel publicado, e diz quantos casos e
@@ -339,7 +380,7 @@ class Hub:
                     {"id": "api", "nome": "API do site (CobaiaAPI)", "url": f"http://localhost:{PORTA_DA_API}/docs"},
                     {"id": "ollama", "nome": "Ollama, que roda o modelo do agente", "url": None},
                     {"id": "hub", "nome": "Hub central", "url": None}]
-        return {"servicos": [{**s, "no_ar": no_ar[s["id"]]} for s in servicos], "painel": PAINEL_PUBLICADO, "pelo_exe": self.execucao.pelo_exe,
+        return {"servicos": [{**s, "no_ar": no_ar[s["id"]]} for s in servicos], "painel": estado_do_painel(self.painel, self.fontes_do_painel), "pelo_exe": self.execucao.pelo_exe,
                 "execucao_permitida": self.execucao.permitida, "casos": len(self.acervo.indice()), "corridas": len(self.acervo.corridas())}
 
     # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) `selecao` devolve o que a seleção pelo Git rodaria agora: a decisão de
@@ -477,7 +518,7 @@ def _tratador(hub: Hub, falar: bool):
             if falar:
                 super().log_message(formato, *args)
 
-        def _responder(self, codigo: int, corpo: bytes, tipo: str, extras: dict | None = None) -> None:
+        def _responder(self, codigo: int, corpo: bytes, tipo: str, extras: dict | None = None, politica: str = POLITICA) -> None:
             self.send_response(codigo)
             self.send_header("Content-Type", tipo)
             self.send_header("Content-Length", str(len(corpo)))
@@ -486,7 +527,7 @@ def _tratador(hub: Hub, falar: bool):
             self.send_header("Cache-Control", "no-store")
             self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Referrer-Policy", "no-referrer")
-            self.send_header("Content-Security-Policy", POLITICA)
+            self.send_header("Content-Security-Policy", politica)
             self.end_headers()
             self.wfile.write(corpo)
 
@@ -571,6 +612,12 @@ def _tratador(hub: Hub, falar: bool):
                     self._json(200, hub.caso((consulta.get("tid") or [""])[0]))
                 elif partes.path == "/api/ao-vivo":
                     self._json(200, hub.ao_vivo())
+                elif partes.path == "/painel":       # o painel local, lido do disco a cada pedido e servido com as regras dele
+                    try:
+                        corpo = hub.painel.read_bytes()
+                    except OSError:
+                        raise Recusa(404, "o painel ainda não foi gerado nesta máquina: rode python ferramentas/gerar_dashboard.py na raiz do repositório") from None
+                    self._responder(200, corpo, "text/html; charset=utf-8", politica=POLITICA_DO_PAINEL)
                 elif partes.path == "/api/central":
                     self._json(200, hub.central())
                 elif partes.path == "/api/metricas":
@@ -620,7 +667,7 @@ class Servidor(ThreadingHTTPServer):
 
 def criar_servidor(acervo: hd.Acervo, revisoes: hr.Revisoes, porta: int = PORTA_PADRAO, endereco: str = ENDERECO, falar: bool = False,
                    permitir_execucao: bool = False, comando_da_corrida=None, selecao_git=None, pelo_exe: bool = False, garantir_ollama=None,
-                   sonda=None, ollama_no_ar=None) -> ThreadingHTTPServer:
+                   sonda=None, ollama_no_ar=None, painel: Path | None = None, fontes_do_painel=None) -> ThreadingHTTPServer:
     """O servidor do hub, pronto para `serve_forever()`; `porta=0` pede uma porta livre ao sistema. Só aceita escutar na própria máquina.
     `permitir_execucao` libera o botão que lança a corrida de cenários; `pelo_exe` também libera, e faz a corrida usar o site e a API que
     o `Cobaia.exe` já subiu. `comando_da_corrida(saida, opcoes)` troca o lançador, `selecao_git(desde)` troca a leitura do Git,
@@ -628,7 +675,8 @@ def criar_servidor(acervo: hd.Acervo, revisoes: hr.Revisoes, porta: int = PORTA_
     if endereco != ENDERECO:
         raise ValueError(f"o hub só escuta em {ENDERECO}: ele grava em disco e não tem senha")
     execucao = Execucao(acervo.raiz, permitir_execucao, comando_da_corrida, pelo_exe=pelo_exe, garantir_ollama=garantir_ollama)
-    return Servidor((endereco, porta), _tratador(Hub(acervo, revisoes, execucao, selecao_git, sonda=sonda, ollama_no_ar=ollama_no_ar), falar))
+    return Servidor((endereco, porta), _tratador(Hub(acervo, revisoes, execucao, selecao_git, sonda=sonda, ollama_no_ar=ollama_no_ar, painel=painel,
+                                                     fontes_do_painel=fontes_do_painel), falar))
 
 
 def conferir(acervo: hd.Acervo) -> int:
@@ -690,6 +738,57 @@ def resumo(acervo: hd.Acervo) -> tuple[dict, str]:
     return dado, "\n".join(linhas)
 
 
+# ! Alteração de IA - Revisar: (26/11/2026) `prova_do_botao` resume as corridas lançadas pelo botão de rodar os cenários (as pastas `hub_<data>_<hora>` de
+# `resultados_alvo/` que têm `cenarios.jsonl`): quando rodaram, com que modelo, quantas execuções, em quantas o agente chegou ao resultado e em
+# quantas a falha foi detectada. `python hub.py --botao [--check]` grava o resumo em `resultados_alvo/fase4/botao_do_hub.{json,md}`.
+# ! Motivo: o Eric rodou os cenários pelo botão em 26/11/2026, a prova que faltava do hub aberto pelo `Cobaia.exe` (decisão 170). As pastas dessas
+# corridas ficam fora do git (decisão 171), então o roadmap, o painel e o texto do TCC precisam de um derivado versionado para citar; sem ele, o
+# número só existiria nesta máquina. Numa cópia sem as pastas o `--check` não tem o que comparar e sai com 0, dizendo isso, em vez de acusar diferença.
+NOME_DA_PROVA_DO_BOTAO = "botao_do_hub"
+
+
+def prova_do_botao(raiz: Path) -> tuple[dict, str]:
+    raiz = Path(raiz)
+    corridas = []
+    for pasta in sorted(p for p in raiz.glob(hd.PREFIXO_DO_HUB + "*") if p.is_dir()):
+        registros = hd._registros_dos_cenarios(pasta)
+        if registros is None:
+            continue
+        try:
+            cab = hd.Acervo(raiz, corridas=(pasta.name,), leituras={}, descobrir=False).corridas()[0]
+        except (OSError, ValueError, KeyError):
+            cab = {}
+        # (26/11/2026, decisão 176) as marcas da hora de cada etapa, quando a corrida as gravou: quantas são e em quantos casos dão o tempo das seis etapas
+        marcas = ea.ler(pasta)
+        com_as_seis = sum(1 for t in ea.tempos_por_caso(marcas).values() if all(e in t for e in ("roteiro", "deteccao", "poda", "busca", "modelo", "selo")))
+        corridas.append({"pasta": pasta.name, "inicio": cab.get("inicio"), "fim": cab.get("fim"), "modelo": cab.get("modelo"), "versao_ollama": cab.get("versao_ollama"),
+                         "marcas": len(marcas), "casos_com_o_tempo_das_seis_etapas": com_as_seis,
+                         "execucoes": len(registros), "cenarios": len({r.get("cenario") for r in registros}),
+                         "task_success": sum(1 for r in registros if r.get("task_success") is True), "detectou": sum(1 for r in registros if r.get("detectou") is True)})
+    dado = {"metadados": {"gerado_em": dt.datetime.now().isoformat(timespec="seconds"), "gerado_por": "hub.py --botao",
+                          "fonte": "as pastas hub_<data>_<hora> de resultados_alvo/ (cenarios.jsonl e o cabeçalho da trilha)"},
+            "total": len(corridas), "corridas": corridas}
+    linhas = pf.cabecalho("As corridas lançadas pelo botão do hub", "hub.py --botao", dado["metadados"]["fonte"], dado["metadados"]["gerado_em"][:10])
+    if corridas:
+        u = corridas[-1]
+        quando = (f"em {u['inicio'][8:10]}/{u['inicio'][5:7]}/{u['inicio'][:4]}, das {u['inicio'][11:16]}" + (f" às {u['fim'][11:16]}" if u.get("fim") else "")) if u.get("inicio") else "sem hora gravada"
+        linhas += ["", (f"O botão de rodar os cenários do hub lançou {len(corridas)} {'corrida' if len(corridas) == 1 else 'corridas'} nesta máquina. A última, {quando}, rodou "
+                        f"{u['execucoes']} execuções de {u['cenarios']} cenários com o modelo `{u['modelo']}` (Ollama {u['versao_ollama']}): o agente chegou ao resultado em "
+                        f"{u['task_success']} de {u['execucoes']}, e a falha foi detectada em {u['detectou']} de {u['execucoes']}. As corridas do botão são uso do produto, não medida "
+                        "do TCC, e as pastas delas ficam fora do git (decisão 171): este arquivo é o registro versionado.")]
+        com_marcas = [c for c in corridas if c["marcas"]]
+        if com_marcas:
+            m = com_marcas[-1]
+            linhas += ["", (f"Na corrida `{m['pasta']}`, lançada com a opção `--etapas-ao-vivo` (decisão 176), o agente gravou a hora de cada etapa: {m['marcas']} marcas, e "
+                            f"{m['casos_com_o_tempo_das_seis_etapas']} de {m['execucoes']} casos têm o tempo das seis etapas no diagrama do hub.")]
+        linhas += ["", "| Pasta | Início | Fim | Execuções | Cenários | Chegou ao resultado | Falha detectada | Marcas da hora de cada etapa |", "|---|---|---|---|---|---|---|---|"]
+        linhas += [f"| `{c['pasta']}` | {c['inicio']} | {c['fim']} | {c['execucoes']} | {c['cenarios']} | {c['task_success']} de {c['execucoes']} | {c['detectou']} de {c['execucoes']} | {c['marcas']} |"
+                   for c in corridas]
+    else:
+        linhas += ["", "Nenhuma corrida lançada pelo botão do hub foi encontrada nesta máquina."]
+    return dado, "\n".join(linhas + [""])
+
+
 def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
     """As opções da linha de comando do hub."""
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -706,12 +805,21 @@ def argumentos(argv: list[str] | None = None) -> argparse.Namespace:
                                                                       "sem a opção, a página só mostra o comando para copiar")
     ap.add_argument("--pelo-exe", action="store_true", help="como o Cobaia.exe abre o hub: o site, a API e o banco já estão no ar, e o botão de rodar os cenários "
                                                              "fica liberado e chama o executar_fase4.py com --cobaias-no-ar")
+    ap.add_argument("--botao", action="store_true", help="grava em <resultados>/fase4/botao_do_hub.{json,md} o resumo das corridas lançadas pelo botão do hub "
+                                                         "(as pastas hub_<data>_<hora>); com --check, regera e compara sem gravar")
     return ap.parse_args(argv)
 
 
 def main(argv: list[str] | None = None) -> int:
     args = argumentos(argv)
     raiz = Path(args.resultados)
+    if args.botao:
+        dado, md = prova_do_botao(raiz)
+        if args.check and not dado["corridas"]:
+            print(f"--check: nenhuma pasta {hd.PREFIXO_DO_HUB}... com cenarios.jsonl nesta cópia; não há o que conferir, e o resumo gravado fica como está")
+            return 0
+        return pf.fechar(NOME_DA_PROVA_DO_BOTAO, dado, md, "tb_f4_botao_", check=args.check, pasta=raiz / "fase4",
+                         doc=EXP.parent.parent.parent / "Documentacao" / "memorial" / "3-resultados-e-analises" / "fase-4-relatorio.md")
     corridas = tuple(c.strip() for c in args.corridas.split(",") if c.strip()) if args.corridas else None
     # quem pede as corridas pelo nome, ou o resumo gravado do pacote Q6, fala só delas; sem isso o hub também mostra as corridas lançadas pelo botão
     acervo = hd.Acervo(raiz, corridas=corridas, descobrir=corridas is None and not args.resumo)

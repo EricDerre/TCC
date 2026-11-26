@@ -71,7 +71,10 @@ class TestesAbasPorTopico(unittest.TestCase):
         for sid in ids_topicos:
             self.assertIn(f'<section id="{sid}"', html, sid)
             self.assertIn(f'data-alvo="{sid}"', html, sid)
-        ids = re.findall(r' id="([^"]+)"', html)
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 116) os ids são procurados fora dos blocos de script.
+        # ! Motivo: a biblioteca de gráficos passou a ir embutida no painel, e o código dela tem trechos como `id="bar"` e `id="line"`, que não são elementos
+        # da página; o teste, que procura dois elementos com o mesmo id, passou a acusá-los.
+        ids = re.findall(r' id="([^"]+)"', re.sub(r"<script\b.*?</script>", "", html, flags=re.DOTALL))
         repetidos = {i for i in ids if ids.count(i) > 1}
         self.assertFalse(repetidos, f"ids repetidos na página: {sorted(repetidos)[:10]}")
 
@@ -971,6 +974,44 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn(f"{impacto['resumo']['selecao_parcial']} de {impacto['resumo']['pares']}", secao, "a página real traz a leitura")
         self.assertEqual(json.dumps(self.dados_t["progresso"], ensure_ascii=False)[:1], "{")
 
+    def teste_biblioteca_de_graficos_vai_embutida_quando_a_copia_local_confere(self):
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 116) teste novo, escrito antes do código: `gerar_dashboard.biblioteca_de_graficos` embute no painel a cópia
+        # local da biblioteca de gráficos (`ferramentas/terceiros/chart.umd.js`) quando o arquivo bate com o código de integridade do registro ao lado; sem a
+        # cópia, o painel continua pedindo a biblioteca à internet; com a cópia diferente do registro, a geração para.
+        # ! Motivo: o grupo decidiu trazer a biblioteca para o repositório, para os gráficos do painel funcionarem sem internet. Um arquivo de terceiros só entra
+        # no HTML se for exatamente o que foi baixado e conferido; trocado ou cortado, ele não pode ir para dentro do painel sem ninguém perceber.
+        import hashlib
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            pasta = Path(tmp)
+            self.assertEqual(gd.biblioteca_de_graficos(pasta), gd.TAG_DO_CDN, "sem a cópia local, o painel pede a biblioteca à internet, como antes")
+            self.assertIn("cdn.jsdelivr.net/npm/chart.js@4.4.1", gd.TAG_DO_CDN)
+            codigo = "/*! biblioteca de teste */ var Chart = function(){}; var s = '</script><p>';\n"
+            (pasta / "chart.umd.js").write_bytes(codigo.encode("utf-8"))
+            with self.assertRaises(ValueError, msg="cópia sem registro não entra no painel"):
+                gd.biblioteca_de_graficos(pasta)
+            registro = {"arquivos": {"chart.umd.js": {"sha256": hashlib.sha256(codigo.encode("utf-8")).hexdigest()}}}
+            (pasta / "terceiros.json").write_text(json.dumps(registro), encoding="utf-8")
+            embutida = gd.biblioteca_de_graficos(pasta)
+            self.assertTrue(embutida.startswith("<script>") and embutida.endswith("</script>"))
+            self.assertNotIn("cdn.jsdelivr.net", embutida)
+            self.assertEqual(embutida.count("</script"), 1, "o fecha-script de dentro da biblioteca não pode fechar o bloco no meio")
+            self.assertIn("var Chart = function(){}", embutida)
+            (pasta / "chart.umd.js").write_bytes((codigo + "alert(1)").encode("utf-8"))
+            with self.assertRaises(ValueError, msg="cópia que não bate com o código de integridade não entra no painel"):
+                gd.biblioteca_de_graficos(pasta)
+        # no repositório: a cópia existe, bate com o registro, e o painel gravado não pede mais a biblioteca à internet
+        registro = json.loads((gd.PASTA_DE_TERCEIROS / "terceiros.json").read_text(encoding="utf-8"))
+        ficha = registro["arquivos"]["chart.umd.js"]
+        dados = (gd.PASTA_DE_TERCEIROS / "chart.umd.js").read_bytes()
+        self.assertEqual(hashlib.sha256(dados).hexdigest(), ficha["sha256"])
+        self.assertEqual((ficha["versao"], ficha["licenca"], ficha["bytes"]), ("4.4.1", "MIT", len(dados)))
+        self.assertEqual(ficha["origem"], "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js")
+        self.assertIn("Chart.js v4.4.1", dados[:300].decode("utf-8"), "o arquivo traz o próprio aviso de versão e de licença")
+        painel = (gd.RAIZ / "Documentacao" / "dashboard" / "painel-do-projeto.html").read_text(encoding="utf-8")
+        self.assertNotIn('<script src="https://cdn.jsdelivr.net', painel, "o painel gravado não pede a biblioteca à internet")
+        self.assertIn("Chart.js v4.4.1", painel)
+
     def teste_hub_e_selecao_pelo_git_usam_os_numeros_dos_json(self):
         # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacotes Q6 e Q7) a aba "Hub e Git" lê hub.json (o que o hub central mostra: casos por corrida,
         # iterações, listas da revisão e testes, de `hub.py --resumo`) e conferencia_git.json (a seleção de cenários pelo Git conferida contra a rodada completa,
@@ -1025,9 +1066,27 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertNotIn("None", h3)
         self.assertNotIn(f"em {fumaca['traces']} cenários", h3)
         self.assertIn("nos cenários em que o roteiro falhou", h3)
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 113) a aba conta a corrida lançada pelo botão do hub, lida de `botao_do_hub.json`, e o molde visual.
+        # ! Motivo: o botão rodou com o modelo em 26/11/2026, e a aba ainda dizia que ele não tinha rodado; sem o derivado, ela continua dizendo isso.
+        self.assertIn("ainda não rodou", h2, "sem o resumo das corridas do botão, a aba diz que a prova falta")
+        self.assertIn("diagramas", h2, "o molde visual do hub")
+        botao = self.ctx.get("botao_do_hub")
+        self.assertTrue(botao and botao["corridas"], "botao_do_hub.json existe em resultados_alvo/fase4")
+        ultima = botao["corridas"][-1]
+        _, h4 = tp.secao_hub(hub, conf, fumaca, botao)
+        self.assertNotIn("ainda não rodou", h4)
+        self.assertIn(f"em {ultima['task_success']} de {ultima['execucoes']} execuções", h4)
+        # (26/11/2026, decisão 176) quando a corrida do botão gravou a hora de cada etapa, a aba diz em quantos casos o diagrama tem o tempo das seis
+        self.assertTrue(ultima["marcas"] > 0, "a última corrida do botão gravou as marcas da hora de cada etapa")
+        self.assertIn(f"em {ultima['casos_com_o_tempo_das_seis_etapas']} dos {ultima['execucoes']} casos", h4)
+        _, h5 = tp.secao_hub(hub, conf, fumaca, {"corridas": [{**ultima, "marcas": 0, "casos_com_o_tempo_das_seis_etapas": 0}]})
+        self.assertNotIn("tempo das seis etapas em", h5, "corrida do botão sem as marcas: a aba não fala do tempo das seis")
+        for proibido in ("—", "→", "Eric", "você"):
+            self.assertNotIn(proibido, h4, proibido)
         secao = self.html[self.html.index('<section id="hub"'):].split("</section>")[0]
         self.assertIn(f"{t['casos']} casos", secao, "a página real traz a leitura")
         self.assertIn(f"em {fumaca['traces']} cenários", secao, "a página real traz a corrida curta")
+        self.assertNotIn("ainda não rodou", secao, "a página real traz a prova do botão")
         self.assertEqual(json.dumps(self.dados_t["hub"], ensure_ascii=False)[:1], "{")
 
     def teste_revisao_v3_usa_os_numeros_do_json(self):
@@ -2113,19 +2172,31 @@ class TesteLeituras(unittest.TestCase):
         self.assertEqual(self.pagina.count('class="como-ler"') >= len(ids), True)
 
     def teste_nenhuma_tabela_de_dados_a_vista(self):
-        ini, fim = self.pagina.index("<main>"), self.pagina.index("</main>")
-        aba, prof, soltas = "", 0, []
-        for m in re.finditer(r'<section id="([^"]+)"|<details|</details>|<table><thead><tr><th[^>]*>(.*?)</th>', self.pagina[ini:fim], re.S):
-            t = m.group(0)
-            if t.startswith("<section"):
-                aba = m.group(1)
-            elif t.startswith("<details"):
-                prof += 1
-            elif t == "</details>":
-                prof -= 1
-            elif prof == 0 and (aba, re.sub(r"<[^>]+>", "", m.group(2)).strip()) not in pl.TABELAS_A_VISTA:
-                soltas.append((aba, m.group(2)[:40]))
-        self.assertEqual(soltas, [])
+        # ! Alteração de IA - Revisar: (26/11/2026) a varredura da página virou a função `soltas_em`, o teste ganhou a conferência de que uma tabela de dados
+        # solta no fim da página é acusada, e na expressão `<details` voltou a ser seguido de `\b` (fim de palavra); no lugar havia um caractere de
+        # retrocesso (0x08), gravado por engano num commit anterior.
+        # ! Motivo: com o retrocesso, `<details` nunca casava; a conta de blocos recolhidos abertos só descia a cada `</details>`, e depois do primeiro bloco
+        # recolhido da página nenhuma tabela era conferida: uma tabela de dados solta no fim do painel passava no teste sem ninguém notar. A conferência
+        # nova foi escrita antes da troca do caractere e falhava com ele; é ela que acusa se a varredura deixar de enxergar as tabelas outra vez.
+        def soltas_em(pagina: str) -> list:
+            ini, fim = pagina.index("<main>"), pagina.index("</main>")
+            aba, prof, soltas = "", 0, []
+            for m in re.finditer(r'<section id="([^"]+)"|<details\b|</details>|<table><thead><tr><th[^>]*>(.*?)</th>', pagina[ini:fim], re.S):
+                t = m.group(0)
+                if t.startswith("<section"):
+                    aba = m.group(1)
+                elif t.startswith("<details"):
+                    prof += 1
+                elif t == "</details>":
+                    prof -= 1
+                elif prof == 0 and (aba, re.sub(r"<[^>]+>", "", m.group(2)).strip()) not in pl.TABELAS_A_VISTA:
+                    soltas.append((aba, m.group(2)[:40]))
+            return soltas
+
+        self.assertEqual(soltas_em(self.pagina), [])
+        solta = '<div class="tabela"><table><thead><tr><th>Dado cru de teste</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table></div>'
+        com_solta = soltas_em(self.pagina.replace("</main>", solta + "</main>"))
+        self.assertEqual([titulo for _, titulo in com_solta], ["Dado cru de teste"], "uma tabela de dados solta no fim da página tem de ser acusada")
 
     def teste_aplicar_recolhe_tabela_com_o_filtro_e_guarda_a_que_e_conteudo(self):
         tab = '<div class="tabela"><table><thead><tr><th>Modelo</th></tr></thead><tbody><tr><td>1</td></tr></tbody></table></div>'

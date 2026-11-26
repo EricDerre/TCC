@@ -35,6 +35,7 @@ import caminhos
 import caso_ao_vivo as cv
 import cliente_ollama as oll
 import estrategias
+import etapas_ao_vivo as ea
 import evolucao_biblioteca as evo
 import executar_bateria
 import executar_fase3
@@ -469,6 +470,13 @@ def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], 
     causas = causas or _causas_normalizadas()
     por_id = {v["id"]: v for v in verbetes}
     t0 = time.monotonic()
+    # ! Alteração de IA - Revisar: (26/11/2026, ficha 114, decisão 176) três marcas da hora dentro do diagnóstico: a busca começa aqui, o modelo logo
+    # antes da inferência e a conferência (o selo) logo depois dela. O caso da marca é o fim do identificador da trilha.
+    # ! Motivo: o diagrama da linha de produção do hub mostra o tempo de cada etapa pela diferença entre duas marcas, e essas três etapas rodam aqui
+    # dentro. As marcas só gravam quando a corrida foi lançada com `--etapas-ao-vivo` (o botão do hub); nas outras corridas `ea.marcar` volta sem
+    # fazer nada, e o diagnóstico, o pedido ao modelo e os eventos da trilha são os mesmos de antes.
+    caso_da_marca = tid.rsplit("/", 1)[-1]
+    ea.marcar("busca", caso_da_marca)
     # ! Alteração de IA - Revisar: (03/11/2026, P5) `extras` (verbetes recuperados pelo id do caso) entram no contexto depois
     # dos k da busca e ficam registrados no evento `candidatos` (`por_id`).
     # ! Motivo: ficha 32 e o ciclo de correção (plano, seção 3.7, item 4): as notas do próprio caso chegam ao modelo sem
@@ -483,7 +491,9 @@ def diagnosticar(trilha: tr.Trilha, tid: str, caso: dict, verbetes: list[dict], 
     s_prompt = trilha.evento("prompt", tid, {"etapa": "diagnostico", "sha": trilha.blob(prompt, "prompt"), "prompt_sha256": sha_prompt,
                                              "chars": len(prompt), "hash_prompt_fixo": hash_prompt_fixo(verbetes, ctx, caso, prompt),
                                              "verbetes_ids": ctx["verbetes_ids"]}, "ao_vivo", pai=s_cand, ts=ts)
+    ea.marcar("modelo", caso_da_marca)
     r, captura = inferir(modelo, prompt, teto, caso["id"], top)
+    ea.marcar("selo", caso_da_marca)
     ambiente = executar_bateria.ambiente_residente()
     registro = registro_oficial(modelo, caso, verbetes, ctx, prompt, r, {**comum, "k": k, "teto_tokens": teto}, ambiente)
     lateral = sc.linha_lateral(registro, captura, top)

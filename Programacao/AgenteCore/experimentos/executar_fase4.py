@@ -94,6 +94,7 @@ import caso_ao_vivo as cv
 import cenarios_fase4 as cen
 import cura_seletor as cs
 import estrategias
+import etapas_ao_vivo as ea
 import evolucao_biblioteca as evo
 import executar_bateria
 import executar_fase3
@@ -726,6 +727,11 @@ class Tela:
     def rodar_caso(self, item: dict) -> dict:
         """Liga o modo do caso, roda o roteiro, poda, compara com a referência, decide a regra R1 e monta o caso ao vivo."""
         _trace(self.nav, "descartar_traces")            # trace na falha (decisão 93): só as páginas deste caso ficam pendentes; sem a opção, não faz nada
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 114, decisão 176) três marcas da hora, que só gravam com `--etapas-ao-vivo`: o roteiro começa
+        # aqui; a detecção, quando a página fecha; e a poda, antes de a árvore da tela ser reduzida.
+        # ! Motivo: o diagrama da linha de produção do hub mostra o tempo de cada etapa pela diferença entre duas marcas. Sem a opção, `ea.marcar`
+        # volta sem fazer nada, e o caso roda como nas corridas 18d, 21d e 28b.
+        ea.marcar("roteiro", item.get("id"))
         cenario_, usado = com_produto(cen.cenario(item["cenario"]), item["produto_id"])
         ref = self.referencia(item["cenario"], usado)
         ligar_modo(item["modo"], item["campo"], self.token)
@@ -736,11 +742,13 @@ class Tela:
             _trace(self.nav, "reter_trace", pagina)     # o roteiro falhou nesta página: é o trace dela que `emitir` grava
         pagina.close()
         ligar_modo("normal", None, self.token)
+        ea.marcar("deteccao", item.get("id"))
         chamada, do_alvo = chamada_do_caso(r["chamadas"], item["cenario"], usado)
         corpo = inter.corpo(chamada["corpo_sha"]) if chamada and chamada.get("corpo_sha") else None
         diff = poda.diff_contrato(self.contrato, corpo if corpo is not None else "",
                                   forma_esperada=cenario_["forma"] if do_alvo else "lista") if chamada else None
         captura = r["capturas"][-1] if r["capturas"] else {}
+        ea.marcar("poda", item.get("id"))
         podada = (poda.podar_arvore(captura["nos"], captura.get("titulo") or "", alvo=cenario_["alvo"], interativos=captura.get("interativos"))
                   if captura.get("nos") else None)
         diff_arv = cv.diff_arvore(ref["arvore"], podada["texto"]) if podada else None
@@ -1378,6 +1386,10 @@ class Cura:
     def executar(self, celula: dict, apos_deteccao=None, quebra: dict | None = None) -> dict:
         """Uma execução: a quebra armada, o roteiro até falhar, a cura e a reexecução; devolve tudo para o registro e a trilha."""
         _trace(self.nav, "descartar_traces")            # trace na falha (decisão 93): só as páginas desta execução ficam pendentes
+        # ! Alteração de IA - Revisar: (26/11/2026, ficha 114, decisão 176) quatro marcas da hora, que só gravam com `--etapas-ao-vivo`: o roteiro
+        # começa aqui; a detecção, quando o roteiro para; a poda, antes de a árvore ser reduzida; e a saída (a cura), logo depois do diagnóstico.
+        # ! Motivo: o mesmo das marcas de `Tela.rodar_caso`: o diagrama do hub. Sem a opção, nada é gravado nem cronometrado.
+        ea.marcar("roteiro", celula.get("id"))
         q = quebra if quebra is not None else cen.quebra(celula["cenario"], celula["modo"])
         ref = self.referencia(q)
         base_cen = cen.cenario(q["cenario"])
@@ -1390,12 +1402,14 @@ class Cura:
         inter = ic.Interceptador(pagina)
         r = cen.rodar_cenario(cenario_, pagina, inter, base=self.base, capturar=False, tempo_limite_ms=cen.TEMPO_LIMITE_QUEBRA_MS)
         quebrou = not r["passou"]
+        ea.marcar("deteccao", celula.get("id"))
         if quebrou:
             _trace(self.nav, "reter_trace", pagina)     # a página da detecção: o passo do localizador falhou nela
         try:
             captura = inter.capturar()
         except Exception as e:  # noqa: BLE001 - página fechada ou navegando: a cura fica sem árvore e isso é registrado
             captura = {"erro": f"{type(e).__name__}: {str(e)[:200]}", "nos": [], "aria": "", "titulo": "", "interativos": []}
+        ea.marcar("poda", celula.get("id"))
         podada = poda.podar_arvore(captura.get("nos") or [], captura.get("titulo") or "", alvo=q["alvo"], interativos=captura.get("interativos"))
         quebra_aplicada = None
         try:
@@ -1412,6 +1426,7 @@ class Cura:
         if quebrou and ref.get("alvo") and not d["fora_do_alvo"]:
             if apos_deteccao is not None:
                 d["diagnostico"] = apos_deteccao(d)
+                ea.marcar("saida", celula.get("id"))
                 # ! Alteração de IA - Revisar: (04/11/2026, leitura da corrida 21) depois do diagnóstico, a verificação dos candidatos vai
                 # para uma página refeita até o passo que falhou; o tempo de refazer entra no MTTR. Sem diagnóstico (modo `cura`), nada muda.
                 # ! Motivo: ver _refazer_ate_o_passo: na corrida 21 os candidatos do login deram "nenhum elemento" porque a página da
@@ -2304,6 +2319,8 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
     marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
           f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "
           f"({len({c['cenario']['id'] for c in celulas})} cenários x {args.repeticoes} repetição(ões)){'; corrida PARCIAL' if parcial else ''}; {len(feitos)} já feita(s)")
+    if args.etapas_ao_vivo:
+        ea.ligar(saida)             # só com a opção (ficha 114): daqui em diante cada etapa marca a hora em que começa
     front, api = subir_cobaias(args)
     trilha: tr.Trilha | None = None
     try:
@@ -2387,6 +2404,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                                                                             (seqs.get("chamada"), "corpo_http")) if s]
                             sv = _diagnosticar(tid, d["caso_vivo"], evidencia)
                             t_diag = time.monotonic()
+                            ea.marcar("saida", cel["id"])           # depois de `t_diag`: a marca (ficha 114) não entra no tempo de reparo
                             conf = cen.diagnostico_conferido(sv["registro"].get("resposta"), d["caso_vivo"])
                         reg = registro_do_cenario(c, cel["repeticao"], v["navegador"], h_rep, deteccao=deteccao, t_deteccao=t_det, t_diagnostico=t_diag,
                                                   conferencia=conf, rotulo=sv["no"]["escolha"] if sv else None,
@@ -2424,6 +2442,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                     trilha.gravar(arq_trilha)
                     executar_fase3._gravar(arq_resumo, reg)
                     registros.append(reg)
+                    ea.marcar("fim", cel["id"])                     # o caso terminou e a trilha dele já está no disco (ficha 114; só grava com a opção)
                     _conferir_versao(versao)
                     marco(f"[{n}/{len(celulas)}] {cel['id']} ({c['tipo']}, {c['modo']}): "
                           + (f"detectou ({reg['origem_deteccao']}); {reg['rotulo']}" if reg["detectou"] else "NÃO detectou")
@@ -2434,6 +2453,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
         marco(f"!! corrida parou: {e}")
         return 1
     finally:
+        ea.desligar()
         derrubar_cobaias(front, api, args.token, parar_banco=not args.cobaias_no_ar)
     fim = cen.agora()
     if trilha is not None:
@@ -2780,6 +2800,13 @@ def montar_parser() -> argparse.ArgumentParser:
     # ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) `--cobaias-no-ar`, do modo `cenarios`, desligada por padrão.
     # ! Motivo: o hub aberto pelo `Cobaia.exe` lança a corrida com o site, a API e o banco já no ar; sem a opção, a corrida tentaria subir
     # outro site e outra API nas mesmas portas e, no fim, desligaria o banco do site que a pessoa está usando.
+    # ! Alteração de IA - Revisar: (26/11/2026, ficha 114, decisão 176) `--etapas-ao-vivo`, do modo `cenarios`, desligada por padrão.
+    # ! Motivo: o diagrama da linha de produção do hub precisa da hora em que cada etapa começa, para mostrar o tempo das seis e acender a que
+    # está rodando. O Eric decidiu gravar só nas corridas lançadas pelo botão do hub, que não são medida; sem a opção, as chamadas `ea.marcar`
+    # espalhadas pelo executor e pelo diagnóstico voltam sem fazer nada, e a corrida de medida continua igual.
+    ap.add_argument("--etapas-ao-vivo", action="store_true",
+                    help="cenarios: grava em <saida>/etapas_ao_vivo.jsonl a hora em que cada etapa de cada caso começa; é o que o botão do hub usa "
+                         "para o diagrama ao vivo (desligada por padrão: a corrida de medida não grava nem cronometra nada)")
     ap.add_argument("--cobaias-no-ar", action="store_true",
                     help="cenarios: usa o site, a API e o banco que já estão no ar (não sobe nem derruba nada); é o que o hub aberto pelo Cobaia.exe usa")
     ap.add_argument("--selecao", choices=("todos", "git"), default="todos",

@@ -236,19 +236,37 @@ def pagina() -> str:
         '<button type="button" id="abrir-metricas">Métricas</button>',
         '<button type="button" id="abrir-ao-vivo">Corrida ao vivo</button>',
         "</nav>",
-        '<label class="campo">Quem está revisando <input id="nome-do-revisor" type="text" maxlength="80" autocomplete="off" placeholder="seu nome"></label>',
-        f'<label class="campo">Corrida <select id="filtro-corrida">{opcao_vazia("todas")}</select></label>',
-        '<label class="campo">Procurar <input id="filtro-texto" type="search" placeholder="caso, causa, título"></label>',
-        '<label class="campo marcar"><input id="filtro-sem-veredito" type="checkbox"> só sem veredito</label>',
-        '<span id="contagem-de-casos" class="contagem"></span>',
+        ('<label class="campo" title="O seu nome entra em cada comentário e em cada veredito que você gravar">Quem está revisando '
+         '<input id="nome-do-revisor" type="text" maxlength="80" autocomplete="off" placeholder="seu nome"></label>'),
         '<p id="erro" role="alert" aria-live="assertive"></p>',
         "</header>",
         '<div class="corpo">',
-        '<aside class="lateral" aria-label="Casos"><ul id="lista-de-casos"></ul></aside>',
+        '<aside class="lateral" aria-label="Casos">',
+        '<div class="topo-da-lista">',
+        f'<label class="campo" title="Mostra só os diagnósticos de uma corrida">Corrida <select id="filtro-corrida">{opcao_vazia("todas")}</select></label>',
+        ('<label class="campo" title="Procura no nome do caso, na causa respondida, no campo e no título">Procurar '
+         '<input id="filtro-texto" type="search" placeholder="caso, causa, título"></label>'),
+        ('<label class="campo marcar" title="Esconde os diagnósticos que o analista já julgou"><input id="filtro-sem-veredito" type="checkbox"> só sem veredito</label>'),
+        '<span id="contagem-de-casos" class="contagem" title="Quantos diagnósticos passam no filtro, do total que o hub tem"></span>',
+        '<button type="button" id="abrir-legenda" aria-controls="legenda-da-lista" aria-expanded="false">O que é cada item?</button>',
+        "</div>",
+        '<div id="legenda-da-lista" class="legenda-da-lista" hidden><dl>',
+        "<dt>Corrida</dt><dd>uma rodada do agente. Cada grupo da lista é uma corrida, e o número ao lado é quantos diagnósticos ela tem</dd>",
+        "<dt>Cada linha</dt><dd>um diagnóstico do agente: o título diz a causa que ele respondeu e onde</dd>",
+        "<dt>Iteração</dt><dd>o mesmo caso diagnosticado mais de uma vez. Iteração 2 de 3 é a segunda de três</dd>",
+        "<dt>Confiança</dt><dd>alta, média ou baixa: o selo que o código dá à resposta do modelo, pela probabilidade lida</dd>",
+        "<dt>Divergência</dt><dd>o que o modelo declarou não bate com o que o código conferiu</dd>",
+        "<dt>Cura</dt><dd>o agente achou outro seletor para um localizador quebrado e refez o roteiro</dd>",
+        "<dt>Veredito</dt><dd>a decisão do analista sobre o diagnóstico. O agente só comenta</dd>",
+        "</dl></div>",
+        '<ul id="lista-de-casos"></ul>',
+        "</aside>",
         '<main id="caso" hidden>',
         '<div id="cabecalho-do-caso">',
         '<h1 id="titulo-do-caso"></h1>',
         '<p id="meta-do-caso" class="meta"></p>',
+        '<div id="processo-do-caso" class="diagrama"></div>',
+        '<div id="resumo-do-processo" class="fichas"></div>',
         '<div class="linha-da-iteracao">',
         '<label class="campo">Iteração <select id="seletor-de-iteracao"></select></label>',
         '<label class="campo marcar"><input id="marca-lido" type="checkbox"> li esta iteração</label>',
@@ -310,6 +328,11 @@ def pagina() -> str:
         '<section id="ao-vivo" hidden>',
         "<h1>Corrida ao vivo</h1>",
         '<div class="cartao">',
+        "<h2>Linha de produção</h2>",
+        '<p id="caso-ao-vivo" class="nota" aria-live="polite"></p>',
+        '<div id="linha-de-producao" class="diagrama"></div>',
+        "</div>",
+        '<div class="cartao">',
         "<h2>Barra de progresso</h2>",
         '<p id="estado-ao-vivo" class="nota"></p>',
         '<p id="etapa-ao-vivo"></p>',
@@ -343,7 +366,8 @@ def pagina() -> str:
         "<h1>Central do agente de QA</h1>",
         '<p id="resumo-do-inicio" class="nota"></p>',
         '<div class="cartao">',
-        "<h2>O que está no ar</h2>",
+        "<h2>Como as peças se ligam, e o que está no ar</h2>",
+        '<div id="workspaces" class="diagrama rolavel"></div>',
         '<div id="servicos" class="servicos"></div>',
         '<p id="nota-dos-servicos" class="nota"></p>',
         "</div>",
@@ -354,8 +378,13 @@ def pagina() -> str:
          '<p class="nota" id="nota-de-rodar"></p></div>'),
         ('<div class="atalho"><button type="button" id="ir-para-metricas">Ver as métricas</button>'
          '<p class="nota">O que cada corrida mediu, lido dos registros gravados, e o resultado da comparação com as pessoas.</p></div>'),
-        ('<div class="atalho"><a class="painel" id="abrir-painel" target="_blank" rel="noopener noreferrer">Abrir o painel do projeto</a>'
-         '<p class="nota">Os gráficos e a leitura de cada resultado, um assunto por aba. Abre em outra aba e precisa de internet.</p></div>'),
+        ('<div class="atalho"><a class="painel" id="abrir-painel" href="/painel" target="_blank" rel="noopener">Abrir o painel do projeto</a>'
+         # ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) a nota do atalho passou a dizer que o painel funciona sem internet, com os gráficos.
+         # ! Motivo: ela dizia que, sem internet, os gráficos do painel não apareciam; a biblioteca que os desenha agora vai embutida no arquivo do painel
+         # (`ferramentas/terceiros/chart.umd.js`, posta no HTML por `gerar_dashboard.py`), e a frase antiga deixou de ser verdade.
+         '<p class="nota">A leitura de cada resultado, um assunto por aba. Abre o arquivo desta máquina, em outra aba, e funciona sem internet: a '
+         'biblioteca que desenha os gráficos vai dentro do próprio arquivo.</p>'
+         '<p class="aviso" id="aviso-do-painel" role="status" hidden></p></div>'),
         "</div>",
         '<p class="nota">Para revisar um diagnóstico do agente, escolha um caso na lista ao lado.</p>',
         "</div>",
@@ -365,11 +394,19 @@ def pagina() -> str:
         '<div id="metricas-da-fase-5" class="cartao" hidden></div>',
         '<div class="cartao">',
         "<h2>Por corrida</h2>",
+        "<h3>Tempo médio de reparo das corridas que rodam cenários</h3>",
+        '<div id="grafico-do-reparo" class="diagrama"></div>',
+        '<p id="nota-do-reparo" class="nota"></p>',
+        "<h3>Confiança dos diagnósticos</h3>",
+        '<div id="grafico-da-confianca" class="diagrama"></div>',
+        ('<div class="legenda-do-diagrama"><span class="l-alta">confiança alta</span><span class="l-media">média</span><span class="l-baixa">baixa</span></div>'),
+        '<details class="tabela-recolhida"><summary>Ver a tabela com os números</summary>',
         ('<p class="nota">Cada linha é lida agora dos arquivos da corrida: os casos e a confiança vêm da trilha; as execuções, o Task Success (em quantas o agente '
          'chegou ao resultado) e o tempo de reparo vêm do <code>cenarios.jsonl</code>. O tempo de reparo é a média dos cenários: primeiro a média das execuções de '
-         'cada cenário, depois a média entre eles. Clique numa corrida para ver cenário por cenário.</p>'),
+         'cada cenário, depois a média entre eles.</p>'),
         ('<div class="tabela"><table><thead><tr><th>Corrida</th><th>Casos com diagnóstico</th><th>Confiança</th><th>Execuções de cenário</th><th>Task Success</th>'
          '<th>Falha detectada</th><th>Tempo médio de reparo</th><th>Medida do TCC</th></tr></thead><tbody id="metricas-por-corrida"></tbody></table></div>'),
+        "</details>",
         "</div>",
         '<div id="metricas-por-cenario" class="cartao" hidden></div>',
         "</section>",
@@ -384,6 +421,15 @@ def pagina() -> str:
         '<button type="button" id="comentar-agora" class="principal">Comentar agora</button>',
         '<button type="button" id="guardar-rascunho">Guardar rascunho</button>',
         '<button type="button" id="cancelar-comentario">Cancelar</button>',
+        "</div>",
+        "</div>",
+        '<div id="zoom-da-etapa" class="zoom" role="dialog" aria-modal="true" aria-labelledby="titulo-do-zoom" hidden>',
+        '<div class="zoom-caixa">',
+        '<button type="button" id="fechar-zoom">Fechar</button>',
+        '<h2 id="titulo-do-zoom"></h2>',
+        '<p id="o-que-e-do-zoom" class="o-que-e"></p>',
+        '<p id="resumo-do-zoom"></p>',
+        '<div id="corpo-do-zoom"></div>',
         "</div>",
         "</div>",
         '<script src="/hub.js" defer></script>',
@@ -535,7 +581,7 @@ JS = r"""'use strict';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const E = {indice: null, caso: null, aba: 'relatorio', evidencia: null, ancora: null, selecao: null, vista: 'inicio', relogio: null, ultimo: null,
-  relogioDoInicio: null, metricas: null, corridaDasMetricas: null, corridaRodando: false};
+  relogioDoInicio: null, metricas: null, corridaDasMetricas: null, corridaRodando: false, grupos: {}, porTid: {}, linhaAoVivo: null, assinaturaDoWorkspace: null};
 const ABAS = ['relatorio', 'arvore', 'trilha'];
 
 function el(tag, props = {}, ...filhos) {
@@ -591,10 +637,10 @@ async function gravar(acao, extras) {
 
 function etiquetas(c) {
   const r = c.revisao || {};
-  const itens = [el('span', {class: 'etiqueta conf-' + (c.selo || 'sem'), text: 'confiança ' + c.confianca})];
-  if (c.divergencia) itens.push(el('span', {class: 'etiqueta alerta', text: 'divergência'}));
-  if (c.cura) itens.push(el('span', {class: 'etiqueta', text: 'cura'}));
-  if (r.veredito) itens.push(el('span', {class: 'etiqueta veredito', text: r.veredito_rotulo}));
+  const itens = [el('span', {class: 'etiqueta conf-' + (c.selo || 'sem'), text: 'confiança ' + c.confianca, title: 'O selo que o código dá à resposta do modelo, pela probabilidade lida'})];
+  if (c.divergencia) itens.push(el('span', {class: 'etiqueta alerta', text: 'divergência', title: 'O que o modelo declarou não bate com o que o código conferiu'}));
+  if (c.cura) itens.push(el('span', {class: 'etiqueta', text: 'cura', title: 'O agente achou outro seletor para o localizador quebrado e refez o roteiro'}));
+  if (r.veredito) itens.push(el('span', {class: 'etiqueta veredito', text: r.veredito_rotulo, title: 'O veredito do analista sobre este diagnóstico'}));
   if (r.ativas) itens.push(el('span', {class: 'etiqueta conversa-ativa', text: r.ativas === 1 ? '1 conversa ativa' : r.ativas + ' conversas ativas'}));
   return itens;
 }
@@ -602,30 +648,66 @@ function etiquetas(c) {
 function itemDaLista(c) {
   const li = el('li', {class: 'item-caso', data: {tid: c.tid, caso: c.caso, corrida: c.corrida}, tabindex: '0', role: 'button'},
     el('span', {class: 'titulo-do-item'}, comCodigo(c.titulo)),
-    el('span', {class: 'meta', text: c.rotulo_da_corrida + ' · ' + c.nome + ' · iteração ' + c.iteracao + ' de ' + c.iteracoes}),
+    el('span', {class: 'meta', text: c.nome + ' · iteração ' + c.iteracao + ' de ' + c.iteracoes,
+      title: 'O nome do caso e qual das vezes em que o agente o diagnosticou é esta'}),
     el('span', {class: 'etiquetas'}, etiquetas(c)));
   li.addEventListener('click', () => abrirCaso(c.tid));
   li.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrirCaso(c.tid); } });
   return li;
 }
 
+// ! Alteração de IA - Revisar: (26/11/2026, molde visual do hub, ficha 113) a lista de casos passa a ser desenhada em grupos, um por corrida, que abrem
+// e fecham; sem filtro, só o primeiro grupo vem aberto (todos, quando o hub tem até doze casos) e cada grupo mostra quinze casos por vez, com o
+// botão "Mostrar mais"; com filtro (corrida, busca ou "só sem veredito") aparecem todos os que batem, de todos os grupos.
+// ! Motivo: o Eric testou o hub com os 170 diagnósticos numa lista só e pediu o fim da rolagem quase sem fim e a explicação de cada campo. Todos
+// os casos continuam na página (escondidos), para a busca e os filtros acharem qualquer um sem pedir nada ao servidor.
+const POR_VEZ = 15;
+
+function estadoDoGrupo(pasta) {
+  if (!E.grupos[pasta]) E.grupos[pasta] = {aberto: E.indice.casos.length <= 12 || E.indice.corridas.findIndex(c => c.pasta === pasta) === 0, limite: POR_VEZ};
+  return E.grupos[pasta];
+}
+
+function grupoDaLista(corrida) {
+  const cabeca = el('button', {type: 'button', class: 'cabeca-do-grupo', data: {corrida: corrida.pasta}, title: corrida.descricao || 'Os diagnósticos desta corrida'},
+    el('span', {class: 'nome-do-grupo', text: corrida.rotulo}), el('span', {class: 'contagem'}));
+  cabeca.addEventListener('click', () => { const g = estadoDoGrupo(corrida.pasta); g.aberto = !g.aberto; filtrar(); });
+  const mais = el('button', {type: 'button', class: 'mostrar-mais'});
+  mais.addEventListener('click', () => { estadoDoGrupo(corrida.pasta).limite += POR_VEZ; filtrar(); });
+  return el('li', {class: 'grupo-de-casos', data: {corrida: corrida.pasta}}, cabeca,
+    el('ul', {class: 'casos-do-grupo'}, E.indice.casos.filter(c => c.corrida === corrida.pasta).map(itemDaLista)), mais);
+}
+
 function desenharLista() {
-  const ul = $('#lista-de-casos');
-  ul.replaceChildren(...E.indice.casos.map(itemDaLista));
+  E.porTid = Object.fromEntries(E.indice.casos.map(c => [c.tid, c]));
+  $('#lista-de-casos').replaceChildren(...E.indice.corridas.map(grupoDaLista));
   filtrar();
 }
 
 function filtrar() {
   const corrida = $('#filtro-corrida').value, texto = $('#filtro-texto').value.trim().toLowerCase(), semVeredito = $('#filtro-sem-veredito').checked;
-  let visiveis = 0;
-  for (const c of E.indice.casos) {
-    const li = $('#lista-de-casos').querySelector('.item-caso[data-tid="' + CSS.escape(c.tid) + '"]');
-    const alvo = [c.tid, c.titulo, c.escolha, c.causa_em_palavras, c.campo].join(' ').toLowerCase();
-    const mostra = (!corrida || c.corrida === corrida) && (!texto || alvo.includes(texto)) && (!semVeredito || !(c.revisao && c.revisao.veredito));
-    li.hidden = !mostra;
-    if (mostra) visiveis += 1;
+  const comFiltro = Boolean(corrida || texto || semVeredito);
+  let batem = 0;
+  for (const grupo of $$('#lista-de-casos .grupo-de-casos')) {
+    const estado = estadoDoGrupo(grupo.dataset.corrida);
+    let noGrupo = 0, total = 0;
+    for (const li of $$('.item-caso', grupo)) {
+      const c = E.porTid[li.dataset.tid];
+      total += 1;
+      const alvo = [c.tid, c.titulo, c.escolha, c.causa_em_palavras, c.campo].join(' ').toLowerCase();
+      const bate = (!corrida || c.corrida === corrida) && (!texto || alvo.includes(texto)) && (!semVeredito || !(c.revisao && c.revisao.veredito));
+      if (bate) noGrupo += 1;
+      li.hidden = !(bate && (comFiltro || (estado.aberto && noGrupo <= estado.limite)));
+    }
+    batem += noGrupo;
+    grupo.hidden = comFiltro && noGrupo === 0;
+    $('.cabeca-do-grupo', grupo).setAttribute('aria-expanded', String(comFiltro ? noGrupo > 0 : estado.aberto));
+    $('.cabeca-do-grupo .contagem', grupo).textContent = comFiltro ? noGrupo + ' de ' + total : total + (total === 1 ? ' caso' : ' casos');
+    const resto = noGrupo - estado.limite, mais = $('.mostrar-mais', grupo);
+    mais.hidden = comFiltro || !estado.aberto || resto <= 0;
+    mais.textContent = 'Mostrar mais ' + Math.min(POR_VEZ, Math.max(0, resto)) + ' (faltam ' + Math.max(0, resto) + ')';
   }
-  $('#contagem-de-casos').textContent = visiveis + ' de ' + E.indice.casos.length + ' casos';
+  $('#contagem-de-casos').textContent = batem + ' de ' + E.indice.casos.length + ' casos';
 }
 
 function atualizarItens(caso, resumo) {
@@ -692,12 +774,18 @@ function desenharCaso() {
   $('#preambulo').innerHTML = c.relatorio.preambulo_html;
   $('#rastro').innerHTML = c.relatorio.rastro_html;
   desenharEvidencia();
-  $('#aba-arvore').innerHTML = c.arvore_html;
+  // a árvore de decisão abre na rede desenhada (molde visual, ficha 113); o texto corrido, com a origem de cada frase, fica recolhido logo abaixo
+  const porEscrito = el('div', {class: 'arvore-por-escrito'});
+  porEscrito.innerHTML = c.arvore_html;
+  $('#aba-arvore').replaceChildren(el('h2', {text: 'Como o agente chegou à causa'}), el('div', {id: 'rede-da-decisao', class: 'diagrama rolavel'}),
+    el('details', {class: 'por-escrito'}, el('summary', {text: 'Ver a árvore de decisão por escrito, com a origem de cada frase'}), porEscrito));
   desenharTrilha();
   desenharRevisao();
   mostrarAba(ABAS.includes(E.aba) ? E.aba : 'relatorio');
   for (const li of $$('#lista-de-casos .item-caso')) li.classList.toggle('aberto', li.dataset.tid === c.tid);
   mostrarVista('casos');
+  desenharProcessoDoCaso();     // depois de a vista aparecer: o desenho mede a largura do lugar onde entra
+  abrirGrupoDoCaso(c.tid);
   main.scrollTop = 0;
   main.dataset.tid = c.tid;
 }
@@ -786,7 +874,15 @@ function desenharInicio(c) {
   $('#nota-de-rodar').textContent = c.execucao_permitida
     ? 'Ativa o agente nos dez cenários de quebra do site, com o modelo local. Leva cerca de um minuto por cenário, e a corrida aparece na lista de casos.'
     : 'Sem o Cobaia.exe, o hub mostra o comando para copiar e rodar na sua janela do PowerShell.';
-  if (c.painel) $('#abrir-painel').setAttribute('href', c.painel);
+  // o painel local (pedido do Eric em 26/11/2026): o botão leva ao arquivo desta máquina, servido pelo hub, e o aviso diz quando ele está atrás das fontes
+  const pn = c.painel || {}, aviso = $('#aviso-do-painel');
+  $('#abrir-painel').setAttribute('href', pn.url || '/painel');
+  aviso.hidden = pn.existe && !pn.atrasado;
+  aviso.replaceChildren(...(!pn.existe ? ['O painel ainda não foi gerado nesta máquina. Na raiz do repositório, rode ', el('code', {text: 'python ferramentas/gerar_dashboard.py'}), '.']
+    : pn.atrasado ? ['O painel foi gerado antes da última mudança em ', el('code', {text: pn.fonte_mais_nova}), '. Para atualizar, rode ', el('code', {text: 'python ferramentas/gerar_dashboard.py'}),
+      ' na raiz do repositório.'] : []));
+  const assinatura = c.servicos.map(s => s.id + ':' + s.no_ar).join(' ');     // o diagrama só é refeito quando um serviço sobe ou cai
+  if (assinatura !== E.assinaturaDoWorkspace) { E.assinaturaDoWorkspace = assinatura; desenharWorkspaces($('#workspaces'), c); }
 }
 
 async function atualizarMetricas() {
@@ -798,54 +894,62 @@ async function atualizarMetricas() {
 
 function comVirgula(v, casas) { return typeof v === 'number' ? v.toFixed(casas).replace('.', ',') : ''; }
 
+// ! Alteração de IA - Revisar: (26/11/2026, molde visual do hub, ficha 113) a vista "Métricas" passa a abrir em gráficos de barras: o tempo médio de
+// reparo do agente e das pessoas, o tempo médio de reparo de cada corrida que roda cenários, a confiança dos diagnósticos por corrida e, da corrida
+// escolhida, o tempo de cada cenário. A tabela com os números e as frases por extenso ficam recolhidas.
+// ! Motivo: o Eric pediu gráficos no lugar do texto, que por escrito fica denso. Os valores são os de `/api/metricas`, sem conta nova aqui, e a
+// ressalva do Task Success (decisão 151) continua à vista, ao lado das contagens, e não dentro do texto recolhido.
 function desenharMetricas() {
   const m = E.metricas, f = m.fase5, alto = $('#metricas-da-fase-5');
   alto.hidden = !f;
   if (f) {
-    const t = f.tempo_medio_s || {};
-    const placar = (typeof t.agente === 'number' && typeof t.pessoas === 'number') ? el('div', {class: 'placar'},
-      el('div', {}, el('span', {class: 'numero', text: comVirgula(t.agente, 1) + ' s'}), el('span', {class: 'rotulo-do-numero', text: 'tempo médio de reparo do agente'})),
-      el('div', {}, el('span', {class: 'numero', text: comVirgula(t.pessoas, 1) + ' s'}), el('span', {class: 'rotulo-do-numero', text: 'tempo médio de reparo das pessoas'}))) : null;
+    const t = f.tempo_medio_s || {}, grafico = el('div', {id: 'grafico-da-fase-5', class: 'diagrama'});
     alto.replaceChildren(
-      el('h2', {text: 'O agente contra as pessoas (Fase 5)'}),
-      el('h3', {text: 'Tempo de reparo, o resultado central'}), placar, el('p', {text: f.tempo}),
-      el('h3', {text: 'Task Success'}),
-      el('p', {text: f.task_success + ' O agente chegou ao resultado em ' + f.agente.sucessos + ' de ' + f.agente.n + ' execuções; as pessoas, em '
-        + f.pessoas.sucessos + ' de ' + f.pessoas.n + ' tentativas.'}),
-      f.ressalva ? el('p', {class: 'ressalva', text: f.ressalva}) : null,
-      el('p', {class: 'nota'}, 'Frases e números copiados de ', el('code', {text: 'resultados_alvo/fase5/medicao.json'}),
-        ', a leitura da comparação pelas regras fixadas antes das medidas' + (f.corrida ? ' (corrida do agente: ' + f.corrida + ').' : '.')));
+      el('h2', {text: 'O agente contra as pessoas (Fase 5)'}), el('h3', {text: 'Tempo médio de reparo: quanto menor, melhor'}), grafico,
+      el('div', {class: 'fichas'},
+        el('span', {class: 'ficha', title: 'Task Success: em quantas execuções o agente chegou ao resultado certo'}, 'o agente chegou ao resultado em ', el('b', {text: f.agente.sucessos + ' de ' + f.agente.n})),
+        el('span', {class: 'ficha', title: 'Em quantas tentativas as pessoas chegaram ao resultado certo'}, 'as pessoas, em ', el('b', {text: f.pessoas.sucessos + ' de ' + f.pessoas.n}))),
+      f.ressalva ? el('p', {class: 'ressalva', text: 'Ressalva do Task Success: ' + f.ressalva}) : null,
+      el('details', {class: 'por-extenso'}, el('summary', {text: 'Ler o resultado por extenso'}), el('p', {text: f.tempo}), el('p', {text: f.task_success}),
+        el('p', {class: 'nota'}, 'Frases e números copiados de ', el('code', {text: 'resultados_alvo/fase5/medicao.json'}),
+          ', a leitura da comparação pelas regras fixadas antes das medidas' + (f.corrida ? ' (corrida do agente: ' + f.corrida + ').' : '.'))));
+    if (typeof t.agente === 'number' && typeof t.pessoas === 'number') graficoDeBarras(grafico, [
+      {rotulo: 'Agente', valor: t.agente, texto: comVirgula(t.agente, 1) + ' s', classe: 'agente'},
+      {rotulo: 'Pessoas', valor: t.pessoas, texto: comVirgula(t.pessoas, 1) + ' s', classe: 'pessoas'}], 'barra-do-lado', 'Tempo médio de reparo do agente e das pessoas');
   }
+  const reparo = c => (c.mttr_media_s === null ? 'sem reparo medido' : comVirgula(c.mttr_media_s, 1) + ' s');
+  const comCenarios = m.corridas.filter(c => typeof c.execucoes === 'number' && c.execucoes > 0);
+  if (!m.corridas.some(c => c.pasta === E.corridaDasMetricas)) E.corridaDasMetricas = comCenarios.length ? comCenarios[comCenarios.length - 1].pasta : null;
+  graficoDeBarras($('#grafico-do-reparo'), comCenarios.map(c => ({rotulo: c.rotulo, valor: c.mttr_media_s, texto: reparo(c) + ' · ' + c.task_success + ' de ' + c.execucoes,
+    data: {corrida: c.pasta}, destaque: E.corridaDasMetricas === c.pasta, dica: c.rotulo + ': tempo médio de reparo ' + reparo(c) + '; chegou ao resultado em ' + c.task_success + ' de ' + c.execucoes
+      + ' execuções. Clique para ver cenário por cenário.', aoClicar: () => { E.corridaDasMetricas = c.pasta; desenharMetricas(); }})), 'barra-da-corrida', 'Tempo médio de reparo por corrida');
+  const semCenarios = m.corridas.filter(c => !(typeof c.execucoes === 'number' && c.execucoes > 0)).map(c => c.rotulo);
+  $('#nota-do-reparo').textContent = (comCenarios.length ? 'Ao lado do tempo, em quantas execuções o agente chegou ao resultado. Clique numa barra para ver cenário por cenário. ' : '')
+    + (semCenarios.length ? 'Sem barra: ' + semCenarios.join(', ') + ', que diagnosticam casos em texto ou na tela e não rodam cenários.' : '');
+  const classeDaConfianca = {alta: 'seg-alta', 'média': 'seg-media', baixa: 'seg-baixa'};
+  graficoDeBarras($('#grafico-da-confianca'), m.corridas.map(c => ({rotulo: c.rotulo, partes: Object.entries(c.confianca).map(([nome, n]) => ({classe: classeDaConfianca[nome] || 'seg-outra', n})),
+    texto: c.casos + (c.casos === 1 ? ' caso' : ' casos'), data: {corrida: c.pasta},
+    dica: c.rotulo + ': ' + (Object.entries(c.confianca).map(([nome, n]) => nome + ' ' + n).join(', ') || 'sem casos')})), 'barra-da-confianca', 'Confiança dos diagnósticos por corrida');
   $('#metricas-por-corrida').replaceChildren(...m.corridas.map(c => {
     const confianca = Object.entries(c.confianca).map(([nome, n]) => nome + ' ' + n).join(' · ') || 'sem casos';
     const medida = c.vale_como_medida === true ? 'sim' : c.vale_como_medida === false ? 'não' : 'não declarada';
     const dosCenarios = typeof c.execucoes === 'number'
-      ? [el('td', {text: String(c.execucoes)}), el('td', {text: c.task_success + ' de ' + c.execucoes}), el('td', {text: c.detectou + ' de ' + c.execucoes}),
-        el('td', {text: c.mttr_media_s === null ? 'sem reparo medido' : comVirgula(c.mttr_media_s, 1) + ' s'})]
+      ? [el('td', {text: String(c.execucoes)}), el('td', {text: c.task_success + ' de ' + c.execucoes}), el('td', {text: c.detectou + ' de ' + c.execucoes}), el('td', {text: reparo(c)})]
       : [el('td', {colspan: '4', class: 'nota', text: 'não rodou cenários: diagnostica os casos em texto ou na tela'})];
-    const tr = el('tr', {class: 'corrida' + (E.corridaDasMetricas === c.pasta ? ' aberta' : ''), data: {corrida: c.pasta}, tabindex: '0', role: 'button'},
-      el('td', {}, el('strong', {text: c.rotulo}), el('code', {text: c.pasta})), el('td', {text: String(c.casos)}), el('td', {text: confianca}), ...dosCenarios,
-      el('td', {text: medida}));
-    const abrir = () => { E.corridaDasMetricas = c.pasta; desenharMetricas(); };
-    tr.addEventListener('click', abrir);
-    tr.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); abrir(); } });
-    return tr;
+    return el('tr', {class: 'corrida', data: {corrida: c.pasta}}, el('td', {}, el('strong', {text: c.rotulo}), el('code', {text: c.pasta})), el('td', {text: String(c.casos)}),
+      el('td', {text: confianca}), ...dosCenarios, el('td', {text: medida}));
   }));
   const aberta = m.corridas.find(c => c.pasta === E.corridaDasMetricas), detalhe = $('#metricas-por-cenario');
   detalhe.hidden = !aberta;
   if (!aberta) return;
   const verCasos = el('button', {type: 'button', id: 'ver-casos-da-corrida', text: 'Mostrar só os casos desta corrida na lista'});
   verCasos.addEventListener('click', () => { $('#filtro-corrida').value = aberta.pasta; filtrar(); });
-  const linhas = aberta.por_cenario.map(x => el('tr', {}, el('td', {}, el('code', {text: x.cenario})), el('td', {text: x.tipo || ''}), el('td', {text: String(x.execucoes)}),
-    el('td', {text: x.task_success + ' de ' + x.execucoes}), el('td', {text: x.detectou + ' de ' + x.execucoes}),
-    el('td', {text: x.mttr_media_s === null ? 'sem reparo medido' : comVirgula(x.mttr_media_s, 1) + ' s'})));
-  detalhe.replaceChildren(
-    el('h2', {text: 'Cenário por cenário: ' + aberta.rotulo}),
-    aberta.descricao ? el('p', {class: 'nota', text: aberta.descricao}) : null,
-    linhas.length ? el('div', {class: 'tabela'}, el('table', {},
-      el('thead', {}, el('tr', {}, ...['Cenário', 'Tipo', 'Execuções', 'Task Success', 'Falha detectada', 'Tempo médio de reparo'].map(t => el('th', {text: t})))),
-      el('tbody', {}, linhas))) : el('p', {class: 'nota', text: 'Esta corrida não rodou cenários; os casos dela estão na lista ao lado.'}),
-    verCasos);
+  const grafico = el('div', {id: 'grafico-dos-cenarios', class: 'diagrama'});
+  detalhe.replaceChildren(el('h2', {text: 'Cenário por cenário: ' + aberta.rotulo}), aberta.descricao ? el('p', {class: 'nota', text: aberta.descricao}) : null, grafico,
+    aberta.por_cenario.length ? null : el('p', {class: 'nota', text: 'Esta corrida não rodou cenários; os casos dela estão na lista ao lado.'}), verCasos);
+  graficoDeBarras(grafico, aberta.por_cenario.map(x => ({rotulo: x.cenario, valor: x.mttr_media_s, texto: reparo(x) + ' · ' + x.task_success + ' de ' + x.execucoes,
+    dica: x.cenario + (x.tipo ? ' (' + x.tipo + ')' : '') + ': tempo médio de reparo ' + reparo(x) + '; chegou ao resultado em ' + x.task_success + ' de ' + x.execucoes + '; falha detectada em '
+      + x.detectou + ' de ' + x.execucoes, classe: x.task_success === x.execucoes ? '' : 'com-falha'})), 'barra-do-cenario', 'Tempo médio de reparo de cada cenário');
 }
 
 function segundos(s) {
@@ -888,6 +992,7 @@ async function atualizarAoVivo() {
   if (o.desde) consulta.set('desde', o.desde);
   let vivo, exec;
   try { [vivo, exec] = await Promise.all([api('/api/ao-vivo'), api('/api/execucao?' + consulta.toString())]); } catch (e) { mostrarErro(e.message); return; }
+  desenharLinhaAoVivo(vivo);
   desenharBarra(vivo);
   desenharCerebro(vivo.ultimo_diagnostico || null);
   desenharExecucao(exec);
@@ -990,6 +1095,7 @@ function mostrarAba(nome) {
   for (const s of $$('#caso > section.aba')) s.hidden = s.id !== 'aba-' + nome;
   for (const b of $$('nav.abas button')) b.classList.toggle('ativa', b.dataset.aba === nome);
   $('#comentar-trecho').hidden = true;
+  if (nome === 'arvore' && E.caso) desenharRede($('#rede-da-decisao'), E.caso.processo.rede);
   gravarEndereco();
 }
 
@@ -1343,6 +1449,16 @@ async function iniciar() {
   $('#abrir-metricas').addEventListener('click', () => mostrarVista(E.vista === 'metricas' ? 'casos' : 'metricas'));
   $('#ir-para-metricas').addEventListener('click', () => mostrarVista('metricas'));
   $('#ir-para-rodar').addEventListener('click', () => { mostrarVista('ao-vivo'); $('#execucao').scrollIntoView({block: 'start'}); });
+  $('#abrir-legenda').addEventListener('click', () => {
+    const legenda = $('#legenda-da-lista');
+    legenda.hidden = !legenda.hidden;
+    $('#abrir-legenda').setAttribute('aria-expanded', String(!legenda.hidden));
+  });
+  $('#fechar-zoom').addEventListener('click', fecharZoom);
+  $('#zoom-da-etapa').addEventListener('click', ev => { if (ev.target === ev.currentTarget) fecharZoom(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !$('#zoom-da-etapa').hidden) fecharZoom(); });
+  let espera = null;
+  window.addEventListener('resize', () => { clearTimeout(espera); espera = setTimeout(redesenharDiagramas, 150); });
   $('#abrir-ultimo').addEventListener('click', () => { if (E.ultimo) abrirCaso(E.ultimo); });
   $('#rodar-cenarios').addEventListener('click', () => mandarExecucao({acao: 'rodar', ...opcoesDaCorrida()}));
   for (const id of ['#selecao-da-corrida', '#desde-da-corrida', '#repeticoes']) {
@@ -1360,3 +1476,18 @@ async function iniciar() {
 
 iniciar();
 """
+
+
+# ! Alteração de IA - Revisar: (26/11/2026, molde visual do hub, ficha 113) o estilo e o programa dos diagramas (`hub_molde.py`) são juntados ao estilo e
+# ao programa da página: o estilo vai no fim, e o programa entra antes da chamada `iniciar()`, que continua sendo a última linha.
+# ! Motivo: os diagramas ficaram em arquivo próprio para não se misturarem com a revisão; a página continua servindo um estilo e um programa só,
+# em `/hub.css` e `/hub.js`, como a regra de segurança do servidor exige (nada de script nem de estilo embutido na página).
+import hub_molde  # depois do programa da página, porque o do molde usa as funções definidas acima e é juntado a ele
+
+CSS += hub_molde.CSS + """
+.legenda-do-diagrama .l-alta::before{background:var(--bom);border-color:var(--bom)}
+.legenda-do-diagrama .l-media::before{background:var(--meio);border-color:var(--meio)}
+.legenda-do-diagrama .l-baixa::before{background:var(--ruim);border-color:var(--ruim)}
+svg .barra-do-cenario.com-falha .cheio-do-grafico{fill:var(--ruim)}
+"""
+JS = JS.replace("\niniciar();\n", "\n" + hub_molde.JS + "\niniciar();\n")

@@ -4325,7 +4325,22 @@ def _item_da_corrida_curta(fumaca: dict) -> str:
 # aberta pelo `Cobaia.exe`; o item dos botões passa a dizer que o botão de rodar também funciona quando o hub é aberto pelo launcher.
 # ! Motivo: a corrida curta rodou em 25/11/2026 (ficha 99, fechada), e a aba ainda dizia que ela ia rodar; e o grupo pediu o hub como central de tudo, aberta
 # pelo `.exe` (decisão 170). A frase da corrida curta só usa números lidos da pasta dela; sem a pasta, a aba diz o que falta, como antes.
-def secao_hub(hub: dict | None, conferencia: dict | None, fumaca: dict | None = None) -> tuple[dict, str]:
+# ! Alteração de IA - Revisar: (26/11/2026, ficha 113) a aba ganhou o parâmetro `botao` (o resumo das corridas lançadas pelo botão do hub, de
+# `botao_do_hub.json`) e o item do molde visual; a frase do botão passa a dizer quando ele rodou com o modelo e em quantas execuções o agente chegou ao resultado.
+# ! Motivo: o grupo rodou os cenários pelo botão em 26/11/2026 e pediu o hub em diagramas, com menos texto. Sem o resumo gravado, a aba continua dizendo
+# que o botão ainda não rodou com o modelo, em vez de afirmar o que não tem de onde ler.
+def _frase_do_botao(botao: dict | None) -> str:
+    if not (botao and botao.get("corridas")):
+        return "Esse botão está coberto por teste sem o modelo; com o modelo, ele ainda não rodou."
+    u = botao["corridas"][-1]
+    dia = "/".join(reversed(str(u.get("inicio") or "")[:10].split("-")))
+    das_marcas = (f" Nessa corrida o agente gravou a hora de cada etapa, e o diagrama do hub mostra o tempo das seis etapas em {u['casos_com_o_tempo_das_seis_etapas']} dos "
+                  f"{u['execucoes']} casos." if u.get("marcas") else "")
+    return (f"Em {dia} o botão rodou os cenários com o modelo, e o agente chegou ao resultado em {u['task_success']} de {u['execucoes']} execuções.{das_marcas} "
+            "A pasta dessa corrida fica fora do repositório; o registro dela é o resumo gravado.")
+
+
+def secao_hub(hub: dict | None, conferencia: dict | None, fumaca: dict | None = None, botao: dict | None = None) -> tuple[dict, str]:
     titulo = ("O analista consegue rever um diagnóstico do agente como se revê uma mudança de código, e a corrida consegue escolher os cenários pelo que mudou? "
               "O hub central, que junta o relatório, a evidência, a árvore de decisão e a trilha de cada caso numa página de revisão, e a seleção pelo Git ligada "
               "ao executor, conferida contra a rodada completa.")
@@ -4369,8 +4384,12 @@ def secao_hub(hub: dict | None, conferencia: dict | None, fumaca: dict | None = 
          "funciona quando o hub é aberto com <code>--permitir-execucao</code> ou pelo <code>Cobaia.exe</code>; sem isso a página mostra o comando para copiar."),
         ("<strong>O hub é também a central aberta pelo <code>Cobaia.exe</code>.</strong> Desde 25/11/2026 o launcher sobe o hub junto com o site e a API e abre o navegador nele. A primeira tela diz "
          "o que está no ar e leva ao site, à API e a este painel; a vista de métricas mostra, por corrida, as execuções, o Task Success e o tempo de reparo, lidos dos registros gravados; e o botão de "
-         "rodar os dez cenários usa o site e a API que o launcher já subiu. A corrida lançada dali é uso do produto, não medida. Esse botão está coberto por teste sem o modelo; com o modelo, ele "
-         "ainda não rodou."),
+         "rodar os dez cenários usa o site e a API que o launcher já subiu. A corrida lançada dali é uso do produto, não medida. " + _frase_do_botao(botao)),
+        ("<strong>A página do hub abre em diagramas.</strong> Desde 26/11/2026 cada caso mostra a linha de produção dele: as seis etapas do agente, com o tempo gravado de cada uma e um cartão "
+         "que amplia ao clicar, as três saídas e a trilha. A árvore de decisão virou uma rede que liga o que o agente viu, os verbetes, as causas possíveis e o resultado; a tela inicial desenha "
+         "como as peças se ligam e o que está no ar; e as métricas saem em gráficos de barras. Nas corridas lançadas pelo botão do hub, o agente grava a hora em que cada etapa começa, e o "
+         "diagrama mostra o tempo das seis e acende a que está rodando; a opção vem desligada, e as corridas de medida não a usam. Nas outras corridas só o roteiro, a inferência e a cura têm "
+         "tempo, e a detecção, a poda, a busca e a conferência aparecem sem tempo."),
         (f"<strong>A seleção pelo Git passou a decidir a corrida.</strong> Com <code>--selecao git</code>, o executor roda só os cenários atingidos pelo que mudou nas cobaias desde o último commit "
          "testado, roda tudo quando um arquivo da aplicação está fora do mapa ou quando a última rodada completa passou do prazo, e grava o que deixou de fora. Na conta sobre o histórico, "
          f"{r['pares_que_rodam_tudo']} de {r['pares']} mudanças rodam tudo, e {r['pares_com_falha_perdida']} deixariam de fora o cenário que falhou na {rotulo_comp} "
@@ -4397,7 +4416,8 @@ def secao_hub(hub: dict | None, conferencia: dict | None, fumaca: dict | None = 
 {fontes(["<code>resultados_alvo/fase4/hub.json</code> (<code>hub.py --resumo</code>, com <code>--check</code>)", "<code>conferencia_git.json</code> (<code>impacto_git.py --conferir-historico</code>)",
          "<code>experimentos/hub.py</code>, <code>hub_dados.py</code>, <code>hub_revisao.py</code>, <code>hub_pagina.py</code> e <code>impacto_git.py</code>",
          "<code>resultados_alvo/fase4_fumaca_q7/</code> (a corrida curta: <code>impacto_git.json</code>, <code>cenarios.jsonl</code> e <code>traces/</code>)",
-         "plano aprovado da Pós-Fase 4, seções 3.6 e 3.7 (pacotes Q6 e Q7); decisões 93, 152, 157, 163 e 170", "levantamento §6.15.1 (revisão no estilo de pull request) e §6.15.5 (seleção pelo diff)",
+         "<code>resultados_alvo/fase4/botao_do_hub.json</code> (<code>hub.py --botao</code>, com <code>--check</code>)",
+         "plano aprovado da Pós-Fase 4, seções 3.6 e 3.7 (pacotes Q6 e Q7); decisões 93, 152, 157, 163, 170, 175 e 176", "levantamento §6.15.1 (revisão no estilo de pull request) e §6.15.5 (seleção pelo diff)",
          "<code>5-metodo-e-ferramental/estudo-visual-explainer-para-o-hub.md</code>"])}
 </section>"""
     return dados_js, html_
@@ -6148,7 +6168,7 @@ def montar(ctx: dict) -> tuple[dict, str]:
     d, h = secao_progresso(ctx.get("taxas_progresso"), ctx.get("erro_progresso"), ctx.get("impacto_git"), ctx.get("fumaca_progresso"))
     partes.append(("progresso", d, h))
     # a aba do hub e da seleção pelo Git existe sempre (o mapa de navegação a lista); sem hub.json e conferencia_git.json ela mostra o estado vazio
-    d, h = secao_hub(ctx.get("hub"), ctx.get("conferencia_git"), ctx.get("fumaca_q7"))
+    d, h = secao_hub(ctx.get("hub"), ctx.get("conferencia_git"), ctx.get("fumaca_q7"), ctx.get("botao_do_hub"))
     partes.append(("hub", d, h))
     # a aba da revisão humana existe sempre (o mapa de navegação a lista); sem leitura_revisao_v3.json ela mostra o estado vazio
     d, h = secao_revisao_v3(ctx.get("revisao_v3"), ctx.get("revisao_trilha"))

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -91,12 +92,32 @@ def evidencia_de_celula(a: Path) -> bool:
     return False
 
 
+# ! Alteração de IA - Revisar: função nova (26/11/2026, ficha 116, decisão 178): diz se o arquivo é a cópia de uma biblioteca de terceiros, isto é, se está numa
+# pasta chamada `terceiros` que tem um `terceiros.json` com a tag, o motivo e a ficha desse arquivo.
+# ! Motivo: a biblioteca de gráficos do painel (`ferramentas/terceiros/chart.umd.js`) entrou no repositório como foi baixada. Pôr a tag de IA dentro dela mudaria o
+# arquivo, e o código de integridade conferido no download deixaria de bater; ela fica coberta pela ficha no registro ao lado, como a saída capturada de uma
+# célula fica coberta pelo `celula.json`. O registro continua cobrado, e arquivo que ele não lista também.
+def copia_de_terceiros(a: Path) -> bool:
+    if a.parent.name != "terceiros" or a.name == "terceiros.json":
+        return False
+    registro = a.parent / "terceiros.json"
+    if not registro.is_file():
+        return False
+    texto = registro.read_text(encoding="utf-8-sig", errors="replace")
+    if "de IA - Revisar" not in texto or "! Motivo" not in texto:
+        return False
+    try:
+        return a.name in (json.loads(texto).get("arquivos") or {})
+    except ValueError:
+        return False
+
+
 def conferir_tags(arqs: list[Path]) -> list[str]:
     falhas = []
     for a in arqs:
         if a.suffix.lower() not in (".md", ".py", ".ps1", ".json", ".cmd", ".bat", ".php", ".js", ".yaml", ".yml", ".txt"):
             continue
-        if evidencia_de_celula(a):
+        if evidencia_de_celula(a) or copia_de_terceiros(a):
             continue
         # ! Alteração de IA - Revisar: `__init__.py` de 0 byte não é cobrado por tag.
         # ! Motivo: o .claude/CLAUDE.md dispensa o arquivo vazio de propósito (marcar quebraria a vazidade), mas esta conferência acusava `instalador\__init__.py: sem tag de IA`.

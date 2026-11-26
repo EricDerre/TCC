@@ -1,0 +1,35 @@
+{
+  "tag_ia": {
+    "alteracao": "! Alteração de IA - Revisar: arquivo novo (26/11/2026, ficha 116, decisão 178), gravado por ferramentas/trazer_chart_js.py: a ficha de cada arquivo de terceiros guardado nesta pasta (origem, versão, licença, tamanho e códigos de integridade).",
+    "motivo": "! Motivo: o arquivo de terceiros entra no repositório como foi baixado, sem a tag de IA dentro, porque a tag mudaria o arquivo e o código de integridade deixaria de bater; esta ficha é o que diz de onde ele veio, quem autorizou e como conferir. O gerador do painel só embute o arquivo cujo SHA-256 bate com o daqui."
+  },
+  "arquivos": {
+    "chart.umd.js": {
+      "biblioteca": "Chart.js",
+      "versao": "4.4.1",
+      "licenca": "MIT",
+      "origem": "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js",
+      "bytes": 205125,
+      "baixado_em": "2026-11-26",
+      "sha256": "74401d738dd3e03ee5dfb3b6841210fe2c4ead8a960c4011ca4ba0b78a9fd8f3",
+      "sri_sha384": "sha384-dug+JxfBvklEQdJ4AYuBBAIScUz0bVN73xpy273gcAwHjb3qI0fXmuYNaNfdyYJG",
+      "sri_sha512": "sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg==",
+      "conferido_contra": {
+        "jsdelivr": {
+          "onde": "https://data.jsdelivr.com/v1/packages/npm/chart.js@4.4.1?structure=flat",
+          "sha256_base64": "dEAdc43T4D7l37O2hBIQ/ixOrYqWDEARykugt4qf2PM=",
+          "bytes": 205125,
+          "bate": true
+        },
+        "cdnjs": {
+          "onde": "https://api.cdnjs.com/libraries/Chart.js/4.4.1?fields=sri",
+          "sri_sha512": "sha512-ZwR1/gSZM3ai6vCdI+LVF1zSq/5HznD3ZSTk7kajkaj4D292NLuduDCO1c/NT8Id+jE58KYLKT7hXnbtryGmMg==",
+          "bate": true
+        }
+      },
+      "autorizado_por": "ficha 116 (decisão 178): só este arquivo, desta versão e desta origem",
+      "usado_por": "ferramentas/gerar_dashboard.py, que o embute no HTML do painel",
+      "aviso_de_licenca": "/*!\n * Chart.js v4.4.1\n * https://www.chartjs.org\n * (c) 2023 Chart.js Contributors\n * Released under the MIT License */"
+    }
+  }
+}

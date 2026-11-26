@@ -601,9 +601,13 @@ def teste_servidor_grava_a_revisao_como_analista_e_recusa_o_que_nao_veio_da_pagi
 
 
 def teste_hub_conferir_monta_todos_os_casos_das_corridas_padrao_sem_subir_servidor():
+    # ! Alteração de IA - Revisar: (26/11/2026) o teste passa a pedir as quatro corridas padrão pelo nome (`--corridas`).
+    # ! Motivo: em 26/11/2026 o Eric rodou os cenários pelo botão do hub, e a pasta `hub_20261126_080944` passou a existir em `resultados_alvo/`; sem
+    # `--corridas`, o `--conferir` também conta as corridas lançadas pelo botão (180 casos em 5 corridas), e o teste, que confere as quatro corridas
+    # padrão, falhava por causa de uma pasta que não é dele. Com as corridas pedidas pelo nome, a procura das pastas `hub_...` fica desligada.
     saida = io.StringIO()
     with contextlib.redirect_stdout(saida):
-        codigo = hub.main(["--conferir"])
+        codigo = hub.main(["--conferir", "--corridas", ",".join(c["pasta"] for c in hd.CORRIDAS_PADRAO)])
     texto = saida.getvalue()
     total = sum(len(_trilhas_com_decisao(RA / c["pasta"])) for c in hd.CORRIDAS_PADRAO)
     assert codigo == 0 and f"{total} casos" in texto and "corrida 28b" in texto, texto
