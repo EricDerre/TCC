@@ -1306,6 +1306,10 @@ O primeiro nó que divergiu da trilha da base foi o previsto em 36 de 36 no verb
      ! Motivo: os trechos da manhã diziam que o Eric tinha lido os 36 relatórios; ele declarou no quadro que colou as respostas de um analista, e o registro da página confirma. -->
 ### 9.5 A medida com revisor humano: em aberto em 05/11, feita em parte em 10/11/2026 (decisões 85, 86, 95, 113 e 114)
 
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) nota de correção no começo da seção 9.5: o relatório 1 da sessão de 05/11/2026 foi respondido pelo analista de QA, e não pelo Eric.
+     ! Motivo: o Eric declarou no quadro, em 25/11/2026, que o analista leu fora da página e que ele colou a resposta (ficha 105, decisão 166); o texto abaixo, de 05 e 10/11/2026, e os blocos colados da leitura gravada dizem "resposta do Eric" e trazem os 307 s como tempo medido, e ficam como foram escritos. -->
+**Correção de 25/11/2026 (decisão 166).** O relatório 1 desta sessão, que o texto abaixo dá como respondido pelo Eric, com 307 s medidos, foi respondido pelo analista de QA da empresa em que o Eric trabalha, o mesmo das revisões de 09 e 10/11/2026 e de 16/11/2026. Ele leu fora da página, e o Eric colou a resposta: os 307 s medem a troca entre os dois, e o tempo até a decisão entra como não medido. A aprovação do parecer do agente de apoio nos outros 10 relatórios continua sendo do Eric (decisão 86). O texto abaixo e os blocos colados da leitura gravada ficam como foram escritos; a declaração está em `resultados_alvo/fase4/quem_leu_revisao_trilha.json`.
+
 <!-- ! Alteração de IA - Revisar: (10/11/2026, decisão 117) este trecho e o item da seção 15 passaram a dizer que os 36 relatórios foram lidos por um analista de QA da empresa.
      ! Motivo: o Eric declarou no quadro quem é o analista e que as 36 respostas são dele; o texto dizia 35 do analista e 1 do Eric e remetia à ficha 62, que fechou. -->
 <!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 95) a medida com revisor humano passou de limitação declarada a em aberto, neste trecho, no estado do relatório, na tabela de abertura, na seção 12 e na lista da seção 15.

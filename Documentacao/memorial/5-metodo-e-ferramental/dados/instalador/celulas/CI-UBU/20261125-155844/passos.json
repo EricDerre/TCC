@@ -1,0 +1,14 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado pelo install.py: quanto levou cada passo da última instalação nesta pasta e como ela terminou.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143, seção 3.3) pede o tempo de cada passo no registro da prova; o instalador e a prova rodam em processos separados, e este arquivo leva um ao outro."
+ },
+ "gravado_em": "2026-11-25T15:58:59",
+ "resultado": "interrompida",
+ "passos": [
+  {
+   "passo": "pacotes do sistema",
+   "segundos": 13.0
+  }
+ ]
+}

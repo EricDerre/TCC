@@ -107,6 +107,9 @@ FASES: list[dict] = [
          ("codigo", "Filtros de texto", "Medidas em código acusam texto longo, repetido ou com termo sem explicação.", "texto"),
          ("codigo", "Árvore de decisão", "Cada caso mostra, passo a passo, o que foi lido, o que entrou e por que a causa foi escolhida.", "arvore"),
          ("codigo", "Barra de progresso e Git", "Uma barra diz quanto falta enquanto o modelo pensa, e um protótipo lê o que mudou no código para dizer o que rodar.", "progresso"),
+         # ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) o passo do hub central e da seleção pelo Git entra no caminho da Pós-Fase 4.
+         # ! Motivo: a decisão 152 pôs os dois pacotes antes do texto final; sem o passo, a visão da fase não levaria à aba nova.
+         ("codigo", "Hub central e seleção pelo Git", "Uma página junta o relatório, a evidência e a árvore de cada caso para o analista comentar e dar o veredito, e a corrida escolhe os cenários pelo que mudou no código.", "hub"),
          ("pessoa", "Revisão humana", "Um analista de teste leu os relatórios, um por vez e às cegas, e disse o que decidiria em cada um.", "revisaov3"),
          ("modelo", "Experimentos antes da Fase 5", "As notas do modelo ajudam? Um segundo pedido conserta mais do que estraga? Um analista de documentação escreve melhor?", "semnotas"),
      ]},

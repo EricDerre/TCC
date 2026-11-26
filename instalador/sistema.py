@@ -18,6 +18,9 @@ PACOTES = {
     # estarem prontos. No Debian e no Ubuntu o `awk` (mawk) já vem na imagem, por isso a lista do `apt` não muda.
     "dnf": {"base": ["curl", "zstd", "gawk"], "venv": [],
             "php": ["php-cli", "php-mysqlnd", "php-mbstring"], "mariadb": ["mariadb-server"]},
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) entra a tabela do `brew`: o PHP pela fórmula `php` e o MariaDB pela fórmula `mariadb@11.8`; sem pacotes de base nem do módulo `venv`.
+    # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: o macOS seguia o caminho antigo e parou em "Não foi possível subir o MariaDB" com o `brew services start mariadb` já feito; passa a seguir o fluxo por família. Decisão do dono do projeto (decisão 161, 25/11/2026): a fórmula `mariadb` do Homebrew já está na 13.1.2 e o `versoes.json` aceita o MariaDB só até a 13.0 (testado 11.8.9), então um Mac atualizado instalaria tudo e pararia no fim; a fórmula `mariadb@11.8` é a série testada. O `curl`, o `zstd` e o Python vêm do macOS e do `install.sh`, por isso `base` e `venv` ficam vazios.
+    "brew": {"base": [], "venv": [], "php": ["php"], "mariadb": ["mariadb@11.8"]},
 }
 
 
@@ -33,13 +36,22 @@ def ler_os_release(texto: str) -> dict[str, str]:
     return dados
 
 
-def familia(sistema: str, os_release: dict[str, str] | None = None, tem_brew: bool = False) -> dict:
-    """A família (quem instala os pacotes) e o grau de suporte, pela decisão 141."""
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa E) `familia` ganha o parâmetro `maquina` (o `platform.machine()`); no macOS com Homebrew, `x86_64` (processador Intel) dá `suporte` "melhor_esforco" e nome "macOS (Intel)", e os outros casos continuam "suportado"; sem Homebrew continua "falta_homebrew". `detectar` passa o `platform.machine()`.
+# ! Motivo: decisão do dono do projeto de 25/11/2026 ("Melhor esforço, célula fica"): nos arquivos públicos do Homebrew (`Formula/p/php.rb`, `Formula/m/mariadb.rb`, `Formula/m/mariadb@11.8.rb`, lidos em 25/11/2026) o bloco `bottle` só traz pacote pronto de macOS para Apple Silicon (`arm64_sequoia`, `arm64_tahoe`, `arm64_golden_gate`) e para Linux; num Mac Intel o `brew install` compila do código-fonte e pode levar mais de uma hora, então o Mac Intel entra como o Fedora, como melhor esforço (a célula `M-15I` continua no fluxo). Nada disso foi observado em execução ainda: a segunda execução do fluxo é a que prova.
+def familia(sistema: str, os_release: dict[str, str] | None = None, tem_brew: bool = False,
+            maquina: str | None = None) -> dict:
+    """A família (quem instala os pacotes) e o grau de suporte, pela decisão 141. `maquina` é o `platform.machine()`
+    (só o macOS usa: `x86_64` é o Mac com processador Intel)."""
     if sistema == "Windows":
         return {"sistema": sistema, "familia": "windows", "id": "windows", "versao": "", "nome": "Windows", "suporte": "suportado"}
     if sistema == "Darwin":
-        return {"sistema": sistema, "familia": "brew", "id": "macos", "versao": "", "nome": "macOS",
-                "suporte": "suportado" if tem_brew else "falta_homebrew"}
+        intel = (maquina or "").lower() in ("x86_64", "amd64")
+        if not tem_brew:
+            suporte = "falta_homebrew"
+        else:
+            suporte = "melhor_esforco" if intel else "suportado"
+        return {"sistema": sistema, "familia": "brew", "id": "macos", "versao": "",
+                "nome": "macOS (Intel)" if intel else "macOS", "suporte": suporte}
     if sistema != "Linux":
         return {"sistema": sistema, "familia": "nao_suportado", "id": sistema.lower(), "versao": "", "nome": sistema,
                 "suporte": "nao_suportado"}
@@ -83,4 +95,4 @@ def detectar() -> dict:
     sistema = platform.system()
     arquivo = Path("/etc/os-release")
     dados = ler_os_release(arquivo.read_text(encoding="utf-8", errors="replace")) if sistema == "Linux" and arquivo.exists() else None
-    return familia(sistema, dados, tem_brew=bool(shutil.which("brew")))
+    return familia(sistema, dados, tem_brew=bool(shutil.which("brew")), maquina=platform.machine())

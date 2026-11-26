@@ -1,0 +1,115 @@
+{
+  "metadados": {
+    "gerado_em": "2026-11-25T13:28:35",
+    "gerado_por": "hub.py --resumo",
+    "fonte": "as trilhas das corridas em resultados_alvo/ e o código do hub"
+  },
+  "corridas": [
+    {
+      "pasta": "fase4_tela_v4",
+      "rotulo": "corrida 18d",
+      "descricao": "os casos de avaliação diagnosticados na tela e em texto (Fase 4)",
+      "modo": "tela",
+      "modelo": "qwen2.5:7b",
+      "inicio": "2026-11-06T09:53:30",
+      "fim": "2026-11-06T11:12:59",
+      "casos": 74
+    },
+    {
+      "pasta": "fase4_ensaio_v4",
+      "rotulo": "corrida 21d",
+      "descricao": "o ensaio dos dez cenários, uma execução de cada (Fase 4)",
+      "modo": "cenarios",
+      "modelo": "qwen2.5:7b",
+      "inicio": "2026-11-06T11:13:26",
+      "fim": "2026-11-06T11:26:54",
+      "casos": 10
+    },
+    {
+      "pasta": "fase4_ineditos",
+      "rotulo": "corrida 24",
+      "descricao": "os casos inéditos, em texto (Fase 4)",
+      "modo": "ineditos",
+      "modelo": "qwen2.5:7b",
+      "inicio": "2026-11-06T13:52:23",
+      "fim": "2026-11-06T14:35:54",
+      "casos": 36
+    },
+    {
+      "pasta": "fase5_agente_b",
+      "rotulo": "corrida 28b",
+      "descricao": "a medida do agente na Fase 5: dez cenários, cinco repetições",
+      "modo": "cenarios",
+      "modelo": "qwen2.5:7b",
+      "inicio": "2026-11-18T21:34:05",
+      "fim": "2026-11-18T22:38:06",
+      "casos": 50
+    }
+  ],
+  "total": {
+    "casos": 170,
+    "casos_distintos": 83,
+    "com_mais_de_uma_iteracao": 47,
+    "maior_numero_de_iteracoes": 6,
+    "com_divergencia": 43,
+    "com_cura": 24
+  },
+  "relatorio": {
+    "blocos": 17,
+    "campos_da_5_5": 11,
+    "blocos_do_agente": 6
+  },
+  "revisao": {
+    "vereditos": [
+      "aprovar",
+      "aprovar_com_sugestoes",
+      "aguardar_autor",
+      "rejeitar",
+      "comentar"
+    ],
+    "estados_da_conversa": [
+      "ativa",
+      "resolvida",
+      "nao_sera_tratada"
+    ],
+    "estados_55": [
+      "aberto",
+      "adiado",
+      "duplicado",
+      "aguardando correção",
+      "aguardando teste de confirmação",
+      "reaberto",
+      "fechado",
+      "rejeitado"
+    ],
+    "severidades": [
+      "crítica",
+      "alta",
+      "média",
+      "baixa"
+    ],
+    "prioridades": [
+      "alta",
+      "média",
+      "baixa"
+    ],
+    "rotulos": [
+      "sugestao",
+      "problema",
+      "duvida",
+      "elogio",
+      "nota"
+    ],
+    "desfechos": [
+      "diagnostico_correto",
+      "agente_errou",
+      "decisao_intencional"
+    ],
+    "causas": 23
+  },
+  "testes": {
+    "arquivo": "testar_hub.py",
+    "total": 44,
+    "no_navegador": 11
+  }
+}

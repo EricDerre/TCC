@@ -10,9 +10,9 @@ banco `ti93phpdb01`, e o venv Python + dependências da CobaiaAPI.
 
 Idempotente: seguro rodar mais de uma vez na mesma máquina.
 
-Uso: python install.py [--conferir] [--reproduzir]. No Linux (apt e dnf) os pacotes do
-sistema, o serviço e o root do MariaDB, o Chromium do Playwright e o Ollama entram pelas
-funções de instalador/ferramentas.py, chamadas por instalar_no_linux.
+Uso: python install.py [--conferir] [--reproduzir]. No Linux (apt e dnf) e no macOS (Homebrew)
+os pacotes do sistema, o serviço e o root do MariaDB, o Chromium do Playwright e o Ollama entram
+pelas funções de instalador/ferramentas.py, chamadas por instalar_por_pacotes.
 
 Chamado por install.ps1 (Windows) ou install.sh (Linux/macOS), que só
 garantem que existe um Python 3 disponível antes de chegar aqui.
@@ -47,6 +47,7 @@ from _env_common import (
     find_or_install_real_python,
     find_php,
     log,
+    mysql_que_nao_e_mariadb,
     modelo_llm_ja_baixado,
     playwright_chromium_instalado,
     run,
@@ -65,17 +66,17 @@ def ensure_php() -> str:
             "winget", "install", "--id", "PHP.PHP.8.2", "-e",
             "--accept-package-agreements", "--accept-source-agreements",
         ])
-    elif OS_NAME == "Darwin":
-        run(["brew", "install", "php"])
     else:
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) saiu daqui o ramo do `Darwin` (`brew install php`), e a mensagem deste `else` passa a dizer "Linux e macOS".
+        # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: o macOS passou a seguir o fluxo por pacotes (`instalar_por_pacotes`, com a fórmula `php`), e nenhum chamador do macOS passa por este passo (conferido por busca em `run.py`, `Cobaia.py` e `instalador/`); este passo só serve ao Windows.
         # ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) saiu daqui o ramo do Linux (`sudo apt-get
-        # install -y php php-mysql`), e a mensagem deste `else` diz onde o PHP entra fora do Windows e do macOS.
+        # install -y php php-mysql`), e a mensagem deste `else` diz onde o PHP entra fora do Windows.
         # ! Motivo: células de 18 e 19/11/2026. No Ubuntu esse comando trazia o Apache (`apache2`, um servidor web na porta 80
         # que o projeto não usa, suspeita HL13) e não trazia o `php-mbstring` (`Call to undefined function
         # mb_strimwidth()`, HL11); no Fedora ele dava `sudo: apt-get: command not found` e o instalador parava em "Feche e
-        # reabra o terminal" (HL3). No Linux os pacotes entram por `instalar_no_linux`, mais abaixo.
-        log(f"Este passo só instala o PHP no Windows e no macOS; em {OS_NAME} ele vem dos pacotes do sistema "
-            "(instalar_no_linux) ou é instalado à mão, na versão 8.x com mysqli, pdo_mysql e mbstring.")
+        # reabra o terminal" (HL3). No Linux os pacotes entram por `instalar_por_pacotes` (nome da época: `instalar_no_linux`), mais abaixo.
+        log("Este passo só instala o PHP no Windows; em Linux e macOS ele vem dos pacotes do sistema "
+            "(instalar_por_pacotes) ou é instalado à mão, na versão 8.x com mysqli, pdo_mysql e mbstring.")
         sys.exit(1)
 
     php = find_php()
@@ -155,12 +156,17 @@ def eh_administrador() -> bool:
         return False
 
 
-def usar_mariadb_portatil(so: str = OS_NAME, admin: bool | None = None, ambiente=None) -> bool:
+def usar_mariadb_portatil(so: str = OS_NAME, admin: bool | None = None, ambiente=None, tem_mysql: bool = False) -> bool:
     """! Alteração de IA - Revisar: no Windows sem administrador o MariaDB vem do zip portátil;
     `COBAIA_MARIADB_PORTATIL=1` força o portátil mesmo com administrador e `=0` força o MSI.
     ! Motivo: quem tem administrador continua com o MSI do winget (caminho testado nas máquinas dos
     integrantes); quem não tem, como na máquina-alvo i5, não pode nem tentar o MSI. A variável existe
-    para o instalador rodar sem terminal (install.ps1, Cobaia.exe) e para testes."""
+    para o instalador rodar sem terminal (install.ps1, Cobaia.exe) e para testes.
+    ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) parâmetro novo `tem_mysql`: com um
+    MySQL na máquina, o zip portátil vale mesmo com administrador (a variável continua mandando primeiro).
+    ! Motivo: execução 45650086543 do GitHub Actions, célula CI-WIN: o executor do Windows traz o MySQL 8.4; o instalador
+    não mexe no MySQL de ninguém e instala o MariaDB portátil ao lado, em vez de passar pelo MSI do winget, que registraria
+    um segundo serviço de banco na máquina que já tem o do MySQL."""
     if ambiente is None:
         ambiente = os.environ
     if so != "Windows":
@@ -170,6 +176,8 @@ def usar_mariadb_portatil(so: str = OS_NAME, admin: bool | None = None, ambiente
         return True
     if forcado == "0":
         return False
+    if tem_mysql:
+        return True
     if admin is None:
         admin = eh_administrador()
     return not admin
@@ -290,9 +298,21 @@ def instalar_mariadb_portatil(perguntar: bool = True) -> str | None:
 def ensure_mariadb_installed() -> str:
     cli = find_mysql_cli()
     if cli:
-        log(f"Cliente MariaDB/MySQL já disponível: {cli}")
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a mensagem deixa de dizer "MariaDB/MySQL".
+        # ! Motivo: `find_mysql_cli` só devolve cliente do MariaDB agora; a execução 45650086543 do Actions mostrou o log "Cliente
+        # MariaDB/MySQL já disponível: C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE", que escondia o erro.
+        log(f"Cliente do MariaDB já disponível: {cli}")
         return cli
 
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) quando existe um MySQL no PATH, o
+    # instalador avisa e passa o `tem_mysql` para `usar_mariadb_portatil`.
+    # ! Motivo: execução 45650086543 do Actions, célula CI-WIN: o MySQL 8.4 do executor era tratado como se fosse o MariaDB e o
+    # instalador parava em "Não foi possível subir o MariaDB". Agora o MySQL fica como está, o MariaDB portátil é instalado ao lado
+    # e quem lê o log sabe por quê; se o serviço do MySQL estiver na porta 3306, o MariaDB não sobe, e o aviso diz o que fazer.
+    mysql = mysql_que_nao_e_mariadb()
+    if mysql:
+        log(f"Há um MySQL em {mysql}. O projeto usa o MariaDB: o instalador não mexe no MySQL e instala o MariaDB portátil ao "
+            "lado. Se o serviço do MySQL estiver ligado na porta 3306, o MariaDB não sobe: pare o serviço do MySQL antes.")
     log("MariaDB não encontrado — instalando...")
     if OS_NAME == "Windows":
         # ! Alteração de IA - Revisar: (26/10/2026) sem administrador (ou com COBAIA_MARIADB_PORTATIL=1) o MariaDB
@@ -301,7 +321,7 @@ def ensure_mariadb_installed() -> str:
         # ! Motivo: na máquina-alvo i5 (corporativa) o MSI do `MariaDB.Server` exige elevação e o instalador parava
         # aqui, com a mensagem "MariaDB foi instalado mas o cliente CLI não foi encontrado"; o zip oficial roda como
         # processo comum, que é o que ensure_mariadb_running já faz no Windows.
-        if usar_mariadb_portatil():
+        if usar_mariadb_portatil(tem_mysql=bool(mysql)):
             instalar_mariadb_portatil()
         else:
             resultado = run([
@@ -311,17 +331,16 @@ def ensure_mariadb_installed() -> str:
             if resultado.returncode != 0:
                 log("O winget não conseguiu instalar o MariaDB.Server; tentando o zip portátil...")
                 instalar_mariadb_portatil()
-    elif OS_NAME == "Darwin":
-        run(["brew", "install", "mariadb"])
-        run(["brew", "services", "start", "mariadb"])
     else:
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) saiu daqui o ramo do `Darwin` (`brew install mariadb` e `brew services start mariadb`), e a mensagem deste `else` passa a dizer "Linux e macOS".
+        # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: com esses dois comandos o serviço subiu, mas o root do MariaDB só entra pelo usuário root do sistema, e o instalador parou em "Não foi possível subir o MariaDB"; o macOS passou a seguir `instalar_por_pacotes` (fórmula `mariadb@11.8`, decisão 161) e nenhum chamador do macOS passa por este passo (conferido por busca).
         # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) saiu daqui o ramo do Linux (`apt-get install -y mariadb-server`
         # e `systemctl enable --now mariadb`).
         # ! Motivo: célula L-U2404-SS de 19/11/2026 (suspeita HL7): sem o systemd o `systemctl` responde "System has not been
         # booted with systemd as init system (PID 1). Can't operate."; e o `apt-get` sem `--no-remove` trocaria um
-        # `mysql-server` já instalado pelo MariaDB sem perguntar. No Linux o pacote e o serviço entram por `instalar_no_linux`.
-        log(f"Este passo só instala o MariaDB no Windows e no macOS; em {OS_NAME} ele vem dos pacotes do sistema "
-            "(instalar_no_linux) ou é instalado à mão.")
+        # `mysql-server` já instalado pelo MariaDB sem perguntar. No Linux o pacote e o serviço entram por `instalar_por_pacotes` (nome da época: `instalar_no_linux`).
+        log("Este passo só instala o MariaDB no Windows; em Linux e macOS ele vem dos pacotes do sistema "
+            "(instalar_por_pacotes) ou é instalado à mão.")
         sys.exit(1)
 
     cli = find_mysql_cli()
@@ -379,8 +398,9 @@ def setup_cobaia_api() -> None:
 
 
 def ensure_ollama() -> str | None:
-    """! Alteração de IA - Revisar: instala o Ollama (runtime do LLM local) se ainda
-    não existir, e devolve o caminho do executável.
+    """! Alteração de IA - Revisar: procura o Ollama (runtime do LLM local) e devolve o
+    caminho do executável, ou None; desde 25/11/2026 não instala mais (ver a tag
+    abaixo do texto) e foi mantida só porque um roteiro histórico a chama.
     ! Motivo: a inferência do agente roda inteiramente na máquina do usuário — sem
     isso instalado, o AgenteCore não tem como produzir diagnóstico. Segue o mesmo
     padrão dos demais componentes (gerenciador de pacotes nativo por sistema
@@ -391,27 +411,20 @@ def ensure_ollama() -> str | None:
         log(f"Ollama já instalado: {ollama}")
         return ollama
 
-    log("Ollama não encontrado — instalando...")
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) saiu daqui o `winget install --id Ollama.Ollama` do Windows: esta função só procura o Ollama e devolve o caminho (ou None), em qualquer sistema, sem instalar nada; quem instala e baixa o modelo no Windows é `setup_agente_core`, por `ferramentas.preparar_ollama`.
+    # ! Motivo: (motivo reescrito em 25/11/2026, consertos da revisão depois da primeira execução do Actions) no Windows o Ollama vinha de `winget install --id Ollama.Ollama`, que instala a versão do dia e não a testada do `versoes.json` (seção 3.2 do plano aprovado), e o `ollama pull` seguinte rodava sem esperar o servidor responder e sem ninguém conferir o resultado. Nenhuma célula gravou falha do `winget`: a máquina do GitHub Actions tem o `winget` v1.11.510 (`estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844). A função fica, e não some, porque `ferramentas/instalador_matriz/sondas_suspeitas.sh` (roteiro histórico de uma célula de Linux) chama `install.ensure_ollama()`; no Linux ela continua devolvendo None com a mesma mensagem. Não observado em execução.
     if OS_NAME == "Windows":
-        run([
-            "winget", "install", "--id", "Ollama.Ollama", "-e",
-            "--accept-package-agreements", "--accept-source-agreements",
-        ])
-    elif OS_NAME == "Darwin":
-        run(["brew", "install", "--cask", "ollama"])
-    else:
-        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) saiu daqui o ramo do Linux, que só imprimia o comando do script
-        # oficial e devolvia None.
-        # ! Motivo: célula L-U2404 de 18/11/2026 (suspeita HL5): a instalação terminava em "Instalação concluída" sem o
-        # Ollama. No Linux quem instala o Ollama, na versão testada, é `instalador/ferramentas.py` (`preparar_ollama`).
-        log(f"Este passo só instala o Ollama no Windows e no macOS; em {OS_NAME} ele entra por instalador/ferramentas.py.")
+        log("Ollama não encontrado nesta máquina; no Windows quem o instala, na versão testada, é "
+            "instalador/ferramentas.preparar_ollama (chamado por setup_agente_core).")
         return None
-
-    ollama = find_ollama()
-    if not ollama:
-        log("Ollama foi instalado mas não foi localizado nesta sessão. "
-            "Feche e reabra o terminal e rode o instalador de novo.")
-    return ollama
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) saiu daqui o ramo do `Darwin` (`brew install --cask ollama`), e a mensagem passa a dizer "Linux e macOS".
+    # ! Motivo: o `--cask` traz a versão do dia (o `versoes.json` testou uma só) e não liga o servidor antes do `ollama pull`; no macOS o Ollama passa a vir de `instalador/ferramentas.preparar_ollama`, que roda o script oficial com `OLLAMA_VERSION` (no macOS o script baixa o `Ollama-darwin.zip` da versão, põe o `Ollama.app` em `/Applications`, liga `/usr/local/bin/ollama` e abre o aplicativo). Não observado em execução: a primeira execução parou antes.
+    # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) saiu daqui o ramo do Linux, que só imprimia o comando do script
+    # oficial e devolvia None.
+    # ! Motivo: célula L-U2404 de 18/11/2026 (suspeita HL5): a instalação terminava em "Instalação concluída" sem o
+    # Ollama. No Linux quem instala o Ollama, na versão testada, é `instalador/ferramentas.py` (`preparar_ollama`).
+    log("Este passo não instala o Ollama; em Linux e macOS ele entra por instalador/ferramentas.py.")
+    return None
 
 
 def setup_agente_core() -> None:
@@ -447,28 +460,16 @@ def setup_agente_core() -> None:
     else:
         run([str(python_venv), "-m", "playwright", "install", "chromium"])
 
-    ollama = ensure_ollama()
-    if ollama:
-        # ! Alteração de IA - Revisar: o modelo padrão passa de qwen2.5-coder:3b para qwen2.5:7b
-        # (decisão 52 do Memorial, 22/09/2026); a variável COBAIA_MODELO_LLM continua mandando.
-        # ! Motivo: o 3b era o padrão provisório da comparação de porte da Fase 2
-        # (RESULTADO_FASE2.md: ~7 s e ~2 GB contra ~19 s e ~4,8 GB do 7b) "até a decisão sair".
-        # A decisão saiu da Fase 3 (13–15/09/2026): pela regra pré-registrada, qwen2.5:7b com a
-        # biblioteca L1 fez 91,7% de acurácia balanceada nos 36 casos de avaliação, contra 71,2%
-        # na melhor versão do 3b (resultados_alvo/fase3/decisao_modelo.md, seção 1). Custa mais
-        # (mediana de 66,8 s por diagnóstico com a biblioteca original na máquina-alvo i5,
-        # relatório da Fase 3 §9) e é o modelo que o agente das próximas fases usa.
-        modelo = os.environ.get("COBAIA_MODELO_LLM", "qwen2.5:7b")
-        if modelo_llm_ja_baixado(ollama, modelo):
-            log(f"Modelo {modelo} já baixado.")
-        else:
-            log(f"Baixando o modelo {modelo} (pode demorar na primeira vez)...")
-            run([ollama, "pull", modelo])
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) o Ollama e o modelo passam a vir de `ferramentas.preparar_ollama(versoes.carregar())`: instala a versão testada pelo script oficial se falta, confere a faixa se já existe, espera o servidor responder, baixa o modelo e levanta `Falha` se o `ollama pull` falha. Saíram daqui `ensure_ollama()` (que rodava `winget install`) e o `ollama pull` solto.
+    # ! Motivo: (motivo reescrito em 25/11/2026, consertos da revisão depois da primeira execução do Actions) o `winget` instala a versão do dia, e não a do `versoes.json` (seção 3.2 do plano aprovado), e o `run([ollama, "pull", ...])` antigo não tinha o resultado conferido, então um `pull` que falhava deixava a instalação terminar como concluída sem o modelo. A `Falha` sobe até `main`, que a mostra como "Instalação interrompida: ..." com código 1. O modelo padrão (`qwen2.5:7b`, decisão 52 do Memorial, 22/09/2026, antes escrito neste arquivo) passa a vir do `versoes.json`; `COBAIA_MODELO_LLM` continua mandando. Nenhuma célula gravou falha do `winget`: a máquina do GitHub Actions tem o `winget` v1.11.510 (`estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844). Não observado em execução.
+    from instalador import ferramentas, versoes
+    ferramentas.preparar_ollama(versoes.carregar())
 
 
 # ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) entram aqui `eh_root`, `caminho_para`,
 # `instalar_no_linux`, `instalar_e_relatar_no_linux`, `relatar_versoes` e `_argumentos`, trazidos de `instalador/nucleo.py`, que deixa de existir; os passos do Windows e
-# do macOS saem do `main` e viram `instalar_no_windows_ou_mac`, na mesma ordem; e o `main` passa a receber argumentos
+# do macOS saem do `main` e viram `instalar_no_windows_ou_mac`, na mesma ordem (nomes da época; em 25/11/2026 viraram
+# `instalar_por_pacotes`, `instalar_e_relatar` e `instalar_no_windows`, ver as tags de cada função); e o `main` passa a receber argumentos
 # (`--conferir`, `--ate`, `--reproduzir`), a reconhecer a família do sistema e a devolver o código de saída.
 # ! Motivo: célula L-U2404 de 18/11/2026 (suspeitas HL10 e HL12): este arquivo aplicava os `.sql` antes de o serviço e o root
 # do MariaDB estarem prontos e parava em "Não foi possível subir o MariaDB" com o serviço no ar; no Fedora rodava `sudo
@@ -490,9 +491,12 @@ def eh_root() -> bool:
 
 
 def caminho_para(info: dict) -> str:
-    """'apt' e 'dnf' (Debian, Ubuntu e derivados; Fedora) devolvem a própria família; 'nao_suportado' recebe a mensagem com a
-    lista do que instalar à mão; Windows e macOS seguem pelos passos de `instalar_no_windows_ou_mac`."""
-    if info["familia"] in ("apt", "dnf", "nao_suportado"):
+    """'apt', 'dnf' e 'brew' (Debian, Ubuntu e derivados; Fedora; macOS com Homebrew) devolvem a própria família;
+    'nao_suportado' recebe a mensagem com a lista do que instalar à mão; só o Windows segue pelos passos de
+    `instalar_no_windows`."""
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) `brew` entra com `apt`, `dnf` e `nao_suportado`; só o Windows devolve "como_estava".
+    # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: pelo caminho antigo o instalador parou em "Não foi possível subir o MariaDB" com o `brew services start mariadb` já feito (o root do MariaDB só entra pelo usuário root do sistema); o macOS passa a seguir o fluxo por pacotes, decisão do dono do projeto de 25/11/2026.
+    if info["familia"] in ("apt", "dnf", "brew", "nao_suportado"):
         return info["familia"]
     return "como_estava"
 
@@ -536,9 +540,11 @@ def gravar_passos(resultado: str, pasta: Path | None = None) -> Path | None:
     return caminho
 
 
-def instalar_no_linux(info: dict, ferr: dict) -> None:
-    """Os passos do Linux, na ordem em que um depende do outro: o serviço e o root do banco vêm antes dos `.sql`. Valem para
-    o `apt` e para o `dnf`. Um passo que não dá certo levanta `ferramentas.Falha`."""
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) `instalar_no_linux` passa a se chamar `instalar_por_pacotes`; `instalar_e_relatar_no_linux`, `instalar_e_relatar`; `instalar_no_windows_ou_mac`, `instalar_no_windows`.
+# ! Motivo: o macOS (Homebrew) passa a seguir os mesmos passos do Linux (execuções M-15 e M-15I de 25/11/2026, decisão do dono do projeto), então o nome "no Linux" ficou errado, e a função antiga do Windows deixou de ter o ramo do macOS.
+def instalar_por_pacotes(info: dict, ferr: dict) -> None:
+    """Os passos do Linux e do macOS, na ordem em que um depende do outro: o serviço e o root do banco vêm antes dos `.sql`.
+    Valem para o `apt`, o `dnf` e o `brew`. Um passo que não dá certo levanta `ferramentas.Falha`."""
     from instalador import ferramentas
 
     def venv_da_api() -> None:
@@ -571,8 +577,9 @@ def relatar_versoes(ferr: dict, reproduzir: bool) -> list[str]:
     return sorted(nome for nome, dados in julgadas.items() if dados["impede"])
 
 
-def instalar_no_windows_ou_mac() -> None:
-    """Os passos do Windows e do macOS, na ordem em que sempre rodaram. Um passo obrigatório que falha chama `sys.exit(1)`."""
+def instalar_no_windows() -> None:
+    """Os passos do Windows, na ordem em que sempre rodaram. Um passo obrigatório que falha chama `sys.exit(1)`; o Ollama
+    (`ferramentas.preparar_ollama`) levanta `ferramentas.Falha`, que o `main` mostra como "Instalação interrompida"."""
     log(f"Sistema operacional detectado: {OS_NAME}")
 
     cronometrar("PHP", ensure_php)
@@ -607,25 +614,31 @@ def codigo_de_saida(e: SystemExit) -> int:
     return 1
 
 
-def instalar_e_relatar_no_linux(info: dict, reproduzir: bool) -> int:
-    """Roda os passos do Linux, transforma a falha de um passo em mensagem e código de saída, e confere as versões no fim."""
+def instalar_e_relatar(info: dict, reproduzir: bool) -> int:
+    """Roda os passos do Linux e do macOS, transforma a falha de um passo em mensagem e código de saída, e confere as versões no fim."""
     from instalador import ferramentas, versoes
     if info["suporte"] == "melhor_esforco":
         if info["familia"] == "dnf":
             log("Aviso: o Fedora entra como melhor esforço: o instalador garante o site e a API; o navegador do agente "
                 "depende de bibliotecas que ele não instala aqui.")
+        elif info["familia"] == "brew":
+            # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa E) aviso novo para o Mac com processador Intel (família `brew`, `suporte` "melhor_esforco"); o do Fedora e o das outras distribuições ficam como estavam.
+            # ! Motivo: decisão do dono do projeto de 25/11/2026: nos arquivos públicos do Homebrew (`Formula/p/php.rb`, `Formula/m/mariadb.rb`, `Formula/m/mariadb@11.8.rb`) o bloco `bottle` só traz pacote pronto de macOS para Apple Silicon; num Mac Intel o `brew install` do PHP e do MariaDB compila do código-fonte, o que pode levar mais de uma hora. Sem o aviso a instalação pareceria travada. Não observado em execução.
+            log("Aviso: o Mac com processador Intel entra como melhor esforço: o Homebrew deixou de publicar pacote pronto do "
+                "PHP e do MariaDB para ele, e a instalação pode compilar os dois do código-fonte, o que pode levar mais de "
+                "uma hora.")
         else:
             log("Aviso: esta distribuição não está entre as testadas (Ubuntu 22.04, 24.04 e 26.04; Debian 12 e 13); "
                 "o instalador segue pelo apt, como melhor esforço.")
     ferr = versoes.carregar()
     try:
-        instalar_no_linux(info, ferr)
+        instalar_por_pacotes(info, ferr)
     except ferramentas.Falha as e:
         log("")
         log(f"Instalação interrompida: {e}")
         return 1
     except SystemExit as e:
-        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) captura do `SystemExit` dos passos de Linux em `instalar_e_relatar_no_linux`.
+        # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) captura do `SystemExit` dos passos de Linux em `instalar_e_relatar_no_linux` (nome da época; hoje `instalar_e_relatar`).
         # ! Motivo: `apply_sql_files` e `setup_cobaia_api` chamam `sys.exit` quando falham; sem esta captura o instalador saía sem a
         # linha "Instalação interrompida".
         codigo = codigo_de_saida(e)
@@ -657,7 +670,7 @@ def _argumentos(argv: list[str] | None) -> argparse.Namespace:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Instala (sem argumento) ou roda a prova (`--conferir`). Devolve o código de saída; no Windows e no macOS um passo
+    """Instala (sem argumento) ou roda a prova (`--conferir`). Devolve o código de saída; no Windows um passo
     obrigatório que falha ainda sai por `sys.exit(1)`, como sempre saiu."""
     args = _argumentos(argv)
     from instalador import sistema
@@ -676,7 +689,9 @@ def main(argv: list[str] | None = None) -> int:
         for linha in sistema.mensagem_nao_suportado(info, versoes.carregar()).splitlines():
             log(linha)
         return 1
-    if caminho == "como_estava" and info["suporte"] == "falta_homebrew":
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o aviso de falta do Homebrew passa a depender de `info["familia"] == "brew"` (antes dependia de `caminho == "como_estava"`).
+    # ! Motivo: o macOS deixou de ter o caminho "como_estava" (agora é `brew`, com o fluxo por pacotes); sem esta troca o aviso nunca apareceria e o `brew install` morreria em `FileNotFoundError`. O teste de root abaixo também vale para o macOS, porque o Homebrew se recusa a rodar como root.
+    if info["familia"] == "brew" and info["suporte"] == "falta_homebrew":
         # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) o macOS sem Homebrew avisa e sai com 1 antes de qualquer passo.
         # ! Motivo: sem o Homebrew o `brew install` morria em `FileNotFoundError`; o lançador antigo dava esta mensagem.
         log("Homebrew não encontrado. Instale em https://brew.sh e rode ./install.sh de novo.")
@@ -696,12 +711,22 @@ def main(argv: list[str] | None = None) -> int:
                 # ! Motivo: o argumento era aceito em silêncio e a instalação terminava em "Instalação concluída" sem conferir
                 # versão nenhuma, embora o texto de uso diga que o modo exige a versão exata; a regra de versões no caminho do
                 # Windows entra no pacote I4.
-                log("Aviso: no Windows e no macOS o --reproduzir ainda não confere as versões durante a instalação; para "
+                # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o aviso do `--reproduzir` fala só do Windows.
+                # ! Motivo: o macOS passou a seguir `instalar_e_relatar`, que confere as versões no fim; só o Windows ainda não confere durante a instalação.
+                log("Aviso: no Windows o --reproduzir ainda não confere as versões durante a instalação; para "
                     "conferir, rode a prova: python install.py --conferir --reproduzir")
-            instalar_no_windows_ou_mac()
-            codigo = 0
+            # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) uma `ferramentas.Falha` levantada pelos passos do Windows vira a linha "Instalação interrompida: <mensagem>" e código 1; o `passos.json` sai com resultado `interrompida`, pelo `finally` abaixo.
+            # ! Motivo: no Windows o Ollama passa a vir de `ferramentas.preparar_ollama`, que levanta `Falha` (download do script, script com erro, versão fora da faixa, `ollama pull` que falha); sem esta captura a `Falha` subiria como erro do Python na tela, e o `install.cmd` mostraria um traceback em vez de dizer o que aconteceu. O `sys.exit(1)` dos outros passos do Windows continua como antes. Não observado em execução.
+            from instalador import ferramentas
+            try:
+                instalar_no_windows()
+                codigo = 0
+            except ferramentas.Falha as e:
+                log("")
+                log(f"Instalação interrompida: {e}")
+                codigo = 1
         else:
-            codigo = instalar_e_relatar_no_linux(info, args.reproduzir)
+            codigo = instalar_e_relatar(info, args.reproduzir)
         if codigo == 0:
             resultado = "concluida"
         return codigo

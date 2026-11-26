@@ -223,3 +223,22 @@ Os números de cada figura de [`Documentacao/figuras/`](.), lidos dos registros 
 | Login do administrador | localizador | 39,0 | 38,5 | 40,3 | 150,1 | 144,6 | 155,7 | 111,2 | 5 de 5 | 2 de 3 |
 | Lista de produtos do administrador | localizador | 60,3 | 60,1 | 60,6 | 331,2 | 258,7 | 403,7 | 270,9 | 5 de 5 | 2 de 3 |
 | Reserva do cliente | localizador | 61,0 | 60,0 | 63,1 | 281,6 | 167,7 | 395,4 | 220,6 | 5 de 5 | 2 de 3 |
+
+## O relatório ajuda quem revisa?
+
+[Figura](revisao-humana.png). Fonte: `fase4/leitura_revisao_v3.json` (`adesao`, `resumo`; sessão de revisão dos 36 relatórios da corrida 24).
+
+| Grupo | Casos | Decisões apropriadas | Decisões não apropriadas |
+|---|---|---|---|
+| Diagnósticos certos | 25 | 20 | 5 |
+| Diagnósticos errados | 11 | 10 | 1 |
+
+## Mudar o agente melhora o diagnóstico?
+
+[Figura](experimentos-pos-fase-4.png). Fonte: `fase4/sem_notas.json` (`resumo`, corrida 25), `fase4/segundo_passe.json` (`resumo`, corrida 26) e `fase4/analista.json` (`revisao`, `leituras`, corrida 27).
+
+| Mudança testada | Casos da referência | Certos na referência | Casos com a mudança | Certos com a mudança | Valor-p |
+|---|---|---|---|---|---|
+| Biblioteca sem as notas do modelo (corrida 25) | 72 | 56 | 72 | 54 | 0,6875 |
+| Segundo pedido ao modelo (corrida 26) | 72 | 56 | 72 | 54 | 0,625 |
+| Analista de documentação: propostas julgadas corretas (corrida 27) | 20 | 1 | 8 | 3 | 0,0581 |

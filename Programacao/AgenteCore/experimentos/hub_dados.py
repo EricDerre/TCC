@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import re
 import threading
+import time
 from pathlib import Path
 
 import arvore_de_decisao as ad
@@ -178,6 +179,22 @@ class Acervo:
             _, linha = self._achar(tid)
             return {"caso": linha["caso"], "tid": linha["tid"], "hash": linha["hash"], "numero": linha["iteracao"]}
 
+    # ! Alteração de IA - Revisar: (25/11/2026, pacote Q6, etapa 3) `trace` devolve o arquivo do trace do Playwright de uma trilha, quando a
+    # corrida o gravou, e `arvore` devolve só a árvore de decisão dela, sem montar o relatório.
+    # ! Motivo: decisão 93. O caminho do trace é montado aqui, da pasta da corrida e do nome do caso, depois de a trilha ser achada entre as
+    # trilhas lidas; o identificador que vem da página nunca entra num caminho. A árvore sozinha serve à vista "Corrida ao vivo", que relê
+    # o último diagnóstico a cada dois segundos e não precisa do relatório inteiro.
+    def trace(self, tid: str) -> Path | None:
+        with self._trava:
+            dado, _ = self._achar(tid)
+            arq = dado["pasta"] / PASTA_DOS_TRACES / f"{grr.nome_do_relatorio(tid)}.zip"
+            return arq if arq.is_file() else None
+
+    def arvore(self, tid: str) -> dict:
+        with self._trava:
+            dado, _ = self._achar(tid)
+            return ad.arvore_do_caso(dado["eventos"], tid, pasta_blobs=dado["pasta"] / "blobs", leituras=self.leituras, calibracao=self.calibracao, limiares=self.limiares)
+
     def mudancas(self, tid_de: str, tid_para: str) -> list[dict]:
         """O que mudou de uma iteração para outra, campo a campo, só o que é diferente."""
         _, antes = self._achar(tid_de)
@@ -286,7 +303,7 @@ class Acervo:
             comentario = (causa + (f"; campo `{linha['campo']}`" if linha["campo"] else "") + f"; confiança {linha['confianca']}"
                           + ("; o que o modelo declarou não bate com o que o código conferiu" if linha["divergencia"] else "")
                           + ("; o localizador foi curado e o roteiro refeito" if linha["cura"] else "") + ".")
-            trace = pasta / PASTA_DOS_TRACES / f"{grr.nome_do_relatorio(tid)}.zip"
+            trace = self.trace(tid)
             corrida = next(x for x in self.corridas() if x["pasta"] == linha["corrida"])
             return {"tid": tid, "caso": linha["caso"], "nome": linha["nome"], "titulo": linha["titulo"], "hash": linha["hash"], "corrida": corrida,
                     "resumo": {k: v for k, v in linha.items() if k != "seq"}, "iteracao": linha["iteracao"], "iteracoes": iteracoes,
@@ -294,4 +311,74 @@ class Acervo:
                     "relatorio": self._relatorio(dado, tid), "evidencia": self._evidencia(c), "arvore": arvore, "trilha": trilha_, "blobs": blobs,
                     "comentario_do_agente": {"autor": {"nome": f"agente ({cab.get('modelo')}, biblioteca {cab.get('hash_biblioteca')})", "papel": "agente"},
                                              "veredito": "comentar", "ts": linha["ts"], "texto": comentario},
-                    "trace": {"existe": trace.exists(), "arquivo": trace.name if trace.exists() else None}}
+                    "trace": {"existe": trace is not None, "arquivo": trace.name if trace is not None else None}}
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, pacote Q6, etapa 3) `AoVivo` lê a corrida em andamento para a vista "Corrida ao vivo" do hub: acha
+# o `progresso.json` gravado por último entre as pastas de `resultados_alvo/` (o estado da barra de progresso do pacote Q4), diz há quantos
+# segundos ele foi regravado e se uma inferência está rodando agora, e traz o último diagnóstico da trilha daquela pasta (a causa
+# respondida, a confiança, as alternativas com a probabilidade lida e os verbetes entregues).
+# ! Motivo: decisão 93 e ficha 45 (a aba "Cérebro ao vivo" do plano da Fase 4, que não foi feita) e plano da Pós-Fase 4, seção 3.5 ("grava um
+# arquivo de estado em JSON que o hub lê"). `progresso.py` regrava o arquivo no máximo uma vez por segundo enquanto o modelo trabalha; se
+# ele está parado há mais de `LIMITE_DE_IDADE_S`, a inferência acabou ou a corrida morreu, e a página não pode continuar dizendo "rodando".
+# O executor regrava a trilha inteira a cada caso; se a leitura pegar o arquivo pela metade, vale a última boa (`Acervo._carregar`).
+LIMITE_DE_IDADE_S = 30
+ESTADOS_RODANDO = ("indeterminado", "determinado")
+
+
+class AoVivo:
+    """A corrida que gravou o estado da barra por último, lida da pasta dela; nada é escrito."""
+
+    def __init__(self, raiz: Path, leituras: dict | None = None, calibracao: dict | None = None, limiares: dict | None = None) -> None:
+        self.raiz = Path(raiz)
+        self.leituras, self.calibracao, self.limiares = leituras, calibracao, limiares
+        self._acervos: dict[str, Acervo] = {}
+        self._trava = threading.Lock()
+
+    def _mais_recente(self) -> Path | None:
+        candidatos = []
+        for arq in self.raiz.glob("*/progresso.json"):
+            try:
+                candidatos.append((arq.stat().st_mtime, arq))
+            except OSError:
+                continue
+        return max(candidatos)[1] if candidatos else None
+
+    def _ultimo_diagnostico(self, pasta: Path) -> tuple[dict | None, int]:
+        nome = pasta.name
+        if not _NOME_DE_CORRIDA.match(nome):
+            return None, 0
+        try:
+            if nome not in self._acervos:
+                self._acervos[nome] = Acervo(self.raiz, corridas=(nome,), leituras=self.leituras, calibracao=self.calibracao, limiares=self.limiares)
+            acervo = self._acervos[nome]
+            linhas = acervo.indice()
+            if not linhas:
+                return None, 0
+            linha = linhas[-1]
+            causa = next((d for d in acervo.arvore(linha["tid"])["decisoes"] if d["chave"] == "causa"), {})
+        except (OSError, ValueError, KeyError):
+            return None, 0          # a corrida ainda não gravou trilha, ou gravou um arquivo que não dá para ler agora
+        alternativas = [{"opcao": a.get("opcao"), "probabilidade": a.get("probabilidade"), "escolhida": bool(a.get("escolhida"))} for a in causa.get("alternativas") or []]
+        verbetes = [{"id": v, "titulo": (acervo.leituras.get(v) or {}).get("titulo") or v} for v in linha["verbetes"]]
+        return ({"tid": linha["tid"], "caso": linha["caso"], "nome": linha["nome"], "titulo": linha["titulo"], "escolha": linha["escolha"],
+                 "causa_em_palavras": linha["causa_em_palavras"], "campo": linha["campo"], "confianca": linha["confianca"], "divergencia": linha["divergencia"],
+                 "cura": linha["cura"], "ts": linha["ts"], "alternativas": alternativas, "verbetes": verbetes}, len(linhas))
+
+    def ler(self) -> dict:
+        with self._trava:
+            arq = self._mais_recente()
+            if arq is None:
+                return {"ha_corrida": False}
+            try:
+                progresso = json.loads(arq.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                progresso = None
+            try:
+                idade = max(0.0, time.time() - arq.stat().st_mtime)
+            except OSError:
+                idade = 0.0
+            ultimo, quantos = self._ultimo_diagnostico(arq.parent)
+            rodando = idade <= LIMITE_DE_IDADE_S and (progresso is None or progresso.get("estado") in ESTADOS_RODANDO)
+            return {"ha_corrida": True, "pasta": arq.parent.name, "progresso": progresso if isinstance(progresso, dict) else None, "idade_s": round(idade, 1),
+                    "em_andamento": rodando, "ultimo_diagnostico": ultimo, "diagnosticos": quantos}

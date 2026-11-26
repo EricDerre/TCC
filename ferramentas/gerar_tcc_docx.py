@@ -21,12 +21,14 @@
 Uso (na raiz do repositório):
     python ferramentas/gerar_tcc_docx.py                       # Documentacao/TCC - ABNT 14724 - V1.md -> Documentacao/TCC_v1_<data>.docx
     python ferramentas/gerar_tcc_docx.py --copiar-para ../squad-24-projeto/TCC   # e copia para a pasta TCC/ do clone
-Opções: --entrada, --molde, --saida (caminho do .docx), --copiar-para (pasta).
+Opções: --entrada, --molde, --saida (caminho do .docx), --copiar-para (pasta), --folhas N (número fixo no "N f." da ficha
+catalográfica; sem ele, a ficha leva um campo do Word, NUMPAGES menos 2, que o Word atualiza ao abrir ou ao exportar o PDF).
 
 Gramática do Markdown de entrada (o que o script entende):
     <!-- ... -->                    comentário: nunca vai para o Word (é onde ficam as tags de IA e a origem dos números)
     ## Dados                        bloco com linhas `- **Chave:** valor` (Universidade, Curso, Autores (um por linha, com `|`),
-                                    Título, Subtítulo, Natureza, Orientador, Local, Ano, Versão, Data)
+                                    Título, Subtítulo, Natureza, Orientador, Local, Ano, Versão, Data; opcionais: Grau, CDD, CDU,
+                                    Ficha elaborada por, Banca (itens separados por `|`, cada um "Nome com titulação - Instituição"))
     # RESUMO / # ABSTRACT           parágrafo único; a última linha "Palavras-chave: ..." / "Keywords: ..." fica fora do parágrafo
     # AGRADECIMENTOS, # DEDICATÓRIA parágrafos comuns (opcionais)
     # LISTA DE ABREVIATURAS E SIGLAS  linhas `- **SIGLA** significado`
@@ -50,7 +52,7 @@ import struct
 import sys
 import zipfile
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -64,6 +66,15 @@ PRE_TEXTUAIS = {"DEDICATÓRIA", "AGRADECIMENTOS", "RESUMO", "ABSTRACT", "LISTA D
                 "LISTA DE ABREVIATURAS E SIGLAS", "SUMÁRIO"}
 POS_TEXTUAIS_PREFIXOS = ("REFERÊNCIAS", "GLOSSÁRIO", "APÊNDICE", "ANEXO")
 EMU_POR_TWIP = 635
+# ! Alteração de IA - Revisar: (25/11/2026, decisão 158) constantes da ficha catalográfica e da folha de aprovação: caixa de 12,5 x 7,5 cm em twips e a altura útil da página A4 (16838 menos as margens de 1701 e 1134).
+# ! Motivo: a ficha (NBR 14724) tem de ter o tamanho exato da caixa e ficar no pé da página; a altura útil serve para calcular o espaço em branco acima dela.
+FICHA_LARGURA = 7087
+FICHA_ALTURA = 4252
+ALTURA_UTIL = 16838 - 1701 - 1134
+PARTICULAS = {"de", "da", "do", "das", "dos", "e"}
+SUFIXOS_DE_NOME = {"filho", "júnior", "junior", "neto", "sobrinho"}
+TITULACOES = {"prof", "profa", "dr", "dra", "me", "ma", "ms", "msc", "mestre", "mestra", "doutor", "doutora", "esp"}
+MARCA_FOLHAS = "{FOLHAS}"
 
 
 class ErroDeEntrada(Exception):
@@ -271,6 +282,7 @@ class Documento:
     tabelas: list[str] = field(default_factory=list)   # títulos, na ordem, para a lista de tabelas
     figuras: list[Figura] = field(default_factory=list)
     sumario: list[tuple[int, str]] = field(default_factory=list)
+    folhas: int | None = None   # número fixo do "N f." da ficha; None = campo do Word
 
 
 def tirar_comentarios(texto: str) -> str:
@@ -438,7 +450,193 @@ def corpo_da_secao(sec: Secao, doc: Documento, entrada: Path, *, referencias: bo
     return xml
 
 
-def capa_e_folha_de_rosto(d: dict[str, str]) -> str:
+# ! Alteração de IA - Revisar: (25/11/2026, decisão 158) bloco novo: ficha catalográfica e folha de aprovação, mais as funções
+# de nome (inverter_nome, sem_titulacao, romano) que a ficha usa para montar a entrada pelo sobrenome e as entradas secundárias.
+# ! Motivo: o TCC passa a ser entregue com folha de aprovação e ficha catalográfica (NBR 14724) na ordem capa, folha de rosto,
+# ficha, aprovação, dedicatória, agradecimentos, resumo, abstract, listas, sumário. As regras de nome seguem o uso brasileiro:
+# o último sobrenome vai para a frente, "de/da/do/das/dos/e" ficam no fim do prenome, e Filho/Júnior/Neto/Sobrinho acompanham
+# o sobrenome ("Silva Filho, João da"). Tudo sai do bloco Dados, sem digitar a ficha à mão.
+def inverter_nome(nome: str) -> str:
+    """"Guilherme Penha dos Santos" -> "Santos, Guilherme Penha dos"; "João da Silva Filho" -> "Silva Filho, João da"."""
+    partes = nome.split()
+    if len(partes) < 2:
+        return nome.strip()
+    n_sobrenome = 2 if partes[-1].lower() in SUFIXOS_DE_NOME and len(partes) > 2 else 1
+    return f"{' '.join(partes[-n_sobrenome:])}, {' '.join(partes[:-n_sobrenome])}"
+
+
+def sem_titulacao(nome: str) -> str:
+    """Tira "Prof.", "Me.", "Dr." etc. do começo do nome do orientador."""
+    partes = nome.split()
+    while partes and partes[0].rstrip(".").lower() in TITULACOES:
+        partes.pop(0)
+    return " ".join(partes)
+
+
+def romano(n: int) -> str:
+    saida = ""
+    for valor, letra in ((1000, "M"), (900, "CM"), (500, "D"), (400, "CD"), (100, "C"), (90, "XC"), (50, "L"), (40, "XL"),
+                         (10, "X"), (9, "IX"), (5, "V"), (4, "IV"), (1, "I")):
+        while n >= valor:
+            saida += letra
+            n -= valor
+    return saida
+
+
+def lista_de_autores(d: dict[str, str]) -> list[str]:
+    return [a.strip() for a in d["Autores"].split("|") if a.strip()]
+
+
+def orientador_rotulo_e_nome(d: dict[str, str]) -> tuple[str, str]:
+    """O campo Orientador do bloco Dados vem como "Orientador: Prof. Me. Fulano"; devolve ("Orientador", "Prof. Me. Fulano")."""
+    m = re.match(r"^(Orientador|Orientadora)\s*:\s*(.*)$", d["Orientador"].strip())
+    return (m.group(1), m.group(2).strip()) if m else ("Orientador", d["Orientador"].strip())
+
+
+def palavras_chave(doc: Documento) -> list[str]:
+    """Palavras-chave da linha "Palavras-chave: a; b; c." do RESUMO, na ordem em que aparecem."""
+    for sec in doc.secoes:
+        if sec.titulo.upper() == "RESUMO":
+            for linha in sec.linhas:
+                m = re.match(r"^\s*Palavras-chave:\s*(.*?)\.?\s*$", linha)
+                if m:
+                    return [p.strip() for p in m.group(1).split(";") if p.strip()]
+    return []
+
+
+def cdd_cdu(d: dict[str, str]) -> str:
+    partes = [f"{k} {d[k]}" for k in ("CDD", "CDU") if d.get(k)]
+    return " / ".join(partes)
+
+
+def frase_da_ficha(d: dict[str, str]) -> str:
+    quem = d.get("Ficha elaborada por")
+    return f"Ficha catalográfica elaborada por {quem}." if quem else "Ficha catalográfica elaborada pelos autores."
+
+
+def _maiuscula_inicial(texto: str) -> str:
+    return texto[:1].upper() + texto[1:]
+
+
+def linhas_da_ficha(d: dict[str, str], chaves: list[str], folhas: str) -> list[str]:
+    """Texto da ficha, uma linha por parágrafo ("" separa os grupos); `folhas` entra em "N f. : il."."""
+    autores = lista_de_autores(d)
+    titulo = d["Título"].rstrip(": ")
+    subtitulo = d.get("Subtítulo", "").strip()
+    if subtitulo:
+        inicial = subtitulo[:1].lower() + subtitulo[1:] if subtitulo[1:2].islower() else subtitulo
+        titulo += f" : {inicial}"
+    if len(autores) > 3:
+        quem = f"{autores[0]} [et al.]"
+    elif len(autores) > 1:
+        quem = ", ".join(autores[:-1]) + " e " + autores[-1]
+    else:
+        quem = autores[0]
+    rotulo, orientador = orientador_rotulo_e_nome(d)
+    grau = d.get("Grau", "Graduação")
+    assuntos = " ".join(f"{k}. {_maiuscula_inicial(p)}." for k, p in enumerate(chaves, 1))
+    secundarias = [inverter_nome(a) + "." for a in autores[1:]]
+    secundarias.append(inverter_nome(sem_titulacao(orientador)) + ", orient.")
+    secundarias.append("Título.")
+    romanas = " ".join(f"{romano(k)}. {t}" for k, t in enumerate(secundarias, 1))
+    return [
+        inverter_nome(autores[0]),
+        f"{titulo} / {quem}. – {d['Local']}, {d['Ano']}.",
+        f"{folhas} f. : il.",
+        "",
+        f"{rotulo}: {orientador}.",
+        f"Trabalho de Conclusão de Curso ({grau}) – {d['Universidade']}, {d['Local']}, {d['Ano']}.",
+        "",
+        (assuntos + " " + romanas).strip(),
+    ]
+
+
+def campo_folhas(cache: str = "0") -> str:
+    """{ = { NUMPAGES } - 2 }: total de páginas do arquivo menos a capa e a própria página da ficha."""
+    r = _rpr(20)
+    return (f'<w:r>{r}<w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r>'
+            f'<w:r>{r}<w:instrText xml:space="preserve"> = </w:instrText></w:r>'
+            f'<w:r>{r}<w:fldChar w:fldCharType="begin"/></w:r>'
+            f'<w:r>{r}<w:instrText xml:space="preserve"> NUMPAGES </w:instrText></w:r>'
+            f'<w:r>{r}<w:fldChar w:fldCharType="separate"/></w:r>'
+            f'{run("0", sz=20)}'
+            f'<w:r>{r}<w:fldChar w:fldCharType="end"/></w:r>'
+            f'<w:r>{r}<w:instrText xml:space="preserve"> - 2 </w:instrText></w:r>'
+            f'<w:r>{r}<w:fldChar w:fldCharType="separate"/></w:r>'
+            f'{run(cache, sz=20)}'
+            f'<w:r>{r}<w:fldChar w:fldCharType="end"/></w:r>')
+
+
+def secao_do_word(numero_inicial: int | None = None) -> str:
+    num = f'<w:pgNumType w:start="{numero_inicial}"/>' if numero_inicial is not None else ""
+    return f'<w:sectPr>{PAGINA}{num}<w:cols w:space="720"/><w:docGrid w:linePitch="360"/></w:sectPr>'
+
+
+def ficha_catalografica(d: dict[str, str], chaves: list[str], folhas: int | None) -> str:
+    """Página da ficha: espaço em branco, caixa de 12,5 x 7,5 cm (tabela de uma célula, altura exata) e, abaixo dela, a frase
+    de quem elaborou. O último parágrafo fecha a seção do Word da ficha (página que não entra na numeração impressa)."""
+    texto = linhas_da_ficha(d, chaves, MARCA_FOLHAS)
+    paragrafos = ""
+    for k, linha in enumerate(texto):
+        if not linha:
+            paragrafos += par("", jc="left", after=0, line=240)
+            continue
+        recuo = {"left": 0} if k == 0 else {"left": 397}
+        if MARCA_FOLHAS in linha:
+            runs = campo_folhas() if folhas is None else run(str(folhas), sz=20)
+            runs += run(linha.replace(MARCA_FOLHAS, ""), sz=20)
+        else:
+            runs = run(linha, sz=20)
+        paragrafos += par(runs, jc="left", after=0, line=240, **recuo)
+    codigos = cdd_cdu(d)
+    if codigos:
+        paragrafos += par(run(codigos, sz=20), jc="right", before=120, after=0, line=240)
+    borda = "".join(f'<w:{lado} w:val="single" w:sz="6" w:space="0" w:color="000000"/>' for lado in ("top", "left", "bottom", "right"))
+    caixa = (f'<w:tbl><w:tblPr><w:tblW w:w="{FICHA_LARGURA}" w:type="dxa"/><w:jc w:val="center"/>'
+             f'<w:tblBorders>{borda}</w:tblBorders><w:tblLayout w:type="fixed"/>'
+             f'<w:tblCellMar><w:top w:w="113" w:type="dxa"/><w:left w:w="170" w:type="dxa"/><w:bottom w:w="113" w:type="dxa"/>'
+             f'<w:right w:w="170" w:type="dxa"/></w:tblCellMar><w:tblLook w:val="04A0"/></w:tblPr>'
+             f'<w:tblGrid><w:gridCol w:w="{FICHA_LARGURA}"/></w:tblGrid>'
+             f'<w:tr><w:trPr><w:cantSplit/><w:trHeight w:val="{FICHA_ALTURA}" w:hRule="exact"/></w:trPr>'
+             f'<w:tc><w:tcPr><w:tcW w:w="{FICHA_LARGURA}" w:type="dxa"/><w:vAlign w:val="top"/></w:tcPr>{paragrafos}</w:tc></w:tr></w:tbl>')
+    # espaço acima da caixa: altura útil menos a caixa, a linha da frase (corpo 10) e uma folga de 38 pontos (com folga de 8 pontos o Word jogou a frase para uma página só dela)
+    espaco = ALTURA_UTIL - FICHA_ALTURA - 240 - 760
+    xml = (f'<w:p><w:pPr><w:spacing w:before="0" w:after="0" w:line="{espaco}" w:lineRule="exact"/></w:pPr></w:p>' + caixa)
+    xml += par(run(frase_da_ficha(d), sz=20), jc="center", before=60, after=0, line=240, sect=secao_do_word())
+    return xml
+
+
+def folha_de_aprovacao(d: dict[str, str]) -> str:
+    autores = lista_de_autores(d)
+    titulo, subtitulo = d["Título"], d.get("Subtítulo", "")
+    xml = ""
+    for k, autor in enumerate(autores):
+        xml += par(run(autor.upper(), b=True), jc="center", after=600 if k == len(autores) - 1 else 40)
+    xml += par(run(titulo.upper() + (":" if subtitulo and not titulo.endswith(":") else ""), b=True, sz=28), jc="center", after=60)
+    if subtitulo:
+        xml += par(run(subtitulo, i=True, sz=26), jc="center", after=480)
+    xml += par(run(d["Natureza"], sz=20), jc="both", left=4535, after=360, line=240)
+    xml += par(run("Aprovado em: ____/____/________."), jc="center", after=360)
+    xml += par(run("BANCA EXAMINADORA", b=True), jc="center", after=240, keep_next=True)
+    rotulo, orientador = orientador_rotulo_e_nome(d)
+    blocos_banca = [(orientador, f"({rotulo})", d["Universidade"])]
+    if d.get("Banca"):
+        for item in [i.strip() for i in d["Banca"].split("|") if i.strip()]:
+            nome, _, instituicao = item.partition(" - ")
+            blocos_banca.append((nome.strip(), "", instituicao.strip()))
+    else:
+        blocos_banca += [("Examinador(a)", "", ""), ("Examinador(a)", "", "")]
+    for nome, papel, instituicao in blocos_banca:
+        xml += par(run("_" * 50), jc="center", before=560, after=0, line=240, keep_next=True)
+        xml += par(run(nome, sz=22), jc="center", after=0, line=240, keep_next=True)
+        if papel:
+            xml += par(run(papel, sz=22), jc="center", after=0, line=240, keep_next=True)
+        if instituicao:
+            xml += par(run(instituicao, sz=22), jc="center", after=0, line=240)
+    return xml
+
+
+def capa_e_folha_de_rosto(d: dict[str, str], sect_final: str = "") -> str:
     autores = [a.strip() for a in d["Autores"].split("|") if a.strip()]
     titulo, subtitulo = d["Título"], d.get("Subtítulo", "")
     xml = par(run(d["Universidade"].upper(), b=True), jc="center", after=120)
@@ -460,7 +658,9 @@ def capa_e_folha_de_rosto(d: dict[str, str]) -> str:
     xml += par(run(d["Natureza"], sz=20), jc="both", left=4535, after=240, line=240)
     xml += par(run(d["Orientador"], sz=20), jc="left", left=4535, after=1800, line=240)
     xml += par(run(d["Local"]), jc="center", after=80)
-    xml += par(run(d["Ano"]), jc="center", after=0)
+    # ! Alteração de IA - Revisar: o último parágrafo da folha de rosto (o ano) passa a fechar a primeira seção do Word (capa e folha de rosto), recebendo `sect_final`.
+    # ! Motivo: a ficha catalográfica (verso da folha de rosto) precisa começar em seção própria para não entrar na numeração impressa.
+    xml += par(run(d["Ano"]), jc="center", after=0, sect=sect_final)
     return xml
 
 
@@ -478,7 +678,11 @@ def resumo(sec: Secao) -> str:
 
 def montar_corpo(doc: Documento, entrada: Path) -> str:
     d = doc.dados
-    pre = capa_e_folha_de_rosto(d)
+    # ! Alteração de IA - Revisar: o começo do documento passa a ser 4 seções do Word: (1) capa e folha de rosto, numeração começando em 0 (capa = 0, folha de rosto = 1); (2) ficha catalográfica, sem número e sem reiniciar; (3) folha de aprovação até o sumário, recomeçando em 2; (4) texto, com o cabeçalho do número e a contagem seguindo.
+    # ! Motivo: antes eram duas seções (capa a sumário, texto). A ficha é o verso da folha de rosto e não conta como folha; sem seção própria, a primeira página da Introdução sairia com número uma unidade maior do que o "N f." da ficha prevê.
+    pre = capa_e_folha_de_rosto(d, sect_final=secao_do_word(0))
+    pre += ficha_catalografica(d, palavras_chave(doc), doc.folhas)
+    pre += folha_de_aprovacao(d)
     textuais = ""
     pos = ""
     pre_opcionais = {}
@@ -513,8 +717,7 @@ def montar_corpo(doc: Documento, entrada: Path) -> str:
     pre += listas_siglas
     pre += titulo_sem_numero("Sumário")
     pre += campo_em_paragrafos('TOC \\o "1-3" \\h \\z \\u', doc.sumario, negrito=True)
-    quebra_de_secao = par("", sect=f'<w:sectPr>{PAGINA}<w:pgNumType w:start="0"/><w:cols w:space="720"/><w:docGrid w:linePitch="360"/></w:sectPr>',
-                          after=0, line=240)
+    quebra_de_secao = par("", sect=secao_do_word(2), after=0, line=240)
     return pre + quebra_de_secao + textuais + pos
 
 
@@ -532,8 +735,32 @@ def campo_em_paragrafos(instr: str, itens: list[tuple[int, str]], *, negrito: bo
     return xml
 
 
-def gerar(entrada: Path, molde: Path, saida: Path) -> Documento:
+def propriedades_core(d: dict[str, str]) -> str:
+    """docProps/core.xml novo: autores do bloco Dados, título e datas da geração; nada herdado do molde."""
+    agora = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    autores = escape("; ".join(lista_de_autores(d)))
+    titulo = d["Título"].rstrip(": ") + (f": {d['Subtítulo']}" if d.get("Subtítulo") else "")
+    return ("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n"
+            '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" '
+            'xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" '
+            'xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+            f"<dc:title>{escape(titulo)}</dc:title><dc:creator>{autores}</dc:creator>"
+            f"<cp:lastModifiedBy>{autores}</cp:lastModifiedBy><cp:revision>1</cp:revision>"
+            f'<dcterms:created xsi:type="dcterms:W3CDTF">{agora}</dcterms:created>'
+            f'<dcterms:modified xsi:type="dcterms:W3CDTF">{agora}</dcterms:modified></cp:coreProperties>')
+
+
+def propriedades_app(app: str) -> str:
+    """docProps/app.xml do molde sem Template, Manager e Company (o Application deixa de dizer "Macintosh")."""
+    app = re.sub(r"\s*<(Template|Manager|Company)(/>|>.*?</\1>)", "", app, flags=re.DOTALL)
+    return app.replace("Microsoft Macintosh Word", "Microsoft Office Word")
+
+
+def gerar(entrada: Path, molde: Path, saida: Path, folhas: int | None = None) -> Documento:
+    # ! Alteração de IA - Revisar: (25/11/2026, decisão 158) `gerar` aceita `folhas` (número fixo do "N f." da ficha), troca `docProps/core.xml` e `docProps/app.xml` do molde por propriedades próprias e não copia mais a miniatura `docProps/thumbnail.jpeg` do molde.
+    # ! Motivo: o arquivo saía com autor "python-docx", descrição "generated by python-docx", datas de 2013 e a miniatura da primeira página do molde; a entrega não pode carregar propriedade que não seja dos autores (nem rastro de ferramenta).
     doc = ler_markdown(entrada)
+    doc.folhas = folhas
     corpo = montar_corpo(doc, entrada)
     with zipfile.ZipFile(molde) as z:
         nomes = z.namelist()
@@ -541,8 +768,11 @@ def gerar(entrada: Path, molde: Path, saida: Path) -> Documento:
         settings = z.read("word/settings.xml").decode("utf-8")
         rels = z.read("word/_rels/document.xml.rels").decode("utf-8")
         tipos = z.read("[Content_Types].xml").decode("utf-8")
-        outros = {n: z.read(n) for n in nomes if n not in ("word/document.xml", "word/settings.xml",
+        outros = {n: z.read(n) for n in nomes if n not in ("word/document.xml", "word/settings.xml", "docProps/thumbnail.jpeg",
                                                              "word/_rels/document.xml.rels", "[Content_Types].xml")}
+    outros["docProps/core.xml"] = propriedades_core(doc.dados).encode("utf-8")
+    outros["docProps/app.xml"] = propriedades_app(outros["docProps/app.xml"].decode("utf-8")).encode("utf-8")
+    outros["_rels/.rels"] = re.sub(r"<Relationship [^>]*thumbnail[^>]*/>", "", outros["_rels/.rels"].decode("utf-8")).encode("utf-8")
     m = re.search(r"<w:body>(.*)</w:body>", documento, re.DOTALL)
     if not m:
         raise ErroDeEntrada("molde sem <w:body>")
@@ -553,6 +783,9 @@ def gerar(entrada: Path, molde: Path, saida: Path) -> Documento:
     if 'xmlns:wp=' not in raiz:
         raiz = raiz.replace("<w:document ", '<w:document xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" ', 1)
     novo = raiz + corpo + sect_final + "</w:body>" + documento[m.end():]
+    # ! Alteração de IA - Revisar: tira `<w:savePreviewPicture/>` das configurações do molde.
+    # ! Motivo: com essa opção o Word grava no arquivo uma miniatura da primeira página (`docProps/thumbnail.jpeg`) toda vez que salva; o arquivo entregue não precisa dela.
+    settings = settings.replace("<w:savePreviewPicture/>", "")
     if "<w:updateFields" not in settings:
         settings = settings.replace("<w:defaultTabStop", '<w:updateFields w:val="true"/><w:defaultTabStop', 1)
     for fig in doc.figuras:
@@ -586,11 +819,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--molde", type=Path, default=MOLDE)
     ap.add_argument("--saida", type=Path, default=None, help="caminho do .docx (padrão: Documentacao/TCC_v<versão>_<data>.docx)")
     ap.add_argument("--copiar-para", type=Path, default=None, help="pasta que recebe uma cópia (a TCC/ do clone do orientador)")
+    ap.add_argument("--folhas", type=int, default=None, help="número fixo do \"N f.\" da ficha catalográfica (padrão: campo do Word)")
     args = ap.parse_args(argv)
     try:
         doc_prev = ler_markdown(args.entrada)
         saida = args.saida or (args.entrada.parent / nome_de_saida(doc_prev))
-        doc = gerar(args.entrada, args.molde, saida)
+        doc = gerar(args.entrada, args.molde, saida, folhas=args.folhas)
     except ErroDeEntrada as erro:
         print(f"erro: {erro}", file=sys.stderr)
         return 2

@@ -1,0 +1,95 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "CI-WIN",
+ "gravado_em": "2026-11-25T15:59:45",
+ "sistema": {
+  "sistema": "Windows",
+  "familia": "windows",
+  "id": "windows",
+  "versao": "",
+  "nome": "Windows",
+  "suporte": "suportado"
+ },
+ "maquina": {
+  "plataforma": "Windows-2025Server-10.0.26100-SP0",
+  "arquitetura": "AMD64",
+  "python": "3.12.10",
+  "nucleos": 4,
+  "memoria_total_gb": 16.0,
+  "memoria_livre_gb": 13.4,
+  "administrador": true,
+  "defender": {
+   "antivirus": "True",
+   "tempo_real": "False",
+   "protecao_contra_adulteracao": "False"
+  }
+ },
+ "niveis": {
+  "N1": {
+   "estado": "falhou",
+   "detalhe": "o MariaDB não respondeu (ensure_mariadb_running)",
+   "segundos": 52.4
+  },
+  "N2": {
+   "estado": "nao_rodou",
+   "detalhe": "depende do N1, que não passou",
+   "segundos": null
+  },
+  "N3": {
+   "estado": "falhou",
+   "detalhe": "o executável do Ollama não foi encontrado (find_ollama)",
+   "segundos": 0.0
+  },
+  "N4": {
+   "estado": "nao_rodou",
+   "detalhe": "depende do N3, que não passou",
+   "segundos": null
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.12.10",
+   "testada": "3.14.7",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "php": {
+   "encontrada": "8.5.12",
+   "testada": "8.2.35",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "mariadb": {
+   "encontrada": "8.4.13",
+   "testada": "11.8.9",
+   "estado": "fora_da_faixa",
+   "impede": true
+  }
+ },
+ "instalacao": {
+  "gravado_em": "2026-11-25T15:59:43",
+  "resultado": "interrompida",
+  "passos": [
+   {
+    "passo": "PHP",
+    "segundos": 0.0
+   },
+   {
+    "passo": "MariaDB",
+    "segundos": 0.0
+   },
+   {
+    "passo": "serviço do MariaDB",
+    "segundos": 52.9
+   }
+  ]
+ },
+ "alcancado": "N0",
+ "falhou": true,
+ "impedida_por_versao": [
+  "mariadb"
+ ]
+}

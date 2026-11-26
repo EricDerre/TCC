@@ -8,10 +8,12 @@
 # object file`) e, para o Ollama, só imprimia o comando. Os três arquivos que as corridas importam não podem mudar antes de a
 # corrida 28b ser lida; este módulo os importa e fica no lugar deles até o pacote I3.
 # ! Alteração de IA - Revisar: (19/11/2026, pacote I3 do instalador único) desde o pacote I3 este módulo é a biblioteca dos passos
-# de Linux chamada por `install.instalar_no_linux`; as opções do PHP e o serviço do banco foram para o `_env_common.py`.
+# de Linux chamada por `install.instalar_no_linux` (nome da época; hoje `install.instalar_por_pacotes`); as opções do PHP e o serviço do banco foram para o `_env_common.py`.
 # ! Motivo: a corrida 28b foi lida em 19/11/2026, e os consertos que moravam em módulos provisórios entraram nos arquivos que o
 # Windows e as corridas já importam (`_env_common.py` e `install.py`); aqui ficam só os passos que o Linux precisa e o Windows não.
-"""Instalação e conferência das ferramentas num Linux de `apt`. Só biblioteca padrão."""
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a docstring do módulo e as menções a `install.instalar_no_linux` passam a dizer Linux (`apt` e `dnf`) e macOS (Homebrew) e a `install.instalar_por_pacotes`; `instalar_no_linux` era o nome da época, hoje é `instalar_por_pacotes`.
+# ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: o macOS passa a seguir o mesmo fluxo por família do Linux (pacotes pelo `brew`, serviço, root, `.sql`, venvs, Chromium, Ollama); o módulo deixou de ser só do Linux.
+"""Instalação e conferência das ferramentas no Linux (`apt` e `dnf`) e no macOS (Homebrew). Só biblioteca padrão."""
 import importlib.util
 import json
 import os
@@ -36,11 +38,16 @@ import install
 from instalador import conferir, sistema, versoes
 
 OLLAMA_SCRIPT = "https://ollama.com/install.sh"
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) constante nova com o endereço do script oficial do Ollama para o Windows.
+# ! Motivo: (motivo reescrito em 25/11/2026, consertos da revisão depois da primeira execução do Actions) o Ollama do Windows deixa de vir do `winget` (que instala a versão do dia, e não a testada do `versoes.json`) e passa a vir deste script, na versão testada. Nenhuma célula gravou falha do `winget`: a máquina do GitHub Actions tem o `winget` v1.11.510 (`estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844). Não observado em execução.
+OLLAMA_SCRIPT_DO_WINDOWS = "https://ollama.com/install.ps1"
 OLLAMA_API = "http://127.0.0.1:11434"
 EXTENSOES_DO_PHP = ("mysqli", "pdo_mysql", "mbstring")
 AVISO_DO_ROOT = (
     "O site legado (Programacao/CobaiaFront/conn/connect.php) entra no MariaDB como root, sem senha.\n"
-    "Neste sistema o root do MariaDB só entra pelo usuário root do Linux (unix_socket). Para o site funcionar,\n"
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) "do Linux" vira "do sistema" no aviso do root.
+    # ! Motivo: no macOS (células M-15 e M-15I) o root do MariaDB também só entra pelo usuário root do sistema ("you need to be system 'root' user to connect"); o aviso aparece para quem instala nos dois.
+    "Neste sistema o root do MariaDB só entra pelo usuário root do sistema (unix_socket). Para o site funcionar,\n"
     "o instalador troca essa entrada para senha vazia: qualquer usuário desta máquina passa a entrar como root\n"
     "do MariaDB. Não aceite numa máquina que tenha um MariaDB em uso de verdade."
 )
@@ -71,7 +78,12 @@ def como_root(uid: int | None = None, tem_sudo: bool | None = None) -> list[str]
 # ("sudo: apt-get: command not found") e parava em "PHP foi instalado mas não foi encontrado automaticamente. Feche e
 # reabra o terminal", que manda a pessoa fazer a coisa errada. A decisão 141 põe o Fedora como melhor esforço.
 def pacote_instalado(nome: str, familia: str = "apt") -> bool:
-    """O gerenciador de pacotes diz que o pacote está instalado? (`dpkg-query` no `apt`, `rpm -q` no `dnf`.)"""
+    """O gerenciador de pacotes diz que o pacote está instalado? (`dpkg-query` no `apt`, `rpm -q` no `dnf`, `brew list` no `brew`.)"""
+    if familia == "brew":
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) na família `brew` a pergunta é `brew list --versions <nome>`: instalado quando sai com código 0 e escreve alguma coisa.
+        # ! Motivo: o macOS passa a seguir o fluxo por pacotes (execuções M-15 e M-15I de 25/11/2026); `brew list --versions` sai com código 0 e escreve a versão se a fórmula está instalada, e sai sem escrever nada, ou com erro, se não está.
+        r = subprocess.run(["brew", "list", "--versions", nome], capture_output=True, text=True, check=False)
+        return r.returncode == 0 and bool((r.stdout or "").strip())
     if familia == "dnf":
         # ! Alteração de IA - Revisar: (19/11/2026, revisão da segunda rodada, M-1) pergunta ao `rpm` por `--whatprovides`.
         # ! Motivo: no Fedora o comando `curl` pode vir do pacote `curl-minimal`, que provê `curl`; com `rpm -q curl` o
@@ -85,6 +97,11 @@ def pacotes_desejados(familia: str, falta_venv: bool) -> list[str]:
     """Os pacotes do sistema que o projeto usa, da tabela de `instalador/sistema.py`; o do venv só quando o Python em uso
     não tem o `ensurepip`."""
     tabela = sistema.pacotes(familia)
+    if familia == "brew":
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) na família `brew` o grupo `php` só entra na lista quando `env.find_php()` não acha nada, e o grupo `mariadb` só quando `env.find_mysql_cli()` não acha nada; `apt` e `dnf` não mudam.
+        # ! Motivo: o Homebrew guarda os dados do MariaDB em `var/mysql`, a mesma pasta para qualquer fórmula `mariadb`; instalar a `mariadb@11.8` ao lado de um MariaDB que o Mac já tem poria dois servidores a usar a mesma pasta de dados. Um MariaDB que já existe fica como está e a faixa de versão é conferida no fim, como nos outros sistemas. Também a fórmula `mariadb` recusa-se a instalar onde há a fórmula `mysql`. Não observado em execução.
+        return [*tabela["base"], *(tabela["venv"] if falta_venv else []),
+                *([] if env.find_php() else tabela["php"]), *([] if env.find_mysql_cli() else tabela["mariadb"])]
     return [*tabela["base"], *(tabela["venv"] if falta_venv else []), *tabela["php"], *tabela["mariadb"]]
 
 
@@ -105,6 +122,10 @@ def comando_apt(pacotes: list[str], prefixo: list[str]) -> list[str]:
 
 def comando_de_instalar(pacotes: list[str], prefixo: list[str], familia: str) -> list[str]:
     """O comando que instala os pacotes sem pergunta na tela. O `dnf` não remove pacote em conflito sem o `--allowerasing`."""
+    if familia == "brew":
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) na família `brew` o comando é `brew install <pacotes>`, sem `sudo` e sem usar o prefixo recebido.
+        # ! Motivo: o Homebrew se recusa a rodar como root; o `sudo` na frente faria o `brew install` parar com erro.
+        return ["brew", "install", *pacotes]
     if familia == "dnf":
         return [*prefixo, "dnf", "install", "-y", *pacotes]
     return comando_apt(pacotes, prefixo)
@@ -116,13 +137,15 @@ def falta_o_modulo_de_venv() -> bool:
 
 
 def instalar_pacotes_do_sistema(info: dict) -> list[str]:
-    """Instala pelo `apt` ou pelo `dnf` só o que falta e devolve a lista do que instalou."""
+    """Instala pelo `apt`, pelo `dnf` ou pelo `brew` só o que falta e devolve a lista do que instalou."""
     familia = info["familia"]
     faltam = pacotes_que_faltam(pacotes_desejados(familia, falta_o_modulo_de_venv()), familia=familia)
     if not faltam:
         env.log("Pacotes do sistema: nada a instalar.")
         return []
-    prefixo = como_root()
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) na família `brew` não chama `como_root()` (não há `sudo`).
+    # ! Motivo: o Homebrew se recusa a rodar como root, e `como_root()` levanta `Falha` num Mac sem `sudo`; o macOS não precisa dele para instalar os pacotes.
+    prefixo = [] if familia == "brew" else como_root()
     env.log("Pacotes do sistema que faltam: " + " ".join(faltam))
     # ! Alteração de IA - Revisar: o `apt-get update` com falha passa a gerar um aviso, e a falha do `install` explica o `--no-remove`.
     # ! Motivo: numa máquina com o `mysql-server`, `apt-get install -y mariadb-server` removia o MySQL sem perguntar; agora o
@@ -135,6 +158,10 @@ def instalar_pacotes_do_sistema(info: dict) -> list[str]:
             env.log(f"Aviso: o `apt-get update` saiu com código {atualizacao.returncode}; o instalador segue, mas a lista de "
                     "pacotes pode estar velha.")
     if env.run(comando_de_instalar(faltam, prefixo, familia)).returncode != 0:
+        if familia == "brew":
+            # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) mensagem de falha do `brew install`.
+            # ! Motivo: se o Mac tem a fórmula `mysql`, a `mariadb` não instala ("conflicts_with mysql" na fórmula) e o Homebrew diz por quê na saída; a mensagem manda ler a saída dele.
+            raise Falha("o Homebrew não conseguiu instalar: " + " ".join(faltam) + ". A mensagem dele está logo acima.")
         if familia == "dnf":
             raise Falha("o dnf não conseguiu instalar: " + " ".join(faltam) + ". A mensagem dele está logo acima.")
         raise Falha("o apt-get não conseguiu instalar: " + " ".join(faltam) + ". A mensagem dele está logo acima. O "
@@ -260,9 +287,12 @@ def instalar_chromium(python_venv: Path, info: dict) -> None:
     elif env.run(comando_do_chromium(str(python_venv), com_bibliotecas)).returncode != 0:
         raise Falha("o Playwright não conseguiu baixar o Chromium ou instalar as bibliotecas dele; a mensagem está acima.")
     faltam: list[str] = []
-    for binario in binarios_do_chromium():
-        r = subprocess.run(["ldd", str(binario)], capture_output=True, text=True, check=False)
-        faltam += bibliotecas_que_faltam(r.stdout)
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a conferência das bibliotecas com o `ldd` só roda no Linux (`env.OS_NAME == "Linux"`).
+    # ! Motivo: o macOS não tem `ldd` (usaria `otool`) e passa a seguir este fluxo (execuções M-15 e M-15I de 25/11/2026); sem a condição o `subprocess.run(["ldd", ...])` morreria com `FileNotFoundError`. No macOS o Chromium do Playwright traz o que precisa.
+    if env.OS_NAME == "Linux":
+        for binario in binarios_do_chromium():
+            r = subprocess.run(["ldd", str(binario)], capture_output=True, text=True, check=False)
+            faltam += bibliotecas_que_faltam(r.stdout)
     if not faltam:
         return
     lista = " ".join(sorted(set(faltam)))
@@ -296,16 +326,41 @@ def decidir_ollama(encontrada: str | None, registro: dict) -> str:
     return {"igual": "usar", "fora_da_faixa": "parar"}.get(versoes.comparar(encontrada, registro), "avisar")
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) função nova `roteiro_do_ollama`: devolve o endereço do script oficial, onde gravá-lo e o comando que o roda, no Windows (`install.ps1`, pelo `powershell`) e nos outros sistemas (`install.sh`, pelo `sh`); `instalar_ollama` passa a usá-la.
+# ! Motivo: no Windows o Ollama vinha de `winget install --id Ollama.Ollama` (em `install.ensure_ollama`), o `winget` instala a versão do dia, e não a do `versoes.json`, e o `ollama pull` seguinte rodava sem esperar o servidor responder e sem ninguém conferir o resultado. Nenhuma célula gravou falha do `winget`: a máquina do GitHub Actions tem o `winget` v1.11.510 (`estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844). (motivo reescrito em 25/11/2026, consertos da revisão depois da primeira execução do Actions); a seção 3.2 do plano aprovado já pedia "Ollama na versão testada (Windows: o instalador oficial da versão, em escopo de usuário)". O script `https://ollama.com/install.ps1` baixa o `OllamaSetup.exe` da versão pedida em `OLLAMA_VERSION`, confere a assinatura e instala em `%LOCALAPPDATA%\Programs\Ollama` sem administrador. Nada disso foi observado em execução ainda: a segunda execução do fluxo é a que prova.
+def roteiro_do_ollama(so: str | None = None) -> tuple[str, Path, list[str]]:
+    """O endereço do script oficial do Ollama, o arquivo onde gravá-lo e o comando que o roda, para o sistema `so`
+    (o desta máquina quando não vem)."""
+    so = env.OS_NAME if so is None else so
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) a pasta do script do Ollama passa a vir de `versoes.raiz_do_projeto()`, chamada na hora, e não de `RAIZ` (calculada de `__file__` no import).
+    # ! Motivo: dentro do `Cobaia.exe` (PyInstaller) `__file__` aponta para a pasta temporária de extração: o `install.ps1` do Ollama seria gravado lá e some quando o executável fecha. Com a raiz do executável o script fica em `.ferramentas/ollama/` do projeto, como nas outras formas de rodar.
+    pasta = versoes.raiz_do_projeto() / ".ferramentas" / "ollama"
+    if so == "Windows":
+        arquivo = pasta / "install.ps1"
+        return OLLAMA_SCRIPT_DO_WINDOWS, arquivo, ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(arquivo)]
+    arquivo = pasta / "install.sh"
+    return OLLAMA_SCRIPT, arquivo, ["sh", str(arquivo)]
+
+
 def instalar_ollama(versao: str) -> None:
-    """Baixa o script oficial para `.ferramentas/ollama/install.sh` e roda com `OLLAMA_VERSION`. O script usa o sudo."""
-    roteiro = RAIZ / ".ferramentas" / "ollama" / "install.sh"
-    env.log(f"Baixando o script oficial do Ollama ({OLLAMA_SCRIPT}) para instalar a versão {versao}...")
+    """Baixa o script oficial do sistema (`install.sh`, ou `install.ps1` no Windows) para `.ferramentas/ollama/` e roda com
+    `OLLAMA_VERSION`. No Linux e no macOS o script usa o sudo; no Windows instala em escopo de usuário."""
+    url, roteiro, comando = roteiro_do_ollama()
+    env.log(f"Baixando o script oficial do Ollama ({url}) para instalar a versão {versao}...")
     try:
-        install.baixar_arquivo(OLLAMA_SCRIPT, roteiro)
+        install.baixar_arquivo(url, roteiro)
     except OSError as e:
-        raise Falha(f"não foi possível baixar {OLLAMA_SCRIPT}: {e}") from e
-    if env.run(["sh", str(roteiro)], env={**os.environ, "OLLAMA_VERSION": versao}).returncode != 0:
+        raise Falha(f"não foi possível baixar {url}: {e}") from e
+    if env.run(comando, env={**os.environ, "OLLAMA_VERSION": versao}).returncode != 0:
         raise Falha("o script do Ollama saiu com erro; a mensagem dele está logo acima.")
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) função nova `comando_de_atualizar_ollama`: o comando que a mensagem de "Ollama fora da faixa" ensina, por sistema.
+# ! Motivo: a mensagem só trazia `curl -fsSL ... | sh`, que não existe no Windows; no Windows o comando equivalente é o do site oficial (`irm https://ollama.com/install.ps1 | iex` com `$env:OLLAMA_VERSION`). Não observado em execução.
+def comando_de_atualizar_ollama(versao: str) -> str:
+    if env.OS_NAME == "Windows":
+        return f'$env:OLLAMA_VERSION="{versao}"; irm {OLLAMA_SCRIPT_DO_WINDOWS} | iex'
+    return f"curl -fsSL {OLLAMA_SCRIPT} | OLLAMA_VERSION={versao} sh"
 
 
 def ollama_responde(espera: int = 5) -> bool:
@@ -355,7 +410,7 @@ def preparar_ollama(ferr: dict, ambiente: Mapping[str, str] | None = None) -> st
         # ! Motivo: com só `a partir do {aceita_de}` a pessoa não via o teto (`aceita_ate`) e achava que um Ollama mais novo servia.
         raise Falha(f"o Ollama desta máquina é o {encontrada}, fora da faixa que o projeto aceita (de {registro['aceita_de']} "
                     f"a {registro.get('aceita_ate') or 'a mais nova'}). O instalador não troca um Ollama já instalado; para atualizar: "
-                    f"curl -fsSL {OLLAMA_SCRIPT} | OLLAMA_VERSION={registro['testada']} sh")
+                    + comando_de_atualizar_ollama(registro["testada"]))
     elif decisao == "avisar":
         env.log(f"Aviso: o Ollama desta máquina é o {encontrada or 'de versão não lida'}; o projeto testou o "
                 f"{registro['testada']}. Ele fica como está.")

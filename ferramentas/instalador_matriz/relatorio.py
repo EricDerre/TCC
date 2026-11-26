@@ -50,10 +50,15 @@ CELULAS = {
     "L-F45": ("Fedora 45 (melhor esforço)", "WSL: imagem oficial importada e apagada no fim"),
     "L-ARCH": ("Arch Linux (sem suporte)", "WSL: imagem oficial importada e apagada no fim"),
     "L-SUSE": ("openSUSE (sem suporte)", "WSL: imagem oficial importada e apagada no fim"),
-    "CI-UBU": ("Ubuntu 24.04 do GitHub Actions", "executor do GitHub; já traz Python, PHP e banco, não é limpo"),
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o texto da `CI-UBU` passa a dizer que o executor vem com o MySQL 8.0 e que a célula o remove antes do instalador.
+    # ! Motivo: na execução 45650086543 o `apt-get install --no-remove ... mariadb-server` parou com "Packages need to be removed but remove is disabled" por causa do MySQL 8.0 do executor; a decisão do dono do projeto foi a célula tirá-lo antes (preparo `remover-mysql`), e a tabela do README tem de dizer que esta máquina é alterada antes da instalação.
+    "CI-UBU": ("Ubuntu 24.04 do GitHub Actions",
+               "executor do GitHub; já traz Python, PHP e o MySQL 8.0, e a célula remove o MySQL antes do instalador; não é limpo"),
     "CI-WIN": ("Windows Server 2025 do GitHub Actions", "executor do GitHub; já traz Python, PHP e banco, não é limpo"),
     "M-15": ("macOS 15, Apple Silicon", "executor do GitHub; já traz o Homebrew e o Python, não é limpo"),
-    "M-15I": ("macOS 15, Intel", "executor do GitHub; já traz o Homebrew e o Python, não é limpo"),
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa E) o sistema da `M-15I` passa a dizer "macOS 15, Intel (melhor esforço)", como o Fedora.
+    # ! Motivo: decisão do dono do projeto de 25/11/2026 ("Melhor esforço, célula fica"): nos arquivos públicos do Homebrew (`Formula/p/php.rb`, `Formula/m/mariadb.rb`, `Formula/m/mariadb@11.8.rb`) o bloco `bottle` só traz pacote pronto de macOS para Apple Silicon; num Mac Intel o `brew install` compila do código-fonte e pode levar mais de uma hora. A tabela do README tem de dizer que esta célula não é garantida. Nada disso foi observado em execução ainda.
+    "M-15I": ("macOS 15, Intel (melhor esforço)", "executor do GitHub; já traz o Homebrew e o Python, não é limpo"),
 }
 
 # ! Alteração de IA - Revisar: lista fixa do que a decisão 153 deixou sem teste, com o motivo de cada uma.
@@ -143,6 +148,9 @@ def coletar(celulas: Path) -> list[dict]:
             "impedida_por_versao": list((registro or {}).get("impedida_por_versao", [])),
             "sistema": ((registro or {}).get("sistema") or {}).get("nome", ""),
             "commit": str((celula.get("actions") or {}).get("commit", ""))[:8],
+            # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) cada rodada guarda o nome do `preparo` do `celula.json` (`nenhum` se a chave não existe).
+            # ! Motivo: a `CI-UBU` passa a remover o MySQL do executor antes do instalador; a linha da rodada precisa dizer isso, e as rodadas gravadas antes da chave continuam valendo, sem preparo.
+            "preparo": str((celula.get("preparo") or {}).get("nome", "nenhum")) if isinstance(celula.get("preparo"), dict) else "nenhum",
         })
     return rodadas
 
@@ -151,7 +159,8 @@ def coletar(celulas: Path) -> list[dict]:
 # ! Motivo: a última rodada de uma célula pode ter pedido menos níveis que uma anterior (por exemplo, `--ate N1` depois de um `--ate N3`), e mostrar só a última esconderia o que já foi provado; "sem prova" e "não terminou" valem menos que N0.
 def _da_rodada(r: dict) -> dict:
     """Os campos de uma rodada que a tabela por célula mostra."""
-    return {"rodada": r["rodada"], "modo": r["modo"], "alcancado": r["alcancado"], "ate": r["ate"], "primeira_falha": r["primeira_falha"]}
+    return {"rodada": r["rodada"], "modo": r["modo"], "alcancado": r["alcancado"], "ate": r["ate"], "primeira_falha": r["primeira_falha"],
+            "preparo": r.get("preparo", "nenhum")}   # ! Alteração de IA - Revisar: entra `preparo` (ver `coletar`). ! Motivo: `_texto_da_rodada` o mostra.
 
 
 def por_celula(rodadas: list[dict]) -> list[dict]:
@@ -226,7 +235,10 @@ def _texto_da_rodada(r: dict) -> str:
         alcancou = "não terminou (o GitHub cortou a tarefa antes do fim)"
     else:
         alcancou = f"alcançou {r['alcancado']}"
-    texto = f"{r['rodada']}, {r['modo'] or 'modo não gravado'}, até {r['ate'] or '?'}: {alcancou}"
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a frase da rodada passa a dizer "preparo <nome>" quando o `celula.json` traz um preparo diferente de `nenhum`.
+    # ! Motivo: a `CI-UBU` remove o MySQL do executor antes do instalador (execução 45650086543: o `apt-get --no-remove` recusou a troca); quem lê o relatório precisa ver que aquela rodada não foi numa máquina como veio.
+    preparo = f", preparo {r['preparo']}" if r.get("preparo", "nenhum") != "nenhum" else ""
+    texto = f"{r['rodada']}, {r['modo'] or 'modo não gravado'}{preparo}, até {r['ate'] or '?'}: {alcancou}"
     return texto + (f". {r['primeira_falha']}" if r["primeira_falha"] else "")
 
 

@@ -1,0 +1,22 @@
+plataforma: macOS-15.8.2-arm64-arm-64bit-Mach-O
+processador: arm64
+núcleos: 3
+
+== python3: código 0, em /opt/homebrew/bin/python3
+   Python 3.15.2
+== python: código 0, em /Library/Frameworks/Python.framework/Versions/Current/bin/python
+   Python 3.15.2
+== py (Windows): ausente
+== php: ausente
+== php, extensões: ausente
+== mysql: ausente
+== mariadb: ausente
+== brew: código 0, em /opt/homebrew/bin/brew
+   Homebrew 7.0.14
+== winget: ausente
+== ollama: ausente
+== curl: código 0, em /usr/bin/curl
+   curl 8.7.1 (x86_64-apple-darwin24.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.64.0
+   Release-Date: 2024-03-27
+   Protocols: dict file ftp ftps gopher gophers http https imap imaps ipfs ipns ldap ldaps mqtt pop3 pop3s rtsp smb smbs smtp smtps telnet tftp
+== sudo sem senha: código 0, em /usr/bin/sudo

@@ -1462,7 +1462,7 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 <!-- ! Alteração de IA - Revisar: ficha 98 acrescentada em 25/11/2026 (qual ODS da ONU o projeto declara nos slides e no banner da apresentação).
      ! Motivo: o orientador pediu que cada equipe informe o ODS considerado no projeto, e o Eric pediu a pesquisa em 25/11/2026; a pesquisa (`2-pesquisa-e-literatura/ods-do-projeto.md`) achou três metas que se sustentam e descartou as que pedem medida que o projeto não fez, e a escolha entre elas é dele. -->
 ### 98. Qual ODS da ONU o projeto declara nos slides e no banner?
-- **Estado:** aberta
+- **Estado:** fechada em 25/11/2026
 - **Quem decide:** Eric
 - **Aberta em:** 25/11/2026
 - **O que é:** O orientador pediu que cada equipe informe qual Objetivo de Desenvolvimento Sustentável (ODS) da ONU foi considerado no projeto, nos slides e no banner da apresentação. A pesquisa está em `2-pesquisa-e-literatura/ods-do-projeto.md`: cruzou o texto oficial das metas, na página das Nações Unidas no Brasil, com o que o repositório mostra que o projeto fez e mediu. O encaixe mais forte é o ODS 9 (Indústria, Inovação e Infraestrutura), meta 9.5, que fala de fortalecer a pesquisa científica e as capacidades tecnológicas e de incentivar a inovação. Depois vêm o ODS 8 (Trabalho Decente e Crescimento Econômico), meta 8.2, de produtividade por modernização tecnológica e inovação, onde cai o tempo de reparo medido na Fase 5, e o ODS 17 (Parcerias e Meios de Implementação), meta 17.6, de acesso compartilhado à ciência e à tecnologia, pelo código aberto. Os ODS 4, 10, 12 e 13 foram descartados, com o motivo: o projeto não mediu energia, clima, inclusão nem formação de pessoas.
@@ -1472,7 +1472,142 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (b) Só o ODS 9, meta 9.5.
   - (c) Os três: ODS 9 (9.5) em destaque, com ODS 8 (8.2) e ODS 17 (17.6) como apoio.
 - **Recomendação:** (a). A meta 9.5 descreve o que o trabalho é, e a 8.2 recebe o número central da Fase 5. A 17.6 é a mais fraca das três, porque fala de cooperação entre países, que o projeto não fez.
-- **Decisão:** em aberto
+- **Decisão:** (c), pelo Eric em 25/11/2026, na sessão principal (decisão 159): "Os 3, enfatizando na questão de código fonte aberto e documentado, facilitando o acesso". Os três ODS entraram no último parágrafo da Justificativa do documento do TCC e numa seção do README, com o destaque no código aberto e documentado; os textos prontos para o slide e para o banner estão no levantamento.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (25/11/2026, Pós-Fase 4, pacotes Q6 e Q7) com a ficha 99: a corrida curta, com o modelo, que prova a seleção pelo Git e o trace na falha numa execução de verdade. Os números vêm de `resultados_alvo/fase4/conferencia_git.json` e do cabeçalho de `resultados_alvo/fase5_agente_b/trilha_cenarios.jsonl`, lidos por script.
+     ! Motivo: os dois pacotes foram provados sem o modelo e sem as cobaias, e a corrida com o modelo só o Eric lança, da janela dele, com o aplicativo fechado (decisão 112); sem a ficha, o que falta provar ficaria só no relato da sessão. -->
+## Aberta pelos pacotes Q6 e Q7 da Pós-Fase 4 (25/11/2026)
+
+<!-- ! Alteração de IA - Revisar: (25/11/2026, noite) a ficha 99 ganhou a resposta do Eric, pela opção (a), decisão 163; o Estado continua `aberta`.
+     ! Motivo: a própria ficha diz que ela fecha depois de a corrida ser lida; o que falta agora é a corrida, que o Eric lança da janela dele. -->
+### 99. A corrida curta que prova a seleção pelo Git e o trace na falha roda agora?
+- **Estado:** aberta
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O hub central (pacote Q6) e a seleção de cenários pelo Git (pacote Q7) foram feitos e testados sem o modelo e sem as cobaias. Duas coisas só uma corrida de verdade prova. A primeira é o trace do Playwright (a gravação que o navegador faz de cada passo do roteiro) gravado só quando o roteiro falha: ele foi provado numa página local que falha de propósito e nos pontos em que o `executar_fase4.py` o chama, mas nenhuma corrida com as cobaias o gravou. A segunda é a seleção decidindo a corrida: os testes usam um repositório temporário, e a conta sobre o histórico (`resultados_alvo/fase4/conferencia_git.json`) é retrospectiva, porque nenhuma seleção rodou. O lançador `Programacao/AgenteCore/experimentos/rodar_fumaca_q7.ps1` faz a prova em quatro passos: roda os dez cenários do ensaio, uma repetição de cada, com `-Selecao git -Desde 717f68c2 -TraceNaFalha` (como nenhuma rodada completa está registrada, a regra 2 manda rodar os dez); mostra o que a seleção decidiria em seguida, com o commit da corrida já registrado (o esperado é "nada a rodar"); confere a corrida contra a rodada completa da corrida 28b (`impacto_git.py --conferir`); e lista os traces gravados. A corrida 28b levou 64 minutos para 50 execuções, então dez execuções ficam perto de um quarto de hora, mais a bateria `testar_fase4.py`, que o `rodar_fase4.ps1` roda antes. Com o trace ligado os tempos não valem como medida, e a leitura vai para a pasta da própria corrida (`fase4_fumaca_q7`), nunca para `resultados_alvo/fase4`.
+- **Por que importa:** Sem a corrida, o texto do TCC tem de dizer que o trace e a ligação da seleção ao executor foram provados em teste, e não numa execução do agente. O plano da Pós-Fase 4 previa "máquina por minutos" para o pacote Q7. A última reunião com o orientador é 02/12/2026, e o pacote Q8, o texto final, ainda está por fazer.
+- **Opções:**
+  - (a) Rodar agora: o Eric fecha o aplicativo Claude e o VS Code e roda, numa janela do PowerShell, `powershell -ExecutionPolicy Bypass -File "C:\Users\Eric.Derre\Documents\TCC\Programacao\AgenteCore\experimentos\rodar_fumaca_q7.ps1"`. Na sessão seguinte o Claude lê `fase4_fumaca_q7/impacto_git.json`, a conferência e a pasta `traces/`, registra o resultado e fecha a ficha.
+  - (b) Rodar depois do texto final, se sobrar tempo antes de 02/12/2026; até lá o roadmap e o TCC dizem "provado em teste".
+  - (c) Não rodar: o trace com as cobaias e a seleção numa corrida de verdade ficam declarados como não exercitados, com o motivo.
+- **Recomendação:** (a). São minutos de máquina, o lançador faz tudo num comando, e é a única prova dos dois pacotes que não depende de mim.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro da sessão principal (decisão 163): "Rodar agora (Recomendado)". A ficha continua aberta até a corrida rodar na janela dele e ser lida: o resultado entra aqui, com a decisão gravada em `fase4_fumaca_q7/impacto_git.json`, a conferência contra a corrida 28b e os traces da pasta `traces/`.
+
+## Abertas pela primeira execução do instalador no GitHub Actions (25/11/2026)
+
+<!-- ! Alteração de IA - Revisar: fichas 100 e 101 acrescentadas em 25/11/2026, já fechadas, com as respostas do Eric no quadro da sessão do instalador único.
+     ! Motivo: a primeira execução do fluxo `.github/workflows/instalador.yml` (execução 45650086543 do GitHub Actions, commit `9badcba8`) falhou nas quatro máquinas, e a fórmula do Homebrew mostrou o MariaDB 13.1.2, fora da faixa que o `versoes.json` aceita; as duas escolhas mudam o instalador e ficam registradas com as opções que foram oferecidas. -->
+
+### 100. A primeira execução do instalador no GitHub falhou nas quatro máquinas: o que consertar antes da entrega?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O fluxo `.github/workflows/instalador.yml` rodou pela primeira vez em 25/11/2026 (execução 45650086543 do GitHub Actions, commit `9badcba8`), e as quatro células falharam, com a evidência gravada. No Ubuntu (`CI-UBU`) o instalador parou de propósito: a máquina do GitHub já traz o MySQL 8.0, e o instalador não deixa o `apt-get` remover o banco de ninguém ("Packages need to be removed but remove is disabled"). No Windows (`CI-WIN`) o instalador aceitou o `mysql.EXE` do MySQL 8.4 da máquina como se fosse o cliente do MariaDB, não instalou o MariaDB e parou em "Não foi possível subir o MariaDB"; o `install.cmd` ainda saiu com código 0. No macOS (`M-15` e `M-15I`) o Homebrew instalou e ligou o MariaDB, mas o root do banco só entra pelo usuário root do sistema; o instalador leu essa recusa como banco desligado e parou na mesma mensagem.
+- **Por que importa:** Pela decisão 153, o GitHub Actions é a única prova do instalador em máquina nova antes da entrega de 02/12/2026. Cada rodada de conserto pede um commit e um push do Eric.
+- **Opções:**
+  - (a) Os três. Ubuntu: a célula tira o MySQL da máquina do GitHub antes do instalador, declarado no relatório. macOS: o instalador passa a tratar o root do banco como já faz no Linux. Windows: ele só aceita um cliente que seja MariaDB e, se só houver MySQL, usa o MariaDB portátil. Pode pedir duas ou três rodadas de push.
+  - (b) Só Ubuntu e macOS. O Windows fica com a falha gravada e explicada no relatório, porque o caminho do Windows era do pacote I4, que saiu de antes da entrega.
+  - (c) Nenhum, só relatar. A evidência entra como está, e o relatório, o README e o `DETALHES-TECNICOS.md` passam a dizer que o instalador não funcionou no macOS nem no Windows do GitHub, com a causa de cada um.
+- **Recomendação:** (a). Os dois defeitos são do instalador e apareceriam na máquina de qualquer pessoa que já tivesse um MySQL no Windows ou que usasse um Mac; o do Ubuntu é da célula, e o comportamento do instalador ali está certo.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 160): "Os três (Recomendado)". O conserto do macOS leva o sistema para o mesmo fluxo por família de pacotes que o Linux usa, como a seção 3 do plano aprovado do instalador já previa (`claude-memoria/plano-aprovado-instalador-unico.md`).
+
+### 101. Qual MariaDB o instalador instala no macOS?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** No macOS o instalador pede o MariaDB ao Homebrew (o gerenciador de pacotes do Mac). A fórmula comum, `mariadb`, acompanha a versão mais nova e em 25/11/2026 estava na 13.1.2 (arquivo `Formula/m/mariadb.rb` do repositório público do Homebrew). O `versoes.json` do projeto aceita o MariaDB da série 10.6 até a 13.0, e o projeto foi testado na 11.8.9. Num Mac atualizado o instalador faria tudo e, no fim, pararia com "a versão de mariadb impede seguir". O Homebrew também tem a fórmula `mariadb@11.8`, da série testada.
+- **Por que importa:** O instalador do macOS quebraria a cada série nova do MariaDB no Homebrew, sem que nada no projeto tivesse mudado.
+- **Opções:**
+  - (a) O 11.8 do Homebrew. O instalador instala a fórmula `mariadb@11.8`, a mesma série testada no projeto e a mesma do zip do Windows, e deixa de depender da versão do dia. Custa um pouco mais de código, porque essa fórmula não entra sozinha no PATH. Se o Mac já tiver um MariaDB, ele fica como está e a faixa de versão é conferida.
+  - (b) O do dia, e medir. Instala o `mariadb` comum; se a máquina do GitHub trouxer o 13.1, a célula grava até onde o site funciona, o instalador para no fim por causa da versão, e depois a faixa aceita é alargada com essa evidência. Pode custar uma rodada a mais de push.
+  - (c) Acima da faixa só avisa. Para PHP, MariaDB e Python, que não afetam as medidas, versão mais nova que a faixa vira aviso e não interrompe a instalação. Muda a regra da decisão 139 nos três sistemas.
+- **Recomendação:** (a). É a série em que o projeto foi testado, e a escolha não muda a regra das versões (decisão 139).
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 161): "O 11.8 do Homebrew (Recomendado)".
+
+<!-- ! Alteração de IA - Revisar: ficha 102 acrescentada em 25/11/2026, já fechada, com a resposta do Eric no quadro da sessão do instalador único.
+     ! Motivo: ao conferir as fórmulas do Homebrew para o conserto do macOS (decisão 161), o bloco `bottle` de `php`, `mariadb` e `mariadb@11.8` só trazia pacote pronto para Apple Silicon e Linux; o que o projeto promete para o Mac com processador Intel muda o README e o relatório, e a escolha fica registrada com as opções oferecidas. -->
+
+### 102. O que o projeto diz sobre o Mac com processador Intel?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** No macOS o instalador pede o PHP e o MariaDB ao Homebrew (o gerenciador de pacotes do Mac). Em 25/11/2026 as fórmulas `php`, `mariadb` e `mariadb@11.8` do repositório público do Homebrew (`Formula/p/php.rb`, `Formula/m/mariadb.rb`, `Formula/m/mariadb@11.8.rb`) só traziam pacote pronto para Mac com Apple Silicon e para Linux; nenhum para Mac com processador Intel. Num Mac Intel com o Homebrew atualizado, o `brew install` compila os dois programas do código-fonte, o que pode levar mais de uma hora. A célula de teste do Mac Intel (`M-15I`, máquina `macos-15-intel` do GitHub Actions) roda numa imagem antiga, de 24/08/2026, que na primeira execução ainda trouxe o MariaDB 12.3.3 pronto.
+- **Por que importa:** O README dizia macOS sem distinguir o processador. Quem tem um Mac Intel pode esperar mais de uma hora de compilação, ou ver a instalação falhar, sem nada no texto avisar; e a célula `M-15I` pode passar dos 60 minutos que o instalador tem dentro dela.
+- **Opções:**
+  - (a) Melhor esforço, e a célula fica. A `M-15I` continua no fluxo e o relatório grava o que acontecer. O README e o `DETALHES-TECNICOS.md` passam a dizer que o Mac Intel é melhor esforço, como o Fedora: o instalador roda, mas depende de o Homebrew compilar o PHP e o MariaDB.
+  - (b) Tirar a célula Intel. A `M-15I` sai do fluxo e o Mac Intel fica declarado como não testado; sobra só o Mac com Apple Silicon (`M-15`), que prova até o nível N3 com o modelo pequeno, e nenhum Mac roda o `qwen2.5:7b` na prova.
+  - (c) Deixar como suportado. Nada muda no texto; se o Homebrew compilar do código e passar dos 60 minutos, a célula falha e o assunto volta depois da segunda execução.
+- **Recomendação:** (a). O texto passa a dizer o que o Homebrew entrega hoje, e a célula continua medindo o que acontece de verdade na máquina Intel do GitHub.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 162): "Melhor esforço, célula fica (Recomendado)".
+
+## Abertas pelo pacote Q8, o texto final e a entrega (25/11/2026)
+
+<!-- ! Alteração de IA - Revisar: fichas 103 a 107 abertas em 25/11/2026 pela sessão do pacote Q8 da Pós-Fase 4, uma por decisão que só o Eric pode tomar antes de o Word e o PDF do TCC serem gerados.
+     ! Motivo: a decisão 158 manda gerar o Word e o PDF uma vez só; a leitura do que é "marcação de IA", o texto dos agradecimentos, quem respondeu o relatório 1 da sessão de 05/11/2026, a banca da folha de aprovação e a hora de gerar mudam o arquivo entregue e não podem ser supostos. -->
+<!-- ! Alteração de IA - Revisar: fichas 103 a 107 fechadas em 25/11/2026 com as respostas que o Eric deu uma a uma no quadro da mesma sessão (decisões 164 a 168); só o Estado e a Decisão de cada ficha mudaram.
+     ! Motivo: sem a Decisão preenchida, o painel mostraria as cinco fichas abertas e o texto do TCC citaria respostas ainda não registradas. -->
+
+### 103. O que sai dos arquivos entregues do TCC, e o que continua no texto?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** A decisão 158 manda entregar o TCC em PDF e em Word "sem nenhuma marcação de IA (inclusive as ocultas)". As marcações deste repositório são as tags `! Alteração de IA - Revisar` e as linhas `! Motivo:`, que no documento do TCC ficam em comentários do Markdown (`Documentacao/TCC - ABNT 14724 - V1.md`); o gerador (`ferramentas/gerar_tcc_docx.py`) nunca as leva para o Word. Em 25/11/2026 o gerador passou a gravar também as propriedades do arquivo (autor e último a salvar: os sete autores; título; sem empresa, gerente nem modelo de documento herdados do molde do orientador), e a conferência nova, `ferramentas/conferir_entrega_tcc.py`, acusa no `.docx` e no PDF qualquer tag, comentário do Word, texto oculto, alteração controlada ou propriedade que cite ferramenta de IA. Uma coisa não é marcação e continua no texto: o TCC declara, na seção 5.9 (Rastreabilidade e Apoio de Inteligência Artificial) e nas limitações (seção 6.9 e Conclusão), que um agente de apoio de inteligência artificial (Claude Code) ajudou a escrever código, documentação e as rodadas de pesquisa.
+- **Por que importa:** É a única geração do Word e do PDF. Se a leitura estiver errada, o arquivo sai com algo que você não quer, ou sem a declaração que a banca espera encontrar sobre como o trabalho foi feito.
+- **Opções:**
+  - (a) Saem as tags, os comentários, o texto oculto e as propriedades herdadas do molde; o autor do arquivo passa a ser os sete autores; a declaração do apoio de inteligência artificial continua no texto (seções 5.9, 6.9 e 7).
+  - (b) Igual à (a), mas as propriedades do arquivo ficam como o Word gravar: autor e último a salvar com o seu usuário do Windows.
+- **Recomendação:** (a). As tags são instrumento de revisão do repositório e não interessam a quem lê o PDF; a declaração no texto é o que deixa o trabalho honesto com a banca sobre como foi feito, e tirá-la não é o que a decisão 158 pede.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro: "Tags e ocultos saem (Recomendado)" (decisão 164). Saem as tags, os comentários, o texto oculto e as propriedades herdadas; o autor do arquivo são os sete autores; a declaração do apoio de inteligência artificial continua no texto. A conferência `ferramentas/conferir_entrega_tcc.py` roda sobre o Word e o PDF antes da entrega.
+
+### 104. Agradecimentos: o que o grupo quer?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** A seção AGRADECIMENTOS do documento do TCC traz só a frase "[Opcional. Versão provisória: o grupo decide se mantém a seção e o que escrever.]", desde a versão 1. É elemento opcional da NBR 14724, e do jeito que está ela sairia assim no Word final.
+- **Por que importa:** A frase provisória não pode ir para a entrega, e o texto dos agradecimentos é do grupo, não de quem monta o documento.
+- **Opções:**
+  - (a) Usar o texto curto proposto, que você pode editar: "Ao Prof. Me. Rafael Oliveira Cotrin, pela orientação e pelas reuniões de acompanhamento ao longo do semestre. À Universidade Cidade de São Paulo e aos professores do Curso de Ciência da Computação. Ao analista de QA que leu e avaliou os relatórios do agente e as propostas de edição da biblioteca, sem ter participado do projeto. Às nossas famílias e aos colegas, pelo apoio durante o curso."
+  - (b) Tirar a seção do documento.
+  - (c) O grupo escreve, e você me passa o texto.
+- **Recomendação:** (a). É sóbrio e cita quem de fato ajudou; a (c) se o grupo quiser algo pessoal.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro: "Texto proposto (Recomendado)" (decisão 165). O texto entrou na seção AGRADECIMENTOS de `Documentacao/TCC - ABNT 14724 - V1.md` no mesmo dia; o grupo pode editá-lo antes da geração.
+
+### 105. Quem respondeu o relatório 1 da sessão de revisão de 05/11/2026?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O texto do TCC (seções 6.9 e 6.10.8) diz que, na sessão de revisão da corrida 22, em 05/11/2026, "o revisor, um integrante do grupo, respondeu o relatório 1", com 307 s de tempo medido, e aprovou o parecer do agente de apoio nos outros 10 relatórios (decisões 85 e 86). O registro da época (`Programacao/AgenteCore/experimentos/resultados_alvo/fase4/revisao_trilha_respostas.json`) diz que foi você. Nas duas revisões seguintes, a dos 36 relatórios (09 e 10/11/2026) e a das propostas da corrida 27 (16/11/2026), quem respondeu foi um analista de QA, e isso só ficou registrado certo depois de perguntado (decisões 114, 117 e 129). Para esta primeira ninguém perguntou.
+- **Por que importa:** O documento afirma quem leu. Se não foi um integrante do grupo, a frase está errada num texto que vai para a banca.
+- **Opções:**
+  - (a) Fui eu: o texto fica como está.
+  - (b) Foi outra pessoa: você diz quem, pelo papel, e o texto e o registro mudam.
+- **Recomendação:** Não há: é um fato que só você sabe. A pergunta existe porque nas duas revisões seguintes a resposta foi outra.
+- **Decisão:** (b), pelo Eric em 25/11/2026, no quadro: "Foi outra pessoa"; "O analista de QA"; "Leu fora, eu colei" (decisão 166). O relatório 1 foi respondido pelo analista de QA, que leu fora da página; os 307 s medem a troca entre os dois, e o tempo entra como não medido. O texto do TCC (seções 6.9 e 6.10.8) e a seção 9.5 do relatório da Fase 4 foram corrigidos; a declaração está em `Programacao/AgenteCore/experimentos/resultados_alvo/fase4/quem_leu_revisao_trilha.json`; o registro cru e a leitura gravada da sessão ficam como estão.
+
+### 106. A banca na folha de aprovação
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** A folha de aprovação (decisão 158) é montada pelo gerador com os autores, o título, a natureza do trabalho, a linha "Aprovado em" e três blocos de assinatura. O primeiro bloco é o orientador, Prof. Me. Rafael Oliveira Cotrin, da UNICID. Os outros dois saem como "Examinador(a)", com a linha em branco, a menos que o bloco Dados do documento ganhe a chave `Banca` com o nome, a titulação e a instituição de cada um.
+- **Por que importa:** Nome de examinador errado na folha de aprovação obriga a gerar o arquivo de novo.
+- **Opções:**
+  - (a) Deixar os dois examinadores em branco: a folha é preenchida quando a banca for conhecida.
+  - (b) Informar os nomes agora: você me passa nome, titulação e instituição dos dois.
+- **Recomendação:** (a). A UNICID não pediu a folha, e a banca não foi informada ao projeto.
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro: "Em branco (Recomendado)" (decisão 167). O bloco Dados do documento fica sem a chave `Banca`.
+
+### 107. Quando gerar o Word e o PDF?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** O texto final está escrito e conferido por script. Dois trechos esperam fatos que dependem de você. O primeiro é a corrida curta do pacote Q7 (ficha 99, decisão 163), que roda na sua janela com o aplicativo Claude e o VS Code fechados; sem ela, o texto diz que o trace na falha e a seleção pelo Git foram provados em teste e numa conta sobre o histórico. O segundo é a segunda execução do instalador no GitHub Actions, que começa com o seu commit e push, depois de recompilar o `Cobaia.exe`; sem ela, o texto diz que a primeira execução falhou nas quatro máquinas e que os três defeitos foram consertados com teste (decisões 160 a 162). No documento os dois trechos estão marcados com `A_PREENCHER`, em comentário. A versão do arquivo passa a 4, com a data do dia em que for gerado.
+- **Por que importa:** O Word e o PDF saem uma vez só. Gerar antes das duas provas deixa o texto mais fraco nesses dois pontos; esperar demais empurra a entrega para a véspera da última reunião, em 02/12/2026.
+- **Opções:**
+  - (a) Esperar as duas provas e gerar em seguida, com prazo: quinta, 26/11/2026, à noite. O que não tiver chegado até lá entra com o estado declarado.
+  - (b) Gerar agora, com o estado de 25/11/2026 declarado nos dois trechos.
+  - (c) Esperar as duas provas, sem prazo.
+- **Recomendação:** (a). As duas provas custam minutos da sua máquina e um push, e a reunião de sexta, 27/11/2026, já teria o documento.
+- **Decisão:** (c), pelo Eric em 25/11/2026, no quadro: "Esperar sem prazo", contra a recomendação (decisão 168). O Word e o PDF só são gerados depois de lidas a corrida curta do pacote Q7 (ficha 99) e a segunda execução do instalador no GitHub Actions.
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

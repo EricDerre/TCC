@@ -2776,6 +2776,203 @@ def teste_analista_previa_esta_gravada_e_bate_com_a_regeracao():
     assert ea.main(["--previa", "--check"]) == 0
 
 
+# ------------------------------------------------------------------ Q7: a seleção pelo Git ligada ao executor
+
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) o bloco "Q7" testa a ligação da seleção de cenários pelo diff do Git ao executor,
+# escrito ANTES do código: a primeira rodada falha por AttributeError em `impacto_git.decidir`. A decisão de uma corrida com as três regras da
+# base E (arquivo da aplicação fora do mapa roda tudo; a rodada completa volta em prazo fixo, e também quando nenhuma está registrada; o que a
+# seleção deixa de rodar fica registrado para a conferência); o registro dos commits testados, que só cresce; os arquivos alterados que ainda
+# não foram commitados, que também contam, porque a corrida testa a pasta de trabalho; a conferência de uma corrida selecionada contra uma
+# rodada completa, que acusa a falha que ficou de fora; a conferência sobre o histórico do repositório contra a corrida 28b, gravada com
+# `--check`; e, no executor, a opção desligada por padrão e o filtro das execuções.
+# ! Motivo: plano aprovado da Pós-Fase 4, seções 3.7 e 7 (Q7), e decisão 152. O protótipo do Q4 dizia o que a seleção escolheria; faltava a
+# corrida usar a escolha e alguém conferir o que ela deixou de rodar. A regra 3 só vale se a falha perdida aparecer num teste: por isso a
+# conferência é exercitada com uma rodada completa em que um cenário deixado de fora falhou.
+ENSAIO_Q7 = ["contrato-error_500", "contrato-escala_ou_unidade_errada", "contrato-field_missing", "contrato-field_renamed", "contrato-malformed_json", "contrato-type_drift",
+             "localizador-front-admin-login", "localizador-front-admin-produtos", "localizador-front-busca", "localizador-front-cliente-reserva"]
+AGORA_Q7 = "2026-11-25T15:00:00"
+
+
+def _registro_q7(*entradas: tuple[str, str, str]) -> list[dict]:
+    """Entradas do registro dos commits testados: (quando, tipo, commit)."""
+    return [{"quando": q, "tipo": t, "commit": c, "corrida": f"corrida_{i}", "arvore_suja": False, "cenarios": [], "deixados_de_fora": []} for i, (q, t, c) in enumerate(entradas)]
+
+
+def teste_q7_decisao_aplica_as_tres_regras_e_diz_o_que_roda_e_o_que_fica_de_fora():
+    import impacto_git as ig
+    m = ig.mapa()
+    ontem = _registro_q7(("2026-11-24T10:00:00", "completa", "aaaaaaa"))
+    login = ["Programacao/CobaiaFront/admin/login.php"]
+    d = ig.decidir(login, m, ontem, agora=AGORA_Q7, desde="aaaaaaa", commit_atual="bbbbbbb")
+    assert d["modo"] == "selecionada" and d["cenarios"] and set(d["cenarios"]) < set(ENSAIO_Q7) and "localizador-front-admin-login" in d["cenarios"], d["cenarios"]
+    assert sorted(d["cenarios"] + d["deixados_de_fora"]) == ENSAIO_Q7 and "contrato-field_missing" in d["deixados_de_fora"]
+    assert "conferencia_contra_a_rodada_completa" in d["regras"] and d["commit_testado"] == "aaaaaaa" and d["commit_atual"] == "bbbbbbb"
+    assert any("admin/login.php" in x for x in d["por_que"]["localizador-front-admin-login"]), d["por_que"]
+    assert str(len(d["cenarios"])) in d["motivo"] and "10" in d["motivo"] and d["alterados"]["no_mapa"] == 1
+    contrato = ig.decidir(["Programacao/CobaiaAPI/app/routers/produtos.py"], m, ontem, agora=AGORA_Q7, desde="aaaaaaa")
+    assert contrato["modo"] == "selecionada" and set(contrato["cenarios"]) == {c for c in ENSAIO_Q7 if c.startswith("contrato-")}
+    antiga = ig.decidir(login, m, _registro_q7(("2026-11-15T10:00:00", "completa", "aaaaaaa"), ("2026-11-24T10:00:00", "selecionada", "ccccccc")), agora=AGORA_Q7, desde="ccccccc")
+    assert antiga["modo"] == "completa" and antiga["regras"] == ["rodada_completa_periodica"] and sorted(antiga["cenarios"]) == ENSAIO_Q7 and antiga["deixados_de_fora"] == []
+    assert "10 dias" in antiga["motivo"], antiga["motivo"]
+    assert ig.decidir(login, m, _registro_q7(("2026-11-15T10:00:00", "completa", "aaaaaaa")), agora=AGORA_Q7, desde="aaaaaaa", completa_a_cada_dias=30)["modo"] == "selecionada"
+    sem_completa = ig.decidir(login, m, _registro_q7(("2026-11-24T10:00:00", "selecionada", "ccccccc")), agora=AGORA_Q7, desde="ccccccc")
+    assert sem_completa["modo"] == "completa" and "nenhuma rodada completa" in sem_completa["motivo"]
+    fora = ig.decidir(login + ["Programacao/CobaiaFront/js/novo.js"], m, ontem, agora=AGORA_Q7, desde="aaaaaaa")
+    assert fora["modo"] == "completa" and fora["regras"] == ["fora_do_mapa_roda_tudo"] and sorted(fora["cenarios"]) == ENSAIO_Q7 and "novo.js" in fora["motivo"]
+    sem_partida = ig.decidir(login, m, ontem, agora=AGORA_Q7, desde=None)
+    assert sem_partida["modo"] == "completa" and "commit testado" in sem_partida["motivo"] and sorted(sem_partida["cenarios"]) == ENSAIO_Q7
+    nada = ig.decidir(["Documentacao/memorial/roadmap.md", "README.md"], m, ontem, agora=AGORA_Q7, desde="aaaaaaa")
+    assert nada["modo"] == "nada" and nada["cenarios"] == [] and sorted(nada["deixados_de_fora"]) == ENSAIO_Q7 and "rodada completa" in nada["motivo"]
+    assert ig.decidir([], m, ontem, agora=AGORA_Q7, desde="aaaaaaa")["modo"] == "nada"
+    sem_ensaio = ig.decidir(login, {**m, "ensaio": {}}, ontem, agora=AGORA_Q7, desde="aaaaaaa")
+    assert sem_ensaio["modo"] == "completa" and "ensaio" in sem_ensaio["motivo"], "cenário atingido sem execução no ensaio: na dúvida, roda tudo"
+
+
+def teste_q7_registro_dos_commits_testados_so_cresce_e_da_o_ponto_de_partida():
+    import impacto_git as ig
+    arq = _temp() / "hub" / "commits_testados.jsonl"
+    assert ig.ler_registro(arq) == [] and ig.ultimo_commit_testado([]) is None and ig.ultima_completa([]) is None
+    primeira = ig.registrar(arq, {"quando": "2026-11-20T10:00:00", "tipo": "completa", "commit": "aaaaaaa", "corrida": "c1", "arvore_suja": False, "cenarios": ENSAIO_Q7, "deixados_de_fora": []})
+    antes = arq.read_bytes()
+    ig.registrar(arq, {"quando": "2026-11-22T10:00:00", "tipo": "selecionada", "commit": "bbbbbbb", "corrida": "c2", "arvore_suja": True, "cenarios": ENSAIO_Q7[:2], "deixados_de_fora": ENSAIO_Q7[2:]})
+    assert arq.read_bytes().startswith(antes) and len(ig.ler_registro(arq)) == 2 and ig.ler_registro(arq)[0] == primeira
+    r = ig.ler_registro(arq)
+    assert ig.ultimo_commit_testado(r) == "bbbbbbb" and ig.ultima_completa(r)["commit"] == "aaaaaaa"
+    for ruim in ({"tipo": "nada", "commit": "aaaaaaa"}, {"tipo": "completa", "commit": ""}, {"tipo": "completa"}):
+        try:
+            ig.registrar(arq, {"quando": AGORA_Q7, "corrida": "x", **ruim})
+        except ValueError:
+            continue
+        raise AssertionError(f"o registro devia recusar {ruim}")
+    assert len(ig.ler_registro(arq)) == 2
+
+
+def teste_q7_o_que_ainda_nao_foi_commitado_tambem_conta_e_a_decisao_da_corrida_le_o_git():
+    import impacto_git as ig
+    repo = _temp()
+
+    def git(*argumentos: str) -> str:
+        return subprocess.run(["git", "-c", "user.name=teste", "-c", "user.email=teste@exemplo.com", *argumentos], cwd=repo, check=True,
+                              capture_output=True, text=True, encoding="utf-8").stdout.strip()
+
+    git("init", "-q")
+    (repo / "Programacao" / "CobaiaFront" / "admin").mkdir(parents=True)
+    (repo / "Programacao" / "CobaiaFront" / "admin" / "login.php").write_text("<?php // a\n", encoding="utf-8")
+    (repo / "README.md").write_text("a\n", encoding="utf-8")
+    git("add", "-A")
+    git("commit", "-q", "-m", "a")
+    a = git("rev-parse", "HEAD")
+    assert ig.alterados_na_arvore(repo) == [] and ig.commit_atual(repo) == a
+    (repo / "Programacao" / "CobaiaFront" / "admin" / "login.php").write_text("<?php // b\n", encoding="utf-8")       # alterado e não commitado
+    (repo / "Programacao" / "CobaiaFront" / "js").mkdir()
+    (repo / "Programacao" / "CobaiaFront" / "js" / "novo.js").write_text("// novo\n", encoding="utf-8")              # novo, fora do índice
+    (repo / "README.md").write_text("b\n", encoding="utf-8")                                                        # fora da aplicação: não conta
+    assert ig.alterados_na_arvore(repo) == ["Programacao/CobaiaFront/admin/login.php", "Programacao/CobaiaFront/js/novo.js"]
+    arq = repo / "commits_testados.jsonl"
+    ig.registrar(arq, {"quando": "2026-11-24T10:00:00", "tipo": "completa", "commit": a, "corrida": "c1", "arvore_suja": False, "cenarios": ENSAIO_Q7, "deixados_de_fora": []})
+    d = ig.decidir_para_a_corrida(raiz=repo, registro=arq, agora=AGORA_Q7)
+    assert d["commit_testado"] == a and d["commit_atual"] == a and d["arvore_suja"] is True, "sem --desde, o ponto de partida é o último commit testado do registro"
+    assert d["modo"] == "completa" and d["regras"] == ["fora_do_mapa_roda_tudo"], "o arquivo novo, ainda não commitado, é da aplicação e está fora do mapa"
+    (repo / "Programacao" / "CobaiaFront" / "js" / "novo.js").unlink()
+    d2 = ig.decidir_para_a_corrida(raiz=repo, registro=arq, agora=AGORA_Q7)
+    assert d2["modo"] == "selecionada" and "localizador-front-admin-login" in d2["cenarios"] and d2["arvore_suja"] is True
+    git("add", "-A")
+    git("commit", "-q", "-m", "b")
+    d3 = ig.decidir_para_a_corrida(raiz=repo, registro=arq, agora=AGORA_Q7, desde=a)
+    assert d3["commit_atual"] == git("rev-parse", "HEAD") != a and d3["arvore_suja"] is False and d3["modo"] == "selecionada"
+    assert ig.decidir_para_a_corrida(raiz=repo, registro=repo / "vazio.jsonl", agora=AGORA_Q7)["modo"] == "completa", "sem registro e sem --desde: roda tudo"
+    try:
+        ig.decidir_para_a_corrida(raiz=repo, registro=arq, agora=AGORA_Q7, desde="HEAD; rm -rf x")
+    except ValueError as e:
+        assert "commit" in str(e)
+    else:
+        raise AssertionError("um --desde que não é um commit devia ser recusado")
+
+
+def teste_q7_conferencia_contra_a_rodada_completa_acusa_a_falha_que_a_selecao_deixou_de_fora():
+    import impacto_git as ig
+
+    def reg(cenario: str, *sucessos: bool) -> list[dict]:
+        return [{"cenario": cenario, "repeticao": n, "task_success": s, "detectou": True} for n, s in enumerate(sucessos, start=1)]
+
+    decisao = {"modo": "selecionada", "cenarios": ["A"], "deixados_de_fora": ["B", "C"], "commit_testado": "aaaaaaa", "commit_atual": "bbbbbbb"}
+    completa = reg("A", True, True) + reg("B", True, False) + reg("C", True, True)
+    c = ig.conferir(decisao, reg("A", True), completa)
+    por = {x["cenario"]: x for x in c["cenarios"]}
+    assert c["resumo"]["falhas_perdidas"] == ["B"] and c["resumo"]["segura"] is False and c["resumo"]["deixados_de_fora"] == 2, c["resumo"]
+    assert por["B"]["na_selecao"] is False and por["B"]["completa"] == {"execucoes": 2, "task_success": 1} and por["B"]["selecionada"] is None and "falhou" in por["B"]["situacao"]
+    assert por["C"]["situacao"] == "ficou de fora e passou na rodada completa" and por["A"]["situacao"] == "rodou nas duas e o resultado é o mesmo"
+    assert c["resumo"]["discordancias"] == [] and c["regra"] == ig.REGRAS["conferencia_contra_a_rodada_completa"]
+    segura = ig.conferir(decisao, reg("A", True), reg("A", True) + reg("B", True, True) + reg("C", True))
+    assert segura["resumo"]["falhas_perdidas"] == [] and segura["resumo"]["segura"] is True
+    discorda = ig.conferir(decisao, reg("A", False), reg("A", True) + reg("B", True) + reg("C", True))
+    assert discorda["resumo"]["discordancias"] == ["A"] and "não é o mesmo" in {x["cenario"]: x for x in discorda["cenarios"]}["A"]["situacao"]
+    falta = ig.conferir(decisao, reg("A", True), reg("A", True) + reg("C", True))
+    assert {x["cenario"]: x for x in falta["cenarios"]}["B"]["situacao"] == "ficou de fora e não rodou na rodada completa" and falta["resumo"]["sem_rodada_completa"] == ["B"]
+    md = ig.render_conferencia(c, "corrida_selecionada", "corrida_completa")
+    assert "B" in md and "falhas perdidas" in md.lower() and "—" not in md and "→" not in md
+
+
+def teste_q7_conferencia_sobre_o_historico_contra_a_corrida_28b_gravada_e_conferida():
+    import impacto_git as ig
+    dado, md = ig.conferencia_historica(RAIZ, completa="fase5_agente_b")
+    prova, _ = ig.prova(RAIZ)
+    assert [p["atual"] for p in dado["pares"]] == [p["atual"] for p in prova["pares"]] and dado["completa"]["corrida"] == "fase5_agente_b"
+    registros = [json.loads(l) for l in (RA / "fase5_agente_b" / "cenarios.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
+    falharam = sorted({r["cenario"] for r in registros if not r["task_success"]})
+    assert dado["completa"]["execucoes"] == len(registros) and dado["completa"]["cenarios_com_falha"] == falharam
+    for par, p in zip(dado["pares"], prova["pares"], strict=True):
+        deixados = sorted(p["selecao"]["deixados_de_fora"]["ensaio"])
+        assert par["veredito"] == p["veredito"] and par["deixados_de_fora"] == deixados
+        assert par["falhas_perdidas"] == sorted(set(deixados) & set(falharam)) and par["segura"] is (not par["falhas_perdidas"])
+        if p["veredito"] == "roda tudo":
+            assert par["deixados_de_fora"] == [] and par["segura"] is True, "quem roda tudo não perde nada"
+    r = dado["resumo"]
+    assert r["pares"] == len(prova["pares"]) and r["pares_seguros"] + r["pares_com_falha_perdida"] == r["pares"] and r["pares_que_rodam_tudo"] == prova["resumo"]["rodar_tudo"]
+    assert "exploratória" in md or "retrospectiva" in md, "a conta sobre o histórico é dita como o que é: nenhuma dessas seleções rodou de verdade"
+    gravado = RA / "fase4" / "conferencia_git.json"
+    assert gravado.exists(), "conferencia_git.json ainda não gravado (impacto_git.py --conferir-historico)"
+    assert ig.sem_data(json.loads(gravado.read_text(encoding="utf-8"))) == ig.sem_data(dado), "o arquivo gravado difere da conferência de agora (impacto_git.py --conferir-historico --check)"
+    assert ig.main(["--conferir-historico", "--check"]) == 0
+
+
+def teste_q7_executor_selecao_pelo_git_vem_desligada_e_filtra_as_execucoes():
+    import cenarios_fase4 as cen
+    import executar_fase4 as ex
+    padrao = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "qualquer"])
+    assert padrao.selecao == "todos" and padrao.desde is None and padrao.completa_a_cada_dias == 7, "desligada por padrão: a corrida de sempre"
+    assert ex.selecao_git_da_corrida(padrao, decidir=lambda **k: 1 / 0) is None, "com a seleção desligada o Git nem é consultado"
+    todas = ex.celulas_do_ensaio(2)
+    assert [c["id"] for c in todas] == [f"{c['id']}#{r}" for r in (1, 2) for c in cen.CENARIOS_DO_ENSAIO] and ex.celulas_do_ensaio(2, 0, so=None) == todas
+    so = ex.celulas_do_ensaio(2, 0, so=["contrato-field_missing", "localizador-front-busca"])
+    assert [c["id"] for c in so] == ["contrato-field_missing#1", "localizador-front-busca#1", "contrato-field_missing#2", "localizador-front-busca#2"]
+    assert ex.celulas_do_ensaio(1, 0, so=[]) == []
+    ligada = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "qualquer", "--selecao", "git", "--desde", "abc1234", "--completa-a-cada-dias", "3"])
+    visto = {}
+
+    def decidir(**k):
+        visto.update(k)
+        return {"modo": "selecionada", "cenarios": ["contrato-field_missing"], "deixados_de_fora": [], "motivo": "teste", "commit_atual": "def5678", "arvore_suja": False}
+
+    d = ex.selecao_git_da_corrida(ligada, decidir=decidir)
+    assert d["modo"] == "selecionada" and visto == {"desde": "abc1234", "completa_a_cada_dias": 3}
+    pasta = _temp() / "corrida"
+    pasta.mkdir()
+    registro = pasta.parent / "commits_testados.jsonl"
+    ex.gravar_decisao_git(pasta, d, [{"cenario": "contrato-field_missing", "repeticao": 1, "task_success": True}], registro=registro, corrida="corrida", quando=AGORA_Q7)
+    gravado = json.loads((pasta / "impacto_git.json").read_text(encoding="utf-8"))
+    assert gravado["decisao"]["modo"] == "selecionada" and gravado["rodados"] == ["contrato-field_missing"] and gravado["execucoes"] == 1
+    import impacto_git as ig
+    assert [(e["tipo"], e["commit"], e["corrida"]) for e in ig.ler_registro(registro)] == [("selecionada", "def5678", "corrida")]
+    ex.gravar_decisao_git(pasta, {**d, "modo": "nada", "cenarios": []}, [], registro=registro, corrida="corrida", quando=AGORA_Q7)
+    assert len(ig.ler_registro(registro)) == 1, "uma corrida que não rodou nada não vira commit testado"
+    fonte = inspect.getsource(ex.rodar_cenarios)
+    for trecho in ("selecao_git_da_corrida(args)", "celulas_do_ensaio(args.repeticoes, args.casos, so=", "gravar_decisao_git("):
+        assert trecho in fonte, trecho
+    ps1 = (EXP / "rodar_fase4.ps1").read_bytes()
+    assert ps1.startswith(b"\xef\xbb\xbf") and b'[ValidateSet("todos", "git")][string]$Selecao = "todos"' in ps1 and b'"--selecao", "git"' in ps1 and b"[string]$Desde" in ps1
+
+
 def main() -> None:
     argparse.ArgumentParser(description=__doc__).parse_args()
     modulo = sys.modules[__name__]

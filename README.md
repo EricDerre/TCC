@@ -16,7 +16,7 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
      ! Motivo: a linha dizia "com três corridas por rodar"; as corridas 25, 26 e 27 rodaram na noite de 11 para 12/11/2026, e a revisão às cegas foi gravada em 16/11/2026 (roadmap, §2.23 a §2.25); nenhuma muda o agente. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a frase de estado do alto passou de 16/11/2026 a 25/11/2026 e diz que a Fase 5 está concluída, com o resultado central.
      ! Motivo: a frase parava na Pós-Fase 4 de 16/11/2026 e tratava a Fase 5 como futura; a fase foi medida em 18 e 24/11/2026 e fechada em 25/11/2026 (decisão 156). O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. -->
-> **Em 25/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, e a Fase 5, que mediu o agente contra pessoas, estão concluídas: nos dez cenários medidos o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento: as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente, e faltam o hub, a integração com o Git e a documentação final.
+> **Em 25/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, e a Fase 5, que mediu o agente contra pessoas, estão concluídas: nos dez cenários medidos o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. A Pós-Fase 4, que cuida do que o agente entrega a quem lê, está em andamento: as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente; o hub de revisão e a seleção de cenários pelo Git foram feitos em 25/11/2026, e faltam uma corrida curta de prova com o modelo e a documentação final.
 
 | Quero... | Vá para |
 |---|---|
@@ -64,7 +64,7 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: o pacote Q4 entregou a barra de progresso e o protótipo da seleção pelo diff do Git; sem a frase, a tabela pararia no Q3. -->
 <!-- ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) a linha da Pós-Fase 4 diz que o Q5 também está feito.
      ! Motivo: o pacote Q5 fez a medida com revisor humano dos relatórios; sem a frase, a tabela pararia no Q4. -->
-| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Em andamento (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026) |
+| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Em andamento (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026; Q6 e Q7 em 25/11/2026) |
 <!-- ! Alteração de IA - Revisar: (16/11/2026) a linha da Fase 5 passa de "Não iniciada" a "Em andamento", com o que já existe: o plano aprovado; nenhuma medida feita ainda.
      ! Motivo: o plano da Fase 5 foi aprovado em 16/11/2026 (decisão 133) e o roadmap passou a dizer "Em andamento"; o painel mostra o estado curto desta tabela ao lado da etiqueta do roadmap, e a visão da fase dizia "Em andamento" e "Não iniciada" ao mesmo tempo. -->
 <!-- ! Alteração de IA - Revisar: (18/11/2026, corrida 28) a linha da Fase 5 diz que a noite do agente rodou e vai ser refeita, e que falta a medida com as pessoas.
@@ -83,7 +83,9 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 
 <!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) o título da lista abaixo deixou de dizer "antes da Fase 5".
      ! Motivo: a Fase 5 foi concluída em 25/11/2026; os dois itens são da Pós-Fase 4, parte feita antes da Fase 5 e parte ainda por fazer. -->
-**O que a Pós-Fase 4 fez antes da Fase 5, e o que ainda falta dela:**
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o título da lista deixa de falar no que falta da Pós-Fase 4.
+     ! Motivo: os pacotes Q0 a Q7 estão feitos desde 25/11/2026; a lista abaixo já conta cada um, e o último item ainda descrevia a fase como ideia para o futuro. -->
+**O que a Pós-Fase 4 fez:**
 
 <!-- ! Alteração de IA - Revisar: (07/11/2026, pacote Q2) a linha da Pós-Fase 4 na tabela acima diz que o Q2 também está feito, e o item abaixo ganhou os filtros de texto.
      ! Motivo: o pacote Q2 passou a medir em código cada texto que chega ao analista e ajustou o molde do relatório até passar; sem a frase, o leitor acharia que só a camada de leitura existe. -->
@@ -97,8 +99,16 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: é a medida da especificação da trilha que a Fase 4 deixou em aberto (ficha 40, decisão 113); sem a frase, o leitor acharia que ninguém leu os relatórios novos. -->
 <!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q3) o item abaixo ganhou a árvore de decisão por caso.
      ! Motivo: o pacote Q3 é a terceira entrega do que chega ao analista (plano da Pós-Fase 4, seção 3.4); sem a frase, o leitor não saberia que a árvore existe. -->
-- rever o que o agente entrega ao analista, porque hoje os verbetes são difíceis de entender (desde 07/11/2026 existe uma camada de leitura dos verbetes, gerada por código e curada em 10/11/2026 por um analista, com consertos no que era fato errado; o relatório por caso segue o molde do relatório de defeitos do syllabus CTFL 4.0; e filtros em código medem cada texto que chega ao analista, com limiares calibrados nos comentários deste repositório: todos os relatórios passam, e as leituras dos verbetes passam todas depois da curadoria; e, desde 08/11/2026, cada caso tem uma árvore de decisão lida da trilha gravada, com o que o modelo leu, que verbetes entraram, a causa contra a segunda, a cura quando houve e a origem de cada afirmação: o que o código mediu, o que ele conferiu, o que o modelo só declarou e o que faltou; e, também desde 08/11/2026, enquanto o modelo pensa uma barra de progresso diz quanto falta, estimando pelas taxas das corridas anteriores desta máquina, com o erro medido nos registros gravados, e um protótipo lê o que mudou no Git para dizer quais cenários rodar e por quê, provado no histórico do próprio repositório; e, em 09 e 10/11/2026, os 36 relatórios da corrida 24 foram lidos no formato novo, um por vez e às cegas, todos por um analista de QA da empresa, que não participou do projeto, a quem o Eric passou os relatórios: ele decidiu certo na maior parte deles e deu a nota máxima de utilidade à maioria, mas o tempo de leitura não foi medido e é um leitor só);
-- a Pós-Fase 4: ajustes e ideias para o visual do projeto, com o tipo de resposta e a formatação, e talvez gráficos ou um dashboard dinâmico sobre cada assunto (decisão 94).
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o item deixa de ser um "rever" com o que foi feito entre parênteses e passa a contar o que foi feito.
+     ! Motivo: a frase começava como tarefa por fazer ("rever ... porque hoje os verbetes são difíceis") e trazia o trabalho já feito num parêntese de 1400 caracteres. -->
+- o que o agente entrega ao analista, porque os verbetes eram difíceis de entender: desde 07/11/2026 existe uma camada de leitura dos verbetes, gerada por código e curada em 10/11/2026 por um analista, com consertos no que era fato errado; o relatório por caso segue o molde do relatório de defeitos do syllabus CTFL 4.0; e filtros em código medem cada texto que chega ao analista, com limiares calibrados nos comentários deste repositório: todos os relatórios passam, e as leituras dos verbetes passam todas depois da curadoria; e, desde 08/11/2026, cada caso tem uma árvore de decisão lida da trilha gravada, com o que o modelo leu, que verbetes entraram, a causa contra a segunda, a cura quando houve e a origem de cada afirmação: o que o código mediu, o que ele conferiu, o que o modelo só declarou e o que faltou; e, também desde 08/11/2026, enquanto o modelo pensa uma barra de progresso diz quanto falta, estimando pelas taxas das corridas anteriores desta máquina, com o erro medido nos registros gravados, e um protótipo lê o que mudou no Git para dizer quais cenários rodar e por quê, provado no histórico do próprio repositório; e, em 09 e 10/11/2026, os 36 relatórios da corrida 24 foram lidos no formato novo, um por vez e às cegas, todos por um analista de QA da empresa, que não participou do projeto, a quem o Eric passou os relatórios: ele decidiu certo na maior parte deles e deu a nota máxima de utilidade à maioria, mas o tempo de leitura não foi medido e é um leitor só;
+<!-- ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) item novo com o hub de revisão e a seleção de cenários pelo Git; a frase de estado no alto e a linha da Pós-Fase 4 na tabela acompanharam. Os números vêm de `resultados_alvo/fase4/hub.json` e de `conferencia_git.json`, lidos por script.
+     ! Motivo: a decisão 152 pôs os dois antes do texto final, e eles foram feitos em 25/11/2026; a frase de estado ainda dizia que faltavam, e o leitor não saberia que existem nem como abrir o hub. -->
+- o hub de revisão, desde 25/11/2026: uma página local, à imagem da revisão de uma mudança de código, que junta 170 casos diagnosticados pelo agente e mostra, para cada um, o relatório em blocos, a evidência ao lado, a árvore de decisão e os eventos gravados. O analista comenta um trecho, responde, resolve a conversa e dá o veredito; o agente só comenta. Para abrir: `python hub.py`, em `Programacao/AgenteCore/experimentos`. Detalhes no painel, aba "Hub e Git", e em [DETALHES-TECNICOS.md](DETALHES-TECNICOS.md);
+- a escolha dos cenários pelo que mudou no código, também desde 25/11/2026: com `--selecao git`, a corrida roda só os cenários atingidos pelo que mudou nas cobaias, roda tudo na dúvida e registra o que deixou de fora. Numa conta sobre o histórico do repositório, 2 de 8 mudanças deixariam de fora um cenário que falhou na rodada completa, e é por isso que a rodada completa volta em prazo fixo. Nenhuma seleção parcial rodou de verdade ainda;
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o último item da lista passa a contar o painel por fase, no lugar da Pós-Fase 4 descrita como ideia.
+     ! Motivo: o item repetia o texto da decisão 94, de 05/11/2026, que anunciava a Pós-Fase 4 como "ajustes e ideias" e "talvez gráficos"; a fase foi planejada em 07/11/2026 e feita. -->
+- o painel do projeto reorganizado por fase, com uma aba de visão em cada fase e um glossário dos termos e dos métodos (decisão 124).
 
 ## O que já descobrimos
 
@@ -200,7 +210,9 @@ O agente também chegou ao resultado em mais cenários: 49 de 50 execuções, co
 - **Que um exemplar resolvido ou os rótulos em palavras ajudam o modelo.** Testamos os dois nos 90 casos: trocam a resposta em alguns casos, para os dois lados, e o saldo não se separa do acaso (decisão 91).
 - **Quanto a biblioteca ajuda nos casos que ela nunca viu.** A última corrida mede só a biblioteca final; esses casos não foram lidos sem ela.
 - **Que os sinais da trilha apontam os erros.** A corrida teve só 5 erros, poucos para pôr os sinais em ordem ([figura dos sinais](Documentacao/figuras/sinais-da-trilha.png)).
-- **Que o relatório ajuda quem revisa.** Em aberto: a medida com revisor humano será feita depois que a Pós-Fase 4 normalizar e melhorar as respostas; por agora vale a pré-análise do agente de apoio (decisões 85, 86 e 95).
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o item da medida com revisor humano passa a dizer o que foi medido e o que continua sem resposta.
+     ! Motivo: o item dizia que a medida seria feita depois que a Pós-Fase 4 melhorasse as respostas; ela foi feita em 09 e 10/11/2026 (`resultados_alvo/fase4/leitura_revisao_v3.md`: 30 de 36). -->
+- **Que o relatório ajuda qualquer pessoa que revise, e em quanto tempo.** A medida foi feita com um leitor só, um analista de QA de fora do projeto, que decidiu certo em 30 de 36 relatórios; o tempo de leitura não foi medido, e o que ele recebeu para ler não foi declarado (decisões 114 e 117).
 
 ## Os dois sistemas de teste
 
@@ -223,9 +235,16 @@ A avaliação usa 90 casos de falha com a resposta certa conhecida, e as regras 
      ! Motivo: o texto prometia Windows 10/11, Linux e macOS, e a prova gravada cobre só o Windows da máquina-alvo e o Linux pelo WSL (o Linux do Windows); as células do GitHub Actions ainda não rodaram. No Linux o instalador é o novo (traz o próprio Python pelo `uv` quando falta); no Windows e no macOS ele ainda segue os passos antigos, que nunca rodaram em máquina nova. -->
 Precisa de internet: o instalador baixa PHP, MariaDB e os pacotes Python que faltarem. O que ele pede em cada sistema:
 
-- **Windows:** `install.cmd` ou `Cobaia.exe`. Usa o `winget` (o gerenciador de pacotes do Windows) para trazer o Python e o PHP quando faltam, e o MariaDB pelo `winget` ou, sem administrador, pelo zip oficial.
+<!-- ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do instalador no GitHub Actions) a linha do Windows ganha o que acontece numa máquina que já tem o MySQL e de onde vem o Ollama.
+     ! Motivo: na célula CI-WIN (execução 45650086543) o instalador aceitou o `mysql.EXE` do MySQL 8.4 da máquina como cliente do MariaDB e parou em "Não foi possível subir o MariaDB"; ele passou a aceitar só executável do MariaDB e a trazer o MariaDB pelo zip quando há um MySQL. O Ollama passou a vir do instalador oficial, na versão testada do `versoes.json`. Nenhum dos dois foi visto rodando ainda: a segunda execução do fluxo é a prova. -->
+- **Windows:** `install.cmd` ou `Cobaia.exe`. Usa o `winget` (o gerenciador de pacotes do Windows) para trazer o Python e o PHP quando faltam, e o MariaDB pelo `winget` ou, sem administrador, pelo zip oficial. Se a máquina já tem um MySQL, o instalador não mexe nele e traz o MariaDB pelo zip, ao lado; com o serviço do MySQL ligado na porta 3306, ele para e pede para desligar esse serviço. O Ollama vem do instalador oficial, na versão testada.
 - **Linux de `apt` (Ubuntu, Debian) ou de `dnf` (Fedora):** `./install.sh`. Usa o `sudo` para instalar os pacotes do sistema. Se não houver um Python 3.12 ou mais novo, o próprio `install.sh` traz um para dentro da pasta do projeto (`.ferramentas/`), sem mexer no Python do sistema. Outras distribuições recebem a lista do que instalar à mão.
-- **macOS:** `./install.sh`, com o [Homebrew](https://brew.sh) já instalado.
+<!-- ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a linha do macOS passa a dizer que o instalador usa o Homebrew pelos mesmos passos do Linux, sem `sudo`.
+     ! Motivo: nas células M-15 e M-15I (macOS 15) de 25/11/2026 o caminho antigo parou em "Não foi possível subir o MariaDB"; o macOS agora instala o PHP e o MariaDB 11.8 pelo Homebrew no fluxo por pacotes. Ainda sem rodada que passe. -->
+- **macOS:** `./install.sh`, com o [Homebrew](https://brew.sh) já instalado. O instalador usa o Homebrew (sem `sudo`) para trazer o PHP e o MariaDB 11.8, pelos mesmos passos do Linux. O Mac com processador Intel entra como melhor esforço: o Homebrew deixou de publicar pacote pronto do PHP e do MariaDB para ele, e a instalação pode compilar os dois (mais de uma hora).
+<!-- ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa E) a linha do macOS ganha o Mac Intel como melhor esforço, com o motivo em uma frase.
+     ! Motivo: decisão do dono do projeto de 25/11/2026: o bloco `bottle` das fórmulas `php`, `mariadb` e `mariadb@11.8` do Homebrew só traz pacote pronto para Apple Silicon e Linux; não observado em execução. -->
+
 
 <!-- ! Alteração de IA - Revisar: (25/11/2026, conserto da revisão do I5/I7) a frase de abertura de "O que foi provado" deixa de dizer que o instalador rodou em todas as linhas e passa a dizer que cada linha é uma célula de teste e que na `ALVO` só a prova rodou.
      ! Motivo: a `ALVO` é a máquina do projeto com a instalação que já existia; o roteiro dela (`celula_alvo.ps1`) roda só a prova, e a frase antiga fazia o leitor entender que o instalador também tinha sido testado nela. -->
@@ -244,10 +263,10 @@ Precisa de internet: o instalador baixa PHP, MariaDB e os pacotes Python que fal
 | L-F45 | Fedora 45 (melhor esforço) | WSL: imagem oficial importada e apagada no fim | WSL | N1 | N3 | N1 |
 | L-ARCH | Arch Linux (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
 | L-SUSE | openSUSE (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
-| CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
-| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
-| M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
-| M-15I | macOS 15, Intel | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions (previsto) | ainda sem rodada | - | - |
+| CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e o MySQL 8.0, e a célula remove o MySQL antes do instalador; não é limpo | GitHub Actions | N0 | N4 | N0 |
+| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions | N0 | N4 | - |
+| M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N0 | N3 | - |
+| M-15I | macOS 15, Intel (melhor esforço) | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N0 | N4 | - |
 
 Cada linha é uma célula de teste, e a coluna "Como a máquina nasce" diz o que ela é: na `ALVO` só a prova rodou. Nível alcançado é o maior nível da prova que passou sem nenhum nível abaixo dele ter falhado; N0 quer dizer que nenhum nível passou, "sem prova" quer dizer que a rodada parou antes de gravar o `registro.json`, e "não terminou" quer dizer que o GitHub cortou a tarefa antes do fim. Rodada `novo` é a que roda o instalador já com os consertos; `como-esta` é a que roda o instalador antes deles, para gravar a falha. A última coluna olha todas as rodadas `novo` da célula, porque a última rodada pode ter pedido menos níveis que uma anterior.
 <!-- tb_inst_resumo:fim -->
@@ -315,6 +334,20 @@ TCC/
 ```
 
 A árvore completa está em [Detalhes técnicos](DETALHES-TECNICOS.md#estrutura-do-repositório).
+
+<!-- ! Alteração de IA - Revisar: (25/11/2026, ficha 98, decisão 159) seção nova com os três Objetivos de Desenvolvimento Sustentável a que o projeto se relaciona.
+     ! Motivo: o orientador pediu que cada equipe informe o ODS considerado no projeto, e o README não dizia nenhum; o Eric escolheu os três, com o destaque no código aberto e documentado. Sem número nesta tabela: os números e o texto oficial das metas ficam no levantamento, para não serem digitados duas vezes. -->
+## Objetivos de Desenvolvimento Sustentável (ODS)
+
+O projeto se relaciona com três metas da Agenda 2030 da ONU, por afinidade e sem medir os indicadores delas.
+
+| ODS | Meta | Por que |
+|---|---|---|
+| 9: Indústria, Inovação e Infraestrutura | 9.5 | Pesquisa aplicada e inovação em teste de software, numa máquina comum, só em CPU. |
+| 8: Trabalho Decente e Crescimento Econômico | 8.2 | Produtividade por modernização tecnológica: nos dez cenários medidos, o reparo pelo agente foi mais rápido que o manual. |
+| 17: Parcerias e Meios de Implementação | 17.6 | Acesso aberto ao conhecimento: o código, os registros de cada medida e a documentação são públicos, sob licença MIT. |
+
+**Como ler.** A coluna "Por que" diz o que no projeto sustenta cada meta. O destaque do grupo é a terceira linha: tudo o que foi feito pode ser lido, reproduzido e reaproveitado por outra equipe. O levantamento completo, com o texto oficial de cada meta e as que foram descartadas, está em [ODS do projeto](Documentacao/memorial/2-pesquisa-e-literatura/ods-do-projeto.md).
 
 ## Segurança
 

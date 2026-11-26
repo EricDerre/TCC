@@ -274,6 +274,34 @@ def coletar() -> dict[str, dict]:
                   "diferenca_media_s": geral_f5["diferenca_media_s"], "agente_mais_rapido": geral_f5["sinais"]["agente"], "pessoas_mais_rapidas": geral_f5["sinais"]["pessoas"],
                   "empates": geral_f5["sinais"]["empates"], "cenarios": len(med["tempo"]["por_cenario"])},
     }
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) figura nova "revisao-humana": dos 36 relatórios da corrida 24, quantas decisões do analista de QA foram apropriadas (aceitar o diagnóstico certo, recusar o errado), separadas por diagnóstico certo e errado, lidas de `fase4/leitura_revisao_v3.json` (`adesao`).
+    # ! Motivo: o README precisa mostrar se o relatório ajuda quem revisa; a leitura da sessão traz os números por grupo (20 de 25 e 10 de 11, 30 de 36 no total), e a figura os lê dali em vez de repeti-los à mão.
+    rev = _j("fase4/leitura_revisao_v3.json")
+    grupo_rev = {x["grupo"]: x for x in rev["adesao"]}
+    figs["revisao-humana"] = {
+        "titulo": "O relatório ajuda quem revisa?",
+        "fonte": "`fase4/leitura_revisao_v3.json` (`adesao`, `resumo`; sessão de revisão dos 36 relatórios da corrida 24)",
+        "cab": ["Grupo", "Casos", "Decisões apropriadas", "Decisões não apropriadas"],
+        "linhas": [[nome, grupo_rev[chave]["n"], grupo_rev[chave]["apropriadas"], grupo_rev[chave]["n"] - grupo_rev[chave]["apropriadas"]]
+                   for nome, chave in (("Diagnósticos certos", "diagnóstico certo"), ("Diagnósticos errados", "diagnóstico errado"))],
+        "resumo": rev["resumo"],
+    }
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) figura nova "experimentos-pos-fase-4": as três mudanças testadas depois da Fase 4 (corridas 25, 26 e 27), com a referência, a mudança e o valor-p de cada uma.
+    # ! Motivo: o README precisa dizer que nenhuma das três tirou o agente do ruído. Corridas 25 e 26: acertos em 72 casos (`sem_notas.json` e `segundo_passe.json`, campo `resumo`). Corrida 27: propostas julgadas corretas na revisão às cegas, 1 de 20 nas edições da corrida 20 e 3 de 8 nas da corrida 27, vindas de `analista.json` (`revisao.corrida_20_pelo_mesmo_revisor`, `revisao.corrida_27` e, para o p, `leituras` com a leitura `parcela_correta`).
+    sn, sp, ana = _j("fase4/sem_notas.json")["resumo"], _j("fase4/segundo_passe.json")["resumo"], _j("fase4/analista.json")
+    rv = ana["revisao"]
+    lei = {x["leitura"]: x for x in ana["leituras"]}["parcela_correta"]
+    n20, n27 = sum(rv["corrida_20_pelo_mesmo_revisor"].values()), sum(rv["corrida_27"].values())
+    assert lei["corrida_20"] == f'{rv["corrida_20_pelo_mesmo_revisor"]["Correta"]} de {n20}' and lei["corrida_27"] == f'{rv["corrida_27"]["Correta"]} de {n27}', (lei, rv)
+    figs["experimentos-pos-fase-4"] = {
+        "titulo": "Mudar o agente melhora o diagnóstico?",
+        "fonte": "`fase4/sem_notas.json` (`resumo`, corrida 25), `fase4/segundo_passe.json` (`resumo`, corrida 26) e `fase4/analista.json` (`revisao`, `leituras`, corrida 27)",
+        "decimais_exatos": True,
+        "cab": ["Mudança testada", "Casos da referência", "Certos na referência", "Casos com a mudança", "Certos com a mudança", "Valor-p"],
+        "linhas": [["Biblioteca sem as notas do modelo (corrida 25)", sn["casos"], sn["acertos_referencia"], sn["casos"], sn["acertos_sem_notas"], sn["p"]],
+                   ["Segundo pedido ao modelo (corrida 26)", sp["casos"], sp["acertos_primeira"], sp["casos"], sp["acertos_final"], sp["p"]],
+                   ["Analista de documentação: propostas julgadas corretas (corrida 27)", n20, rv["corrida_20_pelo_mesmo_revisor"]["Correta"], n27, rv["corrida_27"]["Correta"], lei["p"]]],
+    }
     return figs
 
 
@@ -291,7 +319,10 @@ def gerar_md(figs: dict[str, dict]) -> str:
         saida.append("| " + " | ".join(str(c) for c in f["cab"]) + " |")
         saida.append("|" + "---|" * len(f["cab"]))
         for l in f["linhas"]:
-            saida.append("| " + " | ".join(_num(c) if isinstance(c, float) else str(c) for c in l) + " |")
+            # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) figura com `decimais_exatos` escreve o decimal inteiro (0,6875), sem arredondar a uma casa.
+            # ! Motivo: o valor-p da tabela de `experimentos-pos-fase-4` sairia como 0,7 com a regra de uma casa, e 0,6875, 0,625 e 0,0581 são os números que o roadmap e o README citam; as outras tabelas continuam com uma casa.
+            exato = f.get("decimais_exatos")
+            saida.append("| " + " | ".join((str(c).replace(".", ",") if exato else _num(c)) if isinstance(c, float) else str(c) for c in l) + " |")
         saida.append("")
     return "\n".join(saida)
 
@@ -777,6 +808,58 @@ def desenhar(figs: dict[str, dict]) -> None:
     fig.savefig(SAIDA / "agente-e-pessoas.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
     plt.close(fig)
     print("  agente-e-pessoas.png")
+
+    # ---- revisão humana (corrida 24)
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) desenho da figura "revisao-humana": duas barras empilhadas, diagnósticos certos e errados, com a decisão apropriada em azul e a não apropriada em laranja, o número de casos escrito na faixa.
+    # ! Motivo: quem lê o README precisa ver de relance que o analista aceitou quase todos os diagnósticos certos e recusou quase todos os errados; o subtítulo diz quem leu e que o tempo não foi medido, porque a sessão passou os relatórios por troca de mensagens e não mediu a leitura.
+    f = figs["revisao-humana"]
+    fig, ax = base(7.6, 3.0)
+    limpar(ax, "x")
+    linhas = f["linhas"][::-1]
+    for i, (nome, casos, apropriadas, nao) in enumerate(linhas):
+        ax.barh(i, apropriadas, color=AZUL, height=0.56, zorder=3)
+        ax.barh(i, nao, left=apropriadas, color=LARANJA, height=0.56, zorder=3)
+        ax.text(apropriadas / 2, i, str(apropriadas), ha="center", va="center", fontsize=10, fontweight="bold", color="white")
+        ax.text(apropriadas + nao / 2, i, str(nao), ha="center", va="center", fontsize=10, fontweight="bold", color="white" if nao >= 3 else TINTA)
+        ax.text(casos + 0.5, i, f"{casos} casos", va="center", fontsize=9.5, color=TINTA)
+    ax.set_yticks(range(len(linhas)))
+    ax.set_yticklabels([l[0] for l in linhas], fontsize=10, color=TINTA)
+    ax.set_xlim(0, max(l[1] for l in linhas) * 1.22)
+    ax.set_xlabel("relatórios da corrida 24", fontsize=9, color=TINTA_2)
+    r = f["resumo"]
+    titular(fig, f["titulo"], f"{r['adesao_apropriada']} das {r['relatorios']} decisões foram apropriadas; quem leu foi um analista de QA de fora do projeto, e o tempo não foi medido")
+    legenda(fig, [Patch(facecolor=AZUL, label="Decisão apropriada (aceitar o certo, recusar o errado)"), Patch(facecolor=LARANJA, label="Decisão não apropriada")], y=-0.01)
+    fig.tight_layout(rect=(0, 0.1, 1, topo(fig)))
+    fig.savefig(SAIDA / "revisao-humana.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
+    plt.close(fig)
+    print("  revisao-humana.png")
+
+    # ---- experimentos da Pós-Fase 4 (corridas 25, 26 e 27)
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) desenho da figura "experimentos-pos-fase-4": uma linha por mudança testada, ponto cinza na referência e ponto azul com a mudança, em porcentagem, e à direita os números e o valor-p.
+    # ! Motivo: as três mudanças (biblioteca sem as notas do modelo, segundo pedido ao modelo, analista de documentação) têm denominadores diferentes (72, 72 e 20 contra 8), então a figura converte tudo para porcentagem e escreve a contagem real ao lado, para ninguém ler 3 de 8 como se fosse 3 de 72.
+    f = figs["experimentos-pos-fase-4"]
+    fig, ax = base(8.6, 3.4)
+    limpar(ax, "x")
+    linhas = f["linhas"][::-1]
+    for i, (nome, n_ref, c_ref, n_mud, c_mud, p) in enumerate(linhas):
+        pr, pm = 100 * c_ref / n_ref, 100 * c_mud / n_mud
+        ax.plot([pr, pm], [i, i], color=NEUTROS[1], linewidth=2, zorder=2)
+        ax.scatter([pr], [i], s=70, color=NEUTROS[0], edgecolor=SUPERFICIE, linewidth=1.3, zorder=3)
+        ax.scatter([pm], [i], s=70, color=AZUL, edgecolor=SUPERFICIE, linewidth=1.3, zorder=4)
+        ax.text(103, i, f"{c_ref} de {n_ref} e {c_mud} de {n_mud}\np = {_num(p, 4).rstrip('0').rstrip(',')}", va="center", fontsize=8.8, color=TINTA, linespacing=1.4)
+    ax.set_yticks(range(len(linhas)))
+    ax.set_yticklabels(["\n".join(textwrap.wrap(l[0], 36)) for l in linhas], fontsize=9, color=TINTA)
+    ax.set_ylim(-0.7, len(linhas) - 0.3)
+    ax.set_xlim(0, 135)
+    ax.set_xticks(range(0, 101, 20))
+    ax.xaxis.set_major_formatter(lambda v, _: f"{v:.0f}%")
+    ax.set_xlabel("casos com a causa certa (corridas 25 e 26) ou propostas julgadas corretas (corrida 27)", fontsize=9, color=TINTA_2)
+    titular(fig, f["titulo"], "Nenhuma das três diferenças sai do ruído (p acima de 0,05)")
+    legenda(fig, [Line2D([], [], color=NEUTROS[0], marker="o", linestyle="", markersize=7, label="Referência"), Line2D([], [], color=AZUL, marker="o", linestyle="", markersize=7, label="Com a mudança")], y=-0.01)
+    fig.tight_layout(rect=(0, 0.09, 1, topo(fig)))
+    fig.savefig(SAIDA / "experimentos-pos-fase-4.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.15, metadata={"Software": None})
+    plt.close(fig)
+    print("  experimentos-pos-fase-4.png")
 
 
 def main() -> int:

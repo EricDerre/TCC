@@ -52,7 +52,7 @@ def _texto(valor, campo: str, obrigatorio: bool = True, limite: int = LIMITE_DO_
     if valor is None and not obrigatorio:
         return ""
     if not isinstance(valor, str):
-        raise ValueError(f"{campo}: esperava texto")
+        raise ValueError(f"{campo}: esperava texto")  # noqa: TRY004 - toda recusa de um pedido é ValueError, que o servidor traduz em 400
     valor = valor.strip()
     if obrigatorio and not valor:
         raise ValueError(f"{campo}: o texto está vazio")
@@ -63,7 +63,7 @@ def _texto(valor, campo: str, obrigatorio: bool = True, limite: int = LIMITE_DO_
 
 def _autor(valor) -> dict:
     if not isinstance(valor, dict):
-        raise ValueError("autor: esperava nome e papel")
+        raise ValueError("autor: esperava nome e papel")  # noqa: TRY004 - toda recusa de um pedido é ValueError, que o servidor traduz em 400
     papel = valor.get("papel")
     if papel not in PAPEIS:
         raise ValueError(f"autor: o papel {papel!r} não é um de {PAPEIS}")
@@ -72,7 +72,7 @@ def _autor(valor) -> dict:
 
 def _iteracao(valor) -> dict:
     if not isinstance(valor, dict):
-        raise ValueError("iteracao: esperava a trilha, o hash dos eventos e o número da iteração revisada")
+        raise ValueError("iteracao: esperava a trilha, o hash dos eventos e o número da iteração revisada")  # noqa: TRY004 - toda recusa de um pedido é ValueError, que o servidor traduz em 400
     numero = valor.get("numero")
     if not isinstance(numero, int) or isinstance(numero, bool) or numero < 1:
         raise ValueError("iteracao.numero: esperava um inteiro a partir de 1")
@@ -83,7 +83,7 @@ def _ancora(valor) -> dict | None:
     if valor is None:
         return None
     if not isinstance(valor, dict):
-        raise ValueError("ancora: esperava o bloco, o trecho e a posição dele no bloco")
+        raise ValueError("ancora: esperava o bloco, o trecho e a posição dele no bloco")  # noqa: TRY004 - toda recusa de um pedido é ValueError, que o servidor traduz em 400
     inicio, fim = valor.get("inicio"), valor.get("fim")
     if not all(isinstance(x, int) and not isinstance(x, bool) for x in (inicio, fim)) or inicio < 0 or fim <= inicio:
         raise ValueError("ancora: a posição do trecho no bloco é inválida (o fim vem depois do início)")
@@ -98,7 +98,7 @@ def validar(evento: dict, anteriores: list[dict]) -> dict:
     """O evento conferido e normalizado, sem `id`, `ts` nem `revisao`; `anteriores` são os eventos já aceitos do mesmo caso (para saber que
     conversas existem). Recusa com ValueError, dizendo o que não bate."""
     if not isinstance(evento, dict):
-        raise ValueError("evento: esperava um objeto")
+        raise ValueError("evento: esperava um objeto")  # noqa: TRY004 - toda recusa de um pedido é ValueError, que o servidor traduz em 400
     tipo = evento.get("tipo")
     if tipo not in TIPOS:
         raise ValueError(f"tipo: {tipo!r} não é um de {TIPOS}")

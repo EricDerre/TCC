@@ -28,7 +28,11 @@ usuário comum. No macOS, ainda sem teste, vale o que está escrito acima.
 import glob
 import os
 import platform
+import re
 import shutil
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) entra o import de `socket`, para `porta_ocupada`.
+# ! Motivo: ver a tag de `porta_ocupada`: o plano B do Windows de `ensure_mariadb_running` precisa saber se a porta 3306 já tem outro servidor.
+import socket
 import subprocess
 import sys
 import time
@@ -147,7 +151,9 @@ def php_extension_flags(php_path: str, so: str | None = None) -> list[str]:
     # distribuição já carrega mysqli, pdo_mysql e mbstring pelos arquivos de `conf.d`. Provado nas células de 19/11/2026
     # (Ubuntu 22.04, 24.04 e 26.04, Debian 12 e 13, Fedora 45), quando a regra morava em `instalador/servicos.py`, um
     # módulo provisório que trocava esta função só na memória porque este arquivo não podia mudar antes da corrida 28b.
-    if (so or OS_NAME) == "Linux":
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o `Darwin` passa a devolver a mesma lista do Linux (só `output_buffering`).
+    # ! Motivo: o PHP do Homebrew é configurado com `--enable-mbstring`, `--with-mysqli=mysqlnd` e `--with-pdo-mysql=mysqlnd`, ou seja, as três extensões ficam dentro do executável, e o `php.ini` dele aponta `extension_dir` para `<prefixo>/lib/php/pecl/...`; a pasta `ext` ao lado do executável só existe no PHP do Windows, e forçar `extension_dir` para uma pasta que não existe é o defeito já visto no Ubuntu (`Class "mysqli" not found`). Este ponto não foi observado em execução: a primeira execução do Actions (M-15 e M-15I) parou antes de chegar ao PHP; quem confere as extensões é `ferramentas.conferir_php`, e a segunda execução é a que vai provar.
+    if (so or OS_NAME) in ("Linux", "Darwin"):
         return ["-d", "output_buffering=4096"]
     ext_dir = php_extension_dir(php_path)
     return [
@@ -272,10 +278,62 @@ def modelo_llm_ja_baixado(ollama: str, modelo: str) -> bool:
 # MariaDB
 # --------------------------------------------------------------------------
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) funções novas `eh_do_mariadb`,
+# `achar_do_mariadb` e `mysql_que_nao_e_mariadb`; `find_mysql_cli`, `find_mariadbd_server` e `find_mariadb_admin` passam a
+# aceitar do PATH o nome que só o MariaDB usa (`mariadb`, `mariadbd`, `mariadb-admin`) direto, e o nome que o MySQL também usa
+# (`mysql`, `mysqld`, `mysqladmin`) só quando `eh_do_mariadb` confirma que o executável é do MariaDB.
+# ! Motivo: execução 45650086543 do GitHub Actions, célula CI-WIN (Windows Server 2025): o executor traz o MySQL 8.4 no PATH,
+# `find_mysql_cli` aceitou `C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE` ("Cliente MariaDB/MySQL já disponível"), o
+# MariaDB nunca foi instalado, o instalador tentou subir o `mysqld.EXE` do MySQL como processo e parou em "Não foi possível subir o
+# MariaDB. Verifique a instalação e rode o instalador de novo." O banco do projeto é o MariaDB; conferir o texto do `--version`
+# ("MariaDB" aparece nele, "MySQL Community Server" não) é o que separa um do outro. O nome próprio do MariaDB vale sem rodar
+# nada, porque no Debian e no Ubuntu o `mariadb` existe no PATH desde o 10.4 e as células de Linux já provadas não mudam.
+def eh_do_mariadb(executavel: str) -> bool:
+    """O executável é do MariaDB? Roda `<executável> --version` (entrada fechada, limite de 30 s) e procura "mariadb" na
+    saída. O MySQL responde "mysql  Ver 8.4.13 for Win64 on x86_64 (MySQL Community Server - GPL)"; o MariaDB traz o nome
+    dele, inclusive o `mysql` antigo ("mysql  Ver 15.1 Distrib 10.6.18-MariaDB"). Se o executável não roda, é False."""
+    try:
+        resultado = subprocess.run([executavel, "--version"], capture_output=True, text=True, stdin=subprocess.DEVNULL,
+                                   timeout=30, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return "mariadb" in f"{resultado.stdout or ''} {resultado.stderr or ''}".lower()
+
+
+def achar_do_mariadb(proprios: tuple[str, ...], comuns: tuple[str, ...]) -> str | None:
+    """Procura no PATH: primeiro os nomes que só o MariaDB usa (valem direto); depois os que o MySQL também usa, só se
+    `eh_do_mariadb` confirmar."""
+    achado = which_any(*proprios)
+    if achado:
+        return achado
+    for nome in comuns:
+        achado = which_any(nome)
+        if achado and eh_do_mariadb(achado):
+            return achado
+    return None
+
+
+def mysql_que_nao_e_mariadb() -> str | None:
+    """O `mysql` do PATH quando ele existe e não é do MariaDB (por exemplo o MySQL 8.4 que o executor do GitHub Actions traz)."""
+    achado = which_any("mysql")
+    if achado and not eh_do_mariadb(achado):
+        return achado
+    return None
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) função nova `achar_no_homebrew`, usada pelas três buscas do MariaDB no macOS depois do PATH, e função nova `formula_do_mariadb` (mais abaixo, junto do serviço do macOS).
+# ! Motivo: o instalador do macOS passa a instalar a fórmula `mariadb@11.8` (decisão 161, 25/11/2026), e o Homebrew não põe essa fórmula no PATH: deixa os executáveis só em `<prefixo>/opt/mariadb@11.8/bin`, com o prefixo `/opt/homebrew` no Apple Silicon e `/usr/local` no Intel. Sem esta busca, `find_mysql_cli` diria "não achei" logo depois de o `brew install` dar certo. Não foi observado em execução: a primeira execução (M-15 e M-15I) instalou a fórmula `mariadb` e parou antes.
+def achar_no_homebrew(executavel: str) -> str | None:
+    """No macOS, procura o executável do MariaDB nas pastas `opt/mariadb@*/bin` do Homebrew (versão mais alta primeiro)."""
+    return find_by_glob(f"/opt/homebrew/opt/mariadb@*/bin/{executavel}", f"/usr/local/opt/mariadb@*/bin/{executavel}")
+
+
 def find_mysql_cli() -> str | None:
-    found = which_any("mariadb", "mysql")
+    found = achar_do_mariadb(("mariadb",), ("mysql",))
     if found:
         return found
+    if OS_NAME == "Darwin":
+        return achar_no_homebrew("mariadb")
     if OS_NAME == "Windows":
         # ! Alteração de IA - Revisar: (26/10/2026, Fase 4, P0) também procura o MariaDB portátil (zip oficial
         # extraído em %LOCALAPPDATA%\MariaDB\mariadb-<versão>-winx64\), aqui e nas três funções abaixo.
@@ -292,9 +350,15 @@ def find_mysql_cli() -> str | None:
 
 def find_mariadbd_server() -> str | None:
     """Binário do servidor em si (não o cliente CLI)."""
-    found = which_any("mariadbd", "mysqld")
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a busca no PATH passa por `achar_do_mariadb`.
+    # ! Motivo: ver a tag de `eh_do_mariadb`: o `mysqld.EXE` do MySQL 8.4 do executor do Windows era aceito como servidor do MariaDB.
+    found = achar_do_mariadb(("mariadbd",), ("mysqld",))
     if found:
         return found
+    if OS_NAME == "Darwin":
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) no macOS procura também nas pastas `opt` do Homebrew; ver a tag de `achar_no_homebrew`.
+        # ! Motivo: a fórmula `mariadb@11.8` não entra no PATH; não observado em execução.
+        return achar_no_homebrew("mariadbd")
     if OS_NAME == "Windows":
         return find_by_glob(
             r"C:\Program Files\MariaDB*\bin\mariadbd.exe",
@@ -310,9 +374,15 @@ def find_mariadb_admin() -> str | None:
     ! Motivo: ver stop_managed_mariadbd(). Mesma busca por caminho conhecido que os
     demais binários, porque o PATH pode não incluir a pasta bin do MariaDB no Windows
     (confirmado nesta máquina que mariadb-admin.exe existe ao lado do mariadbd.exe)."""
-    found = which_any("mariadb-admin", "mysqladmin")
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a busca no PATH passa por `achar_do_mariadb`.
+    # ! Motivo: ver a tag de `eh_do_mariadb`: sem isso o `mysqladmin.EXE` do MySQL 8.4 do executor do Windows desligaria o banco errado.
+    found = achar_do_mariadb(("mariadb-admin",), ("mysqladmin",))
     if found:
         return found
+    if OS_NAME == "Darwin":
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) no macOS procura também nas pastas `opt` do Homebrew; ver a tag de `achar_no_homebrew`.
+        # ! Motivo: sem o `mariadb-admin`, `banco_no_ar` não consegue o `ping` que separa "acesso recusado" de "banco desligado" (o defeito das células M-15 e M-15I); não observado em execução.
+        return achar_no_homebrew("mariadb-admin")
     if OS_NAME == "Windows":
         return find_by_glob(
             r"C:\Program Files\MariaDB*\bin\mariadb-admin.exe",
@@ -345,6 +415,17 @@ def find_mariadb_datadir_config(raiz: Path | None = None) -> str | None:
 def _can_connect(cli: str) -> bool:
     result = subprocess.run([cli, "-u", "root", "-e", "SELECT 1;"], capture_output=True)
     return result.returncode == 0
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) função nova `porta_ocupada`: tenta abrir uma conexão TCP em `host:porta` (padrão `127.0.0.1`, limite de 2 s) e diz se alguém atendeu.
+# ! Motivo: `ensure_mariadb_running` do Windows só sabia que o banco "não respondia ao root sem senha"; se o serviço do MySQL estivesse ligado na porta 3306 (recusa o root sem senha), o instalador subia um `mariadbd` que não consegue usar a 3306, esperava 45 s e parava em "Não foi possível subir o MariaDB" sem dizer a causa. Com esta pergunta ele diz que a porta está em uso.
+def porta_ocupada(porta: int, host: str = "127.0.0.1", espera: float = 2.0) -> bool:
+    """True se algum programa já atende em `host:porta`."""
+    try:
+        with socket.create_connection((host, porta), timeout=espera):
+            return True
+    except OSError:
+        return False
 
 
 def wait_for_mariadb(cli: str, timeout_s: int = 60) -> bool:
@@ -424,12 +505,48 @@ def subir_servico_no_linux(cli: str, espera_s: int = 40) -> bool:
     return False
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) funções novas `formula_do_mariadb` e `subir_servico_no_macos`.
+# ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: o `brew services start mariadb` deu certo, mas o root do MariaDB só entra pelo usuário root do sistema (o `mariadb-install-db` diz "you need to be system 'root' user to connect"); `wait_for_mariadb` testava "no ar" entrando como root sem senha, leu a recusa como banco desligado, tentou subir um segundo `mariadbd` como processo e o instalador parou em "Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo." Agora "no ar" é `banco_no_ar` (que usa o `mariadb-admin ping`) e o serviço é ligado pela fórmula a que o cliente pertence, porque o instalador passa a instalar a `mariadb@11.8` e não sempre a `mariadb` (decisão 161). Não observado em execução: a segunda execução é a que vai provar.
+def formula_do_mariadb(cli: str, resolvido: str | None = None) -> str:
+    """O nome da fórmula do Homebrew a que o cliente do MariaDB pertence. Lê o caminho real do executável
+    (`.../Cellar/<fórmula>/<versão>/bin/mariadb`; `resolvido` só serve para o teste passar o caminho pronto). Sem `Cellar` no
+    caminho, procura `mariadb@<número>` no texto; se não achar, devolve `mariadb`."""
+    if resolvido is None:
+        try:
+            resolvido = os.path.realpath(cli)
+        except OSError:
+            resolvido = cli
+    texto = str(resolvido).replace("\\", "/")
+    na_cellar = re.search(r"/Cellar/([^/]+)/", texto)
+    if na_cellar:
+        return na_cellar.group(1)
+    versionada = re.search(r"(mariadb@[0-9][0-9.]*)", texto)
+    return versionada.group(1) if versionada else "mariadb"
+
+
+def subir_servico_no_macos(cli: str, espera_s: int = 60) -> bool:
+    """Liga o serviço do MariaDB pelo `brew services start <fórmula>` e espera o servidor responder, de 2 em 2 segundos.
+    Não sobe o servidor como processo: o `mariadbd` do Homebrew é do usuário que instalou e o serviço é o jeito dele."""
+    if banco_no_ar(cli):
+        return True
+    formula = formula_do_mariadb(cli)
+    log(f"O MariaDB não está no ar; ligando o serviço ({formula})...")
+    run(["brew", "services", "start", formula])
+    limite = time.time() + espera_s
+    while time.time() < limite:
+        if banco_no_ar(cli):
+            return True
+        time.sleep(2)
+    log(f"O MariaDB não respondeu depois de `brew services start {formula}`; a mensagem do comando está logo acima.")
+    return False
+
+
 def ensure_mariadb_running(cli: str) -> bool:
     """Garante que existe um mariadbd/mysqld respondendo em localhost:3306.
-    Tenta, em ordem: (1) já está rodando, (2) serviço do SO (systemd ou `service` no Linux, brew
-    services no macOS; não aplicável no Windows, ver módulo docstring),
-    (3) inicia o binário do servidor diretamente como subprocesso (sempre o
-    caminho usado no Windows, já que winget não registra serviço; no Linux esse passo não existe mais)."""
+    Tenta, em ordem: (1) já está rodando, (2) serviço do SO (systemd ou `service` no Linux, `brew services`
+    no macOS; não aplicável no Windows, ver módulo docstring),
+    (3) inicia o binário do servidor diretamente como subprocesso (só no Windows, já que winget não registra serviço;
+    no Linux e no macOS esse passo não existe mais)."""
     global _mariadbd_proc
 
     if _can_connect(cli):
@@ -443,14 +560,25 @@ def ensure_mariadb_running(cli: str) -> bool:
         # não consegue escrever na pasta de dados do pacote (`/var/lib/mysql`).
         return subir_servico_no_linux(cli)
     if OS_NAME == "Darwin":
-        run(["brew", "services", "start", "mariadb"])
-        if wait_for_mariadb(cli, timeout_s=30):
-            return True
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) no macOS a função volta daqui para `subir_servico_no_macos`: sem `wait_for_mariadb` com root sem senha e sem a queda para o servidor como processo.
+        # ! Motivo: ver a tag de `formula_do_mariadb`: nas células M-15 e M-15I o serviço estava no ar, o root recusado foi lido como banco desligado, e o segundo `mariadbd` como processo levou à parada "Não foi possível subir o MariaDB".
+        return subir_servico_no_macos(cli)
 
     # Fallback (sempre usado no Windows): sobe o servidor como processo comum.
     server_bin = find_mariadbd_server()
     if not server_bin:
         log("Binário do servidor MariaDB (mariadbd/mysqld) não encontrado.")
+        return False
+
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) no Windows, antes de subir o `mariadbd` como processo, confere a porta 3306; se já atende, não sobe nada, avisa e devolve False. Quando `_can_connect` já passou (acima), nada muda.
+    # ! Motivo: com o serviço do MySQL ligado na 3306 (o `root` dele tem senha, então `_can_connect` falha), o `mariadbd` portátil não consegue usar a porta; o instalador esperava 45 s em `wait_for_mariadb` e parava em "Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo." sem dizer que o problema era outro servidor na porta. Não observado em execução.
+    if porta_ocupada(3306):
+        # ! Alteração de IA - Revisar: (25/11/2026, ajuste do controlador depois da segunda revisão) com a porta 3306 ocupada, espera 15 s pelo próprio MariaDB do projeto antes de dizer que a porta é de outro servidor.
+        # ! Motivo: o MariaDB do projeto abre a porta um instante antes de aceitar a entrada do root; quem chamasse esta função nesse instante (o `run.py` ou o lançador de uma corrida, logo depois de outro processo subir o banco) recebia False na hora, quando antes a espera de 45 s de `wait_for_mariadb` cobria o caso. Não observado em execução: é para o aviso da porta não mudar o que já funcionava na máquina do projeto.
+        if wait_for_mariadb(cli, timeout_s=15):
+            return True
+        log("A porta 3306 já está em uso por outro servidor de banco (por exemplo o serviço do MySQL), e o MariaDB do projeto "
+            "não consegue subir nela. Pare esse serviço (no PowerShell de administrador: `Stop-Service MySQL*`) e rode o instalador de novo.")
         return False
 
     log(f"Nenhum serviço de banco ativo — iniciando {server_bin} como processo...")
@@ -474,16 +602,25 @@ def ensure_root_no_password(cli: str) -> bool:
     if _can_connect(cli):
         return True
 
-    if OS_NAME == "Linux":
-        log("root não acessível sem senha via TCP — tentando corrigir via socket local (sudo)...")
+    if OS_NAME in ("Linux", "Darwin"):
         fix_sql = (
             "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD(''); "
             "FLUSH PRIVILEGES;"
         )
-        fixed = subprocess.run(["sudo", cli, "-u", "root", "-e", fix_sql], capture_output=True)
-        if fixed.returncode == 0 and _can_connect(cli):
-            log("root ajustado para sem senha.")
-            return True
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) no macOS o conserto tenta primeiro como o próprio usuário, sem `sudo`, e depois com `sudo`, como no Linux; a mensagem do macOS não fala em "via TCP".
+        # ! Motivo: execuções M-15 e M-15I (macOS 15): o `mariadb-install-db` do Homebrew criou duas contas com todos os privilégios, `root@localhost` (só entra o usuário root do sistema) e a do usuário que instalou (`runner@localhost`, só entra o usuário `runner` do sistema), ambas sem senha; então quem instalou consegue entrar com `mariadb -e ...` sem `sudo`, que no Mac pode pedir senha. A conta do usuário é a primeira tentativa; o `sudo` fica de reserva. Não observado em execução: a primeira execução parou antes deste passo.
+        if OS_NAME == "Darwin":
+            log("root não acessível sem senha — tentando corrigir com a conta do usuário que instalou o MariaDB e, se não "
+                "der, com o sudo...")
+            tentativas = [[cli, "-e", fix_sql], ["sudo", cli, "-u", "root", "-e", fix_sql]]
+        else:
+            log("root não acessível sem senha via TCP — tentando corrigir via socket local (sudo)...")
+            tentativas = [["sudo", cli, "-u", "root", "-e", fix_sql]]
+        for comando in tentativas:
+            fixed = subprocess.run(comando, capture_output=True)
+            if fixed.returncode == 0 and _can_connect(cli):
+                log("root ajustado para sem senha.")
+                return True
 
     log("!! Não foi possível confirmar acesso a root sem senha no MariaDB.")
     log("!! Programacao/CobaiaFront/conn/connect.php (intocado) espera usuário 'root' sem senha.")

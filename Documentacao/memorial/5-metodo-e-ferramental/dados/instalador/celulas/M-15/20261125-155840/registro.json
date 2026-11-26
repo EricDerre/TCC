@@ -1,0 +1,88 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por instalador/conferir.py: a prova de uma instalação, nível a nível.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula de teste em arquivo, com o erro literal de cada falha, para o relatório sair de script e não de memória."
+ },
+ "celula": "M-15",
+ "gravado_em": "2026-11-25T16:00:47",
+ "sistema": {
+  "sistema": "Darwin",
+  "familia": "brew",
+  "id": "macos",
+  "versao": "",
+  "nome": "macOS",
+  "suporte": "suportado"
+ },
+ "maquina": {
+  "plataforma": "macOS-15.8.2-arm64-arm-64bit-Mach-O",
+  "arquitetura": "arm64",
+  "python": "3.14.10",
+  "nucleos": 3,
+  "memoria_total_gb": 7.0,
+  "administrador": false,
+  "sudo_sem_senha": true
+ },
+ "niveis": {
+  "N1": {
+   "estado": "falhou",
+   "detalhe": "o MariaDB não respondeu (ensure_mariadb_running)",
+   "segundos": 77.0
+  },
+  "N2": {
+   "estado": "nao_rodou",
+   "detalhe": "depende do N1, que não passou",
+   "segundos": null
+  },
+  "N3": {
+   "estado": "falhou",
+   "detalhe": "o executável do Ollama não foi encontrado (find_ollama)",
+   "segundos": 0.0
+  },
+  "N4": {
+   "estado": "nao_rodou",
+   "detalhe": "",
+   "segundos": null
+  }
+ },
+ "versoes": {
+  "python": {
+   "encontrada": "3.14.10",
+   "testada": "3.14.7",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "php": {
+   "encontrada": "8.5.12",
+   "testada": "8.2.35",
+   "estado": "na_faixa",
+   "impede": false
+  },
+  "mariadb": {
+   "encontrada": "13.0.2",
+   "testada": "11.8.9",
+   "estado": "na_faixa",
+   "impede": false
+  }
+ },
+ "instalacao": {
+  "gravado_em": "2026-11-25T16:00:47",
+  "resultado": "interrompida",
+  "passos": [
+   {
+    "passo": "PHP",
+    "segundos": 32.7
+   },
+   {
+    "passo": "MariaDB",
+    "segundos": 14.9
+   },
+   {
+    "passo": "serviço do MariaDB",
+    "segundos": 77.0
+   }
+  ]
+ },
+ "alcancado": "N0",
+ "falhou": true,
+ "impedida_por_versao": []
+}

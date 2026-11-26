@@ -41,7 +41,8 @@ jobs:
     timeout-minutes: 150
     strategy:
       fail-fast: false
-      # O modo de CI-WIN, M-15 e M-15I muda para `novo` no mesmo commit que consertar o caminho de cada uma.
+      # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a `CI-UBU` passa a rodar com `--preparo remover-mysql`, e `CI-WIN`, `M-15` e `M-15I` passam do modo `como-esta` para `novo`.
+      # ! Motivo: na execução 45650086543 o instalador parou na CI-UBU com "The following packages will be REMOVED: mysql-client mysql-server ... E: Packages need to be removed but remove is disabled." (o executor já traz o MySQL 8.0 e o instalador não deixa o `apt-get` remover pacotes); o preparo tira o MySQL antes e o `celula.json` diz que tirou. As outras três células entram em `novo` porque os consertos delas (Windows aceitar só executável do MariaDB, macOS pelo Homebrew) entram no mesmo commit.
       matrix:
         include:
           - id: CI-UBU
@@ -49,24 +50,24 @@ jobs:
             python: python3
             ate: N4
             modo: novo
-            opcoes: "--forcar-uv"
+            opcoes: "--forcar-uv --preparo remover-mysql"
           - id: CI-WIN
             runner: windows-2025
             python: python
             ate: N4
-            modo: como-esta
+            modo: novo
             opcoes: ""
           - id: M-15
             runner: macos-15
             python: python3
             ate: N3
-            modo: como-esta
+            modo: novo
             opcoes: "--forcar-uv"
           - id: M-15I
             runner: macos-15-intel
             python: python3
             ate: N4
-            modo: como-esta
+            modo: novo
             opcoes: ""
     steps:
       - name: Baixar o repositório

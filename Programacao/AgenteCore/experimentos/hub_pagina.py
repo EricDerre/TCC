@@ -59,8 +59,7 @@ def inline(texto: str) -> str:
 
 def _celulas(linha: str) -> list[str]:
     s = linha.strip()
-    if s.startswith("|"):
-        s = s[1:]
+    s = s.removeprefix("|")
     if s.endswith("|") and not s.endswith("\\|"):
         s = s[:-1]
     return [c.strip().replace("\\|", "|") for c in _PIPE.split(s)]
@@ -237,6 +236,7 @@ def pagina() -> str:
         '<label class="campo">Procurar <input id="filtro-texto" type="search" placeholder="caso, causa, título"></label>',
         '<label class="campo marcar"><input id="filtro-sem-veredito" type="checkbox"> só sem veredito</label>',
         '<span id="contagem-de-casos" class="contagem"></span>',
+        '<button type="button" id="abrir-ao-vivo">Corrida ao vivo</button>',
         '<p id="erro" role="alert" aria-live="assertive"></p>',
         "</header>",
         '<div class="corpo">',
@@ -252,6 +252,7 @@ def pagina() -> str:
         '<span id="aviso-de-iteracao" class="aviso"></span>',
         "</div>",
         '<div id="mudancas"></div>',
+        '<p id="trace-do-caso" class="nota"></p>',
         "</div>",
         '<nav class="abas" aria-label="Partes do caso">',
         '<button type="button" data-aba="relatorio">Relatório</button>',
@@ -302,6 +303,38 @@ def pagina() -> str:
         '<section id="aba-arvore" class="aba" hidden></section>',
         '<section id="aba-trilha" class="aba" hidden></section>',
         "</main>",
+        '<section id="ao-vivo" hidden>',
+        "<h1>Corrida ao vivo</h1>",
+        '<div class="cartao">',
+        "<h2>Barra de progresso</h2>",
+        '<p id="estado-ao-vivo" class="nota"></p>',
+        '<p id="etapa-ao-vivo"></p>',
+        '<div id="barra" class="barra" role="progressbar" aria-label="Progresso da inferência em andamento" aria-valuemin="0" aria-valuemax="100"><div id="barra-cheia"></div></div>',
+        '<p id="tempo-ao-vivo" class="nota"></p>',
+        "</div>",
+        '<div id="cerebro" class="cartao">',
+        "<h2>Cérebro ao vivo: o último diagnóstico</h2>",
+        '<div id="cerebro-conteudo"></div>',
+        '<button type="button" id="abrir-ultimo" hidden>Abrir este caso</button>',
+        "</div>",
+        '<div id="execucao" class="cartao">',
+        "<h2>Rodar os cenários</h2>",
+        '<p id="estado-da-execucao"></p>',
+        '<div class="linha-de-campos">',
+        ('<label class="campo">O que rodar <select id="selecao-da-corrida"><option value="todos">os dez cenários</option>'
+         '<option value="git">só os atingidos pelo que mudou no Git</option></select></label>'),
+        ('<label class="campo" id="campo-do-desde" hidden>Desde o commit <input id="desde-da-corrida" type="text" maxlength="40" autocomplete="off" '
+         'placeholder="o último testado"></label>'),
+        '<label class="campo" id="campo-das-repeticoes">Repetições de cada cenário <select id="repeticoes"></select></label>',
+        '<button type="button" id="rodar-cenarios" class="principal" hidden>Ativar o agente e rodar os cenários</button>',
+        '<button type="button" id="parar-corrida" hidden>Parar a corrida</button>',
+        '<button type="button" id="copiar-comando" hidden>Copiar o comando</button>',
+        "</div>",
+        '<div id="previa-da-selecao"></div>',
+        '<pre id="comando-da-corrida" hidden></pre>',
+        '<pre id="log-da-execucao" hidden></pre>',
+        "</div>",
+        "</section>",
         '<p id="vazio" class="nota">Escolha um caso na lista.</p>',
         "</div>",
         '<button type="button" id="comentar-trecho" hidden>Comentar o trecho</button>',
@@ -367,7 +400,14 @@ textarea{width:100%;resize:vertical}
 .etiqueta,.origem,.legenda-origem,.estado-da-conversa,.tipo,.rotulo,.bloqueante,.selo-modelo{display:inline-block;font:500 11px/1.5 var(--fm);border:1px solid var(--linha);border-radius:999px;padding:0 7px;white-space:nowrap}
 .conf-alto{color:var(--bom);border-color:var(--bom)}.conf-medio{color:var(--meio);border-color:var(--meio)}.conf-baixo,.alerta,.bloqueante{color:var(--ruim);border-color:var(--ruim)}
 .veredito{background:var(--acento);color:var(--bg2);border-color:var(--acento)}.conversa-ativa{color:var(--acento);border-color:var(--acento)}
-main{overflow-y:auto;padding:16px 20px 60px}
+main,#ao-vivo{overflow-y:auto;padding:16px 20px 60px}
+#abrir-ao-vivo.ativa{background:var(--acento);color:var(--bg2);border-color:var(--acento)}
+.barra,.trilho{height:14px;border:1px solid var(--linha);border-radius:999px;background:var(--bg);overflow:hidden}
+#barra-cheia{height:100%;width:0;background:var(--acento)}
+.alternativa{display:grid;grid-template-columns:minmax(120px,260px) minmax(60px,1fr) 150px;gap:10px;align-items:center;margin:5px 0}
+.trilho{height:10px}.trilho div{height:100%;background:var(--ink2)}.alternativa.escolhida .trilho div{background:var(--acento)}
+.alternativa .valor{font:13px var(--fm);color:var(--ink2)}
+#comando-da-corrida{user-select:all}
 #vazio{padding:24px}
 .nota{color:var(--ink2);font-size:13px}
 .aviso{font-size:13px;color:var(--meio)}
@@ -388,6 +428,9 @@ td code{overflow-wrap:anywhere}
 .bloco h3{margin-top:0}.bloco .conteudo p{margin:6px 0}.bloco .conteudo ul,.bloco .conteudo ol{margin:6px 0;padding-left:22px}
 .valor-do-analista{font-size:13px;color:var(--acento);font-weight:600;margin:6px 0 0}
 mark.trecho-comentado{background:var(--marca);color:inherit;border-radius:3px;padding:0 1px}
+mark.trecho-comentado.aceso{outline:2px solid var(--acento);outline-offset:1px}
+.conversa.acesa{box-shadow:0 0 0 2px var(--acento)}
+td,th,.contagem{font-variant-numeric:tabular-nums}
 mark.trecho-rascunho{background:none;color:inherit;border-bottom:2px dashed var(--meio)}
 .conversa{border:1px solid var(--linha);border-left:3px solid var(--acento);border-radius:8px;padding:8px 12px;margin:10px 0;background:var(--bg)}
 .conversa[data-estado=resolvida]{border-left-color:var(--bom)}.conversa[data-estado=nao_sera_tratada]{border-left-color:var(--ink2)}
@@ -415,7 +458,9 @@ tr.evento td:first-child{font-family:var(--fm)}
 details{border:1px solid var(--linha);border-radius:8px;padding:6px 10px;margin:8px 0;background:var(--bg2)}summary{cursor:pointer;font-weight:600}
 @media (max-width:1100px){.corpo{grid-template-columns:240px minmax(0,1fr)}.duas-colunas{grid-template-columns:minmax(0,1fr)}#evidencia{position:static;max-height:none}}
 @media (max-width:720px){body{height:auto}.corpo{display:block}.lateral{max-height:40vh}main{overflow:visible}}
-@media (prefers-reduced-motion:no-preference){.item-caso,button{transition:background-color .12s,border-color .12s,color .12s}}
+@media (prefers-reduced-motion:no-preference){.item-caso,button{transition:background-color .12s,border-color .12s,color .12s}
+.barra.indeterminada #barra-cheia{animation:vai-e-volta 1.4s ease-in-out infinite alternate}}
+@keyframes vai-e-volta{from{margin-left:0}to{margin-left:70%}}
 """
 
 
@@ -428,10 +473,15 @@ details{border:1px solid var(--linha);border-radius:8px;padding:6px 10px;margin:
 # trecho: se a posição não bate mais (o relatório de outra iteração tem outro texto), a página procura o trecho e, se não acha, avisa na
 # conversa em vez de marcar o lugar errado. O rascunho só vai ao servidor junto com o veredito, como a revisão pendente do GitHub
 # (levantamento §6.15.1). Todo texto digitado ou vindo da evidência entra por `textContent`; só o HTML que o servidor já escapou entra como marcação.
+# ! Alteração de IA - Revisar: (25/11/2026, etapa 3) o programa ganhou a vista "Corrida ao vivo" (a barra de progresso lida de `/api/ao-vivo`, o
+# último diagnóstico com as alternativas e os verbetes, e o botão de rodar ou o comando para copiar, por `/api/execucao`), relida sozinha a
+# cada dois segundos enquanto está aberta, o botão "Abrir a árvore de decisão" no comentário do agente e o atalho do trace no cabeçalho do caso.
+# ! Motivo: decisão 93 (o "Cérebro ao vivo" e o trace na falha) e plano, seção 3.6, item 7 (os botões). A releitura para quando a vista é
+# fechada ou a aba do navegador fica escondida, para o hub não ficar lendo o disco à toa durante uma corrida que já disputa a máquina.
 JS = r"""'use strict';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const E = {indice: null, caso: null, aba: 'relatorio', evidencia: null, ancora: null, selecao: null};
+const E = {indice: null, caso: null, aba: 'relatorio', evidencia: null, ancora: null, selecao: null, vista: 'casos', relogio: null, ultimo: null};
 const ABAS = ['relatorio', 'arvore', 'trilha'];
 
 function el(tag, props = {}, ...filhos) {
@@ -538,13 +588,14 @@ function atualizarItens(caso, resumo) {
 
 function lerEndereco() {
   const p = new URLSearchParams(location.hash.slice(1));
-  return {tid: p.get('caso'), aba: ABAS.includes(p.get('aba')) ? p.get('aba') : 'relatorio'};
+  return {tid: p.get('caso'), aba: ABAS.includes(p.get('aba')) ? p.get('aba') : 'relatorio', vista: p.get('vista') === 'ao-vivo' ? 'ao-vivo' : 'casos'};
 }
 
 function gravarEndereco() {
   const p = new URLSearchParams();
   if (E.caso) p.set('caso', E.caso.tid);
   p.set('aba', E.aba);
+  if (E.vista === 'ao-vivo') p.set('vista', 'ao-vivo');
   history.replaceState(null, '', '#' + p.toString());
 }
 
@@ -561,8 +612,6 @@ async function abrirCaso(tid, aba) {
 
 function desenharCaso() {
   const c = E.caso, main = $('#caso');
-  $('#vazio').hidden = true;
-  main.hidden = false;
   $('#titulo-do-caso').replaceChildren(...comCodigo(c.titulo));
   $('#meta-do-caso').textContent = c.corrida.rotulo + (c.corrida.descricao ? ' (' + c.corrida.descricao + ')' : '') + ' · ' + c.nome + ' · iteração ' + c.iteracao + ' de '
     + c.iteracoes.length + ' · modelo ' + c.corrida.modelo;
@@ -571,10 +620,20 @@ function desenharCaso() {
   $('#seletor-de-iteracao').value = c.tid;
   $('#aviso-de-iteracao').textContent = c.iteracao < c.iteracoes.length ? 'Há iteração mais nova: a ' + c.iteracoes.length + ' é a última.' : '';
   desenharMudancas();
+  const trace = $('#trace-do-caso');
+  trace.replaceChildren();
+  if (c.trace.existe) {
+    trace.append('Trace do Playwright da falha: ', el('a', {href: '/api/trace?tid=' + encodeURIComponent(c.tid), text: 'baixar ' + c.trace.arquivo}),
+      ' · para abrir no visualizador: ', el('code', {text: c.trace.comando}));
+  } else {
+    trace.append('Sem trace gravado: a corrida rodou com o trace desligado (o padrão), ou o roteiro não falhou neste caso.');
+  }
   const ag = c.comentario_do_agente;
+  const abrirArvore = el('button', {type: 'button', id: 'abrir-arvore', text: 'Abrir a árvore de decisão'});
+  abrirArvore.addEventListener('click', () => mostrarAba('arvore'));
   $('#comentario-do-agente').replaceChildren(
     el('p', {class: 'meta'}, el('span', {class: 'autor', text: ag.autor.nome}), ' · ' + quando(ag.ts) + ' · o agente só comenta: o veredito é do analista'),
-    el('p', {}, comCodigo(ag.texto)));
+    el('p', {}, comCodigo(ag.texto)), abrirArvore);
   $('#preambulo').innerHTML = c.relatorio.preambulo_html;
   $('#rastro').innerHTML = c.relatorio.rastro_html;
   desenharEvidencia();
@@ -583,8 +642,152 @@ function desenharCaso() {
   desenharRevisao();
   mostrarAba(ABAS.includes(E.aba) ? E.aba : 'relatorio');
   for (const li of $$('#lista-de-casos .item-caso')) li.classList.toggle('aberto', li.dataset.tid === c.tid);
+  mostrarVista('casos');
   main.scrollTop = 0;
   main.dataset.tid = c.tid;
+}
+
+// ---------------------------------------------------------------- a corrida ao vivo
+
+function mostrarVista(vista) {
+  E.vista = vista;
+  const vivo = vista === 'ao-vivo';
+  $('#ao-vivo').hidden = !vivo;
+  $('#caso').hidden = vivo || !E.caso;
+  $('#vazio').hidden = vivo || Boolean(E.caso);
+  $('#abrir-ao-vivo').classList.toggle('ativa', vivo);
+  $('#comentar-trecho').hidden = true;
+  if (vivo) {
+    atualizarAoVivo();
+    if (!E.relogio) E.relogio = setInterval(atualizarAoVivo, 2000);
+  } else if (E.relogio) {
+    clearInterval(E.relogio);
+    E.relogio = null;
+  }
+  gravarEndereco();
+}
+
+function segundos(s) {
+  if (typeof s !== 'number') return '';
+  return s < 90 ? Math.round(s) + ' s' : Math.floor(s / 60) + ' min ' + Math.round(s % 60) + ' s';
+}
+
+// ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) a escolha "o que rodar" (os dez cenários, ou só os atingidos pelo que mudou no
+// Git), o campo do commit de partida e a prévia do que a seleção rodaria e deixaria de fora, com o motivo de cada cenário.
+// ! Motivo: plano, seção 3.7: a seleção diz quais cenários rodar e por quê. A prévia é pedida quando a escolha muda, e não a cada releitura
+// da vista, para o hub não consultar o Git a cada dois segundos; o commit digitado só vai ao servidor junto com a seleção pelo Git.
+function opcoesDaCorrida() {
+  const selecao = $('#selecao-da-corrida').value;
+  return {selecao, desde: selecao === 'git' ? ($('#desde-da-corrida').value.trim() || null) : null, repeticoes: Number($('#repeticoes').value || 1)};
+}
+
+async function atualizarSelecao() {
+  const o = opcoesDaCorrida(), alvo = $('#previa-da-selecao');
+  $('#campo-do-desde').hidden = o.selecao !== 'git';
+  if (o.selecao !== 'git') { alvo.replaceChildren(); mostrarErro(''); return; }
+  let d;
+  try { d = await api('/api/selecao' + (o.desde ? '?desde=' + encodeURIComponent(o.desde) : '')); } catch (e) { mostrarErro(e.message); return; }
+  mostrarErro('');
+  const modo = {completa: 'completa: os ' + d.cenarios.length + ' cenários', selecionada: 'selecionada: ' + d.cenarios.length + ' cenários', nada: 'vazia: nada a rodar'}[d.modo] || d.modo;
+  const lista = (itens, porQue) => itens.length
+    ? el('ul', {}, itens.map(c => el('li', {}, el('code', {text: c}), porQue && porQue[c] && porQue[c].length ? ' · ' + porQue[c][0] : '')))
+    : el('p', {class: 'nota', text: 'nenhum'});
+  alvo.replaceChildren(
+    el('h3', {text: 'Pelo que mudou no Git, a corrida seria ' + modo}),
+    el('p', {text: d.motivo}),
+    el('p', {class: 'meta', text: 'Do commit ' + (d.commit_testado ? d.commit_testado.slice(0, 10) : 'nenhum (não há ponto de partida)') + ' até o commit '
+      + String(d.commit_atual || '').slice(0, 10) + (d.arvore_suja ? ', mais as alterações ainda não commitadas nas pastas das cobaias' : '') + '.'}),
+    el('h4', {text: 'Cenários que rodariam'}), lista(d.cenarios, d.por_que),
+    el('h4', {text: 'Deixados de fora, registrados para a conferência contra a rodada completa'}), lista(d.deixados_de_fora, null));
+}
+
+async function atualizarAoVivo() {
+  if (document.hidden) return;
+  const o = opcoesDaCorrida(), consulta = new URLSearchParams({selecao: o.selecao, repeticoes: String(o.repeticoes)});
+  if (o.desde) consulta.set('desde', o.desde);
+  let vivo, exec;
+  try { [vivo, exec] = await Promise.all([api('/api/ao-vivo'), api('/api/execucao?' + consulta.toString())]); } catch (e) { mostrarErro(e.message); return; }
+  desenharBarra(vivo);
+  desenharCerebro(vivo.ultimo_diagnostico || null);
+  desenharExecucao(exec);
+}
+
+function desenharBarra(v) {
+  const barra = $('#barra'), cheia = $('#barra-cheia');
+  if (!v.ha_corrida) {
+    $('#estado-ao-vivo').textContent = 'Nenhuma corrida gravou o estado da barra nesta pasta de resultados.';
+    $('#etapa-ao-vivo').textContent = '';
+    $('#tempo-ao-vivo').textContent = '';
+    barra.removeAttribute('aria-valuenow');
+    barra.classList.remove('indeterminada');
+    cheia.style.width = '0%';
+    return;
+  }
+  const p = v.progresso || {};
+  const rodando = {indeterminado: 'o modelo está trabalhando, ainda sem estimativa de tempo', determinado: 'o modelo está trabalhando'};
+  const parada = {concluido: 'a última inferência terminou', cancelado: 'a corrida foi cancelada', falhou: 'a última inferência falhou'};
+  const situacao = v.em_andamento ? (rodando[p.estado] || 'em andamento')
+    : (parada[p.estado] || 'parada: o estado da barra não é regravado há ' + segundos(v.idade_s));
+  $('#estado-ao-vivo').textContent = 'Corrida ' + v.pasta + ': ' + situacao + ' · ' + v.diagnosticos + (v.diagnosticos === 1 ? ' diagnóstico gravado' : ' diagnósticos gravados') + ' na trilha.';
+  $('#etapa-ao-vivo').textContent = p.etapa ? 'Etapa: ' + p.etapa + (v.em_andamento && p.fase ? ' · ' + (p.fase === 'prefill' ? 'lendo o caso' : 'escrevendo a resposta') : '') : '';
+  const pct = typeof p.fracao === 'number' ? Math.round(Math.max(0, Math.min(1, p.fracao)) * 100) : null;
+  if (pct === null) {
+    barra.removeAttribute('aria-valuenow');
+    barra.classList.toggle('indeterminada', v.em_andamento);
+    cheia.style.width = v.em_andamento ? '30%' : '0%';
+  } else {
+    barra.setAttribute('aria-valuenow', String(pct));
+    barra.classList.remove('indeterminada');
+    cheia.style.width = pct + '%';
+  }
+  const estimativa = p.estimativa_refeita_s || p.estimativa_s;
+  $('#tempo-ao-vivo').textContent = [typeof p.decorrido_s === 'number' ? 'decorrido ' + segundos(p.decorrido_s) : '',
+    typeof estimativa === 'number' ? 'estimativa de ' + segundos(estimativa) : '',
+    typeof p.inferencias_concluidas === 'number' ? p.inferencias_concluidas + (p.inferencias_concluidas === 1 ? ' inferência concluída' : ' inferências concluídas') : '']
+    .filter(Boolean).join(' · ');
+}
+
+function desenharCerebro(u) {
+  const alvo = $('#cerebro-conteudo');
+  E.ultimo = u && u.no_hub ? u.tid : null;
+  $('#abrir-ultimo').hidden = !E.ultimo;
+  if (!u) { alvo.replaceChildren(el('p', {class: 'nota', text: 'Nenhum diagnóstico gravado ainda nesta corrida.'})); return; }
+  const linhas = u.alternativas.map(a => {
+    const cheio = el('div');
+    cheio.style.width = (typeof a.probabilidade === 'number' ? Math.max(1, Math.round(a.probabilidade * 100)) : 0) + '%';
+    return el('div', {class: 'alternativa' + (a.escolhida ? ' escolhida' : '')}, el('code', {text: a.opcao}), el('div', {class: 'trilho'}, cheio),
+      el('span', {class: 'valor', text: typeof a.probabilidade === 'number' ? (a.probabilidade * 100).toFixed(1).replace('.', ',') + '%' : 'sem probabilidade lida'}));
+  });
+  alvo.replaceChildren(
+    el('p', {class: 'meta', text: u.nome + ' · ' + quando(u.ts)}),
+    el('h3', {}, comCodigo(u.titulo)),
+    el('p', {}, 'Causa respondida: ', el('code', {text: u.escolha || 'nenhuma'}), u.causa_em_palavras ? ' (' + u.causa_em_palavras + ')' : '', ' · confiança ' + u.confianca
+      + (u.divergencia ? ' · o que o modelo declarou não bate com o que o código conferiu' : '') + (u.cura ? ' · localizador curado' : '')),
+    el('h4', {text: 'Alternativas, com a probabilidade lida na causa'}), ...(linhas.length ? linhas : [el('p', {class: 'nota', text: 'A resposta não trouxe alternativas.'})]),
+    el('h4', {text: 'Verbetes entregues ao modelo'}), el('ul', {}, u.verbetes.map(v => el('li', {}, v.titulo + ' ', el('code', {text: v.id})))));
+}
+
+function desenharExecucao(x) {
+  const livre = x.permitida && !x.em_andamento;
+  $('#rodar-cenarios').hidden = !livre;
+  $('#campo-das-repeticoes').hidden = !livre;
+  $('#parar-corrida').hidden = !(x.permitida && x.em_andamento);
+  $('#comando-da-corrida').hidden = x.permitida;
+  $('#copiar-comando').hidden = x.permitida;
+  $('#comando-da-corrida').textContent = x.comando_sugerido;
+  if (!$('#repeticoes').options.length) for (const n of x.repeticoes) $('#repeticoes').append(el('option', {value: String(n), text: String(n)}));
+  $('#estado-da-execucao').textContent = !x.permitida
+    ? 'O hub foi aberto sem --permitir-execucao: copie o comando e rode na sua janela do PowerShell, na pasta experimentos, com o aplicativo Claude fechado.'
+    : x.em_andamento ? 'Corrida ' + x.saida + ' em andamento desde ' + quando(x.inicio) + '.'
+      : x.terminou ? 'A corrida ' + x.saida + ' terminou em ' + quando(x.fim) + ', com código ' + x.codigo + (x.parada_pelo_hub ? ' (parada pelo hub)' : '') + '.'
+        : 'Nenhuma corrida lançada pelo hub desde que ele foi aberto. A corrida chama o modelo e leva cerca de um minuto por cenário e repetição.';
+  $('#log-da-execucao').hidden = !x.log;
+  $('#log-da-execucao').textContent = x.log;
+}
+
+async function mandarExecucao(pedido) {
+  try { await api('/api/execucao', pedido); mostrarErro(''); } catch (e) { mostrarErro(e.message); }
+  await atualizarAoVivo();
 }
 
 function desenharMudancas() {
@@ -940,8 +1143,31 @@ async function iniciar() {
   document.addEventListener('mouseup', ev => { if (!(ev.target.closest && ev.target.closest('#comentar-trecho'))) setTimeout(aoSelecionar, 0); });
   document.addEventListener('keyup', ev => { if (ev.shiftKey || ev.key === 'Shift') setTimeout(aoSelecionar, 0); });
   $('#caso').addEventListener('scroll', () => { if (!$('#comentar-trecho').hidden) aoSelecionar(); });
-  const {tid, aba} = lerEndereco();
+  // o trecho comentado e a conversa dele se acendem juntos (ideia do realce ligado, do estudo do visual-explainer, decisão 126)
+  const acender = (ev, ligado) => {
+    const alvo = ev.target.closest ? ev.target.closest('[data-conversa]') : null;
+    if (!alvo) return;
+    const id = CSS.escape(alvo.dataset.conversa);
+    for (const m of $$('mark.trecho-comentado[data-conversa="' + id + '"]')) m.classList.toggle('aceso', ligado);
+    for (const c of $$('.conversa[data-conversa="' + id + '"]')) c.classList.toggle('acesa', ligado);
+  };
+  for (const [evento, ligado] of [['mouseover', true], ['focusin', true], ['mouseout', false], ['focusout', false]]) {
+    $('#aba-relatorio').addEventListener(evento, ev => acender(ev, ligado));
+  }
+  $('#abrir-ao-vivo').addEventListener('click', () => mostrarVista(E.vista === 'ao-vivo' ? 'casos' : 'ao-vivo'));
+  $('#abrir-ultimo').addEventListener('click', () => { if (E.ultimo) abrirCaso(E.ultimo); });
+  $('#rodar-cenarios').addEventListener('click', () => mandarExecucao({acao: 'rodar', ...opcoesDaCorrida()}));
+  for (const id of ['#selecao-da-corrida', '#desde-da-corrida', '#repeticoes']) {
+    $(id).addEventListener('change', async () => { if (id !== '#repeticoes') await atualizarSelecao(); atualizarAoVivo(); });
+  }
+  $('#parar-corrida').addEventListener('click', () => mandarExecucao({acao: 'parar'}));
+  $('#copiar-comando').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('#comando-da-corrida').textContent); $('#copiar-comando').textContent = 'Comando copiado'; }
+    catch (e) { mostrarErro('Não deu para copiar sozinho: selecione o comando e copie.'); }
+  });
+  const {tid, aba, vista} = lerEndereco();
   if (tid) await abrirCaso(tid, aba);
+  if (vista === 'ao-vivo') mostrarVista('ao-vivo');
 }
 
 iniciar();

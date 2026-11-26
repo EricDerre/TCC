@@ -971,6 +971,40 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn(f"{impacto['resumo']['selecao_parcial']} de {impacto['resumo']['pares']}", secao, "a página real traz a leitura")
         self.assertEqual(json.dumps(self.dados_t["progresso"], ensure_ascii=False)[:1], "{")
 
+    def teste_hub_e_selecao_pelo_git_usam_os_numeros_dos_json(self):
+        # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacotes Q6 e Q7) a aba "Hub e Git" lê hub.json (o que o hub central mostra: casos por corrida,
+        # iterações, listas da revisão e testes, de `hub.py --resumo`) e conferencia_git.json (a seleção de cenários pelo Git conferida contra a rodada completa,
+        # de `impacto_git.py --conferir-historico`); sem os arquivos, o estado vazio.
+        # ! Motivo: a regra do painel é uma aba por análise, lida do JSON versionado, e o grupo decide por ela: os números da aba têm de ser os dos arquivos gravados,
+        # e o texto novo do painel fala do grupo, sem o nome do autor.
+        self.assertIn("hub", [sid for _, abas in tp.NAV for sid, _, _ in abas])
+        for f in ("hubCorridas", "hubSelecao"):
+            self.assertIn(f"function {f}(", tp.JS_TOPICOS)
+            self.assertIn(f, tp.DESENHAR_TOPICOS["hub"])
+        self.assertIn("hub", pl.RESPOSTA_SIMPLES)
+        for g in ("g-hub-corridas", "g-hub-selecao"):
+            self.assertIn(g, pl.COMO_LER_GRAFICO)
+        _, vazia = tp.secao_hub(None, None)
+        self.assertIn('<section id="hub"', vazia)
+        self.assertIn("hub.py --resumo", vazia)
+        hub, conf = self.ctx.get("hub"), self.ctx.get("conferencia_git")
+        self.assertTrue(hub and conf, "hub.json e conferencia_git.json existem em resultados_alvo/fase4")
+        d, h = tp.secao_hub(hub, conf)
+        t, r = hub["total"], conf["resumo"]
+        for trecho in (f"{t['casos']} casos", f"{t['casos_distintos']} casos distintos", f"{hub['testes']['total']} testes", f"{r['pares_com_falha_perdida']} de {r['pares']}",
+                       "g-hub-corridas", "g-hub-selecao", "python hub.py", "--permitir-execucao", "--trace-na-falha", "--selecao git"):
+            self.assertIn(trecho, h, trecho)
+        self.assertEqual(d["corridas"]["casos"], [c["casos"] for c in hub["corridas"]])
+        self.assertEqual(d["corridas"]["rotulos"], [c["rotulo"] for c in hub["corridas"]])
+        self.assertEqual(d["selecao"]["deixados"], [len(p["deixados_de_fora"]) for p in conf["pares"]])
+        self.assertEqual(d["selecao"]["perdidas"], [len(p["falhas_perdidas"]) for p in conf["pares"]])
+        self.assertEqual(d["selecao"]["selecionados"], [len(p["selecionados"]) for p in conf["pares"]])
+        for proibido in ("—", "→", "Eric", "você"):
+            self.assertNotIn(proibido, h, proibido)
+        secao = self.html[self.html.index('<section id="hub"'):].split("</section>")[0]
+        self.assertIn(f"{t['casos']} casos", secao, "a página real traz a leitura")
+        self.assertEqual(json.dumps(self.dados_t["hub"], ensure_ascii=False)[:1], "{")
+
     def teste_revisao_v3_usa_os_numeros_do_json(self):
         # ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a aba "Revisão humana" lê leitura_revisao_v3.json (a sessão com revisor humano dos
         # relatórios v3 e das árvores da corrida 24, ficha 40 opção b): a adesão apropriada por grupo, o erro localizado, o tempo até a decisão, a utilidade e a

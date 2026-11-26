@@ -355,7 +355,11 @@ def teste_pacotes_por_familia():
     # ! Motivo: na rodada 20261119-134801 o script oficial do Ollama parou com "The following tools are required but missing:
     # - awk": a imagem do Fedora 45 para o WSL não traz o `awk`, e o instalador saiu com erro depois de o site já estar pronto.
     assert {"curl", "zstd", "gawk"} <= set(dnf["base"]), dnf["base"]
-    for sem_tabela in ("nao_suportado", "windows", "brew"):
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) `brew` sai da lista de famílias sem tabela de pacotes e ganha a tabela própria (`php` e `mariadb@11.8`).
+    # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: o macOS passa a seguir o fluxo por pacotes do Linux; a decisão do dono do projeto (decisão 161) é instalar o MariaDB pela fórmula `mariadb@11.8`, porque a fórmula `mariadb` já está na 13.1.2 e o `versoes.json` aceita só até a 13.0.
+    brew = sistema.pacotes("brew")
+    assert brew == {"base": [], "venv": [], "php": ["php"], "mariadb": ["mariadb@11.8"]}, brew
+    for sem_tabela in ("nao_suportado", "windows"):
         try:
             sistema.pacotes(sem_tabela)
         except ValueError as e:
@@ -863,11 +867,14 @@ def teste_build_exe_ps1_confere_o_resultado_e_entra_na_pasta_do_projeto():
 # ! Motivo: as opções do PHP por sistema passaram de `instalador/servicos.py` para `_env_common.php_extension_flags`; no Linux só o `output_buffering` (célula L-U2404, `Class "mysqli" not found` com `extension_dir=/usr/bin/ext`), e no Windows e no macOS a lista de sempre.
 def teste_env_php_extension_flags_por_sistema():
     assert env.php_extension_flags("/usr/bin/php", "Linux") == ["-d", "output_buffering=4096"]
-    for so in ("Windows", "Darwin"):
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o `Darwin` sai do laço que exige `extension_dir` e as extensões, e ganha a mesma lista do Linux.
+    # ! Motivo: o PHP do Homebrew traz mysqli, pdo_mysql e mbstring dentro do executável e não tem a pasta `ext` ao lado dele; forçar `extension_dir` para uma pasta que não existe é o defeito já visto no Ubuntu (`Class "mysqli" not found`). Este ponto não foi observado em execução no macOS: a primeira execução parou antes.
+    for so in ("Windows",):
         opcoes = env.php_extension_flags("/usr/bin/php", so)
         assert "extension=mysqli" in opcoes, so
         assert "extension=mbstring" in opcoes, so
         assert any(item.startswith("extension_dir=") for item in opcoes), so
+    assert env.php_extension_flags("/opt/homebrew/bin/php", "Darwin") == ["-d", "output_buffering=4096"]
 
 
 # ! Alteração de IA - Revisar: (19/11/2026, pacote I3) `teste_conferir_n1_ajusta_o_run_antes_de_subir` vira `teste_conferir_n1_nao_troca_as_opcoes_na_memoria`: o N1 não troca mais nada no `run.py` antes de subir os serviços.
@@ -1194,6 +1201,10 @@ def teste_ferramentas_chromium_sem_bibliotecas_no_melhor_esforco_so_avisa():
     from instalador import ferramentas
     original = (env.playwright_chromium_instalado, ferramentas.binarios_do_chromium, ferramentas.subprocess.run, env.log)
     mensagens: list[str] = []
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o teste fixa `env.OS_NAME` em "Linux" enquanto roda.
+    # ! Motivo: `instalar_chromium` só confere as bibliotecas com o `ldd` no Linux (o macOS não tem `ldd`); sem fixar, o teste dependia do sistema em que a bateria roda e, no Windows, não chegava à conferência.
+    os_original = env.OS_NAME
+    env.OS_NAME = "Linux"
     try:
         env.playwright_chromium_instalado = lambda: True
         ferramentas.binarios_do_chromium = lambda *a, **k: [Path("x")]
@@ -1208,6 +1219,7 @@ def teste_ferramentas_chromium_sem_bibliotecas_no_melhor_esforco_so_avisa():
             assert "libnss3.so" in str(e), str(e)
     finally:
         env.playwright_chromium_instalado, ferramentas.binarios_do_chromium, ferramentas.subprocess.run, env.log = original
+        env.OS_NAME = os_original
 
 
 def teste_ferramentas_bibliotecas_que_faltam():
@@ -1326,7 +1338,7 @@ def teste_ferramentas_preparar_ollama_fora_da_faixa_para():
 # ! Motivo: HL12 da célula L-U2404 de 18/11/2026: o `install.py` rodava os `.sql` antes de o serviço e o root do MariaDB estarem
 # prontos e parava em "Não foi possível subir o MariaDB" com o serviço no ar; a ordem dos passos precisa de teste que a trave. No pacote I3 os passos moram no `install.py`, e sem a troca de `gravar_passos` o teste gravaria `.ferramentas/instalacao/passos.json` dentro do repositório.
 def _gravadores_do_instalador(chamadas: list[str]) -> dict:
-    """Troca os passos do `instalar_no_linux` por gravadores e devolve o que precisa ser desfeito."""
+    """Troca os passos do `instalar_por_pacotes` por gravadores e devolve o que precisa ser desfeito."""
     from instalador import ferramentas
     alvos = [(ferramentas, "instalar_pacotes_do_sistema"), (ferramentas, "conferir_php"), (ferramentas, "subir_banco"),
              (ferramentas, "garantir_root_sem_senha"), (install, "apply_sql_files"), (install, "setup_cobaia_api"),
@@ -1354,15 +1366,17 @@ def teste_install_caminho_por_familia():
     assert install.caminho_para({"familia": "apt"}) == "apt"
     assert install.caminho_para({"familia": "dnf"}) == "dnf"
     assert install.caminho_para({"familia": "nao_suportado"}) == "nao_suportado"
-    for familia in ("windows", "brew"):
-        assert install.caminho_para({"familia": familia}) == "como_estava", familia
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) `brew` sai da lista que segue "como_estava" e passa a ter caminho próprio.
+    # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: pelo caminho antigo o instalador parou em "Não foi possível subir o MariaDB" com o `brew services start mariadb` já feito; o macOS passa a seguir o mesmo fluxo por pacotes do Linux. Só o Windows segue como estava.
+    assert install.caminho_para({"familia": "brew"}) == "brew"
+    assert install.caminho_para({"familia": "windows"}) == "como_estava"
 
 
 def teste_install_ordem_dos_passos_no_linux():
     chamadas: list[str] = []
     originais = _gravadores_do_instalador(chamadas)
     try:
-        install.instalar_no_linux({"familia": "apt"}, {})
+        install.instalar_por_pacotes({"familia": "apt"}, {})
     finally:
         _desfazer(originais)
     assert chamadas == ["instalar_pacotes_do_sistema", "conferir_php", "subir_banco", "garantir_root_sem_senha",
@@ -1377,7 +1391,7 @@ def teste_install_sem_cliente_do_banco_e_falha():
     try:
         install.find_mysql_cli = lambda: None
         try:
-            install.instalar_no_linux({"familia": "apt"}, {})
+            install.instalar_por_pacotes({"familia": "apt"}, {})
             raise AssertionError("sem cliente do banco tinha de levantar Falha")
         except ferramentas.Falha:
             pass
@@ -1388,7 +1402,7 @@ def teste_install_sem_cliente_do_banco_e_falha():
 def teste_install_main_no_windows_roda_os_passos_do_windows():
     chamadas: list[int] = []
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Windows")),
-                        (install, "instalar_no_windows_ou_mac", lambda: chamadas.append(1)),
+                        (install, "instalar_no_windows", lambda: chamadas.append(1)),
                         (install, "log", lambda texto="": None), (install, "gravar_passos", _sem_gravar_passos)])
     try:
         assert install.main([]) == 0
@@ -1402,7 +1416,7 @@ def teste_install_main_no_windows_roda_os_passos_do_windows():
 def teste_install_main_reproduzir_no_windows_avisa():
     mensagens: list[str] = []
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Windows")),
-                        (install, "instalar_no_windows_ou_mac", lambda: None),
+                        (install, "instalar_no_windows", lambda: None),
                         (install, "log", lambda texto="": mensagens.append(texto)), (install, "gravar_passos", _sem_gravar_passos)])
     try:
         assert install.main(["--reproduzir"]) == 0
@@ -1421,7 +1435,7 @@ def teste_install_main_devolve_1_quando_um_passo_falha():
         raise ferramentas.Falha("x")
 
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Linux", UBUNTU_2404)),
-                        (install, "instalar_no_linux", falhar), (install, "eh_root", lambda: False),
+                        (install, "instalar_por_pacotes", falhar), (install, "eh_root", lambda: False),
                         (install, "log", lambda texto="": None), (install, "gravar_passos", _sem_gravar_passos)])
     try:
         assert install.main([]) == 1
@@ -1437,7 +1451,7 @@ UBUNTU_2404 = {"ID": "ubuntu", "VERSION_ID": "24.04", "PRETTY_NAME": "Ubuntu 24.
 def teste_install_main_recusa_root_no_apt():
     chamadas: list[int] = []
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Linux", UBUNTU_2404)),
-                        (install, "instalar_no_linux", lambda info, ferr: chamadas.append(1)),
+                        (install, "instalar_por_pacotes", lambda info, ferr: chamadas.append(1)),
                         (install, "eh_root", lambda: True), (install, "log", lambda texto="": None),
                         (install, "gravar_passos", _sem_gravar_passos)])
     try:
@@ -1450,7 +1464,10 @@ def teste_install_main_recusa_root_no_apt():
 def teste_install_main_no_mac_sem_homebrew_avisa_e_para():
     chamadas: list[int] = []
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Darwin", tem_brew=False)),
-                        (install, "instalar_no_windows_ou_mac", lambda: chamadas.append(1)),
+                        (install, "instalar_no_windows", lambda: chamadas.append(1)),
+                        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o teste também vigia `instalar_por_pacotes`, que é o caminho do macOS agora.
+                        # ! Motivo: sem o Homebrew o instalador tem de parar antes de qualquer passo, inclusive o fluxo por pacotes que o macOS passou a seguir.
+                        (install, "instalar_por_pacotes", lambda info, ferr: chamadas.append(2)),
                         (install, "log", lambda texto="": None), (install, "gravar_passos", _sem_gravar_passos)])
     try:
         assert install.main([]) == 1
@@ -1464,7 +1481,7 @@ def teste_install_main_devolve_1_quando_o_install_py_sai():
         raise SystemExit(1)
 
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Linux", UBUNTU_2404)),
-                        (install, "instalar_no_linux", sair), (install, "eh_root", lambda: False),
+                        (install, "instalar_por_pacotes", sair), (install, "eh_root", lambda: False),
                         (install, "log", lambda texto="": None), (install, "gravar_passos", _sem_gravar_passos)])
     try:
         assert install.main([]) == 1
@@ -1478,8 +1495,8 @@ def teste_install_main_sem_suporte_imprime_a_lista_e_devolve_1():
     chamadas: list[str] = []
     mensagens: list[str] = []
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Linux", {"ID": "arch", "PRETTY_NAME": "Arch Linux"})),
-                        (install, "instalar_no_windows_ou_mac", lambda: chamadas.append("instalar_no_windows_ou_mac")),
-                        (install, "instalar_no_linux", lambda info, ferr: chamadas.append("instalar_no_linux")),
+                        (install, "instalar_no_windows", lambda: chamadas.append("instalar_no_windows")),
+                        (install, "instalar_por_pacotes", lambda info, ferr: chamadas.append("instalar_por_pacotes")),
                         (install, "log", lambda texto="": mensagens.append(texto)),
                         (install, "gravar_passos", _sem_gravar_passos)])
     try:
@@ -1495,7 +1512,7 @@ def teste_install_main_no_fedora_instala_pelo_dnf():
     recebidas: list = []
     info_fedora = sistema.familia("Linux", {"ID": "fedora", "VERSION_ID": "45", "PRETTY_NAME": "Fedora Linux 45"})
     original = _trocar([(sistema, "detectar", lambda: info_fedora), (install, "eh_root", lambda: False),
-                        (install, "instalar_no_linux", lambda info, ferr: recebidas.append(info)),
+                        (install, "instalar_por_pacotes", lambda info, ferr: recebidas.append(info)),
                         (install, "relatar_versoes", lambda ferr, reproduzir: []),
                         (install, "log", lambda texto="": None), (install, "gravar_passos", _sem_gravar_passos)])
     try:
@@ -1534,7 +1551,7 @@ def teste_install_main_sair_sem_erro_devolve_zero():
         raise saida["erro"]
 
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Linux", UBUNTU_2404)),
-                        (install, "instalar_no_linux", sair), (install, "eh_root", lambda: False),
+                        (install, "instalar_por_pacotes", sair), (install, "eh_root", lambda: False),
                         (install, "log", lambda texto="": mensagens.append(texto)),
                         (install, "gravar_passos", _sem_gravar_passos)])
     try:
@@ -1605,7 +1622,7 @@ def teste_install_main_grava_os_passos_com_o_resultado():
 
     from instalador import ferramentas
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Linux", UBUNTU_2404)),
-                        (install, "instalar_no_linux", linux), (install, "instalar_no_windows_ou_mac", windows),
+                        (install, "instalar_por_pacotes", linux), (install, "instalar_no_windows", windows),
                         (install, "relatar_versoes", lambda ferr, reproduzir: []), (install, "eh_root", lambda: False),
                         (install, "log", lambda texto="": None),
                         (install, "gravar_passos", lambda resultado, pasta=None: gravados.append(resultado))])
@@ -1640,7 +1657,7 @@ def teste_install_main_sem_argumentos_nao_le_a_linha_de_comando():
 
     argv_original = sys.argv
     original = _trocar([(sistema, "detectar", lambda: sistema.familia("Windows")), (conferir, "main", nao_chamar),
-                        (install, "instalar_no_windows_ou_mac", lambda: None), (install, "log", lambda texto="": None),
+                        (install, "instalar_no_windows", lambda: None), (install, "log", lambda texto="": None),
                         (install, "gravar_passos", lambda resultado, pasta=None: gravados.append(resultado))])
     try:
         sys.argv = ["Cobaia.exe", "--conferir"]
@@ -2180,7 +2197,9 @@ def teste_fixa_windows_ensure_mariadb_running_sobe_o_servidor_como_processo():
         esperas.append((args, kwargs))
         return True
 
-    original = _trocar([(env, "OS_NAME", "Windows"), (env, "_can_connect", lambda cli: False),
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) o teste passa a trocar `env.porta_ocupada` por "livre".
+    # ! Motivo: `ensure_mariadb_running` agora olha a porta 3306 antes de subir o servidor; sem a troca, um MariaDB ou MySQL de verdade ligado na máquina que roda a bateria faria este teste falhar.
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "_can_connect", lambda cli: False), (env, "porta_ocupada", lambda *a, **k: False),
                         (env, "find_mariadbd_server", lambda: r"C:\m\bin\mariadbd.exe"),
                         (env, "find_mariadb_datadir_config", lambda: r"C:\p\.mariadb\data\my.ini"),
                         (env.subprocess, "Popen", popen), (env, "wait_for_mariadb", espera),
@@ -2353,6 +2372,9 @@ def teste_fixa_windows_ensure_mariadb_installed():
     original = _trocar([(install, "OS_NAME", "Windows"), (install, "log", lambda msg: None),
                         (install, "find_mysql_cli", lambda: "cli"),
                         (install, "usar_mariadb_portatil", lambda *a, **k: True),
+                        # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) este teste passa a trocar `mysql_que_nao_e_mariadb` por uma função que não acha MySQL nenhum.
+                        # ! Motivo: `ensure_mariadb_installed` agora procura um `mysql` no PATH da máquina onde a bateria roda (e rodaria `mysql --version` de verdade); aqui o caso é "sem MySQL", o fluxo de antes. O caso com MySQL tem teste próprio, logo abaixo.
+                        (install, "mysql_que_nao_e_mariadb", lambda: None),
                         (install, "instalar_mariadb_portatil", lambda *a, **k: portateis.append(comandos[:])),
                         (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(codigo[0]))])
     try:
@@ -2382,22 +2404,199 @@ def teste_fixa_windows_ensure_mariadb_installed():
         _destrocar(original)
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) testes novos de `eh_do_mariadb`, das três buscas (`find_mysql_cli`, `find_mariadbd_server`, `find_mariadb_admin`), de `mysql_que_nao_e_mariadb`, do aviso e do zip portátil quando só existe o MySQL, de `usar_mariadb_portatil(tem_mysql=True)` e dos dois lançadores do Windows (`install.ps1` e `install.cmd`).
+# ! Motivo: execução 45650086543 do GitHub Actions (célula CI-WIN, Windows Server 2025): o executor traz o MySQL 8.4 no PATH, o log disse "Cliente MariaDB/MySQL já disponível: C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE", o instalador tentou subir o `mysqld.EXE` do MySQL e parou em "Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo."; e o `install.cmd` saiu com código 0 mesmo assim, porque o `install.ps1` não devolvia o código do `install.py` e o `install.cmd` terminava em `pause`. Nenhum destes testes roda `mysql`, `mariadb`, `winget` nem rede: o `--version` e o PATH são trocados por gravadores.
+def _tabela_de_path(tabela: dict):
+    """`which_any` de mentira: devolve o primeiro nome da chamada que está na tabela."""
+    return lambda *nomes: next((tabela[n] for n in nomes if n in tabela), None)
+
+
+def _versao_de_mentira(texto: str, codigo: int = 0):
+    """`subprocess.run` de mentira para `eh_do_mariadb`: devolve o texto como saída do `--version`."""
+    chamadas: list = []
+
+    def falso(comando, **kwargs):
+        chamadas.append((comando, kwargs))
+        r = _Resultado(codigo, texto)
+        return r
+    falso.chamadas = chamadas
+    return falso
+
+
+def teste_eh_do_mariadb_le_o_texto_do_version():
+    mysql = "mysql  Ver 8.4.13 for Win64 on x86_64 (MySQL Community Server - GPL)"
+    novo = "mariadb from 11.8.9-MariaDB, client 15.2 for Win64 (AMD64)"
+    antigo = "mysql  Ver 15.1 Distrib 10.6.18-MariaDB, for debian-linux-gnu (x86_64) using  EditLine wrapper"
+    falso = _versao_de_mentira(mysql)
+    original = _trocar([(env.subprocess, "run", falso)])
+    try:
+        assert env.eh_do_mariadb(r"C:\mysql.exe") is False
+        assert falso.chamadas[0][0] == [r"C:\mysql.exe", "--version"]
+        assert falso.chamadas[0][1].get("timeout") == 30
+        assert falso.chamadas[0][1].get("stdin") == subprocess.DEVNULL
+        env.subprocess.run = _versao_de_mentira(novo)
+        assert env.eh_do_mariadb("x") is True
+        env.subprocess.run = _versao_de_mentira(antigo)
+        assert env.eh_do_mariadb("x") is True
+        env.subprocess.run = _versao_de_mentira("MARIADB 11")
+        assert env.eh_do_mariadb("x") is True
+
+        def nao_roda(*args, **kwargs):
+            raise FileNotFoundError("sem o executável")
+        env.subprocess.run = nao_roda
+        assert env.eh_do_mariadb("x") is False
+
+        def demora(*args, **kwargs):
+            raise subprocess.TimeoutExpired("x", 30)
+        env.subprocess.run = demora
+        assert env.eh_do_mariadb("x") is False
+    finally:
+        _destrocar(original)
+
+
+def teste_buscas_do_mariadb_usam_o_nome_proprio_sem_chamar_o_version():
+    # No Debian e no Ubuntu o `mariadb` existe no PATH: vale direto, sem rodar `--version` (as células de Linux já provadas).
+    tabela = {"mariadb": "/usr/bin/mariadb", "mariadbd": "/usr/sbin/mariadbd", "mariadb-admin": "/usr/bin/mariadb-admin",
+              "mysql": "/usr/bin/mysql"}
+    for so in ("Linux", "Windows"):
+        original = _trocar([(env, "OS_NAME", so), (env, "which_any", _tabela_de_path(tabela)),
+                            (env, "eh_do_mariadb", _levanta), (env, "find_by_glob", _levanta)])
+        try:
+            assert env.find_mysql_cli() == "/usr/bin/mariadb"
+            assert env.find_mariadbd_server() == "/usr/sbin/mariadbd"
+            assert env.find_mariadb_admin() == "/usr/bin/mariadb-admin"
+        finally:
+            _destrocar(original)
+
+
+def teste_buscas_do_mariadb_recusam_o_mysql_do_path():
+    # Caso do executor do Windows: só há o MySQL 8.4 no PATH.
+    pasta = r"C:\Program Files\MySQL\MySQL Server 8.4\bin"
+    tabela = {"mysql": pasta + r"\mysql.EXE", "mysqld": pasta + r"\mysqld.EXE", "mysqladmin": pasta + r"\mysqladmin.EXE"}
+    consultados: list = []
+
+    def eh(executavel):
+        consultados.append(executavel)
+        return False
+
+    portatil = r"C:\Users\x\AppData\Local\MariaDB\mariadb-11.8.9-winx64\bin"
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "which_any", _tabela_de_path(tabela)),
+                        (env, "eh_do_mariadb", eh), (env, "find_by_glob", lambda *p: None)])
+    try:
+        assert env.find_mysql_cli() is None
+        assert env.find_mariadbd_server() is None
+        assert env.find_mariadb_admin() is None
+        assert consultados == [pasta + r"\mysql.EXE", pasta + r"\mysqld.EXE", pasta + r"\mysqladmin.EXE"], consultados
+        # Com o MariaDB portátil extraído, a busca cai nele e devolve o dele, nunca o do MySQL.
+        env.find_by_glob = lambda *p: portatil + r"\mariadb.exe" if "mariadb.exe" in p[-1] else None
+        assert env.find_mysql_cli() == portatil + r"\mariadb.exe"
+        # Se o `mysql` do PATH for mesmo do MariaDB (instalação antiga), é aceito.
+        env.eh_do_mariadb = lambda executavel: True
+        env.find_by_glob = _levanta
+        assert env.find_mysql_cli() == pasta + r"\mysql.EXE"
+        assert env.find_mariadbd_server() == pasta + r"\mysqld.EXE"
+        assert env.find_mariadb_admin() == pasta + r"\mysqladmin.EXE"
+    finally:
+        _destrocar(original)
+
+
+def teste_mysql_que_nao_e_mariadb():
+    original = _trocar([(env, "which_any", _tabela_de_path({"mysql": r"C:\m\mysql.EXE"})), (env, "eh_do_mariadb", lambda e: False)])
+    try:
+        assert env.mysql_que_nao_e_mariadb() == r"C:\m\mysql.EXE"
+        env.eh_do_mariadb = lambda e: True
+        assert env.mysql_que_nao_e_mariadb() is None
+        env.which_any = _tabela_de_path({})
+        env.eh_do_mariadb = _levanta
+        assert env.mysql_que_nao_e_mariadb() is None
+    finally:
+        _destrocar(original)
+
+
+def teste_usar_mariadb_portatil_com_mysql_na_maquina():
+    # Com MySQL na máquina o zip vale mesmo com administrador (o MSI do winget brigaria pela porta 3306 com o serviço do MySQL).
+    assert install.usar_mariadb_portatil(so="Windows", admin=True, ambiente={}, tem_mysql=True) is True
+    assert install.usar_mariadb_portatil(so="Windows", admin=False, ambiente={}, tem_mysql=True) is True
+    assert install.usar_mariadb_portatil(so="Windows", admin=True, ambiente={}, tem_mysql=False) is False
+    # A variável continua mandando primeiro.
+    assert install.usar_mariadb_portatil(so="Windows", admin=False, ambiente={"COBAIA_MARIADB_PORTATIL": "0"}, tem_mysql=True) is False
+    assert install.usar_mariadb_portatil(so="Windows", admin=True, ambiente={"COBAIA_MARIADB_PORTATIL": "1"}, tem_mysql=True) is True
+    # Fora do Windows nada muda.
+    assert install.usar_mariadb_portatil(so="Linux", admin=False, ambiente={}, tem_mysql=True) is False
+
+
+def teste_ensure_mariadb_installed_com_mysql_avisa_e_usa_o_zip():
+    mensagens: list = []
+    comandos: list = []
+    portateis: list = []
+    pedidos: list = []
+
+    def usar(*args, **kwargs):
+        pedidos.append(kwargs)
+        return kwargs.get("tem_mysql", False)
+
+    original = _trocar([(install, "OS_NAME", "Windows"), (install, "log", mensagens.append),
+                        (install, "find_mysql_cli", _respostas(None, r"C:\m\bin\mariadb.exe")),
+                        (install, "mysql_que_nao_e_mariadb", lambda: r"C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE"),
+                        (install, "usar_mariadb_portatil", usar),
+                        (install, "instalar_mariadb_portatil", lambda *a, **k: portateis.append(1)),
+                        (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(0))])
+    try:
+        assert install.ensure_mariadb_installed() == r"C:\m\bin\mariadb.exe"
+        assert comandos == [] and portateis == [1], (comandos, portateis)
+        assert pedidos == [{"tem_mysql": True}], pedidos
+        texto = "\n".join(mensagens)
+        assert r"C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE" in texto
+        assert "3306" in texto and "não mexe no MySQL" in texto and "MariaDB portátil" in texto, texto
+        assert "MariaDB/MySQL" not in texto
+        # Sem MySQL: nada de aviso e `tem_mysql` falso.
+        mensagens.clear()
+        pedidos.clear()
+        install.mysql_que_nao_e_mariadb = lambda: None
+        install.find_mysql_cli = _respostas(None, "cli")
+        install.ensure_mariadb_installed()
+        assert pedidos == [{"tem_mysql": False}], pedidos
+        assert not any("MySQL" in m for m in mensagens), mensagens
+        # Cliente do MariaDB já achado: a mensagem nova.
+        mensagens.clear()
+        install.find_mysql_cli = lambda: "cli"
+        assert install.ensure_mariadb_installed() == "cli"
+        assert mensagens == ["Cliente do MariaDB já disponível: cli"], mensagens
+    finally:
+        _destrocar(original)
+
+
+def teste_lancadores_do_windows_devolvem_o_codigo_de_saida():
+    ps1 = (RAIZ / "install.ps1").read_bytes()
+    assert ps1[:3] == b"\xef\xbb\xbf", "install.ps1 precisa de BOM UTF-8"
+    texto = ps1.decode("utf-8-sig")
+    assert "\u2014" not in texto, "travessão no install.ps1"
+    linhas = [l.strip() for l in texto.splitlines() if l.strip() and not l.strip().startswith("#")]
+    assert linhas[-2] == '& $py (Join-Path $PSScriptRoot "install.py") @args', linhas[-2]
+    assert linhas[-1] == "exit $LASTEXITCODE", linhas[-1]
+    cmd = (RAIZ / "install.cmd").read_bytes()
+    assert all(b < 128 for b in cmd), "install.cmd tem byte acima de 127"
+    comandos = [l.strip() for l in cmd.decode("ascii").splitlines() if l.strip() and not l.strip().lower().startswith("rem")]
+    assert comandos[-3:] == ['set "COBAIA_CODIGO=%ERRORLEVEL%"', "pause", "exit /b %COBAIA_CODIGO%"], comandos[-3:]
+    # O `-File ... %*` continua passando os argumentos adiante.
+    assert any("install.ps1" in c and "%*" in c for c in comandos)
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) `teste_fixa_windows_ensure_ollama` muda de propósito: `ensure_ollama` no Windows só procura o Ollama e não chama mais o `winget`.
+# ! Motivo: antes o teste fixava `winget install --id Ollama.Ollama`; o Ollama do Windows passa a vir de `instalador/ferramentas.preparar_ollama` (script oficial, versão testada), porque o `winget` instala a versão do dia e não a testada do `versoes.json`, e o `ollama pull` seguinte não esperava o servidor nem conferia o resultado. Nenhuma célula gravou falha do `winget`: a máquina do GitHub Actions tem o `winget` v1.11.510 (`estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844). (motivo reescrito em 25/11/2026, consertos da revisão). Nada disso foi observado em execução ainda.
 def teste_fixa_windows_ensure_ollama():
     comandos: list = []
-    winget = ["winget", "install", "--id", "Ollama.Ollama", "-e", "--accept-package-agreements", "--accept-source-agreements"]
-    original = _trocar([(install, "OS_NAME", "Windows"), (install, "log", lambda msg: None),
+    mensagens: list = []
+    original = _trocar([(install, "OS_NAME", "Windows"), (install, "log", mensagens.append),
                         (install, "find_ollama", lambda: "ollama.exe"),
                         (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(0))])
     try:
         assert install.ensure_ollama() == "ollama.exe"
         assert comandos == []
-        install.find_ollama = _respostas(None, "ollama.exe")
-        assert install.ensure_ollama() == "ollama.exe"
-        assert comandos == [winget]
-        comandos.clear()
         install.find_ollama = lambda: None
         assert install.ensure_ollama() is None
-        assert comandos == [winget]
+        assert comandos == [], comandos
+        assert any("preparar_ollama" in m for m in mensagens), mensagens
     finally:
         _destrocar(original)
 
@@ -2433,9 +2632,13 @@ def teste_fixa_windows_setup_cobaia_api():
         _destrocar(original)
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) `teste_fixa_windows_setup_agente_core` muda de propósito: depois do Chromium o Ollama e o modelo vêm de `ferramentas.preparar_ollama(versoes.carregar())`, e não mais de `ensure_ollama` mais um `ollama pull` solto.
+# ! Motivo: o `ollama pull` do `setup_agente_core` antigo não tinha o resultado conferido (um `pull` que falhava passava em silêncio), e o `winget` instala a versão do dia do Ollama, e não a testada do `versoes.json` (a máquina do GitHub Actions tem o `winget` v1.11.510, pelo `estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844: nenhuma célula gravou falha dele); `preparar_ollama` confere a versão, espera o servidor responder e levanta `Falha` se o `pull` falha. Nada disso foi observado em execução ainda.
 def teste_fixa_windows_setup_agente_core():
+    from instalador import ferramentas
     comandos: list = []
     mensagens: list = []
+    preparos: list = []
     pasta = _pasta_temporaria()
     (pasta / "requirements.txt").write_text("playwright\n", encoding="utf-8")
     (pasta / ".venv").mkdir()
@@ -2443,49 +2646,36 @@ def teste_fixa_windows_setup_agente_core():
     req = pasta / "requirements.txt"
     pip = str(venv / "Scripts" / "pip.exe")
     python_venv = str(venv / "Scripts" / "python.exe")
-    estado = {"chromium": False, "ollama": "ollama.exe", "modelo": False}
-    modelo_anterior = os.environ.pop("COBAIA_MODELO_LLM", None)
+    estado = {"chromium": False}
     original = _trocar([(install, "OS_NAME", "Windows"), (install, "IS_FROZEN", False), (install, "AGENTE_CORE", pasta),
                         (install, "log", mensagens.append),
                         (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(0)),
                         (install, "playwright_chromium_instalado", lambda: estado["chromium"]),
-                        (install, "ensure_ollama", lambda: estado["ollama"]),
-                        (install, "modelo_llm_ja_baixado", lambda ollama, modelo: estado["modelo"])])
+                        (install, "ensure_ollama", _levanta), (install, "modelo_llm_ja_baixado", _levanta),
+                        (ferramentas, "preparar_ollama", lambda ferr, *a, **kw: preparos.append(ferr) or "ollama.exe")])
     try:
         install.setup_agente_core()
-        assert comandos == [[pip, "install", "-r", str(req)], [python_venv, "-m", "playwright", "install", "chromium"],
-                            ["ollama.exe", "pull", "qwen2.5:7b"]], comandos
-        # COBAIA_MODELO_LLM manda no nome do modelo.
+        assert comandos == [[pip, "install", "-r", str(req)], [python_venv, "-m", "playwright", "install", "chromium"]], comandos
+        assert preparos == [versoes.carregar()], preparos
+        # Chromium já na máquina: só o pip, e o Ollama e o modelo continuam por `preparar_ollama`.
         comandos.clear()
-        os.environ["COBAIA_MODELO_LLM"] = "x:1"
-        install.setup_agente_core()
-        assert comandos[-1] == ["ollama.exe", "pull", "x:1"], comandos
-        os.environ.pop("COBAIA_MODELO_LLM")
-        # Chromium e modelo já na máquina: só o pip.
-        comandos.clear()
+        preparos.clear()
         estado["chromium"] = True
-        estado["modelo"] = True
         install.setup_agente_core()
         assert comandos == [[pip, "install", "-r", str(req)]], comandos
-        # Sem Ollama não há pull.
-        comandos.clear()
-        estado["ollama"] = None
-        estado["modelo"] = False
-        install.modelo_llm_ja_baixado = _levanta
-        install.setup_agente_core()
-        assert comandos == [[pip, "install", "-r", str(req)]], comandos
+        assert len(preparos) == 1
+        # Nenhum comando do passo chama o winget.
+        assert not any("winget" in str(c) for c in comandos)
         # Sem requirements.txt nada roda.
         comandos.clear()
+        preparos.clear()
         mensagens.clear()
         install.AGENTE_CORE = _pasta_temporaria()
         install.setup_agente_core()
-        assert comandos == []
+        assert comandos == [] and preparos == []
         assert any("AgenteCore ainda não implementado" in m for m in mensagens)
     finally:
         _destrocar(original)
-        os.environ.pop("COBAIA_MODELO_LLM", None)
-        if modelo_anterior is not None:
-            os.environ["COBAIA_MODELO_LLM"] = modelo_anterior
 
 
 class _RespostaSql:
@@ -2720,6 +2910,134 @@ def teste_celula_actions_veredito_e_resumo():
     assert "—" not in texto and "→" not in texto
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) testes novos do preparo `remover-mysql` da célula: a tabela `PREPAROS`, `rodar_preparo` (log, códigos, não para no primeiro erro, não roda fora do Linux), a chave `preparo` do `celula.json`, o resumo com o preparo e o estado inicial, o relatório com o preparo da rodada e o `importar_actions` aceitando a chave nova.
+# ! Motivo: na execução 45650086543 a célula `CI-UBU` parou porque o `apt-get install --no-remove ... mariadb-server` respondeu "The following packages will be REMOVED: mysql-client mysql-client-8.0 ... mysql-server-8.0 ... E: Packages need to be removed but remove is disabled." (o executor já traz o MySQL 8.0). A célula passa a tirar o MySQL antes do instalador; o teste garante que só os seis pacotes que o `apt-get` listou saem (o `mysql-common` fica, o MariaDB do Ubuntu depende dele) e que a remoção aparece na evidência, sem rodar `sudo` de verdade.
+def _com_subprocess_gravado(sistema: str, codigos: dict | None = None):
+    """Troca `subprocess.run` e `platform.system` de `celula_actions` por gravadores; devolve (chamadas, restaurar)."""
+    chamadas: list = []
+    original_run, original_system = celula_actions.subprocess.run, celula_actions.platform.system
+
+    class _R:
+        def __init__(self, comando):
+            self.returncode = (codigos or {}).get(" ".join(comando), 0)
+            self.stdout = f"saida de {comando[-1]}\n".encode("utf-8")
+
+    def run(comando, **kw):
+        chamadas.append((list(comando), kw))
+        return _R(comando)
+
+    celula_actions.subprocess.run = run
+    celula_actions.platform.system = lambda: sistema
+
+    def restaurar():
+        celula_actions.subprocess.run, celula_actions.platform.system = original_run, original_system
+    return chamadas, restaurar
+
+
+def teste_celula_actions_preparo_remover_mysql_tem_os_tres_comandos():
+    ca = celula_actions
+    comandos = ca.PREPAROS["remover-mysql"]
+    assert len(comandos) == 3 and ca.PREPAROS.get("nenhum", []) == []
+    assert comandos[0] == ["sudo", "systemctl", "stop", "mysql"]
+    assert comandos[1][:6] == ["sudo", "env", "DEBIAN_FRONTEND=noninteractive", "apt-get", "remove", "-y"] and "--purge" in comandos[1]
+    pacotes = comandos[1][comandos[1].index("--purge") + 1:]
+    assert pacotes == ["mysql-server", "mysql-server-8.0", "mysql-server-core-8.0", "mysql-client", "mysql-client-8.0",
+                       "mysql-client-core-8.0"], pacotes
+    assert not any("mysql-common" in p for c in comandos for p in c), "o mysql-common fica: o MariaDB do Ubuntu depende dele"
+    assert comandos[2] == ["sudo", "rm", "-rf", "/var/lib/mysql", "/var/lib/mysql-files", "/var/lib/mysql-keyring"]
+    assert all(isinstance(c, list) for c in comandos), "sem shell: lista de listas"
+
+
+def teste_celula_actions_rodar_preparo_grava_log_e_codigos():
+    ca = celula_actions
+    pasta = _pasta_temporaria()
+    chamadas, restaurar = _com_subprocess_gravado("Linux", {"sudo systemctl stop mysql": 5})
+    try:
+        feito = ca.rodar_preparo("remover-mysql", pasta, {"PATH": "x"})
+    finally:
+        restaurar()
+    assert feito["nome"] == "remover-mysql" and "pulado" not in feito
+    assert [c["codigo"] for c in feito["comandos"]] == [5, 0, 0], "não para no primeiro erro"
+    assert feito["comandos"][0]["comando"] == "sudo systemctl stop mysql"
+    assert [c[0] for c in chamadas] == ca.PREPAROS["remover-mysql"]
+    for _, kw in chamadas:
+        assert kw["stdin"] == ca.subprocess.DEVNULL and kw["timeout"] == 600 and kw["env"] == {"PATH": "x"}
+    log = (pasta / "preparo.log").read_text(encoding="utf-8")
+    assert "sudo systemctl stop mysql" in log and "saida de mysql" in log and "apt-get remove" in log
+    assert "código 5" in log and "código 0" in log, log
+    # sem preparo: nada roda e nada é gravado
+    chamadas, restaurar = _com_subprocess_gravado("Linux")
+    try:
+        nenhum = ca.rodar_preparo("nenhum", pasta, {})
+    finally:
+        restaurar()
+    assert nenhum == {"nome": "nenhum", "comandos": []} and chamadas == []
+
+
+def teste_celula_actions_preparo_fora_do_linux_nao_roda_nada():
+    ca = celula_actions
+    for sistema in ("Windows", "Darwin"):
+        pasta = _pasta_temporaria()
+        chamadas, restaurar = _com_subprocess_gravado(sistema)
+        try:
+            feito = ca.rodar_preparo("remover-mysql", pasta, {})
+        finally:
+            restaurar()
+        assert chamadas == [] and feito == {"nome": "remover-mysql", "comandos": [], "pulado": "só no Linux"}, (sistema, feito)
+
+
+def teste_celula_actions_celula_json_traz_o_preparo():
+    ca = celula_actions
+    inicio = datetime(2026, 11, 26, 12, 0, 0)
+    sem = ca.montar_celula("CI-UBU", "N3", "m", False, inicio, inicio, {}, {}, modo="novo", terminou=False)
+    assert sem["preparo"] == {"nome": "nenhum", "comandos": []}
+    preparo = {"nome": "remover-mysql", "comandos": [{"comando": "sudo systemctl stop mysql", "codigo": 0}]}
+    com = ca.montar_celula("CI-UBU", "N3", "m", False, inicio, inicio, {}, {}, modo="novo", terminou=True, preparo=preparo)
+    assert com["preparo"] == preparo
+    json.dumps(com)
+
+
+def teste_celula_actions_resumo_mostra_o_preparo_e_o_estado_inicial():
+    ca = celula_actions
+    celula = {"id": "CI-UBU", "ate": "N3", "imagem": "GitHub Actions: Linux X64, imagem ubuntu24 1", "saidas": {"instalador": "0"},
+              "preparo": {"nome": "remover-mysql", "comandos": [{"comando": "a", "codigo": 5}, {"comando": "b", "codigo": 0}]}}
+    estado = "\n".join(f"linha {i}" for i in range(200))
+    texto = ca.resumo_em_markdown(celula, None, "x", "y", estado)
+    assert "- Preparo antes do instalador: remover-mysql (códigos: 5, 0)" in texto, texto
+    assert "<details><summary>Estado inicial da máquina</summary>" in texto
+    assert "linha 119" in texto and "linha 120" not in texto, "até 120 linhas"
+    sem = ca.resumo_em_markdown({**celula, "preparo": {"nome": "nenhum", "comandos": []}}, None, "x", "y", "so uma")
+    assert "Preparo antes do instalador" not in sem and "so uma" in sem
+    antigo = {k: v for k, v in celula.items() if k != "preparo"}
+    assert "Preparo antes do instalador" not in ca.resumo_em_markdown(antigo, None, "x", "y")
+    assert "—" not in texto and "→" not in texto
+
+
+def teste_relatorio_mostra_o_preparo_da_rodada():
+    celulas = _pasta_temporaria() / "celulas"
+    for carimbo_, preparo in (("20261126-120000", {"nome": "remover-mysql", "comandos": []}), ("20261126-130000", None)):
+        pasta = celulas / "CI-UBU" / carimbo_
+        pasta.mkdir(parents=True)
+        dados = {"id": "CI-UBU", "modo": "novo", "ate": "N3", "terminou": True, "actions": {"commit": "a" * 40}}
+        if preparo:
+            dados["preparo"] = preparo
+        (pasta / "celula.json").write_text(json.dumps(dados), encoding="utf-8")
+    rodadas = relatorio.coletar(celulas)
+    assert [r["preparo"] for r in rodadas] == ["remover-mysql", "nenhum"], "rodada antiga, sem a chave, vale sem preparo"
+    texto = relatorio.bloco_matriz(relatorio.por_celula(rodadas))
+    assert texto.count("preparo remover-mysql") == 1, texto
+    nasce = relatorio.CELULAS["CI-UBU"][1]
+    assert "MySQL 8.0" in nasce and "remove" in nasce and "antes do instalador" in nasce, nasce
+
+
+def teste_importar_actions_aceita_celula_json_com_preparo():
+    base = _pasta_temporaria()
+    dados = {**json.loads(_CELULA_JSON_CERTO), "preparo": {"nome": "remover-mysql", "comandos": [{"comando": "x", "codigo": 0}]}}
+    pacote = _zip_de_rodada(base, {"CI-UBU/20261126-120000/celula.json": json.dumps(dados)})
+    gravadas = importar_actions.importar(pacote, base / "celulas")
+    assert importar_actions.conferir_rodada(gravadas[0]) == []
+
+
 def teste_instalador_yml_tem_as_quatro_celulas_e_guarda_a_evidencia():
     texto = (RAIZ / ".github" / "workflows" / "instalador.yml").read_text(encoding="utf-8")
     assert "\t" not in texto, "YAML não aceita tabulação"
@@ -2728,9 +3046,14 @@ def teste_instalador_yml_tem_as_quatro_celulas_e_guarda_a_evidencia():
                    "id: CI-UBU", "id: CI-WIN", "id: M-15", "id: M-15I",
                    "runner: ubuntu-24.04", "runner: windows-2025", "runner: macos-15", "runner: macos-15-intel",
                    "ferramentas/instalador_matriz/celula_actions.py", "actions/upload-artifact@", "if: always()", "celula-${{ matrix.id }}",
-                   "modo: como-esta", "modo: novo", '--modo "${{ matrix.modo }}"', "cancel-in-progress: false", "repositório é público"):
+                   "modo: novo",'--modo "${{ matrix.modo }}"', "cancel-in-progress: false", "repositório é público"):
         assert pedaco in texto, pedaco
     assert "cancel-in-progress: true" not in texto
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) o teste passa a exigir `--preparo remover-mysql` na CI-UBU, o modo `novo` nas quatro células e as ações na versão 4.
+    # ! Motivo: sem o preparo a CI-UBU para no `apt-get install --no-remove` (o executor traz o MySQL 8.0); as três outras células ganham os consertos no mesmo commit, então nenhuma fica mais em `como-esta`.
+    assert '"--forcar-uv --preparo remover-mysql"' in texto
+    assert texto.count("modo: novo") == 4 and "modo: como-esta" not in texto.split("matrix:")[1]
+    assert "actions/checkout@v4" in texto and "actions/upload-artifact@v4" in texto
 
 
 # ! Alteração de IA - Revisar: (25/11/2026, pacote I7) testes novos do `importar_actions.py`: traz uma rodada de um zip para a pasta `celulas/`, e recusa o que não é evidência (sem `celula.json`, sem tag, `id` diferente da pasta, nome de pasta fora do formato, regravação, caminho que sai da pasta).
@@ -3032,6 +3355,543 @@ def teste_relatorio_do_repositorio_bate_com_as_evidencias():
     for fixa in relatorio.CELULAS:
         if fixa.startswith(("L-", "ALVO")):
             assert any(r["id"] == fixa for r in rodadas), f"{fixa} devia ter rodada"
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, Tarefa C) testes novos do macOS pelo fluxo por pacotes: tabela do `brew`, busca do MariaDB nas pastas `opt` do Homebrew, `formula_do_mariadb`, `subir_servico_no_macos`, `ensure_mariadb_running` e `ensure_root_no_password` no `Darwin`, `php_extension_flags` no `Darwin`, `pacotes_desejados`, `pacote_instalado`, `comando_de_instalar` e `instalar_pacotes_do_sistema` na família `brew`, `instalar_chromium` sem `ldd` fora do Linux, `main` no macOS e os passos do Windows que perderam o ramo do macOS.
+# ! Motivo: execuções M-15 e M-15I (macOS 15) do GitHub Actions de 25/11/2026 (execução 45650086543): o `brew install mariadb` e o `brew services start mariadb` deram certo, mas o root do MariaDB só entra pelo usuário root do sistema ("you need to be system 'root' user to connect"); `wait_for_mariadb` leu a recusa como banco fora do ar, tentou subir um segundo `mariadbd` como processo e o instalador parou em "Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo." A decisão do dono do projeto (decisão 161, 25/11/2026) é o macOS seguir o fluxo por família e o MariaDB vir da fórmula `mariadb@11.8`. Nenhum destes testes chama `brew`, `sudo`, rede nem banco: `subprocess.run`, `env.run`, `which_any`, `find_by_glob` e `OS_NAME` são trocados por gravadores. Nada disto foi observado em execução no macOS: a primeira execução parou antes.
+def teste_env_formula_do_mariadb():
+    assert env.formula_do_mariadb("mariadb", "/opt/homebrew/Cellar/mariadb@11.8/11.8.9/bin/mariadb") == "mariadb@11.8"
+    assert env.formula_do_mariadb("mariadb", "/usr/local/Cellar/mariadb/13.1.2/bin/mariadb") == "mariadb"
+    assert env.formula_do_mariadb("mariadb", "/opt/homebrew/opt/mariadb@11.8/bin/mariadb") == "mariadb@11.8"
+    assert env.formula_do_mariadb("mariadb", "/qualquer/lugar/bin/mariadb") == "mariadb"
+    assert env.formula_do_mariadb("mariadb", "/opt/homebrew/opt/mariadb@10.11/bin/mariadb") == "mariadb@10.11"
+
+
+def teste_env_buscas_do_mariadb_no_macos_olham_as_pastas_do_homebrew():
+    padroes: list = []
+    original = _trocar([(env, "OS_NAME", "Darwin"), (env, "which_any", lambda *nomes: None),
+                        (env, "find_by_glob", lambda *p: padroes.append(p))])
+    try:
+        for funcao, executavel in (("find_mysql_cli", "mariadb"), ("find_mariadbd_server", "mariadbd"),
+                                   ("find_mariadb_admin", "mariadb-admin")):
+            padroes.clear()
+            assert getattr(env, funcao)() is None, funcao
+            assert padroes == [(f"/opt/homebrew/opt/mariadb@*/bin/{executavel}",
+                                f"/usr/local/opt/mariadb@*/bin/{executavel}")], (funcao, padroes)
+        # Achado nas pastas do Homebrew: devolve o caminho.
+        env.find_by_glob = lambda *p: "/opt/homebrew/opt/mariadb@11.8/bin/mariadb"
+        assert env.find_mysql_cli() == "/opt/homebrew/opt/mariadb@11.8/bin/mariadb"
+        # Achado no PATH: nem olha as pastas.
+        env.which_any = lambda *nomes: "/opt/homebrew/bin/mariadb"
+        env.find_by_glob = _levanta
+        assert env.find_mysql_cli() == "/opt/homebrew/bin/mariadb"
+    finally:
+        _destrocar(original)
+
+
+def teste_ferramentas_brew_so_pede_o_que_ainda_nao_existe():
+    achados = {"php": None, "cli": None}
+    original = _trocar([(env, "find_php", lambda: achados["php"]), (env, "find_mysql_cli", lambda: achados["cli"]),
+                        (env, "run", env.run), (ferramentas.subprocess, "run", ferramentas.subprocess.run)])
+    try:
+        assert ferramentas.pacotes_desejados("brew", False) == ["php", "mariadb@11.8"]
+        achados["php"] = "/opt/homebrew/bin/php"
+        assert ferramentas.pacotes_desejados("brew", False) == ["mariadb@11.8"]
+        achados["cli"] = "/opt/homebrew/bin/mariadb"
+        assert ferramentas.pacotes_desejados("brew", False) == []
+        # Com os dois achados, o `brew` não é chamado (nem para perguntar o que está instalado).
+        env.run = _levanta
+        ferramentas.subprocess.run = _levanta
+        assert ferramentas.instalar_pacotes_do_sistema({"familia": "brew"}) == []
+    finally:
+        _destrocar(original)
+
+
+def teste_ferramentas_pacote_instalado_e_comando_no_brew():
+    comandos: list = []
+    resultado = {"valor": _Resultado(0, "php 8.4.1\n")}
+    original = _trocar([(ferramentas.subprocess, "run", lambda comando, **kw: comandos.append(comando) or resultado["valor"])])
+    try:
+        assert ferramentas.pacote_instalado("php", "brew") is True
+        assert comandos[-1] == ["brew", "list", "--versions", "php"], comandos
+        resultado["valor"] = _Resultado(0, "")
+        assert ferramentas.pacote_instalado("mariadb@11.8", "brew") is False
+        resultado["valor"] = _Resultado(1, "")
+        assert ferramentas.pacote_instalado("php", "brew") is False
+    finally:
+        _destrocar(original)
+    # O Homebrew se recusa a rodar como root: o comando não leva `sudo`, mesmo que o prefixo venha preenchido.
+    assert ferramentas.comando_de_instalar(["php", "mariadb@11.8"], [], "brew") == ["brew", "install", "php", "mariadb@11.8"]
+    assert ferramentas.comando_de_instalar(["php"], ["sudo"], "brew") == ["brew", "install", "php"]
+
+
+def teste_ferramentas_instalar_pacotes_pelo_brew_nao_usa_sudo():
+    comandos: list = []
+    original = _trocar([(ferramentas, "pacotes_desejados", lambda familia, falta_venv: ["php", "mariadb@11.8"]),
+                        (ferramentas, "pacotes_que_faltam", lambda pacotes, *a, **k: ["mariadb@11.8"]),
+                        (ferramentas, "como_root", _levanta),
+                        (env, "run", lambda comando, **kw: comandos.append(comando) or _Resultado(0))])
+    try:
+        assert ferramentas.instalar_pacotes_do_sistema({"familia": "brew"}) == ["mariadb@11.8"]
+        assert comandos == [["brew", "install", "mariadb@11.8"]], comandos
+        env.run = lambda comando, **kw: _Resultado(1)
+        try:
+            ferramentas.instalar_pacotes_do_sistema({"familia": "brew"})
+            raise AssertionError("o brew saindo com erro tinha de levantar Falha")
+        except ferramentas.Falha as e:
+            assert "Homebrew" in str(e) and "mariadb@11.8" in str(e) and "apt" not in str(e) and "dnf" not in str(e), str(e)
+    finally:
+        _destrocar(original)
+
+
+def teste_ferramentas_aviso_do_root_vale_para_o_macos():
+    assert "do Linux" not in ferramentas.AVISO_DO_ROOT and "do sistema" in ferramentas.AVISO_DO_ROOT
+
+
+def teste_ferramentas_chromium_no_macos_nao_chama_o_ldd():
+    comandos: list = []
+    original = _trocar([(env, "OS_NAME", "Darwin"), (env, "playwright_chromium_instalado", lambda: False),
+                        (env, "run", lambda comando, **kw: comandos.append(comando) or _Resultado(0)),
+                        (ferramentas.subprocess, "run", _levanta), (ferramentas, "binarios_do_chromium", _levanta),
+                        (env, "log", lambda texto="": None)])
+    try:
+        ferramentas.instalar_chromium(Path("/v/bin/python"), {"familia": "brew", "suporte": "suportado"})
+        assert comandos == [[str(Path("/v/bin/python")), "-m", "playwright", "install", "chromium"]], comandos
+    finally:
+        _destrocar(original)
+
+
+def teste_env_subir_servico_no_macos():
+    comandos: list = []
+    mensagens: list = []
+    estado = {"respostas": iter([False, True])}
+    original = _trocar([(env, "OS_NAME", "Darwin"), (env, "banco_no_ar", lambda cli: next(estado["respostas"])),
+                        (env, "run", lambda comando, **kw: comandos.append(comando) or _Resultado(0)),
+                        (env.subprocess, "Popen", _levanta), (env, "log", mensagens.append)])
+    try:
+        cli = "/opt/homebrew/opt/mariadb@11.8/bin/mariadb"
+        # Sobe depois do `brew services start` da fórmula a que o cliente pertence (e não sempre `mariadb`).
+        assert env.subir_servico_no_macos(cli) is True
+        assert comandos == [["brew", "services", "start", "mariadb@11.8"]], comandos
+        # Já no ar: não roda nada.
+        comandos.clear()
+        env.banco_no_ar = lambda c: True
+        assert env.subir_servico_no_macos(cli) is True
+        assert comandos == []
+        # Não responde: devolve False, diz qual comando rodou, e não sobe servidor como processo (o `Popen` levanta).
+        env.banco_no_ar = lambda c: False
+        assert env.subir_servico_no_macos(cli, espera_s=0) is False
+        assert comandos == [["brew", "services", "start", "mariadb@11.8"]], comandos
+        assert any("brew services start mariadb@11.8" in m for m in mensagens), mensagens
+    finally:
+        _destrocar(original)
+
+
+def teste_env_ensure_mariadb_running_no_macos_nao_inicia_processo():
+    chamadas: list = []
+    original = _trocar([(env, "OS_NAME", "Darwin"), (env, "_can_connect", lambda cli: False),
+                        (env, "subir_servico_no_macos", lambda cli: chamadas.append(cli) or True),
+                        (env, "wait_for_mariadb", _levanta), (env, "run", _levanta), (env.subprocess, "Popen", _levanta),
+                        (env, "find_mariadbd_server", _levanta)])
+    try:
+        assert env.ensure_mariadb_running("mariadb") is True
+        assert chamadas == ["mariadb"], chamadas
+        env.subir_servico_no_macos = lambda cli: False
+        assert env.ensure_mariadb_running("mariadb") is False
+    finally:
+        _destrocar(original)
+
+
+def teste_env_ensure_root_no_password_no_macos_tenta_sem_sudo_primeiro():
+    comandos: list = []
+    mensagens: list = []
+    codigos = iter([1, 0])
+    conexoes = iter([False, True])
+    original = _trocar([(env, "OS_NAME", "Darwin"), (env, "_can_connect", lambda cli: next(conexoes)),
+                        (env.subprocess, "run", lambda comando, **kw: comandos.append(comando) or _Resultado(next(codigos))),
+                        (env, "log", mensagens.append)])
+    try:
+        assert env.ensure_root_no_password("mariadb") is True
+        assert len(comandos) == 2, comandos
+        assert comandos[0][:2] == ["mariadb", "-e"] and "ALTER USER" in comandos[0][2], comandos[0]
+        assert comandos[1][:5] == ["sudo", "mariadb", "-u", "root", "-e"], comandos[1]
+        assert not any("TCP" in m for m in mensagens), mensagens
+        # A conta do usuário que instalou resolve de primeira: o `sudo` nem é chamado.
+        comandos.clear()
+        codigos = iter([0])
+        conexoes = iter([False, True])
+        assert env.ensure_root_no_password("mariadb") is True
+        assert len(comandos) == 1 and comandos[0][0] == "mariadb", comandos
+    finally:
+        _destrocar(original)
+
+
+def teste_env_ensure_root_no_password_no_linux_continua_so_com_sudo():
+    comandos: list = []
+    conexoes = iter([False, True])
+    original = _trocar([(env, "OS_NAME", "Linux"), (env, "_can_connect", lambda cli: next(conexoes)),
+                        (env.subprocess, "run", lambda comando, **kw: comandos.append(comando) or _Resultado(0)),
+                        (env, "log", lambda texto="": None)])
+    try:
+        assert env.ensure_root_no_password("mariadb") is True
+        assert len(comandos) == 1 and comandos[0][:5] == ["sudo", "mariadb", "-u", "root", "-e"], comandos
+    finally:
+        _destrocar(original)
+
+
+def teste_install_main_no_macos_segue_o_fluxo_por_pacotes():
+    recebidas: list = []
+    info_mac = sistema.familia("Darwin", tem_brew=True)
+    original = _trocar([(sistema, "detectar", lambda: info_mac), (install, "eh_root", lambda: False),
+                        (install, "instalar_por_pacotes", lambda info, ferr: recebidas.append(info)),
+                        (install, "instalar_no_windows", _levanta),
+                        (install, "relatar_versoes", lambda ferr, reproduzir: []),
+                        (install, "log", lambda texto="": None), (install, "gravar_passos", _sem_gravar_passos)])
+    try:
+        assert install.main([]) == 0
+        assert recebidas == [info_mac], recebidas
+        # Como root o Homebrew se recusa a rodar: o instalador para antes de qualquer passo.
+        recebidas.clear()
+        install.eh_root = lambda: True
+        assert install.main([]) == 1
+        assert recebidas == []
+    finally:
+        _destrocar(original)
+
+
+def teste_install_ordem_dos_passos_na_familia_brew():
+    chamadas: list[str] = []
+    originais = _gravadores_do_instalador(chamadas)
+    try:
+        install.instalar_por_pacotes({"familia": "brew"}, {})
+    finally:
+        _desfazer(originais)
+    assert chamadas == ["instalar_pacotes_do_sistema", "conferir_php", "subir_banco", "garantir_root_sem_senha",
+                        "apply_sql_files", "conferir_pasta_da_venv", "setup_cobaia_api", "conferir_venv",
+                        "preparar_agente"], chamadas
+
+
+def teste_install_reproduzir_so_avisa_no_windows():
+    mensagens: list[str] = []
+    original = _trocar([(sistema, "detectar", lambda: sistema.familia("Windows")),
+                        (install, "instalar_no_windows", lambda: None),
+                        (install, "log", mensagens.append), (install, "gravar_passos", _sem_gravar_passos)])
+    try:
+        assert install.main(["--reproduzir"]) == 0
+        aviso = [m for m in mensagens if "--conferir --reproduzir" in m]
+        assert aviso and "macOS" not in aviso[0], aviso
+    finally:
+        _destrocar(original)
+
+
+def teste_install_passos_do_windows_nao_tem_mais_ramo_do_macos():
+    mensagens: list[str] = []
+    comandos: list = []
+    original = _trocar([(install, "OS_NAME", "Darwin"), (install, "log", mensagens.append),
+                        (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(0)),
+                        (install, "find_php", lambda: None), (install, "find_mysql_cli", lambda: None),
+                        (install, "mysql_que_nao_e_mariadb", lambda: None), (install, "find_ollama", lambda: None)])
+    try:
+        _sai_com_1(install.ensure_php)
+        _sai_com_1(install.ensure_mariadb_installed)
+        assert install.ensure_ollama() is None
+        assert comandos == [], comandos
+        assert sum("Linux e macOS" in m for m in mensagens) == 3, mensagens
+    finally:
+        _destrocar(original)
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) testes novos do Ollama do Windows pelo script oficial: `roteiro_do_ollama`, `instalar_ollama` nos dois sistemas, a falha do download e do script, a mensagem de atualização à mão, o `setup_agente_core` sem `winget` e a `Falha` do caminho do Windows virando código 1.
+# ! Motivo: `install.ensure_ollama` rodava `winget install --id Ollama.Ollama`, que instala a versão do dia, e o projeto testou uma só (seção 3.2 do plano aprovado: "Ollama na versão testada"); o `ollama pull` seguinte rodava sem esperar o servidor responder e sem ninguém conferir o resultado. Nenhuma célula gravou falha do `winget`: a máquina do GitHub Actions tem o `winget` v1.11.510 (`estado_inicial.txt` da célula CI-WIN, rodada 20261125-155844). (motivo reescrito em 25/11/2026, consertos da revisão). Nada disso foi observado em execução ainda: a segunda execução do fluxo é a que prova.
+def teste_ferramentas_roteiro_do_ollama_nos_dois_sistemas():
+    from instalador import ferramentas
+    url, arquivo, comando = ferramentas.roteiro_do_ollama("Windows")
+    assert url == "https://ollama.com/install.ps1" == ferramentas.OLLAMA_SCRIPT_DO_WINDOWS
+    assert arquivo == ferramentas.RAIZ / ".ferramentas" / "ollama" / "install.ps1", arquivo
+    assert comando == ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", str(arquivo)], comando
+    for so in ("Linux", "Darwin"):
+        url, arquivo, comando = ferramentas.roteiro_do_ollama(so)
+        assert url == "https://ollama.com/install.sh" == ferramentas.OLLAMA_SCRIPT
+        assert arquivo == ferramentas.RAIZ / ".ferramentas" / "ollama" / "install.sh", arquivo
+        assert comando == ["sh", str(arquivo)], comando
+    original = _trocar([(env, "OS_NAME", "Windows")])
+    try:
+        assert ferramentas.roteiro_do_ollama()[0] == ferramentas.OLLAMA_SCRIPT_DO_WINDOWS
+    finally:
+        _destrocar(original)
+
+
+def teste_ferramentas_instalar_ollama_no_windows_roda_o_powershell():
+    from instalador import ferramentas
+    baixados: list = []
+    rodados: list = []
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "log", lambda texto="": None),
+                        (install, "baixar_arquivo", lambda url, destino: baixados.append((url, destino)) or 1),
+                        (env, "run", lambda comando, **kw: rodados.append((comando, kw)) or _Resultado(0))])
+    try:
+        ferramentas.instalar_ollama("0.40.2")
+    finally:
+        _destrocar(original)
+    _, arquivo, comando = ferramentas.roteiro_do_ollama("Windows")
+    assert baixados == [("https://ollama.com/install.ps1", arquivo)], baixados
+    assert len(rodados) == 1 and rodados[0][0] == comando, rodados
+    assert rodados[0][1]["env"]["OLLAMA_VERSION"] == "0.40.2", rodados
+    assert "winget" not in str(rodados)
+
+
+def teste_ferramentas_instalar_ollama_fora_do_windows_continua_pelo_sh():
+    from instalador import ferramentas
+    baixados: list = []
+    rodados: list = []
+    original = _trocar([(env, "OS_NAME", "Linux"), (env, "log", lambda texto="": None),
+                        (install, "baixar_arquivo", lambda url, destino: baixados.append(url) or 1),
+                        (env, "run", lambda comando, **kw: rodados.append((comando, kw)) or _Resultado(0))])
+    try:
+        ferramentas.instalar_ollama("0.40.2")
+    finally:
+        _destrocar(original)
+    assert baixados == ["https://ollama.com/install.sh"], baixados
+    assert rodados[0][0][0] == "sh" and rodados[0][1]["env"]["OLLAMA_VERSION"] == "0.40.2", rodados
+
+
+def teste_ferramentas_instalar_ollama_falha_no_download_e_no_script():
+    from instalador import ferramentas
+
+    def baixar_com_erro(url, destino):
+        raise OSError("sem rede")
+
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "log", lambda texto="": None),
+                        (install, "baixar_arquivo", baixar_com_erro), (env, "run", _levanta)])
+    try:
+        try:
+            ferramentas.instalar_ollama("0.40.2")
+            raise AssertionError("download com erro tinha de levantar Falha")
+        except ferramentas.Falha as e:
+            assert "install.ps1" in str(e) and "sem rede" in str(e), str(e)
+        install.baixar_arquivo = lambda url, destino: 1
+        env.run = lambda comando, **kw: _Resultado(1)
+        try:
+            ferramentas.instalar_ollama("0.40.2")
+            raise AssertionError("script com erro tinha de levantar Falha")
+        except ferramentas.Falha as e:
+            assert "saiu com erro" in str(e), str(e)
+    finally:
+        _destrocar(original)
+
+
+def teste_ferramentas_ollama_fora_da_faixa_ensina_o_comando_do_sistema():
+    from instalador import ferramentas
+    ferr = versoes.carregar()
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "find_ollama", lambda: "ollama.exe"),
+                        (ferramentas, "versao_do_ollama", lambda ollama: "0.1.0")])
+    try:
+        try:
+            ferramentas.preparar_ollama(ferr, {})
+            raise AssertionError("Ollama fora da faixa tinha de levantar Falha")
+        except ferramentas.Falha as e:
+            texto = str(e)
+        assert f'$env:OLLAMA_VERSION="{ferr["ollama"]["testada"]}"; irm https://ollama.com/install.ps1 | iex' in texto, texto
+        assert "curl" not in texto, texto
+        env.OS_NAME = "Linux"
+        try:
+            ferramentas.preparar_ollama(ferr, {})
+        except ferramentas.Falha as e:
+            assert "curl -fsSL https://ollama.com/install.sh | OLLAMA_VERSION=" in str(e), str(e)
+    finally:
+        _destrocar(original)
+
+
+def teste_install_main_falha_do_ollama_no_windows_vira_codigo_1():
+    from instalador import ferramentas
+    mensagens: list[str] = []
+    gravados: list[str] = []
+
+    def falhar():
+        raise ferramentas.Falha("o script do Ollama saiu com erro; a mensagem dele está logo acima.")
+
+    original = _trocar([(sistema, "detectar", lambda: sistema.familia("Windows")), (install, "instalar_no_windows", falhar),
+                        (install, "log", lambda texto="": mensagens.append(texto)),
+                        (install, "gravar_passos", lambda resultado, pasta=None: gravados.append(resultado))])
+    try:
+        assert install.main([]) == 1
+    finally:
+        _destrocar(original)
+    assert "Instalação interrompida: o script do Ollama saiu com erro; a mensagem dele está logo acima." in mensagens, mensagens
+    assert gravados == ["interrompida"], gravados
+
+
+def teste_install_ensure_ollama_nao_instala_mais_no_windows_nem_chama_winget():
+    codigo = "\n".join(l for l in inspect.getsource(install.ensure_ollama).splitlines() if not l.lstrip().startswith("#"))
+    assert "winget" not in codigo, codigo
+    codigo = "\n".join(l for l in inspect.getsource(install.setup_agente_core).splitlines() if not l.lstrip().startswith("#"))
+    assert "winget" not in codigo and "preparar_ollama" in codigo, codigo
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa E) testes novos do Mac com processador Intel como melhor esforço: `sistema.familia` com `maquina`, o nome do sistema, o aviso de `instalar_e_relatar`, a tabela `CELULAS` do relatório e o texto do README e do DETALHES-TECNICOS.
+# ! Motivo: decisão do dono do projeto de 25/11/2026 ("Melhor esforço, célula fica"): nos arquivos públicos do Homebrew (`Formula/p/php.rb`, `Formula/m/mariadb.rb`, `Formula/m/mariadb@11.8.rb`, lidos em 25/11/2026) o bloco `bottle` só traz pacote pronto de macOS para Apple Silicon (`arm64_sequoia`, `arm64_tahoe`, `arm64_golden_gate`) e Linux; num Mac Intel o `brew install` compila do código-fonte e pode levar mais de uma hora. Nada disso foi observado em execução ainda.
+def teste_sistema_mac_intel_e_melhor_esforco():
+    intel = sistema.familia("Darwin", tem_brew=True, maquina="x86_64")
+    assert (intel["familia"], intel["suporte"]) == ("brew", "melhor_esforco"), intel
+    assert "Intel" in intel["nome"], intel
+    arm = sistema.familia("Darwin", tem_brew=True, maquina="arm64")
+    assert (arm["familia"], arm["suporte"], arm["nome"]) == ("brew", "suportado", "macOS"), arm
+    assert sistema.familia("Darwin", tem_brew=True)["suporte"] == "suportado"
+    for maquina in ("x86_64", "arm64"):
+        assert sistema.familia("Darwin", tem_brew=False, maquina=maquina)["suporte"] == "falta_homebrew", maquina
+    # `detectar` passa a máquina que o `platform` diz.
+    original = _trocar([(sistema.platform, "system", lambda: "Darwin"), (sistema.platform, "machine", lambda: "x86_64"),
+                        (sistema.shutil, "which", lambda nome: "/usr/local/bin/brew")])
+    try:
+        assert sistema.detectar()["suporte"] == "melhor_esforco"
+        sistema.platform.machine = lambda: "arm64"
+        assert sistema.detectar()["suporte"] == "suportado"
+    finally:
+        _destrocar(original)
+
+
+def teste_install_aviso_do_mac_intel_em_instalar_e_relatar():
+    mensagens: list[str] = []
+    original = _trocar([(install, "instalar_por_pacotes", lambda info, ferr: None),
+                        (install, "relatar_versoes", lambda ferr, reproduzir: []), (install, "log", mensagens.append)])
+    try:
+        assert install.instalar_e_relatar(sistema.familia("Darwin", tem_brew=True, maquina="x86_64"), False) == 0
+        aviso = " ".join(m for m in mensagens if m.startswith("Aviso"))
+        assert "Intel" in aviso and "código-fonte" in aviso and "uma hora" in aviso, aviso
+        assert "Fedora" not in aviso and "apt" not in aviso, aviso
+        # O Mac Apple Silicon não leva aviso nenhum, e os avisos do Fedora e de outras distribuições seguem como estavam.
+        mensagens.clear()
+        install.instalar_e_relatar(sistema.familia("Darwin", tem_brew=True, maquina="arm64"), False)
+        assert not any(m.startswith("Aviso") for m in mensagens), mensagens
+        mensagens.clear()
+        install.instalar_e_relatar(sistema.familia("Linux", {"ID": "fedora", "VERSION_ID": "45"}), False)
+        assert any("Fedora entra como melhor esforço" in m for m in mensagens), mensagens
+        mensagens.clear()
+        install.instalar_e_relatar(sistema.familia("Linux", {"ID": "linuxmint", "ID_LIKE": "ubuntu", "VERSION_ID": "22.3"}), False)
+        assert any("segue pelo apt" in m for m in mensagens), mensagens
+    finally:
+        _destrocar(original)
+
+
+def teste_relatorio_mac_intel_e_melhor_esforco_e_a_documentacao_acompanha():
+    assert relatorio.CELULAS["M-15I"][0] == "macOS 15, Intel (melhor esforço)", relatorio.CELULAS["M-15I"]
+    assert relatorio.CELULAS["M-15"][0] == "macOS 15, Apple Silicon"
+    for nome in ("README.md", "DETALHES-TECNICOS.md"):
+        texto = (RAIZ / nome).read_text(encoding="utf-8")
+        assert "macOS 15, Intel (melhor esforço)" in texto, nome
+        assert "Intel" in texto and "melhor esforço" in texto, nome
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) testes novos: a raiz do projeto dentro e fora do `Cobaia.exe` (C1), a porta 3306 ocupada (C4: `porta_ocupada` nos dois módulos, `ensure_mariadb_running` do Windows sem subir segundo servidor, a linha da porta e a sonda dos serviços no `estado_inicial`) e o modelo pequeno nas provas até N1, N2 e N3 (C5).
+# ! Motivo: (C1) o `Cobaia.exe` chama `install.main()`; lá `__file__` aponta para a pasta temporária de extração do PyInstaller, onde não há `versoes.json`, e o passo do Ollama pararia com `FileNotFoundError`. (C4) com o serviço do MySQL ligado na porta 3306 o `mariadbd` portátil não consegue subir e o instalador esperava 45 s e parava em "Não foi possível subir o MariaDB" sem dizer que a porta estava ocupada; e a evidência da célula não gravava o estado da porta. (C5) a prova só até o N3 não usa o modelo, mas o instalador baixava o `qwen2.5:7b` (4,7 GB) numa máquina `macos-15` com pouco disco. Nenhum destes testes abre a 3306 de verdade nem sobe banco: a porta ocupada é um servidor de teste numa porta alta que o sistema escolhe.
+def teste_versoes_raiz_do_projeto_dentro_e_fora_do_executavel():
+    exe = Path(tempfile.gettempdir()) / "pasta_do_exe" / "Cobaia.exe"
+    assert versoes.raiz_do_projeto(congelado=True, executavel=str(exe)) == exe.resolve().parent
+    arquivo = RAIZ / "instalador" / "versoes.py"
+    assert versoes.raiz_do_projeto(congelado=False, executavel=str(exe), arquivo=str(arquivo)) == RAIZ
+    assert versoes.RAIZ == RAIZ and versoes.ARQUIVO == RAIZ / "versoes.json"
+    # sem argumentos lê `sys.frozen` e `sys.executable` na hora da chamada (o PyInstaller põe `frozen` em `sys`)
+    tinha = hasattr(sys, "frozen")
+    antes_exe = sys.executable
+    try:
+        sys.frozen = True
+        sys.executable = str(exe)
+        assert versoes.raiz_do_projeto() == exe.resolve().parent
+        # o passo do Ollama grava o script ao lado do executável, não na pasta de extração
+        _, arquivo_do_script, _ = ferramentas.roteiro_do_ollama("Windows")
+        assert arquivo_do_script == exe.resolve().parent / ".ferramentas" / "ollama" / "install.ps1", arquivo_do_script
+    finally:
+        sys.executable = antes_exe
+        if tinha:
+            sys.frozen = False
+        else:
+            del sys.frozen
+    assert versoes.raiz_do_projeto() == RAIZ
+
+
+def _servidor_de_teste():
+    import socket
+    servidor = socket.socket()
+    servidor.bind(("127.0.0.1", 0))
+    servidor.listen(1)
+    return servidor, servidor.getsockname()[1]
+
+
+def teste_porta_ocupada_nos_dois_modulos_ocupada_e_livre():
+    for funcao in (env.porta_ocupada, celula_actions.porta_ocupada):
+        servidor, porta = _servidor_de_teste()
+        try:
+            assert funcao(porta, espera=1.0) is True
+        finally:
+            servidor.close()
+        assert funcao(porta, espera=1.0) is False, "fechado o servidor, a porta fica livre"
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, ajuste do controlador depois da segunda revisão) o teste da porta ocupada passa a esperar uma chamada de `wait_for_mariadb` com 15 s antes do aviso, e ganha um par: se nesses 15 s o banco responde, a função devolve True sem subir outro servidor.
+# ! Motivo: o MariaDB do projeto abre a porta 3306 um instante antes de aceitar a entrada do root; sem a espera curta, quem chamasse `ensure_mariadb_running` nesse instante recebia False na hora, quando antes a espera de 45 s cobria o caso. Não observado em execução.
+def teste_fixa_windows_ensure_mariadb_running_porta_ocupada_nao_sobe_segundo_servidor():
+    logs: list = []
+    esperas: list = []
+
+    def esperar(cli, timeout_s=60):
+        esperas.append((cli, timeout_s))
+        return False
+
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "_can_connect", lambda cli: False),
+                        (env, "porta_ocupada", lambda *a, **k: True),
+                        (env, "find_mariadbd_server", lambda: r"C:\m\bin\mariadbd.exe"),
+                        (env.subprocess, "Popen", _levanta), (env, "wait_for_mariadb", esperar),
+                        (env, "run", _levanta), (env, "log", logs.append), (env, "_mariadbd_proc", None)])
+    try:
+        assert env.ensure_mariadb_running("cli") is False
+        assert esperas == [("cli", 15)], esperas
+        texto = "\n".join(logs)
+        assert "3306" in texto and "em uso" in texto and "MySQL" in texto and "rode o instalador de novo" in texto, texto
+    finally:
+        _destrocar(original)
+
+
+def teste_fixa_windows_ensure_mariadb_running_porta_ocupada_pelo_proprio_banco_que_esta_subindo():
+    logs: list = []
+    original = _trocar([(env, "OS_NAME", "Windows"), (env, "_can_connect", lambda cli: False),
+                        (env, "porta_ocupada", lambda *a, **k: True),
+                        (env, "find_mariadbd_server", lambda: r"C:\m\bin\mariadbd.exe"),
+                        (env.subprocess, "Popen", _levanta), (env, "wait_for_mariadb", lambda cli, timeout_s=60: True),
+                        (env, "run", _levanta), (env, "log", logs.append), (env, "_mariadbd_proc", None)])
+    try:
+        assert env.ensure_mariadb_running("cli") is True
+        assert "em uso" not in "\n".join(logs), logs
+    finally:
+        _destrocar(original)
+
+
+def teste_celula_actions_estado_inicial_traz_a_porta_e_a_sonda_dos_servicos():
+    ca = celula_actions
+    assert ca.SONDAS_DO_ESTADO["serviços de banco (Windows)"] == [
+        "powershell", "-NoProfile", "-Command", "Get-Service *mysql*,*maria* | Format-Table -HideTableHeaders Name,Status,StartType"]
+    for ocupada, palavra in ((True, "ocupada"), (False, "livre")):
+        original = _trocar([(ca.shutil, "which", lambda c: None), (ca, "porta_ocupada", lambda *a, **k: ocupada),
+                            (ca.subprocess, "run", _levanta)])
+        try:
+            texto = ca.estado_inicial()
+        finally:
+            _destrocar(original)
+        assert f"== porta 3306 (banco): {palavra}" in texto, texto
+        assert "== serviços de banco (Windows): ausente" in texto
+
+
+def teste_celula_actions_modelo_pequeno_nas_provas_que_param_antes_do_n4():
+    ca = celula_actions
+    base = {"PATH": "x"}
+    for sistema in ("Linux", "Darwin", "Windows"):
+        for ate in ("N1", "N2", "N3"):
+            amb = ca.ambiente_do_instalador(sistema, False, base, ate, "qwen2.5:0.5b-instruct")
+            assert amb["COBAIA_MODELO_LLM"] == "qwen2.5:0.5b-instruct", (sistema, ate)
+        n4 = ca.ambiente_do_instalador(sistema, False, base, "N4", "qwen2.5:0.5b-instruct")
+        assert "COBAIA_MODELO_LLM" not in n4, "no N4 o modelo é o do projeto"
+        assert "COBAIA_MODELO_LLM" not in ca.ambiente_do_instalador(sistema, False, base), "sem o nível, nada muda"
+    assert base == {"PATH": "x"}
+    fonte = (RAIZ / "ferramentas" / "instalador_matriz" / "celula_actions.py").read_text(encoding="utf-8")
+    assert "ambiente_do_instalador(sistema, args.forcar_uv, dict(os.environ), args.ate, args.modelo_pequeno)" in fonte
 
 
 def main() -> None:

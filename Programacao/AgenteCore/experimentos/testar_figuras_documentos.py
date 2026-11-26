@@ -115,6 +115,35 @@ def teste_figura_do_agente_contra_as_pessoas_le_a_medicao_da_fase_5():
                           "empates": geral["sinais"]["empates"], "cenarios": len(m["tempo"]["por_cenario"])}, f["geral"]
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) teste novo da figura "revisao-humana": quantos relatórios do analista de QA foram decisões apropriadas, separados por diagnóstico certo e errado.
+# ! Motivo: a figura entra no README como a única forma de ver a revisão às cegas dos 36 relatórios da corrida 24; se a soma das faixas não batesse com os 30 de 36 da leitura (`leitura_revisao_v3.json`, `adesao_apropriada`), a figura sairia contando outra coisa sem ninguém notar.
+def teste_figura_da_revisao_humana_bate_com_a_leitura_da_sessao():
+    d = g._j("fase4/leitura_revisao_v3.json")
+    f = FIGS["revisao-humana"]
+    assert "leitura_revisao_v3.json" in f["fonte"], f["fonte"]
+    assert [l[0] for l in f["linhas"]] == ["Diagnósticos certos", "Diagnósticos errados"], f["linhas"]
+    for nome, casos, apropriadas, nao in f["linhas"]:
+        assert casos == apropriadas + nao, nome
+    assert sum(l[1] for l in f["linhas"]) == d["resumo"]["relatorios"] == 36
+    assert sum(l[2] for l in f["linhas"]) == d["resumo"]["adesao_apropriada"] == 30
+    assert [l[1] for l in f["linhas"]] == [d["resumo"]["acertos_na_corrida"], d["resumo"]["erros_na_corrida"]] == [25, 11]
+    assert [l[2:] for l in f["linhas"]] == [[20, 5], [10, 1]], "aceitar o certo e recusar o errado são as decisões apropriadas"
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) teste novo da figura "experimentos-pos-fase-4": as três mudanças testadas depois da Fase 4 (corridas 25, 26 e 27), cada uma com a referência, a mudança e o valor-p.
+# ! Motivo: o README passa a afirmar que nenhuma das três sai do ruído (p acima de 0,05); a figura só pode dizer isso se os números vierem de `sem_notas.json`, `segundo_passe.json` e `analista.json`, com os mesmos valores que o roadmap registra (56 e 54 de 72, p 0,6875; 56 e 54 de 72, p 0,625; 1 de 20 e 3 de 8, p 0,0581).
+def teste_figura_dos_experimentos_da_pos_fase_4_le_os_tres_registros():
+    f = FIGS["experimentos-pos-fase-4"]
+    for rel in ("sem_notas.json", "segundo_passe.json", "analista.json"):
+        assert rel in f["fonte"], (rel, f["fonte"])
+    assert len(f["linhas"]) == 3 and len(f["linhas"][0]) == len(f["cab"]), f["linhas"]
+    # colunas: experimento, casos da referência, certos da referência, casos da mudança, certos da mudança, p
+    assert [l[1:] for l in f["linhas"]] == [[72, 56, 72, 54, 0.6875], [72, 56, 72, 54, 0.625], [20, 1, 8, 3, 0.0581]], f["linhas"]
+    assert all(l[5] > 0.05 for l in f["linhas"]), "nenhuma das três sai do ruído"
+    assert [n in l[0] for n, l in zip(("corrida 25", "corrida 26", "corrida 27"), f["linhas"])] == [True] * 3
+    assert "0,6875" in g.gerar_md(FIGS) and "0,0581" in g.gerar_md(FIGS), "o valor-p sai inteiro na tabela de dados"
+
+
 def teste_titulos_sem_travessao_nem_seta():
     for f in FIGS.values():
         for c in "—→↔":

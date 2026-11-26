@@ -710,12 +710,15 @@ class Tela:
 
     def rodar_caso(self, item: dict) -> dict:
         """Liga o modo do caso, roda o roteiro, poda, compara com a referência, decide a regra R1 e monta o caso ao vivo."""
+        _trace(self.nav, "descartar_traces")            # trace na falha (decisão 93): só as páginas deste caso ficam pendentes; sem a opção, não faz nada
         cenario_, usado = com_produto(cen.cenario(item["cenario"]), item["produto_id"])
         ref = self.referencia(item["cenario"], usado)
         ligar_modo(item["modo"], item["campo"], self.token)
         pagina = self.nav.nova_pagina()
         inter = ic.Interceptador(pagina)
         r = cen.rodar_cenario(cenario_, pagina, inter)
+        if not r["passou"]:
+            _trace(self.nav, "reter_trace", pagina)     # o roteiro falhou nesta página: é o trace dela que `emitir` grava
         pagina.close()
         ligar_modo("normal", None, self.token)
         chamada, do_alvo = chamada_do_caso(r["chamadas"], item["cenario"], usado)
@@ -760,6 +763,7 @@ class Tela:
 
     def emitir(self, tid: str, d: dict) -> dict:
         """Os eventos do caso na trilha; devolve os `seq` que um nó de decisão pode apontar como evidência."""
+        _trace(self.nav, "gravar_traces", tid)          # trace na falha (decisão 93): é aqui que o identificador da trilha passa a existir
         trilha, item, r, inter = self.trilha, d["item"], d["r"], d["inter"]
         seqs: dict = {"entrada": None, "chamada": None, "poda_arvore": None, "poda_corpo": None, "interceptacoes": []}
         seqs["entrada"] = trilha.evento("entrada", tid, {"caso": item["id"], "classe": item["classe"], "nivel": item["nivel"], "modo": item["modo"],
@@ -1153,7 +1157,7 @@ def rodar_tela(args: argparse.Namespace) -> int:
             return 2
         comum = {"digest": digest, "versao_ollama": versao_ollama, "maquina": platform.node(), "epoca": dv.VERSAO_CURADA + 1,
                  "biblioteca_epoca": dv.VERSAO_CURADA, "biblioteca_versao": hash_curada, "particao": None, "k": k, "teto_tokens": args.teto}
-        with navegador.Navegador(canal=args.canal) as nav:
+        with navegador_da_corrida(args, saida) as nav:
             v = nav.versao()
             if arq_trilha.exists() and feitos:
                 trilha = tr.Trilha.carregar(arq_trilha)
@@ -1358,6 +1362,7 @@ class Cura:
     # mutação que troca o nome acessível do alvo, num modo que não está em cenarios_fase4.QUEBRAS; sem `quebra`, nada muda.
     def executar(self, celula: dict, apos_deteccao=None, quebra: dict | None = None) -> dict:
         """Uma execução: a quebra armada, o roteiro até falhar, a cura e a reexecução; devolve tudo para o registro e a trilha."""
+        _trace(self.nav, "descartar_traces")            # trace na falha (decisão 93): só as páginas desta execução ficam pendentes
         q = quebra if quebra is not None else cen.quebra(celula["cenario"], celula["modo"])
         ref = self.referencia(q)
         base_cen = cen.cenario(q["cenario"])
@@ -1370,6 +1375,8 @@ class Cura:
         inter = ic.Interceptador(pagina)
         r = cen.rodar_cenario(cenario_, pagina, inter, base=self.base, capturar=False, tempo_limite_ms=cen.TEMPO_LIMITE_QUEBRA_MS)
         quebrou = not r["passou"]
+        if quebrou:
+            _trace(self.nav, "reter_trace", pagina)     # a página da detecção: o passo do localizador falhou nela
         try:
             captura = inter.capturar()
         except Exception as e:  # noqa: BLE001 - página fechada ou navegando: a cura fica sem árvore e isso é registrado
@@ -1481,6 +1488,7 @@ class Cura:
         """A segunda metade de emitir: os incidentes do roteiro, o evento e o nó da cura, as reexecuções, o nó da reexecução e
         os incidentes do interceptador."""
         import gerar_relatorio_raciocinio as grr
+        _trace(self.nav, "gravar_traces", tid)          # trace na falha (decisão 93): o da página da detecção; os das reexecuções são jogados fora
         trilha, q, r = self.trilha, d["quebra"], d["r"]
         alvo = d.get("alvo")
         s_ent, s_poda = seqs["s_ent"], seqs["s_poda"]
@@ -1569,7 +1577,7 @@ def rodar_cura(args: argparse.Namespace) -> int:
         if rb.restaurar(cli) != rb.CONTAGENS_DO_SEED:
             marco("!! o banco restaurado não tem as contagens do seed")
             return 2
-        with navegador.Navegador(canal=args.canal) as nav:
+        with navegador_da_corrida(args, saida) as nav:
             v = nav.versao()
             if arq_trilha.exists() and feitos:
                 trilha = tr.Trilha.carregar(arq_trilha)
@@ -2073,10 +2081,40 @@ def rodar_biblioteca(args: argparse.Namespace) -> int:
 # ! Motivo: plano aprovado, seção 5 (P6): os testes escritos antes pedem o cronômetro da detecção à validação, o Task Success
 # só com roteiro concluído sem erro (ou causa e campo certos no contrato), o banco conferido por hash e o navegador fixo; com
 # as contas fora do laço da corrida, o teste confere cada uma sem navegador nem modelo.
-def celulas_do_ensaio(repeticoes: int, casos: int = 0) -> list[dict]:
-    """As execuções do ensaio: repetição por repetição, os dez cenários na ordem do catálogo (ou os N primeiros com --casos)."""
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) `celulas_do_ensaio` ganhou `so`, a lista dos cenários a rodar (sem ela, os dez de
+# sempre); `selecao_git_da_corrida` devolve a decisão de `impacto_git.decidir_para_a_corrida` quando a corrida pede `--selecao git`, e nada
+# quando não pede (o Git nem é consultado); `gravar_decisao_git` grava na pasta da corrida o que foi decidido e o que rodou, e acrescenta o
+# commit testado ao registro quando a corrida rodou alguma coisa.
+# ! Motivo: plano aprovado da Pós-Fase 4, seção 3.7 e pacote Q7. Com as contas fora do laço da corrida, o teste confere cada uma sem navegador
+# nem modelo, e a corrida sem a opção passa pelas mesmas linhas de antes (`so=None` devolve exatamente a lista antiga).
+def celulas_do_ensaio(repeticoes: int, casos: int = 0, so: list[str] | None = None) -> list[dict]:
+    """As execuções do ensaio: repetição por repetição, os dez cenários na ordem do catálogo (ou os N primeiros com --casos, ou só os de `so`)."""
     base = list(cen.CENARIOS_DO_ENSAIO)[:casos] if casos else list(cen.CENARIOS_DO_ENSAIO)
+    if so is not None:
+        base = [c for c in base if c["id"] in set(so)]
     return [{"id": f"{c['id']}#{r}", "cenario": c, "repeticao": r} for r in range(1, max(1, repeticoes) + 1) for c in base]
+
+
+def selecao_git_da_corrida(args: argparse.Namespace, decidir=None) -> dict | None:
+    if getattr(args, "selecao", "todos") != "git":
+        return None
+    if decidir is None:
+        import impacto_git as ig
+        decidir = ig.decidir_para_a_corrida
+    return decidir(desde=args.desde, completa_a_cada_dias=args.completa_a_cada_dias)
+
+
+def gravar_decisao_git(saida: Path, decisao: dict, registros: list[dict], registro: Path | None = None, corrida: str | None = None, quando: str | None = None) -> Path:
+    import impacto_git as ig
+    quando = quando or cen.agora()
+    saida.mkdir(parents=True, exist_ok=True)
+    arq = saida / ig.ARQUIVO_DA_DECISAO
+    arq.write_text(json.dumps({"decisao": decisao, "rodados": sorted({r["cenario"] for r in registros}), "execucoes": len(registros), "gravado_em": quando},
+                              ensure_ascii=False, indent=1), encoding="utf-8", newline="\n")
+    if decisao.get("modo") in ig.TIPOS_DE_CORRIDA and registros and decisao.get("commit_atual"):
+        ig.registrar(registro, {"quando": quando, "tipo": decisao["modo"], "commit": decisao["commit_atual"], "corrida": corrida, "arvore_suja": decisao.get("arvore_suja"),
+                                "cenarios": decisao.get("cenarios"), "deixados_de_fora": decisao.get("deixados_de_fora")})
+    return arq
 
 
 def preparar_repeticao(n: int, restaurar, hash_atual, hash_do_seed: str) -> str:
@@ -2178,6 +2216,18 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
     modelo = args.modelo
     slug = executar_fase3._slug(modelo)
     parcial = bool(args.casos)
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) com `--selecao git` a corrida pergunta ao `impacto_git` o que rodar: tudo,
+    # só os cenários atingidos pelo que mudou nas cobaias, ou nada. Sem a opção (o padrão), `decisao_git` fica vazio e nada abaixo muda.
+    # ! Motivo: plano, seção 3.7. A corrida selecionada não é uma rodada inteira: ela é tratada como parcial (não grava derivado oficial), e
+    # a que não tem o que rodar termina aqui, antes de subir as cobaias e de chamar o modelo, deixando a decisão gravada na pasta.
+    decisao_git = selecao_git_da_corrida(args)
+    if decisao_git is not None:
+        marco(f"seleção pelo Git: {decisao_git['modo']}; {decisao_git['motivo']}")
+        if decisao_git["modo"] == "nada":
+            gravar_decisao_git(saida, decisao_git, [], corrida=args.saida)
+            marco("FIM cenarios: nada a rodar pela seleção do Git; vale a rodada completa periódica")
+            return 0
+        parcial = parcial or decisao_git["modo"] == "selecionada"
     versao = executar_fase3._versao_ollama()
     if versao is None:
         marco("!! o Ollama não respondeu em /api/version; suba o servidor antes da corrida")
@@ -2197,7 +2247,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
     k = ler_ks(args.k)[0] if args.k else int((limiares or {}).get("k") or 3)
     versoes = _ambiente().get("versoes", {})
     contrato = _contrato_do_produto()
-    celulas = celulas_do_ensaio(args.repeticoes, args.casos)
+    celulas = celulas_do_ensaio(args.repeticoes, args.casos, so=decisao_git["cenarios"] if decisao_git is not None and decisao_git["modo"] == "selecionada" else None)
     if not evo.snapshot_fechado(dv.PASTA_CURADA):
         marco(f"!! a biblioteca de produção em {dv.PASTA_CURADA} não existe ou não está fechada (sem fechamento.json)")
         return 2
@@ -2233,6 +2283,8 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                                   "localizador": "cura aplicada e o roteiro concluído sem erro na reexecução"},
                  "top_logprobs": args.top, "teto_tokens": args.teto, "hash_prompt_fixo": hash_fixo, "hash_indice": dv.hash_indice(indice), "versoes": versoes,
                  "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO, "sinais_da_referencia_na_busca": cv.SINAIS_DA_REFERENCIA_NA_BUSCA}
+    if decisao_git is not None:
+        condicoes["selecao_git"] = decisao_git          # só com --selecao git: sem a opção o arquivo sai como sempre saiu
     (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
     marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
           f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "
@@ -2254,7 +2306,7 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
             return 2
         comum = {"digest": digest, "versao_ollama": versao_ollama, "maquina": platform.node(), "epoca": dv.VERSAO_CURADA + 1,
                  "biblioteca_epoca": dv.VERSAO_CURADA, "biblioteca_versao": hash_bib, "particao": None, "k": k, "teto_tokens": args.teto}
-        with navegador.Navegador(canal=args.canal) as nav:
+        with navegador_da_corrida(args, saida) as nav:
             v = nav.versao()
             versoes_nav = [r.get("navegador") for r in registros] + [v["navegador"]]
             conferir_navegador(versoes_nav)
@@ -2382,6 +2434,8 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                 comando = f"RESULTADOS_DIR=resultados_alvo python executar_fase4.py --modo cenarios --saida {args.saida}_reexec --repeticoes 1"
                 (pasta_rel / f"{nome}.md").write_text(grr.relatorio_do_caso_v2(trilha.eventos, tid, comando_reexecucao=comando, pasta_blobs=saida / "blobs"),
                                                       encoding="utf-8", newline="\n")
+    if decisao_git is not None:
+        gravar_decisao_git(saida, decisao_git, registros, corrida=args.saida)
     sucessos = sum(1 for r in registros if r.get("task_success"))
     tamanho = arq_trilha.stat().st_size if arq_trilha.exists() else 0
     marco(f"FIM cenarios: {len(registros)} de {len(celulas)} execuções; Task Success {sucessos}; duração {time.monotonic() - t0:.0f} s; trilha {tamanho} bytes")
@@ -2702,7 +2756,33 @@ def montar_parser() -> argparse.ArgumentParser:
     # ! Motivo: a fumaça sem as cobaias precisa pular o bloco do seletor quebrado (que sobe o front, a API e o navegador).
     ap.add_argument("--condicoes", default=None, help="experimento_prompt: condições separadas por vírgula (padrão: exemplar,rotulos_por_extenso)")
     ap.add_argument("--sem-seletor", action="store_true", help="avaliacao_trilha: não roda a mutação do seletor na tela (fumaça sem as cobaias); corrida parcial")
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q6) `--trace-na-falha`, desligada por padrão.
+    # ! Motivo: decisão 93 e ficha 33: o trace do Playwright na falha tinha sido decidido e não feito. Ligado, o navegador grava a tela e a
+    # estrutura da página a cada passo, o que muda o tempo do roteiro; o tempo de reparo das corridas 21d e 28b foi medido sem ele.
+    # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) `--selecao git`, `--desde` e `--completa-a-cada-dias`, do modo `cenarios`; o
+    # padrão de `--selecao` é `todos`, a corrida de sempre.
+    # ! Motivo: plano, seção 3.7: a seleção dos cenários pelo que mudou no Git passa a decidir a corrida, com as três regras da base E.
+    ap.add_argument("--selecao", choices=("todos", "git"), default="todos",
+                    help="cenarios: `git` roda só os cenários atingidos pelo que mudou nas cobaias desde o último commit testado (ou desde --desde); padrão: todos")
+    ap.add_argument("--desde", default=None, help="cenarios com --selecao git: o commit testado de onde o diff parte (padrão: o último do registro de commits testados)")
+    ap.add_argument("--completa-a-cada-dias", type=int, default=7, help="cenarios com --selecao git: prazo, em dias, da rodada completa periódica (regra 2)")
+    ap.add_argument("--trace-na-falha", action="store_true", help="tela, cura e cenarios: grava em <saida>/traces/<caso>.zip o trace do Playwright da página em que "
+                                                                  "o roteiro falhou (desligado por padrão: ligado, os tempos da corrida não valem como medida)")
     return ap
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q6, etapa 3) `navegador_da_corrida` abre o navegador dos modos `tela`, `cura` e
+# `cenarios` com a pasta `<saida>/traces` quando a corrida pede `--trace-na-falha`, e sem pasta nenhuma (o navegador de sempre) quando não
+# pede; `_trace` chama `reter_trace`, `gravar_traces` ou `descartar_traces` do navegador só quando ele tem o método.
+# ! Motivo: decisão 93 (o trace na falha, que a Fase 4 não fez). Os testes da Fase 4 trocam o navegador por um objeto de mentira que só tem
+# `nova_pagina`; chamando pelo ajudante, eles continuam passando sem mudança, e com o trace desligado nenhuma das três chamadas faz nada.
+def navegador_da_corrida(args: argparse.Namespace, saida: Path):
+    return navegador.Navegador(canal=args.canal, pasta_dos_traces=(Path(saida) / navegador.PASTA_DOS_TRACES) if getattr(args, "trace_na_falha", False) else None)
+
+
+def _trace(nav, metodo: str, *argumentos):
+    funcao = getattr(nav, metodo, None)
+    return funcao(*argumentos) if funcao is not None else None
 
 
 # ! Alteração de IA - Revisar: (08/11/2026, Pós-Fase 4, pacote Q4) `com_progresso` roda a função do modo dentro de `progresso.observando` quando o

@@ -1165,8 +1165,10 @@ def contexto_progresso() -> dict:
         arq = pasta / nome
         return ler_json(arq) if arq.exists() else None
 
+    # ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) o contexto ganhou `hub.json` e `conferencia_git.json`, lidos pela aba "Hub e Git".
+    # ! Motivo: a aba nova lê os números dos derivados gravados por `hub.py --resumo` e `impacto_git.py --conferir-historico`; sem eles, mostra o estado vazio.
     return {"taxas_progresso": ler("taxas_progresso.json"), "erro_progresso": ler("erro_progresso.json"), "impacto_git": ler("impacto_git.json"),
-            "fumaca_progresso": ler("fumaca_progresso.json")}
+            "fumaca_progresso": ler("fumaca_progresso.json"), "hub": ler("hub.json"), "conferencia_git": ler("conferencia_git.json")}
 
 
 # ! Alteração de IA - Revisar: (16/11/2026, Fase 5, parte do pacote F5 adiantada) o contexto da aba "medicao", lido por painel_topicos.secao_medicao: os quatro

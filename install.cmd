@@ -9,4 +9,9 @@ rem SEM ACENTO de proposito: testado que o cmd.exe le o arquivo na codepage OEM 
 rem os bytes UTF-8 de c-cedilha/til re-tokenizam a linha rem, imprimindo um erro
 rem espurio antes do script rodar.
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0install.ps1" %*
+rem ! Alteracao de IA - Revisar: guarda o codigo de saida do install.ps1 antes do pause e devolve ele no fim.
+rem ! Motivo: execucao 45650086543 do GitHub Actions, celula CI-WIN: o instalador parou com erro, mas o install.cmd
+rem terminava em pause e saia com codigo 0, entao o fluxo seguia como se a instalacao tivesse dado certo.
+set "COBAIA_CODIGO=%ERRORLEVEL%"
 pause
+exit /b %COBAIA_CODIGO%

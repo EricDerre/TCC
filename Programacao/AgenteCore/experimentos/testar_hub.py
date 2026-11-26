@@ -41,15 +41,14 @@ if str(EXP) not in sys.path:
     sys.path.insert(0, str(EXP))
 
 import gerar_relatorio_raciocinio as grr
-import navegador
-import taxonomia
-import testar_pos_fase4 as tp4
-import trilha
-
 import hub
 import hub_dados as hd
 import hub_pagina as hp
 import hub_revisao as hr
+import navegador
+import taxonomia
+import testar_pos_fase4 as tp4
+import trilha
 
 _TEMPORARIOS = tp4._TEMPORARIOS
 ANALISTA = {"nome": "revisor de teste", "papel": "analista"}
@@ -230,7 +229,7 @@ def teste_hub_acervo_enxerga_caso_novo_quando_a_trilha_cresce():
 # ------------------------------------------------------------------ etapa 1: o Markdown da página
 
 def teste_hub_markdown_vira_html_sem_deixar_passar_marcacao_do_conteudo():
-    md = "\n".join(["Texto com `codigo <b>` e **negrito** e <script>alert(1)</script>.", "",
+    md = "\n".join(["Texto com `codigo <b>` e **negrito** e <script>alert(1)</script>.", "",  # noqa: FLY002 - uma linha de Markdown por item, como no arquivo
                     "| Campo | Valor |", "|---|---|", "| `preco` | <img src=x onerror=alert(1)> |", "",
                     "- item um", "  - sub item", "- item dois", "",
                     "1. primeiro", "2. segundo", "",
@@ -862,6 +861,15 @@ def _estado_da_barra(pasta: Path, estado: str = "determinado", fracao: float | N
     return arq
 
 
+def _ate(ler, pronto, segundos: float = 10.0):
+    """Chama `ler` até `pronto(valor)` ser verdadeiro e devolve o valor lido."""
+    def tentar():
+        valor = ler()
+        return valor if pronto(valor) else None
+
+    return _esperar(tentar, segundos)
+
+
 def _esperar(condicao, segundos: float = 10.0, passo: float = 0.1):
     """Chama `condicao` até ela devolver algo verdadeiro, ou falha depois de `segundos`."""
     fim = time.monotonic() + segundos
@@ -1067,9 +1075,9 @@ def teste_servidor_execucao_so_dispara_com_permissao_e_uma_corrida_por_vez():
         assert status == 200 and r["em_andamento"] is True and re.fullmatch(r"hub_\d{8}_\d{6}", r["saida"]), "o nome da pasta é dado pelo servidor, não pelo pedido"
         saida = r["saida"]
         assert _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 1})[0] == 409, "uma corrida por vez"
-        vivo = _esperar(lambda: (lambda d: d if d.get("pasta") == saida else None)(_json(base, "GET", "/api/ao-vivo")[1]))
+        vivo = _ate(lambda: _json(base, "GET", "/api/ao-vivo")[1], lambda d: d.get("pasta") == saida)
         assert vivo["progresso"]["estado"] in ("determinado", "concluido")
-        fim = _esperar(lambda: (lambda d: d if d["terminou"] else None)(_json(base, "GET", "/api/execucao")[1]))
+        fim = _ate(lambda: _json(base, "GET", "/api/execucao")[1], lambda d: d["terminou"])
         assert fim["codigo"] == 0 and fim["em_andamento"] is False and fim["saida"] == saida and "FIM da corrida de mentira" in fim["log"], fim
         depois = _json(base, "GET", "/api/ao-vivo")[1]
         assert depois["progresso"]["estado"] == "concluido" and depois["ultimo_diagnostico"]["escolha"] == "resposta_truncada"
@@ -1078,7 +1086,7 @@ def teste_servidor_execucao_so_dispara_com_permissao_e_uma_corrida_por_vez():
         assert _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 2})[1]["em_andamento"] is True
         status, r = _json(base, "POST", "/api/execucao", {"acao": "parar"})
         assert status == 200, r
-        parou = _esperar(lambda: (lambda d: d if d["terminou"] else None)(_json(base, "GET", "/api/execucao")[1]))
+        parou = _ate(lambda: _json(base, "GET", "/api/execucao")[1], lambda d: d["terminou"])
         assert parou["codigo"] != 0 and parou["parada_pelo_hub"] is True, parou
 
 
@@ -1152,6 +1160,157 @@ def teste_pagina_abre_a_arvore_pelo_botao_e_oferece_o_trace_quando_ele_existe():
             _abrir_caso(pagina, base, sem)
             assert pagina.locator("#trace-do-caso a").count() == 0 and "trace desligado" in pagina.inner_text("#trace-do-caso")
         assert erros == [], erros
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, pacote Q6, etapa 4) teste da ideia aproveitada do estudo do `visual-explainer` (decisão 126): passar o
+# mouse numa conversa acende o trecho comentado no relatório, e passar no trecho acende a conversa. Escrito ANTES do código: a primeira
+# rodada falha porque nenhum dos dois ganha a marca.
+# ! Motivo: o estudo (`5-metodo-e-ferramental/estudo-visual-explainer-para-o-hub.md`) registra a ideia do realce ligado, em que o termo do
+# texto e a parte da figura que tratam da mesma coisa se acendem juntos; no hub, com várias conversas num bloco, é o que diz de relance a que
+# trecho cada uma se refere. A marca é uma borda, e não só uma cor, para quem não distingue as cores também ver.
+def teste_pagina_conversa_e_trecho_comentado_se_acendem_juntos():
+    with _navegador() as (pagina, erros):
+        if pagina is None:
+            return
+        acervo, _ = _acervo_de_teste()
+        tid = acervo.iteracoes("lex-1")[1]["tid"]
+        bloco = "b12-veredito-do-agente"
+        palavra = _palavra_do_bloco(acervo.caso(tid), bloco)
+        with _hub_no_ar(acervo) as (base, _, _srv):
+            status, _r = _json(base, "POST", "/api/revisao", {"tid": tid, "acao": "comentar", "autor": {"nome": "Ana"}, "texto": "Sobre este trecho.",
+                                                             "ancora": {"bloco": bloco, "trecho": palavra, "inicio": 0, "fim": len(palavra)}})
+            assert status == 200
+            _abrir_caso(pagina, base, tid)
+            marca, conversa = f'section.bloco[data-bloco="{bloco}"] mark.trecho-comentado', f'section.bloco[data-bloco="{bloco}"] .conversa'
+            assert pagina.inner_text(marca) == palavra and pagina.locator(marca + ".aceso").count() == 0 and pagina.locator(conversa + ".acesa").count() == 0
+            pagina.hover(conversa + " .cab-conversa")
+            pagina.wait_for_selector(marca + ".aceso")
+            assert pagina.locator(conversa + ".acesa").count() == 1
+            pagina.hover("#titulo-do-caso")
+            pagina.wait_for_selector(marca + ".aceso", state="detached")
+            pagina.hover(marca)
+            pagina.wait_for_selector(conversa + ".acesa")
+        assert erros == [], erros
+
+
+# ------------------------------------------------------------------ Q7: a seleção pelo Git no hub
+
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) os testes da seleção pelo Git no hub, escritos ANTES do código: a primeira rodada
+# falha porque `criar_servidor` não aceita `selecao_git`. O servidor mostra a decisão de `impacto_git` para o que mudou (`/api/selecao`), põe
+# `-Selecao git` e `-Desde <commit>` no comando da corrida e recusa um `desde` que não seja um commit; a página mostra o que rodaria, o que
+# ficaria de fora e por quê, antes de qualquer corrida.
+# ! Motivo: plano aprovado da Pós-Fase 4, seção 3.7 ("a seleção diz quais cenários rodar e por quê") e pacote Q7 (a seleção ligada ao hub). A
+# decisão vem de uma função que o teste troca, para o teste não depender do estado do repositório no dia em que roda; o `desde` vira parte de
+# uma linha de comando, e por isso só passa se for o identificador de um commit.
+DECISAO_Q7 = {"modo": "selecionada", "regras": ["conferencia_contra_a_rodada_completa"], "commit_atual": "def5678abc", "arvore_suja": True,
+              "motivo": "seleção parcial: 2 de 10 cenários do ensaio, pelos arquivos no mapa; os 8 deixados de fora ficam registrados para a conferência contra a rodada completa (regra 3)",
+              "cenarios": ["localizador-front-admin-login", "localizador-front-admin-produtos"], "deixados_de_fora": ["contrato-field_missing", "localizador-front-busca"],
+              "por_que": {"localizador-front-admin-login": ["Programacao/CobaiaFront/admin/login.php: página do cenário"],
+                          "localizador-front-admin-produtos": ["Programacao/CobaiaFront/admin/login.php: página aberta por um passo do cenário"]},
+              "arquivos": [{"arquivo": "Programacao/CobaiaFront/admin/login.php", "classe": "no_mapa", "motivo": "no mapa"}]}
+
+
+def _selecao_de_mentira(pedidos: list):
+    def selecao(desde):
+        pedidos.append(desde)
+        return {**DECISAO_Q7, "commit_testado": desde or "abc1234"}
+    return selecao
+
+
+def teste_servidor_selecao_pelo_git_mostra_a_decisao_e_entra_no_comando():
+    acervo, _ = _acervo_de_teste()
+    pedidos, vistos = [], []
+
+    def lancador(saida, opcoes):
+        vistos.append(dict(opcoes))
+        return [sys.executable, "-c", "print('ok')"]
+
+    with _hub_no_ar(acervo, selecao_git=_selecao_de_mentira(pedidos), permitir_execucao=True, comando_da_corrida=lancador) as (base, _, _srv):
+        status, d = _json(base, "GET", "/api/selecao")
+        assert status == 200 and d["modo"] == "selecionada" and d["commit_testado"] == "abc1234" and pedidos == [None], d
+        assert _json(base, "GET", "/api/selecao?desde=0123abc")[1]["commit_testado"] == "0123abc" and pedidos[-1] == "0123abc"
+        for ruim in ("HEAD", "abc; rm -rf x", "../x", "zzzzzzz", "abc12"):
+            status, r = _json(base, "GET", "/api/selecao?desde=" + urllib.parse.quote(ruim, safe=""))
+            assert status == 400 and "commit" in r["erro"], (ruim, r)
+        assert len(pedidos) == 2, "um desde recusado nem chega à função que lê o Git"
+        e = _json(base, "GET", "/api/execucao")[1]
+        assert "-Selecao" not in e["comando_sugerido"] and "-Repeticoes 1" in e["comando_sugerido"]
+        e = _json(base, "GET", "/api/execucao?selecao=git&desde=0123abc&repeticoes=3")[1]
+        assert e["comando_sugerido"].endswith("-Repeticoes 3 -LeituraNaPasta -Selecao git -Desde 0123abc"), e["comando_sugerido"]
+        assert _json(base, "GET", "/api/execucao?selecao=git")[1]["comando_sugerido"].endswith("-Selecao git")
+        for ruim in ("selecao=tudo", "selecao=git&desde=abc%3B+rm", "repeticoes=99"):
+            assert _json(base, "GET", "/api/execucao?" + ruim)[0] == 400, ruim
+        for ruim in ({"selecao": "outra"}, {"selecao": "git", "desde": "abc; rm"}, {"selecao": "todos", "desde": "0123abc"}):
+            assert _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 1, **ruim})[0] == 400, ruim
+        assert vistos == []
+        assert _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 2, "selecao": "git", "desde": "0123abc"})[0] == 200
+        assert vistos == [{"repeticoes": 2, "selecao": "git", "desde": "0123abc"}]
+        _esperar(lambda: _json(base, "GET", "/api/execucao")[1]["terminou"])
+        assert _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 1})[0] == 200 and vistos[-1] == {"repeticoes": 1, "selecao": "todos", "desde": None}
+        _esperar(lambda: _json(base, "GET", "/api/execucao")[1]["terminou"])
+    assert hub.comando_padrao("hub_x", {"repeticoes": 1, "selecao": "todos", "desde": None})[-1] == "-LeituraNaPasta"
+    assert hub.comando_padrao("hub_x", {"repeticoes": 1})[-1] == "-LeituraNaPasta", "sem a seleção, o comando é o de antes"
+
+
+def teste_pagina_selecao_pelo_git_mostra_o_que_rodaria_e_muda_o_comando():
+    with _navegador() as (pagina, erros):
+        if pagina is None:
+            return
+        acervo, _ = _acervo_de_teste()
+        pedidos: list = []
+        with _hub_no_ar(acervo, selecao_git=_selecao_de_mentira(pedidos)) as (base, _, _srv):
+            pagina.goto(base + "/")
+            pagina.wait_for_selector("#lista-de-casos .item-caso")
+            pagina.click("#abrir-ao-vivo")
+            pagina.wait_for_selector("#comando-da-corrida:visible")
+            assert "-Selecao" not in pagina.inner_text("#comando-da-corrida") and pagina.inner_text("#previa-da-selecao").strip() == "" and pedidos == []
+            pagina.select_option("#selecao-da-corrida", "git")
+            _esperar_texto(pagina, "#previa-da-selecao", "seleção parcial")
+            texto = pagina.inner_text("#previa-da-selecao")
+            for trecho in ("localizador-front-admin-login", "contrato-field_missing", "abc1234", "def5678", "admin/login.php", "ainda não commitadas"):
+                assert trecho in texto, (trecho, texto)
+            _esperar_texto(pagina, "#comando-da-corrida", "-Selecao git")
+            pagina.fill("#desde-da-corrida", "0123abc")
+            pagina.dispatch_event("#desde-da-corrida", "change")
+            _esperar_texto(pagina, "#comando-da-corrida", "-Desde 0123abc")
+            _esperar_texto(pagina, "#previa-da-selecao", "0123abc")
+            pagina.fill("#desde-da-corrida", "isto nao e um commit")
+            pagina.dispatch_event("#desde-da-corrida", "change")
+            _esperar_texto(pagina, "#erro", "commit")
+            pagina.select_option("#selecao-da-corrida", "todos")
+            pagina.wait_for_selector("#erro:empty", state="attached")
+            pagina.locator("#comando-da-corrida", has_text="-Selecao").wait_for(state="detached")
+            assert pagina.inner_text("#previa-da-selecao").strip() == ""
+        assert [e for e in erros if "status of 400" not in e] == [], erros
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, pacote Q6) teste do resumo do hub (`hub.py --resumo`), escrito ANTES do código: a primeira rodada falha por
+# AttributeError em `hub.resumo`. O resumo diz quantos casos o hub mostra por corrida, quantos casos distintos e quantos têm mais de uma
+# iteração, as listas fechadas da revisão e quantos testes o runner tem, e fica gravado em `resultados_alvo/fase4/hub.{json,md}` com `--check`.
+# ! Motivo: a aba do painel e os textos do roadmap e do README citam esses números, e a regra do projeto é que nenhum número seja digitado à
+# mão: eles saem deste arquivo, que o teste compara com o acervo de verdade.
+def teste_hub_resumo_gravado_e_conferido_contra_o_acervo():
+    acervo = hd.Acervo(RA)
+    indice = acervo.indice()
+    dado, md = hub.resumo(acervo)
+    assert [c["pasta"] for c in dado["corridas"]] == [c["pasta"] for c in hd.CORRIDAS_PADRAO] and sum(c["casos"] for c in dado["corridas"]) == len(indice)
+    por_caso: dict[str, int] = {}
+    for linha in indice:
+        por_caso[linha["caso"]] = por_caso.get(linha["caso"], 0) + 1
+    t = dado["total"]
+    assert t["casos"] == len(indice) and t["casos_distintos"] == len(por_caso) and t["com_mais_de_uma_iteracao"] == sum(1 for n in por_caso.values() if n > 1), t
+    assert t["maior_numero_de_iteracoes"] == max(por_caso.values()) and t["com_divergencia"] == sum(1 for l in indice if l["divergencia"]) and t["com_cura"] == sum(1 for l in indice if l["cura"])
+    assert dado["revisao"]["vereditos"] == list(hr.VEREDITOS) and dado["revisao"]["estados_55"] == list(hr.ESTADOS_55) and dado["revisao"]["causas"] == len(hr.CAUSAS)
+    assert dado["relatorio"]["blocos"] == len(grr.CAMPOS_55) + len(grr.SECOES_MANTIDAS_V3) and dado["relatorio"]["campos_da_5_5"] == len(grr.CAMPOS_55)
+    meus = [n for n, o in vars(sys.modules[__name__]).items() if n.startswith("teste_") and inspect.isfunction(o)]
+    assert dado["testes"]["total"] == len(meus) and 0 < dado["testes"]["no_navegador"] < len(meus), dado["testes"]
+    assert "—" not in md and "→" not in md and f"{len(indice)} casos" in md
+    gravado = RA / "fase4" / "hub.json"
+    assert gravado.exists(), "hub.json ainda não gravado (python hub.py --resumo)"
+    assert hub.pf.sem_data(json.loads(gravado.read_text(encoding="utf-8"))) == hub.pf.sem_data(json.loads(json.dumps(dado, ensure_ascii=False))), "o arquivo gravado difere do acervo de agora (hub.py --resumo --check)"
+    saida = io.StringIO()
+    with contextlib.redirect_stdout(saida):
+        assert hub.main(["--resumo", "--check"]) == 0, saida.getvalue()
 
 
 def main() -> None:

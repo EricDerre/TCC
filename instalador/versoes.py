@@ -6,9 +6,23 @@
 """Versões testadas e faixas aceitas (decisão 139). Só biblioteca padrão; não instala nada."""
 import json
 import re
+import sys
 from pathlib import Path
 
-RAIZ = Path(__file__).resolve().parent.parent
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da revisão depois da primeira execução do Actions) função nova `raiz_do_projeto`: a pasta do executável quando o programa está compilado pelo PyInstaller (`Cobaia.exe`, que fica na raiz do projeto, ao lado do `versoes.json`) e a pasta de cima de `instalador/` nos outros casos; `RAIZ` passa a vir dela.
+# ! Motivo: o `Cobaia.py` chama `install.main()` de dentro do executável, e lá `__file__` aponta para a pasta temporária de extração (`%TEMP%\_MEIxxxx`), onde não há `versoes.json`: `versoes.carregar()` no passo do Ollama (`install.setup_agente_core`) levantaria `FileNotFoundError`, que o `install.main` não trata, e a instalação pelo executável pararia com um erro do Python depois de já ter instalado PHP, MariaDB e as venvs. Mesma regra que o `_env_common.REPO_ROOT` já usa. Não rodei nem compilei o `Cobaia.exe`.
+def raiz_do_projeto(congelado: bool | None = None, executavel: str | None = None, arquivo: str | None = None) -> Path:
+    """A raiz do projeto: a pasta do executável quando o programa está compilado (`sys.frozen`), senão a pasta de cima de
+    `instalador/`. Os três parâmetros só existem para o teste trocar o que `sys` e `__file__` diriam."""
+    if congelado is None:
+        congelado = bool(getattr(sys, "frozen", False))
+    if congelado:
+        return Path(executavel or sys.executable).resolve().parent
+    return Path(arquivo or __file__).resolve().parent.parent
+
+
+RAIZ = raiz_do_projeto()
 ARQUIVO = RAIZ / "versoes.json"
 ALVOS_UV = ("windows-x86_64", "linux-x86_64", "linux-aarch64", "macos-aarch64", "macos-x86_64")
 

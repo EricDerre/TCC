@@ -66,6 +66,11 @@
 #   -SemCorrecao    biblioteca: nao roda o ciclo de correcao (fumaca)
 #   -TetoProposta N biblioteca: teto de tokens de saida da proposta de edicao (padrao 700)
 #   -SemSeletor     avaliacao_trilha: nao roda a mutacao do seletor na tela (fumaca sem as cobaias; a avaliacao grava na pasta da corrida)
+#   -TraceNaFalha   tela, cura e cenarios: grava em <Saida>\traces\<caso>.zip o trace do Playwright da pagina em que o roteiro falhou
+#                   (os tempos da corrida deixam de valer como medida, e a leitura vai para a pasta da corrida)
+#   -LeituraNaPasta a leitura do avaliador vai para a pasta da corrida, nunca para resultados_alvo\fase4 (e o que o hub usa)
+#   -Selecao git    cenarios: roda so os cenarios atingidos pelo que mudou nas cobaias desde o ultimo commit testado (ou desde -Desde <commit>);
+#                   a leitura vai para a pasta da corrida
 param(
     [Parameter(Mandatory = $true)][ValidateSet("reproducao", "calibracao", "tela", "cura", "biblioteca", "cenarios", "avaliacao_trilha", "experimento_prompt", "ineditos", "sem_notas", "segundo_passe", "analista")][string]$Modo,
     [Parameter(Mandatory = $true)][string]$Saida,
@@ -88,7 +93,11 @@ param(
     [switch]$SemSonda,
     [switch]$SemCorrecao,
     [int]$TetoProposta = 700,
-    [switch]$SemSeletor
+    [switch]$SemSeletor,
+    [switch]$TraceNaFalha,
+    [switch]$LeituraNaPasta,
+    [ValidateSet("todos", "git")][string]$Selecao = "todos",
+    [string]$Desde = ""
 )
 $ErrorActionPreference = "Stop"
 $env:PYTHONIOENCODING = "utf-8"
@@ -246,7 +255,19 @@ if ($Modo -eq "cura") {
 }
 if ($Modo -eq "cenarios") {
     $Argumentos += @("--repeticoes", "$Repeticoes")
+    # ! Alteracao de IA - Revisar: (25/11/2026, Pos-Fase 4, pacote Q7) -Selecao git repassa --selecao git (e --desde, se vier) ao executor.
+    # ! Motivo: plano, secao 3.7: a corrida roda so os cenarios atingidos pelo que mudou nas cobaias. Vem desligada (padrao: todos).
+    if ($Selecao -eq "git") {
+        $Argumentos += @("--selecao", "git")
+        if ($Desde) { $Argumentos += @("--desde", $Desde) }
+    }
 }
+# ! Alteracao de IA - Revisar: (25/11/2026, Pos-Fase 4, pacote Q6) -TraceNaFalha repassa --trace-na-falha ao executor nos modos tela, cura e
+# cenarios, e -LeituraNaPasta manda o avaliador gravar a leitura na pasta da propria corrida. Os dois vem desligados.
+# ! Motivo: decisao 93 (o trace do Playwright so na falha, que a Fase 4 nao fez) e ficha 97 (o hub dispara uma corrida de cenarios). Com o
+# trace ligado o navegador grava a tela a cada passo e os tempos nao valem como medida; e uma corrida lancada pelo hub nao e uma das
+# corridas oficiais. Sem -LeituraNaPasta o avaliador gravaria a leitura em resultados_alvo\fase4, por cima de uma leitura oficial.
+if ($TraceNaFalha -and (@("tela", "cura", "cenarios") -contains $Modo)) { $Argumentos += @("--trace-na-falha") }
 if ($Modo -eq "biblioteca") {
     $Argumentos += @("--base-ineditos", $BaseIneditos, "--teto-proposta", "$TetoProposta")
     if ($SemSonda) { $Argumentos += @("--sem-sonda") }
@@ -268,11 +289,17 @@ if ($ComModelo) {
     }
 }
 if ($CodigoExecutor -ne 0) { Marco "!! executar_fase4.py saiu com codigo $CodigoExecutor"; exit $CodigoExecutor }
+# ! Alteracao de IA - Revisar: (25/11/2026, Pos-Fase 4, pacote Q7) com -Selecao git, se a corrida nao gravou cenarios.jsonl, o script termina aqui.
+# ! Motivo: quando nada do que mudou atinge um cenario, o executor grava a decisao e sai sem rodar; o avaliador nao teria o que ler e sairia com erro.
+if (($Selecao -eq "git") -and -not (Test-Path (Join-Path (Join-Path (Join-Path $Aqui $Resultados) $Saida) "cenarios.jsonl"))) {
+    Marco "selecao pelo Git: nada a rodar; a decisao ficou em impacto_git.json na pasta da corrida"
+    exit 0
+}
 
 $Avaliacao = @("avaliar_fase4.py", (FlagDaLeitura $Modo), "--saida", $Saida)
 if ($Nome) { $Avaliacao += @("--nome", $Nome) }
 if ($Titulo) { $Avaliacao += @("--titulo", $Titulo) }
-if (($Casos -gt 0) -or $CuraParcial -or $TrilhaParcial) { $Avaliacao += @("--pasta", (Join-Path (Join-Path $Aqui $Resultados) $Saida)) }
+if (($Casos -gt 0) -or $CuraParcial -or $TrilhaParcial -or $LeituraNaPasta -or $TraceNaFalha -or ($Selecao -eq "git")) { $Avaliacao += @("--pasta", (Join-Path (Join-Path $Aqui $Resultados) $Saida)) }
 Marco ("avaliar_fase4.py " + (($Avaliacao | Select-Object -Skip 1) -join " "))
 & python @Avaliacao
 if ($LASTEXITCODE -ne 0) { Marco "!! avaliar_fase4.py saiu com codigo $LASTEXITCODE"; exit $LASTEXITCODE }

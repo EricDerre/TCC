@@ -29,4 +29,7 @@ if (-not $py) {
     }
 }
 
-& $py (Join-Path $PSScriptRoot "install.py")
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a última chamada passa os argumentos (`@args`) ao install.py e o script termina com `exit $LASTEXITCODE`.
+# ! Motivo: execução 45650086543 do GitHub Actions, célula CI-WIN: o install.py parou em "Não foi possível subir o MariaDB" e mesmo assim `powershell -File install.ps1` saiu com código 0, porque o script não devolvia o código do Python; e `install.cmd --conferir` não chegava ao install.py, porque os argumentos não eram repassados.
+& $py (Join-Path $PSScriptRoot "install.py") @args
+exit $LASTEXITCODE

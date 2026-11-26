@@ -184,6 +184,9 @@ NAV = [
         # ! Alteração de IA - Revisar: (08/11/2026, pacote Q4) aba da barra de progresso e do protótipo do Git; o id entra junto com a seção (secao_progresso).
         # ! Motivo: as duas análises do Q4 (plano, seções 3.5 e 3.7) viram uma aba lida dos JSON gravados, como manda a regra do painel.
         ("progresso", "Barra e Git", "Dá para saber quanto falta enquanto o modelo pensa, e o que rodar quando o código das cobaias muda? As taxas do modelo nesta máquina, o erro da estimativa da barra por fase, medido nos registros gravados, e a seleção de cenários pelo diff do Git, provada no histórico do repositório."),
+        # ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) aba do hub central e da seleção pelo Git ligada ao executor; o id entra junto com a seção (secao_hub).
+        # ! Motivo: os dois pacotes feitos depois da Fase 5 (decisão 152) viram uma aba lida dos JSON gravados, como manda a regra do painel.
+        ("hub", "Hub e Git", "O analista consegue rever um diagnóstico do agente como se revê uma mudança de código, e a corrida consegue escolher os cenários pelo que mudou? O hub central, que junta o relatório, a evidência, a árvore de decisão e a trilha de cada caso numa página de revisão, e a seleção pelo Git ligada ao executor, conferida contra a rodada completa."),
         # ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) aba da sessão com revisor humano; o id entra junto com a seção (secao_revisao_v3).
         # ! Motivo: a medida com revisor humano (ficha 40, opção b) é uma análise nova da Pós-Fase 4 e, pela regra do painel, vira uma aba lida do JSON gravado.
         ("revisaov3", "Revisão humana", "O relatório v3 com a árvore de decisão ajuda uma pessoa a decidir? A sessão de revisão da corrida 24: os 36 relatórios lidos um a um, às cegas, todos por um analista de QA da empresa a quem o Eric passou os relatórios, com a adesão apropriada (aceitar o diagnóstico certo e recusar o errado), o erro localizado e a utilidade."),
@@ -2223,6 +2226,22 @@ function progGit(){
   grafico('g-git-pares', {type:'bar', data:{labels: G.pares, datasets:[{label:'cenários base a rodar (de '+G.total+')', data: G.selecionados, backgroundColor: G.cores.map(c => css(c))}]},
     options:{responsive:true, maintainAspectRatio:false, scales:{y:{beginAtZero:true, max: G.total, ticks:{stepSize:1}, title:{display:true, text:'cenários a rodar'}}}, plugins:{tooltip:{callbacks:{label: c => G.vereditos[c.dataIndex]+': '+c.formattedValue+' de '+G.total}}}}});
 }
+// ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacotes Q6 e Q7) os dois gráficos da aba "Hub e Git": os casos que o hub junta por corrida e, para cada
+// mudança do histórico, os cenários que a seleção pelo Git rodaria, os que deixaria de fora e passaram na rodada completa e os que deixaria de fora e falharam.
+// ! Motivo: a aba nova segue a regra do painel (um ou dois gráficos lidos do JSON); as cores vêm da paleta validada (--s1, --s3 e --s8), e a legenda nomeia cada série.
+function hubCorridas(){
+  const C = (T.hub||{}).corridas; if(!C) return;
+  grafico('g-hub-corridas', {type:'bar', data:{labels: C.rotulos, datasets:[{label:'casos com diagnóstico', data: C.casos, backgroundColor: css('--s1')}]},
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, title:{display:true, text:'casos no hub'}}}}});
+}
+function hubSelecao(){
+  const S = (T.hub||{}).selecao; if(!S || !S.pares.length) return;
+  grafico('g-hub-selecao', {type:'bar', data:{labels: S.pares, datasets:[
+      {label:'a seleção rodaria', data: S.selecionados, backgroundColor: css('--s1')},
+      {label:'deixaria de fora, e passou na rodada completa', data: S.deixados.map((d, i) => d - S.perdidas[i]), backgroundColor: css('--s3')},
+      {label:'deixaria de fora, e falhou na rodada completa', data: S.perdidas, backgroundColor: css('--s8')}]},
+    options:{responsive:true, maintainAspectRatio:false, scales:{x:{stacked:true}, y:{stacked:true, beginAtZero:true, max: S.total, ticks:{stepSize:1}, title:{display:true, text:'cenários do ensaio'}}}}});
+}
 function revV3Adesao(){
   const A = (T.revisaov3||{}).adesao; if(!A) return;
   grafico('g-revv3-adesao', {type:'bar', data:{labels: A.grupos, datasets: A.series.map(s => ({label: s.nome, data: s.n, backgroundColor: css(s.cor)}))},
@@ -2376,6 +2395,7 @@ DESENHAR_TOPICOS = {"modelos": ["modGraficos"], "comparacao": ["cmpEtapas"], "pe
                     "reproducao": ["repClasses"], "calibracao": ["calK", "calCurva"], "tela": ["telaRegra", "telaCorridas", "telaVerbete", "telaClasses", "telaRotulos"], "ineditosf4": ["inedClasse", "inedVerbete"], "posfase4": ["posFontes"], "texto": ["txtCriterios", "txtTermos"], "cura": ["curaModos", "curaRoteiros"],
                     "arvore": ["arvRotulos", "arvConfianca", "arvExplorar"],
                     "progresso": ["progErro", "progGit"],
+                    "hub": ["hubCorridas", "hubSelecao"],
                     "revisaov3": ["revV3Adesao", "revV3Utilidade"],
                     "semnotas": ["semNotasContexto", "semNotasPares"],
                     "fluxo": ["fluxoConferencia", "fluxoPosicao", "fluxoCusto", "fluxoAfirmacoes"],
@@ -4278,6 +4298,83 @@ def secao_progresso(taxas: dict | None, erro: dict | None, impacto: dict | None,
     return dados_js, html_
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacotes Q6 e Q7) a aba "Hub e Git": o hub central (a página de revisão que junta, para cada caso, o
+# relatório, a evidência, a árvore de decisão e a trilha) e a seleção de cenários pelo Git ligada ao executor e conferida contra a rodada completa. Lê `hub.json`
+# (de `hub.py --resumo`) e `conferencia_git.json` (de `impacto_git.py --conferir-historico`); dois gráficos pela paleta, cartões, "Como ler" e as tabelas recolhidas.
+# ! Motivo: a decisão 152 pôs os dois pacotes antes do texto final, e a regra do painel é uma aba por análise, lida dos arquivos gravados. O hub é uma página local,
+# que não cabe dentro do painel publicado; a aba diz o que ele junta, como abri-lo e o que foi e o que não foi provado.
+def secao_hub(hub: dict | None, conferencia: dict | None) -> tuple[dict, str]:
+    titulo = ("O analista consegue rever um diagnóstico do agente como se revê uma mudança de código, e a corrida consegue escolher os cenários pelo que mudou? "
+              "O hub central, que junta o relatório, a evidência, a árvore de decisão e a trilha de cada caso numa página de revisão, e a seleção pelo Git ligada "
+              "ao executor, conferida contra a rodada completa.")
+    if not (hub and conferencia):
+        return {}, (f'<section id="hub" hidden>\n<h1>{titulo}</h1>\n<p class="lead">Os derivados dos pacotes Q6 e Q7 ainda não foram gravados: faltam <code>hub.json</code> ou '
+                    '<code>conferencia_git.json</code> em <code>resultados_alvo/fase4/</code>, que saem de <code>hub.py --resumo</code> e de '
+                    '<code>impacto_git.py --conferir-historico</code>.</p>\n</section>')
+    t, rel, rev, tes = hub["total"], hub["relatorio"], hub["revisao"], hub["testes"]
+    corridas = hub["corridas"]
+    comp, r, pares = conferencia["completa"], conferencia["resumo"], conferencia["pares"]
+    total_ensaio = comp["cenarios"]
+    rotulo_comp = next((c["rotulo"] for c in corridas if c["pasta"] == comp["corrida"]), comp["corrida"])      # "corrida 28b", e nao o nome da pasta
+    lead_ = (f"O hub junta {t['casos']} casos com diagnóstico, de {len(corridas)} corridas ({t['casos_distintos']} casos distintos, porque o mesmo caso diagnosticado mais de uma vez "
+             "aparece como iterações), e em cada um o analista comenta um trecho, responde, resolve a conversa e dá o veredito; o agente só comenta. A seleção pelo Git passou "
+             f"a decidir a corrida, com as três regras de segurança, e a conta sobre o histórico mostra que em {r['pares_com_falha_perdida']} de {r['pares']} mudanças ela deixaria "
+             "de fora um cenário que falhou na rodada completa: são as mudanças em que nada do mapa foi tocado, e é para elas que a rodada completa volta em prazo fixo.")
+    itens_kpi = [("Casos no hub", f"{t['casos']}", f"{t['casos_distintos']} casos distintos, de {len(corridas)} corridas"),
+                 ("Casos com mais de uma iteração", f"{t['com_mais_de_uma_iteracao']}", f"o que tem mais tem {t['maior_numero_de_iteracoes']}; a página diz o que mudou de uma para a outra"),
+                 ("Blocos do relatório de cada caso", f"{rel['blocos']}", f"{rel['campos_da_5_5']} campos da seção 5.5 do syllabus e {rel['blocos_do_agente']} do que o agente fez"),
+                 ("Valores do veredito", f"{len(rev['vereditos'])}", "sempre do analista: o agente só comenta"),
+                 ("Testes do hub", f"{tes['total']} testes", f"{tes['no_navegador']} abrem a página no navegador sem janela"),
+                 ("Mudanças em que a seleção perderia uma falha", f"{r['pares_com_falha_perdida']} de {r['pares']}", f"conta sobre o histórico contra a {rotulo_comp}; nenhuma dessas seleções rodou de verdade")]
+    tab_corridas = tabela(["Corrida", "Pasta", "Modo", "Modelo", "Início", "Casos no hub"],
+                          [[c["rotulo"], f"<code>{esc(c['pasta'])}</code>", esc(c["modo"]), f"<code>{esc(c['modelo'])}</code>", esc(str(c["inicio"])[:10]), str(c["casos"])] for c in corridas], raw=True)
+    tab_revisao = tabela(["O que o analista preenche", "Valores"],
+                         [["Veredito", ", ".join(rev["vereditos"]).replace("_", " ")], ["Estado de cada conversa", ", ".join(rev["estados_da_conversa"]).replace("_", " ")],
+                          ["Estado do defeito (seção 5.5 do syllabus)", ", ".join(rev["estados_55"])], ["Severidade (escala do hub)", ", ".join(rev["severidades"])],
+                          ["Prioridade (escala do hub)", ", ".join(rev["prioridades"])], ["Rótulo do comentário", ", ".join(rev["rotulos"])],
+                          ["Desfecho", ", ".join(rev["desfechos"]).replace("_", " ")], ["A causa é outra", f"uma das {rev['causas']} causas que o agente conhece"]])
+    tab_pares = tabela(["Commit testado", "Commit atual", "Data", "O que a seleção faria", "Rodaria", "Deixaria de fora", "Falhas perdidas", "Segura"],
+                       [[f"<code>{p['testado'][:8]}</code>", f"<code>{p['atual'][:8]}</code>", p["data"], p["veredito"], str(len(p["selecionados"])), str(len(p["deixados_de_fora"])),
+                         ", ".join(f"<code>{esc(x)}</code>" for x in p["falhas_perdidas"]) or "nenhuma", "sim" if p["segura"] else "não"] for p in pares], raw=True)
+    itens_leitura = [
+        ("<strong>O hub é uma página local à imagem de uma pull request.</strong> Ele roda só na máquina de quem revisa (<code>python hub.py</code>, em "
+         "<code>Programacao/AgenteCore/experimentos</code>), monta cada caso na hora, da trilha gravada, com as mesmas funções do relatório e da árvore, e não escreve nas pastas das corridas. "
+         "A revisão fica num arquivo por caso, que só cresce."),
+        ("<strong>O agente só comenta.</strong> O veredito, a severidade, a prioridade, o estado do defeito e a sugestão de que a causa é outra são do analista; o servidor recusa qualquer um deles "
+         "em nome do agente, e o veredito nunca vem escolhido."),
+        ("<strong>Os três itens que a Fase 4 tinha deixado para a interface entraram.</strong> O trace do Playwright só na falha (<code>--trace-na-falha</code>, desligado por padrão, porque gravar a tela "
+         "a cada passo muda o tempo do roteiro), a vista da corrida ao vivo, com a barra de progresso e o último diagnóstico, e o explorador da trilha de cada caso. O botão que lança a corrida só "
+         "funciona quando o hub é aberto com <code>--permitir-execucao</code>; sem isso a página mostra o comando para copiar."),
+        (f"<strong>A seleção pelo Git passou a decidir a corrida.</strong> Com <code>--selecao git</code>, o executor roda só os cenários atingidos pelo que mudou nas cobaias desde o último commit "
+         "testado, roda tudo quando um arquivo da aplicação está fora do mapa ou quando a última rodada completa passou do prazo, e grava o que deixou de fora. Na conta sobre o histórico, "
+         f"{r['pares_que_rodam_tudo']} de {r['pares']} mudanças rodam tudo, e {r['pares_com_falha_perdida']} deixariam de fora o cenário que falhou na {rotulo_comp} "
+         f"({comp['task_success']} de {comp['execucoes']} execuções com sucesso nessa rodada)."),
+        ("<strong>O que ainda não foi provado.</strong> A conta acima é retrospectiva: nenhuma seleção parcial rodou de verdade, porque desde a última mudança nas cobaias nada do mapa foi tocado. "
+         "O trace foi provado numa página local que falha de propósito; a prova com as cobaias e o modelo é uma corrida curta, que fica para a máquina livre."),
+    ]
+    dados_js = {"corridas": {"rotulos": [c["rotulo"] for c in corridas], "casos": [c["casos"] for c in corridas]},
+                "selecao": {"pares": [p["atual"][:8] for p in pares], "selecionados": [len(p["selecionados"]) for p in pares], "deixados": [len(p["deixados_de_fora"]) for p in pares],
+                            "perdidas": [len(p["falhas_perdidas"]) for p in pares], "total": total_ensaio}}
+    html_ = f"""<section id="hub" hidden>
+<h1>{titulo}</h1>
+<p class="lead">{lead_}</p>
+{kpis(itens_kpi)}
+<h2>Quantos casos o hub junta, por corrida</h2>
+<div class="chart baixo"><canvas id="g-hub-corridas"></canvas></div>
+{detalhes("As corridas que o hub mostra", tab_corridas)}
+{detalhes("O que o analista preenche na revisão", tab_revisao)}
+<h2>O que a seleção pelo Git deixaria de fora em cada mudança, e o que a rodada completa mostra</h2>
+<div class="chart"><canvas id="g-hub-selecao"></canvas></div>
+{detalhes("A conferência par a par", tab_pares)}
+{leitura(itens_leitura)}
+{fontes(["<code>resultados_alvo/fase4/hub.json</code> (<code>hub.py --resumo</code>, com <code>--check</code>)", "<code>conferencia_git.json</code> (<code>impacto_git.py --conferir-historico</code>)",
+         "<code>experimentos/hub.py</code>, <code>hub_dados.py</code>, <code>hub_revisao.py</code>, <code>hub_pagina.py</code> e <code>impacto_git.py</code>",
+         "plano aprovado da Pós-Fase 4, seções 3.6 e 3.7 (pacotes Q6 e Q7); decisões 93, 152 e 157", "levantamento §6.15.1 (revisão no estilo de pull request) e §6.15.5 (seleção pelo diff)",
+         "<code>5-metodo-e-ferramental/estudo-visual-explainer-para-o-hub.md</code>"])}
+</section>"""
+    return dados_js, html_
+
+
 # ! Alteração de IA - Revisar: (10/11/2026, Pós-Fase 4, pacote Q5) a aba "Revisão humana": a sessão com revisor humano dos relatórios v3 e das árvores de decisão da
 # corrida 24 (leitura_revisao_v3.json, de avaliar_fase4.py --revisao_v3): a adesão apropriada por grupo, o erro localizado, o tempo até a decisão, a utilidade, a
 # avaliação do revisor contra o gabarito e a tabela caso a caso com o comentário dele; dois gráficos pela paleta, cartões, "Como ler" e as tabelas recolhidas.
@@ -6003,6 +6100,9 @@ def montar(ctx: dict) -> tuple[dict, str]:
     # a aba da barra e do Git existe sempre (o mapa de navegação a lista); sem os JSON do Q4 ela mostra o estado vazio
     d, h = secao_progresso(ctx.get("taxas_progresso"), ctx.get("erro_progresso"), ctx.get("impacto_git"), ctx.get("fumaca_progresso"))
     partes.append(("progresso", d, h))
+    # a aba do hub e da seleção pelo Git existe sempre (o mapa de navegação a lista); sem hub.json e conferencia_git.json ela mostra o estado vazio
+    d, h = secao_hub(ctx.get("hub"), ctx.get("conferencia_git"))
+    partes.append(("hub", d, h))
     # a aba da revisão humana existe sempre (o mapa de navegação a lista); sem leitura_revisao_v3.json ela mostra o estado vazio
     d, h = secao_revisao_v3(ctx.get("revisao_v3"), ctx.get("revisao_trilha"))
     partes.append(("revisaov3", d, h))

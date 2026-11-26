@@ -83,6 +83,16 @@ Todos os números vêm de `fase5/medicao.md` e do README, nas linhas citadas.
 - Slide: "ODS 17, meta 17.6: acesso compartilhado à tecnologia. Código aberto com licença MIT, documentação pública e um instalador único para Windows, Linux e macOS, provado no Windows 11 e no Linux pelo WSL."
 - Banner: "ODS 17 (meta 17.6): código aberto e documentado para outras equipes reaproveitarem."
 
+## Decisão do grupo (25/11/2026)
+
+O Eric escolheu os três ODS (ficha 98, decisão 159): "Os 3, enfatizando na questão de código fonte aberto e documentado, facilitando o acesso". A ordem de leitura continua a da recomendação, e o destaque passa a ser o que o projeto tem de aberto. Os textos com essa ênfase:
+
+- Slide: "ODS 9 (meta 9.5), ODS 8 (meta 8.2) e ODS 17 (meta 17.6). Pesquisa e inovação em teste de software, com reparo mais rápido que o manual nos dez cenários medidos (66,3 s contra 219,7 s, em média). O código, os registros de cada medida e a documentação são abertos, sob licença MIT, para outra equipe reproduzir e reaproveitar."
+- Banner: "ODS 9, 8 e 17: inovação em teste de software, com código aberto e documentado para facilitar o acesso."
+- Se a banca perguntar pelo ODS 17: a meta 17.6 fala de cooperação entre países, que o projeto não fez. A resposta é "acesso aberto ao conhecimento", com o repositório principal público.
+
+O mesmo conteúdo entrou no último parágrafo da Justificativa do documento do TCC (seção 3) e numa seção do `README.md`.
+
 ## Descartados, com o motivo
 
 - **9.c:** trata de acesso universal à internet nos países menos desenvolvidos. O projeto precisa de internet só para instalar.
