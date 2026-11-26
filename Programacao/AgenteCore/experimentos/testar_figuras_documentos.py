@@ -144,6 +144,32 @@ def teste_figura_dos_experimentos_da_pos_fase_4_le_os_tres_registros():
     assert "0,6875" in g.gerar_md(FIGS) and "0,0581" in g.gerar_md(FIGS), "o valor-p sai inteiro na tabela de dados"
 
 
+# ! Alteração de IA - Revisar: (26/11/2026, decisão 182) teste novo, escrito antes do desenho: a figura da arquitetura do agente tem de
+# nomear peças cujos arquivos existem, ler as portas do `run.py` e dizer quais peças guardam alguma coisa.
+# ! Motivo: o Eric aprovou no quadro um diagrama de arquitetura para a seção 5.2 do documento do TCC (ficha 120). A figura não tem número
+# de resultado, mas tem nomes de arquivo, portas e o que fica guardado em cada peça; sem o teste, um arquivo renomeado ou uma porta
+# trocada no `run.py` deixaria a figura e a tabela dela dizendo uma coisa que o código não faz.
+def teste_figura_da_arquitetura_nomeia_pecas_que_existem_e_le_as_portas_do_codigo():
+    import re
+    f = FIGS["arquitetura-do-agente"]
+    assert f["cab"] == ["Peça", "O que faz", "O que guarda", "Onde está no repositório"], f["cab"]
+    pecas = {l[0]: l for l in f["linhas"]}
+    esperadas = ("Aplicações-alvo", "Navegador do agente", "Interceptador", "Poda", "Busca na biblioteca", "Biblioteca de produção", "Modelo local",
+                 "Conferência e selo", "Cura do localizador", "Trilha", "Relatório e árvore de decisão", "Hub central")
+    assert tuple(pecas) == esperadas, tuple(pecas)
+    for l in f["linhas"]:
+        for caminho in l[3].split(", "):
+            assert (g.RAIZ / caminho).exists(), (l[0], caminho)
+    run = (g.RAIZ / "run.py").read_text(encoding="utf-8")
+    for nome, peca in (("FRONT_PORT", "Aplicações-alvo"), ("API_PORT", "Aplicações-alvo"), ("HUB_PORT", "Hub central")):
+        porta = re.search(rf"(?m)^{nome} = (\d+)", run).group(1)
+        assert f"porta {porta}" in pecas[peca][1], (nome, porta, pecas[peca][1])
+    cal = g._j("fase4/calibracao.json")
+    assert str(cal["k_escolhido"]) in pecas["Busca na biblioteca"][1] and cal["metadados"]["modelo"] in pecas["Modelo local"][1]
+    guardam = {l[0] for l in f["linhas"] if l[2] != "nada"}
+    assert guardam == {"Aplicações-alvo", "Biblioteca de produção", "Trilha", "Relatório e árvore de decisão", "Hub central"}, guardam
+
+
 def teste_titulos_sem_travessao_nem_seta():
     for f in FIGS.values():
         for c in "—→↔":

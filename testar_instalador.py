@@ -3439,7 +3439,9 @@ def teste_relatorio_sincronizar_acusa_destino_sem_marca_e_o_check_acusa_diferenc
     shutil.copytree(_celulas_de_mentira(), celulas)
     caminho_relatorio = raiz / relatorio.RELATORIO_RELATIVO
     caminho_relatorio.parent.mkdir(parents=True, exist_ok=True)
-    marcas = "".join(f"<!-- tb_inst_{n}:inicio -->\nvelho\n<!-- tb_inst_{n}:fim -->\n" for n in ("resumo", "matriz", "rodadas", "nao_testadas"))
+    # ! Alteração de IA - Revisar: (26/11/2026, decisão 180) a lista de marcas do relatório de mentira ganha `limites` e `futuro`; o README de mentira ganha `limites_curto`; o DETALHES de mentira ganha `limites` e `futuro`; a contagem de "sem as marcas" passa a ser por arquivo.
+    # ! Motivo: o `DESTINOS` de `relatorio.py` agora cola mais blocos nos três documentos (o dono do projeto pediu a limitação e o trabalho futuro gerados do `matriz.json`); sem estas marcas o teste deixaria de provar "depois de colar, o check não acusa nada", e a contagem por bloco passaria de 2 para 5 sem que o comportamento tivesse mudado.
+    marcas = "".join(f"<!-- tb_inst_{n}:inicio -->\nvelho\n<!-- tb_inst_{n}:fim -->\n" for n in ("resumo", "matriz", "rodadas", "nao_testadas", "limites", "futuro"))
     caminho_relatorio.write_text("texto\n" + marcas + "fim\n", encoding="utf-8")
     (raiz / "README.md").write_text("README sem marcas\n", encoding="utf-8")
     (raiz / "DETALHES-TECNICOS.md").write_text("DETALHES com so uma marca\n<!-- tb_inst_resumo:inicio -->\nvelho\n<!-- tb_inst_resumo:fim -->\n", encoding="utf-8")
@@ -3459,15 +3461,16 @@ def teste_relatorio_sincronizar_acusa_destino_sem_marca_e_o_check_acusa_diferenc
     assert any("DETALHES-TECNICOS.md" in d and "nao_testadas" in d for d in diferencas), "o bloco sem marca continua acusado depois de colar"
     # o que falta de marca continua falta: o check segue acusando só os dois arquivos incompletos
     restantes, _ = relatorio.sincronizar(raiz, gravar=False)
-    assert len([d for d in restantes if "sem as marcas" in d]) == 2, restantes
+    assert len({d.split(":")[0] for d in restantes if "sem as marcas" in d}) == 2, restantes   # ! Alteração de IA - Revisar: conta arquivos, não blocos. ! Motivo: ver a tag acima (decisão 180).
     # arquivo de destino que não existe também é diferença
     (raiz / "README.md").unlink()
     restantes, _ = relatorio.sincronizar(raiz, gravar=False)
     assert any("README.md" in d and "não existe" in d for d in restantes), restantes
     # com todas as marcas, depois de colar o check não acusa nada, e uma edição à mão no bloco é acusada
-    (raiz / "README.md").write_text("README\n<!-- tb_inst_resumo:inicio -->\nvelho\n<!-- tb_inst_resumo:fim -->\n", encoding="utf-8")
+    (raiz / "README.md").write_text("README\n" + "".join(f"<!-- tb_inst_{n}:inicio -->\nvelho\n<!-- tb_inst_{n}:fim -->\n"
+                                                         for n in ("resumo", "limites_curto")), encoding="utf-8")
     (raiz / "DETALHES-TECNICOS.md").write_text("D\n" + "".join(f"<!-- tb_inst_{n}:inicio -->\nv\n<!-- tb_inst_{n}:fim -->\n"
-                                                              for n in ("resumo", "nao_testadas")), encoding="utf-8")
+                                                              for n in ("resumo", "nao_testadas", "limites", "futuro")), encoding="utf-8")
     relatorio.sincronizar(raiz, gravar=True)
     assert relatorio.sincronizar(raiz, gravar=False) == ([], []), "depois de colar, o check não acusa nada"
     caminho_relatorio.write_text(caminho_relatorio.read_text(encoding="utf-8").replace("L-ARCH", "L-OUTRA", 1), encoding="utf-8")
@@ -3483,6 +3486,180 @@ def teste_relatorio_do_repositorio_bate_com_as_evidencias():
     for fixa in relatorio.CELULAS:
         if fixa.startswith(("L-", "ALVO")):
             assert any(r["id"] == fixa for r in rodadas), f"{fixa} devia ter rodada"
+
+
+# ! Alteração de IA - Revisar: (26/11/2026, decisão 180) testes dos blocos gerados de limitação e de trabalho futuro do `relatorio.py`: `_celulas_das_classes` monta uma pasta `celulas/` com uma célula em cada uma das seis classes de `classificar`, e os testes conferem o campo `instalador` das rodadas, `pedido_novo` e `instalador_ultima`, as seis classes, `bloco_limites`, `bloco_futuro`, `bloco_limites_curto`, os `DESTINOS` e o `matriz.json`.
+# ! Motivo: o dono do projeto pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados como limitação e como trabalho futuro, e a tabela do resumo não dizia que uma célula que alcançou o N3 pedindo N3 também é um limite, nem que no Mac Intel a prova passou com o instalador interrompido; gerados das pastas de rodada, os blocos não ficam para trás.
+def _celulas_das_classes() -> Path:
+    celulas = _pasta_temporaria() / "celulas"
+
+    def rodada(ident: str, nome: str, celula: dict, alcancado: str | None) -> None:
+        pasta = celulas / ident / nome
+        pasta.mkdir(parents=True)
+        (pasta / "celula.json").write_text(json.dumps({"id": ident, **celula}, ensure_ascii=False), encoding="utf-8")
+        if alcancado is not None:
+            (pasta / "registro.json").write_text(json.dumps({"alcancado": alcancado, "falhou": False, "niveis": {},
+                                                             "sistema": {"nome": "x"}}), encoding="utf-8")
+
+    ok = {"instalador": "0", "conferir": "0"}
+    rodada("ALVO", "20261119-184751", {"modo": "novo", "ate": "N4", "saidas": {"conferir": "0", "restaurar_banco": "0"}}, "N4")
+    rodada("L-ARCH", "20261119-162821", {"modo": "novo", "ate": "N1", "saidas": {"install_direto": "1"}}, "N1")
+    rodada("L-F45", "20261119-134801", {"modo": "novo", "ate": "N3", "saidas": {"install_direto": "1"}}, "N2")
+    rodada("M-15", "20261126-110603", {"modo": "novo", "ate": "N3", "resultado_do_instalador": "interrompida", "saidas": ok,
+                                       "actions": {}}, "N3")
+    rodada("L-D12", "20261119-161617", {"modo": "novo", "ate": "N3", "saidas": {"install_direto": 0, "preparo": "0"}}, "N3")
+    rodada("L-D13", "20261119-133320", {"modo": "novo", "ate": "N2", "saidas": {"install_direto": "0"}}, "N2")
+    rodada("L-U2404", "20261119-090917", {"modo": "novo", "ate": "N3", "saidas": {"install_direto": "1"}}, "N3")
+    rodada("L-U2404", "20261119-163315", {"modo": "novo", "ate": "N4", "saidas": {"install_direto": "0", "install_bash": "0"}}, "N4")
+    rodada("CI-UBU", "20261126-110552", {"modo": "novo", "ate": "N4", "resultado_do_instalador": "concluida", "saidas": ok,
+                                         "actions": {}}, "N4")
+    rodada("M-15I", "20261126-110601", {"modo": "como-esta", "ate": "N4", "resultado_do_instalador": "interrompida", "saidas": ok,
+                                        "actions": {}}, "N4")
+    return celulas
+
+
+def _classes_de_mentira() -> dict:
+    return {c["id"]: c for c in relatorio.por_celula(relatorio.coletar(_celulas_das_classes()))}
+
+
+def teste_relatorio_campo_instalador_da_rodada():
+    por_id = {(r["id"], r["rodada"]): r for r in relatorio.coletar(_celulas_das_classes())}
+    assert por_id[("M-15", "20261126-110603")]["instalador"] == "interrompido", "resultado_do_instalador diferente de concluida"
+    assert por_id[("CI-UBU", "20261126-110552")]["instalador"] == "concluído"
+    assert por_id[("L-D12", "20261119-161617")]["instalador"] == "concluído", "saidas.install_direto 0, número ou texto"
+    assert por_id[("L-U2404", "20261119-163315")]["instalador"] == "concluído", "todas as chaves install* valem 0"
+    assert por_id[("L-U2404", "20261119-090917")]["instalador"] == "interrompido", "install_direto 1"
+    assert por_id[("ALVO", "20261119-184751")]["instalador"] == "não rodou", "só a prova, sem chave do instalador"
+    pasta = _pasta_temporaria() / "celulas" / "L-D12" / "20261119-000000"
+    pasta.mkdir(parents=True)
+    (pasta / "celula.json").write_text(json.dumps({"saidas": {"install_direto": "0", "install_bash": "1"}}), encoding="utf-8")
+    assert relatorio.coletar(pasta.parent.parent)[0]["instalador"] == "interrompido", "uma chave install* diferente de 0 basta"
+    assert '"instalador": "concluído"' in relatorio.matriz_json(relatorio.coletar(_celulas_das_classes())), "o matriz.json traz o campo"
+
+
+def teste_relatorio_pedido_novo_e_instalador_da_ultima():
+    c = _classes_de_mentira()
+    assert (c["L-U2404"]["pedido_novo"], c["L-U2404"]["instalador_ultima"], c["L-U2404"]["melhor_novo"]) == ("N4", "concluído", "N4")
+    assert (c["ALVO"]["pedido_novo"], c["ALVO"]["instalador_ultima"]) == ("N4", "não rodou")
+    assert c["M-15I"]["pedido_novo"] == "-", "só rodada como-esta: nenhum pedido em rodada novo"
+    assert c["M-15"]["instalador_ultima"] == "interrompido"
+
+
+def teste_relatorio_classifica_as_seis_classes():
+    c = _classes_de_mentira()
+    esperado = {"ALVO": "so_prova", "L-ARCH": "sem_suporte", "L-F45": "abaixo_do_pedido", "M-15": "instalador_parou",
+                "L-D12": "sem_n4", "L-U2404": "ate_o_fim"}
+    for ident, classe in esperado.items():
+        assert relatorio.classificar(c[ident])[0] == classe, (ident, relatorio.classificar(c[ident]))
+    assert relatorio.classificar(c["ALVO"])[1] == "só a prova rodou, sobre a instalação que já existia; o instalador não rodou nesta máquina"
+    assert relatorio.classificar(c["L-ARCH"])[1] == "sem suporte, de propósito: o instalador para e diz o que instalar à mão"
+    assert relatorio.classificar(c["L-F45"])[1] == "a prova ficou abaixo do nível pedido (melhor esforço)"
+    assert relatorio.classificar(c["M-15"])[1] == "a prova passou, mas o instalador não foi até o fim"
+    assert relatorio.classificar(c["L-D12"])[1] == "o N4, com o modelo do projeto respondendo, não foi pedido nesta célula"
+    assert relatorio.classificar(c["L-U2404"]) == ("ate_o_fim", "")
+    # a ordem das regras: o instalador não ter rodado vence a falta de suporte; o melhor esforço também vale para o instalador interrompido
+    assert relatorio.classificar({**c["L-ARCH"], "instalador_ultima": "não rodou"})[0] == "so_prova"
+    assert relatorio.classificar({**c["L-F45"], "melhor_novo": "N3"}) == ("instalador_parou", "a prova passou, mas o instalador não foi até o fim (melhor esforço)")
+
+
+def teste_relatorio_bloco_limites():
+    celulas = relatorio.por_celula(relatorio.coletar(_celulas_das_classes()))
+    texto = relatorio.bloco_limites(celulas)
+    primeira, resto = texto.split("\n\n", 1)
+    assert primeira == ("**Provado até o fim** (instalação concluída e prova até o N4): "
+                        "Ubuntu 24.04 (`L-U2404`, WSL); Ubuntu 24.04 do GitHub Actions (`CI-UBU`, GitHub Actions)."), primeira
+    assert resto.startswith("| Célula | Sistema | Onde rodou | Até onde a prova chegou | Maior nível pedido | Instalador na última rodada | Limitação |"), resto
+    tabela = [linha for linha in resto.splitlines() if linha.startswith("|")]
+    ids = [linha.split(" | ")[0].strip("| ") for linha in tabela[2:]]
+    assert ids == ["ALVO", "L-D12", "L-D13", "L-F45", "L-ARCH", "M-15", "M-15I"], ids
+    assert "L-U2404" not in ids and "CI-UBU" not in ids, "célula ate_o_fim só aparece na frase"
+    assert "| ALVO | Windows 11 da máquina-alvo | máquina-alvo | N4 | N4 | não rodou | só a prova rodou" in resto, "so_prova: nível da última rodada"
+    assert "| L-F45 | Fedora 45 (melhor esforço) | WSL | N2 | N3 | interrompido | a prova ficou abaixo do nível pedido (melhor esforço) |" in resto
+    assert "| M-15 | macOS 15, Apple Silicon | GitHub Actions | N3 | N3 | interrompido | a prova passou, mas o instalador não foi até o fim |" in resto
+    assert not texto.splitlines()[-1].startswith("|") and texto.splitlines()[-2] == "", "legenda de uma linha, depois da tabela"
+    assert "rodada `novo`" in texto.splitlines()[-1] and "Maior nível pedido" in texto.splitlines()[-1]
+    assert "—" not in texto and "→" not in texto
+    assert relatorio.bloco_limites([]).startswith("**Provado até o fim** (instalação concluída e prova até o N4): nenhuma célula.")
+
+
+def teste_relatorio_bloco_futuro():
+    celulas = relatorio.por_celula(relatorio.coletar(_celulas_das_classes()))
+    texto = relatorio.bloco_futuro(celulas)
+    linhas = texto.splitlines()
+    assert linhas[0] == "| O que falta provar | Por que ficou de fora |"
+    corpo = [linha for linha in linhas[2:] if linha.startswith("|")]
+    primeiras = [linha.split(" | ")[0].strip("| ") for linha in corpo]
+    assert primeiras[0] == "A prova até o N4, com o modelo do projeto respondendo, em: Debian 13 (`L-D13`)", primeiras[0]
+    assert "essas células pediram a prova só até o N2" in corpo[0]
+    assert primeiras[1].startswith("A prova até o N4, com o modelo do projeto respondendo, em: Debian 12 (`L-D12`)") and "até o N3" in corpo[1]
+    assert primeiras[2] == "O instalador até o fim em: macOS 15, Apple Silicon (`M-15`), macOS 15, Intel (melhor esforço) (`M-15I`)", primeiras[2]
+    assert "na última rodada a prova passou e o instalador foi interrompido (seção 5 do relatório do instalador)" in corpo[2]
+    assert primeiras[3] == "O nível pedido em: Fedora 45 (melhor esforço) (`L-F45`) (ficou no N2 de N3)", primeiras[3]
+    assert "melhor esforço: o instalador não instala tudo de que esse sistema precisa" in corpo[3]
+    for cod, sistema, motivo in relatorio.NAO_TESTADAS:
+        assert f"| {sistema} (`{cod}`) | {motivo} |" in texto, cod
+    assert primeiras[4:4 + len(relatorio.NAO_TESTADAS)] == [f"{s} (`{c}`)" for c, s, _ in relatorio.NAO_TESTADAS]
+    assert len(relatorio.SEM_CELULA) == 4 and primeiras[-4:] == [a for a, _ in relatorio.SEM_CELULA]
+    assert "O MariaDB instalado pelo MSI do `winget`, no Windows com administrador e sem MySQL" in texto
+    assert "Windows e Linux em processador ARM" in texto and "Um Mac sem o Homebrew" in texto
+    assert "ALVO" not in texto and "L-ARCH" not in texto, "so_prova e sem_suporte não geram trabalho futuro"
+    # classe sem célula não gera linha
+    so_ate_o_fim = [c for c in celulas if c["id"] == "L-U2404"]
+    sem = relatorio.bloco_futuro(so_ate_o_fim)
+    assert "A prova até o N4" not in sem and "O instalador até o fim" not in sem and "O nível pedido" not in sem
+    assert "Um Mac sem o Homebrew" in sem and "W11-SB" in sem
+    assert "—" not in texto and "→" not in texto
+
+
+def teste_relatorio_bloco_futuro_abaixo_do_pedido_sem_melhor_esforco():
+    c = _classes_de_mentira()
+    sem_melhor = {**c["L-F45"], "id": "L-D12", "sistema": "Debian 12"}
+    texto = relatorio.bloco_futuro([sem_melhor])
+    assert "a prova ficou abaixo do nível pedido |" in texto and "melhor esforço: o instalador" not in texto
+
+
+def teste_relatorio_bloco_limites_curto():
+    celulas = relatorio.por_celula(relatorio.coletar(_celulas_das_classes()))
+    texto = relatorio.bloco_limites_curto(celulas)
+    # ! Alteração de IA - Revisar: (26/11/2026, decisão 180, ajuste do controlador) o teste passa a pedir os dois parágrafos do README agrupados por tipo de limite, sem o código de cada célula e sem repetir a mesma frase a cada sistema.
+    # ! Motivo: a primeira forma repetia "o N4, com o modelo do projeto respondendo, não foi pedido nesta célula" seis vezes e listava cada linha do trabalho futuro por extenso; o README estava sendo enxugado a pedido do Eric, e o parágrafo ficou maior que a tabela que ele resume. O detalhe por célula continua nas tabelas do relatório e do DETALHES.
+    p1, p2 = texto.split("\n\n")
+    assert p1.startswith("**Limitação (o que o projeto entrega hoje).** O instalador foi provado até o fim, com a instalação concluída "
+                         "e a prova até o N4, em: Ubuntu 24.04 (WSL); Ubuntu 24.04 do GitHub Actions (GitHub Actions). "
+                         "Nos outros sistemas com rodada: "), p1
+    assert "A prova foi até o N2, o nível pedido, sem chegar ao N4: Debian 13." in p1, p1
+    assert "A prova foi até o N3, o nível pedido, sem chegar ao N4: Debian 12." in p1, p1
+    assert "A prova passou, mas o instalador não foi até o fim: " in p1 and "macOS 15, Apple Silicon" in p1, p1
+    assert "A prova ficou abaixo do nível pedido: Fedora 45 (melhor esforço), no N2 de N3." in p1, p1
+    assert "Sem suporte, de propósito: Arch Linux (sem suporte)." in p1, p1
+    assert "Só a prova rodou, sem o instalador: Windows 11 da máquina-alvo." in p1, p1
+    assert "`" not in p1, "o parágrafo do README não traz o código das células"
+    assert p1.count("não foi pedido nesta célula") == 0
+    assert p2.startswith("**Trabalho futuro (o que falta provar).** A prova até o N4, com o modelo do projeto respondendo, em: "), p2
+    assert "Debian 12; Debian 13." in p2, p2
+    assert "O instalador até o fim em: " in p2 and "O nível pedido em: Fedora 45 (melhor esforço)." in p2, p2
+    assert "As células da matriz que não rodaram: " in p2
+    for _, sistema, _ in relatorio.NAO_TESTADAS:
+        assert sistema in p2, sistema
+    assert "E o que nenhuma célula exercita: o MariaDB instalado pelo MSI do `winget`" in p2, p2
+    for item, _ in relatorio.SEM_CELULA:
+        assert item[1:] in p2, item
+    assert p2.endswith("O motivo de cada item está na seção 6 do relatório do instalador.")
+    # classe sem célula não gera frase
+    so_ate_o_fim = relatorio.bloco_limites_curto([c for c in celulas if c["id"] == "L-U2404"])
+    assert "Nos outros sistemas com rodada" not in so_ate_o_fim and "A prova até o N4" not in so_ate_o_fim, so_ate_o_fim
+    assert "As células da matriz que não rodaram: " in so_ate_o_fim
+    assert "—" not in texto and "→" not in texto
+
+
+def teste_relatorio_destinos_trazem_os_blocos_novos():
+    d = relatorio.DESTINOS
+    assert d[relatorio.RELATORIO_RELATIVO] == ("resumo", "matriz", "rodadas", "nao_testadas", "limites", "futuro")
+    assert d[Path("DETALHES-TECNICOS.md")] == ("resumo", "nao_testadas", "limites", "futuro")
+    assert d[Path("README.md")] == ("resumo", "limites_curto")
+    blocos = relatorio._blocos(relatorio.coletar(_celulas_das_classes()))
+    for nome in {n for nomes in d.values() for n in nomes}:
+        assert blocos[nome].strip(), nome
 
 
 # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, Tarefa C) testes novos do macOS pelo fluxo por pacotes: tabela do `brew`, busca do MariaDB nas pastas `opt` do Homebrew, `formula_do_mariadb`, `subir_servico_no_macos`, `ensure_mariadb_running` e `ensure_root_no_password` no `Darwin`, `php_extension_flags` no `Darwin`, `pacotes_desejados`, `pacote_instalado`, `comando_de_instalar` e `instalar_pacotes_do_sistema` na família `brew`, `instalar_chromium` sem `ldd` fora do Linux, `main` no macOS e os passos do Windows que perderam o ramo do macOS.

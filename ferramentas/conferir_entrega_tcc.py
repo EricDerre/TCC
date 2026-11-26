@@ -12,6 +12,7 @@ completa; sem ele, o script avisa e confere só metadados e busca bruta, dizendo
 from __future__ import annotations
 
 import argparse
+import datetime
 import html
 import json
 import re
@@ -217,16 +218,75 @@ def _decodificar_literal(bruto: bytes) -> str:
     return bruto.decode("latin-1", errors="replace")
 
 
-def _metadados_brutos(dados: bytes) -> dict[str, str]:
+# ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) a leitura dos metadados do PDF sem o PyMuPDF passa a desfazer os
+# escapes das cadeias literais (`\(`, `\)`, `\\`, `\n`, o octal) antes de decodificar, e a preferir o dicionário de informações que o
+# trailer aponta (`/Info N G R`) à primeira ocorrência de cada chave no arquivo; a conferência das marcas olha os dois.
+# ! Motivo: no PDF da versão 5 o título vem em UTF-16 com os parênteses de "(E2E)" escapados, e a leitura sem desfazer o escape
+# embaralhava o trecho; um teste mostrou que uma marca de IA depois de um parêntese ficava sem ser achada. E a primeira ocorrência de
+# `/Title` num PDF exportado pelo Word pode ser a do primeiro marcador ("AGRADECIMENTOS"), e não a do título do documento.
+_ESCAPES_DO_LITERAL = {b"n": b"\n", b"r": b"\r", b"t": b"\t", b"b": b"\b", b"f": b"\f", b"(": b"(", b")": b")", b"\\": b"\\"}
+_CHAVES_DE_METADADOS = re.compile(rb"/(Author|Creator|Producer|Title|Subject|Keywords)\s*(?:\(((?:\\.|[^\\)])*)\)|<([0-9A-Fa-f\s]+)>)", re.DOTALL)
+
+
+def _desescapar_literal(bruto: bytes) -> bytes:
+    """Desfaz os escapes de uma cadeia literal de PDF; sem isso, um texto em UTF-16 com parêntese sai desalinhado."""
+    saida = bytearray()
+    i = 0
+    while i < len(bruto):
+        atual = bruto[i:i + 1]
+        if atual != b"\\" or i + 1 >= len(bruto):
+            saida += atual
+            i += 1
+            continue
+        seguinte = bruto[i + 1:i + 2]
+        if seguinte in _ESCAPES_DO_LITERAL:
+            saida += _ESCAPES_DO_LITERAL[seguinte]
+            i += 2
+        elif seguinte in b"01234567":
+            j, digitos = i + 1, b""
+            while j < len(bruto) and len(digitos) < 3 and bruto[j:j + 1] in b"01234567":
+                digitos += bruto[j:j + 1]
+                j += 1
+            saida.append(int(digitos, 8) & 0xFF)
+            i = j
+        elif seguinte in (b"\r", b"\n"):          # barra no fim da linha: a cadeia continua na linha de baixo
+            i += 2
+            if seguinte == b"\r" and bruto[i:i + 1] == b"\n":
+                i += 1
+        else:
+            saida += seguinte
+            i += 2
+    return bytes(saida)
+
+
+def _cadeias_de_metadados(trecho: bytes) -> dict[str, str]:
+    """A primeira ocorrência de cada chave de metadados no trecho, já decodificada."""
     saida: dict[str, str] = {}
-    for m in re.finditer(rb"/(Author|Creator|Producer|Title|Subject|Keywords)\s*(?:\(((?:\\.|[^\\)])*)\)|<([0-9A-Fa-f\s]+)>)", dados):
+    for m in _CHAVES_DE_METADADOS.finditer(trecho):
         chave = m.group(1).decode()
         if m.group(2) is not None:
-            valor = _decodificar_literal(m.group(2))
+            valor = _decodificar_literal(_desescapar_literal(m.group(2)))
         else:
             valor = _decodificar_literal(bytes.fromhex(re.sub(rb"\s", b"", m.group(3)).decode()))
         saida.setdefault(chave, valor)
     return saida
+
+
+def _objeto_de_informacoes(dados: bytes) -> bytes | None:
+    """O corpo do objeto que o trailer aponta em `/Info N G R`, quando ele está à vista (fora de fluxo comprimido)."""
+    referencias = re.findall(rb"/Info\s+(\d+)\s+(\d+)\s+R", dados)
+    if not referencias:
+        return None
+    numero, geracao = referencias[-1]
+    m = re.search(rb"(?<![0-9])" + numero + rb"\s+" + geracao + rb"\s+obj\b(.*?)endobj", dados, re.DOTALL)
+    return m.group(1) if m else None
+
+
+def _metadados_brutos(dados: bytes) -> dict[str, str]:
+    """Os metadados do PDF sem o PyMuPDF: os do dicionário de informações; sem ele, a primeira ocorrência de cada chave."""
+    primeiras = _cadeias_de_metadados(dados)
+    objeto = _objeto_de_informacoes(dados)
+    return {**primeiras, **_cadeias_de_metadados(objeto)} if objeto is not None else primeiras
 
 
 def _conferir_cadeias_e_metadados(meta: dict[str, str], xmp: str) -> Resultado:
@@ -252,7 +312,9 @@ def conferir_pdf(caminho: Path, usar_fitz: bool = True) -> tuple[list[Resultado]
         m = re.search(rb"<x:xmpmeta.*?</x:xmpmeta>", dados, re.DOTALL)
         if m:
             xmp = m.group(0).decode("utf-8", errors="replace")
-        resultados.append(_conferir_cadeias_e_metadados(meta, xmp))
+        # a conferência das marcas olha o dicionário de informações e também a primeira ocorrência de cada chave no arquivo
+        conferidas = {**{f"{k} (primeira ocorrência no arquivo)": v for k, v in _cadeias_de_metadados(dados).items() if meta.get(k) != v}, **meta}
+        resultados.append(_conferir_cadeias_e_metadados(conferidas, xmp))
         achados = [t.decode() for t in re.findall(rb"/Subtype\s*/(" + "|".join(TIPOS_DE_ANOTACAO).encode() + rb")\b", dados)]
         resultados.append(_ok("Anotações e comentários", [f"/Subtype /{a}" for a in sorted(set(achados))]))
         resultados.append(_ok("Arquivos embutidos", ["/EmbeddedFile"] if b"/EmbeddedFile" in dados else []))
@@ -331,7 +393,15 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\nResultado: {'LIMPO' if not falhas else 'ACHOU MARCAÇÃO'} ({len(falhas)} falha(s), {len(avisos)} aviso(s))")
     if args.json:
         args.json.parent.mkdir(parents=True, exist_ok=True)
+        # ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) o registro em JSON passa a sair com a tag e o motivo,
+        # nas chaves `_tag` e `_motivo`, antes do resultado.
+        # ! Motivo: na geração da versão 5, o `conferir_docs.py` acusou o registro gravado em `5-metodo-e-ferramental/dados/` como
+        # "sem tag de IA"; os outros registros dessa pasta (as revisões do texto do TCC) levam as duas chaves, e este saía sem elas.
         args.json.write_text(json.dumps({
+            "_tag": f"! Alteração de IA - Revisar: registro gerado por ferramentas/conferir_entrega_tcc.py em {datetime.date.today():%d/%m/%Y}: "
+                    f"o que a conferência achou no Word ({args.docx.name}) e no PDF ({args.pdf.name}) do documento do TCC, conferência a conferência.",
+            "_motivo": "! Motivo: a entrega do TCC é em PDF e em Word sem nenhuma marcação de IA, nem as ocultas (decisões 158 e 164); "
+                       "o registro guarda a prova de que os dois arquivos foram conferidos por script antes de serem entregues.",
             "limpo": not falhas,
             "docx": {"arquivo": str(args.docx), "conferencias": [list(r) for r in res_docx], "propriedades": info_docx},
             "pdf": {"arquivo": str(args.pdf), "conferencias": [list(r) for r in res_pdf], "propriedades": info_pdf},

@@ -6,10 +6,12 @@
      ! Motivo: o relatório dizia que o botão do hub ainda não tinha lançado uma corrida com o modelo e descrevia a página de antes do molde; as duas corridas do botão estão em `resultados_alvo/fase4/botao_do_hub.json`, de onde os números saem por script, e são uso do produto, não medida. -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4, ficha 117 e decisão 179) o estado do relatório passa a "fase concluída", a linha do Q8 na tabela da seção 1 e o parágrafo "Ficou sem data" passam a dizer quando saem o Word e o PDF, e entram o desvio 22 e o item 23 do anexo e as fichas e decisões até 117 e 179.
      ! Motivo: o Eric fechou a fase em 26/11/2026 (decisão 179); o relatório ainda dava o Word e o PDF com data limite em 30/11/2026 e parava no desvio 21 e na decisão 177. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) o relatório passa a dizer que o Word e o PDF da versão 5 foram gerados, e entram o item 24 do anexo e as fichas e decisões do parecer de fora.
+     ! Motivo: o relatório ainda dava o Word e o PDF como por sair; eles foram gerados em 26/11/2026, depois da triagem do parecer de uma IA de fora (fichas 119 a 123, decisões 181 a 185). -->
 
 # Pós-Fase 4: o que chega ao analista, relatório da fase
 
-Estado em 26/11/2026: fase concluída (ficha 117, decisão 179), com os pacotes Q0 a Q8 feitos. A corrida curta que prova o trace e a seleção pelo Git com as cobaias rodou em 25/11/2026 (ficha 99, seção 3.11), e na mesma noite o hub virou a central aberta pelo `Cobaia.exe` (decisão 170, seção 3.10). Em 26/11/2026 o hub foi refeito em diagramas e o botão dele foi provado com o modelo, como uso do produto (decisões 175 a 177, seção 3.10). O texto final do TCC está escrito, e o Word e o PDF (versão 5) saem em seguida ao fechamento, no mesmo dia (decisões 158, 174 e 179).
+Estado em 26/11/2026: fase concluída (ficha 117, decisão 179), com os pacotes Q0 a Q8 feitos. A corrida curta que prova o trace e a seleção pelo Git com as cobaias rodou em 25/11/2026 (ficha 99, seção 3.11), e na mesma noite o hub virou a central aberta pelo `Cobaia.exe` (decisão 170, seção 3.10). Em 26/11/2026 o hub foi refeito em diagramas e o botão dele foi provado com o modelo, como uso do produto (decisões 175 a 177, seção 3.10). O texto final do TCC está escrito, e o Word e o PDF da versão 5 saíram no mesmo dia, `Documentacao/TCC_v5_20261126.docx` e `.pdf`, sem marcação de IA (decisões 158, 174, 179 e 185).
 
 ## 1. O que a fase perguntou e o que respondeu
 
@@ -29,7 +31,7 @@ A Fase 4 fechou com o agente lendo a tela, diagnosticando, curando o localizador
 | M1 e corrida 27 | Um analista de documentação (o modelo no papel de quem propõe edição de verbete) produz proposta aproveitável? | A forma melhora; a parcela correta ficou dentro do ruído |
 | Q6 | Um hub à imagem de uma pull request reúne relatório, evidência, árvore, comentário e veredito? | Sim, provado em teste; desde 25/11/2026 é também a central aberta pelo `Cobaia.exe` (decisão 170), e desde 26/11/2026 abre em diagramas (decisão 175), com o botão de rodar os cenários provado com o modelo, como uso do produto |
 | Q7 | A seleção de cenários pelo Git é segura e foi conferida? | Provada em teste, em conta retrospectiva e numa corrida curta com o modelo, em que a regra mandou rodar os dez cenários; nenhuma seleção parcial rodou |
-| Q8 | O texto final e o Word | Texto final escrito em 25 e 26/11/2026, e a fase fechada em 26/11/2026; o Word e o PDF (versão 5) saem em seguida ao fechamento, no mesmo dia (decisões 158, 174 e 179) |
+| Q8 | O texto final e o Word | Texto final escrito em 25 e 26/11/2026, a fase fechada em 26/11/2026, e o Word e o PDF da versão 5 gerados no mesmo dia, sem marcação de IA (decisões 158, 174, 179 e 185) |
 
 ## 2. Como rodou
 
@@ -372,7 +374,7 @@ O que saiu do ruído foi a forma: os filtros de texto, o relatório v3 e a camad
 
 <!-- ! Alteração de IA - Revisar: (26/11/2026, Pós-Fase 4, pacote Q8) a seção 6 passa a contar os desvios 12 a 16 do anexo do plano, e o parágrafo "Ficou sem data" passa ao estado de 26/11/2026.
      ! Motivo: o anexo do plano ganhou os desvios 12 a 15 no pacote Q8 e o 16 com o hub como central, e a seção parava no 11; o parágrafo final dava o texto do TCC como em andamento. -->
-O plano aprovado não muda depois da aprovação; os desvios 1 a 23 estão no anexo dele (`claude-memoria/plano-aprovado-pos-fase-4.md`), com data e decisão. Resumo:<!-- fonte: plano-aprovado-pos-fase-4.md, anexo -->
+O plano aprovado não muda depois da aprovação; os desvios 1 a 24 estão no anexo dele (`claude-memoria/plano-aprovado-pos-fase-4.md`), com data e decisão. Resumo:<!-- fonte: plano-aprovado-pos-fase-4.md, anexo -->
 
 | Desvio | O que mudou | Decisão |
 |---|---|---|
@@ -399,8 +401,9 @@ O plano aprovado não muda depois da aprovação; os desvios 1 a 23 estão no an
 | 21 | O painel do projeto aberto do disco pelo hub | 177 |
 | 22 | A biblioteca de gráficos do painel dentro do repositório, para ele funcionar sem internet | 178 |
 | 23 | O fechamento da fase em 26/11/2026, com o Word e o PDF saindo em seguida | 179 |
+| 24 | O parecer de uma IA de fora sobre o Word de um coautor, a triagem dele e a versão 5 gerada | 181 a 185 |
 
-**Ficou sem data:** a conferência em código que desmente a causa respondida pelo modelo vira regra do agente depois da Fase 5 (decisão 119), e o analista de documentação como regra do agente é base de desenho para depois da Fase 5 (decisão 121); nenhum dos dois tem data. Também ficam sem data a medida do tempo da revisão, num revisor do grupo lendo na página, e uma seleção parcial rodando de verdade. O texto do TCC está escrito (pacote Q8), e o Word e o PDF (versão 5) saem em seguida ao fechamento da fase, em 26/11/2026 (decisões 158, 174 e 179).<!-- fonte: decisoes.md, decisões 119 e 121 -->
+**Ficou sem data:** a conferência em código que desmente a causa respondida pelo modelo vira regra do agente depois da Fase 5 (decisão 119), e o analista de documentação como regra do agente é base de desenho para depois da Fase 5 (decisão 121); nenhum dos dois tem data. Também ficam sem data a medida do tempo da revisão, num revisor do grupo lendo na página, e uma seleção parcial rodando de verdade. O texto do TCC está escrito (pacote Q8), e o Word e o PDF da versão 5 saíram em 26/11/2026, depois dos acertos do parecer de fora (decisões 181 a 185); o quadro com a divisão de papéis entre os sete autores fica para uma versão seguinte (decisão 184).<!-- fonte: decisoes.md, decisões 119 e 121 -->
 
 ## 7. Rastreabilidade
 
@@ -408,9 +411,9 @@ O plano aprovado não muda depois da aprovação; os desvios 1 a 23 estão no an
      ! Motivo: a tabela parava nos desvios 1 a 11, na decisão 163 e na ficha 99, e não dizia onde estão os registros da corrida curta nem os testes da central. -->
 | O quê | Onde |
 |---|---|
-| Plano e desvios 1 a 23 | `claude-memoria/plano-aprovado-pos-fase-4.md` |
-| Decisões 94 a 129, 152, 157, 163, 164 a 168 e 170 a 179 | `Documentacao/memorial/1-decisoes-e-historico/decisoes.md` |
-| Fichas 49 a 99, 103 a 107 e 109 a 117 | `Documentacao/memorial/pendencias.md` |
+| Plano e desvios 1 a 24 | `claude-memoria/plano-aprovado-pos-fase-4.md` |
+| Decisões 94 a 129, 152, 157, 163, 164 a 168, 170 a 179 e 181 a 185 | `Documentacao/memorial/1-decisoes-e-historico/decisoes.md` |
+| Fichas 49 a 99, 103 a 107, 109 a 117 e 119 a 123 | `Documentacao/memorial/pendencias.md` |
 | Roadmap | `Documentacao/memorial/roadmap.md`, §4.8 e §2.23 a §2.25 |
 | Filtros de texto (todos os blocos, inclusive critérios, termos e a tabela por texto) | `resultados_alvo/fase4/texto.{json,md}` |
 | Revisão humana dos relatórios (os blocos de tempo, utilidade, avaliação e por caso) | `resultados_alvo/fase4/leitura_revisao_v3.{json,md}` |

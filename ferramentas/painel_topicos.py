@@ -6210,7 +6210,11 @@ def secao_instalador(matriz: dict | None) -> tuple[dict, str]:
         "instalador não (célula <code>ALVO</code>). O WSL é um Linux dentro do Windows: não prova o serviço que sobe no boot nem o navegador numa área de trabalho real.",
         "<strong>Nível baixo nem sempre é defeito, e nível alto não quer dizer que o instalador foi até o fim.</strong> Fedora e o Mac com processador Intel são de melhor esforço. Arch Linux e openSUSE não têm suporte de propósito: o resultado esperado "
         "nelas é a mensagem de “sem suporte”, com a lista do que instalar à mão. O gráfico mostra o nível da prova: no Mac com processador Intel a prova passa, mas o instalador ainda para ao baixar o modelo do projeto, e a prova baixa o modelo em seguida "
-        "(seção 5 do relatório, linha HM8). O Windows Sandbox, as máquinas virtuais e o Windows 10 de um integrante não foram testados (seção 6 do relatório)."]
+        "(seção 5 do relatório, linha HM8). O Windows Sandbox, as máquinas virtuais e o Windows 10 de um integrante não foram testados (seção 6 do relatório).",
+        # ! Alteração de IA - Revisar: (26/11/2026, decisão 180) a leitura ganha um item com as duas palavras que o projeto usa para o que o instalador não provou até o fim, apontando para as tabelas geradas da seção 6 do relatório.
+        # ! Motivo: o Eric pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados como limitação e como trabalho futuro; a aba mostrava os níveis sem dizer onde essa declaração está.
+        "<strong>Limitação e trabalho futuro.</strong> O instalador foi provado até o fim, com a instalação concluída e a prova até o nível mais alto, em poucos sistemas. O que o projeto entrega hoje em cada um dos outros (a limitação) e o que falta provar "
+        "(o trabalho futuro) estão nas duas tabelas da seção 6 do relatório, geradas das mesmas rodadas deste gráfico (decisão 180)."]
     fontes_ = ["<code>Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/matriz.json</code> (<code>ferramentas/instalador_matriz/relatorio.py --colar</code>, com <code>--check</code>)",
                "<code>5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md</code>, seções 2, 3, 5 e 6",
                "plano aprovado do instalador único (<code>claude-memoria/plano-aprovado-instalador-unico.md</code>); decisões 138 a 143 e 153 a 162"]

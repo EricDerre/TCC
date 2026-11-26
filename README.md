@@ -18,18 +18,24 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
      ! Motivo: a frase parava na Pós-Fase 4 de 16/11/2026 e tratava a Fase 5 como futura; a fase foi medida em 18 e 24/11/2026 e fechada em 25/11/2026 (decisão 156). O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4, ficha 117 e decisão 179) a frase de estado do alto passou de 25/11/2026 a 26/11/2026 e diz que a Pós-Fase 4 está concluída; a linha dela na tabela "Onde o projeto está" também.
      ! Motivo: a frase dizia que a Pós-Fase 4 estava em andamento e que faltava a documentação final; o Eric fechou a fase em 26/11/2026 (decisão 179), com o texto final do TCC escrito e o hub aprovado. Os números da Fase 5 são os que já estavam na frase. -->
-> **Em 26/11/2026:** a Fase 4, em que o agente passou a trabalhar na tela de verdade, a Fase 5, que mediu o agente contra pessoas, e a Pós-Fase 4, que cuida do que o agente entrega a quem lê, estão concluídas. Nos dez cenários medidos o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. Na Pós-Fase 4, as três corridas previstas antes da Fase 5 rodaram e nenhuma muda o agente; o hub, que é a central do projeto, e a seleção de cenários pelo Git foram feitos em 25/11/2026 e confirmados por uma corrida curta com o modelo. O que resta é documentação: o Word e o PDF finais do TCC e a leitura do texto pelo grupo.
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a frase de estado do alto passa a dizer que todas as fases estão concluídas e a dar só o resultado central; saiu o que ela contava da Pós-Fase 4 (as três corridas, o hub, a seleção pelo Git e a corrida curta, com as datas).
+     ! Motivo: o Eric olhou a página no GitHub e pediu o README como documento geral do projeto, sem informação específica de uma fase; o que saiu está na linha da Pós-Fase 4 da tabela "Onde o projeto está" e no relatório da fase, para onde ela aponta. Os números da Fase 5 são os que já estavam na frase. -->
+> **Em 26/11/2026:** todas as fases do projeto estão concluídas, e a tabela de [Onde o projeto está](#onde-o-projeto-está) diz o que cada uma respondeu. O resultado central: nos dez cenários medidos, o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. O documento do TCC está na versão final, a 5, em [PDF](Documentacao/TCC_v5_20261126.pdf) e em [Word](Documentacao/TCC_v5_20261126.docx). O que resta é a leitura do texto pelo grupo.
 
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4) a linha "Ler o trabalho formal" passa a dizer que o texto final está na fonte em Markdown e que o Word e o PDF da versão 5 ainda não foram gerados; o Word de 05/11/2026 fica dito como a versão 3.
      ! Motivo: o Eric pediu, no fechamento, que o README traga o documento do TCC na versão final; a fase fechou antes de o Word e o PDF da versão 5 serem gerados (decisão 179), e a página apontava o Word de 05/11/2026 como "o documento do TCC", quando ele é a versão 3, sem a Fase 5 nem a Pós-Fase 4. O `TCC_v4_20261105.docx` é de um coautor e não é a versão oficial (decisões 173 e 174). -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a linha "Saber o que foi decidido e por quê" passa a levar ao relatório de cada fase, pela tabela "Onde o projeto está".
+     ! Motivo: a linha citava só o relatório da Fase 4, e as outras fases também têm relatório; a tabela de fases agora traz o de cada uma na coluna "Onde ler". -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) a frase de estado do alto e a linha "Ler o trabalho formal" passam a apontar para a versão final do documento do TCC, a 5, em PDF e em Word.
+     ! Motivo: o Eric pediu que o README traga o documento do TCC na versão final; o Word e o PDF da versão 5 foram gerados em 26/11/2026 (decisões 179 e 185), e a página ainda dizia que eles não tinham sido gerados e apontava só para o Word de 05/11/2026, que é a versão 3. -->
 | Quero... | Vá para |
 |---|---|
 | Entender o projeto e ver os resultados | as seções abaixo |
 | Explorar cada resultado, um assunto por aba | [Painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN) |
-| Ler o trabalho formal, nas normas da ABNT | A [fonte do documento do TCC, em Markdown](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md), traz o texto final, com a Fase 5 e a Pós-Fase 4. O Word e o PDF da versão final, a 5, saem dela e ainda não foram gerados; o [Word de 05/11/2026](Documentacao/TCC_v3_20261105.docx) é a versão 3, de antes da Fase 5 <!-- TROCAR NA GERAÇÃO: pôr os links do Word e do PDF da versão 5 e tirar a frase da versão 3 --> |
+| Ler o trabalho formal, nas normas da ABNT | O documento do TCC na versão final, a 5, de 26/11/2026, em [PDF](Documentacao/TCC_v5_20261126.pdf) e em [Word](Documentacao/TCC_v5_20261126.docx): 138 páginas, com todas as fases, o instalador, o hub e as limitações. Os dois saem da [fonte em Markdown](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) |
 | Ver scripts, configurações e os valores de cada rodada | [Detalhes técnicos](DETALHES-TECNICOS.md) |
 | Ver o número exato por trás de cada figura | [Dados das figuras](Documentacao/figuras/dados-das-figuras.md) |
-| Saber o que foi decidido e por quê | [Memorial](Documentacao/Memorial%20de%20Desenvolvimento.md), [roadmap](Documentacao/memorial/roadmap.md), [pendências](Documentacao/memorial/pendencias.md) e [relatório da Fase 4](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md) |
+| Saber o que foi decidido e por quê | [Memorial](Documentacao/Memorial%20de%20Desenvolvimento.md), [roadmap](Documentacao/memorial/roadmap.md), [pendências](Documentacao/memorial/pendencias.md) e o relatório de cada fase, na tabela de [Onde o projeto está](#onde-o-projeto-está) |
 | Ver a cópia no repositório da disciplina | [squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado; este repositório é o principal) |
 | Instalar e rodar | [Instalar e rodar](#instalar-e-rodar) |
 
@@ -53,15 +59,8 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
 
 ## Onde o projeto está
 
-| Fase | A pergunta que ela responde | Estado |
-|---|---|---|
-| 1 | Temos um ambiente de teste controlado, com falhas que se repetem? | Concluída |
-| 2-A | Um modelo local consegue diagnosticar sem documentação nenhuma? | Concluída |
-| 2-B | Documentação escrita por pessoas ajuda? | Concluída |
-| 3 | O próprio modelo consegue manter essa documentação? Qual modelo fica? | Concluída |
-| 3-B | O resultado se sustenta com casos novos e com outro modelo lendo? | Concluída |
-| Pré-Fase 4 | Modelos maiores cabem nesta máquina? Dá para abrir o raciocínio do agente? | Concluída |
-| 4 | O agente funciona na tela de verdade, e não só em casos escritos? | Concluída |
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a tabela de fases desceu inteira para o fim deste bloco de comentários. Os comentários de histórico das linhas da Pós-Fase 4 e da Fase 5, logo abaixo, ficavam entre as linhas da tabela e agora ficam acima dela, sem mudar uma palavra.
+     ! Motivo: no GitHub, um comentário entre duas linhas de tabela encerra a tabela: as fases 1 a 4 apareciam na tabela, e as linhas da Pós-Fase 4 e da Fase 5 saíam embaixo como texto solto, com as barras verticais à vista (o Eric viu isso na página em 26/11/2026). Daqui em diante, comentário de tag vai acima da tabela inteira, nunca entre as linhas dela. -->
 <!-- ! Alteração de IA - Revisar: (07/11/2026, pacote Q1) a linha da Pós-Fase 4 passa a "Em andamento" e o item da lista abaixo diz o que já existe.
      ! Motivo: o pacote Q1 gerou o relatório por caso no molde do syllabus e a camada de leitura dos verbetes; "Não iniciada" e "hoje os verbetes são difíceis de entender" sozinhos ficariam atrasados. -->
 <!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q3) a linha da Pós-Fase 4 diz que o Q3 também está feito.
@@ -70,7 +69,6 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: o pacote Q4 entregou a barra de progresso e o protótipo da seleção pelo diff do Git; sem a frase, a tabela pararia no Q3. -->
 <!-- ! Alteração de IA - Revisar: (10/11/2026, pacote Q5) a linha da Pós-Fase 4 diz que o Q5 também está feito.
      ! Motivo: o pacote Q5 fez a medida com revisor humano dos relatórios; sem a frase, a tabela pararia no Q4. -->
-| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Concluída em 26/11/2026 (Q1 e Q2 feitos em 07/11/2026; Q3 e Q4 em 08/11/2026; Q5 em 10/11/2026; Q6 e Q7 em 25/11/2026; Q8 em 26/11/2026) |
 <!-- ! Alteração de IA - Revisar: (16/11/2026) a linha da Fase 5 passa de "Não iniciada" a "Em andamento", com o que já existe: o plano aprovado; nenhuma medida feita ainda.
      ! Motivo: o plano da Fase 5 foi aprovado em 16/11/2026 (decisão 133) e o roadmap passou a dizer "Em andamento"; o painel mostra o estado curto desta tabela ao lado da etiqueta do roadmap, e a visão da fase dizia "Em andamento" e "Não iniciada" ao mesmo tempo. -->
 <!-- ! Alteração de IA - Revisar: (18/11/2026, corrida 28) a linha da Fase 5 diz que a noite do agente rodou e vai ser refeita, e que falta a medida com as pessoas.
@@ -85,14 +83,12 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: as seções da Fase 5 entraram no documento do TCC em 24/11/2026 (pacote F6) e foram conferidas em 25/11/2026 contra os registros da fase; da fase falta o fechamento, que é decisão do Eric. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a linha da Fase 5 passou de "Em andamento" a "Concluída".
      ! Motivo: o Eric fechou a fase em 25/11/2026 (ficha 96, decisão 156), com os pacotes F0 a F6 feitos; o painel mostra este estado curto na visão da fase, ao lado da célula do roadmap. -->
-| 5 | Ele resolve mais rápido que uma pessoa? | Concluída em 25/11/2026 (o agente reparou mais rápido que as pessoas nos dez cenários, 66,3 s contra 219,7 s na média) |
-
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a lista "O que a Pós-Fase 4 fez", de seis itens, saiu desta seção. Os comentários daqui até a tag da tabela nova são o histórico dessa lista e ficam como registro: onde eles dizem "o item abaixo" ou "a lista abaixo", é da lista que saiu que falam.
+     ! Motivo: a lista contava a Pós-Fase 4 pacote a pacote, com as datas, os comandos e o que cada tela do hub mostra, e o Eric pediu o README como documento geral do projeto, que leva às seções que explicam cada fase. Nada se perdeu: cada item foi conferido por busca no relatório da fase (`pos-fase-4-relatorio.md`, seções 3.1 a 3.11), no roadmap (§1 e §4.8), na tabela dos módulos do `DETALHES-TECNICOS.md` e nas seções 5.8 e 6.7 do documento do TCC. A linha da Pós-Fase 4 na tabela nova resume a fase e aponta para o relatório. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) o título da lista abaixo deixou de dizer "antes da Fase 5".
      ! Motivo: a Fase 5 foi concluída em 25/11/2026; os dois itens são da Pós-Fase 4, parte feita antes da Fase 5 e parte ainda por fazer. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o título da lista deixa de falar no que falta da Pós-Fase 4.
      ! Motivo: os pacotes Q0 a Q7 estão feitos desde 25/11/2026; a lista abaixo já conta cada um, e o último item ainda descrevia a fase como ideia para o futuro. -->
-**O que a Pós-Fase 4 fez:**
-
 <!-- ! Alteração de IA - Revisar: (07/11/2026, pacote Q2) a linha da Pós-Fase 4 na tabela acima diz que o Q2 também está feito, e o item abaixo ganhou os filtros de texto.
      ! Motivo: o pacote Q2 passou a medir em código cada texto que chega ao analista e ajustou o molde do relatório até passar; sem a frase, o leitor acharia que só a camada de leitura existe. -->
 <!-- ! Alteração de IA - Revisar: (08/11/2026, pacote Q4) o item abaixo ganhou a barra de progresso e o protótipo da seleção pelo diff do Git.
@@ -107,30 +103,45 @@ O agente trata os dois: explica a causa da deriva de contrato e conserta sozinho
      ! Motivo: o pacote Q3 é a terceira entrega do que chega ao analista (plano da Pós-Fase 4, seção 3.4); sem a frase, o leitor não saberia que a árvore existe. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o item deixa de ser um "rever" com o que foi feito entre parênteses e passa a contar o que foi feito.
      ! Motivo: a frase começava como tarefa por fazer ("rever ... porque hoje os verbetes são difíceis") e trazia o trabalho já feito num parêntese de 1400 caracteres. -->
-- o que o agente entrega ao analista, porque os verbetes eram difíceis de entender: desde 07/11/2026 existe uma camada de leitura dos verbetes, gerada por código e curada em 10/11/2026 por um analista, com consertos no que era fato errado; o relatório por caso segue o molde do relatório de defeitos do syllabus CTFL 4.0; e filtros em código medem cada texto que chega ao analista, com limiares calibrados nos comentários deste repositório: todos os relatórios passam, e as leituras dos verbetes passam todas depois da curadoria; e, desde 08/11/2026, cada caso tem uma árvore de decisão lida da trilha gravada, com o que o modelo leu, que verbetes entraram, a causa contra a segunda, a cura quando houve e a origem de cada afirmação: o que o código mediu, o que ele conferiu, o que o modelo só declarou e o que faltou; e, também desde 08/11/2026, enquanto o modelo pensa uma barra de progresso diz quanto falta, estimando pelas taxas das corridas anteriores desta máquina, com o erro medido nos registros gravados, e um protótipo lê o que mudou no Git para dizer quais cenários rodar e por quê, provado no histórico do próprio repositório; e, em 09 e 10/11/2026, os 36 relatórios da corrida 24 foram lidos no formato novo, um por vez e às cegas, todos por um analista de QA da empresa, que não participou do projeto, a quem o Eric passou os relatórios: ele decidiu certo na maior parte deles e deu a nota máxima de utilidade à maioria, mas o tempo de leitura não foi medido e é um leitor só;
 <!-- ! Alteração de IA - Revisar: (25/11/2026, pacotes Q6 e Q7) item novo com o hub de revisão e a seleção de cenários pelo Git; a frase de estado no alto e a linha da Pós-Fase 4 na tabela acompanharam. Os números vêm de `resultados_alvo/fase4/hub.json` e de `conferencia_git.json`, lidos por script.
      ! Motivo: a decisão 152 pôs os dois antes do texto final, e eles foram feitos em 25/11/2026; a frase de estado ainda dizia que faltavam, e o leitor não saberia que existem nem como abrir o hub. -->
-- o hub de revisão, desde 25/11/2026: uma página local, à imagem da revisão de uma mudança de código, que junta 170 casos diagnosticados pelo agente e mostra, para cada um, o relatório em blocos, a evidência ao lado, a árvore de decisão e os eventos gravados. O analista comenta um trecho, responde, resolve a conversa e dá o veredito; o agente só comenta. Para abrir: `python hub.py`, em `Programacao/AgenteCore/experimentos`. Detalhes no painel, aba "Hub e Git", e em [DETALHES-TECNICOS.md](DETALHES-TECNICOS.md);
 <!-- ! Alteração de IA - Revisar: (25/11/2026, ficha 109, decisão 170) item novo: o hub como central aberta pelo `Cobaia.exe`.
      ! Motivo: o Eric pediu que o hub seja a central de tudo, aberta quando o `.exe` roda, de onde se rodam os testes e se veem as métricas; sem o item, o leitor continuaria achando que o `.exe` abre o site e a API e que o hub só abre pela linha de comando. -->
-- o hub como central do projeto, também desde 25/11/2026: o `Cobaia.exe` sobe o hub junto com o site e a API e abre o navegador nele. A primeira tela diz o que está no ar (o site, a API, o Ollama e o próprio hub) e leva ao site, à API e ao painel do projeto desta máquina, que o hub serve do disco e avisa quando está atrás das fichas ou do roadmap, e que funciona sem internet, com os gráficos, porque a biblioteca que os desenha vai dentro do próprio arquivo; a vista "Métricas" mostra, por corrida, as execuções, o Task Success e o tempo de reparo, lidos dos registros gravados, e o resultado da comparação com as pessoas; e o botão de rodar os dez cenários usa o site e a API que o `.exe` já subiu. A corrida lançada dali é uso do produto, não medida do TCC, e aparece na lista de casos. Em 26/11/2026 o botão rodou os dez cenários com o modelo, e o agente chegou ao resultado nos dez;
 <!-- ! Alteração de IA - Revisar: (26/11/2026, ficha 116, decisão 178) o item acima passou a dizer que o painel aberto pelo hub funciona sem internet, com os gráficos.
      ! Motivo: a biblioteca de gráficos do painel entrou no repositório e vai embutida no HTML; sem a frase, o leitor não saberia que a única coisa que o painel buscava na internet para funcionar deixou de ser buscada. -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, ficha 113, decisão 175) item novo: o molde visual do hub; e o item acima passou a dizer que o botão rodou com o modelo (número de `resultados_alvo/fase4/botao_do_hub.json`).
      ! Motivo: o Eric testou o hub e pediu diagramas no lugar do texto; sem o item, o leitor não saberia que a página abre no desenho do processo, nem que duas etapas e a cura têm tempo e as outras não. -->
-- o hub em diagramas, desde 26/11/2026: cada caso abre com a linha de produção dele, as seis etapas do agente com o tempo gravado de cada uma e um cartão que amplia ao clicar; a árvore de decisão virou uma rede que liga o que o agente viu, os verbetes, as causas possíveis e o resultado; a tela inicial desenha como as peças se ligam e o que está no ar; e as métricas saem em gráficos. Tudo é desenhado por código na própria máquina, sem internet. Nas corridas lançadas pelo botão do hub, o agente grava a hora em que cada etapa começa (uma opção desligada por padrão, que as corridas de medida não usam), e o diagrama mostra o tempo das seis etapas e acende a que está rodando. Nas outras corridas a trilha só tem o tempo do roteiro, da inferência do modelo e da cura, e a detecção, a poda, a busca e a conferência aparecem sem tempo;
-- a escolha dos cenários pelo que mudou no código, também desde 25/11/2026: com `--selecao git`, a corrida roda só os cenários atingidos pelo que mudou nas cobaias, roda tudo na dúvida e registra o que deixou de fora. Numa conta sobre o histórico do repositório, 2 de 8 mudanças deixariam de fora um cenário que falhou na rodada completa, e é por isso que a rodada completa volta em prazo fixo. Nenhuma seleção parcial rodou de verdade ainda;
 <!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o último item da lista passa a contar o painel por fase, no lugar da Pós-Fase 4 descrita como ideia.
      ! Motivo: o item repetia o texto da decisão 94, de 05/11/2026, que anunciava a Pós-Fase 4 como "ajustes e ideias" e "talvez gráficos"; a fase foi planejada em 07/11/2026 e feita. -->
-- o painel do projeto reorganizado por fase, com uma aba de visão em cada fase e um glossário dos termos e dos métodos (decisão 124).
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a tabela de fases ganhou as colunas "O que ela respondeu" e "Onde ler", o estado de todas as fases ficou só "Concluída", e entraram a frase de abertura e o "Como ler". As colunas "Fase", "A pergunta que ela responde" e "Estado" continuam nessa ordem e com os mesmos nomes de fase, porque o painel lê as três (`ferramentas/painel_fases.py`, `tabela_do_readme`).
+     ! Motivo: a tabela dizia a pergunta e o estado de cada fase, mas não a resposta nem onde ler, e as linhas da Pós-Fase 4 e da Fase 5 carregavam as datas dos pacotes. Nenhum número novo: os 90 casos, as 160 quebras, os 10 cenários, os 30 de 36 relatórios e os 66,3 s contra 219,7 s já estavam neste arquivo, em "O que já descobrimos" e "Os dois sistemas de teste", com a fonte dita lá; as respostas das fases 2-A e Pré-Fase 4 foram conferidas no relatório de cada uma (seção 9 e seção 1), e os três experimentos que não mudaram o agente, na seção 4 do relatório da Pós-Fase 4 (a frase de estado do alto já falava deles). -->
+O trabalho foi feito em fases, e cada fase responde a uma pergunta. Todas estão concluídas.
+
+| Fase | A pergunta que ela responde | Estado | O que ela respondeu | Onde ler |
+|---|---|---|---|---|
+| 1 | Temos um ambiente de teste controlado, com falhas que se repetem? | Concluída | Sim: dois sistemas de teste sobre o mesmo banco de dados, falhas que se ligam e desligam sempre do mesmo jeito e 90 casos de falha com a resposta certa conhecida. | [Os dois sistemas de teste](#os-dois-sistemas-de-teste); TCC 6.1 |
+| 2-A | Um modelo local consegue diagnosticar sem documentação nenhuma? | Concluída | Só em parte: sem conhecer o sistema, nenhum modelo chegou à meta de acerto, e pedir o raciocínio em etapas não ajudou. | [Relatório](Documentacao/memorial/3-resultados-e-analises/fase-2a-relatorio-por-modelo.md); TCC 6.2 |
+| 2-B | Documentação escrita por pessoas ajuda? | Concluída | Sim, quando o modelo recebe só os verbetes mais parecidos com o caso. O risco é o verbete errado, que os modelos seguiram como se fosse certo. | [Relatório](Documentacao/memorial/3-resultados-e-analises/fase-2b-relatorio-por-modelo.md); TCC 6.3 |
+| 3 | O próprio modelo consegue manter essa documentação? Qual modelo fica? | Concluída | Em parte: com conferência em código, só o `qwen2.5:7b` ganhou mais de um caso com a biblioteca que ele mesmo escreveu. Ele ficou como o modelo do agente (decisão 52). | [Relatório](Documentacao/memorial/3-resultados-e-analises/fase-3-relatorio-por-modelo.md) e [análise da decisão](Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md); TCC 6.4 |
+| 3-B | O resultado se sustenta com casos novos e com outro modelo lendo? | Concluída | Em parte: em casos inéditos o ganho não se repetiu, e a biblioteca ajuda mais o modelo que a escreveu. Por isso o agente usa o modelo com a biblioteca dele (decisão 69). | [Relatório](Documentacao/memorial/3-resultados-e-analises/fase-3b-relatorio.md); TCC 6.5 |
+| Pré-Fase 4 | Modelos maiores cabem nesta máquina? Dá para abrir o raciocínio do agente? | Concluída | Modelos maiores não servem de motor nesta máquina (decisão 75). O raciocínio dá para abrir: o desenho da trilha, o registro de cada passo do agente, virou a base da Fase 4 (decisão 77), e a probabilidade que o modelo dá à própria resposta serve de triagem. | [Relatório](Documentacao/memorial/3-resultados-e-analises/pre-fase-4-relatorio.md); TCC 6.6 |
+| 4 | O agente funciona na tela de verdade, e não só em casos escritos? | Concluída | Sim: lendo da tela ele acerta tanto quanto no caso escrito, consertou as 160 quebras de localizador armadas e chegou ao resultado nos 10 cenários do ensaio. | [Relatório](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); TCC 6.7 |
+| Pós-Fase 4 | O que o agente entrega é fácil de ler e de usar? | Concluída | O que chega a quem revisa foi refeito: o relatório de cada caso, a árvore de decisão e o hub, a página central do projeto. Um analista de QA de fora do projeto decidiu certo em 30 de 36 relatórios; é um leitor só, e o tempo de leitura não foi medido. Três experimentos feitos na fase não mudaram o agente. | [Relatório](Documentacao/memorial/3-resultados-e-analises/pos-fase-4-relatorio.md); TCC 5.8 e 6.7 |
+| 5 | Ele resolve mais rápido que uma pessoa? | Concluída | Sim, nos dez cenários medidos: 66,3 s contra 219,7 s na média. É o resultado central do trabalho. | [Relatório](Documentacao/memorial/3-resultados-e-analises/fase-5-relatorio.md); TCC 6.8 |
+
+**Como ler:** cada linha é uma fase, na ordem em que começou. "O que ela respondeu" é a resposta em uma ou duas frases; a figura e os números de cada resposta estão em [O que já descobrimos](#o-que-já-descobrimos). "Onde ler" leva ao relatório completo da fase, e "TCC 6.1" quer dizer a seção 6.1 do [documento do TCC](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md). As datas e o estado completo de cada fase estão no [roadmap](Documentacao/memorial/roadmap.md), e o [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN) tem uma aba de visão para cada fase.
 
 ## O que já descobrimos
 
-Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados das figuras](Documentacao/figuras/dados-das-figuras.md), e as condições de cada rodada, em [Detalhes técnicos](DETALHES-TECNICOS.md).
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) cada uma das nove perguntas abaixo ganhou, logo depois do título, uma linha em itálico com a fase em que foi medida e onde ler mais (a seção do relatório da fase e a aba do painel), e a abertura passou a avisar disso. Os títulos, as figuras, os "Como ler" e os "O que isso mostra" continuam onde estavam.
+     ! Motivo: o Eric pediu o README como documento geral, que leva às seções que explicam melhor cada resultado, e as respostas não diziam de que fase eram nem onde estava o detalhe. A linha fica antes da figura porque o painel copia para as abas de fase o "Como ler" e tudo o que vem a partir de "O que isso mostra" (`ferramentas/painel_fases.py`, `descobertas_do_readme`): posta no fim, ela iria junto e o painel mandaria o leitor para uma aba do próprio painel. -->
+Cada figura responde a uma pergunta. Logo abaixo de cada pergunta está a fase em que ela foi medida e onde ler mais: a seção do relatório da fase e a aba do [painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN). O número exato de cada figura está em [Dados das figuras](Documentacao/figuras/dados-das-figuras.md), e as condições de cada rodada, em [Detalhes técnicos](DETALHES-TECNICOS.md).
 
 <!-- fonte dos números desta seção: Documentacao/figuras/dados-das-figuras.md, gerado de resultados_alvo/ por gerar_figuras_documentos.py; adesão ao verbete errado: fase3/comparacao_fases.json, adesao_cega_2B_A5_pct; margem do ensaio: fase4/cenarios_v4.json, geral; verbete certo no contexto: fase4/tela_v4.json e tela_ineditos.json, verbete_certo; a regra da tela: campos b e c de tela_v4.json e tela_ineditos.json; a corrida 24: fase4/ineditos.json; erros pegos pelo selo baixo: fase4/calibracao.json, limiares; lote nos inéditos: fase4/biblioteca.json, regra_r5 e relatório da Fase 4, seção 7; a medição da Fase 5: fase5/medicao.json (lados, tempo.geral e task_success) e fase5/manual.json (por_integrante). -->
 
 ### A documentação faz diferença?
+
+*Medido nas Fases 2-B e 3. Para saber mais: seções 3 e 6 do [relatório da Fase 2-B](Documentacao/memorial/3-resultados-e-analises/fase-2b-relatorio-por-modelo.md) e a [comparação entre fases](Documentacao/memorial/3-resultados-e-analises/comparacao-entre-fases.md); no painel, aba "Biblioteca em seis condições".*
 
 ![Quatro linhas, uma por modelo, do acerto sem documentação até o acerto com a biblioteca escrita pelo modelo](Documentacao/figuras/documentacao-e-acerto.png)
 
@@ -140,6 +151,8 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 ### Qual modelo ficou?
 
+*Medido na Fase 3. Para saber mais: [análise da decisão do modelo](Documentacao/memorial/3-resultados-e-analises/analise-decisoria-modelo-final.md) e [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-3-relatorio-por-modelo.md); no painel, aba "Decisão".*
+
 ![Pontos por modelo: tempo por caso no eixo horizontal e acurácia balanceada no vertical, com o escolhido em destaque](Documentacao/figuras/escolha-do-modelo.png)
 
 **Como ler:** cada ponto é um modelo com a biblioteca num certo estado. Quanto mais alto, mais acerta; quanto mais à esquerda, mais rápido. A **acurácia balanceada** é o acerto calculado causa por causa, com o mesmo peso para todas, para que responder sempre a causa mais comum não pareça bom. A linha vertical no ponto escolhido mostra a incerteza: com só 36 casos, o valor verdadeiro pode estar em qualquer lugar dela. Entre versões da biblioteca de um mesmo modelo, o tempo não se compara, porque foi medido em momentos diferentes da corrida.
@@ -147,6 +160,8 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 **O que isso mostra:** pela regra fixada antes de rodar, ficou o `qwen2.5:7b` com a primeira versão da biblioteca escrita por ele (decisão 52), depois curada e guardada em `Programacao/AgenteCore/biblioteca_producao/`. O `qwen2.5-coder:3b` é bem mais rápido, mas acerta menos, e o `granite4.2:8b` acerta perto, mas leva mais de 120 segundos por caso.
 
 ### A biblioteca serve para qualquer modelo?
+
+*Medido na Fase 3-B. Para saber mais: seções 4 e 5 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-3b-relatorio.md); no painel, aba "Troca cruzada".*
 
 ![Pares de barras: casos certos de cada modelo com a biblioteca original e com a biblioteca escrita pelo qwen2.5:7b](Documentacao/figuras/quem-le-a-biblioteca.png)
 
@@ -156,6 +171,8 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 ### O agente sabe quando pode estar errado?
 
+*Medido na Fase 4. Para saber mais: seção 4 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); no painel, aba "Calibração".*
+
 ![Barras por selo de confiança, alto, médio e baixo, com os casos certos e errados de cada um](Documentacao/figuras/selo-de-confianca.png)
 
 **Como ler:** cada barra reúne os casos que receberam o mesmo selo. O azul são os certos, e o laranja, os errados. O selo vem da probabilidade que o próprio modelo dá à causa que escolheu.
@@ -164,19 +181,25 @@ Cada figura responde a uma pergunta. O número exato de cada uma está em [Dados
 
 ### Ler da tela é tão bom quanto ler um caso escrito?
 
+*Medido na Fase 4. Para saber mais: seção 5 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); no painel, aba "Tela e caso escrito".*
+
 ![Sete barras: casos certos lendo o caso escrito e lendo da tela, nas quatro versões do caso montado a partir dela, e embaixo os casos inéditos](Documentacao/figuras/tela-e-caso-escrito.png)
 
 **Como ler:** as cinco barras de cima são os mesmos 37 casos. A primeira é o modelo lendo o caso escrito à mão, e as outras, o mesmo caso montado a partir da tela, da versão mais nova para a primeira. As duas de baixo são 25 casos inéditos, que a busca nunca tinha visto. Mais casos certos é melhor.
 
 <!-- ! Alteração de IA - Revisar: (06/11/2026, decisões 97 a 99) este parágrafo e o item sobre a leitura da tela passam às corridas 18d e 18e; a regra é dita pelos casos que a tela perde, com a soma citada.
      ! Motivo: a regra fechou com os sinais novos da busca, pela leitura fixada antes da corrida, e o texto antigo dizia que a tela ainda perdia. Números de `tela_v3.json`, `tela_v4.json` e `tela_ineditos.json`, lidos por script. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) o segundo parágrafo desta resposta ficou só com a regra e o resultado dela e com o limite do prompt. Saíram a conta antiga, que somava os dois lados, a explicação dos 3 casos perdidos e os dois casos inéditos que passaram do limite do prompt (decisão 99).
+     ! Motivo: era o histórico de como a regra R2 foi lida de uma rodada para a outra, detalhe da Fase 4 que não cabe na apresentação geral; o que saiu está na seção 5 do relatório da Fase 4 (os parágrafos "A regra R2 fechou" e "Dois prompts da 18e passaram do limite"), para onde a linha abaixo do título aponta. Nenhum número mudou. -->
 **O que isso mostra:** ler da tela passou à frente do caso escrito: 32 contra 30 nos 37 casos, e 22 contra 18 nos 25 inéditos. A primeira versão dava 16, porque a montagem não dizia o que tinha mudado contra a tela normal. O que mudou por último foi a busca: ela passou a usar o que o caso mede contra a tela normal, e o verbete certo foi de 21 para 36 dos 37 casos, sem nada a mais no texto que o modelo recebe. Isso não quer dizer que o modelo lê melhor da tela: o caso da tela leva uma medida que o caso escrito não tem, e com tão poucos casos a diferença entre os dois lados não se separa do acaso.
 
-A regra aceita que a tela perca no máximo 3 casos para o caso escrito. Ela perdeu 3 e ganhou 5, e nos inéditos perdeu 0 e ganhou 4: a regra fecha, no limite exato (decisões 97 e 98). Até a rodada anterior a conta somava os dois lados, o que daria 8; a leitura que olha só o que a tela perde foi fixada antes desta rodada, sem saber o resultado dela. Os 3 casos perdidos são a mesma confusão: item faltando na lista lido como resposta cortada. E o prompt, o texto que o modelo recebe, cabe no limite do plano ([figura do limite](Documentacao/figuras/prompt-e-limite.png)): dois casos inéditos passaram, porque a lista não tinha teto, e isso foi corrigido sem mudar os outros (decisão 99).
+A regra aceita que a tela perca no máximo 3 casos para o caso escrito. Ela perdeu 3 e ganhou 5, e nos inéditos perdeu 0 e ganhou 4: a regra fecha, no limite exato (decisões 97 e 98). E o prompt, o texto que o modelo recebe, cabe no limite do plano ([figura do limite](Documentacao/figuras/prompt-e-limite.png)).
 
 <!-- ! Alteração de IA - Revisar: (06/11/2026) subseção nova com a corrida 24, e a Fase 4 marcada como concluída na tabela de fases, com a Pós-Fase 4 na linha seguinte.
      ! Motivo: era a última pendência da fase, e é a única medida da biblioteca final em casos que ela nunca viu. Números de `ineditos.json`, lidos por script. -->
 ### E em casos que a biblioteca nunca viu?
+
+*Medido na Fase 4. Para saber mais: seção 7.1 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); no painel, aba "Inéditos em texto".*
 
 ![Barras por classe de defeito, com os casos certos e errados entre 36 casos inéditos](Documentacao/figuras/ineditos-por-classe.png)
 
@@ -184,15 +207,21 @@ A regra aceita que a tela perca no máximo 3 casos para o caso escrito. Ela perd
 
 **O que isso mostra:** a biblioteca final acerta 25 dos 36, contra 31 de 36 nos casos de avaliação. Não são os mesmos casos, então a diferença não mede só a biblioteca, e o número fica perto do que a Fase 3-B mediu em outros 36 inéditos (26 de 36). O que mais pesa é de novo o verbete certo: quando ele chega ao modelo, são 18 de 20; quando não chega, 7 de 16. A classe de tradução é a mais fraca, com 1 de 6.
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a resposta abaixo deixou de dizer que os sinais novos da busca não mudaram o tempo e ganhou a frase final, que separa este ensaio da medida da Fase 5.
+     ! Motivo: a frase dos sinais da busca compara duas corridas da Fase 4 (está na seção 8 do relatório da fase); e a página dava 74 segundos aqui e 66,3 segundos na pergunta da Fase 5 sem dizer que são medidas diferentes: este é o ensaio, com uma execução por cenário, e a outra tem cinco repetições. Os dois números são os que já estavam no arquivo. -->
 ### Quanto tempo o agente leva?
+
+*Medido na Fase 4. Para saber mais: seções 6 e 8 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); no painel, abas "Cura de seletor" e "Cenários da Fase 5".*
 
 ![Barras por cenário de falha, com os segundos da detecção até o resultado](Documentacao/figuras/tempo-por-cenario.png)
 
 **Como ler:** cada barra é um cenário de falha, rodado uma vez, do momento em que o agente percebe a falha até ter o resultado. No azul, o resultado é o diagnóstico conferido. No laranja, é o teste passando de novo depois do conserto.
 
-**O que isso mostra:** os 10 cenários chegaram ao resultado, em 74 segundos na média. Encurtar o prompt tirou cerca de 30% do tempo (eram 105 segundos), sem mudar nenhuma causa respondida, e os sinais novos da busca não mudaram esse resultado. Quase todo esse tempo é o modelo pensando ([figura de onde vai o tempo](Documentacao/figuras/onde-vai-o-tempo.png)): o conserto de localizador só em código levou 0,64 segundo e funcionou nas 160 quebras armadas.
+**O que isso mostra:** os 10 cenários chegaram ao resultado, em 74 segundos na média. Encurtar o prompt tirou cerca de 30% do tempo (eram 105 segundos), sem mudar nenhuma causa respondida. Quase todo esse tempo é o modelo pensando ([figura de onde vai o tempo](Documentacao/figuras/onde-vai-o-tempo.png)): o conserto de localizador só em código levou 0,64 segundo e funcionou nas 160 quebras armadas. Este foi um ensaio, com uma execução por cenário; a medida com cinco repetições, contra pessoas, está em [O agente repara mais rápido que uma pessoa?](#o-agente-repara-mais-rápido-que-uma-pessoa).
 
 ### O que o agente escreve entra na biblioteca sem controle?
+
+*Medido na Fase 4. Para saber mais: seção 7 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); no painel, aba "Biblioteca em produção".*
 
 ![Funil: propostas do modelo, as que passam por cada conferência e as que ficam na biblioteca](Documentacao/figuras/funil-da-biblioteca.png)
 
@@ -203,6 +232,8 @@ A regra aceita que a tela perca no máximo 3 casos para o caso escrito. Ela perd
 <!-- ! Alteração de IA - Revisar: (24/11/2026) descoberta nova, a da Fase 5: o tempo de reparo do agente contra o das pessoas, com a figura `agente-e-pessoas.png`, o "Como ler" e o texto. Na lista do que não dá para afirmar, logo abaixo, saíram as duas frases que a medida respondeu (que não havia medida com pessoas; que os 10 de 10 do ensaio eram de uma repetição só) e entraram os limites da medida nova.
      ! Motivo: a corrida 28b do agente e as três sessões das pessoas foram lidas em 24/11/2026 pelas regras fixadas antes. O Eric decidiu (ficha 91, decisão 151) que o resultado central é o do tempo e que o do Task Success é declarado com a ressalva de que depende da sessão de um integrante só: por isso o Task Success não tem figura e vem num parágrafo à parte, com a ressalva. Os números foram copiados por script de `resultados_alvo/fase5/medicao.json` e `manual.json`; o dado cru está em `Documentacao/figuras/dados-das-figuras.md`. -->
 ### O agente repara mais rápido que uma pessoa?
+
+*Medido na Fase 5. Para saber mais: seção 6 do [relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-5-relatorio.md) e seção 6.8 do [documento do TCC](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md); no painel, aba "Agente contra pessoa".*
 
 ![Barras por cenário de falha, com o tempo do agente e o das pessoas e um traço do menor ao maior tempo de cada lado](Documentacao/figuras/agente-e-pessoas.png)
 
@@ -216,6 +247,10 @@ O agente também chegou ao resultado em mais cenários: 49 de 50 execuções, co
      ! Motivo: o Eric pediu "em aberto" nesta data, porque a revisão será feita depois de as respostas serem normalizadas; o texto dizia só que ela não foi feita. -->
 ### O que ainda não dá para afirmar
 
+<!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) o comentário de 25/11/2026 logo abaixo, sobre o último item da lista, saiu do meio da lista e veio para cima dela, sem mudar uma palavra; nenhum item mudou.
+     ! Motivo: no GitHub, um comentário entre dois itens encerra a lista, e o último item saía como uma segunda lista, separada das outras oito linhas. Comentário de tag fica acima da lista inteira, como acima da tabela inteira. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o item da medida com revisor humano passa a dizer o que foi medido e o que continua sem resposta.
+     ! Motivo: o item dizia que a medida seria feita depois que a Pós-Fase 4 melhorasse as respostas; ela foi feita em 09 e 10/11/2026 (`resultados_alvo/fase4/leitura_revisao_v3.md`: 30 de 36). -->
 - **Que o agente é mais rápido que um analista de testes.** As três pessoas da medida são estudantes do grupo, e não analistas de fora; leram o material de cada cenário numa página, em vez de investigar o site no ar; e os dez cenários são falhas ligadas de propósito. O tempo do agente é o desta máquina, só com CPU.
 - **Que o agente resolve mais cenários que uma pessoa.** A medida deu essa vantagem, mas ela depende da sessão de um integrante que não corrigiu nenhum cenário; sem ela, numa conta feita depois de ver os números, a diferença não se separa do acaso (decisão 151).
 - **Que o agente chega sempre ao resultado.** Nas cinco repetições dos dez cenários, 1 das 50 execuções não chegou: foi no cenário da resposta cortada no meio.
@@ -224,8 +259,6 @@ O agente também chegou ao resultado em mais cenários: 49 de 50 execuções, co
 - **Que um exemplar resolvido ou os rótulos em palavras ajudam o modelo.** Testamos os dois nos 90 casos: trocam a resposta em alguns casos, para os dois lados, e o saldo não se separa do acaso (decisão 91).
 - **Quanto a biblioteca ajuda nos casos que ela nunca viu.** A última corrida mede só a biblioteca final; esses casos não foram lidos sem ela.
 - **Que os sinais da trilha apontam os erros.** A corrida teve só 5 erros, poucos para pôr os sinais em ordem ([figura dos sinais](Documentacao/figuras/sinais-da-trilha.png)).
-<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) o item da medida com revisor humano passa a dizer o que foi medido e o que continua sem resposta.
-     ! Motivo: o item dizia que a medida seria feita depois que a Pós-Fase 4 melhorasse as respostas; ela foi feita em 09 e 10/11/2026 (`resultados_alvo/fase4/leitura_revisao_v3.md`: 30 de 36). -->
 - **Que o relatório ajuda qualquer pessoa que revise, e em quanto tempo.** A medida foi feita com um leitor só, um analista de QA de fora do projeto, que decidiu certo em 30 de 36 relatórios; o tempo de leitura não foi medido, e o que ele recebeu para ler não foi declarado (decisões 114 e 117).
 
 ## Os dois sistemas de teste
@@ -251,10 +284,12 @@ Precisa de internet: o instalador baixa PHP, MariaDB e os pacotes Python que fal
 
 <!-- ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do instalador no GitHub Actions) a linha do Windows ganha o que acontece numa máquina que já tem o MySQL e de onde vem o Ollama.
      ! Motivo: na célula CI-WIN (execução 45650086543) o instalador aceitou o `mysql.EXE` do MySQL 8.4 da máquina como cliente do MariaDB e parou em "Não foi possível subir o MariaDB"; ele passou a aceitar só executável do MariaDB e a trazer o MariaDB pelo zip quando há um MySQL. O Ollama passou a vir do instalador oficial, na versão testada do `versoes.json`. Nenhum dos dois foi visto rodando ainda: a segunda execução do fluxo é a prova. -->
-- **Windows:** `install.cmd` ou `Cobaia.exe`. Usa o `winget` (o gerenciador de pacotes do Windows) para trazer o Python e o PHP quando faltam, e o MariaDB pelo `winget` ou, sem administrador, pelo zip oficial. Se a máquina já tem um MySQL, o instalador não mexe nele e traz o MariaDB pelo zip, ao lado; com o serviço do MySQL ligado na porta 3306, ele para e pede para desligar esse serviço. O Ollama vem do instalador oficial, na versão testada.
-- **Linux de `apt` (Ubuntu, Debian) ou de `dnf` (Fedora):** `./install.sh`. Usa o `sudo` para instalar os pacotes do sistema. Se não houver um Python 3.12 ou mais novo, o próprio `install.sh` traz um para dentro da pasta do projeto (`.ferramentas/`), sem mexer no Python do sistema. Outras distribuições recebem a lista do que instalar à mão.
+<!-- ! Alteração de IA - Revisar: (26/11/2026) o comentário de histórico da linha do macOS, que ficava entre o item do Linux e o do macOS, subiu para cá, acima da lista, sem mudar palavra.
+     ! Motivo: no GitHub um comentário entre dois itens parte a lista em duas, com um espaço no meio; o mesmo defeito cortava a tabela de fases desta página, e o Eric apontou o layout quebrado em 26/11/2026. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) a linha do macOS passa a dizer que o instalador usa o Homebrew pelos mesmos passos do Linux, sem `sudo`.
      ! Motivo: nas células M-15 e M-15I (macOS 15) de 25/11/2026 o caminho antigo parou em "Não foi possível subir o MariaDB"; o macOS agora instala o PHP e o MariaDB 11.8 pelo Homebrew no fluxo por pacotes. Ainda sem rodada que passe. -->
+- **Windows:** `install.cmd` ou `Cobaia.exe`. Usa o `winget` (o gerenciador de pacotes do Windows) para trazer o Python e o PHP quando faltam, e o MariaDB pelo `winget` ou, sem administrador, pelo zip oficial. Se a máquina já tem um MySQL, o instalador não mexe nele e traz o MariaDB pelo zip, ao lado; com o serviço do MySQL ligado na porta 3306, ele para e pede para desligar esse serviço. O Ollama vem do instalador oficial, na versão testada.
+- **Linux de `apt` (Ubuntu, Debian) ou de `dnf` (Fedora):** `./install.sh`. Usa o `sudo` para instalar os pacotes do sistema. Se não houver um Python 3.12 ou mais novo, o próprio `install.sh` traz um para dentro da pasta do projeto (`.ferramentas/`), sem mexer no Python do sistema. Outras distribuições recebem a lista do que instalar à mão.
 - **macOS:** `./install.sh`, com o [Homebrew](https://brew.sh) já instalado. O instalador usa o Homebrew (sem `sudo`) para trazer o PHP e o MariaDB 11.8, pelos mesmos passos do Linux. O Mac com processador Intel entra como melhor esforço: o Homebrew deixou de publicar pacote pronto do PHP e do MariaDB para ele, e a instalação pode compilar os dois (mais de uma hora).
 <!-- ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa E) a linha do macOS ganha o Mac Intel como melhor esforço, com o motivo em uma frase.
      ! Motivo: decisão do dono do projeto de 25/11/2026: o bloco `bottle` das fórmulas `php`, `mariadb` e `mariadb@11.8` do Homebrew só traz pacote pronto para Apple Silicon e Linux; não observado em execução. -->
@@ -287,7 +322,15 @@ Cada linha é uma célula de teste, e a coluna "Como a máquina nasce" diz o que
 
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da frente do instalador) o parágrafo deixa de dizer que o Windows e o macOS seguem os passos antigos e que o fluxo do GitHub Actions ainda vai rodar; passa a dizer que a prova em máquina nova desses dois é a do GitHub Actions, que essas máquinas não são limpas e o que ficou sem conserto no Mac Intel.
      ! Motivo: o fluxo rodou quatro vezes entre 25 e 26/11/2026; na terceira e na quarta execução (45731004628 e 45807394622) a instalação foi até o fim no Windows Server 2025, no Ubuntu e no macOS de Apple Silicon, e no macOS Intel o instalador parou em "Error: unexpected EOF" ao baixar o modelo, com a prova passando. O texto antigo contradizia a tabela gerada logo acima. -->
-Ficaram sem teste: Windows recém-instalado fora do GitHub, Windows 10 e Linux instalado fora do WSL (decisão 153). No Windows e no macOS, a prova em máquina nova é a do GitHub Actions (`.github/workflows/instalador.yml`), em máquinas que o GitHub cria para cada execução e que não são limpas: já trazem o Python e, conforme o sistema, o PHP, o MySQL ou o Homebrew. O nível de cada uma está na tabela acima. No Mac com processador Intel a prova passa, mas o instalador ainda para ao baixar o `qwen2.5:7b`, e a prova baixa o modelo em seguida; isso ficou sem conserto. O relatório com cada rodada, o que falhou e o que nenhuma célula prova está em [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
+<!-- ! Alteração de IA - Revisar: (26/11/2026, decisão 180) a frase "Ficaram sem teste" dá lugar a dois parágrafos gerados por `ferramentas/instalador_matriz/relatorio.py` (bloco `limites_curto`): a limitação, que é até onde o instalador foi provado em cada sistema, e o trabalho futuro, que é o que falta provar.
+     ! Motivo: o Eric pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados com essas duas palavras. A frase antiga listava só o que não foi testado e deixava de fora os sistemas em que a prova parou num nível abaixo do N4; gerados das pastas de rodada, os dois parágrafos não ficam para trás quando uma rodada nova entra. -->
+<!-- tb_inst_limites_curto:inicio -->
+**Limitação (o que o projeto entrega hoje).** O instalador foi provado até o fim, com a instalação concluída e a prova até o N4, em: Ubuntu 24.04 (WSL); Ubuntu 24.04 do GitHub Actions (GitHub Actions); Windows Server 2025 do GitHub Actions (GitHub Actions). Nos outros sistemas com rodada: A prova foi até o N3, o nível pedido, sem chegar ao N4: Ubuntu 24.04 sem systemd; Ubuntu 22.04; Ubuntu 26.04; Debian 12; Debian 13; macOS 15, Apple Silicon. A prova passou, mas o instalador não foi até o fim: macOS 15, Intel (melhor esforço). A prova ficou abaixo do nível pedido: Fedora 45 (melhor esforço), no N1 de N3. Sem suporte, de propósito: Arch Linux (sem suporte); openSUSE (sem suporte). Só a prova rodou, sem o instalador: Windows 11 da máquina-alvo.
+
+**Trabalho futuro (o que falta provar).** A prova até o N4, com o modelo do projeto respondendo, em: Ubuntu 24.04 sem systemd; Ubuntu 22.04; Ubuntu 26.04; Debian 12; Debian 13; macOS 15, Apple Silicon. O instalador até o fim em: macOS 15, Intel (melhor esforço). O nível pedido em: Fedora 45 (melhor esforço). As células da matriz que não rodaram: Windows 11 no Windows Sandbox; Windows 11 Enterprise de avaliação em máquina virtual, com o Defender ligado; Windows 11 Enterprise de avaliação em máquina virtual, com o Defender desligado; Windows Server 2022 de avaliação em máquina virtual; Ubuntu 24.04 de mesa em máquina virtual; Windows 10 de um integrante. E o que nenhuma célula exercita: o MariaDB instalado pelo MSI do `winget`, no Windows com administrador e sem MySQL; o Python e o PHP trazidos pelo `winget`, no Windows; um Mac sem o Homebrew; Windows e Linux em processador ARM. O motivo de cada item está na seção 6 do relatório do instalador.
+<!-- tb_inst_limites_curto:fim -->
+
+No Windows e no macOS, a prova em máquina nova é a do GitHub Actions (`.github/workflows/instalador.yml`), em máquinas que o GitHub cria para cada execução e que não são limpas: já trazem o Python e, conforme o sistema, o PHP, o MySQL ou o Homebrew. O relatório com cada rodada, o que falhou e o que nenhuma célula prova está em [relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
 
 **Para conferir a sua instalação** depois de instalar: `./install.sh --conferir` (Linux e macOS) ou `python install.py --conferir` (Windows). A prova sobe o site e a API, abre o site no navegador do agente, pede uma resposta a um modelo pequeno e, por último, ao `qwen2.5:7b`, e grava o resultado em `.ferramentas/prova/registro.json`.
 
@@ -331,6 +374,8 @@ Máquina sem administrador, o que o instalador faz passo a passo, os testes e as
      ! Motivo: na terceira e na quarta execução do fluxo do GitHub Actions (45731004628 e 45807394622) o Windows Server 2025 e o macOS passaram na prova; o comentário da árvore contradizia a tabela "O que foi provado". -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4) na árvore abaixo, a linha do Word do TCC passa a dizer que ele é a versão 3, e entra a linha do Word entregue por um coautor.
      ! Motivo: o Eric pediu, no fechamento, que o README traga o documento do TCC na versão final; a fase fechou antes de o Word e o PDF da versão 5 serem gerados (decisão 179), e a página apontava o Word de 05/11/2026 como "o documento do TCC", quando ele é a versão 3, sem a Fase 5 nem a Pós-Fase 4. O `TCC_v4_20261105.docx` é de um coautor e não é a versão oficial (decisões 173 e 174). -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) na árvore abaixo entram o PDF e o Word da versão 5 do documento do TCC, e as linhas dos dois Word de 05/11/2026 dizem o que eles são.
+     ! Motivo: o Eric pediu que o README traga o documento do TCC na versão final; o Word e o PDF da versão 5 foram gerados em 26/11/2026 (decisões 179 e 185), e a página ainda dizia que eles não tinham sido gerados e apontava só para o Word de 05/11/2026, que é a versão 3. -->
 ```
 TCC/
 ├── README.md                 # esta página
@@ -345,8 +390,10 @@ TCC/
 ├── claude-memoria/           # memória do Claude e os registros de passagem entre sessões
 ├── Documentacao/
 │   ├── TCC - ABNT 14724 - V1.md   # fonte do documento do TCC (o nome fica "V1" em todas as versões)
-│   ├── TCC_v3_20261105.docx       # Word da versão 3, de 05/11/2026 (a versão final, a 5, ainda não foi gerada)
-│   ├── TCC_v4_20261105.docx       # Word de um coautor sobre a versão 3; a seção 1.1 dele já está na fonte
+│   ├── TCC_v5_20261126.pdf        # documento do TCC na versão final, a 5, em PDF
+│   ├── TCC_v5_20261126.docx       # o mesmo documento em Word
+│   ├── TCC_v3_20261105.docx       # Word da versão 3, de 05/11/2026, anterior à Fase 5
+│   ├── TCC_v4_20261105.docx       # Word de um coautor sobre a versão 3; a seção 1.1 dele está na versão 5
 │   ├── figuras/                   # as figuras desta página e a tabela de cada uma
 │   ├── dashboard/                 # o painel do projeto
 │   └── memorial/                  # decisões, pesquisa, relatórios, roadmap e pendências

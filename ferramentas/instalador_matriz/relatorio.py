@@ -28,9 +28,11 @@ LIMITE_DA_FALHA = 200
 
 # Cada arquivo e os blocos que ele recebe. As marcas são `<!-- tb_inst_<bloco>:inicio -->` e `<!-- tb_inst_<bloco>:fim -->`.
 DESTINOS = {
-    RELATORIO_RELATIVO: ("resumo", "matriz", "rodadas", "nao_testadas"),
-    Path("README.md"): ("resumo",),
-    Path("DETALHES-TECNICOS.md"): ("resumo", "nao_testadas"),
+    # ! Alteração de IA - Revisar: (26/11/2026, decisão 180) o relatório e o DETALHES passam a receber os blocos `limites` e `futuro`, e o README o bloco `limites_curto`.
+    # ! Motivo: o dono do projeto pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados como limitação e como trabalho futuro, e a tabela do resumo não dizia que uma célula que alcançou o N3 pedindo N3 também é um limite, nem que no Mac Intel a prova passou com o instalador interrompido; gerados das pastas de rodada, os blocos não ficam para trás.
+    RELATORIO_RELATIVO: ("resumo", "matriz", "rodadas", "nao_testadas", "limites", "futuro"),
+    Path("README.md"): ("resumo", "limites_curto"),
+    Path("DETALHES-TECNICOS.md"): ("resumo", "nao_testadas", "limites", "futuro"),
 }
 
 # ! Alteração de IA - Revisar: tabela fixa das células da matriz do plano (seções 4.1 e 4.2), com o sistema e como a máquina nasce.
@@ -79,6 +81,16 @@ NAO_TESTADAS = [
      f"{_MOTIVO_153}; esta pedia o computador de um integrante"),
 ]
 
+# ! Alteração de IA - Revisar: (26/11/2026, decisão 180) lista fixa de situações que nenhuma célula da matriz exercita, com o motivo de cada uma, para o bloco de trabalho futuro.
+# ! Motivo: o dono do projeto pediu que o que falta provar fique declarado; estas quatro situações não têm célula nem entram em `NAO_TESTADAS` (que é só o que a decisão 153 cortou), e são texto descritivo, sem número de resultado, para não envelhecer.
+SEM_CELULA = [
+    ("O MariaDB instalado pelo MSI do `winget`, no Windows com administrador e sem MySQL",
+     "a célula do Windows usa o zip portátil do MariaDB; o outro caminho não foi exercitado em máquina nova"),
+    ("O Python e o PHP trazidos pelo `winget`, no Windows", "a máquina do GitHub já traz os dois"),
+    ("Um Mac sem o Homebrew", "a máquina do GitHub já traz o Homebrew"),
+    ("Windows e Linux em processador ARM", "nenhuma célula da matriz roda nesses processadores"),
+]
+
 
 # ! Alteração de IA - Revisar: bloco de funções de leitura (`_limpo`, `_ler_json`, `origem_do_id`, `_primeira_falha`): `_limpo` põe o texto numa linha sem travessão, seta nem `|` solto; `_ler_json` lê um JSON ou devolve None; `origem_do_id` diz onde a célula rodou (GitHub Actions, WSL ou máquina-alvo); `_primeira_falha` acha o primeiro nível que falhou e a primeira linha do detalhe.
 # ! Motivo: o texto de uma falha vem do log da máquina e pode trazer quebra de linha, travessão (regra do projeto: não entra em documento) ou `|` (que quebraria a tabela em Markdown); e um `celula.json` ou `registro.json` ilegível não pode derrubar o relatório inteiro.
@@ -124,6 +136,20 @@ def _primeira_falha(niveis: dict) -> str:
 
 # ! Alteração de IA - Revisar: `coletar` passa a guardar `terminou` de cada rodada e a pôr "não terminou" no lugar do nível quando o `celula.json` diz `"terminou": false`.
 # ! Motivo: a célula do GitHub grava o `celula.json` no começo, com `terminou` falso, e regrava no fim; uma tarefa cortada pelo GitHub fica só com a primeira versão, e o relatório não pode apresentá-la como "sem prova" comum nem como nível alcançado. Rodada antiga, sem a chave, vale como terminada.
+# ! Alteração de IA - Revisar: (26/11/2026, decisão 180) `_estado_do_instalador` diz, do `celula.json`, se o instalador `concluído`, `interrompido` ou `não rodou` naquela rodada; `coletar` guarda o resultado no campo `instalador`.
+# ! Motivo: a tabela do resumo só mostrava o nível da prova, e no Mac Intel (`M-15I`) a prova passou com o instalador interrompido (código de saída 1 em `saidas.instalador`); sem este campo, "provado até o fim" não distingue isso. A célula `ALVO` só roda a prova e não grava código do instalador: é `não rodou`.
+def _estado_do_instalador(celula: dict) -> str:
+    """`concluído`, `interrompido` ou `não rodou`, lido do `celula.json`: `resultado_do_instalador` (células do GitHub Actions: `concluida` ou outro valor) ou, sem ele, os códigos de saída `saidas.instalador` e `saidas.install*`."""
+    resultado = celula.get("resultado_do_instalador")
+    if resultado:
+        return "concluído" if resultado == "concluida" else "interrompido"
+    saidas = celula.get("saidas") or {}
+    codigos = [str(v).strip() for k, v in saidas.items() if k == "instalador" or k.startswith("install")]
+    if not codigos:
+        return "não rodou"
+    return "concluído" if all(c == "0" for c in codigos) else "interrompido"
+
+
 def coletar(celulas: Path) -> list[dict]:
     """Uma entrada por pasta de rodada que tem `celula.json`, em ordem de id e de data."""
     caminhos = sorted(celulas.glob("*/*/celula.json"), key=lambda p: (p.parent.parent.name, p.parent.name)) if celulas.is_dir() else []
@@ -151,6 +177,7 @@ def coletar(celulas: Path) -> list[dict]:
             # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) cada rodada guarda o nome do `preparo` do `celula.json` (`nenhum` se a chave não existe).
             # ! Motivo: a `CI-UBU` passa a remover o MySQL do executor antes do instalador; a linha da rodada precisa dizer isso, e as rodadas gravadas antes da chave continuam valendo, sem preparo.
             "preparo": str((celula.get("preparo") or {}).get("nome", "nenhum")) if isinstance(celula.get("preparo"), dict) else "nenhum",
+            "instalador": _estado_do_instalador(celula),   # ! Alteração de IA - Revisar: campo novo (decisão 180). ! Motivo: ver `_estado_do_instalador`.
         })
     return rodadas
 
@@ -174,7 +201,11 @@ def por_celula(rodadas: list[dict]) -> list[dict]:
         ultima = lista[-1]
         saida.append({"id": ident, "origem": ultima["origem"], "sistema": CELULAS[ident][0] if ident in CELULAS else ultima["sistema"],
                       "rodadas": len(lista), "primeira": _da_rodada(lista[0]), "ultima": _da_rodada(ultima),
-                      "melhor_novo": _melhor_nivel([r["alcancado"] for r in lista if r["modo"] == "novo"])})
+                      "melhor_novo": _melhor_nivel([r["alcancado"] for r in lista if r["modo"] == "novo"]),
+                      # ! Alteração de IA - Revisar: (26/11/2026, decisão 180) a célula ganha `pedido_novo` (o maior `ate` entre as rodadas `novo`, `-` se não há) e `instalador_ultima` (o campo `instalador` da última rodada).
+                      # ! Motivo: `classificar` compara o que a prova alcançou com o que foi pedido e olha se o instalador foi até o fim na última rodada; o `melhor_novo` sozinho não diz se N3 era o teto pedido ou um tropeço.
+                      "pedido_novo": _melhor_nivel([r["ate"] for r in lista if r["modo"] == "novo" and _peso_do_nivel(r["ate"]) >= 0]),
+                      "instalador_ultima": ultima["instalador"]})
     return saida
 
 
@@ -266,6 +297,138 @@ def bloco_nao_testadas() -> str:
     return _tabela(["Célula", "Sistema", "Por que não foi testada"], [[c, s, m] for c, s, m in NAO_TESTADAS])
 
 
+# ! Alteração de IA - Revisar: (26/11/2026, decisão 180) bloco de funções da limitação e do trabalho futuro (`classificar`, `_sistema_e_id`, `_nivel_alcancado`, `bloco_limites`, `_linhas_do_futuro`, `bloco_futuro`, `bloco_limites_curto`): `classificar` põe cada célula numa de seis classes (`so_prova`, `sem_suporte`, `abaixo_do_pedido`, `instalador_parou`, `sem_n4`, `ate_o_fim`) com a frase da limitação; `bloco_limites` e `bloco_limites_curto` dizem até onde a prova chegou em cada sistema; `bloco_futuro` lista o que falta provar.
+# ! Motivo: o dono do projeto pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados como limitação e como trabalho futuro, e a tabela do resumo não dizia que uma célula que alcançou o N3 pedindo N3 também é um limite, nem que no Mac Intel a prova passou com o instalador interrompido; gerados das pastas de rodada, os blocos não ficam para trás. "Provado até o fim" é a instalação concluída e a prova até o N4 numa máquina em que o instalador rodou.
+def classificar(celula: dict) -> tuple[str, str]:
+    """A classe da célula e a frase da limitação (vazia em `ate_o_fim`); a primeira regra que vale decide."""
+    melhor_esforco = " (melhor esforço)" if "(melhor esforço)" in celula["sistema"] else ""
+    if celula["instalador_ultima"] == "não rodou":
+        return "so_prova", "só a prova rodou, sobre a instalação que já existia; o instalador não rodou nesta máquina"
+    if "(sem suporte)" in celula["sistema"]:
+        return "sem_suporte", "sem suporte, de propósito: o instalador para e diz o que instalar à mão"
+    if _peso_do_nivel(celula["melhor_novo"]) < _peso_do_nivel(celula["pedido_novo"]):
+        return "abaixo_do_pedido", "a prova ficou abaixo do nível pedido" + melhor_esforco
+    if celula["instalador_ultima"] == "interrompido":
+        return "instalador_parou", "a prova passou, mas o instalador não foi até o fim" + melhor_esforco
+    if _peso_do_nivel(celula["melhor_novo"]) < _peso_do_nivel("N4"):
+        return "sem_n4", "o N4, com o modelo do projeto respondendo, não foi pedido nesta célula"
+    return "ate_o_fim", ""
+
+
+def _sistema_e_id(c: dict) -> str:
+    return f"{c['sistema']} (`{c['id']}`)"
+
+
+def _nivel_alcancado(c: dict) -> str:
+    """Até onde a prova chegou: o melhor nível das rodadas `novo`; na `so_prova`, o nível da última rodada."""
+    return c["ultima"]["alcancado"] if classificar(c)[0] == "so_prova" else c["melhor_novo"]
+
+
+def _nivel_pedido(c: dict) -> str:
+    return c["ultima"]["ate"] if classificar(c)[0] == "so_prova" else c["pedido_novo"]
+
+
+def _ordenadas(celulas: list[dict]) -> list[dict]:
+    por_id = {c["id"]: c for c in celulas}
+    return [por_id[i] for i in _ordem_das_celulas(celulas) if i in por_id]
+
+
+def bloco_limites(celulas: list[dict]) -> str:
+    """A frase do que foi provado até o fim, a tabela das outras células com rodada e a legenda."""
+    ordem = _ordenadas(celulas)
+    inteiras = [c for c in ordem if classificar(c)[0] == "ate_o_fim"]
+    frase = "**Provado até o fim** (instalação concluída e prova até o N4): " + (
+        "; ".join(f"{c['sistema']} (`{c['id']}`, {c['origem']})" for c in inteiras) + "." if inteiras else "nenhuma célula.")
+    linhas = [[c["id"], c["sistema"], c["origem"], _nivel_alcancado(c), _nivel_pedido(c), c["instalador_ultima"], classificar(c)[1]]
+              for c in ordem if classificar(c)[0] != "ate_o_fim"]
+    tabela = _tabela(["Célula", "Sistema", "Onde rodou", "Até onde a prova chegou", "Maior nível pedido", "Instalador na última rodada",
+                      "Limitação"], linhas)
+    legenda = ("\"Até onde a prova chegou\" é o maior nível alcançado numa rodada `novo`, que é a do instalador depois dos consertos "
+               "(na célula em que só a prova rodou, é o nível da última rodada). \"Maior nível pedido\" existe porque nem toda célula pede o N4. "
+               "\"Instalador na última rodada\" diz se o instalador terminou, parou no meio ou nem rodou.")
+    return frase + "\n\n" + tabela + "\n\n" + legenda
+
+
+def _linhas_do_futuro(celulas: list[dict]) -> list[tuple[str, str]]:
+    """As linhas do trabalho futuro (o que falta provar, por que ficou de fora), na ordem do bloco."""
+    ordem = _ordenadas(celulas)
+    por_classe: dict[str, list[dict]] = {}
+    for c in ordem:
+        por_classe.setdefault(classificar(c)[0], []).append(c)
+    linhas: list[tuple[str, str]] = []
+    pedidos = sorted({c["pedido_novo"] for c in por_classe.get("sem_n4", [])}, key=_peso_do_nivel)
+    for pedido in pedidos:
+        grupo = [c for c in por_classe["sem_n4"] if c["pedido_novo"] == pedido]
+        linhas.append(("A prova até o N4, com o modelo do projeto respondendo, em: " + ", ".join(_sistema_e_id(c) for c in grupo),
+                       f"essas células pediram a prova só até o {pedido}"))
+    if "instalador_parou" in por_classe:
+        linhas.append(("O instalador até o fim em: " + ", ".join(_sistema_e_id(c) for c in por_classe["instalador_parou"]),
+                       "na última rodada a prova passou e o instalador foi interrompido (seção 5 do relatório do instalador)"))
+    if "abaixo_do_pedido" in por_classe:
+        grupo = por_classe["abaixo_do_pedido"]
+        todas = all("(melhor esforço)" in c["sistema"] for c in grupo)
+        linhas.append(("O nível pedido em: " + ", ".join(f"{_sistema_e_id(c)} (ficou no {c['melhor_novo']} de {c['pedido_novo']})" for c in grupo),
+                       "melhor esforço: o instalador não instala tudo de que esse sistema precisa" if todas
+                       else "a prova ficou abaixo do nível pedido"))
+    linhas += [(f"{sistema} (`{cod}`)", motivo) for cod, sistema, motivo in NAO_TESTADAS]
+    linhas += list(SEM_CELULA)
+    return linhas
+
+
+def bloco_futuro(celulas: list[dict]) -> str:
+    """A tabela do que falta provar e por que ficou de fora."""
+    return _tabela(["O que falta provar", "Por que ficou de fora"], [list(l) for l in _linhas_do_futuro(celulas)])
+
+
+def bloco_limites_curto(celulas: list[dict]) -> str:
+    """Os dois parágrafos do README: a limitação e o trabalho futuro."""
+    # ! Alteração de IA - Revisar: (26/11/2026, decisão 180, ajuste do controlador) os dois parágrafos do README passam a agrupar os sistemas por tipo de limite, sem o código de cada célula; o motivo de cada item fica nas tabelas do relatório.
+    # ! Motivo: a primeira forma repetia a mesma frase a cada célula e listava cada linha do trabalho futuro por extenso; o parágrafo ficava maior que a tabela que ele resume, num README que estava sendo enxugado a pedido do Eric.
+    ordem = _ordenadas(celulas)
+    por_classe: dict[str, list[dict]] = {}
+    for c in ordem:
+        por_classe.setdefault(classificar(c)[0], []).append(c)
+
+    def nomes(grupo: list[dict]) -> str:
+        return "; ".join(c["sistema"] for c in grupo)
+
+    inteiras = por_classe.get("ate_o_fim", [])
+    onde = "; ".join(f"{c['sistema']} ({c['origem']})" for c in inteiras) if inteiras else "nenhuma célula"
+    frases = []
+    sem_n4 = por_classe.get("sem_n4", [])
+    for pedido in sorted({c["pedido_novo"] for c in sem_n4}, key=_peso_do_nivel):
+        frases.append(f"A prova foi até o {pedido}, o nível pedido, sem chegar ao N4: {nomes([c for c in sem_n4 if c['pedido_novo'] == pedido])}.")
+    if "instalador_parou" in por_classe:
+        frases.append(f"A prova passou, mas o instalador não foi até o fim: {nomes(por_classe['instalador_parou'])}.")
+    if "abaixo_do_pedido" in por_classe:
+        frases.append("A prova ficou abaixo do nível pedido: "
+                      + "; ".join(f"{c['sistema']}, no {c['melhor_novo']} de {c['pedido_novo']}" for c in por_classe["abaixo_do_pedido"]) + ".")
+    if "sem_suporte" in por_classe:
+        frases.append(f"Sem suporte, de propósito: {nomes(por_classe['sem_suporte'])}.")
+    if "so_prova" in por_classe:
+        frases.append(f"Só a prova rodou, sem o instalador: {nomes(por_classe['so_prova'])}.")
+    limitacao = ("**Limitação (o que o projeto entrega hoje).** O instalador foi provado até o fim, com a instalação concluída e a prova "
+                 f"até o N4, em: {onde}." + (" Nos outros sistemas com rodada: " + " ".join(frases) if frases else ""))
+    falta = []
+    if sem_n4:
+        falta.append(f"A prova até o N4, com o modelo do projeto respondendo, em: {nomes(sem_n4)}.")
+    if "instalador_parou" in por_classe:
+        falta.append(f"O instalador até o fim em: {nomes(por_classe['instalador_parou'])}.")
+    if "abaixo_do_pedido" in por_classe:
+        falta.append(f"O nível pedido em: {nomes(por_classe['abaixo_do_pedido'])}.")
+    falta.append("As células da matriz que não rodaram: " + "; ".join(sistema for _, sistema, _ in NAO_TESTADAS) + ".")
+    falta.append("E o que nenhuma célula exercita: "
+                 + "; ".join((item[0].lower() + item[1:]) if item.startswith(("O ", "Um ")) else item for item, _ in SEM_CELULA) + ".")
+    falta.append("O motivo de cada item está na seção 6 do relatório do instalador.")
+    futuro = "**Trabalho futuro (o que falta provar).** " + " ".join(falta)
+    return _limpo_paragrafo(limitacao) + "\n\n" + _limpo_paragrafo(futuro)
+
+
+def _limpo_paragrafo(texto: str) -> str:
+    """O parágrafo numa linha, sem travessão nem seta (diferente de `_limpo`, não escapa o `|`: não está numa tabela)."""
+    return " ".join(texto.split()).replace("—", "-").replace("–", "-").replace("→", "para").replace("->", "para")
+
+
 # ! Alteração de IA - Revisar: bloco de funções que colam e gravam (`_marcas`, `colar`, `matriz_json`, `_blocos`, `_ler`, `_gravar`, `sincronizar`, `main`): `_marcas` dá as duas marcas HTML de um bloco; `colar` troca o texto entre elas; `matriz_json` monta o `matriz.json`; `_blocos` monta os quatro blocos; `_ler` e `_gravar` leem e gravam sem mexer no fim de linha; `sincronizar` compara (e, com `gravar`, grava) o `matriz.json` e os destinos; `main` é a linha de comando (`--colar` e `--check`). Em `sincronizar`, destino que não existe ou sem as marcas de um bloco passa a ser diferença (antes era só aviso) e nenhum destino com erro de marca é gravado.
 # ! Motivo: se alguém apagasse uma marca do README, o `--check` só avisava, sai com 0 e o resumo do README ficava velho sem ninguém ver; e o `--colar` gravava o que dava e deixava o arquivo com uns blocos novos e outros velhos. Agora a marca que sumiu derruba o `--check` e o `--colar` (código 1) e o arquivo com problema fica como estava.
 def _marcas(nome: str) -> tuple[str, str]:
@@ -309,10 +472,11 @@ def matriz_json(rodadas: list[dict]) -> str:
 
 
 def _blocos(rodadas: list[dict]) -> dict:
-    """Os quatro blocos de texto, por nome."""
+    """Os sete blocos de texto, por nome."""   # ! Alteração de IA - Revisar: entram `limites`, `futuro` e `limites_curto` (decisão 180). ! Motivo: ver `DESTINOS`.
     celulas = por_celula(rodadas)
     return {"resumo": bloco_resumo(celulas), "matriz": bloco_matriz(celulas), "rodadas": bloco_rodadas(rodadas),
-            "nao_testadas": bloco_nao_testadas()}
+            "nao_testadas": bloco_nao_testadas(), "limites": bloco_limites(celulas), "futuro": bloco_futuro(celulas),
+            "limites_curto": bloco_limites_curto(celulas)}
 
 
 def _ler(caminho: Path) -> str:

@@ -1780,6 +1780,91 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). O plano não prende o fechamento ao Word, e não há ficha aberta; gerar hoje deixa o encerramento sem ponta solta até 30/11/2026. Se o grupo devolver mudança de texto, sai uma versão nova, como já sairia.
 - **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 179): "Fechar e gerar hoje (Recomendado)". A fase foi dada por fechada no mesmo dia, depois da verificação: as baterias de todas as fases rodaram verdes em 26/11/2026, de dentro da sessão do pacote Q8 e sem o modelo: 30 arquivos de teste, entre eles `testar_fase4.py` com 166 testes, rodado com o banco e com o site e a API no ar (0 pulados com aviso), `testar_pos_fase4.py` com 83, `testar_hub.py` com 44, `testar_central.py` com 23, `testar_fase5.py` com 39 e `testar_instalador.py` com 193; `conferir_docs.py` sem falha e nenhuma ficha aberta. O Word e o PDF finais (versão 5) saem em seguida: a terceira execução do instalador já foi lida pela sessão do instalador no resumo da página do GitHub Actions, e a geração espera só a evidência dela entrar no repositório, de onde o texto copia os níveis; se isso não acontecer no dia, a geração sai com a segunda execução no texto.
 
+<!-- ! Alteração de IA - Revisar: bloco novo (26/11/2026) com a ficha 118, já fechada: como o projeto declara os sistemas em que o instalador não foi provado até o fim.
+     ! Motivo: o Eric decidiu, pela sessão principal, que esses sistemas ficam declarados como limitação e como trabalho futuro. Não houve quadro com opções: a ficha registra as palavras dele, o que mudou em relação ao que estava escrito e onde a lista exata fica, para a decisão não existir só numa conversa. -->
+## Aberta pelo fechamento da frente do instalador (26/11/2026)
+
+### 118. Como o projeto declara os sistemas em que o instalador não foi provado até o fim?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** Depois de quatro execuções do fluxo do GitHub Actions e das células do WSL, o instalador foi provado até o fim em poucos sistemas. "Até o fim" quer dizer a instalação concluída e a prova até o nível mais alto (o N4, com o modelo do projeto respondendo), numa máquina em que o instalador rodou. Nos outros sistemas aconteceu uma de quatro coisas: a prova chegou ao nível pedido naquela célula, que não era o mais alto (é o caso do Mac com Apple Silicon e de várias distribuições do Linux pelo WSL); a prova passou, mas o instalador não foi até o fim (o Mac com processador Intel); a prova ficou abaixo do pedido ou o sistema não tem suporte de propósito (Fedora, Arch Linux e openSUSE); ou a célula nem rodou (o Windows recém-instalado pelo Sandbox e por máquina virtual e o Windows 10 de um integrante, pela decisão 153). O relatório do instalador, o README e o `DETALHES-TECNICOS.md` diziam só o que não tinha sido testado. A lista exata, com até onde cada sistema chegou, não é digitada: sai das pastas de rodada, por `ferramentas/instalador_matriz/relatorio.py`, e está nas tabelas da seção 6 do relatório do instalador (`Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md`).
+- **Por que importa:** Quem lê a tabela do resumo vê uma célula que alcançou o nível pedido e pode entender que o instalador está provado naquele sistema, quando o modelo do projeto nunca respondeu ali. O texto do TCC e o README precisam dizer a mesma coisa, com as mesmas palavras.
+- **Opções:**
+  - (a) Declarar com duas palavras: limitação, para o que o projeto entrega hoje em cada sistema (até onde a prova chegou), e trabalho futuro, para o que falta provar, no relatório do instalador, no README, no `DETALHES-TECNICOS.md`, no roadmap e na Conclusão do TCC.
+  - (b) Deixar como estava: só a lista do que não foi testado, pela decisão 153.
+- **Recomendação:** não houve quadro com opções: o Eric decidiu direto, pela sessão principal. As duas opções acima só registram o que mudou em relação ao que estava escrito.
+- **Decisão:** (a), pelo Eric em 26/11/2026, pela sessão principal (decisão 180), nas palavras dele: "Vamos colocar como Limitação e 'pendências futuras' a funcionalidade nos SOs que não conseguimos testar ate o fim". A sessão principal passou uma primeira lista, e a conferência na matriz corrigiu um ponto dela: no Mac com Apple Silicon a prova não parou no meio; ela chegou ao nível que aquela célula pedia, que não é o mais alto.
+
+<!-- ! Alteração de IA - Revisar: bloco novo (26/11/2026) com as fichas 119 a 123: as escolhas que o parecer de uma IA de fora sobre o Word de um coautor deixou para o Eric ou para o grupo, e a hora em que sai a versão 5 do documento do TCC.
+     ! Motivo: o Eric mandou o `TCC_v4_20261105.docx` a uma IA de fora, "apenas para ter uma segunda opinião", e trouxe o parecer (guardado fora do git, em `.superpowers/sdd/pos-fase-4/parecer-ia-sobre-o-v4.md`). O parecer leu o texto de 05/11/2026, e parte do que aponta já não vale; o que era defeito pelas regras do projeto foi consertado direto na fonte, e o que é escolha vem para cá, uma ficha por escolha. -->
+## Abertas pelo parecer de fora sobre o documento do TCC (26/11/2026)
+
+### 119. O título e a palavra "autônomo" ficam como estão?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O parecer aponta que o título promete um "agente de QA E2E autônomo com capacidades de self-healing, focado na fronteira de integração", e que o trabalho entrega duas coisas diferentes: na quebra de localizador há cura, feita em código, sem o modelo, e a correção fica como sugestão ao desenvolvedor; na quebra de contrato não há cura, há diagnóstico. A Justificativa (seção 3) chama o agente de "copiloto de depuração", e o objetivo geral (seção 2.1) diz que o modelo é usado "para realizar o self-healing dos localizadores", quando a cura medida não usa o modelo (seção 6.7). A seção 1.1 já separa as duas famílias de falha, e a Conclusão já diz, objetivo a objetivo, que a cura foi medida sem o modelo. O título e o objetivo geral vêm do projeto de pesquisa aprovado.
+- **Por que importa:** É a primeira pergunta que o parecer simula para a banca. Mudar o título ou o objetivo mexe no que o projeto de pesquisa aprovou e pede o de acordo do grupo e do orientador; não mudar pede que o texto diga, logo no começo, em que sentido o agente é autônomo.
+- **Opções:**
+  - (a) Manter o título e o objetivo geral, e acrescentar à seção 1.1 e à seção 3 a frase que diz em que sentido o agente é autônomo (roda sozinho da detecção ao resultado conferido, sem ninguém no meio da execução) e em que sentido é copiloto (a decisão sobre o código continua com o desenvolvedor).
+  - (b) Além de (a), reescrever o objetivo geral para dizer que o modelo local produz o diagnóstico e que a cura do localizador é feita em código, com o registro de que a redação mudou depois da medida.
+  - (c) Mudar também o título, o que pede o de acordo do grupo e do orientador.
+  - (d) Deixar tudo como está.
+- **Recomendação:** (a). Não mexe no que o projeto de pesquisa aprovou, e falta só a frase que tira a aparência de contradição entre "autônomo" e "copiloto".
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 181): "Manter e explicar (Recomendado)". O título e o objetivo geral ficam como estão, e as seções 1.1 e 3 ganham a frase que diz em que sentido o agente é autônomo e em que sentido é copiloto.
+
+### 120. A seção 5 ganha um diagrama de arquitetura?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O parecer diz que a seção 5 só tem o fluxograma "Como o agente trabalha" e pede um diagrama de componentes e um de sequência, com o roteiro, o interceptador, a poda, a busca, o modelo e a trilha. O parecer leu o texto de 05/11/2026; desde 26/11/2026 o documento tem, na seção 6.7, a captura da tela Início do hub, com o desenho de como as peças se ligam. Um diagrama novo sairia de `gerar_figuras_documentos.py`, por código, com o "Como ler", como as outras figuras do documento.
+- **Por que importa:** Quem avalia a engenharia do trabalho procura na metodologia as peças do sistema, o que cada uma guarda e por onde os dados passam. O fluxograma mostra a ordem dos passos, e não as peças.
+- **Opções:**
+  - (a) Só o diagrama de arquitetura (as peças, o que cada uma guarda e por onde os dados passam), na seção 5.2. A sequência dos passos já está no fluxograma "Como o agente trabalha".
+  - (b) O diagrama de arquitetura na seção 5.2 e um diagrama de sequência de um caso, do roteiro à trilha, na seção 5.5.
+  - (c) Nenhum: o fluxograma e a captura do hub ficam como a visão do sistema.
+- **Recomendação:** (a). É a peça que falta, e o diagrama de sequência repetiria o fluxograma que abre a seção 5.
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 182): "Só arquitetura (Recomendado)". A seção 5.2 ganha um diagrama de arquitetura, gerado por `gerar_figuras_documentos.py`; o diagrama de sequência não entra, porque o fluxograma que abre a seção 5 já mostra a ordem dos passos.
+
+### 121. Os termos coloquiais que o parecer aponta são trocados?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O parecer acha o registro coloquial demais para uma monografia e cita "cobaias", "chutar dá 0,25", "deixa em paz", "saiu do lugar" e "põe os sinais em ordem". No texto de hoje, "chutar" não aparece mais; "cobaias" aparece 3 vezes (duas na tabela das fases e uma na seção 6.10.6, onde vem explicada), "deixa em paz" 2 vezes (na definição do TNR), "saiu do lugar" 1 e "põe os sinais em ordem" 1. A regra do Eric para a documentação principal é linguagem direta, sem jargão, e as explicações "Como ler" e "O que a figura mostra" foram escritas assim de propósito; o parecer elogia essa parte.
+- **Por que importa:** São sete ocorrências. Trocar não muda sentido nem número; não trocar mantém o texto como o grupo o leu até aqui.
+- **Opções:**
+  - (a) Trocar só esses termos por equivalentes diretos ("cobaias" por "aplicações-alvo", "deixa em paz" por "não aciona", "saiu do lugar" por "mudou", "põe os sinais em ordem" por "ordena os sinais"), sem mexer na linguagem direta do resto. Os nomes CobaiaFront e CobaiaAPI ficam.
+  - (b) Deixar como está.
+  - (c) Deixar para a leitura do grupo decidir o registro do texto inteiro.
+- **Recomendação:** (a). É pouco, não muda o que o texto diz e tira uma objeção de forma.
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 183): "Trocar só esses (Recomendado)". "cobaias" vira "aplicações-alvo", "deixa em paz" vira "não aciona", "saiu do lugar" vira "mudou" e "põe os sinais em ordem" vira "ordena os sinais"; o resto do texto fica.
+
+### 122. O documento ganha um quadro com a divisão de papéis entre os sete autores?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** O parecer diz que um TCC com sete autores pede evidência da divisão do trabalho e do que foi delegado ao agente de apoio, e sugere um quadro na seção que trata do apoio de inteligência artificial (hoje a 5.9). Essa seção já diz o que o agente de apoio fez e, desde 26/11/2026, os três pontos em que ele tomou parte na avaliação. O que cada autor fez não está em nenhum arquivo do repositório: só o grupo pode preencher. O quadro não pode dizer quem participou da linha de base manual (decisão 154).
+- **Por que importa:** É a pergunta de arguição mais provável para um grupo de sete, e a resposta escrita não pode ser inventada por quem não é do grupo.
+- **Opções:**
+  - (a) Sim, numa versão seguinte: o grupo preenche o quadro (autor e frentes em que trabalhou) e ele entra na seção 5.9; a versão 5 sai sem ele, com a pendência declarada.
+  - (b) Sim, e a versão 5 espera o quadro do grupo.
+  - (c) Não: a seção 5.9 fica como está, e a divisão de papéis é respondida na defesa.
+- **Recomendação:** (a). O quadro responde à pergunta, mas depende de sete pessoas e não deve segurar a versão 5.
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 184): "Sim, na versão seguinte (Recomendado)". O grupo preenche o quadro (autor e frentes em que trabalhou) e ele entra na seção 5.9 numa versão seguinte; a versão 5 sai sem ele, com a pendência declarada no roadmap.
+
+### 123. A versão 5 (Word e PDF) sai depois dos acertos do parecer, ou hoje como está?
+- **Estado:** fechada em 26/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 26/11/2026
+- **O que é:** A decisão 179 manda gerar o Word e o PDF finais no dia do fechamento da Pós-Fase 4. A fonte está pronta para isso: a evidência do instalador entrou, a limitação e o trabalho futuro dos sistemas não provados até o fim estão no texto (decisão 180), e os defeitos que o parecer apontou e que valiam foram consertados (notas de conferência à vista, o endereço de uma página privada, a frase sobre o que o cronômetro das pessoas mediu). Ficam as escolhas das fichas 119 a 122. A geração é uma só (decisão 158), e leva minutos.
+- **Por que importa:** Gerar antes de aplicar o que as fichas 119 a 122 decidirem gasta a única geração num texto que ainda vai mudar; esperar o quadro dos sete autores, se for o caso, não tem data.
+- **Opções:**
+  - (a) Depois dos acertos: aplico o que as fichas 119 a 121 decidirem e gero em seguida, sem esperar o que depende do grupo (ficha 122).
+  - (b) Hoje, como está: gero agora, e o que as fichas mudarem entra numa versão seguinte.
+- **Recomendação:** (a). São acertos de texto que cabem na mesma sessão, e a versão que vai para o orientador já sai com eles.
+- **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 185): "Depois dos acertos (Recomendado)". A frase sobre autônomo e copiloto, o diagrama de arquitetura e a troca dos termos entram na fonte na mesma sessão, e o Word e o PDF saem em seguida, sem esperar o quadro dos papéis.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

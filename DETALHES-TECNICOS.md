@@ -58,6 +58,8 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
      ! Motivo: a linha ainda dizia "Não iniciada" com o texto da decisão 94; a fase foi especificada e planejada em 07/11/2026 (decisões 101 a 106) e dois pacotes já saíram. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, fechamento da Fase 5) a linha da Fase 5 passou de "Não iniciada" a "Concluída", e o item do documento do TCC, mais abaixo, diz que a fonte já traz a Fase 5.
      ! Motivo: a fase foi medida em 18 e 24/11/2026 e fechada em 25/11/2026 (decisão 156); a tabela ainda a dava como não iniciada. O número vem de `resultados_alvo/fase5/medicao.json`, lido por script. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026) a linha da Pós-Fase 4 da tabela abaixo passou de "Em andamento desde 07/11/2026" a "Concluída em 26/11/2026 (decisão 179)"; o resto da célula não mudou.
+     ! Motivo: a fase foi fechada em 26/11/2026 pela decisão 179, e o README e o roadmap já a davam como concluída; esta tabela dizia o contrário. -->
 | Fase | O que é | Estado |
 |---|---|---|
 | 1 | Ambiente e sistemas cobaia | Concluída |
@@ -67,7 +69,7 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 | 3-B | Pontes de versão, casos inéditos, troca cruzada e sondas | Concluída em 01/10/2026 |
 | Pré-Fase 4 | Pesquisa antes da Fase 4: modelos grandes lendo os pesos do disco (repositório colibri), atlas visual das competências e raciocínio aberto | Concluída em 26/10/2026 (relatório fechado; parte B da pesquisa integrada; especificação da trilha aprovada; corrida 13 cancelada) |
 | 4 | O agente na tela: interceptação, poda da árvore de acessibilidade, cura de seletor, biblioteca em produção e trilha aberta | Concluída em 06/11/2026: pacotes P0 a P8 e corridas 16 a 24 ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-4-relatorio.md); regra R2 cumprida na corrida 18d, no limite exato, decisões 97 e 98; medida com revisor humano em aberto, decisão 95) |
-| Pós-Fase 4 | O que chega ao analista: relatório por caso no molde do relatório de defeitos da seção 5.5 do CTFL 4.0, camada de leitura dos verbetes, filtros determinísticos de prolixidade e objetividade, árvore de decisão e barra de progresso antes da Fase 5; hub central e integração com o Git depois dela (decisões 94 e 101 a 106) | Em andamento desde 07/11/2026: Q1 (relatório v3 e camada de leitura) e Q2 (filtros de texto, `filtros_de_texto.py`) feitos em 07/11/2026; Q3 (árvore de decisão por caso, `arvore_de_decisao.py`) e Q4 (barra de progresso, `progresso.py`, e protótipo da seleção pelo diff do Git, `impacto_git.py`) feitos em 08/11/2026; Q5 (a sessão de revisão dos 36 relatórios v3 com a árvore da corrida 24, lidos quase todos por um analista a quem o Eric passou os relatórios, `revisao_v3.py`, `sessao_revisao.py --perfil v3` e `avaliar_fase4.py --revisao_v3`) e a curadoria das 39 leituras dos verbetes (`ferramentas/curadoria_leituras.py`) feitos em 10/11/2026; Q6 (o hub central, uma página local de revisão: `hub.py`, `hub_dados.py`, `hub_revisao.py`, `hub_pagina.py` e `testar_hub.py`; o trace do Playwright só na falha, `--trace-na-falha`) e Q7 (a seleção pelo Git ligada ao executor e ao hub: `--selecao git` no modo `cenarios`, `impacto_git.py --decidir`, `--conferir` e `--conferir-historico`) feitos em 25/11/2026 |
+| Pós-Fase 4 | O que chega ao analista: relatório por caso no molde do relatório de defeitos da seção 5.5 do CTFL 4.0, camada de leitura dos verbetes, filtros determinísticos de prolixidade e objetividade, árvore de decisão e barra de progresso antes da Fase 5; hub central e integração com o Git depois dela (decisões 94 e 101 a 106) | Concluída em 26/11/2026 (decisão 179), depois de aberta em 07/11/2026: Q1 (relatório v3 e camada de leitura) e Q2 (filtros de texto, `filtros_de_texto.py`) feitos em 07/11/2026; Q3 (árvore de decisão por caso, `arvore_de_decisao.py`) e Q4 (barra de progresso, `progresso.py`, e protótipo da seleção pelo diff do Git, `impacto_git.py`) feitos em 08/11/2026; Q5 (a sessão de revisão dos 36 relatórios v3 com a árvore da corrida 24, lidos quase todos por um analista a quem o Eric passou os relatórios, `revisao_v3.py`, `sessao_revisao.py --perfil v3` e `avaliar_fase4.py --revisao_v3`) e a curadoria das 39 leituras dos verbetes (`ferramentas/curadoria_leituras.py`) feitos em 10/11/2026; Q6 (o hub central, uma página local de revisão: `hub.py`, `hub_dados.py`, `hub_revisao.py`, `hub_pagina.py` e `testar_hub.py`; o trace do Playwright só na falha, `--trace-na-falha`) e Q7 (a seleção pelo Git ligada ao executor e ao hub: `--selecao git` no modo `cenarios`, `impacto_git.py --decidir`, `--conferir` e `--conferir-historico`) feitos em 25/11/2026 |
 | 5 | Medição de valor (tempo de reparo e sucesso da tarefa) | Concluída em 25/11/2026: o agente medido na corrida 28b, a frio, e três sessões de pessoas pela página; o agente reparou mais rápido nos dez cenários, 66,3 s contra 219,7 s na média ([relatório da fase](Documentacao/memorial/3-resultados-e-analises/fase-5-relatorio.md)) |
 
 ### Resultado principal
@@ -154,7 +156,9 @@ A parte técnica do projeto: como cada peça funciona, cada script e os valores 
 - [Projeto de pesquisa (ABNT NBR 15287)](Documentacao/Projeto%20de%20Pesquisa%20-%20ABNT%2015287_2025%20-%20V3.md) e o PDF beta gerado a partir dele.
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4) o item do documento do TCC passa a dizer que o texto final está na fonte em Markdown, que o Word e o PDF da versão 5 ainda não foram gerados e o que são os dois Word de 05/11/2026.
      ! Motivo: o item dizia que o texto estava por atualizar e à espera dos números das corridas 18c, 21c, 23 e 24, que entraram na fonte em 25/11/2026, e que o Word sairia com o pacote Q8; a Pós-Fase 4 fechou em 26/11/2026 antes da geração (decisão 179), e existe agora um `TCC_v4_20261105.docx` que não é a versão oficial (decisões 173 e 174). -->
-- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md): a fonte em Markdown traz o texto final desde 26/11/2026, com a Fase 4 pelas leituras vigentes, a Fase 5 (seção 6.8) e a Pós-Fase 4. O Word e o PDF da versão final, a 5, saem dela por `ferramentas/gerar_tcc_docx.py`, no molde do orientador, e por `ferramentas/tcc_docx_para_pdf.py`, conferidos por `ferramentas/conferir_entrega_tcc.py`, e ainda não foram gerados (decisão 179). Até lá, o [.docx da versão 3](Documentacao/TCC_v3_20261105.docx), de 05/11/2026, é texto provisório, com a Fase 4 até a corrida 22 e sem a Fase 5; o `TCC_v4_20261105.docx` é o Word que um coautor entregou sobre a versão 3, com a seção 1.1 que já está na fonte, e não é a versão oficial (decisões 173 e 174). O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho. <!-- TROCAR NA GERAÇÃO: os links do Word e do PDF da versão 5, no lugar da frase "ainda não foram gerados" -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) o item do documento do TCC passa a apontar para o Word e o PDF da versão 5, com o registro da conferência.
+     ! Motivo: o item dizia que o Word e o PDF da versão 5 ainda não tinham sido gerados; eles saíram em 26/11/2026 (decisões 179 e 185). -->
+- [Documento do TCC (ABNT NBR 14724)](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md): a versão final é a 5, de 26/11/2026, em [Word](Documentacao/TCC_v5_20261126.docx) e em [PDF](Documentacao/TCC_v5_20261126.pdf). Os dois saem da fonte em Markdown por `ferramentas/gerar_tcc_docx.py`, no molde do orientador, e por `ferramentas/tcc_docx_para_pdf.py`, e foram conferidos por `ferramentas/conferir_entrega_tcc.py`, que não achou marcação de IA em nenhum dos dois ([registro](Documentacao/memorial/5-metodo-e-ferramental/dados/conferencia-entrega-tcc-20261126.json)). A versão 5 traz a Fase 4 pelas leituras vigentes, a Fase 5 (seção 6.8), a Pós-Fase 4 e o instalador. O [.docx da versão 3](Documentacao/TCC_v3_20261105.docx), de 05/11/2026, é o texto provisório anterior; o `TCC_v4_20261105.docx` é o Word que um coautor entregou sobre a versão 3, com a seção 1.1 que já está na versão 5, e não é a versão oficial (decisões 173 e 174). O nome do arquivo-fonte fica "V1" em todas as versões, porque o gerador lê esse caminho.
 - Registros oficiais das baterias em `Programacao/AgenteCore/experimentos/resultados_alvo/` (JSON, logs, gráficos e relatórios navegáveis).
 - Cópia no repositório da disciplina, a pedido do orientador: [unicid-projeto-software-2026-2/squad-24-projeto](https://github.com/unicid-projeto-software-2026-2/squad-24-projeto) (privado, acesso pela organização da disciplina), com este repositório, sem a `.claude/` nem a `.venv` da CobaiaAPI, na subpasta `projeto/`, mantida por `ferramentas/sincronizar_orientador.py`, e o épico, as features e os requisitos no modelo do orientador em `docs/`; este repositório é o principal e toda alteração sai primeiro aqui (decisão 72).
 
@@ -249,6 +253,8 @@ dois clientes diferentes o consumindo).
      ! Motivo: a camada de leitura dos verbetes nasceu nesta data (decisão 103) e mora fora da biblioteca que o modelo lê; sem a linha, quem abre o repositório não saberia de qual das duas pastas o analista lê. -->
 <!-- ! Alteração de IA - Revisar: (25/11/2026, pacote I7) a árvore abaixo ganhou `instalador/`, `versoes.json`, `restaurar_banco.py`, `testar_instalador.py` e `.github/workflows/`, e as linhas de `install.*` e `run.*` dizem o que cada lançador faz hoje.
      ! Motivo: essas peças existem desde o pacote do instalador único e não estavam na árvore; `.github/` aparecia só com os modelos de issue e de pull request, sem o fluxo `instalador.yml` que roda o instalador no GitHub. -->
+<!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) na árvore abaixo entra a linha do PDF do documento do TCC, ao lado da do Word.
+     ! Motivo: desde a versão 5 o documento do TCC sai em Word e em PDF (decisão 158), e a árvore só trazia o Word. -->
 ```
 TCC/
 ├── README.md                                # porta de entrada: o projeto, as figuras e como rodar
@@ -272,6 +278,7 @@ TCC/
 │   ├── Projeto de Pesquisa - ABNT 15287_2025 - V3.md   # projeto de pesquisa; o PDF beta V4 é gerado a partir dele
 │   ├── TCC - ABNT 14724 - V1.md            # fonte do documento do TCC (o nome fica "V1" em todas as versões, porque o gerador lê esse caminho)
 │   ├── TCC_v<versão>_<AAAAMMDD>.docx       # documento do TCC em Word, gerado por ferramentas/gerar_tcc_docx.py
+│   ├── TCC_v<versão>_<AAAAMMDD>.pdf        # o mesmo documento em PDF, exportado pelo Word por ferramentas/tcc_docx_para_pdf.py
 │   ├── figuras/                            # figuras do README, do documento do TCC e dados-das-figuras.md (geradas por gerar_figuras_documentos.py)
 │   ├── Memorial de Desenvolvimento.md      # índice do memorial
 │   ├── memorial/                           # decisões numeradas, pesquisa bibliográfica, resultados e análises, projeto ABNT, método e ferramental, pendências, roadmap
@@ -502,7 +509,51 @@ cada célula está na tabela acima, e o que cada execução mostrou está nas se
 conforme o sistema, o PHP, o MySQL ou o Homebrew), e por isso cada célula grava
 o que a máquina trazia antes do instalador. A evidência baixada do GitHub entra no repositório por `ferramentas/instalador_matriz/importar_actions.py`.
 
-#### O que não foi testado
+<!-- ! Alteração de IA - Revisar: (26/11/2026, decisão 180) a subseção "O que não foi testado" passa a se chamar "Limitações e trabalho futuro" e ganha as duas tabelas geradas por `relatorio.py` (blocos `limites` e `futuro`), antes da lista das células que não rodaram; o parágrafo do fim deixa de dizer que as células do GitHub Actions ainda vão rodar.
+     ! Motivo: o Eric pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados como limitação (o que o projeto entrega hoje) e como trabalho futuro (o que falta provar). O texto antigo listava só as células que não rodaram e dizia que as do GitHub "entram na tabela só depois de rodarem", quando elas já rodaram quatro vezes. -->
+#### Limitações e trabalho futuro
+
+**Limitação** é o que o projeto entrega hoje em cada sistema, ou seja, até onde a prova chegou; **trabalho futuro** é o que falta provar (decisão 180). "Até o fim" quer dizer a instalação concluída e a prova até o N4, com o modelo do projeto respondendo, numa máquina em que o instalador rodou. As tabelas são geradas das pastas de rodada.
+
+<!-- tb_inst_limites:inicio -->
+**Provado até o fim** (instalação concluída e prova até o N4): Ubuntu 24.04 (`L-U2404`, WSL); Ubuntu 24.04 do GitHub Actions (`CI-UBU`, GitHub Actions); Windows Server 2025 do GitHub Actions (`CI-WIN`, GitHub Actions).
+
+| Célula | Sistema | Onde rodou | Até onde a prova chegou | Maior nível pedido | Instalador na última rodada | Limitação |
+|---|---|---|---|---|---|---|
+| ALVO | Windows 11 da máquina-alvo | máquina-alvo | N4 | N4 | não rodou | só a prova rodou, sobre a instalação que já existia; o instalador não rodou nesta máquina |
+| L-U2404-SS | Ubuntu 24.04 sem systemd | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-U2204 | Ubuntu 22.04 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-U2604 | Ubuntu 26.04 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-D12 | Debian 12 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-D13 | Debian 13 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-F45 | Fedora 45 (melhor esforço) | WSL | N1 | N3 | concluído | a prova ficou abaixo do nível pedido (melhor esforço) |
+| L-ARCH | Arch Linux (sem suporte) | WSL | N0 | N1 | interrompido | sem suporte, de propósito: o instalador para e diz o que instalar à mão |
+| L-SUSE | openSUSE (sem suporte) | WSL | N0 | N1 | interrompido | sem suporte, de propósito: o instalador para e diz o que instalar à mão |
+| M-15 | macOS 15, Apple Silicon | GitHub Actions | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| M-15I | macOS 15, Intel (melhor esforço) | GitHub Actions | N4 | N4 | interrompido | a prova passou, mas o instalador não foi até o fim (melhor esforço) |
+
+"Até onde a prova chegou" é o maior nível alcançado numa rodada `novo`, que é a do instalador depois dos consertos (na célula em que só a prova rodou, é o nível da última rodada). "Maior nível pedido" existe porque nem toda célula pede o N4. "Instalador na última rodada" diz se o instalador terminou, parou no meio ou nem rodou.
+<!-- tb_inst_limites:fim -->
+
+<!-- tb_inst_futuro:inicio -->
+| O que falta provar | Por que ficou de fora |
+|---|---|
+| A prova até o N4, com o modelo do projeto respondendo, em: Ubuntu 24.04 sem systemd (`L-U2404-SS`), Ubuntu 22.04 (`L-U2204`), Ubuntu 26.04 (`L-U2604`), Debian 12 (`L-D12`), Debian 13 (`L-D13`), macOS 15, Apple Silicon (`M-15`) | essas células pediram a prova só até o N3 |
+| O instalador até o fim em: macOS 15, Intel (melhor esforço) (`M-15I`) | na última rodada a prova passou e o instalador foi interrompido (seção 5 do relatório do instalador) |
+| O nível pedido em: Fedora 45 (melhor esforço) (`L-F45`) (ficou no N1 de N3) | melhor esforço: o instalador não instala tudo de que esse sistema precisa |
+| Windows 11 no Windows Sandbox (`W11-SB`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia ligar um recurso do Windows e reiniciar a máquina do projeto |
+| Windows 11 Enterprise de avaliação em máquina virtual, com o Defender ligado (`W11-VM-D1`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| Windows 11 Enterprise de avaliação em máquina virtual, com o Defender desligado (`W11-VM-D0`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| Windows Server 2022 de avaliação em máquina virtual (`WS22-VM`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| Ubuntu 24.04 de mesa em máquina virtual (`L-U2404-VM`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem do Ubuntu de mesa e criar uma máquina virtual no Hyper-V |
+| Windows 10 de um integrante (`W10-USADO`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia o computador de um integrante |
+| O MariaDB instalado pelo MSI do `winget`, no Windows com administrador e sem MySQL | a célula do Windows usa o zip portátil do MariaDB; o outro caminho não foi exercitado em máquina nova |
+| O Python e o PHP trazidos pelo `winget`, no Windows | a máquina do GitHub já traz os dois |
+| Um Mac sem o Homebrew | a máquina do GitHub já traz o Homebrew |
+| Windows e Linux em processador ARM | nenhuma célula da matriz roda nesses processadores |
+<!-- tb_inst_futuro:fim -->
+
+Células da matriz do plano que não rodaram:
 
 <!-- tb_inst_nao_testadas:inicio -->
 | Célula | Sistema | Por que não foi testada |
@@ -515,8 +566,8 @@ o que a máquina trazia antes do instalador. A evidência baixada do GitHub entr
 | W10-USADO | Windows 10 de um integrante | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia o computador de um integrante |
 <!-- tb_inst_nao_testadas:fim -->
 
-Também não há prova de: Windows recém-instalado, Windows 10 e Linux instalado fora do WSL (o WSL não é um Linux instalado); processador ARM em Windows e Linux. As
-quatro células do GitHub Actions entram na tabela acima só depois de rodarem e de a evidência ser importada.
+O WSL não é um Linux instalado, e as máquinas do GitHub Actions não são limpas; o que nenhuma célula prova está na seção 6.3 do
+[relatório do instalador](Documentacao/memorial/5-metodo-e-ferramental/relatorio-instalador-maquina-limpa.md).
 
 ### Como rodar
 

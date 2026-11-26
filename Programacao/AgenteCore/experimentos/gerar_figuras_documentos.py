@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import statistics
 import sys
 import textwrap
@@ -97,6 +98,34 @@ def coletar() -> dict[str, dict]:
     figs["como-o-agente-trabalha"] = {
         "titulo": "Como o agente trabalha", "fonte": "`fase4/calibracao.json` (`k_escolhido`, `metadados.modelo`)",
         "cab": ["Dado", "Valor"], "linhas": [["Verbetes entregues ao modelo (k)", cal["k_escolhido"]], ["Modelo", cal["metadados"]["modelo"]]],
+    }
+    # ! Alteração de IA - Revisar: (26/11/2026, decisão 182) figura nova, `arquitetura-do-agente`: as peças do agente, o que cada uma faz,
+    # o que guarda e onde está no repositório. Os únicos números são as portas, lidas do `run.py`, e o k e o modelo, da calibração.
+    # ! Motivo: o Eric aprovou no quadro (ficha 120) um diagrama de arquitetura para a seção 5.2 do documento do TCC; o fluxograma
+    # `como-o-agente-trabalha` mostra a ordem dos passos, e não as peças nem onde o estado fica. Os nomes de arquivo são conferidos pelo
+    # teste, para a figura não citar arquivo que saiu do lugar.
+    portas = {n: int(v) for n, v in re.findall(r"(?m)^(FRONT_PORT|API_PORT|HUB_PORT) = (\d+)", (RAIZ / "run.py").read_text(encoding="utf-8"))}
+    exp = "Programacao/AgenteCore/experimentos/"
+    figs["arquitetura-do-agente"] = {
+        "titulo": "As peças do agente e por onde os dados passam",
+        "fonte": "`run.py` (`FRONT_PORT`, `API_PORT`, `HUB_PORT`), `fase4/calibracao.json` (`k_escolhido`, `metadados.modelo`) e o arquivo de cada peça",
+        "cab": ["Peça", "O que faz", "O que guarda", "Onde está no repositório"],
+        "linhas": [
+            ["Aplicações-alvo", f"O site de demonstração (porta {portas['FRONT_PORT']}), a API (porta {portas['API_PORT']}) e o banco de dados, com a falha armada",
+             "o banco de dados, restaurado a cada execução", "Programacao/CobaiaFront, Programacao/CobaiaAPI, restaurar_banco.py"],
+            ["Navegador do agente", "Roda o roteiro do cenário na página, com o Chromium do Playwright", "nada", f"{exp}navegador.py, {exp}cenarios_fase4.py"],
+            ["Interceptador", "Grava as chamadas à API e a árvore de acessibilidade da tela enquanto o roteiro roda", "nada", f"{exp}interceptador.py"],
+            ["Poda", "Monta o caso com o que mudou contra a tela normal e corta o resto, em código", "nada", f"{exp}caso_ao_vivo.py, {exp}poda.py"],
+            ["Busca na biblioteca", f"Escolhe os {cal['k_escolhido']} verbetes mais parecidos com o caso", "nada", f"{exp}recuperacao.py"],
+            ["Biblioteca de produção", "Os verbetes de documentação que a busca lê", "os verbetes, em arquivos de texto", "Programacao/AgenteCore/biblioteca_producao"],
+            ["Modelo local", f"O {cal['metadados']['modelo']}, pelo Ollama, só com CPU, escolhe a causa numa lista fechada", "nada", f"{exp}cliente_ollama.py, {exp}diagnostico_ao_vivo.py"],
+            ["Conferência e selo", "Confere a resposta do modelo em código e dá o selo de confiança", "nada", f"{exp}diagnostico_ao_vivo.py"],
+            ["Cura do localizador", "Acha outro seletor para o elemento e roda o roteiro de novo, sem o modelo", "nada", f"{exp}cura_seletor.py"],
+            ["Trilha", "Recebe cada passo: o que o agente viu, o que o modelo respondeu e o que o código conferiu", "um arquivo de linhas JSON por corrida", f"{exp}trilha.py"],
+            ["Relatório e árvore de decisão", "Saem da trilha gravada, em código, sem chamar o modelo de novo", "os relatórios e as árvores, na pasta de cada corrida",
+             f"{exp}gerar_relatorio_raciocinio.py, {exp}arvore_de_decisao.py"],
+            ["Hub central", f"Página local (porta {portas['HUB_PORT']}) em que o analista revê cada caso e dá o veredito", "as revisões, num arquivo por caso", f"{exp}hub.py"],
+        ],
     }
     # documentação e acerto: os 36 casos de avaliação, que o modelo nunca usou para aprender
     etapas = [("2B_A0", "Sem documentação"), ("2B_A2", "Biblioteca escrita à mão"), ("F3_L1", "Biblioteca escrita pelo modelo")]
@@ -439,6 +468,74 @@ def desenhar(figs: dict[str, dict]) -> None:
     fig.savefig(SAIDA / "como-o-agente-trabalha.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.12, metadata={"Software": None})
     plt.close(fig)
     print("  como-o-agente-trabalha.png")
+
+    # ---- a arquitetura do agente
+    # ! Alteração de IA - Revisar: (26/11/2026, decisão 182) desenho da figura `arquitetura-do-agente`: as peças em três faixas (o caminho do
+    # caso, o que apoia cada peça e o que sai para quem revisa), com a cor dizendo o que é código, o que é o modelo, o que fica guardado e
+    # o que está fora do agente. Usa as mesmas caixas e setas do fluxograma acima.
+    # ! Motivo: ficha 120. O fluxograma mostra a ordem dos passos; esta figura mostra as peças, onde o estado fica e por onde os dados passam,
+    # que é o que a seção 5.2 do documento do TCC não tinha. O texto de cada caixa vem da tabela da figura, montada em `coletar`.
+    f = figs["arquitetura-do-agente"]
+    peca = {l[0]: l for l in f["linhas"]}
+    fig, ax = plt.subplots(figsize=(11, 6.5), dpi=200)
+    fig.patch.set_facecolor(SUPERFICIE)
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 66)
+    ax.axis("off")
+    FORA, FORA_B = SUPERFICIE, TINTA_2
+
+    def rotulo(x, y, texto, ha="left"):
+        ax.text(x, y, texto, fontsize=7.4, color=TINTA_2, ha=ha, va="center", style="italic")
+
+    largura, altura, passo = 17.6, 15.5, 20.2
+    xs = [0.5 + i * passo for i in range(5)]
+    y1, y2, y3 = 47.5, 26.0, 4.5
+    # faixa de cima: o caminho do caso
+    cima = [("Navegador do agente", COD, COD_B), ("Interceptador", COD, COD_B), ("Poda", COD, COD_B), ("Busca na biblioteca", COD, COD_B), ("Modelo local", LLM, LLM_B)]
+    for i, (nome, fu, bo) in enumerate(cima):
+        caixa(xs[i], y1, largura, altura, nome, peca[nome][1] + ".", fu, bo)
+        if i:
+            seta(xs[i] - (passo - largura) + 0.25, y1 + altura / 2, xs[i] - 0.25, y1 + altura / 2)
+    # faixa do meio: o que apoia cada peça
+    caixa(xs[0], y2, largura, altura, "Aplicações-alvo", peca["Aplicações-alvo"][1] + ".", FORA, FORA_B)
+    caixa(xs[1], y2, largura + passo, altura, "Cura do localizador", "Quando o passo de um localizador falha, o código acha outro seletor para o elemento e roda o roteiro de novo, sem o modelo.", COD, COD_B, larg=52)
+    caixa(xs[3], y2, largura, altura, "Biblioteca de produção", "Os verbetes de documentação, em arquivos de texto.", RES_, RES_B)
+    caixa(xs[4], y2, largura, altura, "Conferência e selo", peca["Conferência e selo"][1] + ".", COD, COD_B)
+    meio = y2 + altura
+    seta(xs[0] + 5.0, y1 - 0.25, xs[0] + 5.0, meio + 0.25)
+    rotulo(xs[0] + 5.8, (y1 + meio) / 2, "abre a página")
+    seta(xs[1] + 12.0, y1 - 0.25, xs[1] + 12.0, meio + 0.25)
+    rotulo(xs[1] + 12.8, (y1 + meio) / 2, "passo que falhou")
+    seta(xs[1] + 3.0, meio + 0.25, xs[0] + 14.0, y1 - 0.25)
+    rotulo(xs[1] + 4.3, meio + 1.5, "novo seletor")
+    seta(xs[3] + largura / 2, meio + 0.25, xs[3] + largura / 2, y1 - 0.25)
+    rotulo(xs[3] + largura / 2 + 0.8, (y1 + meio) / 2, "verbetes")
+    seta(xs[4] + largura / 2, y1 - 0.25, xs[4] + largura / 2, meio + 0.25)
+    rotulo(xs[4] + largura / 2 + 0.8, (y1 + meio) / 2, "resposta")
+    # faixa de baixo: o que fica gravado e o que chega a quem revisa
+    altura3 = 14.5
+    caixa(xs[0], y3, largura + passo, altura3, "Trilha", "Um arquivo de linhas JSON por corrida. Cada peça acima grava nela o seu passo: o que viu, o que o modelo respondeu e o que o código conferiu.", RES_, RES_B, larg=52)
+    caixa(xs[2], y3, largura, altura3, "Relatório e árvore", "O relatório por caso e a árvore de decisão saem da trilha, em código, sem chamar o modelo de novo.", COD, COD_B)
+    porta_hub = re.search(r"porta (\d+)", peca["Hub central"][1]).group(1)
+    caixa(xs[3], y3, largura, altura3, "Hub central", f"Página local (porta {porta_hub}): guarda a revisão de cada caso.", COD, COD_B)
+    caixa(xs[4], y3, largura, altura3, "Analista de QA", "Revê o caso e dá o veredito.", FORA, FORA_B)
+    for i in (2, 3, 4):
+        seta(xs[i] - (passo - largura) + 0.25, y3 + altura3 / 2, xs[i] - 0.25, y3 + altura3 / 2)
+    # uma linha recolhe o passo de cada peça e desce para a trilha
+    y_bus = y2 - 2.6
+    x_desce = xs[0] + largura + 6.0
+    for x in (xs[1] + largura, xs[4] + largura / 2):
+        ax.plot([x, x], [y2 - 0.25, y_bus], color=TINTA_2, linewidth=1.1, solid_capstyle="round")
+    ax.plot([x_desce, xs[4] + largura / 2], [y_bus, y_bus], color=TINTA_2, linewidth=1.1, solid_capstyle="round")
+    seta(x_desce, y_bus, x_desce, y3 + altura3 + 0.25)
+    rotulo(x_desce + 0.8, (y_bus + y3 + altura3) / 2 - 0.2, "cada passo é gravado")
+    fig.suptitle(f["titulo"], x=0.012, y=0.995, ha="left", va="top", fontsize=13, fontweight="bold", color=TINTA)
+    legenda(fig, [Patch(facecolor=COD, edgecolor=COD_B, label="Código do agente"), Patch(facecolor=LLM, edgecolor=LLM_B, label="Modelo de linguagem"),
+                  Patch(facecolor=RES_, edgecolor=RES_B, label="O que fica guardado"), Patch(facecolor=FORA, edgecolor=FORA_B, label="Fora do agente")], y=0.0)
+    fig.subplots_adjust(left=0.005, right=0.995, top=0.94, bottom=0.05)
+    fig.savefig(SAIDA / "arquitetura-do-agente.png", facecolor=SUPERFICIE, bbox_inches="tight", pad_inches=0.12, metadata={"Software": None})
+    plt.close(fig)
+    print("  arquitetura-do-agente.png")
 
     # ---- documentação e acerto
     f = figs["documentacao-e-acerto"]

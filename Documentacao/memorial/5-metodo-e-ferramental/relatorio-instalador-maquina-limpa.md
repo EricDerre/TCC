@@ -139,7 +139,53 @@ Antes de rodar qualquer célula, a leitura do código do instalador levantou sus
 | HM7 | (achada nas duas células de macOS, na segunda execução) O último passo do script oficial do Ollama, que abre o aplicativo pelo nome, falha logo depois de instalar. | Confirmada e consertada: o script roda sem esse passo (`OLLAMA_NO_START`) e o instalador abre o aplicativo pelo caminho, sem parar se não der. Nas duas células a prova passou mesmo com o instalador interrompido, porque o Ollama já estava instalado e a prova sobe o servidor e baixa o modelo sozinha. Na rodada seguinte (terceira execução) o script terminou sem erro nas duas células e o aplicativo foi aberto pelo caminho; na de Apple Silicon a instalação foi até o fim, e na Intel parou mais adiante, ao baixar o modelo (HM8). | `Unable to find application named 'Ollama'`, seguido de `Instalação interrompida: o script do Ollama saiu com erro; a mensagem dele está logo acima.` | [instalacao.log](dados/instalador/celulas/M-15/20261126-001559/instalacao.log), [instalacao.log](dados/instalador/celulas/M-15I/20261126-001606/instalacao.log); depois do conserto: [instalacao.log](dados/instalador/celulas/M-15/20261126-004539/instalacao.log), [instalacao.log](dados/instalador/celulas/M-15I/20261126-004542/instalacao.log) |
 | HM8 | (achada na célula `M-15I`, na terceira execução) No Mac com processador Intel, o `ollama pull qwen2.5:7b` do instalador cai logo depois de o aplicativo do Ollama ser aberto. | Confirmada e não consertada: aconteceu nas execuções em que o instalador chegou a esse passo (a terceira e a quarta). A causa não foi investigada. Na mesma rodada a prova baixou o mesmo modelo minutos depois e ele respondeu, com o identificador conferindo. Fica declarada (decisão 153): no Mac Intel, que é melhor esforço (decisão 162), o instalador pode parar nesse passo com tudo o mais instalado; as saídas, que não foram testadas, são rodar o `./install.sh` de novo ou baixar o modelo à mão. No Mac de Apple Silicon, que baixa o modelo pequeno na célula, isso não apareceu. | `Error: unexpected EOF`, seguido de "Instalação interrompida: `ollama pull qwen2.5:7b` falhou; a mensagem está logo acima." | [instalacao.log](dados/instalador/celulas/M-15I/20261126-004542/instalacao.log), [registro.json](dados/instalador/celulas/M-15I/20261126-004542/registro.json); quarta execução: [instalacao.log](dados/instalador/celulas/M-15I/20261126-110601/instalacao.log) |
 
-## 6. O que não foi testado e o que nenhuma célula prova
+<!-- ! Alteração de IA - Revisar: (26/11/2026, decisão 180) a seção 6 passa a se chamar "Limitações e trabalho futuro" e ganha duas tabelas geradas por `relatorio.py` (blocos `limites` e `futuro`), antes da lista das células que não rodaram; o que nenhuma célula prova vira a subseção 6.3.
+     ! Motivo: o Eric pediu que os sistemas em que o instalador não foi provado até o fim fiquem declarados com duas palavras, limitação e trabalho futuro. A seção dizia só o que não foi testado, e quem lia a tabela do resumo não via que "N3" numa célula que pediu N3 também é um limite: o modelo do projeto não foi provado ali. As duas tabelas saem das pastas de rodada, para nenhum nível ficar digitado. -->
+## 6. Limitações e trabalho futuro
+
+O instalador foi provado até o fim em poucos sistemas, e o resto fica declarado com duas palavras (decisão 180, de 26/11/2026): **limitação** é o que o projeto entrega hoje em cada sistema, ou seja, até onde a prova chegou; **trabalho futuro** é o que falta provar. "Até o fim" quer dizer a instalação concluída e a prova até o N4, com o modelo do projeto respondendo, numa máquina em que o instalador rodou. As duas tabelas abaixo são escritas por `relatorio.py` a partir das pastas de rodada.
+
+### 6.1 Limitação: até onde cada sistema foi provado
+
+<!-- tb_inst_limites:inicio -->
+**Provado até o fim** (instalação concluída e prova até o N4): Ubuntu 24.04 (`L-U2404`, WSL); Ubuntu 24.04 do GitHub Actions (`CI-UBU`, GitHub Actions); Windows Server 2025 do GitHub Actions (`CI-WIN`, GitHub Actions).
+
+| Célula | Sistema | Onde rodou | Até onde a prova chegou | Maior nível pedido | Instalador na última rodada | Limitação |
+|---|---|---|---|---|---|---|
+| ALVO | Windows 11 da máquina-alvo | máquina-alvo | N4 | N4 | não rodou | só a prova rodou, sobre a instalação que já existia; o instalador não rodou nesta máquina |
+| L-U2404-SS | Ubuntu 24.04 sem systemd | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-U2204 | Ubuntu 22.04 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-U2604 | Ubuntu 26.04 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-D12 | Debian 12 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-D13 | Debian 13 | WSL | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| L-F45 | Fedora 45 (melhor esforço) | WSL | N1 | N3 | concluído | a prova ficou abaixo do nível pedido (melhor esforço) |
+| L-ARCH | Arch Linux (sem suporte) | WSL | N0 | N1 | interrompido | sem suporte, de propósito: o instalador para e diz o que instalar à mão |
+| L-SUSE | openSUSE (sem suporte) | WSL | N0 | N1 | interrompido | sem suporte, de propósito: o instalador para e diz o que instalar à mão |
+| M-15 | macOS 15, Apple Silicon | GitHub Actions | N3 | N3 | concluído | o N4, com o modelo do projeto respondendo, não foi pedido nesta célula |
+| M-15I | macOS 15, Intel (melhor esforço) | GitHub Actions | N4 | N4 | interrompido | a prova passou, mas o instalador não foi até o fim (melhor esforço) |
+
+"Até onde a prova chegou" é o maior nível alcançado numa rodada `novo`, que é a do instalador depois dos consertos (na célula em que só a prova rodou, é o nível da última rodada). "Maior nível pedido" existe porque nem toda célula pede o N4. "Instalador na última rodada" diz se o instalador terminou, parou no meio ou nem rodou.
+<!-- tb_inst_limites:fim -->
+
+### 6.2 Trabalho futuro: o que falta provar
+
+<!-- tb_inst_futuro:inicio -->
+| O que falta provar | Por que ficou de fora |
+|---|---|
+| A prova até o N4, com o modelo do projeto respondendo, em: Ubuntu 24.04 sem systemd (`L-U2404-SS`), Ubuntu 22.04 (`L-U2204`), Ubuntu 26.04 (`L-U2604`), Debian 12 (`L-D12`), Debian 13 (`L-D13`), macOS 15, Apple Silicon (`M-15`) | essas células pediram a prova só até o N3 |
+| O instalador até o fim em: macOS 15, Intel (melhor esforço) (`M-15I`) | na última rodada a prova passou e o instalador foi interrompido (seção 5 do relatório do instalador) |
+| O nível pedido em: Fedora 45 (melhor esforço) (`L-F45`) (ficou no N1 de N3) | melhor esforço: o instalador não instala tudo de que esse sistema precisa |
+| Windows 11 no Windows Sandbox (`W11-SB`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia ligar um recurso do Windows e reiniciar a máquina do projeto |
+| Windows 11 Enterprise de avaliação em máquina virtual, com o Defender ligado (`W11-VM-D1`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| Windows 11 Enterprise de avaliação em máquina virtual, com o Defender desligado (`W11-VM-D0`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| Windows Server 2022 de avaliação em máquina virtual (`WS22-VM`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem de avaliação e criar uma máquina virtual no Hyper-V |
+| Ubuntu 24.04 de mesa em máquina virtual (`L-U2404-VM`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem do Ubuntu de mesa e criar uma máquina virtual no Hyper-V |
+| Windows 10 de um integrante (`W10-USADO`) | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia o computador de um integrante |
+| O MariaDB instalado pelo MSI do `winget`, no Windows com administrador e sem MySQL | a célula do Windows usa o zip portátil do MariaDB; o outro caminho não foi exercitado em máquina nova |
+| O Python e o PHP trazidos pelo `winget`, no Windows | a máquina do GitHub já traz os dois |
+| Um Mac sem o Homebrew | a máquina do GitHub já traz o Homebrew |
+| Windows e Linux em processador ARM | nenhuma célula da matriz roda nesses processadores |
+<!-- tb_inst_futuro:fim -->
 
 As células abaixo estavam na matriz do plano e não foram rodadas:
 
@@ -153,6 +199,8 @@ As células abaixo estavam na matriz do plano e não foram rodadas:
 | L-U2404-VM | Ubuntu 24.04 de mesa em máquina virtual | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia baixar a imagem do Ubuntu de mesa e criar uma máquina virtual no Hyper-V |
 | W10-USADO | Windows 10 de um integrante | decisão 153 (25/11/2026): a prova em máquina nova antes da entrega é a do GitHub Actions; esta pedia o computador de um integrante |
 <!-- tb_inst_nao_testadas:fim -->
+
+### 6.3 O que nenhuma célula prova
 
 Mesmo com todas as células do GitHub rodadas, há coisas que a matriz não prova (seção 4.4 do plano):
 

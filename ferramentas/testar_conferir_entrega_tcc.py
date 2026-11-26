@@ -5,6 +5,7 @@
 """Testes de conferir_entrega_tcc.py."""
 from __future__ import annotations
 
+import json
 import struct
 import sys
 import tempfile
@@ -174,6 +175,15 @@ class TesteLinhaDeComando(unittest.TestCase):
             saida_json = pasta / "r.json"
             self.assertEqual(c.main([str(limpo), str(pdf_falso), "--json", str(saida_json)]), 0)
             self.assertTrue(saida_json.is_file())
+            # ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) o registro em JSON tem de sair com a tag e o motivo,
+            # nas chaves `_tag` e `_motivo`, como os outros registros de `5-metodo-e-ferramental/dados/`, e continuar dizendo se está limpo.
+            # ! Motivo: na geração da versão 5, o `conferir_docs.py` acusou o registro da conferência "sem tag de IA": a ferramenta
+            # gravava o JSON sem as duas chaves, e todo arquivo criado com apoio de IA no repositório leva a marcação.
+            registro = json.loads(saida_json.read_text(encoding="utf-8"))
+            self.assertTrue(registro["_tag"].startswith("! Alteração de IA - Revisar:"), registro.get("_tag"))
+            self.assertTrue(registro["_motivo"].startswith("! Motivo:"), registro.get("_motivo"))
+            self.assertIs(registro["limpo"], True)
+            self.assertEqual(list(registro)[:2], ["_tag", "_motivo"])
             self.assertEqual(c.main([str(sujo), str(pdf_falso)]), 1)
 
 
@@ -191,6 +201,39 @@ class TestePdfBiblioteca(unittest.TestCase):
             resultados, _ = c.conferir_pdf(bom, usar_fitz=False)
             self.assertEqual([r for r in resultados if r[1] == "FALHA"], [])
             self.assertTrue(any(r[1] == "AVISO" for r in resultados))   # diz o que não conferiu
+
+    # ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) dois testes novos do caminho sem PyMuPDF: o título e o autor
+    # lidos do dicionário de informações do PDF, e não do primeiro `/Title` do arquivo, e o texto em UTF-16 com parênteses escapados
+    # decodificado inteiro.
+    # ! Motivo: na versão 5, a conferência sem o PyMuPDF mostrou o título com o trecho "(E2E)" embaralhado, porque os parênteses vêm
+    # escapados dentro do texto em UTF-16 e a leitura não desfazia o escape; e um leitor que pega o primeiro `/Title` do arquivo lê
+    # o título do primeiro marcador ("AGRADECIMENTOS") no lugar do título do documento, que foi o que a sessão principal viu com o
+    # script dela. Um trecho embaralhado nos metadados também podia esconder uma marca de IA dessa conferência.
+    def teste_titulo_e_autor_saem_do_dicionario_de_informacoes_e_nao_do_primeiro_marcador(self) -> None:
+        titulo = "Agente de QA (E2E) autônomo"
+        autor = "João da Silva; Maria (Souza)"
+
+        def literal_utf16(texto: str) -> bytes:
+            cru = b"\xfe\xff" + texto.encode("utf-16-be")
+            return b"(" + cru.replace(b"\\", b"\\\\").replace(b"(", b"\\(").replace(b")", b"\\)") + b")"
+
+        dados = (b"%PDF-1.7\n1 0 obj<</Type /Outlines /First 2 0 R>>endobj\n"
+                 b"2 0 obj<</Title (AGRADECIMENTOS) /Parent 1 0 R>>endobj\n"
+                 b"5 0 obj<</Title " + literal_utf16(titulo) + b" /Author " + literal_utf16(autor) + b" /Producer (Microsoft Word)>>endobj\n"
+                 b"trailer<</Root 9 0 R /Info 5 0 R>>\n%%EOF\n")
+        meta = c._metadados_brutos(dados)
+        self.assertEqual(meta["Title"], titulo)
+        self.assertEqual(meta["Author"], autor)
+
+    def teste_marca_de_ia_depois_de_parentese_escapado_e_achada(self) -> None:
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
+            # um parêntese só: sem desfazer o escape, tudo o que vem depois dele sai desalinhado, inclusive a marca
+            cru = b"\xfe\xff" + "Documento (gerado por Claude".encode("utf-16-be")
+            literal = b"(" + cru.replace(b"\\", b"\\\\").replace(b"(", b"\\(").replace(b")", b"\\)") + b")"
+            ruim = Path(tmp) / "r.pdf"
+            ruim.write_bytes(b"%PDF-1.7\n5 0 obj<</Title " + literal + b" /Author (Autores)>>endobj\ntrailer<</Info 5 0 R>>\n%%EOF\n")
+            resultados, _ = c.conferir_pdf(ruim, usar_fitz=False)
+            self.assertTrue(any(r[1] == "FALHA" for r in resultados), resultados)
 
 
 @unittest.skipIf(fitz is None, "PyMuPDF não instalado: testes de PDF pulados")

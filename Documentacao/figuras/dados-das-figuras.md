@@ -13,6 +13,25 @@ Os números de cada figura de [`Documentacao/figuras/`](.), lidos dos registros 
 | Verbetes entregues ao modelo (k) | 3 |
 | Modelo | qwen2.5:7b |
 
+## As peças do agente e por onde os dados passam
+
+[Figura](arquitetura-do-agente.png). Fonte: `run.py` (`FRONT_PORT`, `API_PORT`, `HUB_PORT`), `fase4/calibracao.json` (`k_escolhido`, `metadados.modelo`) e o arquivo de cada peça.
+
+| Peça | O que faz | O que guarda | Onde está no repositório |
+|---|---|---|---|
+| Aplicações-alvo | O site de demonstração (porta 8080), a API (porta 8000) e o banco de dados, com a falha armada | o banco de dados, restaurado a cada execução | Programacao/CobaiaFront, Programacao/CobaiaAPI, restaurar_banco.py |
+| Navegador do agente | Roda o roteiro do cenário na página, com o Chromium do Playwright | nada | Programacao/AgenteCore/experimentos/navegador.py, Programacao/AgenteCore/experimentos/cenarios_fase4.py |
+| Interceptador | Grava as chamadas à API e a árvore de acessibilidade da tela enquanto o roteiro roda | nada | Programacao/AgenteCore/experimentos/interceptador.py |
+| Poda | Monta o caso com o que mudou contra a tela normal e corta o resto, em código | nada | Programacao/AgenteCore/experimentos/caso_ao_vivo.py, Programacao/AgenteCore/experimentos/poda.py |
+| Busca na biblioteca | Escolhe os 3 verbetes mais parecidos com o caso | nada | Programacao/AgenteCore/experimentos/recuperacao.py |
+| Biblioteca de produção | Os verbetes de documentação que a busca lê | os verbetes, em arquivos de texto | Programacao/AgenteCore/biblioteca_producao |
+| Modelo local | O qwen2.5:7b, pelo Ollama, só com CPU, escolhe a causa numa lista fechada | nada | Programacao/AgenteCore/experimentos/cliente_ollama.py, Programacao/AgenteCore/experimentos/diagnostico_ao_vivo.py |
+| Conferência e selo | Confere a resposta do modelo em código e dá o selo de confiança | nada | Programacao/AgenteCore/experimentos/diagnostico_ao_vivo.py |
+| Cura do localizador | Acha outro seletor para o elemento e roda o roteiro de novo, sem o modelo | nada | Programacao/AgenteCore/experimentos/cura_seletor.py |
+| Trilha | Recebe cada passo: o que o agente viu, o que o modelo respondeu e o que o código conferiu | um arquivo de linhas JSON por corrida | Programacao/AgenteCore/experimentos/trilha.py |
+| Relatório e árvore de decisão | Saem da trilha gravada, em código, sem chamar o modelo de novo | os relatórios e as árvores, na pasta de cada corrida | Programacao/AgenteCore/experimentos/gerar_relatorio_raciocinio.py, Programacao/AgenteCore/experimentos/arvore_de_decisao.py |
+| Hub central | Página local (porta 8765) em que o analista revê cada caso e dá o veredito | as revisões, num arquivo por caso | Programacao/AgenteCore/experimentos/hub.py |
+
 ## O que a documentação fez pelo acerto
 
 [Figura](documentacao-e-acerto.png). Fonte: `fase3/comparacao_fases.json` (`nos_36_avaliacao`: `2B_A0`, `2B_A2`, `F3_L1`, `acerto_pct`).
