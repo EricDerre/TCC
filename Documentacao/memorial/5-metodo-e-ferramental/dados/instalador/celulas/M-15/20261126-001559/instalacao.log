@@ -1,0 +1,499 @@
+[install.sh] Python 3.12 ou mais novo não encontrado: baixando o uv 0.13.9 de https://github.com/astral-sh/uv/releases/download/0.13.9/uv-aarch64-apple-darwin.tar.gz
+[install.sh] Instalando o Python 3.14 em /Users/runner/work/TCC/TCC/.ferramentas/python (dentro do projeto; nada muda no sistema)...
+Downloading cpython-3.14.10-macos-aarch64-none (download) (25.7MiB)
+ Downloaded cpython-3.14.10-macos-aarch64-none (download)
+Installed Python 3.14.10 in 1.83s
+ + cpython-3.14.10-macos-aarch64-none
+[install.sh] Python: /Users/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-macos-aarch64-none/bin/python3 (Python 3.14.10)
+[cobaia] Sistema: macOS (família brew, suportado)
+[cobaia] Pacotes do sistema que faltam: php mariadb@11.8
+[cobaia] $ brew install php mariadb@11.8
+[32m==>[0m [1mDownloading bottle manifests[0m
+✔︎ Bottle Manifest php (8.5.12_1)
+✔︎ Bottle Manifest mariadb@11.8 (11.8.10)
+[34m==>[0m [1mWould install 2 formulae:[0m
+php           8.5.12_1
+mariadb@11.8  11.8.10
+[34m==>[0m [1mWould install 17 dependencies for php:[0m
+apr         1.7.6
+apr-util    1.6.6
+argon2      20190702_1
+m4          1.4.21
+autoconf    2.73
+libtool     2.6.2
+unixodbc    2.3.14
+freetds     1.5.21
+libvmaf     3.2.1
+aom         3.15.3
+dav1d       1.5.5
+libavif     1.4.2
+gd          2.3.3_6
+libzip      1.12.1
+net-snmp    5.9.5.2_2
+openldap    2.7.2
+tidy-html5  5.8.0
+[34m==>[0m [1mWould install 5 dependencies for mariadb@11.8:[0m
+mecab         0.996
+mecab-ipadic  2.7.0-20070801
+msgpack       7.0.2
+onigmo        6.2.0
+groonga       16.1.5_3
+[32m==>[0m [1mFetching downloads for: [32mphp[39m and [32mmariadb@11.8[39m[0m
+✔︎ Bottle Manifest apr (1.7.6)
+✔︎ Bottle Manifest apr-util (1.6.6)
+✔︎ Bottle Manifest argon2 (20190702_1)
+✔︎ Bottle Manifest m4 (1.4.21)
+✔︎ Bottle Manifest autoconf (2.73)
+✔︎ Bottle apr-util (1.6.6)
+✔︎ Bottle Manifest libtool (2.6.2)
+✔︎ Bottle Manifest unixodbc (2.3.14)
+✔︎ Bottle apr (1.7.6)
+✔︎ Bottle Manifest freetds (1.5.21)
+✔︎ Bottle argon2 (20190702_1)
+✔︎ Bottle Manifest libvmaf (3.2.1)
+✔︎ Bottle Manifest aom (3.15.3)
+✔︎ Bottle m4 (1.4.21)
+✔︎ Bottle autoconf (2.73)
+✔︎ Bottle php (8.5.12_1)
+✔︎ Bottle Manifest dav1d (1.5.5)
+✔︎ Bottle libtool (2.6.2)
+✔︎ Bottle Manifest libavif (1.4.2)
+✔︎ Bottle Manifest gd (2.3.3_6)
+✔︎ Bottle Manifest libzip (1.12.1)
+✔︎ Bottle unixodbc (2.3.14)
+✔︎ Bottle libvmaf (3.2.1)
+✔︎ Bottle aom (3.15.3)
+✔︎ Bottle Manifest net-snmp (5.9.5.2_2)
+✔︎ Bottle freetds (1.5.21)
+✔︎ Bottle Manifest openldap (2.7.2)
+✔︎ Bottle Manifest tidy-html5 (5.8.0)
+✔︎ Bottle mariadb@11.8 (11.8.10)
+✔︎ Bottle Manifest mecab (0.996)
+✔︎ Bottle libavif (1.4.2)
+✔︎ Bottle Manifest mecab-ipadic (2.7.0-20070801)
+✔︎ Bottle dav1d (1.5.5)
+✔︎ Bottle Manifest msgpack (7.0.2)
+✔︎ Bottle gd (2.3.3_6)
+✔︎ Bottle libzip (1.12.1)
+✔︎ Bottle Manifest onigmo (6.2.0)
+✔︎ Bottle Manifest groonga (16.1.5_3)
+✔︎ Bottle openldap (2.7.2)
+✔︎ Bottle net-snmp (5.9.5.2_2)
+✔︎ Bottle tidy-html5 (5.8.0)
+✔︎ Bottle mecab (0.996)
+✔︎ Bottle msgpack (7.0.2)
+✔︎ Bottle mecab-ipadic (2.7.0-20070801)
+✔︎ Bottle onigmo (6.2.0)
+✔︎ Bottle groonga (16.1.5_3)
+[32m==>[0m [1mInstalling dependencies for php:[0m [32mapr[39m, [32mapr-util[39m, [32margon2[39m, [32mm4[39m, [32mautoconf[39m, [32mlibtool[39m, [32munixodbc[39m, [32mfreetds[39m, [32mlibvmaf[39m, [32maom[39m, [32mdav1d[39m, [32mlibavif[39m, [32mgd[39m, [32mlibzip[39m, [32mnet-snmp[39m, [32mopenldap[39m and [32mtidy-html5[39m[0m
+[32m==>[0m [1mInstalling php dependency: [32mapr[39m (1.7.6)[0m
+[34m==>[0m [1mPouring apr--1.7.6.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/apr/1.7.6: 58 files, 1.5MB
+[32m==>[0m [1mInstalling php dependency: [32mapr-util[39m (1.6.6)[0m
+[34m==>[0m [1mPouring apr-util--1.6.6.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/apr-util/1.6.6: 55 files, 906.5KB
+[32m==>[0m [1mInstalling php dependency: [32margon2[39m (20190702_1)[0m
+[34m==>[0m [1mPouring argon2--20190702_1.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/argon2/20190702_1: 13 files, 684.2KB
+[32m==>[0m [1mInstalling php dependency: [32mm4[39m (1.4.21)[0m
+[34m==>[0m [1mPouring m4--1.4.21.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/m4/1.4.21: 14 files, 816.2KB
+[32m==>[0m [1mInstalling php dependency: [32mautoconf[39m (2.73)[0m
+[34m==>[0m [1mPouring autoconf--2.73.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/autoconf/2.73: 73 files, 3.8MB
+[32m==>[0m [1mInstalling php dependency: [32mlibtool[39m (2.6.2)[0m
+[34m==>[0m [1mPouring libtool--2.6.2.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/libtool/2.6.2: 78 files, 4.2MB
+[32m==>[0m [1mInstalling php dependency: [32munixodbc[39m (2.3.14)[0m
+[34m==>[0m [1mPouring unixodbc--2.3.14.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/unixodbc/2.3.14: 48 files, 2.2MB
+[32m==>[0m [1mInstalling php dependency: [32mfreetds[39m (1.5.21)[0m
+[34m==>[0m [1mPouring freetds--1.5.21.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/freetds/1.5.21: 2,703 files, 25.4MB
+[32m==>[0m [1mInstalling php dependency: [32mlibvmaf[39m (3.2.1)[0m
+[34m==>[0m [1mPouring libvmaf--3.2.1.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/libvmaf/3.2.1: 243 files, 8.2MB
+[32m==>[0m [1mInstalling php dependency: [32maom[39m (3.15.3)[0m
+[34m==>[0m [1mPouring aom--3.15.3.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/aom/3.15.3: 30 files, 11.3MB
+[32m==>[0m [1mInstalling php dependency: [32mdav1d[39m (1.5.5)[0m
+[34m==>[0m [1mPouring dav1d--1.5.5.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/dav1d/1.5.5: 16 files, 978.3KB
+[32m==>[0m [1mInstalling php dependency: [32mlibavif[39m (1.4.2)[0m
+[34m==>[0m [1mPouring libavif--1.4.2.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/libavif/1.4.2: 22 files, 1.1MB
+[32m==>[0m [1mInstalling php dependency: [32mgd[39m (2.3.3_6)[0m
+[34m==>[0m [1mPouring gd--2.3.3_6.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/gd/2.3.3_6: 34 files, 1.4MB
+[32m==>[0m [1mInstalling php dependency: [32mlibzip[39m (1.12.1)[0m
+[34m==>[0m [1mPouring libzip--1.12.1.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/libzip/1.12.1: 162 files, 908.8KB
+[32m==>[0m [1mInstalling php dependency: [32mnet-snmp[39m (5.9.5.2_2)[0m
+[34m==>[0m [1mPouring net-snmp--5.9.5.2_2.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/net-snmp/5.9.5.2_2: 556 files, 15.3MB
+[32m==>[0m [1mInstalling php dependency: [32mopenldap[39m (2.7.2)[0m
+[34m==>[0m [1mPouring openldap--2.7.2.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/openldap/2.7.2: 339 files, 9MB
+[32m==>[0m [1mInstalling php dependency: [32mtidy-html5[39m (5.8.0)[0m
+[34m==>[0m [1mPouring tidy-html5--5.8.0.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/tidy-html5/5.8.0: 15 files, 3.2MB
+[32m==>[0m [1mInstalling [32mphp[39m[0m
+[34m==>[0m [1mPouring php--8.5.12_1.arm64_sequoia.bottle.tar.gz[0m
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+config-set succeeded
+Updating channel "doc.php.net"
+Update of Channel "doc.php.net" succeeded
+Updating channel "pear.php.net"
+Update of Channel "pear.php.net" succeeded
+Updating channel "pecl.php.net"
+Update of Channel "pecl.php.net" succeeded
+🍺  /opt/homebrew/Cellar/php/8.5.12_1: 533 files, 130.4MB
+[32m==>[0m [1mInstalling dependencies for mariadb@11.8:[0m [32mmecab[39m, [32mmecab-ipadic[39m, [32mmsgpack[39m, [32monigmo[39m and [32mgroonga[39m[0m
+[32m==>[0m [1mInstalling mariadb@11.8 dependency: [32mmecab[39m (0.996)[0m
+[34m==>[0m [1mPouring mecab--0.996.arm64_sequoia.bottle.6.tar.gz[0m
+🍺  /opt/homebrew/Cellar/mecab/0.996: 19 files, 4MB
+[32m==>[0m [1mInstalling mariadb@11.8 dependency: [32mmecab-ipadic[39m (2.7.0-20070801)[0m
+[34m==>[0m [1mPouring mecab-ipadic--2.7.0-20070801.arm64_sequoia.bottle.1.tar.gz[0m
+🍺  /opt/homebrew/Cellar/mecab-ipadic/2.7.0-20070801: 15 files, 53.1MB
+[32m==>[0m [1mInstalling mariadb@11.8 dependency: [32mmsgpack[39m (7.0.2)[0m
+[34m==>[0m [1mPouring msgpack--7.0.2.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/msgpack/7.0.2: 39 files, 196.9KB
+[32m==>[0m [1mInstalling mariadb@11.8 dependency: [32monigmo[39m (6.2.0)[0m
+[34m==>[0m [1mPouring onigmo--6.2.0.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/onigmo/6.2.0: 16 files, 1.6MB
+[32m==>[0m [1mInstalling mariadb@11.8 dependency: [32mgroonga[39m (16.1.5_3)[0m
+[34m==>[0m [1mPouring groonga--16.1.5_3.arm64_sequoia.bottle.tar.gz[0m
+🍺  /opt/homebrew/Cellar/groonga/16.1.5_3: 170 files, 21.7MB
+[32m==>[0m [1mInstalling [32mmariadb@11.8[39m[0m
+[34m==>[0m [1mPouring mariadb@11.8--11.8.10.arm64_sequoia.bottle.tar.gz[0m
+/opt/homebrew/Cellar/mariadb@11.8/11.8.10/bin/mysql_install_db: Deprecated program name. It will be removed in a future release, use 'mariadb-install-db' instead
+chown: /opt/homebrew/Cellar/mariadb@11.8/11.8.10/lib/plugin/auth_pam_tool_dir/auth_pam_tool: Operation not permitted
+Couldn't set an owner to '/opt/homebrew/Cellar/mariadb@11.8/11.8.10/lib/plugin/auth_pam_tool_dir/auth_pam_tool'.
+It must be root, the PAM authentication plugin doesn't work otherwise..
+
+Installing MariaDB/MySQL system tables in '/opt/homebrew/var/mysql' ...
+2026-11-26  0:16:58 0 [Note] Starting MariaDB 11.8.10-MariaDB source revision d04ba7c69bc7fa1719cfc4b8c6393a6d8529b755 server_uid fCgQQFvpUutU7DC07YW2pRHcZRQ= as process 3714
+2026-11-26  0:16:58 0 [Note] InnoDB: The first data file './ibdata1' did not exist. A new tablespace will be created!
+2026-11-26  0:16:58 0 [Note] InnoDB: Compressed tables use zlib 1.2.12
+2026-11-26  0:16:58 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-26  0:16:58 0 [Note] InnoDB: Using generic crc32 instructions
+2026-11-26  0:16:58 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388608m, innodb_buffer_pool_size=128m
+2026-11-26  0:16:58 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-26  0:16:58 0 [Note] InnoDB: Setting file './ibdata1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-26  0:16:58 0 [Note] InnoDB: File './ibdata1' size is now 12.000MiB.
+2026-11-26  0:16:58 0 [Note] InnoDB: Data file .//undo001 did not exist: new to be created
+2026-11-26  0:16:58 0 [Note] InnoDB: Setting file .//undo001 size to 10.000MiB
+2026-11-26  0:16:58 0 [Note] InnoDB: Database physically writes the file full: wait...
+2026-11-26  0:16:58 0 [Note] InnoDB: Data file .//undo002 did not exist: new to be created
+2026-11-26  0:16:58 0 [Note] InnoDB: Setting file .//undo002 size to 10.000MiB
+2026-11-26  0:16:58 0 [Note] InnoDB: Database physically writes the file full: wait...
+2026-11-26  0:16:58 0 [Note] InnoDB: Data file .//undo003 did not exist: new to be created
+2026-11-26  0:16:58 0 [Note] InnoDB: Setting file .//undo003 size to 10.000MiB
+2026-11-26  0:16:58 0 [Note] InnoDB: Database physically writes the file full: wait...
+2026-11-26  0:16:58 0 [Note] InnoDB: Doublewrite buffer not found: creating new
+2026-11-26  0:16:58 0 [Note] InnoDB: Doublewrite buffer created
+2026-11-26  0:16:58 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-26  0:16:58 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-26  0:16:58 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-26  0:16:58 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-26  0:16:58 0 [Note] InnoDB: log sequence number 0; transaction id 3
+2026-11-26  0:16:58 0 [Note] Plugin 'wsrep-provider' is disabled.
+OK
+
+To start mariadbd at boot time you have to copy
+support-files/mariadb.service to the right place for your system
+
+
+Two all-privilege accounts were created.
+One is root@localhost, it has no password, but you need to
+be system 'root' user to connect. Use, for example, sudo mariadb
+The second is runner@localhost, it has no password either, but
+you need to be the system 'runner' user to connect.
+After connecting you can set the password, if you would need to be
+able to connect as any of these users with a password and without sudo
+
+See the MariaDB Documentation at https://mariadb.com/docs
+
+You can start the MariaDB daemon with:
+cd '/opt/homebrew/Cellar/mariadb@11.8/11.8.10' ; /opt/homebrew/Cellar/mariadb@11.8/11.8.10/bin/mariadbd-safe --datadir='/opt/homebrew/var/mysql'
+
+You can test the MariaDB daemon with mariadb-test-run.pl
+cd '/opt/homebrew/Cellar/mariadb@11.8/11.8.10/mariadb-test' ; perl mariadb-test-run.pl
+
+Please report any problems at https://mariadb.org/jira
+
+The latest information about MariaDB is available at https://mariadb.org/.
+
+Consider joining MariaDB's strong and vibrant community:
+https://mariadb.org/get-involved/
+
+🍺  /opt/homebrew/Cellar/mariadb@11.8/11.8.10: 1,010 files, 255.8MB
+[32m==>[0m [1mCaveats[0m
+[34m==>[0m [1mphp[0m
+To enable PHP in Apache add the following to httpd.conf and restart Apache:
+    LoadModule php_module /opt/homebrew/opt/php/lib/httpd/modules/libphp.so
+
+    <FilesMatch \.php$>
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+
+Finally, check DirectoryIndex includes index.php
+    DirectoryIndex index.php index.html
+
+The php.ini and php-fpm.ini file can be found in:
+    /opt/homebrew/etc/php/8.5/
+
+To start php now and restart at login:
+  brew services start php
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/php/sbin/php-fpm --nodaemonize
+[34m==>[0m [1mmariadb@11.8[0m
+A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+server starting up correctly.
+
+MySQL is configured to only allow connections from localhost by default
+
+To start mariadb@11.8 now and restart at login:
+  brew services start mariadb@11.8
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/mariadb@11.8/bin/mariadbd-safe --datadir\=/opt/homebrew/var/mysql
+[cobaia] PHP: /opt/homebrew/bin/php, com mysqli, pdo_mysql, mbstring.
+[cobaia] O MariaDB não está no ar; ligando o serviço (mariadb@11.8)...
+[cobaia] $ brew services start mariadb@11.8
+[34m==>[0m [1mSuccessfully started `mariadb@11.8` (label: sh.brew.mariadb@11.8)[0m
+[cobaia] O site legado (Programacao/CobaiaFront/conn/connect.php) entra no MariaDB como root, sem senha.
+[cobaia] Neste sistema o root do MariaDB só entra pelo usuário root do sistema (unix_socket). Para o site funcionar,
+[cobaia] o instalador troca essa entrada para senha vazia: qualquer usuário desta máquina passa a entrar como root
+[cobaia] do MariaDB. Não aceite numa máquina que tenha um MariaDB em uso de verdade.
+[cobaia] root não acessível sem senha — tentando corrigir com a conta do usuário que instalou o MariaDB e, se não der, com o sudo...
+[cobaia] root ajustado para sem senha.
+[cobaia] Aplicando bancoatualizado.sql...
+[cobaia] Aplicando schema_completo.sql...
+[cobaia] Aplicando seed.sql...
+[cobaia] Banco pronto (schema completo + seed).
+[cobaia] Criando venv da CobaiaAPI...
+[cobaia] $ /Users/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-macos-aarch64-none/bin/python3 -m venv /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/.venv
+[cobaia] $ /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/.venv/bin/pip install -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt
+Collecting fastapi>=0.119.1 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading fastapi-0.165.0-py3-none-any.whl.metadata (27 kB)
+Collecting uvicorn>=0.34 (from uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting pydantic>=2.9 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading pydantic-2.14.4-py3-none-any.whl.metadata (143 kB)
+Collecting pydantic-settings>=2.6 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 11))
+  Downloading pydantic_settings-2.16.3-py3-none-any.whl.metadata (4.0 kB)
+Collecting sqlalchemy>=2.0.36 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 12))
+  Downloading sqlalchemy-2.1.9-cp314-cp314-macosx_11_0_arm64.whl.metadata (9.7 kB)
+Collecting pymysql>=1.1.1 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 13))
+  Downloading pymysql-1.2.4-py3-none-any.whl.metadata (4.2 kB)
+Collecting python-multipart>=0.0.12 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 14))
+  Downloading python_multipart-0.0.34-py3-none-any.whl.metadata (6.3 kB)
+Collecting pytest>=8.3 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting httpx>=0.28 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting ruff>=0.8 (from -r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 9))
+  Downloading ruff-0.17.6-py3-none-macosx_11_0_arm64.whl.metadata (20 kB)
+Collecting starlette>=1.6.0 (from fastapi>=0.119.1->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting anyio>=4.1.0 (from fastapi>=0.119.1->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi>=0.119.1->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi>=0.119.1->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi>=0.119.1->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading annotated_doc-0.0.7-py3-none-any.whl.metadata (6.4 kB)
+Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.119.1->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+Collecting click>=7.0 (from uvicorn>=0.34->uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn>=0.34->uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.9->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.5 (from pydantic>=2.9->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading pydantic_core-2.50.5-cp314-cp314-macosx_11_0_arm64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=1.2.2 (from pydantic-settings>=2.6->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 11))
+  Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting iniconfig>=2 (from pytest>=8.3->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging>=24 (from pytest>=8.3->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.6 (from pytest>=8.3->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting pygments>=2.15 (from pytest>=8.3->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting certifi (from httpx>=0.28->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading certifi-2026.11.20-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx>=0.28->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx>=0.28->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading httptools-0.9.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (3.5 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading pyyaml-6.0.4-cp314-cp314-macosx_11_0_arm64.whl.metadata (2.3 kB)
+Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading uvloop-0.23.0-cp314-cp314-macosx_10_15_universal2.whl.metadata (5.1 kB)
+Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading watchfiles-1.3.0-cp310-abi3-macosx_11_0_arm64.whl.metadata (4.9 kB)
+Collecting websockets>=13.0 (from uvicorn[standard]>=0.34->-r /Users/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading websockets-17.4-cp314-cp314-macosx_11_0_arm64.whl.metadata (6.3 kB)
+Downloading fastapi-0.165.0-py3-none-any.whl (159 kB)
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading pydantic-2.14.4-py3-none-any.whl (494 kB)
+Downloading pydantic_core-2.50.5-cp314-cp314-macosx_11_0_arm64.whl (2.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 92.4 MB/s  0:00:00
+Downloading pydantic_settings-2.16.3-py3-none-any.whl (82 kB)
+Downloading sqlalchemy-2.1.9-cp314-cp314-macosx_11_0_arm64.whl (2.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.5/2.5 MB 119.1 MB/s  0:00:00
+Downloading pymysql-1.2.4-py3-none-any.whl (46 kB)
+Downloading python_multipart-0.0.34-py3-none-any.whl (32 kB)
+Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading ruff-0.17.6-py3-none-macosx_11_0_arm64.whl (9.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.6/9.6 MB 158.2 MB/s  0:00:00
+Downloading annotated_doc-0.0.7-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+Downloading click-8.5.1-py3-none-any.whl (126 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+Downloading packaging-26.4-py3-none-any.whl (140 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 117.4 MB/s  0:00:00
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+Downloading httptools-0.9.0-cp314-cp314-macosx_11_0_arm64.whl (118 kB)
+Downloading pyyaml-6.0.4-cp314-cp314-macosx_11_0_arm64.whl (181 kB)
+Downloading uvloop-0.23.0-cp314-cp314-macosx_10_15_universal2.whl (1.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.4/1.4 MB 107.0 MB/s  0:00:00
+Downloading watchfiles-1.3.0-cp310-abi3-macosx_11_0_arm64.whl (397 kB)
+Downloading websockets-17.4-cp314-cp314-macosx_11_0_arm64.whl (216 kB)
+Downloading certifi-2026.11.20-py3-none-any.whl (127 kB)
+Installing collected packages: websockets, uvloop, typing-extensions, ruff, pyyaml, python-multipart, python-dotenv, pymysql, pygments, pluggy, packaging, iniconfig, idna, httptools, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, sqlalchemy, pytest, pydantic-core, opentelemetry-api, httpcore, anyio, watchfiles, starlette, pydantic, httpx, pydantic-settings, fastapi
+
+Successfully installed annotated-doc-0.0.7 annotated-types-0.8.0 anyio-4.16.0 certifi-2026.11.20 click-8.5.1 fastapi-0.165.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 opentelemetry-api-1.45.2 packaging-26.4 pluggy-1.7.0 pydantic-2.14.4 pydantic-core-2.50.5 pydantic-settings-2.16.3 pygments-2.21.0 pymysql-1.2.4 pytest-9.2.0 python-dotenv-1.2.4 python-multipart-0.0.34 pyyaml-6.0.4 ruff-0.17.6 sqlalchemy-2.1.9 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+[cobaia] Criando venv do AgenteCore...
+[cobaia] $ /Users/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-macos-aarch64-none/bin/python3 -m venv /Users/runner/work/TCC/TCC/Programacao/AgenteCore/.venv
+[cobaia] $ /Users/runner/work/TCC/TCC/Programacao/AgenteCore/.venv/bin/python -m pip install -r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt
+Collecting matplotlib>=3.9 (from -r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading matplotlib-3.11.2-cp314-cp314-macosx_11_0_arm64.whl.metadata (80 kB)
+Collecting playwright==1.64.1 (from -r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading playwright-1.64.1-py3-none-macosx_11_0_arm64.whl.metadata (3.3 kB)
+Collecting pyee<15,>=13 (from playwright==1.64.1->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading pyee-14.0.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting greenlet<4.0.0,>=3.1.1 (from playwright==1.64.1->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading greenlet-3.5.6-cp314-cp314-macosx_11_0_universal2.whl.metadata (3.8 kB)
+Collecting typing-extensions (from pyee<15,>=13->playwright==1.64.1->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting contourpy>=1.0.1 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading contourpy-1.4.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading fonttools-4.69.1-cp314-cp314-macosx_10_15_universal2.whl.metadata (147 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading kiwisolver-1.5.1-cp314-cp314-macosx_11_0_arm64.whl.metadata (5.2 kB)
+Collecting numpy>=1.25 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading numpy-2.5.5-cp314-cp314-macosx_14_0_arm64.whl.metadata (6.6 kB)
+Collecting packaging>=20.0 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Using cached packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading pillow-13.0.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil>=2.7 (from matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting tzdata (from python-dateutil>=2.7->matplotlib>=3.9->-r /Users/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading playwright-1.64.1-py3-none-macosx_11_0_arm64.whl (43.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 43.2/43.2 MB 168.3 MB/s  0:00:00
+Downloading greenlet-3.5.6-cp314-cp314-macosx_11_0_universal2.whl (295 kB)
+Downloading pyee-14.0.0-py3-none-any.whl (15 kB)
+Downloading matplotlib-3.11.2-cp314-cp314-macosx_11_0_arm64.whl (9.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 156.4 MB/s  0:00:00
+Downloading contourpy-1.4.0-cp314-cp314-macosx_11_0_arm64.whl (283 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.69.1-cp314-cp314-macosx_10_15_universal2.whl (3.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.8/3.8 MB 145.5 MB/s  0:00:00
+Downloading kiwisolver-1.5.1-cp314-cp314-macosx_11_0_arm64.whl (64 kB)
+Downloading numpy-2.5.5-cp314-cp314-macosx_14_0_arm64.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 92.8 MB/s  0:00:00
+Using cached packaging-26.4-py3-none-any.whl (140 kB)
+Downloading pillow-13.0.0-cp314-cp314-macosx_11_0_arm64.whl (4.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.9/4.9 MB 152.7 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, typing-extensions, pyparsing, pillow, packaging, numpy, kiwisolver, greenlet, fonttools, cycler, python-dateutil, pyee, contourpy, playwright, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.69.1 greenlet-3.5.6 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.4 pillow-13.0.0 playwright-1.64.1 pyee-14.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 typing-extensions-4.16.0 tzdata-2026.6
+[cobaia] $ /Users/runner/work/TCC/TCC/Programacao/AgenteCore/.venv/bin/python -m playwright install chromium
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/mac-arm64/chrome-mac-arm64.zip
+|                                                                                |   0% of 185.8 MiB
+|■■■■■■■■                                                                        |  10% of 185.8 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 185.8 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 185.8 MiB
+Chrome for Testing 156.0.8078.4 (playwright chromium v1248) downloaded to /Users/runner/Library/Caches/ms-playwright/chromium-1248
+Downloading FFmpeg (playwright ffmpeg v1013) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1013/ffmpeg-mac-arm64.zip
+|                                                                                |   1% of 1.4 MiB
+|■■■■■■■■                                                                        |  10% of 1.4 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 1.4 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 1.4 MiB
+FFmpeg (playwright ffmpeg v1013) downloaded to /Users/runner/Library/Caches/ms-playwright/ffmpeg-1013
+Downloading Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/mac-arm64/chrome-headless-shell-mac-arm64.zip
+|                                                                                |   0% of 99 MiB
+|■■■■■■■■                                                                        |  10% of 99 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 99 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 99 MiB
+Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) downloaded to /Users/runner/Library/Caches/ms-playwright/chromium_headless_shell-1248
+[cobaia] Baixando o script oficial do Ollama (https://ollama.com/install.sh) para instalar a versão 0.40.16...
+[cobaia]   16 kB de 16 kB
+[cobaia] $ sh /Users/runner/work/TCC/TCC/.ferramentas/ollama/install.sh
+>>> Downloading Ollama for macOS...
+#=#=#                                                                          ##O#-#                                                                                                                                                    0.0%##                                                                         4.0%#####                                                                      7.4%#########                                                                 12.9%###########                                                               16.6%###############                                                           20.9%#################                                                         23.6%###################                                                       27.5%########################                                                  34.2%#############################                                             40.8%################################                                          44.7%#################################                                         46.5%######################################                                    53.5%########################################                                  55.8%##########################################                                59.5%##############################################                            64.0%##################################################                        69.5%####################################################                      73.2%########################################################                  78.1%###########################################################               82.4%###############################################################           87.6%################################################################          90.2%###################################################################       93.1%#####################################################################     96.4%######################################################################## 100.0%
+>>> Installing Ollama to /Applications...
+>>> Adding 'ollama' command to PATH (may require password)...
+>>> Starting Ollama...
+Unable to find application named 'Ollama'
+[cobaia] 
+[cobaia] Instalação interrompida: o script do Ollama saiu com erro; a mensagem dele está logo acima.

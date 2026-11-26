@@ -285,6 +285,13 @@ def instalar_mariadb_portatil(perguntar: bool = True) -> str | None:
         log(f"MariaDB portátil já extraído em {cam['pasta']}.")
     if not cam["my_ini"].exists():
         log(f"Criando a pasta de dados em {cam['dados']} (root sem senha, porta 3306)...")
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S1) cria a pasta de cima da pasta de dados (`.mariadb`) antes de chamar o `mariadb-install-db.exe`; erro do sistema ao criar vira mensagem no log e `None`. Só roda quando o `my.ini` ainda não existe, como o resto deste bloco.
+        # ! Motivo: execução 45727470052 do Actions, célula CI-WIN: "FATAL ERROR: Can't create data directory 'D:\a\TCC\TCC\.mariadb\data' (one or more intermediate directories do not exist)"; num clone novo a pasta `.mariadb` não existe (na máquina do projeto ela já existia desde 07/11/2026) e o `mariadb-install-db.exe` só cria a última pasta do caminho. A pasta `data` em si continua sendo criada por ele. O conserto ainda não foi visto rodando: a terceira execução do fluxo é a prova.
+        try:
+            cam["dados"].parent.mkdir(parents=True, exist_ok=True)
+        except OSError as e:
+            log(f"Não foi possível criar a pasta {cam['dados'].parent} para os dados do MariaDB ({e}).")
+            return None
         resultado = run([str(cam["install_db"]), f"--datadir={cam['dados']}", "--port=3306"])
         if resultado.returncode != 0:
             log("mariadb-install-db.exe falhou; veja a saída acima.")
@@ -321,16 +328,24 @@ def ensure_mariadb_installed() -> str:
         # ! Motivo: na máquina-alvo i5 (corporativa) o MSI do `MariaDB.Server` exige elevação e o instalador parava
         # aqui, com a mensagem "MariaDB foi instalado mas o cliente CLI não foi encontrado"; o zip oficial roda como
         # processo comum, que é o que ensure_mariadb_running já faz no Windows.
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S1) quando `instalar_mariadb_portatil()` devolve None (nas duas chamadas, a direta e a de depois do `winget`), o instalador para aqui com uma linha e `sys.exit(1)`.
+        # ! Motivo: execução 45727470052 do Actions, célula CI-WIN: depois de "mariadb-install-db.exe falhou" o instalador seguiu, achou o cliente do zip já extraído, tentou subir o `mariadbd.exe` sem pasta de dados e esperou 45 s para dizer "Não foi possível subir o MariaDB", escondendo a causa. O conserto ainda não foi visto rodando: a terceira execução do fluxo é a prova.
         if usar_mariadb_portatil(tem_mysql=bool(mysql)):
-            instalar_mariadb_portatil()
+            if instalar_mariadb_portatil() is None:
+                log("O MariaDB portátil não ficou pronto; a causa está logo acima.")
+                sys.exit(1)
         else:
             resultado = run([
                 "winget", "install", "--id", "MariaDB.Server", "-e",
                 "--accept-package-agreements", "--accept-source-agreements",
             ])
-            if resultado.returncode != 0:
+            # ! Alteração de IA - Revisar: (25/11/2026, ajuste do controlador depois da revisão dos consertos da segunda execução) depois de o winget devolver erro, o instalador procura o MariaDB mais uma vez antes de tentar o zip.
+            # ! Motivo: a parada nova (`sys.exit(1)` quando o zip portátil não fica pronto) mudaria um caso que antes seguia: o `winget` devolve código de erro, mas o MSI instalou o MariaDB; sem terminal para a pergunta do download (o `Cobaia.exe`), o zip devolvia `None` e o fluxo achava o cliente do MSI logo abaixo. Achado da revisão; não observado em execução.
+            if resultado.returncode != 0 and not find_mysql_cli():
                 log("O winget não conseguiu instalar o MariaDB.Server; tentando o zip portátil...")
-                instalar_mariadb_portatil()
+                if instalar_mariadb_portatil() is None:
+                    log("O MariaDB portátil não ficou pronto; a causa está logo acima.")
+                    sys.exit(1)
     else:
         # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) saiu daqui o ramo do `Darwin` (`brew install mariadb` e `brew services start mariadb`), e a mensagem deste `else` passa a dizer "Linux e macOS".
         # ! Motivo: execuções M-15 e M-15I (macOS 15) de 25/11/2026: com esses dois comandos o serviço subiu, mas o root do MariaDB só entra pelo usuário root do sistema, e o instalador parou em "Não foi possível subir o MariaDB"; o macOS passou a seguir `instalar_por_pacotes` (fórmula `mariadb@11.8`, decisão 161) e nenhum chamador do macOS passa por este passo (conferido por busca).

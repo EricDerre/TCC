@@ -1,0 +1,11 @@
+[Thu Nov 19 07:54:23 2026] PHP 8.1.2-1ubuntu2.28 Development Server (http://localhost:8081) started
+[Thu Nov 19 07:54:26 2026] 127.0.0.1:33946 Accepted
+[Thu Nov 19 07:54:26 2026] PHP Fatal error:  Uncaught Error: Call to undefined function mb_strimwidth() in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php:45
+Stack trace:
+#0 {main}
+  thrown in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php on line 45
+[Thu Nov 19 07:54:26 2026] 127.0.0.1:33946 [500]: GET /produtos_geral.php - Uncaught Error: Call to undefined function mb_strimwidth() in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php:45
+Stack trace:
+#0 {main}
+  thrown in /home/cobaia/TCC-main/Programacao/CobaiaFront/produtos_geral.php on line 45
+[Thu Nov 19 07:54:26 2026] 127.0.0.1:33946 Closing

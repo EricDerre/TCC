@@ -1,0 +1,11 @@
+[cobaia] $ sudo systemctl start mariadb
+System has not been booted with systemd as init system (PID 1). Can't operate.
+Failed to connect to bus: Host is down
+[cobaia] Aguardando o MariaDB responder...
+[cobaia] Nenhum serviço de banco ativo — iniciando /usr/sbin/mariadbd como processo...
+[cobaia] Aguardando o MariaDB responder...
+N1: falhou o MariaDB não respondeu (ensure_mariadb_running)
+N2: nao_rodou depende do N1, que não passou
+N3: falhou o executável do Ollama não foi encontrado (find_ollama)
+N4: nao_rodou 
+registro gravado em /home/cobaia/evidencia/registro.json

@@ -1,0 +1,96 @@
+[Thu Nov 19 12:56:54 2026] PHP 8.3.6 Development Server (http://localhost:8080) started
+[Thu Nov 19 12:56:54 2026] 127.0.0.1:58946 Accepted
+[Thu Nov 19 12:56:54 2026] 127.0.0.1:58946 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Nov 19 12:56:54 2026] 127.0.0.1:58946 Closing
+INFO:     Started server process [7305]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58960 Accepted
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58960 Closed without sending a request; it was probably just an unused speculative preconnection
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58960 Closing
+INFO:     127.0.0.1:60210 - "GET /api/produtos HTTP/1.1" 200 OK
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58972 Accepted
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58972 [200]: GET /produtos_geral.php
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58972 Closing
+[Thu Nov 19 12:56:55 2026] 127.0.0.1:58988 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:58988 [200]: GET /
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:58988 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:58994 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59008 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59016 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59024 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:58994 [200]: GET /css/bootstrap.min.css
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59008 [200]: GET /css/estilo.css
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59016 [200]: GET /images/logo%20churrascaria.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59024 [200]: GET /images/banner_vaca.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:58994 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59008 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59016 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59024 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59032 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59032 [200]: GET /images/banner_hamburger.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59032 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59042 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59042 [200]: GET /images/banner_carne.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59044 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59044 [200]: GET /images/picanha_alho.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59044 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59042 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59050 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59050 [200]: GET /js/bootstrap.min.js
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59050 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59054 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59066 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59068 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59074 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59082 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59088 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59054 [200]: GET /images/costelona.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59066 [200]: GET /images/cupim.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59068 [200]: GET /images/balde_cerveja.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59074 [200]: GET /images/queijo.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59082 [200]: GET /images/picanha_sem.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59088 [200]: GET /images/fraldinha.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59098 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59054 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59066 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59110 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59098 [200]: GET /images/alcatra_pedra.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59124 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59068 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59088 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59136 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59110 [200]: GET /images/maminha.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59074 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59082 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59124 [200]: GET /images/agua.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59146 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59136 [200]: GET /images/refrigerante.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59098 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59156 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59146 [200]: GET /images/paodealho.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59164 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59110 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59124 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59136 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59156 [200]: GET /images/hamburger.png
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59164 [200]: GET /images/abacaxi.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59146 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59164 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59156 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59178 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59178 [200]: GET /images/churrascaria.jpg
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59178 Closing
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59190 Accepted
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59190 [200]: GET /fonts/glyphicons-halflings-regular.woff2
+[Thu Nov 19 12:56:56 2026] 127.0.0.1:59190 Closing
+N1: passou 14 produtos na API e na página do site
+N2: passou Playwright 1.64.1, Chromium 156.0.8078.4, título da página: Churrascaria Fornalha
+N3: passou Ollama 0.40.16, qwen2.5:0.5b respondeu: Pronto.
+N4: nao_rodou 
+registro gravado em /home/cobaia/evidencia/registro.json
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [7305]

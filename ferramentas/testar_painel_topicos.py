@@ -1588,6 +1588,29 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertNotIn("O que o parecer do Claude diz", h_depois)
         self.assertIn("307", h_rev)
         self.assertNotIn("não cumpre", h_depois, "sem a leitura da sessão, a aba não afirma nada sobre ela")
+        # ! Alteração de IA - Revisar: (25/11/2026, decisão 166) a leitura com a declaração de quem leu: a aba diz que o relatório 1 foi respondido pelo analista de QA,
+        # fora da página, que o tempo não foi medido e que a sessão continua valendo como medida não feita; a página real traz isso.
+        # ! Motivo: a aba dava a resposta como do revisor, com 307 s de leitura medidos, que são o tempo da troca entre quem respondeu e quem colou.
+        rev_decl = {**rev, "resumo": {**rev["resumo"], "respostas_do_revisor": 0, "respostas_do_analista": 1},
+                    "por_origem": [rev["por_origem"][1], {**rev["por_origem"][0], "origem": "analista"}],
+                    "tempo": [{"grupo": "todos", "n": 0, "mediana": None, "minimo": None, "maximo": None}],
+                    "casos": [{**rev["casos"][0], "origem": "analista", "segundos": None, "segundos_na_pagina": 307}],
+                    "quem_leu": {"declarado_em": "2026-11-25", "relatorio_1": {"quem": "um analista de QA da empresa em que o Eric trabalha",
+                                 "relacao_com_o_projeto": "não participou do projeto", "como_leu": "fora da página; o Eric colou a resposta"}}}
+        _, h_decl = tp.secao_trilha(sint, self.ctx["road"], gd.cartoes_corridas, revisao_preenchida=True, rev=rev_decl)
+        for trecho in ("resposta do analista de QA", "um analista de QA da empresa em que o Eric trabalha", "fora da página", "não foi medido em nenhum relatório",
+                       "decisão 166", "medida não feita (decisão 87)", "o analista de QA marcou", "5 relatórios"):
+            self.assertIn(trecho, h_decl, trecho)
+        for proibido in ("resposta própria do revisor", "resposta do revisor", "o revisor marcou", "mediana de 307", "onde o revisor respondeu"):
+            self.assertNotIn(proibido, h_decl, proibido)
+        if (self.ctx.get("revisao_trilha") or {}).get("quem_leu"):
+            real = self.html[self.html.index('<section id="trilha"'):].split("</section>")[0]
+            self.assertIn("resposta do analista de QA", real)
+            for proibido in ("resposta própria do revisor", "resposta do revisor", "o revisor marcou", "mediana de 307"):
+                self.assertNotIn(proibido, real, proibido)
+            fechamento = self.html[self.html.index('<section id="fechamentof4"'):].split("</section>")[0]
+            self.assertIn("1 resposta do analista de QA, sem tempo medido", fechamento)
+            self.assertNotIn("resposta do grupo e 10 pareceres", fechamento)
         # ! Alteração de IA - Revisar: (05/11/2026, decisão 88) a aba diz que a regra do carimbo de conflito ficou como está e que o TCC reporta as duas contas.
         # ! Motivo: a frase antiga dizia que a ficha 39 ainda ia decidir; o Eric lê pela aba e veria uma decisão já tomada como pendente.
         self.assertIn("decisão 88", h)
@@ -1636,7 +1659,9 @@ class TestesAbasPorTopico(unittest.TestCase):
         tela = {"resumo": {"concordam": 26, "casos": 37, "discordantes": 9, "limite_r2": 3, "b": 2, "c": 7}}
         cura = {"resumo": {"curadas": 160, "execucoes": 160, "mttr_mediana_s": 0.639}}
         cen = {"geral": {"sucessos": 10, "n": 10, "mttr_media_s": 105.18}}
-        rev = {"resumo": {"respostas_do_revisor": 1, "pareceres_aprovados": 10}}
+        # ! Alteração de IA - Revisar: (25/11/2026, decisão 166) o cartão da medida com revisor humano diz quem respondeu o relatório da sessão de 05/11: o analista, sem tempo medido.
+        # ! Motivo: a leitura passou a aplicar a declaração de quem leu, e o cartão dizia "1 resposta do Eric", que a decisão 166 desmente.
+        rev = {"resumo": {"respostas_do_revisor": 0, "respostas_do_analista": 1, "pareceres_aprovados": 10}}
         # ! Alteração de IA - Revisar: (05/11/2026, decisões 90 a 92) a aba recebe o roadmap, mostra as corridas que faltam antes da Fase 5, lidas pelo estado, e a seção 13 do relatório à vista.
         # ! Motivo: com as fichas 42 a 45 fechadas, a aba diria só "nenhuma ficha aberta", como se não restasse nada, e as corridas 18c, 21c, 23 e 24 ainda vão rodar.
         Corrida = type("Corrida", (), {})
@@ -1658,8 +1683,14 @@ class TestesAbasPorTopico(unittest.TestCase):
         self.assertIn('<section id="fechamentof4" hidden>', h)
         self.assertIn('<span class="chip nao_cumprida">Não cumprida</span><br><span class="nota">limitação declarada</span>', h)
         self.assertIn('<span class="chip concluida">Cumprida</span>', h)
-        for texto in ("26 de 37", "160 de 160", "0,639", "10 de 10", "105,2", "1 resposta do Eric", "10 pareceres", "texto da seção um", "texto da seção onze", "texto da seção doze", "texto da seção quinze", "R2"):
+        for texto in ("26 de 37", "160 de 160", "0,639", "10 de 10", "105,2", "1 resposta do analista de QA, sem tempo medido", "10 pareceres", "texto da seção um", "texto da seção onze", "texto da seção doze", "texto da seção quinze", "R2"):
             self.assertIn(texto, h, texto)
+        self.assertNotIn("resposta do Eric", h)
+        # sem a declaração de quem leu, o cartão não nomeia ninguém
+        sem_declaracao = {"resumo": {"respostas_do_revisor": 1, "pareceres_aprovados": 10}}
+        _, h_sem = tp.secao_fechamento_f4(md, self.ctx["pend"], self.ctx["md_doc_para_html"], revisao=sem_declaracao, road=self.ctx["road"], cartoes_corridas=self.ctx["cartoes_corridas"])
+        self.assertIn("1 resposta do revisor e 10 pareceres do Claude aprovados", h_sem)
+        self.assertNotIn("resposta do Eric", h_sem)
         abertas = [f for b in self.ctx["pend"] for f in b.fichas if f.aberta]
         self.assertEqual(d["fichas_abertas"], len(abertas))
         for f in abertas:

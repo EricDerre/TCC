@@ -107,6 +107,17 @@ Thumbs.db
 !Programacao/AgenteCore/experimentos/resultados_alvo/**/*.log
 
 # ---------------------------------------------------------------------------
+# Logs das células de teste do instalador: exceção ao `*.log` acima
+# ---------------------------------------------------------------------------
+# ! Alteração de IA - Revisar: exceção ao `*.log` para os logs das pastas de rodada das células de teste do instalador
+# (25/11/2026, ficha 108, decisão 169).
+# ! Motivo: o `instalacao.log` e o `conferir.log` de cada rodada trazem a saída completa do instalador e da prova, com
+# o erro literal de cada falha, e o relatório do instalador tem links para eles. Com o `*.log` genérico eles nunca
+# entraram no git (88 arquivos, 4,1 MB em 25/11/2026), e no GitHub os links do relatório apontavam para arquivo que não
+# existe; o `conferir_docs.py` não acusava, porque confere os links contra o disco.
+!Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/**/*.log
+
+# ---------------------------------------------------------------------------
 # Material de apoio do livro-texto (Faceli et al., 3. ed., 2025)
 # ---------------------------------------------------------------------------
 # ! Alteração de IA - Revisar: `Documentacao/notebooks/` inteira fora do versionamento (noite de 30/09/2026, decisão 68),

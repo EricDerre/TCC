@@ -2375,7 +2375,9 @@ def teste_fixa_windows_ensure_mariadb_installed():
                         # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions) este teste passa a trocar `mysql_que_nao_e_mariadb` por uma função que não acha MySQL nenhum.
                         # ! Motivo: `ensure_mariadb_installed` agora procura um `mysql` no PATH da máquina onde a bateria roda (e rodaria `mysql --version` de verdade); aqui o caso é "sem MySQL", o fluxo de antes. O caso com MySQL tem teste próprio, logo abaixo.
                         (install, "mysql_que_nao_e_mariadb", lambda: None),
-                        (install, "instalar_mariadb_portatil", lambda *a, **k: portateis.append(comandos[:])),
+                        # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S1) o `instalar_mariadb_portatil` de mentira passa a devolver "cli" (o cliente achado), como o de verdade quando dá certo.
+                        # ! Motivo: `ensure_mariadb_installed` agora para com código 1 quando o portátil devolve None (execução 45727470052, CI-WIN: seguia depois do "mariadb-install-db.exe falhou" e esperava 45 s por um servidor sem pasta de dados); o gravador antigo devolvia None e cairia nesse caminho de falha.
+                        (install, "instalar_mariadb_portatil", lambda *a, **k: portateis.append(comandos[:]) or "cli"),
                         (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(codigo[0]))])
     try:
         # (a) cliente achado: nada roda.
@@ -2391,15 +2393,132 @@ def teste_fixa_windows_ensure_mariadb_installed():
         install.find_mysql_cli = _respostas(None, "cli")
         assert install.ensure_mariadb_installed() == "cli"
         assert comandos == [winget] and portateis == []
-        # (d) winget com código 1: o portátil é chamado depois do winget.
+        # ! Alteração de IA - Revisar: (25/11/2026, ajuste do controlador depois da revisão dos consertos da segunda execução) o caso (d) ganha uma busca a mais (depois de o winget devolver erro o instalador procura o MariaDB antes de tentar o zip) e o caso (d2), em que o MSI instalou mesmo com o código de erro.
+        # ! Motivo: `ensure_mariadb_installed` passou a conferir `find_mysql_cli()` depois do erro do winget; com as respostas antigas (None, "cli") a segunda busca já achava o cliente e o zip não era chamado, que é o caso (d2), e não o (d).
+        # (d) winget com código 1 e o MariaDB continua faltando: o portátil é chamado depois do winget.
         comandos.clear()
         codigo[0] = 1
-        install.find_mysql_cli = _respostas(None, "cli")
+        install.find_mysql_cli = _respostas(None, None, "cli")
         assert install.ensure_mariadb_installed() == "cli"
         assert comandos == [winget] and portateis == [[winget]]
+        # (d2) winget com código 1, mas o MSI instalou o MariaDB: o portátil não é chamado.
+        comandos.clear()
+        portateis.clear()
+        install.find_mysql_cli = _respostas(None, "cli", "cli")
+        assert install.ensure_mariadb_installed() == "cli"
+        assert comandos == [winget] and portateis == []
         # (e) cliente nunca achado: SystemExit(1).
         install.find_mysql_cli = lambda: None
         _sai_com_1(install.ensure_mariadb_installed)
+    finally:
+        _destrocar(original)
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S1) testes novos: `instalar_mariadb_portatil` cria a pasta de cima da pasta de dados antes de chamar o `mariadb-install-db.exe` (e não mexe em nada quando o `my.ini` já existe), e `ensure_mariadb_installed` para com código 1, sem procurar o cliente de novo, quando o portátil devolve None (nas duas chamadas).
+# ! Motivo: execução 45727470052 do Actions, célula CI-WIN: "FATAL ERROR: Can't create data directory 'D:\a\TCC\TCC\.mariadb\data' (one or more intermediate directories do not exist)", porque num clone novo a pasta `.mariadb` não existe; depois do "mariadb-install-db.exe falhou" o instalador ainda seguiu, achou o cliente do zip e esperou 45 s por um servidor sem pasta de dados. O conserto ainda não foi visto rodando: a terceira execução do fluxo é a prova. Nenhum destes testes baixa nada nem roda o `.exe`.
+def _instalar_portatil_de_mentira(raiz: Path, my_ini_existe: bool, codigo: int = 0, arquivo_no_lugar: bool = False):
+    """Roda `instalar_mariadb_portatil` com tudo trocado por gravadores; devolve (resultado, chamadas, cam, mensagens)."""
+    import io
+    base = raiz / "LocalAppData" / "MariaDB"
+    projeto = raiz / "projeto" / ".mariadb" / "data"
+    cam = install.caminhos_mariadb_portatil("11.8.10", base=base, dados=projeto)
+    cam["install_db"].parent.mkdir(parents=True)
+    cam["install_db"].write_bytes(b"")
+    if my_ini_existe:
+        projeto.mkdir(parents=True)
+        cam["my_ini"].write_text("[mysqld]", encoding="utf-8")
+    if arquivo_no_lugar:
+        # Um arquivo com o nome `.mariadb` impede de criar a pasta de cima da pasta de dados.
+        (raiz / "projeto").mkdir()
+        (raiz / "projeto" / ".mariadb").write_text("arquivo no lugar da pasta", encoding="utf-8")
+    chamadas: list = []
+    mensagens: list = []
+
+    class _Resposta(io.BytesIO):
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+    def rodar(comando, **kw):
+        # A pasta de cima da pasta de dados já tem de existir quando o instalador do banco é chamado.
+        chamadas.append((comando, projeto.parent.is_dir(), projeto.is_dir()))
+        return _Resultado(codigo)
+
+    original = _trocar([(install, "log", mensagens.append), (install, "run", rodar),
+                        (install.urllib.request, "urlopen", lambda *a, **k: _Resposta(b"{}")),
+                        (install, "escolher_zip_mariadb", lambda dados: {"versao": "11.8.10", "nome": "x", "url": "u", "sha256": "s"}),
+                        (install, "caminhos_mariadb_portatil", lambda versao: cam),
+                        (install, "find_mysql_cli", lambda: "cli")])
+    try:
+        resultado = install.instalar_mariadb_portatil(perguntar=False)
+    finally:
+        _destrocar(original)
+    return resultado, chamadas, cam, mensagens
+
+
+def teste_instalar_mariadb_portatil_cria_a_pasta_de_cima_dos_dados():
+    raiz = Path(tempfile.mkdtemp(prefix="cobaia_portatil_"))
+    try:
+        resultado, chamadas, cam, _ = _instalar_portatil_de_mentira(raiz, my_ini_existe=False)
+        assert resultado == "cli"
+        assert len(chamadas) == 1 and chamadas[0][0][0] == str(cam["install_db"]), chamadas
+        assert chamadas[0][1] is True, "a pasta de cima não existia na hora do mariadb-install-db.exe"
+        assert chamadas[0][2] is False, "a pasta de dados em si é do mariadb-install-db.exe"
+    finally:
+        shutil.rmtree(raiz, ignore_errors=True)
+    # Pasta de cima que não dá para criar (já existe um arquivo com esse nome): mensagem e None, sem chamar o .exe.
+    raiz = Path(tempfile.mkdtemp(prefix="cobaia_portatil_"))
+    try:
+        resultado, chamadas, _, mensagens = _instalar_portatil_de_mentira(raiz, my_ini_existe=False, arquivo_no_lugar=True)
+        assert resultado is None and chamadas == [], (resultado, chamadas)
+        assert any(".mariadb" in m for m in mensagens), mensagens
+    finally:
+        shutil.rmtree(raiz, ignore_errors=True)
+
+
+def teste_instalar_mariadb_portatil_com_my_ini_existente_nao_mexe_em_nada():
+    raiz = Path(tempfile.mkdtemp(prefix="cobaia_portatil_"))
+    try:
+        resultado, chamadas, cam, _ = _instalar_portatil_de_mentira(raiz, my_ini_existe=True)
+        assert resultado == "cli" and chamadas == [], (resultado, chamadas)
+        assert cam["dados"].is_dir() and cam["my_ini"].is_file()
+    finally:
+        shutil.rmtree(raiz, ignore_errors=True)
+
+
+def teste_ensure_mariadb_installed_para_quando_o_portatil_nao_ficou_pronto():
+    mensagens: list = []
+    buscas: list = []
+
+    def achar():
+        buscas.append(1)
+        return None
+
+    original = _trocar([(install, "OS_NAME", "Windows"), (install, "log", mensagens.append), (install, "find_mysql_cli", achar),
+                        (install, "mysql_que_nao_e_mariadb", lambda: None), (install, "usar_mariadb_portatil", lambda *a, **k: True),
+                        (install, "instalar_mariadb_portatil", lambda *a, **k: None),
+                        (install, "run", lambda cmd, **kw: _Resultado(1))])
+    try:
+        # Chamada direta (sem administrador): para na hora, sem procurar o cliente de novo.
+        _sai_com_1(install.ensure_mariadb_installed)
+        assert buscas == [1], buscas
+        assert any("portátil" in m and "acima" in m for m in mensagens), mensagens
+        # ! Alteração de IA - Revisar: (25/11/2026, ajuste do controlador depois da revisão dos consertos da segunda execução) depois de o winget devolver erro, o instalador procura o MariaDB mais uma vez antes de tentar o zip; se o MSI instalou mesmo assim, segue com ele.
+        # ! Motivo: com a parada nova, um `winget` que devolvesse código de erro depois de instalar o MariaDB pelo MSI levaria ao zip e, sem terminal para a pergunta do download (`Cobaia.exe`), a `sys.exit(1)`, quando antes o fluxo achava o cliente do MSI e seguia. Achado da revisão; não observado em execução.
+        # Chamada depois de o winget falhar, sem MariaDB na máquina: procura de novo, tenta o zip e para.
+        buscas.clear()
+        mensagens.clear()
+        install.usar_mariadb_portatil = lambda *a, **k: False
+        _sai_com_1(install.ensure_mariadb_installed)
+        assert buscas == [1, 1], buscas
+        assert any("portátil" in m and "acima" in m for m in mensagens), mensagens
+        # O winget devolveu erro, mas o MSI instalou o MariaDB: segue com ele, sem tentar o zip.
+        respostas = [None, r"C:\Program Files\MariaDB 11.8\bin\mariadb.exe", r"C:\Program Files\MariaDB 11.8\bin\mariadb.exe"]
+        install.find_mysql_cli = lambda: respostas.pop(0)
+        install.instalar_mariadb_portatil = _levanta
+        assert install.ensure_mariadb_installed() == r"C:\Program Files\MariaDB 11.8\bin\mariadb.exe"
     finally:
         _destrocar(original)
 
@@ -2539,7 +2658,9 @@ def teste_ensure_mariadb_installed_com_mysql_avisa_e_usa_o_zip():
                         (install, "find_mysql_cli", _respostas(None, r"C:\m\bin\mariadb.exe")),
                         (install, "mysql_que_nao_e_mariadb", lambda: r"C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE"),
                         (install, "usar_mariadb_portatil", usar),
-                        (install, "instalar_mariadb_portatil", lambda *a, **k: portateis.append(1)),
+                        # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S1) o gravador devolve o cliente em vez de None.
+                        # ! Motivo: ver a tag do teste `teste_fixa_windows_ensure_mariadb_installed`: devolver None agora faz o instalador parar com código 1.
+                        (install, "instalar_mariadb_portatil", lambda *a, **k: portateis.append(1) or r"C:\m\bin\mariadb.exe"),
                         (install, "run", lambda cmd, **kw: comandos.append(cmd) or _Resultado(0))])
     try:
         assert install.ensure_mariadb_installed() == r"C:\m\bin\mariadb.exe"
@@ -3679,6 +3800,59 @@ def teste_ferramentas_instalar_ollama_falha_no_download_e_no_script():
         _destrocar(original)
 
 
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S2) testes novos de `instalar_ollama` no macOS: o script roda com `OLLAMA_NO_START=1`, depois vem o `open` pelo caminho do aplicativo, e o `open` que falha só deixa aviso; no Linux e no Windows não há `OLLAMA_NO_START` nem `open`.
+# ! Motivo: execução 45727470052 do Actions, célula M-15 (macOS 15): o script oficial do Ollama instalou em /Applications e parou em "Unable to find application named 'Ollama'" (o `open -a Ollama` dele procura o aplicativo pelo nome, que o sistema ainda não conhecia), e o instalador saiu com "Instalação interrompida: o script do Ollama saiu com erro". O conserto ainda não foi visto rodando: a terceira execução do fluxo é a prova.
+def teste_ferramentas_instalar_ollama_no_macos_nao_deixa_o_script_abrir_o_aplicativo():
+    from instalador import ferramentas
+    rodados: list = []
+    mensagens: list = []
+    codigo_do_open = [0]
+
+    def rodar(comando, **kw):
+        rodados.append((comando, kw))
+        return _Resultado(codigo_do_open[0] if comando[0] == "open" else 0)
+
+    original = _trocar([(env, "OS_NAME", "Darwin"), (env, "log", lambda texto="": mensagens.append(texto)),
+                        (install, "baixar_arquivo", lambda url, destino: 1), (env, "run", rodar)])
+    try:
+        ferramentas.instalar_ollama("0.40.2")
+        assert len(rodados) == 2, rodados
+        assert rodados[0][0][0] == "sh"
+        assert rodados[0][1]["env"]["OLLAMA_VERSION"] == "0.40.2" and rodados[0][1]["env"]["OLLAMA_NO_START"] == "1", rodados
+        assert rodados[1][0] == ["open", "/Applications/Ollama.app", "--args", "hidden"], rodados[1]
+        # `open` com erro: só aviso, nunca Falha.
+        rodados.clear()
+        mensagens.clear()
+        codigo_do_open[0] = 1
+        ferramentas.instalar_ollama("0.40.2")
+        assert len(rodados) == 2 and any("Launchpad" in m and "ollama serve" in m for m in mensagens), mensagens
+        # `open` que nem existe (OSError): também só aviso.
+        rodados.clear()
+        mensagens.clear()
+
+        def rodar_sem_open(comando, **kw):
+            if comando[0] == "open":
+                raise FileNotFoundError("open")
+            return _Resultado(0)
+
+        env.run = rodar_sem_open
+        ferramentas.instalar_ollama("0.40.2")
+        assert any("Launchpad" in m for m in mensagens), mensagens
+    finally:
+        _destrocar(original)
+    # Linux e Windows: ambiente sem `OLLAMA_NO_START` e nenhum `open`.
+    for so in ("Linux", "Windows"):
+        rodados.clear()
+        original = _trocar([(env, "OS_NAME", so), (env, "log", lambda texto="": None),
+                            (install, "baixar_arquivo", lambda url, destino: 1), (env, "run", rodar)])
+        try:
+            ferramentas.instalar_ollama("0.40.2")
+        finally:
+            _destrocar(original)
+        assert len(rodados) == 1 and "OLLAMA_NO_START" not in rodados[0][1]["env"], (so, rodados)
+        assert rodados[0][1]["env"]["OLLAMA_VERSION"] == "0.40.2"
+
+
 def teste_ferramentas_ollama_fora_da_faixa_ensina_o_comando_do_sistema():
     from instalador import ferramentas
     ferr = versoes.carregar()
@@ -3869,14 +4043,50 @@ def teste_celula_actions_estado_inicial_traz_a_porta_e_a_sonda_dos_servicos():
     assert ca.SONDAS_DO_ESTADO["serviços de banco (Windows)"] == [
         "powershell", "-NoProfile", "-Command", "Get-Service *mysql*,*maria* | Format-Table -HideTableHeaders Name,Status,StartType"]
     for ocupada, palavra in ((True, "ocupada"), (False, "livre")):
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S3) este teste passa a trocar `platform.system` por "Windows".
+        # ! Motivo: a sonda dos serviços de banco só roda no Windows; sem a troca o resultado dependeria do sistema em que a bateria roda.
         original = _trocar([(ca.shutil, "which", lambda c: None), (ca, "porta_ocupada", lambda *a, **k: ocupada),
-                            (ca.subprocess, "run", _levanta)])
+                            (ca.platform, "system", lambda: "Windows"), (ca.subprocess, "run", _levanta)])
         try:
             texto = ca.estado_inicial()
         finally:
             _destrocar(original)
         assert f"== porta 3306 (banco): {palavra}" in texto, texto
         assert "== serviços de banco (Windows): ausente" in texto
+
+
+# ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S3) teste novo: fora do Windows a sonda dos serviços de banco não roda, mesmo com um `powershell` no PATH, e a linha diz "não se aplica"; as outras sondas continuam.
+# ! Motivo: execução 45727470052 do Actions, célula M-15 (macOS): a máquina tem um `powershell`, a sonda rodou e saiu com "The term 'Get-Service' is not recognized", ruído no `estado_inicial.txt`.
+def teste_celula_actions_sonda_dos_servicos_de_banco_so_roda_no_windows():
+    ca = celula_actions
+    rodados: list = []
+
+    def rodar(comando, **kw):
+        rodados.append(comando[0])
+        resultado = _Resultado(0)
+        resultado.stdout = b"ok"
+        resultado.stderr = b""
+        return resultado
+
+    for sistema in ("Darwin", "Linux"):
+        rodados.clear()
+        original = _trocar([(ca.shutil, "which", lambda c: "/usr/bin/" + c), (ca, "porta_ocupada", lambda *a, **k: False),
+                            (ca.platform, "system", lambda: sistema), (ca.subprocess, "run", rodar)])
+        try:
+            texto = ca.estado_inicial()
+        finally:
+            _destrocar(original)
+        assert "== serviços de banco (Windows): não se aplica" in texto, texto
+        assert "powershell" not in rodados and "python3" in rodados, rodados
+        assert "Get-Service" not in texto
+    rodados.clear()
+    original = _trocar([(ca.shutil, "which", lambda c: "C:/x/" + c), (ca, "porta_ocupada", lambda *a, **k: False),
+                        (ca.platform, "system", lambda: "Windows"), (ca.subprocess, "run", rodar)])
+    try:
+        texto = ca.estado_inicial()
+    finally:
+        _destrocar(original)
+    assert "powershell" in rodados and "não se aplica" not in texto, (rodados, texto)
 
 
 def teste_celula_actions_modelo_pequeno_nas_provas_que_param_antes_do_n4():

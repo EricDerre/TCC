@@ -4566,7 +4566,7 @@ def teste_avaliar_fase4_revisao_nao_sai_com_a_planilha_incompleta_e_confere_com_
 
 
 # ! Alteração de IA - Revisar: (05/11/2026, decisão 86) a leitura `--revisao` separa a resposta do revisor do parecer do Claude aprovado, não mede tempo onde ele não existe, compara o parecer contra o gabarito e registra a dúvida de leitura do relatório 1.
-# ! Motivo: o Eric respondeu um relatório antes de ler a pré-análise e aprovou o parecer nos outros; somar tudo como revisor humano apresentaria o julgamento do Claude como a medida da especificação (seção 12 c). A conta foi escrita antes de abrir o gabarito.
+# ! Motivo: um relatório teve resposta de uma pessoa antes de a pré-análise ser lida (do analista de QA, decisão 166) e o Eric aprovou o parecer nos outros; somar tudo como revisor humano apresentaria o julgamento do Claude como a medida da especificação (seção 12 c). A conta foi escrita antes de abrir o gabarito.
 _PARECER_DE_TESTE = """| # | Relatório | Causa do agente | Selo | Erro localizado | Decisão | Utilidade | Avaliação | Causa que eu daria | Confiança |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | `relatorio-1` | `causa_x` | alto | n.a. | aceitar | 3 | certo | a mesma | alta |

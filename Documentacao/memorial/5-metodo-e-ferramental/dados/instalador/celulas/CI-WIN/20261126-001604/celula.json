@@ -1,0 +1,32 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_actions.py: o que a célula rodou num executor do GitHub Actions e com que código de saída.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula em arquivo, e a pasta da rodada só fica dispensada da tag nos arquivos de saída capturada se tiver este arquivo (decisão 147)."
+ },
+ "id": "CI-WIN",
+ "modo": "novo",
+ "ate": "N4",
+ "modelo_pequeno": "qwen2.5:0.5b-instruct",
+ "forcar_uv": false,
+ "imagem": "GitHub Actions: Windows X64, imagem ? ?",
+ "terminou": true,
+ "fuso": "UTC",
+ "resultado_do_instalador": "interrompida",
+ "preparo": {
+  "nome": "nenhum",
+  "comandos": []
+ },
+ "actions": {
+  "repositorio": "EricDerre/TCC",
+  "commit": "f305dee18cabae61cba74bd4bd465d694da0fcec",
+  "execucao": "45727470052",
+  "tentativa": "1",
+  "evento": "push"
+ },
+ "inicio": "2026-11-26T00:16:04",
+ "fim": "2026-11-26T00:18:10",
+ "saidas": {
+  "instalador": "1",
+  "conferir": "1"
+ }
+}

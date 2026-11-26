@@ -1,0 +1,873 @@
+[install.sh] Python 3.12 ou mais novo não encontrado: baixando o uv 0.13.9 de https://github.com/astral-sh/uv/releases/download/0.13.9/uv-x86_64-unknown-linux-gnu.tar.gz
+[install.sh] Instalando o Python 3.14 em /home/runner/work/TCC/TCC/.ferramentas/python (dentro do projeto; nada muda no sistema)...
+Downloading cpython-3.14.10-linux-x86_64-gnu (download) (35.2MiB)
+ Downloaded cpython-3.14.10-linux-x86_64-gnu (download)
+Installed Python 3.14.10 in 523ms
+ + cpython-3.14.10-linux-x86_64-gnu
+[install.sh] Python: /home/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-linux-x86_64-gnu/bin/python3 (Python 3.14.10)
+[cobaia] Sistema: Ubuntu 24.04.5 LTS (família apt, suportado)
+[cobaia] Pacotes do sistema que faltam: php-cli php-mysql php-mbstring mariadb-server
+[cobaia] $ sudo apt-get update
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [804 kB]
+Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [880 kB]
+Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1492 kB]
+Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [321 kB]
+Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1716 kB]
+Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [346 kB]
+Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1949 kB]
+Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [448 kB]
+Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1230 kB]
+Get:16 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/main Translation-en [243 kB]
+Get:17 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1233 kB]
+Get:18 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [249 kB]
+Get:19 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1842 kB]
+Get:20 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [429 kB]
+Fetched 13.6 MB in 2s (8148 kB/s)
+Reading package lists...
+[cobaia] $ sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-remove php-cli php-mysql php-mbstring mariadb-server
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  galera-4 libconfig-inifiles-perl libdbd-mysql-perl libdbi-perl libmariadb3
+  liburing2 mariadb-client mariadb-client-core mariadb-common
+  mariadb-plugin-provider-bzip2 mariadb-plugin-provider-lz4
+  mariadb-plugin-provider-lzma mariadb-plugin-provider-lzo
+  mariadb-plugin-provider-snappy mariadb-server-core pv socat
+Suggested packages:
+  libmldbm-perl libnet-daemon-perl libsql-statement-perl mailx mariadb-test
+  doc-base
+The following NEW packages will be installed:
+  galera-4 libconfig-inifiles-perl libdbd-mysql-perl libdbi-perl libmariadb3
+  liburing2 mariadb-client mariadb-client-core mariadb-common
+  mariadb-plugin-provider-bzip2 mariadb-plugin-provider-lz4
+  mariadb-plugin-provider-lzma mariadb-plugin-provider-lzo
+  mariadb-plugin-provider-snappy mariadb-server mariadb-server-core php-cli
+  php-mbstring php-mysql pv socat
+0 upgraded, 21 newly installed, 0 to remove and 81 not upgraded.
+Need to get 17.8 MB of archives.
+After this operation, 192 MB of additional disk space will be used.
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+Get:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 galera-4 amd64 26.4.16-2build4 [736 kB]
+Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-common all 1:10.11.14-0ubuntu0.24.04.1 [28.6 kB]
+Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libdbi-perl amd64 1.643-4ubuntu0.4 [722 kB]
+Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libconfig-inifiles-perl all 3.000003-2ubuntu0.1 [38.5 kB]
+Get:6 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 libmariadb3 amd64 1:10.11.14-0ubuntu0.24.04.1 [196 kB]
+Get:7 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-client-core amd64 1:10.11.14-0ubuntu0.24.04.1 [1039 kB]
+Get:8 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-client amd64 1:10.11.14-0ubuntu0.24.04.1 [2502 kB]
+Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 liburing2 amd64 2.5-1build1 [21.1 kB]
+Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-server-core amd64 1:10.11.14-0ubuntu0.24.04.1 [8406 kB]
+Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 socat amd64 1.8.0.0-4ubuntu0.1 [374 kB]
+Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-server amd64 1:10.11.14-0ubuntu0.24.04.1 [3463 kB]
+Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 libdbd-mysql-perl amd64 4.052-1ubuntu3 [85.5 kB]
+Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-bzip2 amd64 1:10.11.14-0ubuntu0.24.04.1 [13.9 kB]
+Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-lz4 amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:16 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-lzma amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:17 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-lzo amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:18 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-snappy amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:19 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 php-cli all 2:8.3+93ubuntu2 [4584 B]
+Get:20 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 php-mbstring all 2:8.3+93ubuntu2 [1848 B]
+Get:21 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 php-mysql all 2:8.3+93ubuntu2 [1838 B]
+Get:22 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 pv amd64 1.8.5-2build1 [73.9 kB]
+Preconfiguring packages ...
+Fetched 17.8 MB in 3s (6647 kB/s)
+Selecting previously unselected package galera-4.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 216493 files and directories currently installed.)
+Preparing to unpack .../0-galera-4_26.4.16-2build4_amd64.deb ...
+info: The home dir /nonexistent you specified can't be accessed: No such file or directory
+
+info: Selecting UID from range 100 to 999 ...
+
+info: Adding system user `_galera' (UID 109) ...
+info: Adding new user `_galera' (UID 109) with group `nogroup' ...
+info: Not creating `/nonexistent'.
+Unpacking galera-4 (26.4.16-2build4) ...
+Selecting previously unselected package mariadb-common.
+Preparing to unpack .../1-mariadb-common_1%3a10.11.14-0ubuntu0.24.04.1_all.deb ...
+Unpacking mariadb-common (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libdbi-perl:amd64.
+Preparing to unpack .../2-libdbi-perl_1.643-4ubuntu0.4_amd64.deb ...
+Unpacking libdbi-perl:amd64 (1.643-4ubuntu0.4) ...
+Selecting previously unselected package libconfig-inifiles-perl.
+Preparing to unpack .../3-libconfig-inifiles-perl_3.000003-2ubuntu0.1_all.deb ...
+Unpacking libconfig-inifiles-perl (3.000003-2ubuntu0.1) ...
+Selecting previously unselected package libmariadb3:amd64.
+Preparing to unpack .../4-libmariadb3_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libmariadb3:amd64 (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-client-core.
+Preparing to unpack .../5-mariadb-client-core_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-client-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-client.
+Preparing to unpack .../6-mariadb-client_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-client (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package liburing2:amd64.
+Preparing to unpack .../7-liburing2_2.5-1build1_amd64.deb ...
+Unpacking liburing2:amd64 (2.5-1build1) ...
+Selecting previously unselected package mariadb-server-core.
+Preparing to unpack .../8-mariadb-server-core_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-server-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package socat.
+Preparing to unpack .../9-socat_1.8.0.0-4ubuntu0.1_amd64.deb ...
+Unpacking socat (1.8.0.0-4ubuntu0.1) ...
+Setting up mariadb-common (1:10.11.14-0ubuntu0.24.04.1) ...
+update-alternatives: using /etc/mysql/mariadb.cnf to provide /etc/mysql/my.cnf (my.cnf) in auto mode
+Selecting previously unselected package mariadb-server.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 216953 files and directories currently installed.)
+Preparing to unpack .../00-mariadb-server_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-server (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libdbd-mysql-perl:amd64.
+Preparing to unpack .../01-libdbd-mysql-perl_4.052-1ubuntu3_amd64.deb ...
+Unpacking libdbd-mysql-perl:amd64 (4.052-1ubuntu3) ...
+Selecting previously unselected package mariadb-plugin-provider-bzip2.
+Preparing to unpack .../02-mariadb-plugin-provider-bzip2_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-bzip2 (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-lz4.
+Preparing to unpack .../03-mariadb-plugin-provider-lz4_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-lz4 (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-lzma.
+Preparing to unpack .../04-mariadb-plugin-provider-lzma_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-lzma (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-lzo.
+Preparing to unpack .../05-mariadb-plugin-provider-lzo_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-lzo (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-snappy.
+Preparing to unpack .../06-mariadb-plugin-provider-snappy_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-snappy (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package php-cli.
+Preparing to unpack .../07-php-cli_2%3a8.3+93ubuntu2_all.deb ...
+Unpacking php-cli (2:8.3+93ubuntu2) ...
+Selecting previously unselected package php-mbstring.
+Preparing to unpack .../08-php-mbstring_2%3a8.3+93ubuntu2_all.deb ...
+Unpacking php-mbstring (2:8.3+93ubuntu2) ...
+Selecting previously unselected package php-mysql.
+Preparing to unpack .../09-php-mysql_2%3a8.3+93ubuntu2_all.deb ...
+Unpacking php-mysql (2:8.3+93ubuntu2) ...
+Selecting previously unselected package pv.
+Preparing to unpack .../10-pv_1.8.5-2build1_amd64.deb ...
+Unpacking pv (1.8.5-2build1) ...
+Setting up libconfig-inifiles-perl (3.000003-2ubuntu0.1) ...
+Setting up galera-4 (26.4.16-2build4) ...
+Setting up php-mysql (2:8.3+93ubuntu2) ...
+Setting up php-mbstring (2:8.3+93ubuntu2) ...
+Setting up socat (1.8.0.0-4ubuntu0.1) ...
+Setting up libmariadb3:amd64 (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up php-cli (2:8.3+93ubuntu2) ...
+update-alternatives: using /usr/bin/php.default to provide /usr/bin/php (php) in auto mode
+update-alternatives: using /usr/bin/phar.default to provide /usr/bin/phar (phar) in auto mode
+update-alternatives: using /usr/bin/phar.phar.default to provide /usr/bin/phar.phar (phar.phar) in auto mode
+Setting up pv (1.8.5-2build1) ...
+Setting up liburing2:amd64 (2.5-1build1) ...
+Setting up libdbi-perl:amd64 (1.643-4ubuntu0.4) ...
+Setting up mariadb-client-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up libdbd-mysql-perl:amd64 (4.052-1ubuntu3) ...
+Setting up mariadb-server-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-client (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-server (1:10.11.14-0ubuntu0.24.04.1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
+Setting up mariadb-plugin-provider-bzip2 (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-plugin-provider-lzma (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-plugin-provider-lzo (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-plugin-provider-lz4 (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-plugin-provider-snappy (1:10.11.14-0ubuntu0.24.04.1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Not building database; man-db/auto-update is not 'true'.
+Processing triggers for libc-bin (2.39-0ubuntu8.12) ...
+Processing triggers for mariadb-server (1:10.11.14-0ubuntu0.24.04.1) ...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+[cobaia] PHP: /usr/bin/php, com mysqli, pdo_mysql, mbstring.
+[cobaia] O site legado (Programacao/CobaiaFront/conn/connect.php) entra no MariaDB como root, sem senha.
+[cobaia] Neste sistema o root do MariaDB só entra pelo usuário root do sistema (unix_socket). Para o site funcionar,
+[cobaia] o instalador troca essa entrada para senha vazia: qualquer usuário desta máquina passa a entrar como root
+[cobaia] do MariaDB. Não aceite numa máquina que tenha um MariaDB em uso de verdade.
+[cobaia] root não acessível sem senha via TCP — tentando corrigir via socket local (sudo)...
+[cobaia] root ajustado para sem senha.
+[cobaia] Aplicando bancoatualizado.sql...
+[cobaia] Aplicando schema_completo.sql...
+[cobaia] Aplicando seed.sql...
+[cobaia] Banco pronto (schema completo + seed).
+[cobaia] Criando venv da CobaiaAPI...
+[cobaia] $ /home/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-linux-x86_64-gnu/bin/python3 -m venv /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/.venv
+[cobaia] $ /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/.venv/bin/pip install -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt
+Collecting fastapi>=0.119.1 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading fastapi-0.165.0-py3-none-any.whl.metadata (27 kB)
+Collecting uvicorn>=0.34 (from uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting pydantic>=2.9 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading pydantic-2.14.4-py3-none-any.whl.metadata (143 kB)
+Collecting pydantic-settings>=2.6 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 11))
+  Downloading pydantic_settings-2.16.3-py3-none-any.whl.metadata (4.0 kB)
+Collecting sqlalchemy>=2.0.36 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 12))
+  Downloading sqlalchemy-2.1.9-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+Collecting pymysql>=1.1.1 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 13))
+  Downloading pymysql-1.2.4-py3-none-any.whl.metadata (4.2 kB)
+Collecting python-multipart>=0.0.12 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 14))
+  Downloading python_multipart-0.0.34-py3-none-any.whl.metadata (6.3 kB)
+Collecting pytest>=8.3 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting httpx>=0.28 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting ruff>=0.8 (from -r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 9))
+  Downloading ruff-0.17.6-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+Collecting starlette>=1.6.0 (from fastapi>=0.119.1->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting anyio>=4.1.0 (from fastapi>=0.119.1->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi>=0.119.1->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi>=0.119.1->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi>=0.119.1->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading annotated_doc-0.0.7-py3-none-any.whl.metadata (6.4 kB)
+Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.119.1->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+Collecting click>=7.0 (from uvicorn>=0.34->uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn>=0.34->uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.9->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.5 (from pydantic>=2.9->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading pydantic_core-2.50.5-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=1.2.2 (from pydantic-settings>=2.6->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 11))
+  Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting iniconfig>=2 (from pytest>=8.3->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging>=24 (from pytest>=8.3->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.6 (from pytest>=8.3->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting pygments>=2.15 (from pytest>=8.3->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting certifi (from httpx>=0.28->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading certifi-2026.11.20-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx>=0.28->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx>=0.28->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading httptools-0.9.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading pyyaml-6.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.3 kB)
+Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading uvloop-0.23.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=13.0 (from uvicorn[standard]>=0.34->-r /home/runner/work/TCC/TCC/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading websockets-17.4-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+Downloading fastapi-0.165.0-py3-none-any.whl (159 kB)
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+Downloading pydantic-2.14.4-py3-none-any.whl (494 kB)
+Downloading pydantic_core-2.50.5-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 160.9 MB/s  0:00:00
+Downloading pydantic_settings-2.16.3-py3-none-any.whl (82 kB)
+Downloading sqlalchemy-2.1.9-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.6/4.6 MB 255.0 MB/s  0:00:00
+Downloading pymysql-1.2.4-py3-none-any.whl (46 kB)
+Downloading python_multipart-0.0.34-py3-none-any.whl (32 kB)
+Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading ruff-0.17.6-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 349.8 MB/s  0:00:00
+Downloading annotated_doc-0.0.7-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+Downloading click-8.5.1-py3-none-any.whl (126 kB)
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+Downloading packaging-26.4-py3-none-any.whl (140 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 307.0 MB/s  0:00:00
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+Downloading httptools-0.9.0-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (514 kB)
+Downloading pyyaml-6.0.4-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (819 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 819.5/819.5 kB 246.9 MB/s  0:00:00
+Downloading uvloop-0.23.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.4/4.4 MB 308.4 MB/s  0:00:00
+Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+Downloading websockets-17.4-cp314-cp314-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+Downloading certifi-2026.11.20-py3-none-any.whl (127 kB)
+Installing collected packages: websockets, uvloop, typing-extensions, ruff, pyyaml, python-multipart, python-dotenv, pymysql, pygments, pluggy, packaging, iniconfig, idna, httptools, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, sqlalchemy, pytest, pydantic-core, opentelemetry-api, httpcore, anyio, watchfiles, starlette, pydantic, httpx, pydantic-settings, fastapi
+
+Successfully installed annotated-doc-0.0.7 annotated-types-0.8.0 anyio-4.16.0 certifi-2026.11.20 click-8.5.1 fastapi-0.165.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 opentelemetry-api-1.45.2 packaging-26.4 pluggy-1.7.0 pydantic-2.14.4 pydantic-core-2.50.5 pydantic-settings-2.16.3 pygments-2.21.0 pymysql-1.2.4 pytest-9.2.0 python-dotenv-1.2.4 python-multipart-0.0.34 pyyaml-6.0.4 ruff-0.17.6 sqlalchemy-2.1.9 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+[cobaia] Criando venv do AgenteCore...
+[cobaia] $ /home/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-linux-x86_64-gnu/bin/python3 -m venv /home/runner/work/TCC/TCC/Programacao/AgenteCore/.venv
+[cobaia] $ /home/runner/work/TCC/TCC/Programacao/AgenteCore/.venv/bin/python -m pip install -r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt
+Collecting matplotlib>=3.9 (from -r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading matplotlib-3.11.2-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (80 kB)
+Collecting playwright==1.64.1 (from -r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading playwright-1.64.1-py3-none-manylinux1_x86_64.whl.metadata (3.3 kB)
+Collecting pyee<15,>=13 (from playwright==1.64.1->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading pyee-14.0.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting greenlet<4.0.0,>=3.1.1 (from playwright==1.64.1->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading greenlet-3.5.6-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting typing-extensions (from pyee<15,>=13->playwright==1.64.1->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 12))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting contourpy>=1.0.1 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading contourpy-1.4.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading fonttools-4.69.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (147 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading kiwisolver-1.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting numpy>=1.25 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading numpy-2.5.5-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging>=20.0 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Using cached packaging-26.4-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading pillow-13.0.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil>=2.7 (from matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting tzdata (from python-dateutil>=2.7->matplotlib>=3.9->-r /home/runner/work/TCC/TCC/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading playwright-1.64.1-py3-none-manylinux1_x86_64.whl (48.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.5/48.5 MB 263.2 MB/s  0:00:00
+Downloading greenlet-3.5.6-cp314-cp314-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (670 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 670.8/670.8 kB 197.5 MB/s  0:00:00
+Downloading pyee-14.0.0-py3-none-any.whl (15 kB)
+Downloading matplotlib-3.11.2-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (11.0 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 11.0/11.0 MB 146.8 MB/s  0:00:00
+Downloading contourpy-1.4.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (384 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.69.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 98.7 MB/s  0:00:00
+Downloading kiwisolver-1.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 71.1 MB/s  0:00:00
+Downloading numpy-2.5.5-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (15.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.7/15.7 MB 131.6 MB/s  0:00:00
+Using cached packaging-26.4-py3-none-any.whl (140 kB)
+Downloading pillow-13.0.0-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 324.2 MB/s  0:00:00
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+Installing collected packages: tzdata, typing-extensions, pyparsing, pillow, packaging, numpy, kiwisolver, greenlet, fonttools, cycler, python-dateutil, pyee, contourpy, playwright, matplotlib
+
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.69.1 greenlet-3.5.6 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.4 pillow-13.0.0 playwright-1.64.1 pyee-14.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 typing-extensions-4.16.0 tzdata-2026.6
+[cobaia] $ /home/runner/work/TCC/TCC/Programacao/AgenteCore/.venv/bin/python -m playwright install --with-deps chromium
+Installing dependencies...
+Switching to root user to install dependencies...
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease
+Hit:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease
+Hit:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libasound2t64 is already the newest version (1.2.11-1ubuntu0.3).
+libasound2t64 set to manually installed.
+libatk-bridge2.0-0t64 is already the newest version (2.52.0-1build1).
+libatk-bridge2.0-0t64 set to manually installed.
+libatk1.0-0t64 is already the newest version (2.52.0-1build1).
+libatk1.0-0t64 set to manually installed.
+libatspi2.0-0t64 is already the newest version (2.52.0-1build1).
+libatspi2.0-0t64 set to manually installed.
+libcairo2 is already the newest version (1.18.0-3build1).
+libcairo2 set to manually installed.
+libcups2t64 is already the newest version (2.4.7-1.2ubuntu7.14).
+libcups2t64 set to manually installed.
+libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+libdbus-1-3 set to manually installed.
+libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.2).
+libdrm2 set to manually installed.
+libglib2.0-0t64 is already the newest version (2.80.0-6ubuntu3.10).
+libglib2.0-0t64 set to manually installed.
+libnspr4 is already the newest version (2:4.35-1.1build1).
+libnspr4 set to manually installed.
+libnss3 is already the newest version (2:3.98-1ubuntu0.3).
+libnss3 set to manually installed.
+libpango-1.0-0 is already the newest version (1.52.1+ds-1build1).
+libpango-1.0-0 set to manually installed.
+libx11-6 is already the newest version (2:1.8.7-1ubuntu0.1).
+libx11-6 set to manually installed.
+libxcb1 is already the newest version (1.15-1ubuntu2).
+libxcb1 set to manually installed.
+libxcomposite1 is already the newest version (1:0.4.5-1build3).
+libxcomposite1 set to manually installed.
+libxdamage1 is already the newest version (1:1.1.6-1build1).
+libxdamage1 set to manually installed.
+libxext6 is already the newest version (2:1.3.4-1build2).
+libxext6 set to manually installed.
+libxfixes3 is already the newest version (1:6.0.0-2build1).
+libxfixes3 set to manually installed.
+libxkbcommon0 is already the newest version (1.6.0-1build1).
+libxkbcommon0 set to manually installed.
+libxrandr2 is already the newest version (2:1.5.2-2build1).
+libxrandr2 set to manually installed.
+xvfb is already the newest version (2:21.1.12-1ubuntu1.9).
+fonts-noto-color-emoji is already the newest version (2.047-0ubuntu0.24.04.1).
+libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+libfontconfig1 set to manually installed.
+libfreetype6 is already the newest version (2.13.2+dfsg-1ubuntu0.2).
+libfreetype6 set to manually installed.
+fonts-liberation is already the newest version (1:2.1.5-3).
+fonts-liberation set to manually installed.
+The following additional packages will be installed:
+  libgl1-mesa-dri libglx-mesa0 mesa-libgallium xfonts-encodings xfonts-utils
+Recommended packages:
+  fonts-ipafont-mincho fonts-tlwg-loma
+The following NEW packages will be installed:
+  fonts-freefont-ttf fonts-ipafont-gothic fonts-tlwg-loma-otf fonts-unifont
+  fonts-wqy-zenhei xfonts-cyrillic xfonts-encodings xfonts-scalable
+  xfonts-utils
+The following packages will be upgraded:
+  libgbm1 libgl1-mesa-dri libglx-mesa0 mesa-libgallium
+4 upgraded, 9 newly installed, 0 to remove and 77 not upgraded.
+Need to get 32.1 MB of archives.
+After this operation, 79.7 MB of additional disk space will be used.
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+Get:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-ipafont-gothic all 00303-21ubuntu1 [3513 kB]
+Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 fonts-freefont-ttf all 20211204+svn4273-2 [5641 kB]
+Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [107 kB]
+Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-unifont all 1:15.1.01-1build1 [2993 kB]
+Get:6 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 fonts-wqy-zenhei all 0.9.45-8 [7472 kB]
+Get:7 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libgl1-mesa-dri amd64 25.2.8-0ubuntu0.24.04.5 [38.0 kB]
+Get:8 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libglx-mesa0 amd64 25.2.8-0ubuntu0.24.04.5 [110 kB]
+Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 libgbm1 amd64 25.2.8-0ubuntu0.24.04.5 [34.2 kB]
+Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 mesa-libgallium amd64 25.2.8-0ubuntu0.24.04.5 [10.8 MB]
+Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-encodings all 1:1.0.5-0ubuntu2 [578 kB]
+Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-utils amd64 1:7.7+6build3 [94.4 kB]
+Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/universe amd64 xfonts-cyrillic all 1:1.0.5+nmu1 [384 kB]
+Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble/main amd64 xfonts-scalable all 1:1.0.3-1.3 [304 kB]
+Fetched 32.1 MB in 2s (13.7 MB/s)
+Selecting previously unselected package fonts-ipafont-gothic.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 217138 files and directories currently installed.)
+Preparing to unpack .../00-fonts-ipafont-gothic_00303-21ubuntu1_all.deb ...
+Unpacking fonts-ipafont-gothic (00303-21ubuntu1) ...
+Selecting previously unselected package fonts-freefont-ttf.
+Preparing to unpack .../01-fonts-freefont-ttf_20211204+svn4273-2_all.deb ...
+Unpacking fonts-freefont-ttf (20211204+svn4273-2) ...
+Selecting previously unselected package fonts-tlwg-loma-otf.
+Preparing to unpack .../02-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+Selecting previously unselected package fonts-unifont.
+Preparing to unpack .../03-fonts-unifont_1%3a15.1.01-1build1_all.deb ...
+Unpacking fonts-unifont (1:15.1.01-1build1) ...
+Selecting previously unselected package fonts-wqy-zenhei.
+Preparing to unpack .../04-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+Preparing to unpack .../05-libgl1-mesa-dri_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.4) ...
+Preparing to unpack .../06-libglx-mesa0_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.4) ...
+Preparing to unpack .../07-libgbm1_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libgbm1:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.4) ...
+Preparing to unpack .../08-mesa-libgallium_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.4) ...
+Selecting previously unselected package xfonts-encodings.
+Preparing to unpack .../09-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...
+Unpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...
+Selecting previously unselected package xfonts-utils.
+Preparing to unpack .../10-xfonts-utils_1%3a7.7+6build3_amd64.deb ...
+Unpacking xfonts-utils (1:7.7+6build3) ...
+Selecting previously unselected package xfonts-cyrillic.
+Preparing to unpack .../11-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...
+Unpacking xfonts-cyrillic (1:1.0.5+nmu1) ...
+Selecting previously unselected package xfonts-scalable.
+Preparing to unpack .../12-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+Setting up mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libgbm1:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up fonts-wqy-zenhei (0.9.45-8) ...
+Setting up fonts-freefont-ttf (20211204+svn4273-2) ...
+Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+Setting up xfonts-encodings (1:1.0.5-0ubuntu2) ...
+Setting up fonts-ipafont-gothic (00303-21ubuntu1) ...
+update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+Setting up fonts-unifont (1:15.1.01-1build1) ...
+Setting up libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up xfonts-utils (1:7.7+6build3) ...
+Setting up xfonts-cyrillic (1:1.0.5+nmu1) ...
+Setting up xfonts-scalable (1:1.0.3-1.3) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.12) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Not building database; man-db/auto-update is not 'true'.
+Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip
+|                                                                                |   0% of 191.1 MiB
+|■■■■■■■■                                                                        |  10% of 191.1 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 191.1 MiB
+Chrome for Testing 156.0.8078.4 (playwright chromium v1248) downloaded to /home/runner/.cache/ms-playwright/chromium-1248
+Downloading FFmpeg (playwright ffmpeg v1013) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1013/ffmpeg-linux.zip
+|                                                                                |   0% of 2.2 MiB
+|■■■■■■■■                                                                        |  10% of 2.2 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.2 MiB
+FFmpeg (playwright ffmpeg v1013) downloaded to /home/runner/.cache/ms-playwright/ffmpeg-1013
+Downloading Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-headless-shell-linux64.zip
+|                                                                                |   0% of 120 MiB
+|■■■■■■■■                                                                        |  10% of 120 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 120 MiB
+Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) downloaded to /home/runner/.cache/ms-playwright/chromium_headless_shell-1248
+[cobaia] Baixando o script oficial do Ollama (https://ollama.com/install.sh) para instalar a versão 0.40.16...
+[cobaia]   16 kB de 16 kB
+[cobaia] $ sh /home/runner/work/TCC/TCC/.ferramentas/ollama/install.sh
+>>> Installing ollama to /usr/local
+>>> Downloading ollama-linux-amd64.tar.zst
+#=#=#                                                                                                                                                     0.0%                                                                           0.7%                                                                           1.0%                                                                           1.4%#                                                                          2.0%#                                                                          2.3%#                                                                          2.5%#                                                                          2.7%##                                                                         3.0%##                                                                         3.6%##                                                                         4.1%###                                                                        4.8%###                                                                        5.4%####                                                                       6.1%####                                                                       6.8%#####                                                                      7.0%#####                                                                      7.5%#####                                                                      8.2%######                                                                     8.8%######                                                                     9.5%#######                                                                   10.2%#######                                                                   10.3%#######                                                                   10.6%#######                                                                   10.8%########                                                                  11.2%########                                                                  11.6%########                                                                  12.2%#########                                                                 12.7%#########                                                                 12.9%#########                                                                 13.6%##########                                                                14.2%##########                                                                15.0%###########                                                               15.6%###########                                                               16.3%############                                                              17.1%############                                                              17.6%#############                                                             18.3%#############                                                             19.0%#############                                                             19.1%#############                                                             19.2%#############                                                             19.2%#############                                                             19.2%#############                                                             19.3%##############                                                            19.5%##############                                                            19.6%##############                                                            19.8%##############                                                            20.4%###############                                                           21.0%###############                                                           21.7%################                                                          22.4%################                                                          23.1%#################                                                         23.7%#################                                                         24.4%##################                                                        25.1%##################                                                        25.7%##################                                                        26.0%###################                                                       26.5%###################                                                       26.7%###################                                                       27.0%###################                                                       27.1%###################                                                       27.6%####################                                                      28.0%####################                                                      28.7%#####################                                                     29.3%#####################                                                     30.2%######################                                                    31.0%######################                                                    31.2%######################                                                    31.9%#######################                                                   32.6%########################                                                  33.3%########################                                                  33.9%########################                                                  34.3%#########################                                                 35.0%#########################                                                 35.9%#########################                                                 36.1%##########################                                                36.5%##########################                                                36.6%##########################                                                37.3%###########################                                               38.0%###########################                                               38.7%############################                                              39.3%############################                                              39.6%############################                                              39.8%############################                                              40.0%#############################                                             40.3%#############################                                             40.7%#############################                                             41.4%##############################                                            42.0%##############################                                            42.4%##############################                                            43.0%###############################                                           43.7%###############################                                           44.1%################################                                          44.7%################################                                          44.8%################################                                          44.9%################################                                          45.0%################################                                          45.1%################################                                          45.2%################################                                          45.3%################################                                          45.3%################################                                          45.4%################################                                          45.5%################################                                          45.8%#################################                                         46.1%#################################                                         46.8%##################################                                        47.4%##################################                                        47.5%##################################                                        48.2%###################################                                       48.8%###################################                                       49.5%####################################                                      50.2%####################################                                      50.9%#####################################                                     51.6%#####################################                                     52.2%######################################                                    52.9%######################################                                    53.6%######################################                                    54.1%#######################################                                   54.3%#######################################                                   55.0%########################################                                  55.6%########################################                                  55.7%########################################                                  55.8%########################################                                  55.9%########################################                                  55.9%########################################                                  56.2%########################################                                  56.4%#########################################                                 57.0%#########################################                                 57.7%#########################################                                 57.9%#########################################                                 58.2%#########################################                                 58.3%##########################################                                58.4%##########################################                                59.3%##########################################                                59.7%###########################################                               60.4%###########################################                               61.1%############################################                              61.7%############################################                              62.4%#############################################                             62.7%#############################################                             63.0%#############################################                             63.3%#############################################                             63.8%##############################################                            64.0%##############################################                            64.4%##############################################                            65.0%##############################################                            65.1%###############################################                           65.5%###############################################                           65.8%###############################################                           66.5%################################################                          67.2%################################################                          67.8%#################################################                         68.6%#################################################                         69.2%##################################################                        69.9%##################################################                        70.5%###################################################                       71.2%###################################################                       71.9%####################################################                      72.6%####################################################                      73.3%#####################################################                     73.9%#####################################################                     74.6%######################################################                    75.3%######################################################                    76.0%######################################################                    76.3%#######################################################                   76.7%#######################################################                   77.3%########################################################                  78.0%########################################################                  78.7%#########################################################                 79.4%#########################################################                 80.1%##########################################################                80.7%##########################################################                81.3%##########################################################                81.5%###########################################################               82.1%###########################################################               82.9%############################################################              83.4%############################################################              84.1%############################################################              84.2%############################################################              84.6%#############################################################             84.9%#############################################################             85.5%##############################################################            86.2%##############################################################            86.7%##############################################################            87.0%###############################################################           87.5%###############################################################           88.2%###############################################################           88.9%################################################################          89.5%################################################################          89.9%################################################################          90.1%################################################################          90.2%#################################################################         90.9%#################################################################         91.6%##################################################################        92.3%##################################################################        93.0%###################################################################       93.4%###################################################################       93.9%####################################################################      94.5%####################################################################      95.0%####################################################################      95.7%#####################################################################     96.3%#####################################################################     97.0%######################################################################    97.8%######################################################################    98.4%#######################################################################   99.0%#######################################################################   99.7%######################################################################## 100.0%
+>>> Creating ollama user...
+>>> Adding ollama user to render group...
+>>> Adding ollama user to video group...
+>>> Adding current user to ollama group...
+>>> Creating ollama systemd service...
+>>> Enabling and starting ollama service...
+Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc/systemd/system/ollama.service.
+>>> The Ollama API is now available at 127.0.0.1:11434.
+>>> Install complete. Run "ollama" from the command line.
+WARNING: No NVIDIA/AMD GPU detected. Ollama will run in CPU-only mode.
+[cobaia] Baixando o modelo qwen2.5:7b (pode demorar na primeira vez)...
+[cobaia] $ /usr/local/bin/ollama pull qwen2.5:7b
+[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠙ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠸ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠼ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠧ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠏ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠏ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K
+pulling 2bada8a74506:   0% ▕                  ▏ 2.9 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:   1% ▕                  ▏  59 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:   4% ▕                  ▏ 172 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:   7% ▕█                 ▏ 334 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:   8% ▕█                 ▏ 371 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  11% ▕█                 ▏ 492 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  14% ▕██                ▏ 643 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  16% ▕██                ▏ 727 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  18% ▕███               ▏ 854 MB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  22% ▕███               ▏ 1.0 GB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  23% ▕████              ▏ 1.1 GB/4.7 GB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  26% ▕████              ▏ 1.2 GB/4.7 GB  1.2 GB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  29% ▕█████             ▏ 1.4 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  31% ▕█████             ▏ 1.4 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  33% ▕█████             ▏ 1.6 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  37% ▕██████            ▏ 1.7 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  38% ▕██████            ▏ 1.8 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  41% ▕███████           ▏ 1.9 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  44% ▕███████           ▏ 2.1 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  45% ▕████████          ▏ 2.1 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  48% ▕████████          ▏ 2.2 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  51% ▕█████████         ▏ 2.4 GB/4.7 GB  1.2 GB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  52% ▕█████████         ▏ 2.5 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  54% ▕█████████         ▏ 2.5 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  57% ▕██████████        ▏ 2.7 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  58% ▕██████████        ▏ 2.7 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  61% ▕██████████        ▏ 2.8 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  63% ▕███████████       ▏ 3.0 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  64% ▕███████████       ▏ 3.0 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  65% ▕███████████       ▏ 3.1 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  68% ▕████████████      ▏ 3.2 GB/4.7 GB  1.2 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  69% ▕████████████      ▏ 3.2 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  71% ▕████████████      ▏ 3.3 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  73% ▕█████████████     ▏ 3.4 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  73% ▕█████████████     ▏ 3.4 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  73% ▕█████████████     ▏ 3.4 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  75% ▕█████████████     ▏ 3.5 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  76% ▕█████████████     ▏ 3.5 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  76% ▕█████████████     ▏ 3.5 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  76% ▕█████████████     ▏ 3.6 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  76% ▕█████████████     ▏ 3.6 GB/4.7 GB  1.1 GB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  76% ▕█████████████     ▏ 3.6 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  77% ▕█████████████     ▏ 3.6 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  77% ▕█████████████     ▏ 3.6 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  77% ▕█████████████     ▏ 3.6 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  78% ▕██████████████    ▏ 3.7 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  78% ▕██████████████    ▏ 3.7 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  79% ▕██████████████    ▏ 3.7 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  80% ▕██████████████    ▏ 3.7 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  80% ▕██████████████    ▏ 3.8 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  81% ▕██████████████    ▏ 3.8 GB/4.7 GB  893 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  81% ▕██████████████    ▏ 3.8 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  81% ▕██████████████    ▏ 3.8 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  82% ▕██████████████    ▏ 3.8 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  83% ▕██████████████    ▏ 3.9 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  83% ▕██████████████    ▏ 3.9 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  83% ▕██████████████    ▏ 3.9 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  84% ▕███████████████   ▏ 3.9 GB/4.7 GB  760 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  84% ▕███████████████   ▏ 3.9 GB/4.7 GB  760 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  86% ▕███████████████   ▏ 4.0 GB/4.7 GB  760 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  86% ▕███████████████   ▏ 4.0 GB/4.7 GB  760 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  86% ▕███████████████   ▏ 4.0 GB/4.7 GB  760 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  87% ▕███████████████   ▏ 4.1 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  87% ▕███████████████   ▏ 4.1 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  87% ▕███████████████   ▏ 4.1 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  88% ▕███████████████   ▏ 4.1 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  88% ▕███████████████   ▏ 4.1 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  88% ▕███████████████   ▏ 4.1 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  89% ▕███████████████   ▏ 4.2 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  89% ▕████████████████  ▏ 4.2 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  89% ▕████████████████  ▏ 4.2 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  90% ▕████████████████  ▏ 4.2 GB/4.7 GB  672 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  91% ▕████████████████  ▏ 4.3 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  91% ▕████████████████  ▏ 4.3 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  92% ▕████████████████  ▏ 4.3 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  92% ▕████████████████  ▏ 4.3 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  93% ▕████████████████  ▏ 4.3 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  94% ▕████████████████  ▏ 4.4 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  94% ▕████████████████  ▏ 4.4 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  94% ▕████████████████  ▏ 4.4 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  94% ▕████████████████  ▏ 4.4 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  95% ▕█████████████████ ▏ 4.4 GB/4.7 GB  606 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  95% ▕█████████████████ ▏ 4.4 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  95% ▕█████████████████ ▏ 4.4 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  96% ▕█████████████████ ▏ 4.5 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  96% ▕█████████████████ ▏ 4.5 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  97% ▕█████████████████ ▏ 4.5 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  97% ▕█████████████████ ▏ 4.5 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  97% ▕█████████████████ ▏ 4.5 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  97% ▕█████████████████ ▏ 4.6 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  98% ▕█████████████████ ▏ 4.6 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  98% ▕█████████████████ ▏ 4.6 GB/4.7 GB  554 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  98% ▕█████████████████ ▏ 4.6 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  98% ▕█████████████████ ▏ 4.6 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  99% ▕█████████████████ ▏ 4.6 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506:  99% ▕█████████████████ ▏ 4.7 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕█████████████████ ▏ 4.7 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕█████████████████ ▏ 4.7 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕█████████████████ ▏ 4.7 GB/4.7 GB  509 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠙ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠹ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠸ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠼ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠴ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠦ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠧ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠇ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠏ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠙ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠹ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠸ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠼ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠴ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠦ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠧ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠇ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠏ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠙ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠹ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠸ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠼ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠴ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠦ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠧ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠇ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest ⠏ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[A[1Gpulling manifest [K
+pulling 2bada8a74506: 100% ▕██████████████████▏ 4.7 GB                         [K
+pulling 66b9ea09bd5b: 100% ▕██████████████████▏   68 B                         [K
+pulling 832dd9e00a68: 100% ▕██████████████████▏  11 KB                         [K
+pulling 2f15b3218f05: 100% ▕██████████████████▏  487 B                         [K
+verifying sha256 digest [K
+writing manifest [K
+success [K[?25h[?2026l
+[cobaia] Versões encontradas:
+[cobaia]   python: 3.14.10 (na_faixa; testada 3.14.7; aceita de 3.12 a a mais nova)
+[cobaia]   php: 8.3.6 (na_faixa; testada 8.2.35; aceita de 8.1 a 8.5)
+[cobaia]   mariadb: 10.11.14 (na_faixa; testada 11.8.9; aceita de 10.6 a 13.0)
+[cobaia]   ollama: 0.40.16 (igual; testada 0.40.16; aceita de 0.40.2 a a mais nova)
+[cobaia] 
+[cobaia] Instalação concluída. Para rodar o site: ./run.sh
+[cobaia] Para conferir a instalação: ./install.sh --conferir

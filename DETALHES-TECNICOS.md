@@ -480,10 +480,10 @@ A tabela vem dos arquivos de evidência (`Documentacao/memorial/5-metodo-e-ferra
 | L-F45 | Fedora 45 (melhor esforço) | WSL: imagem oficial importada e apagada no fim | WSL | N1 | N3 | N1 |
 | L-ARCH | Arch Linux (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
 | L-SUSE | openSUSE (sem suporte) | WSL: imagem oficial importada e apagada no fim | WSL | N0 | N1 | N0 |
-| CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e o MySQL 8.0, e a célula remove o MySQL antes do instalador; não é limpo | GitHub Actions | N0 | N4 | N0 |
-| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions | N0 | N4 | - |
-| M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N0 | N3 | - |
-| M-15I | macOS 15, Intel (melhor esforço) | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N0 | N4 | - |
+| CI-UBU | Ubuntu 24.04 do GitHub Actions | executor do GitHub; já traz Python, PHP e o MySQL 8.0, e a célula remove o MySQL antes do instalador; não é limpo | GitHub Actions | N4 | N4 | N4 |
+| CI-WIN | Windows Server 2025 do GitHub Actions | executor do GitHub; já traz Python, PHP e banco, não é limpo | GitHub Actions | N0 | N4 | N0 |
+| M-15 | macOS 15, Apple Silicon | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N3 | N3 | N3 |
+| M-15I | macOS 15, Intel (melhor esforço) | executor do GitHub; já traz o Homebrew e o Python, não é limpo | GitHub Actions | N4 | N4 | N4 |
 
 Cada linha é uma célula de teste, e a coluna "Como a máquina nasce" diz o que ela é: na `ALVO` só a prova rodou. Nível alcançado é o maior nível da prova que passou sem nenhum nível abaixo dele ter falhado; N0 quer dizer que nenhum nível passou, "sem prova" quer dizer que a rodada parou antes de gravar o `registro.json`, e "não terminou" quer dizer que o GitHub cortou a tarefa antes do fim. Rodada `novo` é a que roda o instalador já com os consertos; `como-esta` é a que roda o instalador antes deles, para gravar a falha. A última coluna olha todas as rodadas `novo` da célula, porque a última rodada pode ter pedido menos níveis que uma anterior.
 <!-- tb_inst_resumo:fim -->
@@ -1359,7 +1359,10 @@ O que não coube nas células da tabela:
   - a amostra de até 12 relatórios sorteada com semente fixa.
 - `--revisao`:
   - Não sai enquanto houver relatório em branco.
-  - Separa a resposta própria do revisor dos pareceres do Claude aprovados sem resposta própria e sem tempo medido (decisões 85 e 86), e por isso não cumpre a medida com revisor humano, que fica em aberto (decisão 95).
+  <!-- ! Alteração de IA - Revisar: (25/11/2026, decisão 166) o item passa a dizer que a leitura aplica a declaração de quem respondeu, gravada ao lado da planilha.
+       ! Motivo: o relatório 1 foi respondido pelo analista de QA, fora da página, e o item falava em resposta própria do revisor. -->
+  - Aplica a declaração `quem_leu_revisao_trilha.json`, gravada ao lado da planilha (decisão 166): o relatório 1 sai como respondido pelo analista de QA, sem tempo medido, e a planilha fica como foi gravada. Sem o arquivo, a linha com tempo na planilha sai como resposta do revisor.
+  - Separa a resposta de uma pessoa dos pareceres do Claude aprovados sem resposta própria (decisões 85 e 86); a sessão continua valendo como medida não feita (decisão 87), em aberto (decisão 95).
 - Os blocos de cada prefixo no relatório da fase vêm de uma leitura só (`LEITURA_NO_RELATORIO`: `reproducibilidade`, `tela_v3` e `cenarios_v3`, as vigentes):
   - o `--colar` recusa as outras e a corrida que não bate com o `.md` gravado;
   - o `--check` delas confere só os próprios arquivos.
@@ -1443,6 +1446,8 @@ modelo):
      ! Motivo: a medida M2 pede que a mesma pessoa julgue as propostas das corridas 20 e 27 sem saber a origem; quem abre o repositório precisa achar a página, a planilha e o comando que grava o resultado. -->
 <!-- ! Alteração de IA - Revisar: (16/11/2026) a linha de `revisao_propostas.py` passou a citar os dois arquivos que guardam as respostas com a hora e a declaração de quem revisou.
      ! Motivo: a revisão foi gravada em 16/11/2026 (decisão 129), e `revisao_as_cegas.json` não guarda a hora de cada resposta nem o que o revisor tinha à mão; quem abre a pasta da corrida precisa saber o que é cada arquivo. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) duas linhas novas nesta tabela, logo abaixo da de `gerar_tcc_docx.py`: `tcc_docx_para_pdf.py` e `conferir_entrega_tcc.py`.
+     ! Motivo: a decisão 158 pede a entrega em PDF e em Word sem marcação de IA; os dois scripts são o caminho da geração final e não estavam documentados. A tag fica acima da tabela porque um comentário entre as linhas a quebraria. -->
 | Script | O que faz |
 |---|---|
 | `gerar_dashboard.py` | Painel do projeto (`Documentacao/dashboard/painel-do-projeto.html`, HTML único), o compilador das análises: lê os JSON de resultado e as figuras 01–18, monta os gráficos e recebe as abas por tópico de `painel_topicos.py`; `--check` regera e compara. |
@@ -1466,6 +1471,8 @@ modelo):
 | `conferir_docs.py` | Confere a documentação antes de entregar: links relativos, tag `! Alteração de IA - Revisar` com `! Motivo` em todo arquivo tocado, frases obsoletas, hipóteses H1–H6 idênticas, BOM e ausência de travessão nos `.ps1`. |
 | `sincronizar_orientador.py` (+ `testar_sincronizar_orientador.py`) | Cópia do TCC no repositório da disciplina (decisão 72): replica os arquivos rastreados do commit HEAD deste repositório em `../squad-24-projeto/projeto/` (clone do repositório do orientador); ensaio por padrão, `--aplicar` grava, `--check` devolve 1 fora de sincronia. |
 | `gerar_tcc_docx.py` (+ `testar_gerar_tcc_docx.py`) | Documento do TCC em Word a partir de `Documentacao/TCC - ABNT 14724 - V1.md`, no molde do orientador: troca só o corpo do `.docx`, mantém estilos e cabeçalho, e monta sumário e listas como campos do Word; `--copiar-para` grava a cópia em `TCC/` do clone. |
+| `tcc_docx_para_pdf.py` | Abre o `.docx` do TCC no Word sem janela, atualiza os campos (sumário, listas, número de folhas da ficha), salva e exporta o PDF ao lado; repõe as propriedades do arquivo que o Word troca ao salvar. Trabalha numa pasta temporária em `Documents`, porque o Word roda fora do pacote do aplicativo. Uso: `python ferramentas/tcc_docx_para_pdf.py <docx> --pdf <pdf>`. |
+| `conferir_entrega_tcc.py` (+ `testar_conferir_entrega_tcc.py`) | Confere que o Word e o PDF entregues não levam marcação de IA (decisões 158 e 164): tag ou comentário do Markdown no texto, comentário do Word, texto oculto, alteração controlada, propriedade do arquivo, variável do documento, texto embutido em imagem; no PDF, metadados, anotações, arquivos embutidos, camadas ocultas e texto invisível. Sai com 1 se achar algo. Uso: `python ferramentas/conferir_entrega_tcc.py <docx> <pdf> [--json saida.json]`, sem `-I`, para achar o PyMuPDF. |
 | `replicar_commits_orientador.py` (+ `testar_replicar_commits_orientador.py`) | Cópia commit a commit no clone do repositório da disciplina (decisão 84): lista os commits do principal que o clone ainda não tem e, com `--aplicar`, copia cada um e o commita no clone com a mesma mensagem e o hash de origem; o push é do Eric. |
 | `extrair_pesquisa.py`, `render_levantamento.py`, `integrar_pesquisa.py`, `integrar_pesquisa_llms.py` | Fecham as pesquisas bibliográficas por script: extraem os artefatos verificados, geram as subseções no formato do Memorial (com `--check`) e integram texto, referências (com dedup), mapa de decisões (Fase 3) e mapa adotado/adiado/descartado (LLMs locais, §6.12 e §7.9). |
 

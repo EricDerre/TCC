@@ -1870,6 +1870,97 @@ def teste_revisao_v3_registro_da_pagina_mede_como_as_respostas_entraram_e_a_nota
     assert "Dois leitores" not in nota and "não está registrado" not in nota and "leitura do Eric" not in nota
 
 
+# ------------------------------------------------------------------ a sessão de 05/11/2026 (corrida 22) com a declaração de quem leu (ficha 105, decisão 166)
+
+# ! Alteração de IA - Revisar: (25/11/2026) testes da leitura `--revisao` com a declaração `quem_leu_revisao_trilha.json` ao lado do registro, escritos ANTES do código:
+# o relatório 1 sai com a origem "analista" e o tempo como não medido, a nota cita a declaração, a adesão, a localização e a utilidade não mudam; sem o arquivo, a
+# leitura sai como antes; uma declaração de relatório que a planilha não tem é recusada; e a leitura gravada em resultados_alvo/fase4 (e os blocos colados no
+# relatório da Fase 4) batem com a regeração.
+# ! Motivo: o Eric declarou no quadro, em 25/11/2026, que o relatório 1 dessa sessão foi respondido pelo analista de QA, fora da página (decisão 166); a leitura
+# gravada ainda dava a resposta como do revisor, o autor do trabalho, com 307 s de leitura medidos, que são o tempo da troca entre os dois.
+_ARQUIVOS_DA_SESSAO_DE_0511 = ("trilha.json", "revisao_trilha.md", "pre_analise_revisao_trilha.md")
+_DECLARACAO_DE_0511 = "quem_leu_revisao_trilha.json"
+
+
+def _pasta_da_sessao_de_0511() -> Path:
+    """Cópia da planilha, do acerto de cada caso e da pré-análise reais da sessão de 05/11/2026, sem a declaração."""
+    pasta = _temp()
+    for nome in _ARQUIVOS_DA_SESSAO_DE_0511:
+        shutil.copyfile(RA / "fase4" / nome, pasta / nome)
+    return pasta
+
+
+def _ler_leitura_da_sessao_de_0511(pasta: Path, av) -> tuple[dict, str]:
+    return (json.loads((pasta / f"{av.NOME_REVISAO}.json").read_text(encoding="utf-8")),
+            (pasta / f"{av.NOME_REVISAO}.md").read_text(encoding="utf-8"))
+
+
+def teste_revisao_da_trilha_com_a_declaracao_ao_lado_poe_o_relatorio_1_como_do_analista_e_sem_tempo_medido():
+    import avaliar_fase4 as av
+    pasta = _pasta_da_sessao_de_0511()
+    doc = pasta / "sem_relatorio.md"
+    # sem a declaração, a leitura sai como antes
+    assert av.fechar_revisao(pasta, doc=doc) == 0
+    antes, md_antes = _ler_leitura_da_sessao_de_0511(pasta, av)
+    primeiro = antes["casos"][0]
+    assert primeiro["posicao"] == 1 and primeiro["origem"] == "revisor" and primeiro["segundos"] > 0 and "quem_leu" not in antes, primeiro
+    assert (antes["resumo"]["respostas_do_revisor"], antes["resumo"]["pareceres_aprovados"]) == (1, 10) and "respostas_do_analista" not in antes["resumo"]
+    assert antes["resumo"]["tempo_mediana_s"] == primeiro["segundos"] and next(x for x in antes["tempo"] if x["grupo"] == "todos")["n"] == 1
+    for trecho in ("Um revisor só, o autor do trabalho", "O tempo conta só com o relatório à vista", "tem resposta própria do revisor", "Com resposta do revisor"):
+        assert trecho in md_antes, trecho
+    # com a declaração gravada ao lado do registro
+    shutil.copyfile(RA / "fase4" / _DECLARACAO_DE_0511, pasta / _DECLARACAO_DE_0511)
+    planilha_antes = (pasta / "revisao_trilha.md").read_bytes()
+    assert av.fechar_revisao(pasta, doc=doc) == 0
+    dado, md = _ler_leitura_da_sessao_de_0511(pasta, av)
+    um = dado["casos"][0]
+    assert um["posicao"] == 1 and um["origem"] == av.ORIGEM_ANALISTA and um["segundos"] is None and um["segundos_na_pagina"] == primeiro["segundos"], um
+    assert [c["origem"] for c in dado["casos"][1:]] == ["parecer_aprovado"] * 10 and all(c["segundos"] is None for c in dado["casos"])
+    r = dado["resumo"]
+    assert (r["respostas_do_revisor"], r["respostas_do_analista"], r["pareceres_aprovados"]) == (0, 1, 10) and r["tempo_mediana_s"] is None, r
+    assert all(x["n"] == 0 and x["mediana"] is None for x in dado["tempo"]), dado["tempo"]
+    assert {x["origem"]: x["n"] for x in dado["por_origem"]} == {"parecer_aprovado": 10, av.ORIGEM_ANALISTA: 1}
+    # quem respondeu muda; a conta não
+    for chave in ("adesao", "localizacao", "utilidade", "avaliacao", "parecer", "duvidas_de_leitura"):
+        assert dado[chave] == antes[chave], chave
+    assert av.ARQ_QUEM_LEU_TRILHA == _DECLARACAO_DE_0511 and dado["quem_leu"] == json.loads((pasta / _DECLARACAO_DE_0511).read_text(encoding="utf-8"))
+    declarado = dado["quem_leu"]["relatorio_1"]
+    for trecho in (_DECLARACAO_DE_0511, "25/11/2026", "decisão 166", declarado["quem"], declarado["relacao_com_o_projeto"], declarado["como_leu"],
+                   "O tempo até a decisão entra como não medido", "troca entre os dois", "a do analista de QA", "Com resposta do analista de QA",
+                   av.ROTULO_ANALISTA_TRILHA, "medida não feita (decisão 87)", "o analista de QA marcou", "Somando a resposta do analista de QA e o parecer aprovado"):
+        assert trecho in md, trecho
+    for proibido in ("autor do trabalho", "O tempo conta só com o relatório à vista", "resposta própria do revisor", "resposta do revisor", "Com resposta do revisor",
+                     "o revisor sabia", "Um revisor só", "o revisor marcou", "Revisor disse", "—", "→"):
+        assert proibido not in md, proibido
+    linha_do_primeiro = next(l for l in md.splitlines() if l.startswith("| 1 | `run-4` |"))
+    assert f"| {av.ROTULO_ANALISTA_TRILHA} | {av.TEMPO_NAO_MEDIDO} |" in linha_do_primeiro, linha_do_primeiro
+    assert (pasta / "revisao_trilha.md").read_bytes() == planilha_antes, "a leitura não regrava a planilha"
+    assert av.fechar_revisao(pasta, check=True, doc=doc) == 0
+
+
+def teste_revisao_da_trilha_recusa_a_declaracao_de_um_relatorio_que_a_planilha_nao_tem():
+    import avaliar_fase4 as av
+    pasta = _pasta_da_sessao_de_0511()
+    declaracao = json.loads((RA / "fase4" / _DECLARACAO_DE_0511).read_text(encoding="utf-8"))
+    declaracao["relatorio_12"] = declaracao.pop("relatorio_1")
+    (pasta / _DECLARACAO_DE_0511).write_text(json.dumps(declaracao, ensure_ascii=False), encoding="utf-8")
+    try:
+        av.fechar_revisao(pasta, doc=pasta / "sem_relatorio.md")
+    except ValueError as e:
+        assert "12" in str(e) and "planilha" in str(e), e
+    else:
+        raise AssertionError("aceitou a declaração de um relatório que a planilha não tem")
+    assert not (pasta / f"{av.NOME_REVISAO}.json").exists()
+
+
+def teste_revisao_da_trilha_gravada_diz_quem_leu_e_bate_com_a_regeracao_e_com_o_relatorio():
+    import avaliar_fase4 as av
+    gravado = json.loads((RA / "fase4" / f"{av.NOME_REVISAO}.json").read_text(encoding="utf-8"))
+    um = gravado["casos"][0]
+    assert um["origem"] == av.ORIGEM_ANALISTA and um["segundos"] is None and gravado["resumo"]["tempo_mediana_s"] is None, um
+    assert av.fechar_revisao(RA / "fase4", check=True) == 0, "rode avaliar_fase4.py --revisao e depois --revisao --colar"
+
+
 # ------------------------------------------------------------------ corrida 25: a biblioteca sem as notas do modelo (ficha 63, decisão 116)
 
 # ! Alteração de IA - Revisar: (10/11/2026, ficha 63 opção b, decisão 116) testes de `experimento_sem_notas.py`, escritos ANTES do código: a primeira rodada falha

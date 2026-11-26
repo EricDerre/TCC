@@ -1,0 +1,7 @@
+[cobaia] Sistema operacional detectado: Linux
+[cobaia] PHP não encontrado — instalando...
+[cobaia] $ sudo apt-get update
+sudo: apt-get: command not found
+[cobaia] $ sudo apt-get install -y php php-mysql
+sudo: apt-get: command not found
+[cobaia] PHP foi instalado mas não foi encontrado automaticamente. Feche e reabra o terminal (PATH pode precisar de refresh) e rode o instalador de novo.

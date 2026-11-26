@@ -1,0 +1,45 @@
+{
+ "tag_ia": {
+  "alteracao": "! Alteração de IA - Revisar: arquivo gerado por ferramentas/instalador_matriz/celula_actions.py: o que a célula rodou num executor do GitHub Actions e com que código de saída.",
+  "motivo": "! Motivo: o plano do instalador único (decisão 143) pede a evidência de cada célula em arquivo, e a pasta da rodada só fica dispensada da tag nos arquivos de saída capturada se tiver este arquivo (decisão 147)."
+ },
+ "id": "CI-UBU",
+ "modo": "novo",
+ "ate": "N4",
+ "modelo_pequeno": "qwen2.5:0.5b-instruct",
+ "forcar_uv": true,
+ "imagem": "GitHub Actions: Linux X64, imagem ubuntu24 20261116.133.1",
+ "terminou": true,
+ "fuso": "UTC",
+ "resultado_do_instalador": "concluida",
+ "preparo": {
+  "nome": "remover-mysql",
+  "comandos": [
+   {
+    "comando": "sudo systemctl stop mysql",
+    "codigo": 0
+   },
+   {
+    "comando": "sudo env DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge mysql-server mysql-server-8.0 mysql-server-core-8.0 mysql-client mysql-client-8.0 mysql-client-core-8.0",
+    "codigo": 0
+   },
+   {
+    "comando": "sudo rm -rf /var/lib/mysql /var/lib/mysql-files /var/lib/mysql-keyring",
+    "codigo": 0
+   }
+  ]
+ },
+ "actions": {
+  "repositorio": "EricDerre/TCC",
+  "commit": "f305dee18cabae61cba74bd4bd465d694da0fcec",
+  "execucao": "45727470052",
+  "tentativa": "1",
+  "evento": "push"
+ },
+ "inicio": "2026-11-26T00:16:05",
+ "fim": "2026-11-26T00:19:26",
+ "saidas": {
+  "instalador": "0",
+  "conferir": "0"
+ }
+}

@@ -1,0 +1,59 @@
+[install.sh] Python 3.12 ou mais novo não encontrado: baixando o uv 0.13.9 de https://github.com/astral-sh/uv/releases/download/0.13.9/uv-x86_64-unknown-linux-gnu.tar.gz
+[install.sh] Instalando o Python 3.14 em /home/runner/work/TCC/TCC/.ferramentas/python (dentro do projeto; nada muda no sistema)...
+Downloading cpython-3.14.10-linux-x86_64-gnu (download) (35.2MiB)
+ Downloaded cpython-3.14.10-linux-x86_64-gnu (download)
+Installed Python 3.14.10 in 608ms
+ + cpython-3.14.10-linux-x86_64-gnu
+[install.sh] Python: /home/runner/work/TCC/TCC/.ferramentas/python/cpython-3.14-linux-x86_64-gnu/bin/python3 (Python 3.14.10)
+[cobaia] Sistema: Ubuntu 24.04.5 LTS (família apt, suportado)
+[cobaia] Pacotes do sistema que faltam: php-cli php-mysql php-mbstring mariadb-server
+[cobaia] $ sudo apt-get update
+Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [152 B]
+Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+Hit:2 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Get:3 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [869 kB]
+Get:4 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [794 kB]
+Get:5 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:9 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1492 kB]
+Get:10 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [321 kB]
+Get:11 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1716 kB]
+Get:12 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [346 kB]
+Get:13 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1949 kB]
+Get:14 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [448 kB]
+Get:15 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1228 kB]
+Get:16 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/main Translation-en [242 kB]
+Get:17 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1232 kB]
+Get:18 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [249 kB]
+Get:19 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1842 kB]
+Get:20 http://us-east-2.ec2.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [429 kB]
+Fetched 13.5 MB in 2s (7954 kB/s)
+Reading package lists...
+[cobaia] $ sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-remove php-cli php-mysql php-mbstring mariadb-server
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  galera-4 libconfig-inifiles-perl libdbd-mysql-perl libdbi-perl libmariadb3
+  liburing2 mariadb-client mariadb-client-core mariadb-common
+  mariadb-plugin-provider-bzip2 mariadb-plugin-provider-lz4
+  mariadb-plugin-provider-lzma mariadb-plugin-provider-lzo
+  mariadb-plugin-provider-snappy mariadb-server-core pv socat
+Suggested packages:
+  libmldbm-perl libnet-daemon-perl libsql-statement-perl mailx mariadb-test
+  doc-base
+The following packages will be REMOVED:
+  mysql-client mysql-client-8.0 mysql-client-core-8.0 mysql-server
+  mysql-server-8.0 mysql-server-core-8.0
+The following NEW packages will be installed:
+  galera-4 libconfig-inifiles-perl libdbd-mysql-perl libdbi-perl libmariadb3
+  liburing2 mariadb-client mariadb-client-core mariadb-common
+  mariadb-plugin-provider-bzip2 mariadb-plugin-provider-lz4
+  mariadb-plugin-provider-lzma mariadb-plugin-provider-lzo
+  mariadb-plugin-provider-snappy mariadb-server mariadb-server-core php-cli
+  php-mbstring php-mysql pv socat
+0 upgraded, 21 newly installed, 6 to remove and 75 not upgraded.
+E: Packages need to be removed but remove is disabled.
+[cobaia] 
+[cobaia] Instalação interrompida: o apt-get não conseguiu instalar: php-cli php-mysql php-mbstring mariadb-server. A mensagem dele está logo acima. O instalador não deixa o apt remover pacotes (`--no-remove`): se a mensagem fala em pacotes a remover, esta máquina tem outro servidor de banco (por exemplo o mysql-server), e o instalador não o troca.

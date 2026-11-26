@@ -1,0 +1,7 @@
+[cobaia] Nenhum serviço de banco ativo — iniciando C:\Users\runneradmin\AppData\Local\MariaDB\mariadb-11.8.10-winx64\bin\mariadbd.exe como processo...
+[cobaia] Aguardando o MariaDB responder...
+N1: falhou o MariaDB não respondeu (ensure_mariadb_running)
+N2: nao_rodou depende do N1, que não passou
+N3: falhou o executável do Ollama não foi encontrado (find_ollama)
+N4: nao_rodou depende do N3, que não passou
+registro gravado em D:\a\_temp\celulas\CI-WIN\20261126-001604\registro.json

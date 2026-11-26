@@ -166,6 +166,11 @@ def estado_inicial() -> str:
     linhas = [f"plataforma: {platform.platform()}", f"processador: {platform.machine()}", f"núcleos: {os.cpu_count()}", "",
               f"== porta 3306 (banco): {'ocupada' if porta_ocupada(3306) else 'livre'}"]
     for nome, comando in SONDAS_DO_ESTADO.items():
+        # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S3) a sonda "serviços de banco (Windows)" só roda quando `platform.system() == "Windows"`; nos outros sistemas sai a linha `== serviços de banco (Windows): não se aplica`.
+        # ! Motivo: execução 45727470052 do Actions, célula M-15 (macOS): a máquina tem um `powershell`, a sonda rodou e saiu com "The term 'Get-Service' is not recognized", ruído no `estado_inicial.txt`. O conserto ainda não foi visto rodando: a terceira execução do fluxo é a prova.
+        if "(Windows)" in nome and "serviços" in nome and platform.system() != "Windows":
+            linhas.append(f"== {nome}: não se aplica")
+            continue
         if not shutil.which(comando[0]):
             linhas.append(f"== {nome}: ausente")
             continue

@@ -1,0 +1,139 @@
+[install.sh] Python: /usr/local/bin/python3 (Python 3.14.7)
+[cobaia] Sistema: macOS (família brew, suportado)
+[cobaia] Sistema operacional detectado: Darwin
+[cobaia] PHP já instalado: /usr/local/bin/php
+[cobaia] MariaDB não encontrado — instalando...
+[cobaia] $ brew install mariadb
+[32m==>[0m [1mDownloading bottle manifests[0m
+✔︎ Bottle Manifest mariadb (12.3.3)
+[34m==>[0m [1mWould install 1 formula:[0m
+mariadb
+[34m==>[0m [1mWould install 5 dependencies for mariadb:[0m
+mecab
+mecab-ipadic
+msgpack
+onigmo
+groonga
+[32m==>[0m [1mFetching downloads for: [32mmariadb[39m[0m
+✔︎ Bottle Manifest mecab (0.996)
+✔︎ Bottle Manifest mecab-ipadic (2.7.0-20070801)
+✔︎ Bottle Manifest msgpack (7.0.1)
+✔︎ Bottle Manifest onigmo (6.2.0)
+✔︎ Bottle Manifest groonga (16.0.9)
+✔︎ Bottle msgpack (7.0.1)
+✔︎ Bottle onigmo (6.2.0)
+✔︎ Bottle mecab (0.996)
+✔︎ Bottle mecab-ipadic (2.7.0-20070801)
+✔︎ Bottle groonga (16.0.9)
+✔︎ Bottle mariadb (12.3.3)
+[32m==>[0m [1mInstalling dependencies for mariadb:[0m [32mmecab[39m, [32mmecab-ipadic[39m, [32mmsgpack[39m, [32monigmo[39m and [32mgroonga[39m[0m
+[32m==>[0m [1mInstalling mariadb dependency: [32mmecab[39m[0m
+[34m==>[0m [1mPouring mecab--0.996.sonoma.bottle.6.tar.gz[0m
+🍺  /usr/local/Cellar/mecab/0.996: 19 files, 4MB
+[32m==>[0m [1mInstalling mariadb dependency: [32mmecab-ipadic[39m[0m
+[34m==>[0m [1mPouring mecab-ipadic--2.7.0-20070801.sonoma.bottle.1.tar.gz[0m
+🍺  /usr/local/Cellar/mecab-ipadic/2.7.0-20070801: 15 files, 53MB
+[32m==>[0m [1mInstalling mariadb dependency: [32mmsgpack[39m[0m
+[34m==>[0m [1mPouring msgpack--7.0.1.sonoma.bottle.tar.gz[0m
+🍺  /usr/local/Cellar/msgpack/7.0.1: 39 files, 188.1KB
+[32m==>[0m [1mInstalling mariadb dependency: [32monigmo[39m[0m
+[34m==>[0m [1mPouring onigmo--6.2.0.sonoma.bottle.tar.gz[0m
+🍺  /usr/local/Cellar/onigmo/6.2.0: 16 files, 1.6MB
+[32m==>[0m [1mInstalling mariadb dependency: [32mgroonga[39m[0m
+[34m==>[0m [1mPouring groonga--16.0.9.sonoma.bottle.tar.gz[0m
+🍺  /usr/local/Cellar/groonga/16.0.9: 170 files, 21.7MB
+[32m==>[0m [1mInstalling [32mmariadb[39m[0m
+[34m==>[0m [1mPouring mariadb--12.3.3.sonoma.bottle.tar.gz[0m
+/usr/local/Cellar/mariadb/12.3.3/bin/mysql_install_db: Deprecated program name. It will be removed in a future release, use 'mariadb-install-db' instead
+chown: /usr/local/Cellar/mariadb/12.3.3/lib/plugin/auth_pam_tool_dir/auth_pam_tool: Operation not permitted
+Couldn't set an owner to '/usr/local/Cellar/mariadb/12.3.3/lib/plugin/auth_pam_tool_dir/auth_pam_tool'.
+It must be root, the PAM authentication plugin doesn't work otherwise..
+
+Installing MariaDB/MySQL system tables in '/usr/local/var/mysql' ...
+2026-11-25 15:59:21 0 [Note] Starting MariaDB 12.3.3-MariaDB source revision 83e909fc2a0dbc394b4b683fb3fa2d7dcf26cc5e server_uid c/iRflHueSXBGvYmAikTXh6Uxvk= as process 8984
+2026-11-25 15:59:21 0 [Note] InnoDB: The first data file './ibdata1' did not exist. A new tablespace will be created!
+2026-11-25 15:59:21 0 [Note] InnoDB: Compressed tables use zlib 1.2.12
+2026-11-25 15:59:21 0 [Note] InnoDB: Using transactional memory
+2026-11-25 15:59:21 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-25 15:59:21 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+2026-11-25 15:59:22 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388612m, innodb_buffer_pool_size=128m
+2026-11-25 15:59:22 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-25 15:59:22 0 [Note] InnoDB: Setting file './ibdata1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-25 15:59:22 0 [Note] InnoDB: File './ibdata1' size is now 12.000MiB.
+2026-11-25 15:59:22 0 [Note] InnoDB: Data file .//undo001 did not exist: new to be created
+2026-11-25 15:59:22 0 [Note] InnoDB: Setting file .//undo001 size to 10.000MiB
+2026-11-25 15:59:22 0 [Note] InnoDB: Database physically writes the file full: wait...
+2026-11-25 15:59:22 0 [Note] InnoDB: Data file .//undo002 did not exist: new to be created
+2026-11-25 15:59:22 0 [Note] InnoDB: Setting file .//undo002 size to 10.000MiB
+2026-11-25 15:59:22 0 [Note] InnoDB: Database physically writes the file full: wait...
+2026-11-25 15:59:22 0 [Note] InnoDB: Data file .//undo003 did not exist: new to be created
+2026-11-25 15:59:22 0 [Note] InnoDB: Setting file .//undo003 size to 10.000MiB
+2026-11-25 15:59:22 0 [Note] InnoDB: Database physically writes the file full: wait...
+2026-11-25 15:59:22 0 [Note] InnoDB: Doublewrite buffer not found: creating new
+2026-11-25 15:59:22 0 [Note] InnoDB: Doublewrite buffer created
+2026-11-25 15:59:22 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-25 15:59:22 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-25 15:59:22 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-25 15:59:22 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-25 15:59:22 0 [Note] InnoDB: log sequence number 0; transaction id 3
+2026-11-25 15:59:22 0 [Note] Plugin 'wsrep-provider' is disabled.
+OK
+
+To start mariadbd at boot time you have to copy
+support-files/mariadb.service to the right place for your system
+
+
+Two all-privilege accounts were created.
+One is root@localhost, it has no password, but you need to
+be system 'root' user to connect. Use, for example, sudo mariadb
+The second is runner@localhost, it has no password either, but
+you need to be the system 'runner' user to connect.
+After connecting you can set the password, if you would need to be
+able to connect as any of these users with a password and without sudo
+
+See the MariaDB Documentation at https://mariadb.com/docs
+
+You can start the MariaDB daemon with:
+cd '/usr/local/Cellar/mariadb/12.3.3' ; /usr/local/Cellar/mariadb/12.3.3/bin/mariadbd-safe --datadir='/usr/local/var/mysql'
+
+You can test the MariaDB daemon with mariadb-test-run.pl
+cd '/usr/local/Cellar/mariadb/12.3.3/mariadb-test' ; perl mariadb-test-run.pl
+
+Please report any problems at https://mariadb.org/jira
+
+The latest information about MariaDB is available at https://mariadb.org/.
+
+Consider joining MariaDB's strong and vibrant community:
+https://mariadb.org/get-involved/
+
+[34m==>[0m [1mCaveats[0m
+A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+server starting up correctly.
+
+MySQL is configured to only allow connections from localhost by default
+
+To start mariadb now and restart at login:
+  brew services start mariadb
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/mariadb/bin/mariadbd-safe --datadir\=/usr/local/var/mysql
+[34m==>[0m [1mSummary[0m
+🍺  /usr/local/Cellar/mariadb/12.3.3: 995 files, 259.1MB
+[32m==>[0m [1mCaveats[0m
+[34m==>[0m [1mmariadb[0m
+A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+server starting up correctly.
+
+MySQL is configured to only allow connections from localhost by default
+
+To start mariadb now and restart at login:
+  brew services start mariadb
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/mariadb/bin/mariadbd-safe --datadir\=/usr/local/var/mysql
+[cobaia] $ brew services start mariadb
+[34m==>[0m [1mSuccessfully started `mariadb` (label: homebrew.mxcl.mariadb)[0m
+[cobaia] $ brew services start mariadb
+Service `mariadb` already started, use `brew services restart mariadb` to restart.
+[cobaia] Aguardando o MariaDB responder...
+[cobaia] Nenhum serviço de banco ativo — iniciando /usr/local/bin/mariadbd como processo...
+[cobaia] Aguardando o MariaDB responder...
+[cobaia] Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo.

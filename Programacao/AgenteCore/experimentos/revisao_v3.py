@@ -6,7 +6,7 @@
 # árvore do caso sem o nome do caso, a classe, o nível e o comando de reexecução; pelo caminho dos cartões, `--inicio N` marca a hora em que o cartão N foi apresentado e
 # `--responder N` grava na planilha a decisão, a avaliação, o erro localizado, a utilidade e o comentário, com o tempo contado do cartão à resposta; `--proximo` diz o próximo
 # relatório em branco. A leitura sai por `avaliar_fase4.py --revisao_v3`, contra o acerto de cada caso em `ineditos.json`, e só com a planilha inteira.
-# ! Motivo: a ficha 40 ficou aberta desde 05/11/2026 porque a sessão da corrida 22 teve uma resposta do Eric e dez pareceres do Claude aprovados (decisões 85 a 87 e 95);
+# ! Motivo: a ficha 40 ficou aberta desde 05/11/2026 porque a sessão da corrida 22 teve uma resposta de uma pessoa (do analista de QA, decisão 166) e dez pareceres do Claude aprovados (decisões 85 a 87 e 95);
 # em 08/11/2026 o Eric escolheu fazer a sessão com os relatórios no formato novo (v3 mais árvore) de casos que não leu com o agente, a corrida 24 inteira, numa página
 # com cronômetro ("uma interfacezinha"), no lugar dos cartões. O nome, a classe e o nível saem porque reduzem as 23 causas possíveis a poucas (o mesmo motivo que tirou
 # o nome na página de 05/11); nos cartões, sem cronômetro próprio, o tempo é medido pelo relógio deste módulo.

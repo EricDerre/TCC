@@ -1,14 +1,15 @@
 {
   "metadados": {
-    "gerado_em": "2026-11-05T17:48:38",
+    "gerado_em": "2026-11-25T21:33:13",
     "corrida": "fase4_trilha",
     "gerado_por": "avaliar_fase4.py --revisao",
     "planilha": "revisao_trilha.md"
   },
   "resumo": {
     "relatorios": 11,
-    "respostas_do_revisor": 1,
+    "respostas_do_revisor": 0,
     "pareceres_aprovados": 10,
+    "respostas_do_analista": 1,
     "acertos_na_amostra": 6,
     "erros_na_amostra": 5,
     "acertos_na_corrida": 31,
@@ -19,22 +20,11 @@
       74.1,
       100.0
     ],
-    "tempo_mediana_s": 307,
+    "tempo_mediana_s": null,
     "erros_localizados": 4,
     "utilidade_mediana": 4
   },
   "por_origem": [
-    {
-      "origem": "revisor",
-      "n": 1,
-      "apropriadas": 1,
-      "pct": 100.0,
-      "ic": [
-        20.7,
-        100.0
-      ],
-      "avaliacao_bate": 1
-    },
     {
       "origem": "parecer_aprovado",
       "n": 10,
@@ -45,6 +35,17 @@
         100.0
       ],
       "avaliacao_bate": 10
+    },
+    {
+      "origem": "analista",
+      "n": 1,
+      "apropriadas": 1,
+      "pct": 100.0,
+      "ic": [
+        20.7,
+        100.0
+      ],
+      "avaliacao_bate": 1
     }
   ],
   "parecer": {
@@ -131,17 +132,17 @@
   "tempo": [
     {
       "grupo": "todos",
-      "n": 1,
-      "mediana": 307,
-      "minimo": 307,
-      "maximo": 307
+      "n": 0,
+      "mediana": null,
+      "minimo": null,
+      "maximo": null
     },
     {
       "grupo": "diagnóstico certo",
-      "n": 1,
-      "mediana": 307,
-      "minimo": 307,
-      "maximo": 307
+      "n": 0,
+      "mediana": null,
+      "minimo": null,
+      "maximo": null
     },
     {
       "grupo": "diagnóstico errado",
@@ -152,10 +153,10 @@
     },
     {
       "grupo": "aceitos",
-      "n": 1,
-      "mediana": 307,
-      "minimo": 307,
-      "maximo": 307
+      "n": 0,
+      "mediana": null,
+      "minimo": null,
+      "maximo": null
     },
     {
       "grupo": "recusados",
@@ -221,13 +222,14 @@
     {
       "posicao": 1,
       "caso": "run-4",
-      "origem": "revisor",
-      "segundos": 307,
+      "origem": "analista",
+      "segundos": null,
       "erro_localizado": "sim",
       "decisao": "aceitar",
       "utilidade": 4,
       "avaliacao": "certo",
       "comentario": "",
+      "segundos_na_pagina": 307,
       "classe": 5,
       "gabarito": "dado_desatualizado",
       "rotulo": "dado_desatualizado",
@@ -559,5 +561,22 @@
         "avaliacao_bate": true
       }
     }
-  ]
+  ],
+  "quem_leu": {
+    "_marcador": "! Alteração de IA - Revisar: arquivo novo, escrito pelo Claude em 25/11/2026 com o que o Eric declarou no quadro de perguntas sobre quem respondeu o relatório 1 da sessão de revisão da corrida 22, de 05/11/2026 (ficha 105, decisão 166, que revê as decisões 85 e 86 no que dizem de quem respondeu). ! Motivo: o registro da página (`revisao_trilha_respostas.json`) traz a resposta com a origem \"revisor\" e um tempo, e quem leu foi o analista de QA, fora da página. O registro fica como está, e esta declaração fica ao lado dele; desde 25/11/2026 `avaliar_fase4.py --revisao` a lê e regera a leitura (`leitura_revisao_trilha.json` e `.md`) com ela.",
+    "declarado_em": "2026-11-25",
+    "declarado_por": "Eric, no quadro de perguntas da sessão do pacote Q8",
+    "sessao": "revisão dos 11 relatórios da corrida 22, em 05/11/2026",
+    "relatorio_1": {
+      "quem": "um analista de QA da empresa em que o Eric trabalha",
+      "relacao_com_o_projeto": "o mesmo analista das revisões de 09 e 10/11/2026 e de 16/11/2026 (decisões 114, 117 e 129): atua com teste de software e não participou do projeto",
+      "como_leu": "fora da página; o Eric colou a resposta",
+      "tempo": "não medido: os 307 s que a página registrou medem a troca entre os dois, e não a leitura"
+    },
+    "relatorios_2_a_11": "parecer do agente de apoio, aprovado pelo Eric sem resposta própria (decisão 86); não muda",
+    "opcoes_marcadas_no_quadro": {
+      "quem respondeu o relatório 1": "Foi outra pessoa; O analista de QA",
+      "como a resposta chegou à página": "Leu fora, eu colei"
+    }
+  }
 }

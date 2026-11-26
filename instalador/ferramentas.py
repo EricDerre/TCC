@@ -351,8 +351,21 @@ def instalar_ollama(versao: str) -> None:
         install.baixar_arquivo(url, roteiro)
     except OSError as e:
         raise Falha(f"não foi possível baixar {url}: {e}") from e
-    if env.run(comando, env={**os.environ, "OLLAMA_VERSION": versao}).returncode != 0:
+    # ! Alteração de IA - Revisar: (25/11/2026, consertos da segunda execução do Actions, S2) no macOS (`env.OS_NAME == "Darwin"`) o script do Ollama roda com `OLLAMA_NO_START=1` e, depois de ele terminar bem, o instalador abre o aplicativo com `open /Applications/Ollama.app --args hidden`; se o `open` falhar ou o aplicativo não estiver lá, só sai um aviso no log (nunca `Falha`). No Linux e no Windows o ambiente e os comandos ficam como estavam.
+    # ! Motivo: execução 45727470052 do Actions, célula M-15 (macOS 15): o script oficial instalou em /Applications, criou o link do comando e parou em "Unable to find application named 'Ollama'"; o último passo dele é `open -a Ollama --args hidden`, que procura o aplicativo pelo nome, e logo depois de o `Ollama.app` ser movido o sistema ainda não o conhece por nome. O instalador saiu com "Instalação interrompida: o script do Ollama saiu com erro" antes de baixar o modelo. O script pula esse passo quando `OLLAMA_NO_START` está definida; abrir pelo caminho não depende do nome. Se o aplicativo não abrir, `preparar_ollama` espera o servidor e, sem resposta, sobe `ollama serve` só para baixar o modelo. O conserto ainda não foi visto rodando: a terceira execução do fluxo é a prova.
+    ambiente = {**os.environ, "OLLAMA_VERSION": versao}
+    if env.OS_NAME == "Darwin":
+        ambiente["OLLAMA_NO_START"] = "1"
+    if env.run(comando, env=ambiente).returncode != 0:
         raise Falha("o script do Ollama saiu com erro; a mensagem dele está logo acima.")
+    if env.OS_NAME == "Darwin":
+        try:
+            aberto = env.run(["open", "/Applications/Ollama.app", "--args", "hidden"]).returncode == 0
+        except OSError:
+            aberto = False
+        if not aberto:
+            env.log("Aviso: o Ollama foi instalado, mas o aplicativo não abriu sozinho. Abra o Ollama pelo Launchpad "
+                    "ou rode `ollama serve` em outro terminal; o instalador segue e sobe o servidor só para baixar o modelo.")
 
 
 # ! Alteração de IA - Revisar: (25/11/2026, consertos da primeira execução do Actions, tarefa D) função nova `comando_de_atualizar_ollama`: o comando que a mensagem de "Ollama fora da faixa" ensina, por sistema.

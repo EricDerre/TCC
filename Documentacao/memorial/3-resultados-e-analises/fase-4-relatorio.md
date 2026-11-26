@@ -21,7 +21,7 @@ Parte do [Memorial de Desenvolvimento](../../Memorial%20de%20Desenvolvimento.md)
 | A biblioteca final acerta em casos que nunca viu? | Menos que nos casos de avaliação: 25 de 36 (69,4%; Wilson 95% de 53,1 a 82,0), contra 31 de 36 nos casos de avaliação, que não são os mesmos. Com o verbete certo, 18 de 20; sem ele, 7 de 16. A classe de tradução faz 1 de 6. Há uma condição só: a corrida não diz quanto a biblioteca ajuda nesses casos. | Seção 7.1, corrida 24 |
 | Quanto tempo o agente inteiro leva e em quantos cenários acerta? | 10 de 10 com Task Success (a tarefa concluída, pelo critério da ficha 35) na repetição, com Wilson 95% de 72,2 a 100,0%, e MTTR (tempo da detecção ao reparo validado) médio de 74,0 s com o prompt dentro do limite e os sinais novos da busca (72,5 s na 21c; 105,2 s antes do corte), quase todo do modelo. Uma repetição por cenário, sem linha de base manual. | Seção 8, corridas 21, 21b, 21c e 21d |
 | A divergência da trilha aponta os erros reais? | Com as intervenções em todos os casos, quase não: TPR x TNR (erros pegos vezes acertos deixados em paz) de 0,284 contra 0,250 do acaso. Contada por gatilho, 0,542, numa corrida que não rodou assim. São só 5 erros. Nas mutações, o nó previsto em 100%, o que é esperado por construção. | Seções 9.1 a 9.3, corrida 22 |
-| O relatório por caso ajuda um revisor humano a decidir? | Feita em parte em 09 e 10/11/2026, no pacote Q5 da Pós-Fase 4, sobre os 36 relatórios v3 da corrida 24: 35 lidos por um analista, a quem o Eric passou os relatórios, e 1 pelo Eric (ficha 40, decisões 113 e 114; leitura em `resultados_alvo/fase4/leitura_revisao_v3.md`). Ficaram medidas a adesão, a localização do erro e a utilidade; o tempo até a decisão não. A sessão de 05/11 (1 resposta do Eric e 10 pareceres do Claude aprovados, decisões 85 e 86) fica como registro. | Seção 9.5 |
+| O relatório por caso ajuda um revisor humano a decidir? | Feita em parte em 09 e 10/11/2026, no pacote Q5 da Pós-Fase 4, sobre os 36 relatórios v3 da corrida 24: 35 lidos por um analista, a quem o Eric passou os relatórios, e 1 pelo Eric (ficha 40, decisões 113 e 114; leitura em `resultados_alvo/fase4/leitura_revisao_v3.md`). Ficaram medidas a adesão, a localização do erro e a utilidade; o tempo até a decisão não. A sessão de 05/11 (o relatório 1 respondido pelo analista de QA, sem tempo medido, decisão 166, e 10 pareceres do Claude aprovados pelo Eric, decisões 85 e 86) fica como registro. | Seção 9.5 |
 
 ## 2. Como a fase rodou
 
@@ -1307,8 +1307,10 @@ O primeiro nó que divergiu da trilha da base foi o previsto em 36 de 36 no verb
 ### 9.5 A medida com revisor humano: em aberto em 05/11, feita em parte em 10/11/2026 (decisões 85, 86, 95, 113 e 114)
 
 <!-- ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q8) nota de correção no começo da seção 9.5: o relatório 1 da sessão de 05/11/2026 foi respondido pelo analista de QA, e não pelo Eric.
-     ! Motivo: o Eric declarou no quadro, em 25/11/2026, que o analista leu fora da página e que ele colou a resposta (ficha 105, decisão 166); o texto abaixo, de 05 e 10/11/2026, e os blocos colados da leitura gravada dizem "resposta do Eric" e trazem os 307 s como tempo medido, e ficam como foram escritos. -->
-**Correção de 25/11/2026 (decisão 166).** O relatório 1 desta sessão, que o texto abaixo dá como respondido pelo Eric, com 307 s medidos, foi respondido pelo analista de QA da empresa em que o Eric trabalha, o mesmo das revisões de 09 e 10/11/2026 e de 16/11/2026. Ele leu fora da página, e o Eric colou a resposta: os 307 s medem a troca entre os dois, e o tempo até a decisão entra como não medido. A aprovação do parecer do agente de apoio nos outros 10 relatórios continua sendo do Eric (decisão 86). O texto abaixo e os blocos colados da leitura gravada ficam como foram escritos; a declaração está em `resultados_alvo/fase4/quem_leu_revisao_trilha.json`.
+     ! Motivo: o Eric declarou no quadro, em 25/11/2026, que o analista leu fora da página e que ele colou a resposta (ficha 105, decisão 166); o texto de 05 e 10/11/2026 e os blocos colados da leitura gravada davam a resposta como dele, com 307 s de tempo medido. -->
+<!-- ! Alteração de IA - Revisar: (25/11/2026) a nota de correção, as frases do texto abaixo sobre quem respondeu o relatório 1 e os blocos `tb_f4_revisao_*` passaram a dizer a mesma coisa: a leitura derivada foi regerada com a declaração (`avaliar_fase4.py --revisao` e `--colar`).
+     ! Motivo: a nota dizia que o texto e os blocos ficavam como foram escritos, e o relatório continuava afirmando, logo abaixo dela, que o Eric tinha respondido o relatório 1 com tempo medido. -->
+**Correção de 25/11/2026 (decisão 166).** Este relatório, nas versões de antes, dava o relatório 1 desta sessão como respondido pelo Eric, com 307 s de tempo medido. Quem o respondeu foi o analista de QA da empresa em que o Eric trabalha, o mesmo das revisões de 09 e 10/11/2026 e de 16/11/2026. Ele leu fora da página, e o Eric colou a resposta: os 307 s medem a troca entre os dois, e o tempo até a decisão entra como não medido. A aprovação do parecer do agente de apoio nos outros 10 relatórios continua sendo do Eric (decisão 86), e a sessão continua valendo como medida não feita (decisão 87). O texto e os blocos desta seção já trazem a correção. A declaração está em `resultados_alvo/fase4/quem_leu_revisao_trilha.json`, e a leitura a aplica sem regravar a planilha (`revisao_trilha.md`) nem o registro da página (`revisao_trilha_respostas.json`).
 
 <!-- ! Alteração de IA - Revisar: (10/11/2026, decisão 117) este trecho e o item da seção 15 passaram a dizer que os 36 relatórios foram lidos por um analista de QA da empresa.
      ! Motivo: o Eric declarou no quadro quem é o analista e que as 36 respostas são dele; o texto dizia 35 do analista e 1 do Eric e remetia à ficha 62, que fechou. -->
@@ -1317,23 +1319,23 @@ O primeiro nó que divergiu da trilha da base foi o previsto em 36 de 36 no verb
 
 A especificação da trilha (seção 12 c) pede, com um revisor humano, o acerto da localização do erro, o tempo até a decisão e a adesão apropriada, isto é, aceitar o diagnóstico quando está certo e recusar quando está errado. **Essa medida ainda não foi feita e está em aberto: será feita depois que a Pós-Fase 4 normalizar e melhorar as respostas (decisão 95, que revê a 87).** Por agora vale a pré-análise do Claude que o Eric usou. **Feita em parte em 09 e 10/11/2026 (pacote Q5 da Pós-Fase 4; fichas 40 e 62, decisões 113, 114 e 117):** os 36 relatórios v3 com a árvore de decisão da corrida 24 foram lidos um por vez, sem o nome do caso, a classe nem o nível, todos por um analista de QA da empresa, que não participou do projeto nem conhecia o agente e a quem o Eric passou os relatórios. Ficaram medidas a adesão apropriada, a localização do erro e a utilidade; o tempo até a decisão não, porque a página mediu a troca entre os dois. A leitura está em `resultados_alvo/fase4/leitura_revisao_v3.md` e na aba "Revisão humana" do painel; a declaração de quem leu está em `sessao_revisao_v3/quem_leu.json`, e é um leitor só.
 
-O que aconteceu: a amostra tem 11 relatórios, não os 12 do plano, porque a corrida teve só 5 erros: são os 5 e mais 6 acertos. O Eric respondeu o relatório 1, e só esse tem resposta própria dele e tempo medido (307 s). Depois pediu uma pré-análise do Claude e escolheu lê-la (decisão 85), e aprovou o parecer do Claude nos outros 10 relatórios, sem resposta própria e sem tempo medido (decisão 86).
+O que aconteceu: a amostra tem 11 relatórios, não os 12 do plano, porque a corrida teve só 5 erros: são os 5 e mais 6 acertos. O relatório 1 foi respondido pelo analista de QA, que leu fora da página, e o Eric colou a resposta (decisão 166). Depois o Eric pediu uma pré-análise do Claude e escolheu lê-la (decisão 85), e aprovou o parecer do Claude nos outros 10 relatórios, sem resposta própria (decisão 86). Nenhum relatório desta sessão tem tempo medido.
 
 **O parecer do Claude acertar não é essa medida.** O parecer cobre os 11 relatórios, inclusive o 1, e acertou 11 de 11 decisões e 11 de 11 causas (Wilson 95% da decisão: 74,1 a 100,0%). Mas quem o escreveu sabia quantos erros a amostra tem, já tinha visto os nomes dos casos e consultou a biblioteca. Isso mostra que a evidência para julgar estava no relatório e na biblioteca, para um leitor forte e avisado. Não mostra quanto o relatório ajuda um analista, nem quanto tempo ele leva. Na maior parte, a adesão, a localização e a utilidade das tabelas abaixo são do Claude; as tabelas separam quem decidiu.
 
-Dois pontos para quem for citar. Dos 5 erros, 4 estavam à vista no próprio relatório; o de `semt-9` tem selo alto, nenhum conflito e todas as conferências certas, e a recusa só veio da biblioteca. E, no relatório 1 (`run-4`), o Eric marcou que achou o erro num diagnóstico que avaliou como certo; ele pode ter lido "erro" como o defeito do sistema, e a resposta fica como ele deu.
+Dois pontos para quem for citar. Dos 5 erros, 4 estavam à vista no próprio relatório; o de `semt-9` tem selo alto, nenhum conflito e todas as conferências certas, e a recusa só veio da biblioteca. E, no relatório 1 (`run-4`), a resposta do analista marca que achou o erro num diagnóstico que avaliou como certo; ele pode ter lido "erro" como o defeito do sistema, e a resposta fica como ele deu.
 
 <!-- tabela:tb_f4_revisao_resumo -->
-| Relatórios | Com resposta do revisor | Com parecer aprovado | Diagnósticos certos | Diagnósticos errados | Adesão apropriada | Adesão (%) | Wilson 95% | Tempo mediano (s) | Erros achados | Utilidade mediana |
+| Relatórios | Com resposta do analista de QA | Com parecer aprovado | Diagnósticos certos | Diagnósticos errados | Adesão apropriada | Adesão (%) | Wilson 95% | Tempo mediano (s) | Erros achados | Utilidade mediana |
 |---|---|---|---|---|---|---|---|---|---|---|
-| 11 | 1 | 10 | 6 | 5 | 11 | 100,0 | 74,1 a 100,0 | 307 | 4 de 5 | 4 |
+| 11 | 1 | 10 | 6 | 5 | 11 | 100,0 | 74,1 a 100,0 | não medido | 4 de 5 | 4 |
 <!-- /tabela:tb_f4_revisao_resumo -->
 
 <!-- tabela:tb_f4_revisao_origem -->
 | Quem decidiu | Relatórios | Decisões apropriadas | Apropriadas (%) | Wilson 95% | Avaliação igual ao gabarito |
 |---|---|---|---|---|---|
-| resposta do revisor | 1 | 1 | 100,0 | 20,7 a 100,0 | 1 |
 | parecer do Claude aprovado | 10 | 10 | 100,0 | 72,2 a 100,0 | 10 |
+| resposta do analista de QA, colada pelo Eric | 1 | 1 | 100,0 | 20,7 a 100,0 | 1 |
 <!-- /tabela:tb_f4_revisao_origem -->
 
 <!-- tabela:tb_f4_revisao_parecer -->
@@ -1360,10 +1362,10 @@ Dois pontos para quem for citar. Dos 5 erros, 4 estavam à vista no próprio rel
 <!-- tabela:tb_f4_revisao_tempo -->
 | Grupo | Relatórios | Mediana (s) | Mínimo (s) | Máximo (s) |
 |---|---|---|---|---|
-| todos | 1 | 307 | 307 | 307 |
-| diagnóstico certo | 1 | 307 | 307 | 307 |
+| todos | 0 | não medido | não medido | não medido |
+| diagnóstico certo | 0 | não medido | não medido | não medido |
 | diagnóstico errado | 0 | não medido | não medido | não medido |
-| aceitos | 1 | 307 | 307 | 307 |
+| aceitos | 0 | não medido | não medido | não medido |
 | recusados | 0 | não medido | não medido | não medido |
 <!-- /tabela:tb_f4_revisao_tempo -->
 
@@ -1376,7 +1378,7 @@ Dois pontos para quem for citar. Dos 5 erros, 4 estavam à vista no próprio rel
 <!-- /tabela:tb_f4_revisao_utilidade -->
 
 <!-- tabela:tb_f4_revisao_avaliacao -->
-| Diagnóstico | Revisor disse certo | Revisor disse errado |
+| Diagnóstico | A planilha disse certo | A planilha disse errado |
 |---|---|---|
 | certo | 6 | 0 |
 | errado | 0 | 5 |
@@ -1387,7 +1389,7 @@ Dois pontos para quem for citar. Dos 5 erros, 4 estavam à vista no próprio rel
 <!-- tabela:tb_f4_revisao_casos -->
 | # | Caso | Gabarito | Rótulo | Resultado | Selo | Quem decidiu | Tempo (s) | Erro localizado | Decisão | Apropriada | Utilidade | Avaliação | Causa no parecer do Claude | Comentário |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `run-4` | `dado_desatualizado` | `dado_desatualizado` | certo | alto | resposta do revisor | 307 | sim | aceitar | sim | 4 | certo | `dado_desatualizado` |  |
+| 1 | `run-4` | `dado_desatualizado` | `dado_desatualizado` | certo | alto | resposta do analista de QA, colada pelo Eric | não medido | sim | aceitar | sim | 4 | certo | `dado_desatualizado` |  |
 | 2 | `run-1` | `erro_interno_do_servidor` | `erro_interno_do_servidor` | certo | medio | parecer do Claude aprovado | não medido | n.a. | aceitar | sim | 3 | certo | `erro_interno_do_servidor` | Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86). |
 | 3 | `lex-10` | `resposta_truncada` | `resposta_truncada` | certo | alto | parecer do Claude aprovado | não medido | n.a. | aceitar | sim | 4 | certo | `resposta_truncada` | Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86). |
 | 4 | `semt-9` | `valor_fora_do_dominio` | `tipo_divergente` | errado | alto | parecer do Claude aprovado | não medido | não | recusar | sim | 2 | errado | `valor_fora_do_dominio` | Parecer do Claude, aprovado pelo Eric sem resposta própria (decisão 86). |
@@ -1432,7 +1434,7 @@ A comparação da poda de antes com a de agora, sem modelo, está em `resultados
 
 ## 12. Limitações
 
-- **A medida com revisor humano foi feita em parte depois, no pacote Q5 da Pós-Fase 4** (fichas 40 e 62, decisões 113, 114 e 117; seção 9.5): na sessão de 05/11, 1 resposta do Eric e 10 pareceres do Claude aprovados (decisões 85, 86 e 95); em 09 e 10/11/2026, os 36 relatórios v3 da corrida 24 foram lidos por um analista de QA da empresa, a quem o Eric passou os relatórios (`resultados_alvo/fase4/leitura_revisao_v3.md`): adesão, localização do erro e utilidade medidas, tempo até a decisão não.
+- **A medida com revisor humano foi feita em parte depois, no pacote Q5 da Pós-Fase 4** (fichas 40 e 62, decisões 113, 114 e 117; seção 9.5): na sessão de 05/11, 1 resposta do analista de QA, sem tempo medido (decisão 166), e 10 pareceres do Claude aprovados pelo Eric (decisões 85, 86 e 95); em 09 e 10/11/2026, os 36 relatórios v3 da corrida 24 foram lidos por um analista de QA da empresa, a quem o Eric passou os relatórios (`resultados_alvo/fase4/leitura_revisao_v3.md`): adesão, localização do erro e utilidade medidas, tempo até a decisão não.
 - **A regra R1 rodou mais larga que o texto do plano** (seção 3): não confere o campo do gabarito, e só 12 dos 37 casos derrubam uma conferência do roteiro.
 - **A regra R2 fechou no limite exato, e por uma leitura fixada depois da 18c** (decisões 97 e 98, seção 5): a tela perde 3 casos para o caso escrito, e o limite é 3; pela soma dos dois lados, a conta usada até a 18c, são 8. A leitura foi fixada antes da 18d, sem conhecer o resultado, e as duas contas saem em toda leitura. Corridas iguais já variaram até 3 casos, então outra corrida pode passar do limite.
 - **Os sinais da busca foram escritos olhando os 37 casos da 18d** (decisão 97): a conferência limpa é a 18e, com 25 casos, e esses casos deixam de servir de conferência limpa para outro ajuste na busca. A corrida 24 releu esses 25 em texto e deu o mesmo rótulo nos 25.
@@ -1491,7 +1493,7 @@ O `painel_fase4.py` do plano não foi criado: as abas da fase ficaram em `ferram
 A versão 2 do documento saiu em 05/11/2026, com o sim do Eric e os 12 itens abaixo aplicados: [`Documentacao/TCC_v2_20261105.docx`](../../TCC_v2_20261105.docx), gerado de [`Documentacao/TCC - ABNT 14724 - V1.md`](../../TCC%20-%20ABNT%2014724%20-%20V1.md), com o estado de cada item no [registro da conferência](../5-metodo-e-ferramental/dados/revisao-tcc-v2-2026-11-05.json). A lista fica como registro do que ela carregou. A versão 3, do mesmo dia (`Documentacao/TCC_v3_20261105.docx`), reorganizou a seção 6 com figuras e levou as tabelas e os valores para a seção 6.9, sem número novo de corrida; os trechos que a lista pede nas seções 6.7 e 6.8 estão agora nas duas e na 6.9. Para a próxima versão valem os trechos dos itens 6 e 11 que dependem de corrida: os números das corridas 18c e 21c, com a 18b e a 21b como a leitura anterior, e os das corridas 23 e 24. O .docx sai de `ferramentas/gerar_tcc_docx.py`, com a versão e a data novas no bloco `## Dados`. Os itens:
 
 1. **Seção 6.7, título e fecho:** tirar "em andamento até 01/11/2026" e o parágrafo "Faltam o P5...". Entram as corridas 20, 21, 21b e 22 com os números das seções 7, 8 e 9 deste relatório. As corridas 18 e 21 aparecem com as repetições como leituras vigentes (18b, decisão 82; 21b, roadmap §2.14).
-2. **Seções 6.7 e 6.8, a medida com revisor humano:** dizer que ela não foi feita (decisões 85, 86 e 87), com 1 resposta do Eric e 10 pareceres do Claude aprovados, e que o parecer acertar 11 de 11 não é essa medida, porque quem o escreveu sabia quantos erros a amostra tem e consultou a biblioteca. Usar o texto da seção 9.5.
+2. **Seções 6.7 e 6.8, a medida com revisor humano:** dizer que ela não foi feita (decisões 85, 86 e 87), com 1 resposta de uma pessoa (então dada como do Eric; é do analista de QA, decisão 166) e 10 pareceres do Claude aprovados, e que o parecer acertar 11 de 11 não é essa medida, porque quem o escreveu sabia quantos erros a amostra tem e consultou a biblioteca. Usar o texto da seção 9.5.
 3. **Seção 6.8, o carimbo de conflito:** as duas contas juntas (TPR x TNR de 0,284 com as intervenções em todos os casos e de 0,542 por gatilho), dizendo que a segunda sai de uma corrida que não rodou assim, e que 5 erros não ordenam os sinais (decisão 88).
 4. **Seção 6.7, a poda consertada depois das corridas** (decisão 89): nos casos de texto o prompt leva o corpo inteiro e a poda não chega ao modelo; só na tela o trecho dela vai ao prompt, e nenhum corpo guardado muda.
 5. **Seções 5.7 e 6.7, a regra R1:** ela rodou mais larga que o texto do plano; os 37 de 72 dizem que a falha injetada muda o fio ou a tela (seção 3).

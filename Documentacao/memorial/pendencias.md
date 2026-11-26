@@ -1582,7 +1582,10 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (a) Fui eu: o texto fica como está.
   - (b) Foi outra pessoa: você diz quem, pelo papel, e o texto e o registro mudam.
 - **Recomendação:** Não há: é um fato que só você sabe. A pergunta existe porque nas duas revisões seguintes a resposta foi outra.
-- **Decisão:** (b), pelo Eric em 25/11/2026, no quadro: "Foi outra pessoa"; "O analista de QA"; "Leu fora, eu colei" (decisão 166). O relatório 1 foi respondido pelo analista de QA, que leu fora da página; os 307 s medem a troca entre os dois, e o tempo entra como não medido. O texto do TCC (seções 6.9 e 6.10.8) e a seção 9.5 do relatório da Fase 4 foram corrigidos; a declaração está em `Programacao/AgenteCore/experimentos/resultados_alvo/fase4/quem_leu_revisao_trilha.json`; o registro cru e a leitura gravada da sessão ficam como estão.
+- **Decisão:** (b), pelo Eric em 25/11/2026, no quadro: "Foi outra pessoa"; "O analista de QA"; "Leu fora, eu colei" (decisão 166). O relatório 1 foi respondido pelo analista de QA, que leu fora da página; os 307 s medem a troca entre os dois, e o tempo entra como não medido. O texto do TCC (seções 6.9 e 6.10.8) e a seção 9.5 do relatório da Fase 4 foram corrigidos; a declaração está em `Programacao/AgenteCore/experimentos/resultados_alvo/fase4/quem_leu_revisao_trilha.json`; o registro cru e a leitura gravada da sessão ficam como estão. Atualização do mesmo dia, feita depois: a leitura gravada (`leitura_revisao_trilha.json` e `.md`) deixou de ficar como estava e foi regerada por `avaliar_fase4.py --revisao`, que passou a aplicar a declaração; o registro cru e a planilha continuam como foram gravados.
+
+<!-- ! Alteração de IA - Revisar: (25/11/2026) a Decisão da ficha 105 ganhou a atualização sobre a leitura gravada, regerada com a declaração de quem leu.
+     ! Motivo: a ficha dizia que a leitura gravada ficava como estava, e ela dava o relatório 1 como respondido pelo revisor, com tempo medido. -->
 
 ### 106. A banca na folha de aprovação
 - **Estado:** fechada em 25/11/2026
@@ -1608,6 +1611,24 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
   - (c) Esperar as duas provas, sem prazo.
 - **Recomendação:** (a). As duas provas custam minutos da sua máquina e um push, e a reunião de sexta, 27/11/2026, já teria o documento.
 - **Decisão:** (c), pelo Eric em 25/11/2026, no quadro: "Esperar sem prazo", contra a recomendação (decisão 168). O Word e o PDF só são gerados depois de lidas a corrida curta do pacote Q7 (ficha 99) e a segunda execução do instalador no GitHub Actions.
+
+## Aberta pela conferência do commit da evidência do instalador (25/11/2026)
+
+<!-- ! Alteração de IA - Revisar: ficha 108 acrescentada em 25/11/2026, já fechada, com a resposta do Eric no quadro da sessão do instalador único.
+     ! Motivo: ao conferir o commit `f305dee1`, os arquivos `.log` das pastas de rodada das células não estavam nele: o `.gitignore` ignora todo `*.log`, e os links do relatório do instalador para o `instalacao.log` de cada falha não abriam no GitHub. A escolha muda o que entra no repositório público. -->
+
+### 108. Os arquivos `.log` das células de teste do instalador entram no git?
+- **Estado:** fechada em 25/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 25/11/2026
+- **O que é:** Cada rodada de uma célula de teste do instalador grava uma pasta em `Documentacao/memorial/5-metodo-e-ferramental/dados/instalador/celulas/<id>/<data-hora>/`. Os arquivos `.json` e `.txt` dessas pastas estão no git; os `.log` (o `instalacao.log` e o `conferir.log`, com a saída completa do instalador e da prova, e o erro literal de cada falha) nunca entraram, porque o `.gitignore` tem a regra `*.log`. Em 25/11/2026 eram 88 arquivos, 4,1 MB no total. O relatório do instalador (`relatorio-instalador-maquina-limpa.md`) tem 9 links para esses arquivos, que abrem na máquina do projeto e não abrem no GitHub.
+- **Por que importa:** O plano do instalador pede a falha gravada antes do conserto, com a evidência em arquivo. No repositório público, a parte mais importante dessa evidência (o log) estava faltando, e o `conferir_docs.py` não acusava, porque confere os links contra o disco.
+- **Opções:**
+  - (a) Versionar os logs. Uma exceção no `.gitignore` para a pasta das células, igual à que já existe para os logs das corridas em `resultados_alvo/`. Os 88 arquivos passam a aparecer no próximo `git add`. Dois deles citam o caminho da pasta de usuário do Eric, como 17 arquivos de evidência que já estão no repositório.
+  - (b) Só os que o relatório cita. Entram só os logs para os quais o relatório tem link (cerca de 9 arquivos), com `git add -f`; os outros continuam só na máquina do projeto.
+  - (c) Deixar fora e tirar os links. Os logs continuam fora do repositório; o relatório perde os links e fica só com a linha do erro citada no texto.
+- **Recomendação:** (a). São 4,1 MB, o log é a evidência do erro literal, e a regra fica igual à dos logs das corridas. Nenhum dos 88 arquivos tem senha, chave ou e-mail de pessoa (conferido por busca em 25/11/2026).
+- **Decisão:** (a), pelo Eric em 25/11/2026, no quadro (decisão 169): "Versionar os logs (Recomendado)".
 
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 

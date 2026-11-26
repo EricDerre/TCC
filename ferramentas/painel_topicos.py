@@ -5230,7 +5230,13 @@ def secao_fechamento_f4(relatorio_md: str | None, pend: list, md_doc_para_html, 
         itens_kpi.append(("Cenários que chegaram ao resultado (Task Success)", f'{g["sucessos"]} de {g["n"]}', f'corrida {corrida_cenarios}; média de {fmt(g["mttr_media_s"], 1)} s até o resultado; uma repetição, sem linha de base'))
     if revisao:
         r = revisao["resumo"]
-        itens_kpi.append(("Medida com revisor humano", "em aberto", f'{r["respostas_do_revisor"]} resposta do Eric e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
+        # ! Alteração de IA - Revisar: (25/11/2026, decisão 166) o cartão diz quem respondeu: o analista de QA, sem tempo medido, quando a leitura traz a declaração; sem
+        # ela, "o revisor", sem nomear ninguém.
+        # ! Motivo: o cartão dizia "resposta do Eric", e o relatório 1 da sessão de 05/11/2026 foi respondido pelo analista de QA.
+        n, quem = r.get("respostas_do_analista", 0), "do analista de QA, sem tempo medido,"
+        if not n:
+            n, quem = r["respostas_do_revisor"], "do revisor"
+        itens_kpi.append(("Medida com revisor humano", "em aberto", f'{n} resposta{"s" if n > 1 else ""} {quem} e {r["pareceres_aprovados"]} pareceres do Claude aprovados'))
     if faltam:
         # ! Alteração de IA - Revisar: (10/11/2026, decisão 116) o cartão deixou de dizer que as corridas que faltam foram pedidas pelas fichas 42 a 44.
         # ! Motivo: valia para as corridas 18c, 21c, 23 e 24; a corrida 25 veio da ficha 63, e o cartão de cada corrida, lido do roadmap, já diz de onde ela veio.
@@ -5377,13 +5383,26 @@ def secao_trilha(tri: dict | None, road: dict, cartoes_corridas, revisao_preench
     bloco_rev = ""
     if rev:
         rr, pa_ = rev.get("resumo") or {}, rev.get("parecer") or {}
-        rotulo_origem = {"revisor": "resposta do revisor", "parecer_aprovado": "parecer do Claude aprovado"}
-        n_rev = rr.get("respostas_do_revisor")
+        # ! Alteração de IA - Revisar: (25/11/2026, decisão 166) com a declaração de quem leu na leitura, o bloco diz que o relatório 1 foi respondido pelo analista de QA,
+        # fora da página, que o tempo não foi medido e que a sessão continua valendo como medida não feita (decisão 87); a dúvida de leitura é dele.
+        # ! Motivo: a aba dava a resposta como do revisor, com a mediana de 307 s "com a página à vista", que é o tempo da troca entre quem respondeu e quem colou.
+        rotulo_origem = {"revisor": "resposta do revisor", "analista": "resposta do analista de QA, colada pelo grupo", "parecer_aprovado": "parecer do Claude aprovado"}
+        n_rev, n_analista = rr.get("respostas_do_revisor"), rr.get("respostas_do_analista", 0)
         tempo_ = next((x for x in rev.get("tempo") or [] if x.get("grupo") == "todos"), {})
-        aviso_rev = (f'Só {n_rev} dos {rr.get("relatorios")} relatórios {"tem" if n_rev == 1 else "têm"} resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros {rr.get("pareceres_aprovados")} são o parecer do Claude, '
-                     'aprovado pelo Eric sem resposta própria (decisões 85 e 86). Por isso esta sessão não cumpre a medida com revisor humano da especificação (seção 12 c), que fica em aberto até a Pós-Fase 4 (decisão 95); o que ela dá é o parecer do Claude conferido contra o gabarito. '
-                     f'O tempo até a decisão só existe onde o revisor respondeu: {tempo_.get("n", 0)} relatório, mediana de {nd(tempo_.get("mediana"), 0)} s com a página à vista.') if rr.get("pareceres_aprovados") else ""
-        duvida_rev = (f'<p class="nota">Em {", ".join(f"<code>{esc(x)}</code>" for x in rev["duvidas_de_leitura"])}, o revisor marcou que achou o erro num diagnóstico que avaliou como certo. Ele pode ter lido "erro" como o defeito do sistema, e a conta trata isso como apontar um erro onde não há; a resposta fica como ele deu.</p>'
+        if n_analista:
+            quem_leu = rev.get("quem_leu") or {}
+            quais = "".join(f' O relatório {c["posicao"]} foi respondido por {esc(d["quem"])}; {esc(d["relacao_com_o_projeto"])}. Como leu: {esc(d["como_leu"])} (decisão 166).'
+                            for c in rev.get("casos") or [] if c.get("origem") == "analista" and (d := quem_leu.get(f'relatorio_{c["posicao"]}')))
+            aviso_rev = (f'Dos {rr.get("relatorios")} relatórios, {n_analista} {"tem" if n_analista == 1 else "têm"} resposta de uma pessoa, a do analista de QA.{quais} Os outros {rr.get("pareceres_aprovados")} são o parecer do Claude, '
+                         'aprovado pelo grupo sem resposta própria (decisão 86). Por isso esta sessão continua valendo como medida não feita (decisão 87) da especificação (seção 12 c); a medida foi feita em parte depois, na aba "Revisão humana". '
+                         'O que esta sessão dá é o parecer do Claude conferido contra o gabarito. O tempo até a decisão não foi medido em nenhum relatório: o que a página registrou na resposta do analista foi a troca entre quem respondeu e quem colou, e não a leitura.')
+        else:
+            aviso_rev = (f'Só {n_rev} dos {rr.get("relatorios")} relatórios {"tem" if n_rev == 1 else "têm"} resposta própria do revisor, dada antes de ele ler a pré-análise do Claude. Os outros {rr.get("pareceres_aprovados")} são o parecer do Claude, '
+                         'aprovado pelo Eric sem resposta própria (decisões 85 e 86). Por isso esta sessão não cumpre a medida com revisor humano da especificação (seção 12 c), que fica em aberto até a Pós-Fase 4 (decisão 95); o que ela dá é o parecer do Claude conferido contra o gabarito. '
+                         f'O tempo até a decisão só existe onde o revisor respondeu: {tempo_.get("n", 0)} relatório, mediana de {nd(tempo_.get("mediana"), 0)} s com a página à vista.') if rr.get("pareceres_aprovados") else ""
+        origens_duvida = {c.get("origem") for c in rev.get("casos") or [] if c.get("caso") in (rev.get("duvidas_de_leitura") or [])}
+        quem_marcou = "o analista de QA" if origens_duvida == {"analista"} else "o revisor"
+        duvida_rev = (f'<p class="nota">Em {", ".join(f"<code>{esc(x)}</code>" for x in rev["duvidas_de_leitura"])}, {quem_marcou} marcou que achou o erro num diagnóstico que avaliou como certo. Ele pode ter lido "erro" como o defeito do sistema, e a conta trata isso como apontar um erro onde não há; a resposta fica como ele deu.</p>'
                       if rev.get("duvidas_de_leitura") else "")
         tab_origem = tabela(["Quem decidiu", "Relatórios", "Decisões apropriadas", "Apropriadas (%)", "Wilson 95% (%)", "Avaliação igual ao gabarito"],
                             [[esc(rotulo_origem.get(x["origem"], x["origem"])), x["n"], x["apropriadas"], nd(x.get("pct"), 1), wilson_(x.get("ic")), x.get("avaliacao_bate")] for x in rev.get("por_origem") or []], raw=True)

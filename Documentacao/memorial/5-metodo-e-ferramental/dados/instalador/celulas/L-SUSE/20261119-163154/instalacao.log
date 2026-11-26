@@ -1,0 +1,16 @@
+[install.sh] Python 3.12 ou mais novo não encontrado: baixando o uv 0.13.9 de https://github.com/astral-sh/uv/releases/download/0.13.9/uv-x86_64-unknown-linux-gnu.tar.gz
+[install.sh] Instalando o Python 3.14 em /home/cobaia/TCC-main/.ferramentas/python (dentro do projeto; nada muda no sistema)...
+Downloading cpython-3.14.10-linux-x86_64-gnu (download) (35.2MiB)
+ Downloaded cpython-3.14.10-linux-x86_64-gnu (download)
+Installed Python 3.14.10 in 4.75s
+ + cpython-3.14.10-linux-x86_64-gnu
+[install.sh] Python: /home/cobaia/TCC-main/.ferramentas/python/cpython-3.14.10-linux-x86_64-gnu/bin/python3 (Python 3.14.10)
+[cobaia] Sistema: openSUSE Tumbleweed (família nao_suportado, nao_suportado)
+[cobaia] Este instalador não tem suporte a openSUSE Tumbleweed.
+[cobaia] O que ele instala nos sistemas suportados, para você instalar à mão:
+[cobaia]   - PHP 8.1 a 8.5, com as extensões mysqli, pdo_mysql e mbstring;
+[cobaia]   - MariaDB 10.6 ou mais novo, com o usuário root local sem senha;
+[cobaia]   - Python 3.12 ou mais novo, com o módulo venv;
+[cobaia]   - as bibliotecas de sistema do Chromium do Playwright;
+[cobaia]   - o Ollama (https://ollama.com/download).
+[cobaia] Sistemas suportados: Ubuntu 22.04, 24.04 e 26.04; Debian 12 e 13; Fedora, como melhor esforço.

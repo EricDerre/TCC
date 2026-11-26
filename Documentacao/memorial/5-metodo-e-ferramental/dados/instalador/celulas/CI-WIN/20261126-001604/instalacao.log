@@ -1,0 +1,28 @@
+[cobaia] Sistema: Windows (família windows, suportado)
+[cobaia] Sistema operacional detectado: Windows
+[cobaia] PHP já instalado: c:\tools\php\php.EXE
+[cobaia] Há um MySQL em C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE. O projeto usa o MariaDB: o instalador não mexe no MySQL e instala o MariaDB portátil ao lado. Se o serviço do MySQL estiver ligado na porta 3306, o MariaDB não sobe: pare o serviço do MySQL antes.
+[cobaia] MariaDB não encontrado — instalando...
+[cobaia] Instalando o MariaDB portátil (série 11.8) em %LOCALAPPDATA%\MariaDB, sem administrador...
+[cobaia] Baixando http://downloads.mariadb.org/rest-api/mariadb/11.8.10/mariadb-11.8.10-winx64.zip ...
+[cobaia]   1 MB de 94 MB
+[cobaia]   10 MB de 94 MB
+[cobaia]   20 MB de 94 MB
+[cobaia]   30 MB de 94 MB
+[cobaia]   40 MB de 94 MB
+[cobaia]   50 MB de 94 MB
+[cobaia]   60 MB de 94 MB
+[cobaia]   70 MB de 94 MB
+[cobaia]   80 MB de 94 MB
+[cobaia]   90 MB de 94 MB
+[cobaia] SHA-256 conferido (05d04b46763e...). Extraindo em C:\Users\runneradmin\AppData\Local\MariaDB ...
+[cobaia] Criando a pasta de dados em D:\a\TCC\TCC\.mariadb\data (root sem senha, porta 3306)...
+[cobaia] $ C:\Users\runneradmin\AppData\Local\MariaDB\mariadb-11.8.10-winx64\bin\mariadb-install-db.exe --datadir=D:\a\TCC\TCC\.mariadb\data --port=3306
+Running bootstrap
+FATAL ERROR: Can't create data directory 'D:\a\TCC\TCC\.mariadb\data' (one or more intermediate directories do not exist)
+
+[cobaia] mariadb-install-db.exe falhou; veja a saída acima.
+[cobaia] Nenhum serviço de banco ativo — iniciando C:\Users\runneradmin\AppData\Local\MariaDB\mariadb-11.8.10-winx64\bin\mariadbd.exe como processo...
+[cobaia] Aguardando o MariaDB responder...
+[cobaia] Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo.
+Press any key to continue . . . 

@@ -51,6 +51,28 @@
    "preparo": "nenhum"
   },
   {
+   "id": "CI-UBU",
+   "rodada": "20261126-001605",
+   "modo": "novo",
+   "origem": "GitHub Actions",
+   "imagem": "GitHub Actions: Linux X64, imagem ubuntu24 20261116.133.1",
+   "ate": "N4",
+   "terminou": true,
+   "alcancado": "N4",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "passou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "Ubuntu 24.04.5 LTS",
+   "commit": "f305dee1",
+   "preparo": "remover-mysql"
+  },
+  {
    "id": "CI-WIN",
    "rodada": "20261125-155844",
    "modo": "como-esta",
@@ -72,6 +94,28 @@
    ],
    "sistema": "Windows",
    "commit": "9badcba8",
+   "preparo": "nenhum"
+  },
+  {
+   "id": "CI-WIN",
+   "rodada": "20261126-001604",
+   "modo": "novo",
+   "origem": "GitHub Actions",
+   "imagem": "GitHub Actions: Windows X64, imagem ? ?",
+   "ate": "N4",
+   "terminou": true,
+   "alcancado": "N0",
+   "falhou": true,
+   "niveis": {
+    "N1": "falhou",
+    "N2": "nao_rodou",
+    "N3": "falhou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "N1: o MariaDB não respondeu (ensure_mariadb_running)",
+   "impedida_por_versao": [],
+   "sistema": "Windows",
+   "commit": "f305dee1",
    "preparo": "nenhum"
   },
   {
@@ -619,6 +663,28 @@
    "preparo": "nenhum"
   },
   {
+   "id": "M-15",
+   "rodada": "20261126-001559",
+   "modo": "novo",
+   "origem": "GitHub Actions",
+   "imagem": "GitHub Actions: macOS ARM64, imagem macos15 20261118.0550.1",
+   "ate": "N3",
+   "terminou": true,
+   "alcancado": "N3",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "nao_rodou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "macOS",
+   "commit": "f305dee1",
+   "preparo": "nenhum"
+  },
+  {
    "id": "M-15I",
    "rodada": "20261125-155847",
    "modo": "como-esta",
@@ -638,6 +704,28 @@
    "impedida_por_versao": [],
    "sistema": "macOS",
    "commit": "9badcba8",
+   "preparo": "nenhum"
+  },
+  {
+   "id": "M-15I",
+   "rodada": "20261126-001606",
+   "modo": "novo",
+   "origem": "GitHub Actions",
+   "imagem": "GitHub Actions: macOS X64, imagem macos15 20260824.0482.1",
+   "ate": "N4",
+   "terminou": true,
+   "alcancado": "N4",
+   "falhou": false,
+   "niveis": {
+    "N1": "passou",
+    "N2": "passou",
+    "N3": "passou",
+    "N4": "passou"
+   },
+   "primeira_falha": "",
+   "impedida_por_versao": [],
+   "sistema": "macOS (Intel)",
+   "commit": "f305dee1",
    "preparo": "nenhum"
   }
  ]

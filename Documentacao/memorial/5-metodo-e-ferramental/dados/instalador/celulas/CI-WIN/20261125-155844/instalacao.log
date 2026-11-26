@@ -1,0 +1,8 @@
+[cobaia] Sistema: Windows (família windows, suportado)
+[cobaia] Sistema operacional detectado: Windows
+[cobaia] PHP já instalado: c:\tools\php\php.EXE
+[cobaia] Cliente MariaDB/MySQL já disponível: C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.EXE
+[cobaia] Nenhum serviço de banco ativo — iniciando C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.EXE como processo...
+[cobaia] Aguardando o MariaDB responder...
+[cobaia] Não foi possível subir o MariaDB. Verifique a instalação e rode o instalador de novo.
+Press any key to continue . . . 

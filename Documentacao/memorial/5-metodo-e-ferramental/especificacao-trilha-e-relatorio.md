@@ -223,7 +223,9 @@ Nos 36 casos de avaliação, com gabarito (mapa linha 30): (a) se a divergência
 
 <!-- ! Alteração de IA - Revisar: (05/11/2026, decisão 87) nota sobre a parte (c) da avaliação da trilha.
      ! Motivo: quem ler a especificação precisa saber que a medida com revisor humano não foi feita como está escrita, e onde está o que foi feito no lugar dela. -->
-**Nota (05/11/2026).** A parte (c) não foi feita com um revisor humano: na sessão da corrida 22, o Eric respondeu um relatório e aprovou o parecer do Claude nos outros dez (decisões 85 e 86). A medida fica em aberto e será feita depois da Pós-Fase 4 (decisão 95); a leitura da sessão está em `resultados_alvo/fase4/leitura_revisao_trilha.md`.
+<!-- ! Alteração de IA - Revisar: (25/11/2026, decisão 166) a nota de 05/11 passa a dizer que o relatório 1 foi respondido pelo analista de QA, fora da página.
+     ! Motivo: o Eric declarou no quadro quem respondeu; a nota dizia que tinha sido ele. -->
+**Nota (05/11/2026).** A parte (c) não foi feita com um revisor humano: na sessão da corrida 22, um relatório foi respondido pelo analista de QA, que leu fora da página, sem tempo medido (decisão 166, de 25/11/2026), e o Eric aprovou o parecer do Claude nos outros dez (decisões 85 e 86). A medida fica em aberto e será feita depois da Pós-Fase 4 (decisão 95); a leitura da sessão está em `resultados_alvo/fase4/leitura_revisao_trilha.md`.
 
 <!-- ! Alteração de IA - Revisar: (10/11/2026, decisão 117) a nota passou a dizer que os 36 relatórios foram lidos por um analista de QA da empresa. ! Motivo: o Eric declarou no quadro quem é o analista e que as 36 respostas são dele; a nota dizia 35 e 1 e remetia à ficha 62, que fechou. -->
 <!-- ! Alteração de IA - Revisar: (10/11/2026, tarde) a nota de 10/11 foi reescrita: quem leu quase todos os relatórios foi um analista, e o tempo não foi medido (decisão 114). ! Motivo: a nota da manhã dizia que o Eric tinha lido os 36 relatórios; ele declarou no quadro que passou os relatórios a um analista e colou as respostas. -->

@@ -1,0 +1,5 @@
+N1: falhou cliente do MariaDB não encontrado (find_mysql_cli)
+N2: nao_rodou depende do N1, que não passou
+N3: falhou o executável do Ollama não foi encontrado (find_ollama)
+N4: nao_rodou 
+registro gravado em /home/cobaia/evidencia/registro.json

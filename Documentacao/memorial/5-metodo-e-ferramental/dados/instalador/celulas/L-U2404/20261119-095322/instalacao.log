@@ -1,0 +1,1189 @@
+[install.sh] Python: /usr/bin/python3 (Python 3.12.3)
+[cobaia] Sistema: Ubuntu 24.04.5 LTS (família apt, suportado)
+[cobaia] Pacotes do sistema que faltam: zstd python3-venv php-cli php-mysql php-mbstring mariadb-server
+[cobaia] $ sudo apt-get update
+Get:1 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Hit:2 http://archive.ubuntu.com/ubuntu noble InRelease
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:4 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1198 kB]
+Get:5 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [239 kB]
+Get:6 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [46.3 kB]
+Get:7 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1230 kB]
+Get:8 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [248 kB]
+Get:9 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [76.3 kB]
+Get:10 http://security.ubuntu.com/ubuntu noble-security/universe amd64 c-n-f Metadata [24.2 kB]
+Get:11 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1792 kB]
+Get:12 http://security.ubuntu.com/ubuntu noble-security/restricted Translation-en [414 kB]
+Get:13 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [45.4 kB]
+Get:14 http://security.ubuntu.com/ubuntu noble-security/multiverse Translation-en [12.7 kB]
+Get:15 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [208 B]
+Get:16 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 c-n-f Metadata [468 B]
+Get:17 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:18 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [15.0 MB]
+Get:19 http://archive.ubuntu.com/ubuntu noble/universe Translation-en [5982 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble/universe amd64 Components [3871 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble/universe amd64 c-n-f Metadata [301 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [269 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble/multiverse Translation-en [118 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Components [35.0 kB]
+Get:25 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 c-n-f Metadata [8328 B]
+Get:26 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1456 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble-updates/main Translation-en [317 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [181 kB]
+Get:29 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1716 kB]
+Get:30 http://archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [346 kB]
+Get:31 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [388 kB]
+Get:32 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 c-n-f Metadata [34.9 kB]
+Get:33 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1887 kB]
+Get:34 http://archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [433 kB]
+Get:35 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [50.7 kB]
+Get:36 http://archive.ubuntu.com/ubuntu noble-updates/multiverse Translation-en [14.6 kB]
+Get:37 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:38 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 c-n-f Metadata [656 B]
+Get:39 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [40.6 kB]
+Get:40 http://archive.ubuntu.com/ubuntu noble-backports/main Translation-en [9172 B]
+Get:41 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [5748 B]
+Get:42 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 c-n-f Metadata [368 B]
+Get:43 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [31.0 kB]
+Get:44 http://archive.ubuntu.com/ubuntu noble-backports/universe Translation-en [18.6 kB]
+Get:45 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [12.6 kB]
+Get:46 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 c-n-f Metadata [1588 B]
+Get:47 http://archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [212 B]
+Get:48 http://archive.ubuntu.com/ubuntu noble-backports/restricted amd64 c-n-f Metadata [116 B]
+Get:49 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [748 B]
+Get:50 http://archive.ubuntu.com/ubuntu noble-backports/multiverse Translation-en [340 B]
+Get:51 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+Get:52 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 c-n-f Metadata [116 B]
+Fetched 38.3 MB in 5s (6993 kB/s)
+Reading package lists...
+[cobaia] $ sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-remove zstd python3-venv php-cli php-mysql php-mbstring mariadb-server
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  galera-4 libcgi-fast-perl libcgi-pm-perl libclone-perl
+  libconfig-inifiles-perl libdbd-mysql-perl libdbi-perl libencode-locale-perl
+  libfcgi-bin libfcgi-perl libfcgi0t64 libhtml-parser-perl libhtml-tagset-perl
+  libhtml-template-perl libhttp-date-perl libhttp-message-perl libio-html-perl
+  liblwp-mediatypes-perl libmariadb3 libmysqlclient21 libncurses6 libnuma1
+  libonig5 libperl5.38t64 libpython3.12-minimal libpython3.12-stdlib
+  libpython3.12t64 libsnappy1v5 libterm-readkey-perl libtimedate-perl
+  liburi-perl liburing2 libwrap0 mariadb-client mariadb-client-core
+  mariadb-common mariadb-plugin-provider-bzip2 mariadb-plugin-provider-lz4
+  mariadb-plugin-provider-lzma mariadb-plugin-provider-lzo
+  mariadb-plugin-provider-snappy mariadb-server-core mysql-common perl
+  perl-base perl-modules-5.38 php-common php8.3-cli php8.3-common
+  php8.3-mbstring php8.3-mysql php8.3-opcache php8.3-readline pv
+  python3-pip-whl python3-setuptools-whl python3.12 python3.12-minimal
+  python3.12-venv socat
+Suggested packages:
+  libmldbm-perl libnet-daemon-perl libsql-statement-perl libdata-dump-perl
+  libipc-sharedcache-perl libio-compress-brotli-perl libbusiness-isbn-perl
+  libregexp-ipv6-perl libwww-perl mailx mariadb-test perl-doc
+  libterm-readline-gnu-perl | libterm-readline-perl-perl make
+  libtap-harness-archive-perl php-pear doc-base python3.12-doc binfmt-support
+The following NEW packages will be installed:
+  galera-4 libcgi-fast-perl libcgi-pm-perl libclone-perl
+  libconfig-inifiles-perl libdbd-mysql-perl libdbi-perl libencode-locale-perl
+  libfcgi-bin libfcgi-perl libfcgi0t64 libhtml-parser-perl libhtml-tagset-perl
+  libhtml-template-perl libhttp-date-perl libhttp-message-perl libio-html-perl
+  liblwp-mediatypes-perl libmariadb3 libmysqlclient21 libncurses6 libnuma1
+  libonig5 libsnappy1v5 libterm-readkey-perl libtimedate-perl liburi-perl
+  liburing2 libwrap0 mariadb-client mariadb-client-core mariadb-common
+  mariadb-plugin-provider-bzip2 mariadb-plugin-provider-lz4
+  mariadb-plugin-provider-lzma mariadb-plugin-provider-lzo
+  mariadb-plugin-provider-snappy mariadb-server mariadb-server-core
+  mysql-common php-cli php-common php-mbstring php-mysql php8.3-cli
+  php8.3-common php8.3-mbstring php8.3-mysql php8.3-opcache php8.3-readline pv
+  python3-pip-whl python3-setuptools-whl python3-venv python3.12-venv socat
+  zstd
+The following packages will be upgraded:
+  libperl5.38t64 libpython3.12-minimal libpython3.12-stdlib libpython3.12t64
+  perl perl-base perl-modules-5.38 python3.12 python3.12-minimal
+9 upgraded, 57 newly installed, 0 to remove and 88 not upgraded.
+Need to get 45.2 MB of archives.
+After this operation, 225 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libperl5.38t64 amd64 5.38.2-3.2ubuntu0.7 [4864 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 perl amd64 5.38.2-3.2ubuntu0.7 [231 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 perl-base amd64 5.38.2-3.2ubuntu0.7 [1828 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 perl-modules-5.38 all 5.38.2-3.2ubuntu0.7 [3110 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12t64 amd64 3.12.3-1ubuntu0.17 [2348 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble/universe amd64 galera-4 amd64 26.4.16-2build4 [736 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble/main amd64 mysql-common all 5.8+1.1.0build1 [6746 B]
+Get:12 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-common all 1:10.11.14-0ubuntu0.24.04.1 [28.6 kB]
+Get:13 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libdbi-perl amd64 1.643-4ubuntu0.4 [722 kB]
+Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libconfig-inifiles-perl all 3.000003-2ubuntu0.1 [38.5 kB]
+Get:15 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 libmariadb3 amd64 1:10.11.14-0ubuntu0.24.04.1 [196 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libncurses6 amd64 6.4+20240113-1ubuntu2.2 [112 kB]
+Get:17 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-client-core amd64 1:10.11.14-0ubuntu0.24.04.1 [1039 kB]
+Get:18 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-client amd64 1:10.11.14-0ubuntu0.24.04.1 [2502 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libnuma1 amd64 2.0.18-1ubuntu0.24.04.1 [23.4 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble/main amd64 liburing2 amd64 2.5-1build1 [21.1 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-server-core amd64 1:10.11.14-0ubuntu0.24.04.1 [8406 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble/main amd64 libwrap0 amd64 7.6.q-33 [47.9 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 socat amd64 1.8.0.0-4ubuntu0.1 [374 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-server amd64 1:10.11.14-0ubuntu0.24.04.1 [3463 kB]
+Get:25 http://archive.ubuntu.com/ubuntu noble/main amd64 libhtml-tagset-perl all 3.20-6 [11.3 kB]
+Get:26 http://archive.ubuntu.com/ubuntu noble/main amd64 liburi-perl all 5.27-1 [88.0 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libhtml-parser-perl amd64 3.81-1ubuntu0.1 [86.0 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble/main amd64 libcgi-pm-perl all 4.63-1 [185 kB]
+Get:29 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libfcgi0t64 amd64 2.4.2-2.1ubuntu0.24.04.1 [27.0 kB]
+Get:30 http://archive.ubuntu.com/ubuntu noble/main amd64 libfcgi-perl amd64 0.82+ds-3build2 [21.7 kB]
+Get:31 http://archive.ubuntu.com/ubuntu noble/main amd64 libcgi-fast-perl all 1:2.17-1 [10.3 kB]
+Get:32 http://archive.ubuntu.com/ubuntu noble/main amd64 libclone-perl amd64 0.46-1build3 [10.7 kB]
+Get:33 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libmysqlclient21 amd64 8.0.46-0ubuntu0.24.04.5 [1255 kB]
+Get:34 http://archive.ubuntu.com/ubuntu noble/universe amd64 libdbd-mysql-perl amd64 4.052-1ubuntu3 [85.5 kB]
+Get:35 http://archive.ubuntu.com/ubuntu noble/main amd64 libencode-locale-perl all 1.05-3 [11.6 kB]
+Get:36 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libfcgi-bin amd64 2.4.2-2.1ubuntu0.24.04.1 [11.2 kB]
+Get:37 http://archive.ubuntu.com/ubuntu noble/main amd64 libhtml-template-perl all 2.97-2 [60.2 kB]
+Get:38 http://archive.ubuntu.com/ubuntu noble/main amd64 libtimedate-perl all 2.3300-2 [34.0 kB]
+Get:39 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libhttp-date-perl all 6.06-1ubuntu0.24.04.1 [10.6 kB]
+Get:40 http://archive.ubuntu.com/ubuntu noble/main amd64 libio-html-perl all 1.004-3 [15.9 kB]
+Get:41 http://archive.ubuntu.com/ubuntu noble/main amd64 liblwp-mediatypes-perl all 6.04-2 [20.1 kB]
+Get:42 http://archive.ubuntu.com/ubuntu noble/main amd64 libhttp-message-perl all 6.45-1ubuntu1 [78.2 kB]
+Get:43 http://archive.ubuntu.com/ubuntu noble/main amd64 libonig5 amd64 6.9.9-1build1 [172 kB]
+Get:44 http://archive.ubuntu.com/ubuntu noble/main amd64 libterm-readkey-perl amd64 2.38-2build4 [23.1 kB]
+Get:45 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-bzip2 amd64 1:10.11.14-0ubuntu0.24.04.1 [13.9 kB]
+Get:46 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-lz4 amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:47 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-lzma amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:48 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-lzo amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:49 http://archive.ubuntu.com/ubuntu noble/main amd64 libsnappy1v5 amd64 1.1.10-1build1 [28.6 kB]
+Get:50 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 mariadb-plugin-provider-snappy amd64 1:10.11.14-0ubuntu0.24.04.1 [13.8 kB]
+Get:51 http://archive.ubuntu.com/ubuntu noble/main amd64 php-common all 2:93ubuntu2 [13.9 kB]
+Get:52 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 php8.3-common amd64 8.3.6-0ubuntu0.24.04.13 [748 kB]
+Get:53 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 php8.3-opcache amd64 8.3.6-0ubuntu0.24.04.13 [372 kB]
+Get:54 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 php8.3-readline amd64 8.3.6-0ubuntu0.24.04.13 [13.6 kB]
+Get:55 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 php8.3-cli amd64 8.3.6-0ubuntu0.24.04.13 [1932 kB]
+Get:56 http://archive.ubuntu.com/ubuntu noble/main amd64 php-cli all 2:8.3+93ubuntu2 [4584 B]
+Get:57 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 php8.3-mbstring amd64 8.3.6-0ubuntu0.24.04.13 [511 kB]
+Get:58 http://archive.ubuntu.com/ubuntu noble/universe amd64 php-mbstring all 2:8.3+93ubuntu2 [1848 B]
+Get:59 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 php8.3-mysql amd64 8.3.6-0ubuntu0.24.04.13 [127 kB]
+Get:60 http://archive.ubuntu.com/ubuntu noble/main amd64 php-mysql all 2:8.3+93ubuntu2 [1838 B]
+Get:61 http://archive.ubuntu.com/ubuntu noble/main amd64 pv amd64 1.8.5-2build1 [73.9 kB]
+Get:62 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-pip-whl all 24.0+dfsg-1ubuntu1.3 [1707 kB]
+Get:63 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-setuptools-whl all 68.1.2-2ubuntu1.2 [716 kB]
+Get:64 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3.12-venv amd64 3.12.3-1ubuntu0.17 [5684 B]
+Get:65 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 python3-venv amd64 3.12.3-0ubuntu2.1 [1032 B]
+Get:66 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 zstd amd64 1.5.5+dfsg2-2build1.1 [644 kB]
+Preconfiguring packages ...
+Fetched 45.2 MB in 2s (22.5 MB/s)
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 40785 files and directories currently installed.)
+Preparing to unpack .../libperl5.38t64_5.38.2-3.2ubuntu0.7_amd64.deb ...
+Unpacking libperl5.38t64:amd64 (5.38.2-3.2ubuntu0.7) over (5.38.2-3.2ubuntu0.4) ...
+Preparing to unpack .../perl_5.38.2-3.2ubuntu0.7_amd64.deb ...
+Unpacking perl (5.38.2-3.2ubuntu0.7) over (5.38.2-3.2ubuntu0.4) ...
+Preparing to unpack .../perl-base_5.38.2-3.2ubuntu0.7_amd64.deb ...
+Unpacking perl-base (5.38.2-3.2ubuntu0.7) over (5.38.2-3.2ubuntu0.4) ...
+Setting up perl-base (5.38.2-3.2ubuntu0.7) ...
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 40785 files and directories currently installed.)
+Preparing to unpack .../00-perl-modules-5.38_5.38.2-3.2ubuntu0.7_all.deb ...
+Unpacking perl-modules-5.38 (5.38.2-3.2ubuntu0.7) over (5.38.2-3.2ubuntu0.4) ...
+Preparing to unpack .../01-libpython3.12t64_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12t64:amd64 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../02-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../03-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../04-python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Preparing to unpack .../05-libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) over (3.12.3-1ubuntu0.16) ...
+Selecting previously unselected package galera-4.
+Preparing to unpack .../06-galera-4_26.4.16-2build4_amd64.deb ...
+info: The home dir /nonexistent you specified can't be accessed: No such file or directory
+
+info: Selecting UID from range 100 to 999 ...
+
+info: Adding system user `_galera' (UID 105) ...
+info: Adding new user `_galera' (UID 105) with group `nogroup' ...
+info: Not creating `/nonexistent'.
+Unpacking galera-4 (26.4.16-2build4) ...
+Selecting previously unselected package mysql-common.
+Preparing to unpack .../07-mysql-common_5.8+1.1.0build1_all.deb ...
+Unpacking mysql-common (5.8+1.1.0build1) ...
+Selecting previously unselected package mariadb-common.
+Preparing to unpack .../08-mariadb-common_1%3a10.11.14-0ubuntu0.24.04.1_all.deb ...
+Unpacking mariadb-common (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libdbi-perl:amd64.
+Preparing to unpack .../09-libdbi-perl_1.643-4ubuntu0.4_amd64.deb ...
+Unpacking libdbi-perl:amd64 (1.643-4ubuntu0.4) ...
+Selecting previously unselected package libconfig-inifiles-perl.
+Preparing to unpack .../10-libconfig-inifiles-perl_3.000003-2ubuntu0.1_all.deb ...
+Unpacking libconfig-inifiles-perl (3.000003-2ubuntu0.1) ...
+Selecting previously unselected package libmariadb3:amd64.
+Preparing to unpack .../11-libmariadb3_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking libmariadb3:amd64 (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libncurses6:amd64.
+Preparing to unpack .../12-libncurses6_6.4+20240113-1ubuntu2.2_amd64.deb ...
+Unpacking libncurses6:amd64 (6.4+20240113-1ubuntu2.2) ...
+Selecting previously unselected package mariadb-client-core.
+Preparing to unpack .../13-mariadb-client-core_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-client-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-client.
+Preparing to unpack .../14-mariadb-client_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-client (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libnuma1:amd64.
+Preparing to unpack .../15-libnuma1_2.0.18-1ubuntu0.24.04.1_amd64.deb ...
+Unpacking libnuma1:amd64 (2.0.18-1ubuntu0.24.04.1) ...
+Selecting previously unselected package liburing2:amd64.
+Preparing to unpack .../16-liburing2_2.5-1build1_amd64.deb ...
+Unpacking liburing2:amd64 (2.5-1build1) ...
+Selecting previously unselected package mariadb-server-core.
+Preparing to unpack .../17-mariadb-server-core_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-server-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libwrap0:amd64.
+Preparing to unpack .../18-libwrap0_7.6.q-33_amd64.deb ...
+Unpacking libwrap0:amd64 (7.6.q-33) ...
+Selecting previously unselected package socat.
+Preparing to unpack .../19-socat_1.8.0.0-4ubuntu0.1_amd64.deb ...
+Unpacking socat (1.8.0.0-4ubuntu0.1) ...
+Setting up mysql-common (5.8+1.1.0build1) ...
+update-alternatives: using /etc/mysql/my.cnf.fallback to provide /etc/mysql/my.cnf (my.cnf) in auto mode
+Setting up mariadb-common (1:10.11.14-0ubuntu0.24.04.1) ...
+update-alternatives: using /etc/mysql/mariadb.cnf to provide /etc/mysql/my.cnf (my.cnf) in auto mode
+Selecting previously unselected package mariadb-server.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 41284 files and directories currently installed.)
+Preparing to unpack .../00-mariadb-server_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-server (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libhtml-tagset-perl.
+Preparing to unpack .../01-libhtml-tagset-perl_3.20-6_all.deb ...
+Unpacking libhtml-tagset-perl (3.20-6) ...
+Selecting previously unselected package liburi-perl.
+Preparing to unpack .../02-liburi-perl_5.27-1_all.deb ...
+Unpacking liburi-perl (5.27-1) ...
+Selecting previously unselected package libhtml-parser-perl:amd64.
+Preparing to unpack .../03-libhtml-parser-perl_3.81-1ubuntu0.1_amd64.deb ...
+Unpacking libhtml-parser-perl:amd64 (3.81-1ubuntu0.1) ...
+Selecting previously unselected package libcgi-pm-perl.
+Preparing to unpack .../04-libcgi-pm-perl_4.63-1_all.deb ...
+Unpacking libcgi-pm-perl (4.63-1) ...
+Selecting previously unselected package libfcgi0t64:amd64.
+Preparing to unpack .../05-libfcgi0t64_2.4.2-2.1ubuntu0.24.04.1_amd64.deb ...
+Unpacking libfcgi0t64:amd64 (2.4.2-2.1ubuntu0.24.04.1) ...
+Selecting previously unselected package libfcgi-perl.
+Preparing to unpack .../06-libfcgi-perl_0.82+ds-3build2_amd64.deb ...
+Unpacking libfcgi-perl (0.82+ds-3build2) ...
+Selecting previously unselected package libcgi-fast-perl.
+Preparing to unpack .../07-libcgi-fast-perl_1%3a2.17-1_all.deb ...
+Unpacking libcgi-fast-perl (1:2.17-1) ...
+Selecting previously unselected package libclone-perl:amd64.
+Preparing to unpack .../08-libclone-perl_0.46-1build3_amd64.deb ...
+Unpacking libclone-perl:amd64 (0.46-1build3) ...
+Selecting previously unselected package libmysqlclient21:amd64.
+Preparing to unpack .../09-libmysqlclient21_8.0.46-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libmysqlclient21:amd64 (8.0.46-0ubuntu0.24.04.5) ...
+Selecting previously unselected package libdbd-mysql-perl:amd64.
+Preparing to unpack .../10-libdbd-mysql-perl_4.052-1ubuntu3_amd64.deb ...
+Unpacking libdbd-mysql-perl:amd64 (4.052-1ubuntu3) ...
+Selecting previously unselected package libencode-locale-perl.
+Preparing to unpack .../11-libencode-locale-perl_1.05-3_all.deb ...
+Unpacking libencode-locale-perl (1.05-3) ...
+Selecting previously unselected package libfcgi-bin.
+Preparing to unpack .../12-libfcgi-bin_2.4.2-2.1ubuntu0.24.04.1_amd64.deb ...
+Unpacking libfcgi-bin (2.4.2-2.1ubuntu0.24.04.1) ...
+Selecting previously unselected package libhtml-template-perl.
+Preparing to unpack .../13-libhtml-template-perl_2.97-2_all.deb ...
+Unpacking libhtml-template-perl (2.97-2) ...
+Selecting previously unselected package libtimedate-perl.
+Preparing to unpack .../14-libtimedate-perl_2.3300-2_all.deb ...
+Unpacking libtimedate-perl (2.3300-2) ...
+Selecting previously unselected package libhttp-date-perl.
+Preparing to unpack .../15-libhttp-date-perl_6.06-1ubuntu0.24.04.1_all.deb ...
+Unpacking libhttp-date-perl (6.06-1ubuntu0.24.04.1) ...
+Selecting previously unselected package libio-html-perl.
+Preparing to unpack .../16-libio-html-perl_1.004-3_all.deb ...
+Unpacking libio-html-perl (1.004-3) ...
+Selecting previously unselected package liblwp-mediatypes-perl.
+Preparing to unpack .../17-liblwp-mediatypes-perl_6.04-2_all.deb ...
+Unpacking liblwp-mediatypes-perl (6.04-2) ...
+Selecting previously unselected package libhttp-message-perl.
+Preparing to unpack .../18-libhttp-message-perl_6.45-1ubuntu1_all.deb ...
+Unpacking libhttp-message-perl (6.45-1ubuntu1) ...
+Selecting previously unselected package libonig5:amd64.
+Preparing to unpack .../19-libonig5_6.9.9-1build1_amd64.deb ...
+Unpacking libonig5:amd64 (6.9.9-1build1) ...
+Selecting previously unselected package libterm-readkey-perl.
+Preparing to unpack .../20-libterm-readkey-perl_2.38-2build4_amd64.deb ...
+Unpacking libterm-readkey-perl (2.38-2build4) ...
+Selecting previously unselected package mariadb-plugin-provider-bzip2.
+Preparing to unpack .../21-mariadb-plugin-provider-bzip2_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-bzip2 (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-lz4.
+Preparing to unpack .../22-mariadb-plugin-provider-lz4_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-lz4 (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-lzma.
+Preparing to unpack .../23-mariadb-plugin-provider-lzma_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-lzma (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package mariadb-plugin-provider-lzo.
+Preparing to unpack .../24-mariadb-plugin-provider-lzo_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-lzo (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package libsnappy1v5:amd64.
+Preparing to unpack .../25-libsnappy1v5_1.1.10-1build1_amd64.deb ...
+Unpacking libsnappy1v5:amd64 (1.1.10-1build1) ...
+Selecting previously unselected package mariadb-plugin-provider-snappy.
+Preparing to unpack .../26-mariadb-plugin-provider-snappy_1%3a10.11.14-0ubuntu0.24.04.1_amd64.deb ...
+Unpacking mariadb-plugin-provider-snappy (1:10.11.14-0ubuntu0.24.04.1) ...
+Selecting previously unselected package php-common.
+Preparing to unpack .../27-php-common_2%3a93ubuntu2_all.deb ...
+Unpacking php-common (2:93ubuntu2) ...
+Selecting previously unselected package php8.3-common.
+Preparing to unpack .../28-php8.3-common_8.3.6-0ubuntu0.24.04.13_amd64.deb ...
+Unpacking php8.3-common (8.3.6-0ubuntu0.24.04.13) ...
+Selecting previously unselected package php8.3-opcache.
+Preparing to unpack .../29-php8.3-opcache_8.3.6-0ubuntu0.24.04.13_amd64.deb ...
+Unpacking php8.3-opcache (8.3.6-0ubuntu0.24.04.13) ...
+Selecting previously unselected package php8.3-readline.
+Preparing to unpack .../30-php8.3-readline_8.3.6-0ubuntu0.24.04.13_amd64.deb ...
+Unpacking php8.3-readline (8.3.6-0ubuntu0.24.04.13) ...
+Selecting previously unselected package php8.3-cli.
+Preparing to unpack .../31-php8.3-cli_8.3.6-0ubuntu0.24.04.13_amd64.deb ...
+Unpacking php8.3-cli (8.3.6-0ubuntu0.24.04.13) ...
+Selecting previously unselected package php-cli.
+Preparing to unpack .../32-php-cli_2%3a8.3+93ubuntu2_all.deb ...
+Unpacking php-cli (2:8.3+93ubuntu2) ...
+Selecting previously unselected package php8.3-mbstring.
+Preparing to unpack .../33-php8.3-mbstring_8.3.6-0ubuntu0.24.04.13_amd64.deb ...
+Unpacking php8.3-mbstring (8.3.6-0ubuntu0.24.04.13) ...
+Selecting previously unselected package php-mbstring.
+Preparing to unpack .../34-php-mbstring_2%3a8.3+93ubuntu2_all.deb ...
+Unpacking php-mbstring (2:8.3+93ubuntu2) ...
+Selecting previously unselected package php8.3-mysql.
+Preparing to unpack .../35-php8.3-mysql_8.3.6-0ubuntu0.24.04.13_amd64.deb ...
+Unpacking php8.3-mysql (8.3.6-0ubuntu0.24.04.13) ...
+Selecting previously unselected package php-mysql.
+Preparing to unpack .../36-php-mysql_2%3a8.3+93ubuntu2_all.deb ...
+Unpacking php-mysql (2:8.3+93ubuntu2) ...
+Selecting previously unselected package pv.
+Preparing to unpack .../37-pv_1.8.5-2build1_amd64.deb ...
+Unpacking pv (1.8.5-2build1) ...
+Selecting previously unselected package python3-pip-whl.
+Preparing to unpack .../38-python3-pip-whl_24.0+dfsg-1ubuntu1.3_all.deb ...
+Unpacking python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+Selecting previously unselected package python3-setuptools-whl.
+Preparing to unpack .../39-python3-setuptools-whl_68.1.2-2ubuntu1.2_all.deb ...
+Unpacking python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+Selecting previously unselected package python3.12-venv.
+Preparing to unpack .../40-python3.12-venv_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12-venv (3.12.3-1ubuntu0.17) ...
+Selecting previously unselected package python3-venv.
+Preparing to unpack .../41-python3-venv_3.12.3-0ubuntu2.1_amd64.deb ...
+Unpacking python3-venv (3.12.3-0ubuntu2.1) ...
+Selecting previously unselected package zstd.
+Preparing to unpack .../42-zstd_1.5.5+dfsg2-2build1.1_amd64.deb ...
+Unpacking zstd (1.5.5+dfsg2-2build1.1) ...
+Setting up libconfig-inifiles-perl (3.000003-2ubuntu0.1) ...
+Setting up galera-4 (26.4.16-2build4) ...
+Setting up php-common (2:93ubuntu2) ...
+Created symlink /etc/systemd/system/timers.target.wants/phpsessionclean.timer → /usr/lib/systemd/system/phpsessionclean.timer.
+Setting up libmysqlclient21:amd64 (8.0.46-0ubuntu0.24.04.5) ...
+Setting up python3-setuptools-whl (68.1.2-2ubuntu1.2) ...
+Setting up python3-pip-whl (24.0+dfsg-1ubuntu1.3) ...
+Setting up libfcgi0t64:amd64 (2.4.2-2.1ubuntu0.24.04.1) ...
+Setting up libfcgi-bin (2.4.2-2.1ubuntu0.24.04.1) ...
+Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up php8.3-common (8.3.6-0ubuntu0.24.04.13) ...
+
+Creating config file /etc/php/8.3/mods-available/calendar.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/ctype.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/exif.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/fileinfo.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/ffi.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/ftp.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/gettext.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/iconv.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/pdo.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/phar.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/posix.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/shmop.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/sockets.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/sysvmsg.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/sysvsem.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/sysvshm.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/tokenizer.ini with new version
+Setting up libsnappy1v5:amd64 (1.1.10-1build1) ...
+Setting up php8.3-mysql (8.3.6-0ubuntu0.24.04.13) ...
+
+Creating config file /etc/php/8.3/mods-available/mysqlnd.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/mysqli.ini with new version
+
+Creating config file /etc/php/8.3/mods-available/pdo_mysql.ini with new version
+Setting up php8.3-readline (8.3.6-0ubuntu0.24.04.13) ...
+
+Creating config file /etc/php/8.3/mods-available/readline.ini with new version
+Setting up libwrap0:amd64 (7.6.q-33) ...
+Setting up socat (1.8.0.0-4ubuntu0.1) ...
+Setting up libncurses6:amd64 (6.4+20240113-1ubuntu2.2) ...
+Setting up perl-modules-5.38 (5.38.2-3.2ubuntu0.7) ...
+Setting up libmariadb3:amd64 (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up libnuma1:amd64 (2.0.18-1ubuntu0.24.04.1) ...
+Setting up pv (1.8.5-2build1) ...
+Setting up libperl5.38t64:amd64 (5.38.2-3.2ubuntu0.7) ...
+Setting up php8.3-opcache (8.3.6-0ubuntu0.24.04.13) ...
+
+Creating config file /etc/php/8.3/mods-available/opcache.ini with new version
+Setting up liburing2:amd64 (2.5-1build1) ...
+Setting up zstd (1.5.5+dfsg2-2build1.1) ...
+Setting up libonig5:amd64 (6.9.9-1build1) ...
+Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
+Setting up php-mysql (2:8.3+93ubuntu2) ...
+Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up python3.12 (3.12.3-1ubuntu0.17) ...
+Setting up php8.3-cli (8.3.6-0ubuntu0.24.04.13) ...
+update-alternatives: using /usr/bin/php8.3 to provide /usr/bin/php (php) in auto mode
+update-alternatives: using /usr/bin/phar8.3 to provide /usr/bin/phar (phar) in auto mode
+update-alternatives: using /usr/bin/phar.phar8.3 to provide /usr/bin/phar.phar (phar.phar) in auto mode
+
+Creating config file /etc/php/8.3/cli/php.ini with new version
+Setting up mariadb-client-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up libpython3.12t64:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up perl (5.38.2-3.2ubuntu0.7) ...
+Setting up php8.3-mbstring (8.3.6-0ubuntu0.24.04.13) ...
+
+Creating config file /etc/php/8.3/mods-available/mbstring.ini with new version
+Setting up libio-html-perl (1.004-3) ...
+Setting up libtimedate-perl (2.3300-2) ...
+Setting up php-cli (2:8.3+93ubuntu2) ...
+update-alternatives: using /usr/bin/php.default to provide /usr/bin/php (php) in auto mode
+update-alternatives: using /usr/bin/phar.default to provide /usr/bin/phar (phar) in auto mode
+update-alternatives: using /usr/bin/phar.phar.default to provide /usr/bin/phar.phar (phar.phar) in auto mode
+Setting up libfcgi-perl (0.82+ds-3build2) ...
+Setting up mariadb-server-core (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up libterm-readkey-perl (2.38-2build4) ...
+Setting up liburi-perl (5.27-1) ...
+Setting up libdbi-perl:amd64 (1.643-4ubuntu0.4) ...
+Setting up libhttp-date-perl (6.06-1ubuntu0.24.04.1) ...
+Setting up mariadb-client (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up python3.12-venv (3.12.3-1ubuntu0.17) ...
+Setting up libclone-perl:amd64 (0.46-1build3) ...
+Setting up libhtml-tagset-perl (3.20-6) ...
+Setting up liblwp-mediatypes-perl (6.04-2) ...
+Setting up libencode-locale-perl (1.05-3) ...
+Setting up php-mbstring (2:8.3+93ubuntu2) ...
+Setting up mariadb-server (1:10.11.14-0ubuntu0.24.04.1) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
+Setting up mariadb-plugin-provider-bzip2 (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-plugin-provider-lzma (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up python3-venv (3.12.3-0ubuntu2.1) ...
+Setting up libdbd-mysql-perl:amd64 (4.052-1ubuntu3) ...
+Setting up libhtml-parser-perl:amd64 (3.81-1ubuntu0.1) ...
+Setting up mariadb-plugin-provider-lzo (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up libhttp-message-perl (6.45-1ubuntu1) ...
+Setting up mariadb-plugin-provider-lz4 (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up mariadb-plugin-provider-snappy (1:10.11.14-0ubuntu0.24.04.1) ...
+Setting up libcgi-pm-perl (4.63-1) ...
+Setting up libhtml-template-perl (2.97-2) ...
+Setting up libcgi-fast-perl (1:2.17-1) ...
+Processing triggers for systemd (255.4-1ubuntu8.17) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.8) ...
+Processing triggers for php8.3-cli (8.3.6-0ubuntu0.24.04.13) ...
+Processing triggers for mariadb-server (1:10.11.14-0ubuntu0.24.04.1) ...
+[cobaia] PHP: /usr/bin/php, com mysqli, pdo_mysql, mbstring.
+[cobaia] O site legado (Programacao/CobaiaFront/conn/connect.php) entra no MariaDB como root, sem senha.
+[cobaia] Neste sistema o root do MariaDB só entra pelo usuário root do Linux (unix_socket). Para o site funcionar,
+[cobaia] o instalador troca essa entrada para senha vazia: qualquer usuário desta máquina passa a entrar como root
+[cobaia] do MariaDB. Não aceite numa máquina que tenha um MariaDB em uso de verdade.
+[cobaia] root não acessível sem senha via TCP — tentando corrigir via socket local (sudo)...
+[cobaia] root ajustado para sem senha.
+[cobaia] Aplicando bancoatualizado.sql...
+[cobaia] Aplicando schema_completo.sql...
+[cobaia] Aplicando seed.sql...
+[cobaia] Banco pronto (schema completo + seed).
+[cobaia] Criando venv da CobaiaAPI...
+[cobaia] $ /usr/bin/python3 -m venv /home/cobaia/TCC-main/Programacao/CobaiaAPI/.venv
+[cobaia] $ /home/cobaia/TCC-main/Programacao/CobaiaAPI/.venv/bin/pip install -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt
+Collecting fastapi>=0.119.1 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading fastapi-0.165.0-py3-none-any.whl.metadata (27 kB)
+Collecting uvicorn>=0.34 (from uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading uvicorn-0.54.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting pydantic>=2.9 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 141.5/141.5 kB 3.5 MB/s eta 0:00:00
+Collecting pydantic-settings>=2.6 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 11))
+  Downloading pydantic_settings-2.16.3-py3-none-any.whl.metadata (4.0 kB)
+Collecting sqlalchemy>=2.0.36 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 12))
+  Downloading sqlalchemy-2.1.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (9.7 kB)
+Collecting pymysql>=1.1.1 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 13))
+  Downloading pymysql-1.2.4-py3-none-any.whl.metadata (4.2 kB)
+Collecting python-multipart>=0.0.12 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 14))
+  Downloading python_multipart-0.0.34-py3-none-any.whl.metadata (6.3 kB)
+Collecting pytest>=8.3 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pytest-9.2.0-py3-none-any.whl.metadata (7.9 kB)
+Collecting httpx>=0.28 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting ruff>=0.8 (from -r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 9))
+  Downloading ruff-0.17.5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (20 kB)
+Collecting starlette>=1.6.0 (from fastapi>=0.119.1->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting anyio>=4.1.0 (from fastapi>=0.119.1->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi>=0.119.1->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from fastapi>=0.119.1->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+Collecting annotated-doc>=0.0.2 (from fastapi>=0.119.1->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading annotated_doc-0.0.7-py3-none-any.whl.metadata (6.4 kB)
+Collecting opentelemetry-api>=1.44.0 (from fastapi>=0.119.1->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 8))
+  Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+Collecting click>=7.0 (from uvicorn>=0.34->uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn>=0.34->uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.9->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.50.4 (from pydantic>=2.9->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 10))
+  Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+Collecting python-dotenv>=1.2.2 (from pydantic-settings>=2.6->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 11))
+  Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+Collecting iniconfig>=2 (from pytest>=8.3->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+Collecting packaging>=24 (from pytest>=8.3->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.6 (from pytest>=8.3->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+Collecting pygments>=2.15 (from pytest>=8.3->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 7))
+  Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting certifi (from httpx>=0.28->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx>=0.28->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx>=0.28->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements-dev.txt (line 8))
+  Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+Collecting httptools>=0.8.0 (from uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+Collecting watchfiles>=0.20 (from uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=13.0 (from uvicorn[standard]>=0.34->-r /home/cobaia/TCC-main/Programacao/CobaiaAPI/requirements.txt (line 9))
+  Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+Downloading fastapi-0.165.0-py3-none-any.whl (159 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 159.5/159.5 kB 15.3 MB/s eta 0:00:00
+Downloading uvicorn-0.54.0-py3-none-any.whl (87 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 87.4/87.4 kB 7.0 MB/s eta 0:00:00
+Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 494.1/494.1 kB 15.3 MB/s eta 0:00:00
+Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 44.4 MB/s eta 0:00:00
+Downloading pydantic_settings-2.16.3-py3-none-any.whl (82 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 82.7/82.7 kB 6.7 MB/s eta 0:00:00
+Downloading sqlalchemy-2.1.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.7/4.7 MB 56.5 MB/s eta 0:00:00
+Downloading pymysql-1.2.4-py3-none-any.whl (46 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 46.9/46.9 kB 5.1 MB/s eta 0:00:00
+Downloading python_multipart-0.0.34-py3-none-any.whl (32 kB)
+Downloading pytest-9.2.0-py3-none-any.whl (411 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 411.8/411.8 kB 23.5 MB/s eta 0:00:00
+Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.5/73.5 kB 6.7 MB/s eta 0:00:00
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 78.8/78.8 kB 5.6 MB/s eta 0:00:00
+Downloading ruff-0.17.5-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (10.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.6/10.6 MB 50.8 MB/s eta 0:00:00
+Downloading annotated_doc-0.0.7-py3-none-any.whl (5.3 kB)
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 134.5/134.5 kB 8.1 MB/s eta 0:00:00
+Downloading click-8.5.1-py3-none-any.whl (126 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.2/126.2 kB 10.3 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 30.4 MB/s eta 0:00:00
+Downloading idna-3.20-py3-none-any.whl (69 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 69.6/69.6 kB 9.8 MB/s eta 0:00:00
+Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.3/60.3 kB 5.3 MB/s eta 0:00:00
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 130.0/130.0 kB 11.3 MB/s eta 0:00:00
+Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 40.4 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 41.2 MB/s eta 0:00:00
+Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.6/80.6 kB 10.6 MB/s eta 0:00:00
+Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 3.9 MB/s eta 0:00:00
+Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 46.8 MB/s eta 0:00:00
+Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 458.4/458.4 kB 23.2 MB/s eta 0:00:00
+Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 226.3/226.3 kB 15.0 MB/s eta 0:00:00
+Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 135.1/135.1 kB 10.6 MB/s eta 0:00:00
+Installing collected packages: websockets, uvloop, typing-extensions, ruff, pyyaml, python-multipart, python-dotenv, pymysql, pygments, pluggy, packaging, iniconfig, idna, httptools, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, sqlalchemy, pytest, pydantic-core, opentelemetry-api, httpcore, anyio, watchfiles, starlette, pydantic, httpx, pydantic-settings, fastapi
+Successfully installed annotated-doc-0.0.7 annotated-types-0.8.0 anyio-4.16.0 certifi-2026.10.23 click-8.5.1 fastapi-0.165.0 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.28.1 idna-3.20 iniconfig-2.3.1 opentelemetry-api-1.45.2 packaging-26.3 pluggy-1.7.0 pydantic-2.14.3 pydantic-core-2.50.4 pydantic-settings-2.16.3 pygments-2.21.0 pymysql-1.2.4 pytest-9.2.0 python-dotenv-1.2.4 python-multipart-0.0.34 pyyaml-6.0.3 ruff-0.17.5 sqlalchemy-2.1.9 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.54.0 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+[cobaia] Criando venv do AgenteCore...
+[cobaia] $ /usr/bin/python3 -m venv /home/cobaia/TCC-main/Programacao/AgenteCore/.venv
+[cobaia] $ /home/cobaia/TCC-main/Programacao/AgenteCore/.venv/bin/python -m pip install -r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt
+Collecting matplotlib>=3.9 (from -r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (80 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 80.3/80.3 kB 1.8 MB/s eta 0:00:00
+Collecting playwright==1.64.1 (from -r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading playwright-1.64.1-py3-none-manylinux1_x86_64.whl.metadata (3.3 kB)
+Collecting pyee<15,>=13 (from playwright==1.64.1->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading pyee-14.0.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting greenlet<4.0.0,>=3.1.1 (from playwright==1.64.1->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 12))
+  Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting contourpy>=1.0.1 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (139 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 139.9/139.9 kB 5.5 MB/s eta 0:00:00
+Collecting kiwisolver>=1.3.1 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (5.2 kB)
+Collecting numpy>=1.25 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading numpy-2.5.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Collecting packaging>=20.0 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading pyparsing-3.3.3-py3-none-any.whl.metadata (5.9 kB)
+Collecting python-dateutil>=2.7 (from matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading python_dateutil-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting typing-extensions (from pyee<15,>=13->playwright==1.64.1->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 12))
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting tzdata (from python-dateutil>=2.7->matplotlib>=3.9->-r /home/cobaia/TCC-main/Programacao/AgenteCore/requirements.txt (line 5))
+  Downloading tzdata-2026.6-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading playwright-1.64.1-py3-none-manylinux1_x86_64.whl (48.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 48.5/48.5 MB 3.7 MB/s eta 0:00:00
+Downloading matplotlib-3.11.2-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 50.7 MB/s eta 0:00:00
+Downloading contourpy-1.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (383 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 383.2/383.2 kB 23.1 MB/s eta 0:00:00
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.68.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (5.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.4/5.4 MB 50.9 MB/s eta 0:00:00
+Downloading greenlet-3.5.6-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (621 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 621.4/621.4 kB 27.2 MB/s eta 0:00:00
+Downloading kiwisolver-1.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 37.0 MB/s eta 0:00:00
+Downloading numpy-2.5.5-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (15.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 15.7/15.7 MB 42.5 MB/s eta 0:00:00
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Downloading pillow-13.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 54.2 MB/s eta 0:00:00
+Downloading pyee-14.0.0-py3-none-any.whl (15 kB)
+Downloading pyparsing-3.3.3-py3-none-any.whl (126 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 126.4/126.4 kB 10.9 MB/s eta 0:00:00
+Downloading python_dateutil-4.0.0-py3-none-any.whl (92 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 92.9/92.9 kB 11.5 MB/s eta 0:00:00
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading tzdata-2026.6-py2.py3-none-any.whl (348 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 348.2/348.2 kB 18.5 MB/s eta 0:00:00
+Installing collected packages: tzdata, typing-extensions, pyparsing, pillow, packaging, numpy, kiwisolver, greenlet, fonttools, cycler, python-dateutil, pyee, contourpy, playwright, matplotlib
+Successfully installed contourpy-1.4.0 cycler-0.12.1 fonttools-4.68.0 greenlet-3.5.6 kiwisolver-1.5.1 matplotlib-3.11.2 numpy-2.5.5 packaging-26.3 pillow-13.0.0 playwright-1.64.1 pyee-14.0.0 pyparsing-3.3.3 python-dateutil-4.0.0 typing-extensions-4.16.0 tzdata-2026.6
+[cobaia] $ /home/cobaia/TCC-main/Programacao/AgenteCore/.venv/bin/python -m playwright install --with-deps chromium
+Installing dependencies...
+Switching to root user to install dependencies...
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+libatk-bridge2.0-0t64 is already the newest version (2.52.0-1build1).
+libatk-bridge2.0-0t64 set to manually installed.
+libatk1.0-0t64 is already the newest version (2.52.0-1build1).
+libatk1.0-0t64 set to manually installed.
+libatspi2.0-0t64 is already the newest version (2.52.0-1build1).
+libatspi2.0-0t64 set to manually installed.
+libcairo2 is already the newest version (1.18.0-3build1).
+libcairo2 set to manually installed.
+libcups2t64 is already the newest version (2.4.7-1.2ubuntu7.14).
+libcups2t64 set to manually installed.
+libdbus-1-3 is already the newest version (1.14.10-4ubuntu4.1).
+libdbus-1-3 set to manually installed.
+libdrm2 is already the newest version (2.4.125-1ubuntu0.1~24.04.2).
+libdrm2 set to manually installed.
+libpango-1.0-0 is already the newest version (1.52.1+ds-1build1).
+libpango-1.0-0 set to manually installed.
+libxcb1 is already the newest version (1.15-1ubuntu2).
+libxcb1 set to manually installed.
+libxcomposite1 is already the newest version (1:0.4.5-1build3).
+libxcomposite1 set to manually installed.
+libxdamage1 is already the newest version (1:1.1.6-1build1).
+libxdamage1 set to manually installed.
+libxext6 is already the newest version (2:1.3.4-1build2).
+libxext6 set to manually installed.
+libxfixes3 is already the newest version (1:6.0.0-2build1).
+libxfixes3 set to manually installed.
+libxkbcommon0 is already the newest version (1.6.0-1build1).
+libxkbcommon0 set to manually installed.
+libxrandr2 is already the newest version (2:1.5.2-2build1).
+libxrandr2 set to manually installed.
+libfontconfig1 is already the newest version (2.15.0-1.1ubuntu2).
+libfontconfig1 set to manually installed.
+The following additional packages will be installed:
+  gir1.2-glib-2.0 libasound2-data libegl-mesa0 libfontenc1 libgl1-mesa-dri
+  libglib2.0-bin libglib2.0-data libglx-mesa0 libice6 libsm6 libx11-data
+  libx11-xcb1 libxaw7 libxfont2 libxkbfile1 libxmu6 libxpm4 libxt6t64
+  mesa-libgallium mesa-vulkan-drivers x11-xkb-utils xfonts-encodings
+  xfonts-utils xserver-common
+Suggested packages:
+  alsa-utils libasound2-plugins low-memory-monitor
+Recommended packages:
+  fonts-ipafont-mincho fonts-liberation-sans-narrow fonts-tlwg-loma
+  alsa-ucm-conf alsa-topology-conf xfonts-base
+The following NEW packages will be installed:
+  fonts-freefont-ttf fonts-ipafont-gothic fonts-liberation
+  fonts-noto-color-emoji fonts-tlwg-loma-otf fonts-unifont fonts-wqy-zenhei
+  libasound2-data libasound2t64 libfontenc1 libice6 libnspr4 libnss3 libsm6
+  libxaw7 libxfont2 libxkbfile1 libxmu6 libxpm4 libxt6t64 x11-xkb-utils
+  xfonts-cyrillic xfonts-encodings xfonts-scalable xfonts-utils xserver-common
+  xvfb
+The following packages will be upgraded:
+  gir1.2-glib-2.0 libegl-mesa0 libfreetype6 libgbm1 libgl1-mesa-dri
+  libglib2.0-0t64 libglib2.0-bin libglib2.0-data libglx-mesa0 libx11-6
+  libx11-data libx11-xcb1 mesa-libgallium mesa-vulkan-drivers
+14 upgraded, 27 newly installed, 0 to remove and 74 not upgraded.
+Need to get 67.8 MB of archives.
+After this operation, 105 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble/universe amd64 fonts-ipafont-gothic all 00303-21ubuntu1 [3513 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-data all 2.80.0-6ubuntu3.10 [50.2 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-bin amd64 2.80.0-6ubuntu3.10 [97.9 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 gir1.2-glib-2.0 amd64 2.80.0-6ubuntu3.10 [183 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libglib2.0-0t64 amd64 2.80.0-6ubuntu3.10 [1548 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libx11-6 amd64 2:1.8.7-1ubuntu0.1 [653 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libx11-xcb1 amd64 2:1.8.7-1ubuntu0.1 [7796 B]
+Get:8 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libx11-data all 2:1.8.7-1ubuntu0.1 [116 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 fonts-freefont-ttf all 20211204+svn4273-2 [5641 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble/main amd64 fonts-liberation all 1:2.1.5-3 [1603 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 fonts-noto-color-emoji all 2.047-0ubuntu0.24.04.1 [9764 kB]
+Get:12 http://archive.ubuntu.com/ubuntu noble/universe amd64 fonts-tlwg-loma-otf all 1:0.7.3-1 [107 kB]
+Get:13 http://archive.ubuntu.com/ubuntu noble/universe amd64 fonts-unifont all 1:15.1.01-1build1 [2993 kB]
+Get:14 http://archive.ubuntu.com/ubuntu noble/universe amd64 fonts-wqy-zenhei all 0.9.45-8 [7472 kB]
+Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libasound2-data all 1.2.11-1ubuntu0.3 [21.4 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libasound2t64 amd64 1.2.11-1ubuntu0.3 [398 kB]
+Get:17 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgl1-mesa-dri amd64 25.2.8-0ubuntu0.24.04.5 [38.0 kB]
+Get:18 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libglx-mesa0 amd64 25.2.8-0ubuntu0.24.04.5 [110 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libegl-mesa0 amd64 25.2.8-0ubuntu0.24.04.5 [117 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgbm1 amd64 25.2.8-0ubuntu0.24.04.5 [34.2 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 mesa-libgallium amd64 25.2.8-0ubuntu0.24.04.5 [10.8 MB]
+Get:22 http://archive.ubuntu.com/ubuntu noble/main amd64 libfontenc1 amd64 1:1.1.8-1build1 [14.0 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libfreetype6 amd64 2.13.2+dfsg-1ubuntu0.2 [403 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble/main amd64 libice6 amd64 2:1.0.10-1build3 [41.4 kB]
+Get:25 http://archive.ubuntu.com/ubuntu noble/main amd64 libnspr4 amd64 2:4.35-1.1build1 [117 kB]
+Get:26 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libnss3 amd64 2:3.98-1ubuntu0.3 [1445 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble/main amd64 libsm6 amd64 2:1.2.3-1build3 [15.7 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble/main amd64 libxt6t64 amd64 1:1.2.1-1.2build1 [171 kB]
+Get:29 http://archive.ubuntu.com/ubuntu noble/main amd64 libxmu6 amd64 2:1.1.3-3build2 [47.6 kB]
+Get:30 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libxpm4 amd64 1:3.5.17-1ubuntu0.24.04.2 [36.7 kB]
+Get:31 http://archive.ubuntu.com/ubuntu noble/main amd64 libxaw7 amd64 2:1.0.14-1build2 [187 kB]
+Get:32 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libxfont2 amd64 1:2.0.6-1+deb13u1build0.24.04.2 [94.0 kB]
+Get:33 http://archive.ubuntu.com/ubuntu noble/main amd64 libxkbfile1 amd64 1:1.1.0-1build4 [70.0 kB]
+Get:34 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 mesa-vulkan-drivers amd64 25.2.8-0ubuntu0.24.04.5 [17.5 MB]
+Get:35 http://archive.ubuntu.com/ubuntu noble/main amd64 x11-xkb-utils amd64 7.7+8build2 [170 kB]
+Get:36 http://archive.ubuntu.com/ubuntu noble/main amd64 xfonts-encodings all 1:1.0.5-0ubuntu2 [578 kB]
+Get:37 http://archive.ubuntu.com/ubuntu noble/main amd64 xfonts-utils amd64 1:7.7+6build3 [94.4 kB]
+Get:38 http://archive.ubuntu.com/ubuntu noble/universe amd64 xfonts-cyrillic all 1:1.0.5+nmu1 [384 kB]
+Get:39 http://archive.ubuntu.com/ubuntu noble/main amd64 xfonts-scalable all 1:1.0.3-1.3 [304 kB]
+Get:40 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 xserver-common all 2:21.1.12-1ubuntu1.9 [35.0 kB]
+Get:41 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 xvfb amd64 2:21.1.12-1ubuntu1.9 [877 kB]
+Fetched 67.8 MB in 2s (41.7 MB/s)
+Selecting previously unselected package fonts-ipafont-gothic.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 41965 files and directories currently installed.)
+Preparing to unpack .../00-fonts-ipafont-gothic_00303-21ubuntu1_all.deb ...
+Unpacking fonts-ipafont-gothic (00303-21ubuntu1) ...
+Preparing to unpack .../01-libglib2.0-data_2.80.0-6ubuntu3.10_all.deb ...
+Unpacking libglib2.0-data (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.8) ...
+Preparing to unpack .../02-libglib2.0-bin_2.80.0-6ubuntu3.10_amd64.deb ...
+Unpacking libglib2.0-bin (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.8) ...
+Preparing to unpack .../03-gir1.2-glib-2.0_2.80.0-6ubuntu3.10_amd64.deb ...
+Unpacking gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.8) ...
+Preparing to unpack .../04-libglib2.0-0t64_2.80.0-6ubuntu3.10_amd64.deb ...
+Unpacking libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) over (2.80.0-6ubuntu3.8) ...
+Preparing to unpack .../05-libx11-6_2%3a1.8.7-1ubuntu0.1_amd64.deb ...
+Unpacking libx11-6:amd64 (2:1.8.7-1ubuntu0.1) over (2:1.8.7-1build1) ...
+Preparing to unpack .../06-libx11-xcb1_2%3a1.8.7-1ubuntu0.1_amd64.deb ...
+Unpacking libx11-xcb1:amd64 (2:1.8.7-1ubuntu0.1) over (2:1.8.7-1build1) ...
+Preparing to unpack .../07-libx11-data_2%3a1.8.7-1ubuntu0.1_all.deb ...
+Unpacking libx11-data (2:1.8.7-1ubuntu0.1) over (2:1.8.7-1build1) ...
+Selecting previously unselected package fonts-freefont-ttf.
+Preparing to unpack .../08-fonts-freefont-ttf_20211204+svn4273-2_all.deb ...
+Unpacking fonts-freefont-ttf (20211204+svn4273-2) ...
+Selecting previously unselected package fonts-liberation.
+Preparing to unpack .../09-fonts-liberation_1%3a2.1.5-3_all.deb ...
+Unpacking fonts-liberation (1:2.1.5-3) ...
+Selecting previously unselected package fonts-noto-color-emoji.
+Preparing to unpack .../10-fonts-noto-color-emoji_2.047-0ubuntu0.24.04.1_all.deb ...
+Unpacking fonts-noto-color-emoji (2.047-0ubuntu0.24.04.1) ...
+Selecting previously unselected package fonts-tlwg-loma-otf.
+Preparing to unpack .../11-fonts-tlwg-loma-otf_1%3a0.7.3-1_all.deb ...
+Unpacking fonts-tlwg-loma-otf (1:0.7.3-1) ...
+Selecting previously unselected package fonts-unifont.
+Preparing to unpack .../12-fonts-unifont_1%3a15.1.01-1build1_all.deb ...
+Unpacking fonts-unifont (1:15.1.01-1build1) ...
+Selecting previously unselected package fonts-wqy-zenhei.
+Preparing to unpack .../13-fonts-wqy-zenhei_0.9.45-8_all.deb ...
+Unpacking fonts-wqy-zenhei (0.9.45-8) ...
+Selecting previously unselected package libasound2-data.
+Preparing to unpack .../14-libasound2-data_1.2.11-1ubuntu0.3_all.deb ...
+Unpacking libasound2-data (1.2.11-1ubuntu0.3) ...
+Selecting previously unselected package libasound2t64:amd64.
+Preparing to unpack .../15-libasound2t64_1.2.11-1ubuntu0.3_amd64.deb ...
+Unpacking libasound2t64:amd64 (1.2.11-1ubuntu0.3) ...
+Preparing to unpack .../16-libgl1-mesa-dri_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.2) ...
+Preparing to unpack .../17-libglx-mesa0_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.2) ...
+Preparing to unpack .../18-libegl-mesa0_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.2) ...
+Preparing to unpack .../19-libgbm1_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking libgbm1:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.2) ...
+Preparing to unpack .../20-mesa-libgallium_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.2) ...
+Selecting previously unselected package libfontenc1:amd64.
+Preparing to unpack .../21-libfontenc1_1%3a1.1.8-1build1_amd64.deb ...
+Unpacking libfontenc1:amd64 (1:1.1.8-1build1) ...
+Preparing to unpack .../22-libfreetype6_2.13.2+dfsg-1ubuntu0.2_amd64.deb ...
+Unpacking libfreetype6:amd64 (2.13.2+dfsg-1ubuntu0.2) over (2.13.2+dfsg-1ubuntu0.1) ...
+Selecting previously unselected package libice6:amd64.
+Preparing to unpack .../23-libice6_2%3a1.0.10-1build3_amd64.deb ...
+Unpacking libice6:amd64 (2:1.0.10-1build3) ...
+Selecting previously unselected package libnspr4:amd64.
+Preparing to unpack .../24-libnspr4_2%3a4.35-1.1build1_amd64.deb ...
+Unpacking libnspr4:amd64 (2:4.35-1.1build1) ...
+Selecting previously unselected package libnss3:amd64.
+Preparing to unpack .../25-libnss3_2%3a3.98-1ubuntu0.3_amd64.deb ...
+Unpacking libnss3:amd64 (2:3.98-1ubuntu0.3) ...
+Selecting previously unselected package libsm6:amd64.
+Preparing to unpack .../26-libsm6_2%3a1.2.3-1build3_amd64.deb ...
+Unpacking libsm6:amd64 (2:1.2.3-1build3) ...
+Selecting previously unselected package libxt6t64:amd64.
+Preparing to unpack .../27-libxt6t64_1%3a1.2.1-1.2build1_amd64.deb ...
+Unpacking libxt6t64:amd64 (1:1.2.1-1.2build1) ...
+Selecting previously unselected package libxmu6:amd64.
+Preparing to unpack .../28-libxmu6_2%3a1.1.3-3build2_amd64.deb ...
+Unpacking libxmu6:amd64 (2:1.1.3-3build2) ...
+Selecting previously unselected package libxpm4:amd64.
+Preparing to unpack .../29-libxpm4_1%3a3.5.17-1ubuntu0.24.04.2_amd64.deb ...
+Unpacking libxpm4:amd64 (1:3.5.17-1ubuntu0.24.04.2) ...
+Selecting previously unselected package libxaw7:amd64.
+Preparing to unpack .../30-libxaw7_2%3a1.0.14-1build2_amd64.deb ...
+Unpacking libxaw7:amd64 (2:1.0.14-1build2) ...
+Selecting previously unselected package libxfont2:amd64.
+Preparing to unpack .../31-libxfont2_1%3a2.0.6-1+deb13u1build0.24.04.2_amd64.deb ...
+Unpacking libxfont2:amd64 (1:2.0.6-1+deb13u1build0.24.04.2) ...
+Selecting previously unselected package libxkbfile1:amd64.
+Preparing to unpack .../32-libxkbfile1_1%3a1.1.0-1build4_amd64.deb ...
+Unpacking libxkbfile1:amd64 (1:1.1.0-1build4) ...
+Preparing to unpack .../33-mesa-vulkan-drivers_25.2.8-0ubuntu0.24.04.5_amd64.deb ...
+Unpacking mesa-vulkan-drivers:amd64 (25.2.8-0ubuntu0.24.04.5) over (25.2.8-0ubuntu0.24.04.2) ...
+Selecting previously unselected package x11-xkb-utils.
+Preparing to unpack .../34-x11-xkb-utils_7.7+8build2_amd64.deb ...
+Unpacking x11-xkb-utils (7.7+8build2) ...
+Selecting previously unselected package xfonts-encodings.
+Preparing to unpack .../35-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...
+Unpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...
+Selecting previously unselected package xfonts-utils.
+Preparing to unpack .../36-xfonts-utils_1%3a7.7+6build3_amd64.deb ...
+Unpacking xfonts-utils (1:7.7+6build3) ...
+Selecting previously unselected package xfonts-cyrillic.
+Preparing to unpack .../37-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...
+Unpacking xfonts-cyrillic (1:1.0.5+nmu1) ...
+Selecting previously unselected package xfonts-scalable.
+Preparing to unpack .../38-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...
+Unpacking xfonts-scalable (1:1.0.3-1.3) ...
+Selecting previously unselected package xserver-common.
+Preparing to unpack .../39-xserver-common_2%3a21.1.12-1ubuntu1.9_all.deb ...
+Unpacking xserver-common (2:21.1.12-1ubuntu1.9) ...
+Selecting previously unselected package xvfb.
+Preparing to unpack .../40-xvfb_2%3a21.1.12-1ubuntu1.9_amd64.deb ...
+Unpacking xvfb (2:21.1.12-1ubuntu1.9) ...
+Setting up libice6:amd64 (2:1.0.10-1build3) ...
+Setting up fonts-noto-color-emoji (2.047-0ubuntu0.24.04.1) ...
+Setting up fonts-wqy-zenhei (0.9.45-8) ...
+Setting up fonts-freefont-ttf (20211204+svn4273-2) ...
+Setting up libasound2-data (1.2.11-1ubuntu0.3) ...
+Setting up libfontenc1:amd64 (1:1.1.8-1build1) ...
+Setting up libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) ...
+Setting up libglib2.0-data (2.80.0-6ubuntu3.10) ...
+Setting up libasound2t64:amd64 (1.2.11-1ubuntu0.3) ...
+Setting up fonts-tlwg-loma-otf (1:0.7.3-1) ...
+Setting up libfreetype6:amd64 (2.13.2+dfsg-1ubuntu0.2) ...
+Setting up libx11-data (2:1.8.7-1ubuntu0.1) ...
+Setting up libnspr4:amd64 (2:4.35-1.1build1) ...
+Setting up xfonts-encodings (1:1.0.5-0ubuntu2) ...
+Setting up gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) ...
+Setting up fonts-ipafont-gothic (00303-21ubuntu1) ...
+update-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode
+Setting up fonts-liberation (1:2.1.5-3) ...
+Setting up libx11-6:amd64 (2:1.8.7-1ubuntu0.1) ...
+Setting up libxkbfile1:amd64 (1:1.1.0-1build4) ...
+Setting up libsm6:amd64 (2:1.2.3-1build3) ...
+Setting up libxfont2:amd64 (1:2.0.6-1+deb13u1build0.24.04.2) ...
+Setting up fonts-unifont (1:15.1.01-1build1) ...
+Setting up libx11-xcb1:amd64 (2:1.8.7-1ubuntu0.1) ...
+Setting up mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libxpm4:amd64 (1:3.5.17-1ubuntu0.24.04.2) ...
+Setting up libgbm1:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libglib2.0-bin (2.80.0-6ubuntu3.10) ...
+Setting up libnss3:amd64 (2:3.98-1ubuntu0.3) ...
+Setting up xfonts-utils (1:7.7+6build3) ...
+Setting up libegl-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libxt6t64:amd64 (1:1.2.1-1.2build1) ...
+Setting up xfonts-cyrillic (1:1.0.5+nmu1) ...
+Setting up xfonts-scalable (1:1.0.3-1.3) ...
+Setting up mesa-vulkan-drivers:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libxmu6:amd64 (2:1.1.3-3build2) ...
+Setting up libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...
+Setting up libxaw7:amd64 (2:1.0.14-1build2) ...
+Setting up x11-xkb-utils (7.7+8build2) ...
+Setting up xserver-common (2:21.1.12-1ubuntu1.9) ...
+Setting up xvfb (2:21.1.12-1ubuntu1.9) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for fontconfig (2.15.0-1.1ubuntu2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.8) ...
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip[22m
+|                                                                                |   0% of 191.1 MiB
+|■■■■■■■■                                                                        |  10% of 191.1 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 191.1 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 191.1 MiB
+Chrome for Testing 156.0.8078.4 (playwright chromium v1248) downloaded to /home/cobaia/.cache/ms-playwright/chromium-1248
+Downloading FFmpeg (playwright ffmpeg v1013)[2m from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1013/ffmpeg-linux.zip[22m
+|                                                                                |   0% of 2.2 MiB
+|■■■■■■■■                                                                        |  10% of 2.2 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 2.2 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 2.2 MiB
+FFmpeg (playwright ffmpeg v1013) downloaded to /home/cobaia/.cache/ms-playwright/ffmpeg-1013
+Downloading Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-headless-shell-linux64.zip[22m
+|                                                                                |   0% of 120 MiB
+|■■■■■■■■                                                                        |  10% of 120 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 120 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 120 MiB
+Chrome Headless Shell 156.0.8078.4 (playwright chromium-headless-shell v1248) downloaded to /home/cobaia/.cache/ms-playwright/chromium_headless_shell-1248
+[cobaia] Baixando o script oficial do Ollama (https://ollama.com/install.sh) para instalar a versão 0.40.16...
+[cobaia]   0 MB de 0 MB
+[cobaia] $ sh /home/cobaia/TCC-main/.ferramentas/ollama/install.sh
+>>> Installing ollama to /usr/local
+>>> Downloading ollama-linux-amd64.tar.zst
+#=#=#                                                                          ##O#-#                                                                         ##O=#  #                                                                                                                                                  0.0%                                                                           0.1%                                                                           0.4%                                                                           0.7%                                                                           0.9%                                                                           1.2%#                                                                          1.5%#                                                                          1.8%#                                                                          2.1%#                                                                          2.4%##                                                                         2.8%##                                                                         3.2%##                                                                         3.6%##                                                                         4.0%###                                                                        4.3%###                                                                        4.7%###                                                                        5.1%###                                                                        5.5%####                                                                       5.9%####                                                                       6.3%####                                                                       6.5%####                                                                       6.9%#####                                                                      7.2%#####                                                                      7.5%#####                                                                      7.9%#####                                                                      8.3%######                                                                     8.7%######                                                                     9.0%######                                                                     9.4%#######                                                                    9.8%#######                                                                   10.1%#######                                                                   10.5%#######                                                                   10.8%########                                                                  11.2%########                                                                  11.6%########                                                                  12.0%########                                                                  12.4%#########                                                                 12.8%#########                                                                 13.2%#########                                                                 13.6%##########                                                                14.0%##########                                                                14.4%##########                                                                14.8%##########                                                                15.3%###########                                                               15.7%###########                                                               16.1%###########                                                               16.5%############                                                              17.0%############                                                              17.4%############                                                              17.7%############                                                              17.9%#############                                                             18.5%#############                                                             18.8%#############                                                             19.2%##############                                                            19.6%##############                                                            19.9%##############                                                            20.4%##############                                                            20.8%###############                                                           21.2%###############                                                           21.6%###############                                                           22.1%################                                                          22.5%################                                                          22.9%################                                                          23.3%#################                                                         23.7%#################                                                         24.1%#################                                                         24.5%#################                                                         24.8%##################                                                        25.3%##################                                                        25.7%##################                                                        26.1%###################                                                       26.5%###################                                                       26.9%###################                                                       27.3%###################                                                       27.7%####################                                                      28.2%####################                                                      28.6%####################                                                      28.9%#####################                                                     29.3%#####################                                                     29.7%#####################                                                     30.1%#####################                                                     30.5%######################                                                    31.0%######################                                                    31.3%######################                                                    31.8%#######################                                                   32.2%#######################                                                   32.9%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.0%#######################                                                   33.2%########################                                                  33.6%########################                                                  34.0%########################                                                  34.4%#########################                                                 34.8%#########################                                                 35.2%#########################                                                 35.7%#########################                                                 36.1%##########################                                                36.5%##########################                                                36.9%##########################                                                37.3%###########################                                               37.7%###########################                                               38.1%###########################                                               38.5%############################                                              38.9%############################                                              39.4%############################                                              39.8%############################                                              40.1%#############################                                             40.6%#############################                                             40.8%#############################                                             41.2%#############################                                             41.5%##############################                                            41.9%##############################                                            42.3%##############################                                            42.6%##############################                                            43.0%###############################                                           43.4%###############################                                           43.7%###############################                                           44.1%################################                                          44.5%################################                                          44.9%################################                                          45.3%################################                                          45.7%#################################                                         46.0%#################################                                         46.4%#################################                                         46.8%#################################                                         47.2%##################################                                        47.6%##################################                                        48.0%##################################                                        48.3%###################################                                       48.7%###################################                                       49.0%###################################                                       49.4%###################################                                       49.9%####################################                                      50.3%####################################                                      50.7%####################################                                      51.0%####################################                                      51.4%#####################################                                     51.7%#####################################                                     52.0%#####################################                                     52.2%#####################################                                     52.4%#####################################                                     52.7%######################################                                    53.1%######################################                                    53.5%######################################                                    53.9%#######################################                                   54.3%#######################################                                   54.7%#######################################                                   55.1%#######################################                                   55.5%########################################                                  55.9%########################################                                  56.2%########################################                                  56.6%#########################################                                 57.0%#########################################                                 57.4%#########################################                                 57.8%#########################################                                 58.1%##########################################                                58.7%##########################################                                59.3%##########################################                                59.7%###########################################                               60.1%###########################################                               60.5%###########################################                               60.9%############################################                              61.3%############################################                              61.7%############################################                              62.0%############################################                              62.4%#############################################                             62.8%#############################################                             63.2%#############################################                             63.6%##############################################                            64.0%##############################################                            64.4%##############################################                            64.8%##############################################                            65.3%###############################################                           65.7%###############################################                           66.1%###############################################                           66.5%################################################                          67.0%################################################                          67.4%################################################                          67.8%#################################################                         68.2%#################################################                         68.6%#################################################                         69.0%#################################################                         69.4%##################################################                        69.6%##################################################                        70.2%##################################################                        70.6%###################################################                       71.0%###################################################                       71.4%###################################################                       71.8%###################################################                       72.1%####################################################                      72.5%####################################################                      73.0%####################################################                      73.3%#####################################################                     73.7%#####################################################                     74.1%#####################################################                     74.5%#####################################################                     74.9%######################################################                    75.4%######################################################                    75.7%######################################################                    76.1%#######################################################                   76.6%#######################################################                   77.0%#######################################################                   77.4%########################################################                  77.9%########################################################                  78.3%########################################################                  78.8%########################################################                  79.1%#########################################################                 79.6%#########################################################                 80.0%#########################################################                 80.4%##########################################################                80.8%##########################################################                81.2%##########################################################                81.7%###########################################################               82.1%###########################################################               82.6%###########################################################               83.0%############################################################              83.4%############################################################              83.7%############################################################              84.1%############################################################              84.5%#############################################################             84.9%#############################################################             85.3%#############################################################             85.6%#############################################################             86.0%##############################################################            86.4%##############################################################            86.7%##############################################################            87.1%##############################################################            87.4%###############################################################           87.8%###############################################################           88.2%###############################################################           88.6%################################################################          89.0%################################################################          89.4%################################################################          89.8%################################################################          90.1%#################################################################         90.4%#################################################################         90.7%#################################################################         91.0%#################################################################         91.3%#################################################################         91.5%#################################################################         91.7%##################################################################        91.8%##################################################################        92.1%##################################################################        92.3%##################################################################        92.5%##################################################################        92.7%##################################################################        92.9%##################################################################        93.0%###################################################################       93.2%###################################################################       93.4%###################################################################       93.6%###################################################################       93.8%###################################################################       94.0%###################################################################       94.1%###################################################################       94.3%####################################################################      94.5%####################################################################      94.7%####################################################################      94.9%####################################################################      95.0%####################################################################      95.0%####################################################################      95.0%####################################################################      95.0%####################################################################      95.0%####################################################################      95.0%####################################################################      95.0%####################################################################      95.1%####################################################################      95.1%####################################################################      95.2%####################################################################      95.2%####################################################################      95.3%####################################################################      95.3%####################################################################      95.4%####################################################################      95.5%####################################################################      95.5%####################################################################      95.6%####################################################################      95.7%####################################################################      95.7%####################################################################      95.8%#####################################################################     95.9%#####################################################################     96.0%#####################################################################     96.1%#####################################################################     96.1%#####################################################################     96.2%#####################################################################     96.3%#####################################################################     96.4%#####################################################################     96.5%#####################################################################     96.7%#####################################################################     96.8%#####################################################################     96.9%#####################################################################     97.0%#####################################################################     97.1%######################################################################    97.3%######################################################################    97.4%######################################################################    97.5%######################################################################    97.7%######################################################################    97.8%######################################################################    98.0%######################################################################    98.2%######################################################################    98.3%######################################################################    98.5%#######################################################################   98.7%#######################################################################   98.9%#######################################################################   99.1%#######################################################################   99.3%#######################################################################   99.5%#######################################################################   99.7%#######################################################################   99.9%######################################################################## 100.0%
+>>> Creating ollama user...
+>>> Adding ollama user to render group...
+>>> Adding ollama user to video group...
+>>> Adding current user to ollama group...
+>>> Creating ollama systemd service...
+>>> Enabling and starting ollama service...
+Created symlink /etc/systemd/system/default.target.wants/ollama.service → /etc/systemd/system/ollama.service.
+>>> The Ollama API is now available at 127.0.0.1:11434.
+>>> Install complete. Run "ollama" from the command line.
+[cobaia] Baixando o modelo qwen2.5:0.5b (pode demorar na primeira vez)...
+[cobaia] $ /usr/local/bin/ollama pull qwen2.5:0.5b
+[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠙ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠸ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠼ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠴ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠧ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠇ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠏ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠋ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠙ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠹ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠸ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠼ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠴ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠦ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠧ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest ⠇ [K[?25h[?2026l[?2026h[?25l[1Gpulling manifest [K
+pulling c5396e06af29:   0% ▕                  ▏ 632 KB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   1% ▕                  ▏ 3.2 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   3% ▕                  ▏  10 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   4% ▕                  ▏  17 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   5% ▕                  ▏  21 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   7% ▕█                 ▏  27 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   8% ▕█                 ▏  30 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:   9% ▕█                 ▏  37 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  11% ▕█                 ▏  43 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  12% ▕██                ▏  47 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  14% ▕██                ▏  53 MB/397 MB                  [K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  15% ▕██                ▏  59 MB/397 MB   56 MB/s      6s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  17% ▕███               ▏  67 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  18% ▕███               ▏  71 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  20% ▕███               ▏  78 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  21% ▕███               ▏  85 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  22% ▕████              ▏  88 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  24% ▕████              ▏  96 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  26% ▕████              ▏ 103 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  27% ▕████              ▏ 107 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  28% ▕█████             ▏ 112 MB/397 MB   56 MB/s      5s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  30% ▕█████             ▏ 120 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  31% ▕█████             ▏ 121 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  33% ▕█████             ▏ 130 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  35% ▕██████            ▏ 137 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  35% ▕██████            ▏ 140 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  37% ▕██████            ▏ 147 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  39% ▕███████           ▏ 155 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  40% ▕███████           ▏ 158 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  42% ▕███████           ▏ 166 MB/397 MB   56 MB/s      4s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  44% ▕███████           ▏ 174 MB/397 MB   56 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  45% ▕████████          ▏ 178 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  47% ▕████████          ▏ 185 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  49% ▕████████          ▏ 193 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  49% ▕████████          ▏ 196 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  51% ▕█████████         ▏ 203 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  53% ▕█████████         ▏ 211 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  54% ▕█████████         ▏ 215 MB/397 MB   59 MB/s      3s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  56% ▕██████████        ▏ 223 MB/397 MB   59 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  58% ▕██████████        ▏ 232 MB/397 MB   59 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  59% ▕██████████        ▏ 236 MB/397 MB   59 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  62% ▕███████████       ▏ 244 MB/397 MB   61 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  64% ▕███████████       ▏ 253 MB/397 MB   61 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  65% ▕███████████       ▏ 256 MB/397 MB   61 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  67% ▕███████████       ▏ 264 MB/397 MB   61 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  69% ▕████████████      ▏ 273 MB/397 MB   61 MB/s      2s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  70% ▕████████████      ▏ 277 MB/397 MB   61 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  72% ▕████████████      ▏ 285 MB/397 MB   61 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  74% ▕█████████████     ▏ 293 MB/397 MB   61 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  75% ▕█████████████     ▏ 297 MB/397 MB   61 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  77% ▕█████████████     ▏ 304 MB/397 MB   61 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  78% ▕██████████████    ▏ 311 MB/397 MB   62 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  79% ▕██████████████    ▏ 315 MB/397 MB   62 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  81% ▕██████████████    ▏ 323 MB/397 MB   62 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  83% ▕███████████████   ▏ 331 MB/397 MB   62 MB/s      1s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  84% ▕███████████████   ▏ 335 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  86% ▕███████████████   ▏ 342 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  88% ▕███████████████   ▏ 349 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  89% ▕███████████████   ▏ 352 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  91% ▕████████████████  ▏ 360 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  92% ▕████████████████  ▏ 366 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  93% ▕████████████████  ▏ 369 MB/397 MB   62 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  94% ▕████████████████  ▏ 374 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  95% ▕█████████████████ ▏ 377 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  95% ▕█████████████████ ▏ 379 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  96% ▕█████████████████ ▏ 382 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  97% ▕█████████████████ ▏ 386 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  98% ▕█████████████████ ▏ 387 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29:  99% ▕█████████████████ ▏ 392 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K[?25h[?2026l[?2026h[?25l[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K[?25h[?2026l[?2026h[?25l[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠙ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠹ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠸ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠼ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠴ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠦ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠧ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠇ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠏ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest ⠋ [K[?25h[?2026l[?2026h[?25l[A[A[A[A[1Gpulling manifest [K
+pulling c5396e06af29: 100% ▕█████████████████ ▏ 397 MB/397 MB   61 MB/s      0s[K
+pulling eb4402837c78: 100% ▕██████████████████▏ 1.5 KB                         [K
+pulling 005f95c74751: 100% ▕██████████████████▏  490 B                         [K
+verifying sha256 digest [K
+writing manifest [K
+success [K[?25h[?2026l
+[cobaia] Versões encontradas:
+[cobaia]   python: 3.12.3 (na_faixa; testada 3.14.7; aceita de 3.12 a a mais nova)
+[cobaia]   php: 8.3.6 (na_faixa; testada 8.2.35; aceita de 8.1 a 8.5)
+[cobaia]   mariadb: 10.11.14 (na_faixa; testada 11.8.9; aceita de 10.6 a 13.0)
+[cobaia]   ollama: 0.40.16 (igual; testada 0.40.16; aceita de 0.40.2 a a mais nova)
+[cobaia] 
+[cobaia] Instalação concluída. Para rodar o site: ./run.sh
+[cobaia] Para conferir a instalação: ./install.sh --conferir
