@@ -809,10 +809,14 @@ def desenhar(figs: dict[str, dict]) -> None:
         ax.plot([pt_t, pt_e], [i, i], color=NEUTROS[1], linewidth=2, zorder=2)
         ax.scatter([pt_e], [i], s=70, color=NEUTROS[0], edgecolor=SUPERFICIE, linewidth=1.3, zorder=3)
         ax.scatter([pt_t], [i], s=70, color=AZUL, edgecolor=SUPERFICIE, linewidth=1.3, zorder=4)
-        ax.text(103, i, f"{tela} e {esc_} de {casos}", va="center", fontsize=8.8, color=TINTA)
+        # ! Alteração de IA - Revisar: (27/11/2026, versão 6 do documento do TCC) o rótulo de cada classe passa de "8 e 7 de 8" a
+        # "tela 8, escrito 7, de 8", e o espaço à direita do gráfico cresce para caber o texto.
+        # ! Motivo: a segunda revisão de fora sobre a versão 5 leu "8 e 7 de 8" como erro; o rótulo só se entendia com o "Como ler" ao
+        # lado, e quem olha a figura sozinha não sabe qual número é de qual lado.
+        ax.text(103, i, f"tela {tela}, escrito {esc_}, de {casos}", va="center", fontsize=8.8, color=TINTA)
     ax.set_yticks(range(len(linhas)))
     ax.set_yticklabels([l[0] for l in linhas], fontsize=9, color=TINTA)
-    ax.set_xlim(0, 125)
+    ax.set_xlim(0, 140)
     ax.set_xticks(range(0, 101, 20))
     ax.xaxis.set_major_formatter(lambda v, _: f"{v:.0f}%")
     ax.set_xlabel("casos com a causa certa", fontsize=9, color=TINTA_2)

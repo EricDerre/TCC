@@ -1865,6 +1865,74 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). São acertos de texto que cabem na mesma sessão, e a versão que vai para o orientador já sai com eles.
 - **Decisão:** (a), pelo Eric em 26/11/2026, no quadro (decisão 185): "Depois dos acertos (Recomendado)". A frase sobre autônomo e copiloto, o diagrama de arquitetura e a troca dos termos entram na fonte na mesma sessão, e o Word e o PDF saem em seguida, sem esperar o quadro dos papéis.
 
+<!-- ! Alteração de IA - Revisar: bloco novo (27/11/2026) com as fichas 124 e 125: a versão 6 do documento do TCC, pedida pelo Eric depois de uma segunda revisão de fora sobre a versão 5, e a pergunta que ela deixou sobre os números das corridas no texto.
+     ! Motivo: o Eric respondeu no quadro da sessão principal o que a versão 6 faz (ficha 124, gravada já fechada, com as palavras dele); ao planejar a retirada dos termos internos, apareceu uma escolha que muda o tamanho do trabalho: os números das corridas, que o documento usa 174 vezes como nome de cada medida. -->
+## Abertas pela versão 6 do documento do TCC (27/11/2026)
+
+### 124. O que a versão 6 do documento do TCC muda?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** O Eric mandou o PDF da versão 5 a uma segunda IA de fora (o parecer está fora do git, em `.superpowers/sdd/pos-fase-4/parecer-gemini-sobre-o-v5.md`). A sessão principal conferiu por script que os defeitos de renderização e de digitação que o parecer aponta não existem no PDF, e levou a ele, no quadro, três perguntas: se sai uma versão 6, o que fazer com "decisão N" no texto, e se a Fundamentação ganha duas subseções.
+- **Por que importa:** O capítulo 6 tem 60 páginas, e a seção 6.10 repete por corrida o que as seções 6.1 a 6.8 contam por fase; o texto cita 185 vezes "decisão N", que só o repositório explica.
+- **Opções:** as que a sessão principal ofereceu no quadro.
+- **Recomendação:** as três marcadas como recomendadas.
+- **Decisão:** pelo Eric em 27/11/2026, no quadro da sessão principal (decisão 186). Versão 6: "Acertos e reorganizar o cap. 6" (nas limitações e nos trabalhos futuros, o caminho rápido da cura de localizador sem o modelo, a gramática só nas chaves com nova tentativa e o agrupamento de falhas na esteira de integração contínua; a Conclusão dizendo que o ganho na tela veio da busca guiada pelos sinais de diferença, e não da escrita do modelo na biblioteca; o número da figura do hub apresentado antes dela; e a seção 6.10 fundida nas seções 6.1 a 6.8, cada tabela junto da sua análise, com as tabelas auxiliares e o número bruto por corrida num apêndice). Sobre "decisão N": "Pode cortar o uso da nomenclatura 'decisão N', mas sim explicar, na primeira vez, o que significa / qual foi a decisão de fato, levando em consideração de que quem estiver lendo o documento não terá lido nada além dele, ou seja, o documento deve ser explicativo e não deve ficar se embasando em explicações e tópicos que não estão nele mesmo". Fundamentação: "Sim, duas subseções curtas (Recomendado)", uma sobre injeção de falhas e outra sobre experimentos controlados com pessoas em engenharia de software, com poucas fontes primárias conferidas na origem.
+
+### 125. O que acontece com "corrida N" no texto da versão 6?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** Pela decisão 186, a versão 6 tira do texto os números de decisão, de ficha e de pacote e diz em palavras o que foi decidido. O texto usa também "corrida N" 174 vezes, em 35 números diferentes (16 a 28b), como o nome de cada medida: as tabelas, as figuras e as remissões entre seções dependem desses nomes. Hoje nenhuma parte do documento lista as corridas, e quem lê só o documento encontra "corrida 18d" sem saber o que ela foi.
+- **Por que importa:** Tirar os números das corridas obriga a reescrever quase todo o capítulo 6, as tabelas e as legendas, e o leitor perde o jeito de ligar uma tabela à outra; mantê-los sem explicação contraria a regra que o Eric deu para a versão 6.
+- **Opções:**
+  - (a) Manter "corrida N" como nome de cada medida, com um quadro novo no apêndice (cada corrida: a data, o que mediu, em quantos casos e a seção em que é lida), e, na primeira vez que uma corrida aparece em cada seção, dizer em palavras o que ela foi.
+  - (b) Tirar os números das corridas do texto corrido e deixá-los só nas tabelas e no apêndice.
+  - (c) Tirar os números das corridas de tudo, inclusive das tabelas.
+- **Recomendação:** (a). O número da corrida é o nome da medida, como "Experimento 2" num artigo; o que faltava era o documento dizer o que cada uma é, e o quadro e a primeira menção resolvem isso sem reescrever o capítulo inteiro.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro da sessão do pacote Q8 (decisão 187): "Manter com quadro (Recomendado)". "Corrida N" fica como nome de cada medida; entra no apêndice o quadro das corridas, e o texto diz em palavras o que cada corrida foi na primeira vez que ela aparece em cada seção.
+
+<!-- ! Alteração de IA - Revisar: ficha 126 acrescentada em 27/11/2026: depois da fusão da seção 6.10, o capítulo 6 ainda repete; segunda passada de corte, ou gerar a versão 6 como está.
+     ! Motivo: a reorganização pedida (decisão 186) foi feita, mas um ensaio mostrou o capítulo 6 com 58 páginas, contra 60 na versão 5, e o revisor de leitura achou histórias contadas duas ou três vezes; cortar mais muda o texto que o Eric e o grupo já leram, e é escolha dele. -->
+### 126. Depois da fusão, o capítulo 6 ainda repete: faz uma segunda passada de corte antes de gerar a versão 6?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** A seção 6.10 foi fundida nas seções das fases (6.3.1 a 6.8.1), quatro tabelas auxiliares foram para o Apêndice D, as citações a decisões saíram do texto, as corridas ganharam o quadro do Apêndice C e as duas subseções da Fundamentação entraram. Num ensaio da geração, o documento ficou com 144 páginas, e o capítulo 6 vai da página 59 à 117, 58 páginas, contra 60 na versão 5: o revisor que planejou a fusão só achou um parágrafo que repetia por inteiro o que a fase já dizia, porque quase todo parágrafo das antigas subseções da 6.10 traz algum número a mais. O revisor que leu o documento como quem só o tem achou 13 histórias contadas duas ou três vezes (por exemplo, a cura de 160 de 160 com 0,639 s em seis lugares; a regra R2 em cinco; o integrante 2 em cinco; o hub em quatro) e 7 números que aparecem de dois jeitos (como 67,6 s na tabela da Discussão contra 74,0 s no texto).
+- **Por que importa:** A repetição do capítulo 6 era a principal crítica de forma da segunda revisão de fora, e continua quase do mesmo tamanho. Uma segunda passada mexe no texto que o grupo já leu e pede outra conferência dos números e outro revisor.
+- **Opções:**
+  - (a) Segunda passada de corte: em cada subseção nova (6.3.1 a 6.8.1), sai a frase cujo número já está no texto da fase, e fica só o que é número a mais, com a tabela; as histórias repetidas ficam contadas uma vez, na seção da fase, e a Discussão e a Conclusão remetem a ela; os 7 números de dois jeitos ganham a frase que diz que são contas diferentes. Depois, a conferência por script e um revisor, e então a geração.
+  - (b) Só os 7 números de dois jeitos, e gerar a versão 6 com a repetição como está.
+  - (c) Gerar como está.
+- **Recomendação:** (a). É o ponto que a revisão de fora mais pesou, a geração é uma só, e a passada cabe antes da reunião de 02/12/2026.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 188): "Segunda passada (Recomendado)".
+
+<!-- ! Alteração de IA - Revisar: fichas 127 e 128 acrescentadas em 27/11/2026: a geração do Word e do PDF da versão 6 do documento do TCC, e o roteiro de arguição que a segunda revisão de fora sugeriu.
+     ! Motivo: a sessão principal pediu que a geração fosse perguntada ao Eric antes, e deixou o roteiro como escolha dele; as duas são decisões dele. -->
+### 127. O Word e o PDF da versão 6 do TCC saem agora?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** A fonte do documento tem tudo o que as decisões 186 a 188 pediram: a seção 6.10 fundida nas seções das fases (6.3.1 a 6.8.1), quatro tabelas auxiliares no Apêndice D, o quadro das corridas no Apêndice C, as citações a decisões, fichas e etapas internas tiradas do texto (269 trocas, com a decisão dita em palavras onde a citação era a única explicação), a primeira menção de cada corrida explicada em cada seção, as duas subseções novas da Fundamentação (4.1.13 e 4.1.14, com quatro fontes conferidas na origem), os acertos de conteúdo (o caminho rápido da cura, a gramática nas quatro linhas, o agrupamento de falhas na esteira, de onde veio o acerto na tela e o 190 antes das capturas do hub), o rótulo da figura por classe e a segunda passada de corte (1.566 palavras a menos, sem nenhum número perdido). Um ensaio em rascunho deu 143 páginas, contra 138 da versão 5, com conferência sem marcação de IA limpa. O capítulo 6 tem 57 páginas: o corte encurtou o texto, mas o tamanho vem das 26 figuras, 14 delas na seção 6.7.
+- **Por que importa:** A geração é uma só por versão. A última reunião com o orientador é em 02/12/2026.
+- **Opções:**
+  - (a) Gerar agora: o Word e o PDF da versão 6, com a conferência sem marcação de IA, os links do README e do `DETALHES-TECNICOS.md` trocados e a cópia na pasta `TCC/` do clone do orientador.
+  - (b) Esperar: o Eric ou o grupo leem a fonte antes, e a geração sai depois.
+- **Recomendação:** (a). O que foi pedido está feito e conferido por script; o que o grupo devolver depois da leitura pode sair numa versão seguinte.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 189): "Gerar agora (Recomendado)". O Word e o PDF da versão 6 saem no mesmo dia, com a conferência sem marcação de IA, os links do README e do `DETALHES-TECNICOS.md` e a cópia na pasta `TCC/` do clone do orientador.
+
+### 128. Sai, ao lado do relatório da fase, um roteiro curto de arguição para a banca?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** A segunda revisão de fora lista perguntas prováveis da banca, com respostas (sobre o tempo da cura com o modelo no meio, a biblioteca escrita pelo modelo, a linha de base com integrantes do grupo, as aplicações-alvo controladas, a esteira de integração contínua e a gramática contra a probabilidade do rótulo). Um roteiro curto, só com respostas que o documento sustenta e a seção de cada uma, ajudaria o grupo a se preparar. Não entra no documento do TCC.
+- **Por que importa:** É material de preparação para a defesa; não muda o documento. Custa uma passada de leitura.
+- **Opções:**
+  - (a) Sim: um arquivo `roteiro-de-arguicao.md` ao lado do relatório da Pós-Fase 4, com cada pergunta, a resposta curta e a seção do documento que a sustenta.
+  - (b) Não.
+- **Recomendação:** (a). As seis perguntas são as que um parecer de fora já fez, e a resposta de cada uma já está no documento; juntar num lugar só poupa o grupo.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 190): "Sim (Recomendado)". Sai `roteiro-de-arguicao.md` ao lado do relatório da Pós-Fase 4, com as seis perguntas, a resposta curta que o documento sustenta e a seção de cada uma; não entra no documento do TCC.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

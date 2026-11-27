@@ -20,7 +20,7 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
      ! Motivo: a frase dizia que a Pós-Fase 4 estava em andamento e que faltava a documentação final; o Eric fechou a fase em 26/11/2026 (decisão 179), com o texto final do TCC escrito e o hub aprovado. Os números da Fase 5 são os que já estavam na frase. -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, revisão geral do README) a frase de estado do alto passa a dizer que todas as fases estão concluídas e a dar só o resultado central; saiu o que ela contava da Pós-Fase 4 (as três corridas, o hub, a seleção pelo Git e a corrida curta, com as datas).
      ! Motivo: o Eric olhou a página no GitHub e pediu o README como documento geral do projeto, sem informação específica de uma fase; o que saiu está na linha da Pós-Fase 4 da tabela "Onde o projeto está" e no relatório da fase, para onde ela aponta. Os números da Fase 5 são os que já estavam na frase. -->
-> **Em 26/11/2026:** todas as fases do projeto estão concluídas, e a tabela de [Onde o projeto está](#onde-o-projeto-está) diz o que cada uma respondeu. O resultado central: nos dez cenários medidos, o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. O documento do TCC está na versão final, a 5, em [PDF](Documentacao/TCC_v5_20261126.pdf) e em [Word](Documentacao/TCC_v5_20261126.docx). O que resta é a leitura do texto pelo grupo.
+> **Em 26/11/2026:** todas as fases do projeto estão concluídas, e a tabela de [Onde o projeto está](#onde-o-projeto-está) diz o que cada uma respondeu. O resultado central: nos dez cenários medidos, o agente reparou mais rápido que as pessoas, 66,3 s contra 219,7 s na média. O documento do TCC está na versão final, a 7, em [PDF](Documentacao/TCC_v7_20261127.pdf) e em [Word](Documentacao/TCC_v7_20261127.docx). O que resta é a leitura do texto pelo grupo.
 
 <!-- ! Alteração de IA - Revisar: (26/11/2026, fechamento da Pós-Fase 4) a linha "Ler o trabalho formal" passa a dizer que o texto final está na fonte em Markdown e que o Word e o PDF da versão 5 ainda não foram gerados; o Word de 05/11/2026 fica dito como a versão 3.
      ! Motivo: o Eric pediu, no fechamento, que o README traga o documento do TCC na versão final; a fase fechou antes de o Word e o PDF da versão 5 serem gerados (decisão 179), e a página apontava o Word de 05/11/2026 como "o documento do TCC", quando ele é a versão 3, sem a Fase 5 nem a Pós-Fase 4. O `TCC_v4_20261105.docx` é de um coautor e não é a versão oficial (decisões 173 e 174). -->
@@ -28,11 +28,15 @@ Trabalho de Conclusão de Curso em Ciência da Computação (Universidade Cidade
      ! Motivo: a linha citava só o relatório da Fase 4, e as outras fases também têm relatório; a tabela de fases agora traz o de cada uma na coluna "Onde ler". -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) a frase de estado do alto e a linha "Ler o trabalho formal" passam a apontar para a versão final do documento do TCC, a 5, em PDF e em Word.
      ! Motivo: o Eric pediu que o README traga o documento do TCC na versão final; o Word e o PDF da versão 5 foram gerados em 26/11/2026 (decisões 179 e 185), e a página ainda dizia que eles não tinham sido gerados e apontava só para o Word de 05/11/2026, que é a versão 3. -->
+<!-- ! Alteração de IA - Revisar: (27/11/2026, versão 6 do documento do TCC) o documento do TCC passa a apontar para a versão 6.
+     ! Motivo: decisão 189: o Word e o PDF da versão 6 saíram em 27/11/2026, com o capítulo 6 reorganizado, o texto sem depender de citações internas, os Apêndices C e D e as duas subseções novas da Fundamentação; a página apontava para a versão 5. -->
+<!-- ! Alteração de IA - Revisar: (27/11/2026, decisão 192) a frase de estado do alto e a linha "Ler o trabalho formal" passam a apontar para a versão 7, com 142 páginas.
+     ! Motivo: o Word e o PDF da versão 7 saíram em 27/11/2026, com as páginas de Hammoudi (2016) e de Faceli et al. (2025) conferidas nas fontes (decisão 191); a página apontava para a versão 6. -->
 | Quero... | Vá para |
 |---|---|
 | Entender o projeto e ver os resultados | as seções abaixo |
 | Explorar cada resultado, um assunto por aba | [Painel do projeto](https://claude.ai/artifact/LhXeAccx5NMk1HprycHApN) |
-| Ler o trabalho formal, nas normas da ABNT | O documento do TCC na versão final, a 5, de 26/11/2026, em [PDF](Documentacao/TCC_v5_20261126.pdf) e em [Word](Documentacao/TCC_v5_20261126.docx): 138 páginas, com todas as fases, o instalador, o hub e as limitações. Os dois saem da [fonte em Markdown](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) |
+| Ler o trabalho formal, nas normas da ABNT | O documento do TCC na versão final, a 7, de 27/11/2026, em [PDF](Documentacao/TCC_v7_20261127.pdf) e em [Word](Documentacao/TCC_v7_20261127.docx): 142 páginas, com todas as fases, o instalador, o hub, as limitações e, nos apêndices, o quadro das corridas e as tabelas auxiliares. Os dois saem da [fonte em Markdown](Documentacao/TCC%20-%20ABNT%2014724%20-%20V1.md) |
 | Ver scripts, configurações e os valores de cada rodada | [Detalhes técnicos](DETALHES-TECNICOS.md) |
 | Ver o número exato por trás de cada figura | [Dados das figuras](Documentacao/figuras/dados-das-figuras.md) |
 | Saber o que foi decidido e por quê | [Memorial](Documentacao/Memorial%20de%20Desenvolvimento.md), [roadmap](Documentacao/memorial/roadmap.md), [pendências](Documentacao/memorial/pendencias.md) e o relatório de cada fase, na tabela de [Onde o projeto está](#onde-o-projeto-está) |
@@ -376,6 +380,8 @@ Máquina sem administrador, o que o instalador faz passo a passo, os testes e as
      ! Motivo: o Eric pediu, no fechamento, que o README traga o documento do TCC na versão final; a fase fechou antes de o Word e o PDF da versão 5 serem gerados (decisão 179), e a página apontava o Word de 05/11/2026 como "o documento do TCC", quando ele é a versão 3, sem a Fase 5 nem a Pós-Fase 4. O `TCC_v4_20261105.docx` é de um coautor e não é a versão oficial (decisões 173 e 174). -->
 <!-- ! Alteração de IA - Revisar: (26/11/2026, versão 5 do documento do TCC) na árvore abaixo entram o PDF e o Word da versão 5 do documento do TCC, e as linhas dos dois Word de 05/11/2026 dizem o que eles são.
      ! Motivo: o Eric pediu que o README traga o documento do TCC na versão final; o Word e o PDF da versão 5 foram gerados em 26/11/2026 (decisões 179 e 185), e a página ainda dizia que eles não tinham sido gerados e apontava só para o Word de 05/11/2026, que é a versão 3. -->
+<!-- ! Alteração de IA - Revisar: (27/11/2026, decisão 192) na árvore abaixo, o PDF e o Word da versão final passam a ser os da versão 7, e o PDF da versão 6 entra como versão anterior.
+     ! Motivo: a versão 7 saiu em 27/11/2026 com as páginas de Hammoudi (2016) e de Faceli et al. (2025) conferidas nas fontes (decisão 191); a árvore apontava a versão 6 como a final. -->
 ```
 TCC/
 ├── README.md                 # esta página
@@ -390,10 +396,12 @@ TCC/
 ├── claude-memoria/           # memória do Claude e os registros de passagem entre sessões
 ├── Documentacao/
 │   ├── TCC - ABNT 14724 - V1.md   # fonte do documento do TCC (o nome fica "V1" em todas as versões)
-│   ├── TCC_v5_20261126.pdf        # documento do TCC na versão final, a 5, em PDF
-│   ├── TCC_v5_20261126.docx       # o mesmo documento em Word
+│   ├── TCC_v7_20261127.pdf        # documento do TCC na versão final, a 7, em PDF
+│   ├── TCC_v7_20261127.docx       # o mesmo documento em Word
+│   ├── TCC_v6_20261127.pdf        # versão 6, de 27/11/2026, antes das páginas de Hammoudi e de Faceli
+│   ├── TCC_v5_20261126.pdf        # versão 5, de 26/11/2026, anterior à reorganização do capítulo 6
 │   ├── TCC_v3_20261105.docx       # Word da versão 3, de 05/11/2026, anterior à Fase 5
-│   ├── TCC_v4_20261105.docx       # Word de um coautor sobre a versão 3; a seção 1.1 dele está na versão 5
+│   ├── TCC_v4_20261105.docx       # Word de um coautor sobre a versão 3; a seção 1.1 dele está na versão 7
 │   ├── figuras/                   # as figuras desta página e a tabela de cada uma
 │   ├── dashboard/                 # o painel do projeto
 │   └── memorial/                  # decisões, pesquisa, relatórios, roadmap e pendências

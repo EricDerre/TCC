@@ -1,0 +1,117 @@
+{
+  "_tag": "! Alteração de IA - Revisar: registro gerado por ferramentas/conferir_entrega_tcc.py em 27/11/2026: o que a conferência achou no Word (TCC_v6_20261127.docx) e no PDF (TCC_v6_20261127.pdf) do documento do TCC, conferência a conferência.",
+  "_motivo": "! Motivo: a entrega do TCC é em PDF e em Word sem nenhuma marcação de IA, nem as ocultas (decisões 158 e 164); o registro guarda a prova de que os dois arquivos foram conferidos por script antes de serem entregues.",
+  "limpo": true,
+  "docx": {
+    "arquivo": "Documentacao\\TCC_v6_20261127.docx",
+    "conferencias": [
+      [
+        "Tag de IA e comentários do Markdown no texto",
+        "OK",
+        ""
+      ],
+      [
+        "Comentários do Word",
+        "OK",
+        ""
+      ],
+      [
+        "Texto oculto (w:vanish, w:specVanish)",
+        "OK",
+        ""
+      ],
+      [
+        "Alterações controladas",
+        "OK",
+        ""
+      ],
+      [
+        "Propriedades do arquivo (core, app, custom)",
+        "OK",
+        ""
+      ],
+      [
+        "Variáveis do documento (docVars)",
+        "OK",
+        ""
+      ],
+      [
+        "customXml",
+        "OK",
+        ""
+      ],
+      [
+        "Imagens: nome e texto alternativo",
+        "OK",
+        ""
+      ],
+      [
+        "PNG e outras imagens: blocos de texto",
+        "OK",
+        ""
+      ],
+      [
+        "Ligações externas",
+        "OK",
+        ""
+      ],
+      [
+        "Template anexado com caminho de usuário (attachedTemplate)",
+        "OK",
+        ""
+      ]
+    ],
+    "propriedades": {
+      "Autor (dc:creator)": "Eric Conde Derre; Erick do Carmo Esteves; Guilherme Penha dos Santos; João Victor Fonseca Silva; Kennedy Fernando de Oliveira Gundim; Leandro Henrique da Silva Patricio; Pedro Henrique Torres Gonçalves",
+      "Último a salvar (cp:lastModifiedBy)": "Eric Conde Derre; Erick do Carmo Esteves; Guilherme Penha dos Santos; João Victor Fonseca Silva; Kennedy Fernando de Oliveira Gundim; Leandro Henrique da Silva Patricio; Pedro Henrique Torres Gonçalves",
+      "Título (dc:title)": "Desenvolvimento de um agente de QA end-to-end (E2E) autônomo com capacidades de self-healing: Focado na fronteira de integração",
+      "Programa (Application)": "Microsoft Office Word",
+      "Empresa (Company)": "",
+      "Gerente (Manager)": ""
+    }
+  },
+  "pdf": {
+    "arquivo": "Documentacao\\TCC_v6_20261127.pdf",
+    "conferencias": [
+      [
+        "Metadados do PDF (Info e XMP)",
+        "OK",
+        ""
+      ],
+      [
+        "Anotações e comentários",
+        "OK",
+        ""
+      ],
+      [
+        "Arquivos embutidos",
+        "OK",
+        ""
+      ],
+      [
+        "Camadas opcionais (OCG) ocultas",
+        "OK",
+        ""
+      ],
+      [
+        "Texto invisível",
+        "OK",
+        ""
+      ],
+      [
+        "Tag de IA no texto das páginas",
+        "OK",
+        ""
+      ]
+    ],
+    "propriedades": {
+      "PDF title": "Desenvolvimento de um agente de QA end-to-end (E2E) autônomo com capacidades de self-healing: Focado na fronteira de integração",
+      "PDF author": "Eric Conde Derre; Erick do Carmo Esteves; Guilherme Penha dos Santos; João Victor Fonseca Silva; Kennedy Fernando de Oliveira Gundim; Leandro Henrique da Silva Patricio; Pedro Henrique Torres Gonçalves",
+      "PDF subject": "",
+      "PDF keywords": "",
+      "PDF creator": "Microsoft® Word for Microsoft 365",
+      "PDF producer": "Microsoft® Word for Microsoft 365",
+      "PDF páginas": "143"
+    }
+  }
+}
