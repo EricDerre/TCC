@@ -1933,6 +1933,58 @@ Com a troca cruzada rodada, todas as corridas previstas da Fase 3-B estão feita
 - **Recomendação:** (a). As seis perguntas são as que um parecer de fora já fez, e a resposta de cada uma já está no documento; juntar num lugar só poupa o grupo.
 - **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 190): "Sim (Recomendado)". Sai `roteiro-de-arguicao.md` ao lado do relatório da Pós-Fase 4, com as seis perguntas, a resposta curta que o documento sustenta e a seção de cada uma; não entra no documento do TCC.
 
+<!-- ! Alteração de IA - Revisar: fichas 129 a 132 acrescentadas em 27/11/2026 (a coletânea de erros sorteados para a banca, cartão #99 do Kanban do orientador), já fechadas com as respostas do Eric no quadro da sessão da coletânea.
+     ! Motivo: o botão do hub roda sempre os mesmos dez cenários, e o Eric pediu erros sorteados para a banca não dizer que as rodadas são casos fixos; as quatro perguntas do desenho e as respostas precisam ficar registradas antes do código, com as contas que as sustentam. -->
+### 129. Quantos erros entram na coletânea para a banca, e de onde eles vêm?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** O Eric pediu uma coletânea de cerca de 50 erros que apareçam sorteados nas rodadas do hub, para a banca não dizer que os casos são fixos. Hoje o botão "Ativar o agente e rodar os cenários" roda sempre os mesmos dez cenários da medida da Fase 5, na mesma ordem. Contando por script os registros versionados, já existem 58 erros distintos provados em corrida: 42 de contrato da API (41 combinações de página, modo de injeção e campo que a tela reproduziu na corrida 17, mais o `field_renamed` em `preco` da corrida 28b) e 16 quebras de localizador do front (4 roteiros vezes 4 modos), curadas na corrida 19. O gabarito de cada um (a causa certa e o campo certo) sai do próprio modo de injeção.
+- **Por que importa:** Erro novo de verdade pede um modo de injeção novo, um gabarito e uma prova de que a tela mostra a falha; os 58 já têm os três. O tamanho sozinho não impede a banca de ver o mesmo erro duas vezes: isso depende do jeito de sortear (ficha 130).
+- **Opções:**
+  - (a) Os 58 provados, inclusive os 4 que o agente errou na medida; nenhum modo novo.
+  - (b) 50 exatos, cortando 8 dos 58 por algum critério.
+  - (c) Os 58 mais combinações de página, modo e campo que nunca rodaram, aprovadas por uma conferência sem o modelo, na janela do Eric.
+- **Recomendação:** (a). Cortar 8 é escolher quem fica de fora, e qualquer critério vira pergunta da banca; os 4 que o agente errou mostram que a rodada não é ensaiada. Com (c), o acerto nos erros novos nunca foi medido.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 193): "Os 58 provados (Recomendado)".
+
+### 130. Como o sorteio dos erros funciona?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** Com os 58 erros, sortear de novo a cada rodada dá 37% de chance de repetir algum erro em duas rodadas de 5 e 87% em duas de 10 (conta por script). Embaralhando a coletânea uma vez e tirando da pilha, nada se repete até a pilha acabar. A semente é o número que decide o embaralhamento: com o mesmo número, qualquer pessoa refaz o sorteio por um comando e chega à mesma lista.
+- **Por que importa:** É o que responde "esses casos foram preparados": se um membro da banca diz o número, ninguém do grupo escolheu a ordem.
+- **Opções:**
+  - (a) Pilha com o número dito pela banca (sem número, a hora do clique); o número, a lista e a posição na pilha gravados antes de o primeiro erro ser ligado; um comando refaz a lista.
+  - (b) Sorteio novo a cada rodada, pela hora.
+  - (c) Sem sorteio: a banca escolhe os erros numa grade na tela.
+- **Recomendação:** (a). Não repete erro até a pilha acabar (64 cartas, cerca de 86 minutos a 81 s por caso) e deixa a prova gravada.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 194): "Pilha com número da banca (Recomendado)".
+
+### 131. Entram na pilha rodadas sem erro nenhum?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** Hoje toda rodada tem um erro ligado, e alguém pode dizer que o sistema "sabe" que sempre há erro. A ideia é pôr na pilha, junto com os 58 erros, 6 cartas sem falha, uma por página (catálogo, detalhe, busca, login, lista do administrador e reserva). Nelas o certo é a detecção não acusar nada e o modelo nem ser chamado. As 6 páginas já rodam sem erro em toda corrida, como referência.
+- **Por que importa:** Mostra que a detecção não é combinada e que o agente não inventa erro.
+- **Opções:**
+  - (a) Sim, 6 cartas sem erro; a pilha fica com 64 cartas.
+  - (b) Não, só os 58 erros.
+- **Recomendação:** (a). Risco declarado: com a máquina lenta, a regra do tempo de resposta pode acusar uma falha que não existe, e isso aparece na tela.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 195): "Sim, 6 sem erro (Recomendado)".
+
+### 132. O que a banca vê no hub, e quando?
+- **Estado:** fechada em 27/11/2026
+- **Quem decide:** Eric
+- **Aberta em:** 27/11/2026
+- **O que é:** Nos dois jeitos, a tela mostra o número, a posição na pilha e uma grade com as 64 cartas por classe, e ao fim da rodada a lista inteira e o comando que refaz o sorteio. O agente nunca vê o gabarito; a diferença é só o que a banca sabe antes.
+- **Por que importa:** É o momento em que a banca compara a resposta do agente com o erro que foi ligado.
+- **Opções:**
+  - (a) O erro sorteado fica escondido até o agente responder; depois, um cartão lado a lado com o que foi ligado (modo, campo, página e a causa certa) e o que o agente disse, com acertou ou errou.
+  - (b) A lista sorteada aparece antes de rodar.
+- **Recomendação:** (a). A banca compara na hora, sem saber antes o que vinha.
+- **Decisão:** (a), pelo Eric em 27/11/2026, no quadro (decisão 196): "Revela após a resposta (Recomendado)". O desenho inteiro foi aprovado em seguida (decisão 197) e está em `claude-memoria/plano-aprovado-coletanea-da-banca.md`.
+
 ## Histórico — pendências fechadas ou consolidadas (texto original preservado)
 
 <!-- ! Alteração de IA - Revisar: bloco criado em 28/09/2026 com o texto ORIGINAL das pendências anteriores (lista da seção 8 do Memorial e blocos de 11/09, 21/09 e 22/09), movido sem reescrita; as que continuam de pé apontam para a ficha que as consolidou ("→ ficha N"); os comentários de alteração antigos deste arquivo vêm logo abaixo, também sem mudança.

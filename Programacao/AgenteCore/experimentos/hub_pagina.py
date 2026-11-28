@@ -332,6 +332,19 @@ def pagina() -> str:
         '<p id="caso-ao-vivo" class="nota" aria-live="polite"></p>',
         '<div id="linha-de-producao" class="diagrama"></div>',
         "</div>",
+        # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 194 a 196) o bloco da rodada da coletânea: o resumo da pilha, um cartão
+        # por carta (escondido até a resposta), a grade das 64 cartas e, no fim, a lista e o comando que refaz o sorteio.
+        # ! Motivo: é onde a banca compara o que foi ligado com o que o agente disse; fica logo abaixo da linha de produção, que mostra o caso rodando.
+        '<div id="coletanea" class="cartao" hidden>',
+        "<h2>Erros sorteados da coletânea</h2>",
+        '<p id="coletanea-resumo" class="nota"></p>',
+        '<div id="coletanea-cartas" class="cartas-da-rodada"></div>',
+        "<h3>As 64 cartas da coletânea, por grupo</h3>",
+        ('<p class="nota">Cada quadrado é uma carta. Azul: revelada nesta rodada (o cartão acima diz se o agente acertou). Cinza: tirada numa rodada anterior '
+         'com o mesmo número. Apagado: ainda na pilha, ou escondida até o agente responder; os dois ficam iguais de propósito.</p>'),
+        '<div id="coletanea-grade" class="grade-da-coletanea"></div>',
+        '<div id="coletanea-fim"></div>',
+        "</div>",
         '<div class="cartao">',
         "<h2>Barra de progresso</h2>",
         '<p id="estado-ao-vivo" class="nota"></p>',
@@ -348,8 +361,14 @@ def pagina() -> str:
         "<h2>Rodar os cenários</h2>",
         '<p id="estado-da-execucao"></p>',
         '<div class="linha-de-campos">',
+        # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 193 a 197) "O que rodar" ganha "erros sorteados da coletânea", com
+        # os campos "Quantos casos" e "Número da banca" e a nota que explica a pilha; os dois campos só aparecem com a coletânea escolhida.
+        # ! Motivo: a banca diz o número e vê de onde vêm os casos; todo campo novo vem com a explicação no lugar onde aparece.
         ('<label class="campo">O que rodar <select id="selecao-da-corrida"><option value="todos">os dez cenários</option>'
-         '<option value="git">só os atingidos pelo que mudou no Git</option></select></label>'),
+         '<option value="git">só os atingidos pelo que mudou no Git</option><option value="coletanea">erros sorteados da coletânea</option></select></label>'),
+        '<label class="campo" id="campo-das-quantas" hidden>Quantos casos <select id="quantas-da-corrida"></select></label>',
+        ('<label class="campo" id="campo-do-numero" hidden>Número da banca <input id="numero-da-corrida" type="text" inputmode="numeric" maxlength="18" '
+         'autocomplete="off" placeholder="vazio: a hora do clique"></label>'),
         ('<label class="campo" id="campo-do-desde" hidden>Desde o commit <input id="desde-da-corrida" type="text" maxlength="40" autocomplete="off" '
          'placeholder="o último testado"></label>'),
         '<label class="campo" id="campo-das-repeticoes">Repetições de cada cenário <select id="repeticoes"></select></label>',
@@ -357,6 +376,11 @@ def pagina() -> str:
         '<button type="button" id="parar-corrida" hidden>Parar a corrida</button>',
         '<button type="button" id="copiar-comando" hidden>Copiar o comando</button>',
         "</div>",
+        ('<p id="nota-da-coletanea" class="nota" hidden>Os erros sorteados saem de uma coletânea de 64 cartas: 58 erros já provados nas corridas '
+         '(42 de contrato da API e 16 quebras de localizador do site) e 6 cartas sem erro nenhum. O número dito pela banca, só com algarismos, embaralha a '
+         'pilha; cada rodada tira os próximos casos dela, e nenhum se repete até a pilha acabar. Sem número, vale a hora do clique. O sorteio é gravado '
+         'antes de o primeiro erro ser ligado, e cada erro só aparece depois de o agente responder. Cada caso leva cerca de um minuto e meio. A rodada é '
+         'uso do produto, não medida do TCC.</p>'),
         '<div id="previa-da-selecao"></div>',
         '<pre id="comando-da-corrida" hidden></pre>',
         '<pre id="log-da-execucao" hidden></pre>',
@@ -507,6 +531,20 @@ tr.corrida td:first-child strong{display:block}
 .alternativa{display:grid;grid-template-columns:minmax(120px,260px) minmax(60px,1fr) 150px;gap:10px;align-items:center;margin:5px 0}
 .trilho{height:10px}.trilho div{height:100%;background:var(--ink2)}.alternativa.escolhida .trilho div{background:var(--acento)}
 .alternativa .valor{font:13px var(--fm);color:var(--ink2)}
+/* ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) os cartões das cartas da rodada (escondida, acerto, erro), o lado a lado do que
+   foi ligado e do que o agente disse, e a grade das 64 cartas em quadrados por grupo.
+   ! Motivo: o bloco da coletânea mostra a rodada em desenho, como o resto do hub; o quadrado apagado e o escondido têm a mesma cor de propósito,
+   para a grade não entregar quais cartas estão na rodada antes da resposta. */
+.cartas-da-rodada{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;margin:8px 0}
+.carta-da-rodada{border:1px solid var(--linha);border-left-width:5px;border-radius:8px;padding:8px 10px;background:var(--bg2)}
+.carta-da-rodada p{margin:2px 0}.carta-da-rodada.escondida{border-left-color:var(--linha);color:var(--ink2);border-style:dashed}
+.carta-da-rodada.acerto{border-left-color:var(--bom)}.carta-da-rodada.erro{border-left-color:var(--ruim)}
+.lado-a-lado{display:grid;grid-template-columns:1fr 1fr;gap:10px}.lado-a-lado h4{margin-top:4px}
+.carta-da-rodada .resultado-da-carta{font-weight:600}.carta-da-rodada.acerto .resultado-da-carta{color:var(--bom)}.carta-da-rodada.erro .resultado-da-carta{color:var(--ruim)}
+.grade-da-coletanea{display:flex;flex-wrap:wrap;gap:8px 18px;margin:6px 0}
+.grupo-da-grade p{margin:0 0 3px}.quadrados{display:flex;flex-wrap:wrap;gap:3px;max-width:180px}
+.quadrado{width:16px;height:16px;border-radius:3px;border:1px solid var(--linha);background:var(--bg)}
+.quadrado.antes{background:var(--ink2);border-color:var(--ink2)}.quadrado.revelada{background:var(--acento);border-color:var(--acento)}
 #comando-da-corrida{user-select:all}
 .nota{color:var(--ink2);font-size:13px}
 .aviso{font-size:13px;color:var(--meio)}
@@ -961,14 +999,18 @@ function segundos(s) {
 // Git), o campo do commit de partida e a prévia do que a seleção rodaria e deixaria de fora, com o motivo de cada cenário.
 // ! Motivo: plano, seção 3.7: a seleção diz quais cenários rodar e por quê. A prévia é pedida quando a escolha muda, e não a cada releitura
 // da vista, para o hub não consultar o Git a cada dois segundos; o commit digitado só vai ao servidor junto com a seleção pelo Git.
+// ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) as opções levam também quantas cartas e o número da banca, só com a coletânea.
+// ! Motivo: o servidor recusa o número nas outras escolhas, e com a coletânea as repetições são sempre 1.
 function opcoesDaCorrida() {
-  const selecao = $('#selecao-da-corrida').value;
-  return {selecao, desde: selecao === 'git' ? ($('#desde-da-corrida').value.trim() || null) : null, repeticoes: Number($('#repeticoes').value || 1)};
+  const selecao = $('#selecao-da-corrida').value, coletanea = selecao === 'coletanea';
+  return {selecao, desde: selecao === 'git' ? ($('#desde-da-corrida').value.trim() || null) : null, repeticoes: coletanea ? 1 : Number($('#repeticoes').value || 1),
+          quantas: coletanea ? Number($('#quantas-da-corrida').value || 5) : null, numero: coletanea ? ($('#numero-da-corrida').value.trim() || null) : null};
 }
 
 async function atualizarSelecao() {
   const o = opcoesDaCorrida(), alvo = $('#previa-da-selecao');
   $('#campo-do-desde').hidden = o.selecao !== 'git';
+  for (const id of ['#campo-das-quantas', '#campo-do-numero', '#nota-da-coletanea']) $(id).hidden = o.selecao !== 'coletanea';   // coletânea da banca
   if (o.selecao !== 'git') { alvo.replaceChildren(); mostrarErro(''); return; }
   let d;
   try { d = await api('/api/selecao' + (o.desde ? '?desde=' + encodeURIComponent(o.desde) : '')); } catch (e) { mostrarErro(e.message); return; }
@@ -990,12 +1032,56 @@ async function atualizarAoVivo() {
   if (document.hidden) return;
   const o = opcoesDaCorrida(), consulta = new URLSearchParams({selecao: o.selecao, repeticoes: String(o.repeticoes)});
   if (o.desde) consulta.set('desde', o.desde);
+  if (o.quantas) consulta.set('quantas', String(o.quantas));
+  if (o.numero && /^\d{1,18}$/.test(o.numero)) consulta.set('numero', o.numero);    // número ainda errado: a recusa vem no clique, e a vista segue viva
   let vivo, exec;
   try { [vivo, exec] = await Promise.all([api('/api/ao-vivo'), api('/api/execucao?' + consulta.toString())]); } catch (e) { mostrarErro(e.message); return; }
   desenharLinhaAoVivo(vivo);
   desenharBarra(vivo);
   desenharCerebro(vivo.ultimo_diagnostico || null);
+  desenharColetanea(vivo.coletanea || null);
   desenharExecucao(exec);
+}
+
+// ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 194 a 196) o bloco da rodada da coletânea: o resumo (número, de onde veio,
+// posição na pilha, quantas faltam e a conferência do mesmo agente da medida), um cartão por carta, a grade das 64 cartas e o fim da rodada.
+// ! Motivo: a carta escondida chega do servidor só com a posição, e o quadrado apagado sem o nome; esta função não tem como mostrar o erro antes da
+// resposta. O cartão revelado põe lado a lado o que foi ligado e o que o agente disse, para a banca comparar sem precisar ler a trilha.
+function desenharColetanea(c) {
+  $('#coletanea').hidden = !c;
+  if (!c) return;
+  const m = c.mesmo_agente;
+  const agente = !m ? 'a conferência do mesmo agente da medida não pôde ser feita (faltam as condições de uma das corridas)'
+    : m.prompt_fixo && m.biblioteca ? 'mesmo agente da medida: o prompt fixo e a biblioteca têm os mesmos códigos da corrida ' + m.referencia
+      : 'atenção: o prompt fixo ou a biblioteca não têm os mesmos códigos da corrida ' + m.referencia;
+  $('#coletanea-resumo').textContent = 'Número ' + c.numero + (c.origem === 'relógio' ? ' (a hora do clique: ninguém disse um número)' : ' (dito pela banca)')
+    + ' · cartas ' + c.de + ' a ' + c.ate + ' de ' + c.total + ' da pilha · faltam ' + c.faltam + ' · ' + agente + '.';
+  $('#coletanea-cartas').replaceChildren(...c.cartas_da_rodada.map(cartaDaRodada));
+  $('#coletanea-grade').replaceChildren(...c.grade.map(g => el('div', {class: 'grupo-da-grade'},
+    el('p', {class: 'meta', text: g.nome + ' (' + g.cartas.length + ')', title: g.pergunta}),
+    el('div', {class: 'quadrados'}, g.cartas.map(q => el('span', {class: 'quadrado' + (q.marca ? ' ' + q.marca : ''), role: 'img',
+      title: q.marca ? q.descricao : 'apagado: na pilha, ou escondido até a resposta', 'aria-label': q.marca ? q.descricao : 'carta apagada'}))))));
+  $('#coletanea-fim').replaceChildren(...(c.lista
+    ? [el('h3', {text: 'A rodada inteira, na ordem da pilha'}), el('ol', {start: String(c.de)}, c.lista.map(i => el('li', {}, el('code', {text: i})))),
+       el('p', {}, 'Para refazer o sorteio em qualquer máquina, na pasta experimentos: ', el('code', {text: c.comando}))]
+    : [el('p', {class: 'nota', text: 'A rodada inteira e o comando que refaz o sorteio aparecem quando a última carta for respondida.'})]));
+}
+
+function cartaDaRodada(k) {
+  if (!k.revelada) return el('div', {class: 'carta-da-rodada escondida'}, el('p', {class: 'meta', text: k.nome}), el('p', {text: 'escondida até o agente responder'}));
+  const a = k.agente;
+  const disse = k.tipo === 'sem_erro' ? (a.detectou ? 'acusou uma falha' : 'nada foi acusado, e o modelo nem foi chamado')
+    : !a.detectou ? 'a falha não foi detectada'
+      : 'causa ' + (a.rotulo || 'nenhuma') + (k.tipo === 'contrato' ? ', campo ' + (a.campo || 'nenhum') : '')
+        + (k.tipo === 'localizador' ? (a.curado ? '; a cura fez o roteiro voltar a passar' : '; a cura não fez o roteiro voltar a passar') : '');
+  const certo = k.tipo === 'sem_erro' ? 'nenhuma falha' : 'causa ' + k.causa_certa + (k.tipo === 'contrato' ? ', campo ' + (k.campo_certo || 'nenhum') : '');
+  const bom = k.veredito === 'acertou' || k.veredito.startsWith('certo');
+  return el('div', {class: 'carta-da-rodada revelada ' + (bom ? 'acerto' : 'erro')},
+    el('p', {class: 'meta', text: k.nome + ' · ' + (k.grupo || '') + (k.medido_na_fase_5 ? ' · um dos dez da medida da Fase 5' : '')}),
+    el('div', {class: 'lado-a-lado'},
+      el('div', {}, el('h4', {text: 'O que foi ligado'}), el('p', {}, comCodigo(k.o_que_foi_ligado)), el('p', {class: 'nota', text: 'O certo: ' + certo})),
+      el('div', {}, el('h4', {text: 'O que o agente disse'}), el('p', {text: disse}))),
+    el('p', {class: 'resultado-da-carta', text: k.veredito}));
 }
 
 function desenharBarra(v) {
@@ -1056,12 +1142,13 @@ function desenharCerebro(u) {
 function desenharExecucao(x) {
   const livre = x.permitida && !x.em_andamento;
   $('#rodar-cenarios').hidden = !livre;
-  $('#campo-das-repeticoes').hidden = !livre;
+  $('#campo-das-repeticoes').hidden = !livre || $('#selecao-da-corrida').value === 'coletanea';   // coletânea: sempre uma repetição
   $('#parar-corrida').hidden = !(x.permitida && x.em_andamento);
   $('#comando-da-corrida').hidden = x.permitida;
   $('#copiar-comando').hidden = x.permitida;
   $('#comando-da-corrida').textContent = x.comando_sugerido;
   if (!$('#repeticoes').options.length) for (const n of x.repeticoes) $('#repeticoes').append(el('option', {value: String(n), text: String(n)}));
+  if (!$('#quantas-da-corrida').options.length) for (const n of x.quantas || []) $('#quantas-da-corrida').append(el('option', {value: String(n), text: String(n), selected: n === 5}));
   $('#estado-da-execucao').textContent = !x.permitida
     ? 'O hub foi aberto sem --permitir-execucao: copie o comando e rode na sua janela do PowerShell, na pasta experimentos, com o aplicativo Claude fechado.'
     : x.em_andamento ? 'Corrida ' + x.saida + ' em andamento desde ' + quando(x.inicio) + '.'
@@ -1461,7 +1548,7 @@ async function iniciar() {
   window.addEventListener('resize', () => { clearTimeout(espera); espera = setTimeout(redesenharDiagramas, 150); });
   $('#abrir-ultimo').addEventListener('click', () => { if (E.ultimo) abrirCaso(E.ultimo); });
   $('#rodar-cenarios').addEventListener('click', () => mandarExecucao({acao: 'rodar', ...opcoesDaCorrida()}));
-  for (const id of ['#selecao-da-corrida', '#desde-da-corrida', '#repeticoes']) {
+  for (const id of ['#selecao-da-corrida', '#desde-da-corrida', '#repeticoes', '#quantas-da-corrida', '#numero-da-corrida']) {     // os dois últimos: coletânea da banca
     $(id).addEventListener('change', async () => { if (id !== '#repeticoes') await atualizarSelecao(); atualizarAoVivo(); });
   }
   $('#parar-corrida').addEventListener('click', () => mandarExecucao({acao: 'parar'}));

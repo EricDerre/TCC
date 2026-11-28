@@ -74,6 +74,9 @@ from __future__ import annotations
 import argparse
 import contextlib
 import copy
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) `datetime`, para a hora do sorteio e o número do relógio em `preparar_sorteio`.
+# ! Motivo: o sorteio grava quando foi feito, e sem número dito pela banca o número é a hora do clique.
+import datetime as dt
 import json
 import platform
 import re
@@ -1491,6 +1494,46 @@ class Cura:
         o nó `cura`, as ações e conferências das reexecuções e o nó `reexecucao`; incidentes por último."""
         self.emitir_cura(tid, d, self.emitir_quebra(tid, d))
 
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisão 195) `executar_sem_quebra` e `emitir_sem_quebra`: a carta sem erro de um
+    # roteiro do front roda o roteiro do catálogo de cenários sem quebra nenhuma (com o banco restaurado antes, na reserva, que grava), e a trilha
+    # recebe a entrada (marcada `sem_erro`), as ações e as conferências. O certo é o roteiro passar; se ele falhar, a corrida só registra a falha
+    # acusada, sem diagnóstico nem cura, porque não há quebra armada para a cura procurar.
+    # ! Motivo: `executar` sempre arma uma quebra do catálogo (`cen.quebra`) e mede a cura dela; a carta sem erro precisa do mesmo roteiro sem nada
+    # trocado, e com as mesmas marcas da hora (`ea.marcar`) para a linha de produção do hub mostrar o caso.
+    def executar_sem_quebra(self, celula: dict) -> dict:
+        """A carta sem erro do front: o roteiro sem quebra; `detectou` é o roteiro ter falhado."""
+        _trace(self.nav, "descartar_traces")
+        ea.marcar("roteiro", celula.get("id"))
+        base_cen = cen.cenario(celula["cenario"])
+        if base_cen.get("restaura_banco"):
+            self._restaurar()
+        pagina = self.nav.nova_pagina()
+        inter = ic.Interceptador(pagina)
+        r = cen.rodar_cenario(base_cen, pagina, inter, base=self.base, capturar=False)
+        detectou = not r["passou"]
+        if detectou:
+            _trace(self.nav, "reter_trace", pagina)
+        pagina.close()
+        ea.marcar("deteccao", celula.get("id"))
+        return {"celula": celula, "cenario": base_cen, "r": r, "inter": inter, "detectou": detectou,
+                "deteccao": r.get("deteccao") if detectou else None, "t_deteccao": r.get("t_deteccao") if detectou else None}
+
+    def emitir_sem_quebra(self, tid: str, d: dict) -> int:
+        """Os eventos da carta sem erro do front: entrada, ações, conferências e incidentes; devolve o seq da entrada."""
+        _trace(self.nav, "gravar_traces", tid)
+        trilha, r = self.trilha, d["r"]
+        s_ent = trilha.evento("entrada", tid, {"caso": d["celula"]["id"], "roteiro": d["cenario"]["id"], "modo": "normal", "sem_erro": True,
+                                               "passou": r["passou"], "erro": r.get("erro")}, "ao_vivo", ts=r["inicio"])
+        for i, (passo, tempo) in enumerate(zip(d["cenario"]["passos"], r["tempos_ms"])):
+            trilha.evento("acao", tid, {"passo": i + 1, "acao": passo["acao"], "seletor": passo.get("seletor"), "url": passo.get("url"), "tempo_ms": tempo,
+                                        "falhou": r["passo_falho"] == i, "reexecucao": 0}, "ao_vivo", pai=s_ent, ts=cen.agora())
+        for conf in r["conferencias"]:
+            trilha.evento("verificacao", tid, tr._v("conferencia_do_roteiro", conf["nome"], "confere" if conf["passou"] else "nao_confere",
+                                                    {"esperado": conf["esperado"], "observado": conf["observado"], "reexecucao": 0}), "ao_vivo", pai=s_ent, ts=cen.agora())
+        for inc in d["inter"].incidentes:
+            trilha.evento("incidente", tid, inc, "ao_vivo", pai=s_ent, ts=cen.agora())
+        return s_ent
+
     def emitir_quebra(self, tid: str, d: dict, extras: dict | None = None) -> dict:
         """A primeira metade de emitir: entrada (com `extras`, como o caso ao vivo do cenário de localizador), ações e
         conferências do roteiro quebrado e a poda; devolve os seq."""
@@ -2125,6 +2168,40 @@ def celulas_do_ensaio(repeticoes: int, casos: int = 0, so: list[str] | None = No
     return [{"id": f"{c['id']}#{r}", "cenario": c, "repeticao": r} for r in range(1, max(1, repeticoes) + 1) for c in base]
 
 
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 193 a 197) `celulas_da_coletanea` e `preparar_sorteio`: as cartas
+# sorteadas viram execuções de uma repetição, com o nome neutro `carta-<posição na pilha>#1`, e o sorteio é feito e gravado (`sorteio.json` na
+# pasta da corrida e uma linha em `<resultados>/hub/sorteios.jsonl`) antes de as cobaias subirem e de o primeiro erro ser ligado; relançar a
+# mesma pasta lê o `sorteio.json` dela em vez de sortear de novo.
+# ! Motivo: plano aprovado da coletânea, seções 4.2 e 4.3. O nome da execução vai para a barra de progresso do hub (`progresso.anunciar`) e para
+# as marcas da linha de produção, que a banca vê antes da resposta; com o nome da carta ali, o erro estaria entregue. O nome nunca vai ao prompt
+# (`estrategias._dados_do_caso`). Gravar antes de ligar o primeiro erro é o que prova que a lista não foi escolhida depois.
+def celulas_da_coletanea(sorteio: dict) -> list[dict]:
+    """As execuções de uma rodada da coletânea: uma por carta tirada, na ordem da pilha, com o nome da posição."""
+    import coletanea as cl
+    return [{"id": f"carta-{sorteio['posicao'] + i:02d}#1", "cenario": cl.carta(id_), "repeticao": 1} for i, id_ in enumerate(sorteio["cartas"], 1)]
+
+
+def caminho_dos_sorteios() -> Path:
+    """O registro dos sorteios da coletânea, `<resultados>/hub/sorteios.jsonl` (o mesmo que o hub lê para saber onde a pilha parou)."""
+    import coletanea as cl
+    return caminhos.RESULTADOS / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+
+
+def preparar_sorteio(args: argparse.Namespace, saida: Path, registro: Path, agora: dt.datetime | None = None) -> dict:
+    """O sorteio da rodada, gravado antes de qualquer erro ligado; recusa (SystemExit) número ou quantidade fora da regra."""
+    import coletanea as cl
+    arq = Path(saida) / cl.ARQUIVO_DO_SORTEIO
+    if arq.exists():
+        return json.loads(arq.read_text(encoding="utf-8"))
+    numero, origem = (args.numero, "digitado") if args.numero else (cl.numero_do_relogio(agora), "relógio")
+    try:
+        sorteio = cl.sortear(numero, args.quantas, registro, args.saida, origem, quando=(agora or dt.datetime.now()).isoformat(timespec="seconds"))
+    except ValueError as e:
+        raise SystemExit(f"coletânea: {e}") from None
+    cl.gravar_sorteio(sorteio, saida, registro)
+    return sorteio
+
+
 def selecao_git_da_corrida(args: argparse.Namespace, decidir=None) -> dict | None:
     if getattr(args, "selecao", "todos") != "git":
         return None
@@ -2208,6 +2285,11 @@ def registro_do_cenario(cenario_: dict, repeticao: int, navegador_: str | None, 
     if cenario_["tipo"] == "contrato":
         ts = detectou and cen.task_success_contrato(conferencia, cenario_["causa"], cenario_.get("campo"))
         t_fim = t_diagnostico if (conferencia or {}).get("conferido") else None
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisão 195) a carta sem erro da coletânea: o acerto é não ter acusado nada, e
+    # não há tempo de reparo, porque não havia o que reparar.
+    # ! Motivo: a carta mostra à banca que a detecção não é combinada; uma detecção nela é falha acusada onde não havia, e conta como erro.
+    elif cenario_["tipo"] == "sem_erro":
+        ts, t_fim = not detectou, None
     else:
         ts = detectou and bool((cura or {}).get("curado"))
         t_fim = t_validacao if (cura or {}).get("curado") else None
@@ -2245,7 +2327,14 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
     t0 = time.monotonic()
     modelo = args.modelo
     slug = executar_fase3._slug(modelo)
-    parcial = bool(args.casos)
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisão 197) a corrida com `--coletanea` é parcial desde o começo, e não aceita
+    # `--selecao git` junto.
+    # ! Motivo: a rodada da coletânea é uso do produto, não medida: como parcial, ela segue sem limiares e sem ponte e não grava derivado oficial.
+    # A seleção pelo Git escolhe entre os dez da medida, e a coletânea troca os dez pelas cartas sorteadas; as duas juntas não têm sentido.
+    parcial = bool(args.casos) or bool(getattr(args, "coletanea", False))
+    if getattr(args, "coletanea", False) and getattr(args, "selecao", "todos") == "git":
+        marco("!! --coletanea não vale com --selecao git: a coletânea sorteia as cartas, a seleção escolhe entre os dez da medida")
+        return 2
     # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) com `--selecao git` a corrida pergunta ao `impacto_git` o que rodar: tudo,
     # só os cenários atingidos pelo que mudou nas cobaias, ou nada. Sem a opção (o padrão), `decisao_git` fica vazio e nada abaixo muda.
     # ! Motivo: plano, seção 3.7. A corrida selecionada não é uma rodada inteira: ela é tratada como parcial (não grava derivado oficial), e
@@ -2281,6 +2370,23 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
     if not evo.snapshot_fechado(dv.PASTA_CURADA):
         marco(f"!! a biblioteca de produção em {dv.PASTA_CURADA} não existe ou não está fechada (sem fechamento.json)")
         return 2
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 194 e 197) com `--coletanea`, o sorteio sai aqui: depois das conferências
+    # que encerram a corrida cedo e antes de as cobaias subirem e de qualquer modo de injeção ser ligado; as execuções passam a ser as cartas tiradas.
+    # ! Motivo: o sorteio gravado antes do primeiro erro é a prova de que a lista não foi escolhida depois; sorteando antes das conferências, uma
+    # corrida que parasse cedo gastaria cartas da pilha sem rodar nenhuma.
+    sorteio = None
+    if getattr(args, "coletanea", False):
+        import coletanea as cl
+        try:
+            sorteio = preparar_sorteio(args, saida, caminho_dos_sorteios())
+        except SystemExit as e:
+            marco(f"!! {e}")
+            return 2
+        celulas = celulas_da_coletanea(sorteio)
+        # o comando que refaz a lista fica só no `sorteio.json`: no log, que o hub mostra, ele deixaria refazer a lista antes do fim da rodada
+        marco(f"coletânea: número {sorteio['numero']} ({sorteio['origem']}), cartas {sorteio['posicao'] + 1} a {sorteio['proxima']} de {sorteio['total']} "
+              f"da pilha, coletânea {sorteio['codigo_da_coletanea'][:12]}; o sorteio está em {cl.ARQUIVO_DO_SORTEIO}")
+    ids_dos_cenarios = sorteio["cartas"] if sorteio is not None else [c["id"] for c in cen.CENARIOS_DO_ENSAIO]
     fech_prod = json.loads((dv.PASTA_CURADA / "fechamento.json").read_text(encoding="utf-8"))
     pasta_bib = saida / "bibliotecas" / slug / f"epoca-{dv.VERSAO_CURADA}"
     hash_bib = e3b._preparar_copia(dv.PASTA_CURADA, pasta_bib)
@@ -2315,10 +2421,15 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                  "canal": args.canal, "contrato": contrato, "limites": tr.LIMITES_PADRAO, "orcamento_de_tempo_ms": ORCAMENTO_DE_TEMPO_MS, "versao_do_caso_ao_vivo": cv.VERSAO_DO_CASO, "sinais_da_referencia_na_busca": cv.SINAIS_DA_REFERENCIA_NA_BUSCA}
     if decisao_git is not None:
         condicoes["selecao_git"] = decisao_git          # só com --selecao git: sem a opção o arquivo sai como sempre saiu
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) com `--coletanea`, as condições levam o sorteio e trocam a lista dos cenários
+    # pelas cartas tiradas; sem a opção, o arquivo sai como sempre saiu.
+    # ! Motivo: quem lê a corrida depois tem de ver, no mesmo arquivo do código do prompt fixo e da biblioteca, que cartas rodaram e de que pilha.
+    if sorteio is not None:
+        condicoes.update({"coletanea": sorteio, "cenarios": list(ids_dos_cenarios), "catalogo": [dict(c["cenario"]) for c in celulas], "repeticoes": 1})
     (saida / "condicoes_fase4.json").write_text(json.dumps(condicoes, ensure_ascii=False, indent=2), encoding="utf-8")
     marco(f"INÍCIO cenarios: Ollama {versao}, {modelo}, biblioteca de produção ({hash_bib}"
           f"{', lote ' + str(fech_prod.get('origem_do_lote')) if fech_prod.get('origem_do_lote') else ''}), k = {k}; {len(celulas)} execução(ões) "
-          f"({len({c['cenario']['id'] for c in celulas})} cenários x {args.repeticoes} repetição(ões)){'; corrida PARCIAL' if parcial else ''}; {len(feitos)} já feita(s)")
+          f"({len({c['cenario']['id'] for c in celulas})} cenários x {1 if sorteio is not None else args.repeticoes} repetição(ões)){'; corrida PARCIAL' if parcial else ''}; {len(feitos)} já feita(s)")
     if args.etapas_ao_vivo:
         ea.ligar(saida)             # só com a opção (ficha 114): daqui em diante cada etapa marca a hora em que começa
     front, api = subir_cobaias(args)
@@ -2355,8 +2466,8 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                                                        etapas_registradas=["roteiro", "interceptacao", "poda", "caso_ao_vivo", "recuperacao", "prompt",
                                                                            "diagnostico", "cura"],
                                                        etapas_nao_registradas=["intervencao", "edicao_biblioteca"],
-                                                       extras={"modo": "cenarios", "k": k, "limiares": limiares, "repeticoes": args.repeticoes,
-                                                               "cenarios": [c["id"] for c in cen.CENARIOS_DO_ENSAIO]}), ts=inicio)
+                                                       extras={"modo": "cenarios", "k": k, "limiares": limiares, "repeticoes": 1 if sorteio is not None else args.repeticoes,
+                                                               "cenarios": list(ids_dos_cenarios)}), ts=inicio)     # coletânea: as cartas tiradas
             tela = Tela(nav, trilha, args.saida, contrato, args.token, marco, prefixo=f"{args.saida}/{slug}")
             cura = Cura(nav, trilha, args.saida, args.token, marco, cli)
 
@@ -2383,8 +2494,13 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                     c = cel["cenario"]
                     tid = f"{args.saida}/{slug}/{cel['id']}"
                     t_cel = time.monotonic()
-                    if c["tipo"] == "contrato":
-                        item = {**c, "id": cel["id"], "produto_id": None, "requisicao": "GET /api/produtos"}
+                    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) a carta de contrato da coletânea traz a página, o produto e a
+                    # requisição dela (o detalhe é `GET /api/produtos/<id>`), e a carta sem erro do catálogo e do detalhe segue este mesmo caminho,
+                    # com o modo `normal`; os dez da medida não trazem nada disso e continuam com o produto vazio e `GET /api/produtos`.
+                    # ! Motivo: os seis cenários de contrato do ensaio são todos do catálogo; a coletânea tem cartas no detalhe do produto, e a
+                    # carta sem erro dessas páginas precisa passar pela mesma detecção (regra R1) que acusaria uma falha de verdade.
+                    if c["tipo"] == "contrato" or (c["tipo"] == "sem_erro" and c["cenario"] in ("api-catalogo", "api-detalhe")):
+                        item = {**c, "id": cel["id"], "produto_id": c.get("produto_id"), "requisicao": c.get("requisicao") or "GET /api/produtos"}
                         d = tela.rodar_caso(item)
                         t_fio = time.monotonic()
                         seqs = tela.emitir(tid, d)
@@ -2411,12 +2527,26 @@ def rodar_cenarios(args: argparse.Namespace) -> int:
                                                   p_rotulo=sv["no"]["confianca"]["p_rotulo"] if sv else None, selo=sv["no"]["confianca"]["selo"] if sv else None,
                                                   segundos=round(time.monotonic() - t_cel, 3), segundos_diagnostico=sv["registro"]["segundos"] if sv else None,
                                                   origem_deteccao=origem, motivo_deteccao=motivo)
+                    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisão 195) a carta sem erro de um roteiro do front: o roteiro roda
+                    # sem quebra (`Cura.executar_sem_quebra`); se ele falhar, o registro guarda a falha acusada, sem diagnóstico nem cura.
+                    # ! Motivo: no front a detecção é o roteiro falhar, e sem quebra armada não há elemento trocado para a cura procurar.
+                    elif c["tipo"] == "sem_erro":
+                        d = cura.executar_sem_quebra({"id": cel["id"], "cenario": c["cenario"]})
+                        cura.emitir_sem_quebra(tid, d)
+                        reg = registro_do_cenario(c, cel["repeticao"], v["navegador"], h_rep, deteccao=d["deteccao"], t_deteccao=d["t_deteccao"],
+                                                  t_diagnostico=None, conferencia=None, rotulo=None, p_rotulo=None, segundos=round(time.monotonic() - t_cel, 3),
+                                                  origem_deteccao="roteiro_sem_quebra" if d["detectou"] else None,
+                                                  motivo_deteccao=cen.motivo_do_roteiro(d["r"]) if d["detectou"] else None)
                     else:
                         guardado: dict = {}
 
                         # c, tid e guardado entram como valores padrão: a função é da execução desta volta do laço
-                        def apos_deteccao(d_: dict, c: dict = c, tid: str = tid, guardado: dict = guardado) -> dict:
-                            caso = caso_do_localizador(c, d_)
+                        # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) na rodada da coletânea, o caso ao vivo do localizador leva o
+                        # nome neutro da execução (`carta-07`) no lugar do nome da carta; nos dez da medida, o nome continua o do cenário.
+                        # ! Motivo: o nome do caso vai para a barra de progresso do hub (`diagnostico_ao_vivo.inferir`), que a banca vê antes da
+                        # resposta; com o nome da carta ("localizador/front-busca/id_renomeado"), o erro estaria na tela. O nome não vai ao prompt.
+                        def apos_deteccao(d_: dict, c: dict = c, tid: str = tid, guardado: dict = guardado, nome: str = cel["id"].split("#")[0]) -> dict:
+                            caso = caso_do_localizador(c if sorteio is None else {**c, "id": nome}, d_)
                             blob = trilha.blob(json.dumps(caso, ensure_ascii=False, sort_keys=True), "caso_ao_vivo")
                             guardado["seqs"] = cura.emitir_quebra(tid, d_, extras={"caso_ao_vivo": blob, "cenario_da_fase_5": c["id"]})
                             sv_ = _diagnosticar(tid, caso, [{"seq": guardado["seqs"]["s_poda"], "papel": "arvore_podada"}])
@@ -2813,6 +2943,14 @@ def montar_parser() -> argparse.ArgumentParser:
                     help="cenarios: `git` roda só os cenários atingidos pelo que mudou nas cobaias desde o último commit testado (ou desde --desde); padrão: todos")
     ap.add_argument("--desde", default=None, help="cenarios com --selecao git: o commit testado de onde o diff parte (padrão: o último do registro de commits testados)")
     ap.add_argument("--completa-a-cada-dias", type=int, default=7, help="cenarios com --selecao git: prazo, em dias, da rodada completa periódica (regra 2)")
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 193 a 197) `--coletanea`, `--numero` e `--quantas`, do modo `cenarios`,
+    # desligadas por padrão: a corrida roda as cartas tiradas da pilha da coletânea (`coletanea.py`) no lugar dos dez cenários da medida.
+    # ! Motivo: o botão do hub rodava sempre os mesmos dez cenários, e o Eric pediu erros sorteados para a banca não dizer que as rodadas são casos
+    # fixos. Sem `--coletanea` nada muda; `--quantas` é conferido por `coletanea.sortear` (3, 5 ou 10) e `--numero` por `coletanea.normalizar_numero`.
+    ap.add_argument("--coletanea", action="store_true",
+                    help="cenarios: roda as próximas cartas da pilha da coletânea de erros para a banca (uso do produto, não medida)")
+    ap.add_argument("--numero", default=None, help="cenarios com --coletanea: o número dito pela banca, que embaralha a pilha (sem ele, vale a hora)")
+    ap.add_argument("--quantas", type=int, default=5, help="cenarios com --coletanea: quantas cartas a rodada tira da pilha (3, 5 ou 10)")
     ap.add_argument("--trace-na-falha", action="store_true", help="tela, cura e cenarios: grava em <saida>/traces/<caso>.zip o trace do Playwright da página em que "
                                                                   "o roteiro falhou (desligado por padrão: ligado, os tempos da corrida não valem como medida)")
     return ap

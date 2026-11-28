@@ -6135,6 +6135,206 @@ def teste_rodar_fila_pre_fase5_ps1_roda_as_tres_corridas_em_ordem_e_simula_sem_r
     assert codigo == 2 and comandos == [] and "30" in saida, (codigo, saida)
 
 
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 193 a 197) os testes do modo `cenarios` com `--coletanea`: as opções
+# desligadas por padrão, as cartas sorteadas como execuções de nome neutro, o sorteio gravado na pasta e no registro antes das cobaias (e
+# reaproveitado ao relançar), o registro da carta sem erro e a trilha do roteiro do front rodado sem quebra.
+# ! Motivo: plano aprovado da coletânea, seção 4.3. Sem a opção a corrida tem de ser a de sempre (os dez da medida); com ela, o nome da carta
+# não pode aparecer no nome da execução (é o que a barra de progresso do hub mostra antes da resposta), e a carta sem erro acerta quando nada
+# é acusado. Tudo sem modelo, sem cobaias e sem navegador.
+def teste_coletanea_da_banca_vira_execucoes_de_nome_neutro():
+    import cenarios_fase4 as cen
+    import executar_fase4 as ex
+    args = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "hub_x"])
+    assert args.coletanea is False and args.numero is None and args.quantas == 5, "a coletânea vem desligada"
+    args = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "hub_x", "--coletanea", "--numero", "4821", "--quantas", "3"])
+    assert args.coletanea and args.numero == "4821" and args.quantas == 3
+    sorteio = {"posicao": 6, "cartas": ["contrato/api-detalhe/corpo_vazio", "localizador/front-busca/id_renomeado", "sem-erro/front-admin-login"]}
+    celulas = ex.celulas_da_coletanea(sorteio)
+    assert [c["id"] for c in celulas] == ["carta-07#1", "carta-08#1", "carta-09#1"]
+    assert [c["cenario"]["id"] for c in celulas] == sorteio["cartas"] and all(c["repeticao"] == 1 for c in celulas)
+    assert celulas[0]["cenario"]["cenario"] == "api-detalhe" and celulas[0]["cenario"]["requisicao"] == "GET /api/produtos/1"
+    for c in celulas:
+        assert c["cenario"]["modo"] not in c["id"] and c["cenario"]["cenario"] not in c["id"], "o nome da execução entrega a carta"
+    assert [c["cenario"]["id"] for c in ex.celulas_do_ensaio(1)] == [x["id"] for x in cen.CENARIOS_DO_ENSAIO], "sem a coletânea, o ensaio de sempre"
+    # o caso ao vivo do localizador, cujo nome vai para a barra de progresso do hub, leva o nome neutro na coletânea e o do cenário na medida
+    fonte = inspect.getsource(ex.rodar_cenarios)
+    assert 'caso_do_localizador(c if sorteio is None else {**c, "id": nome}, d_)' in fonte and 'nome: str = cel["id"].split("#")[0]' in fonte
+    loc = celulas[1]["cenario"]
+    q = cen.quebra(loc["cenario"], loc["modo"])
+    d = {"quebra": q, "r": {"conferencia_falha": None, "erro": "TimeoutError", "chamadas": []}, "podada": {"texto": '- searchbox "search"', "antes": 4, "depois": 1}}
+    assert ex.caso_do_localizador({**loc, "id": "carta-08"}, d)["id"] == "carta-08@cenario"
+    assert "localizador/" not in json.dumps(ex.caso_do_localizador({**loc, "id": "carta-08"}, d)["id"])
+
+
+def teste_coletanea_da_banca_sorteio_gravado_antes_e_reaproveitado_ao_relancar():
+    import coletanea as cl
+    import executar_fase4 as ex
+    pasta = _temp()
+    saida, reg = pasta / "hub_x", pasta / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+    args = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "hub_x", "--coletanea", "--numero", "4821", "--quantas", "5"])
+    s = ex.preparar_sorteio(args, saida, reg, agora=dt.datetime(2026, 12, 4, 19, 30))
+    assert (saida / cl.ARQUIVO_DO_SORTEIO).exists() and s["origem"] == "digitado" and s["cartas"] == cl.ordem_da_pilha("4821")[:5]
+    assert s["corrida"] == "hub_x" and s["quando"] == "2026-12-04T19:30:00"
+    assert ex.preparar_sorteio(args, saida, reg) == s and len(reg.read_text(encoding="utf-8").splitlines()) == 1, "relançar a pasta sorteou de novo"
+    sem_numero = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "hub_y", "--coletanea", "--quantas", "3"])
+    s3 = ex.preparar_sorteio(sem_numero, pasta / "hub_y", reg, agora=dt.datetime(2026, 12, 4, 19, 31, 2))
+    assert s3["numero"] == "20261204193102" and s3["origem"] == "relógio" and len(s3["cartas"]) == 3
+    try:
+        ex.preparar_sorteio(ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "hub_z", "--coletanea", "--quantas", "4"]), pasta / "hub_z", reg)
+    except SystemExit as e:
+        assert "quantas" in str(e), e
+    else:
+        raise AssertionError("--quantas 4 deveria ser recusado")
+
+
+def teste_coletanea_da_banca_carta_sem_erro_acerta_quando_nada_e_acusado():
+    import cenarios_fase4 as cen
+    import coletanea as cl
+    import executar_fase4 as ex
+    sem = cl.carta("sem-erro/api-catalogo")
+    r = ex.registro_do_cenario(sem, 1, "156.0", "h-seed", deteccao=None, t_deteccao=None, t_diagnostico=None, conferencia=None, rotulo=None, p_rotulo=None)
+    assert (r["tipo"], r["detectou"], r["task_success"], r["mttr_s"], r["causa_esperada"]) == ("sem_erro", False, True, None, None)
+    ok = cen.diagnostico_conferido(_RESPOSTA.format(causa="campo_ausente", campo="preco"), _CASO_DE_CONTRATO)
+    r = ex.registro_do_cenario(sem, 1, "156.0", "h-seed", deteccao="2026-12-04T19:30:00", t_deteccao=100.0, t_diagnostico=150.0, conferencia=ok,
+                               rotulo="campo_ausente", p_rotulo=0.9, origem_deteccao="contrato_no_fio", motivo_deteccao="o fio acusou")
+    assert r["detectou"] is True and r["task_success"] is False and r["mttr_s"] is None, "acusar falha onde não havia não é acerto"
+    carta = cl.carta("contrato/api-catalogo/field_missing/preco")
+    r = ex.registro_do_cenario(carta, 1, "156.0", "h-seed", deteccao="2026-12-04T19:30:00", t_deteccao=100.0, t_diagnostico=161.25, conferencia=ok,
+                               rotulo="campo_ausente", p_rotulo=0.91)
+    assert r["task_success"] is True and r["mttr_s"] == 61.25 and r["cenario"] == carta["id"] and r["classe"] == 2, "a carta de contrato registra como o ensaio"
+
+
+def teste_coletanea_da_banca_roteiro_sem_quebra_vai_para_a_trilha():
+    import executar_fase4 as ex
+    t = trilha.Trilha(versao=trilha.V2)
+    t.corrida(_cabecalho(), ts=TS)
+    cura = ex.Cura(None, t, "hub_x", "token", lambda m: None, None)
+    r = {"inicio": TS, "passou": True, "passo_falho": None, "tempos_ms": [10, 20, 30], "erro": None, "conferencia_falha": None,
+         "conferencias": [{"nome": "área administrativa aberta", "passou": True, "esperado": "x", "observado": "x"}], "chamadas": []}
+    d = {"celula": {"id": "carta-03#1", "cenario": "front-admin-login"}, "cenario": {"id": "front-admin-login", "passos": [{"acao": "abrir", "url": "admin/login.php"},
+         {"acao": "esperar", "seletor": "#login_usuario"}, {"acao": "conferir", "nome": "área administrativa aberta"}]}, "r": r,
+         "inter": type("Inter", (), {"incidentes": []})(), "detectou": False, "deteccao": None, "t_deteccao": None}
+    cura.emitir_sem_quebra("hub_x/qwen2.5_7b/carta-03#1", d)
+    tipos = [e["tipo"] for e in t.eventos if e.get("trilha") == "hub_x/qwen2.5_7b/carta-03#1"]
+    assert tipos == ["entrada", "acao", "acao", "acao", "verificacao"], tipos
+    entrada = next(e for e in t.eventos if e["tipo"] == "entrada")
+    assert entrada["dados"]["sem_erro"] is True and entrada["dados"]["modo"] == "normal"
+    # o relatório do caso, que a corrida gera no fim para toda execução, sai mesmo sem diagnóstico nem cura
+    texto = grr.relatorio_do_caso_v2(t.eventos, "hub_x/qwen2.5_7b/carta-03#1")
+    assert "carta-03#1" in texto, texto[:300]
+
+
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) a rodada da coletânea de ponta a ponta, com o diagnóstico de verdade e o resto de
+# mentira: o Ollama (`_ollama_de_mentira_v2`), o navegador, a tela e a cura (classes falsas no lugar de `Tela` e de `Cura.executar`), o banco e a
+# espera das cobaias. Confere o sorteio gravado antes de tudo, as cinco execuções no `cenarios.jsonl` com o nome da carta, a carta sem erro sem
+# nada acusado, as condições com o sorteio e os nomes neutros na trilha e no registro do diagnóstico.
+# ! Motivo: o laço de `rodar_cenarios` com `--coletanea` só rodaria pela primeira vez na janela do Eric, com o modelo; um nome errado ou uma chave
+# faltando ali só apareceria na frente dele. Nada aqui abre navegador, porta, banco ou modelo, e o registro de sorteios vai para a pasta temporária.
+def teste_coletanea_da_banca_rodada_de_ponta_a_ponta_com_o_resto_de_mentira():
+    import contextlib as cl_ctx
+    import time as tempo
+    import caso_ao_vivo as cv
+    import cenarios_fase4 as cen
+    import coletanea as cl
+    import executar_bateria
+    import executar_fase4 as ex
+    import _env_common as env
+    import restaurar_banco as rb
+    import run
+
+    class TelaFalsa:
+        def __init__(self, nav, trilha_, saida, contrato, token, marco, prefixo=None):
+            self.trilha = trilha_
+
+        def referencia(self, cid, pid):
+            return {}
+
+        def rodar_caso(self, item):
+            com_erro = item["modo"] != "normal"
+            r = {"t_deteccao": tempo.monotonic() if com_erro else None, "deteccao": cen.agora() if com_erro else None, "passou": not com_erro,
+                 "passo_falho": 2 if com_erro else None, "erro": None,
+                 "conferencia_falha": {"nome": "grid com 14 cartões", "esperado": "14 elementos", "observado": "0 elementos"} if com_erro else None}
+            caso = cv.montar_caso(f"{item['id']}@tela", item["requisicao"], 200, "PRODUTO: id, nome, preco", '[{"id": 1, "nome": "Picanha", "preco": 89.9}]',
+                                  "o preço do cartão não aparece")
+            return {"r": r, "veredito": {"reproduz": com_erro, "motivo": "corpo diferente da referência"}, "caso_vivo": caso}
+
+        def emitir(self, tid, d):
+            self.trilha.evento("entrada", tid, {"caso": tid.rsplit("/", 1)[-1]}, "ao_vivo", ts=cen.agora())
+            return {"poda_corpo": None, "poda_arvore": None, "chamada": None}
+
+    class CuraFalsa(ex.Cura):
+        def executar(self, celula, apos_deteccao=None, quebra=None):
+            q = cen.quebra(celula["cenario"], celula["modo"])
+            d = {"celula": celula, "quebra": q, "r": {"deteccao": cen.agora(), "passo_falho": q["passo_alvo"], "erro": "TimeoutError: o localizador não resolveu",
+                                                      "conferencia_falha": None, "passou": False}, "t_deteccao": tempo.monotonic(),
+                 "podada": {"texto": '- searchbox "search"', "antes": 4, "depois": 1}, "ref": {}}
+            if apos_deteccao is not None:
+                apos_deteccao(d)
+            d.update({"escolha": {"curado": True, "aplicado": {"estrategia": "papel_e_nome"}, "reexecucoes": 1, "mesmo_elemento": True}, "t_validacao": tempo.monotonic(),
+                      "segundos_restauracao": 0.0})
+            return d
+
+        def emitir_quebra(self, tid, d, extras=None):
+            s = self.trilha.evento("entrada", tid, {"roteiro": d["celula"]["cenario"], **(extras or {})}, "ao_vivo", ts=cen.agora())
+            p = self.trilha.evento("poda", tid, {"alvo": "arvore", "antes": {"nos": 4}, "depois": {"linhas": 1}, "regras": [], "sha": self.trilha.blob(d["podada"]["texto"], "arvore_podada"),
+                                                 "diff": []}, "ao_vivo", pai=s, ts=cen.agora())
+            return {"s_ent": s, "s_poda": p}
+
+        def emitir_cura(self, tid, d, seqs):
+            return None
+
+        def executar_sem_quebra(self, celula):
+            return {"celula": celula, "cenario": cen.cenario(celula["cenario"]), "r": {"inicio": cen.agora(), "passou": True, "passo_falho": None, "tempos_ms": [],
+                                                                                      "conferencias": [], "erro": None},
+                    "inter": type("Inter", (), {"incidentes": []})(), "detectou": False, "deteccao": None, "t_deteccao": None}
+
+    class NavFalso:
+        def versao(self):
+            return {"navegador": "156.0.8078.4", "playwright": "1.64.1"}
+
+    @cl_ctx.contextmanager
+    def nav_falso(args, saida):
+        yield NavFalso()
+
+    resposta = "Curto.\nCAUSA_RAIZ: campo_ausente\nCAMPO: preco\nIMPACTO: O usuário não vê o preço.\nFONTE: nenhum"
+    chamadas: list = []
+    guardados = {(m, n): getattr(m, n) for m, n in ((ex, "Tela"), (ex, "Cura"), (ex, "navegador_da_corrida"), (ex, "ligar_modo"), (run, "wait_until_ready"),
+                                                    (env, "find_mysql_cli"), (rb, "restaurar"), (rb, "hash_das_tabelas"), (ex, "caminho_dos_sorteios"))}
+    args = ex.montar_parser().parse_args(["--modo", "cenarios", "--saida", "_fumaca_coletanea", "--coletanea", "--numero", "4821", "--quantas", "5", "--cobaias-no-ar",
+                                          "--sem-relatorios"])
+    with _saida_temporaria_das_corridas() as tmp, _ollama_de_mentira_v2(lambda prompt, corpo: (resposta, .9, []), chamadas, versao="0.40.16"):
+        try:
+            ex.Tela, ex.Cura, ex.navegador_da_corrida, ex.ligar_modo = TelaFalsa, CuraFalsa, nav_falso, lambda *a, **k: {}
+            run.wait_until_ready = lambda *a, **k: True
+            env.find_mysql_cli = lambda: "mysql-de-mentira"
+            rb.restaurar, rb.hash_das_tabelas = (lambda cli: dict(rb.CONTAGENS_DO_SEED)), (lambda cli: "h-seed")
+            ex.caminho_dos_sorteios = lambda: tmp / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+            assert ex.rodar_cenarios(args) == 0
+        finally:
+            for (m, n), v in guardados.items():
+                setattr(m, n, v)
+        raiz = tmp / "_fumaca_coletanea"
+        sorteio = json.loads((raiz / cl.ARQUIVO_DO_SORTEIO).read_text(encoding="utf-8"))
+        assert sorteio["cartas"] == cl.ordem_da_pilha("4821")[:5] and (tmp / "hub" / cl.ARQUIVO_DOS_SORTEIOS).exists(), "o sorteio foi gravado na pasta e no registro"
+        registros = executar_bateria.ler_jsonl(raiz / "cenarios.jsonl")
+        assert [r["cenario"] for r in registros] == sorteio["cartas"], [r["cenario"] for r in registros]
+        tipos = {r["tipo"] for r in registros}
+        assert {"contrato", "localizador", "sem_erro"} <= tipos, tipos
+        sem = next(r for r in registros if r["tipo"] == "sem_erro")
+        assert sem["detectou"] is False and sem["task_success"] is True
+        certo = next(r for r in registros if r["cenario"] == "contrato/api-catalogo/field_missing/preco")
+        assert certo["task_success"] is True, "a resposta de mentira é a causa e o campo certos dessa carta"
+        loc = next(r for r in registros if r["tipo"] == "localizador")
+        assert loc["task_success"] is True and loc["cura"]["estrategia"] == "papel_e_nome"
+        condicoes = json.loads((raiz / "condicoes_fase4.json").read_text(encoding="utf-8"))
+        assert condicoes["parcial"] is True and condicoes["coletanea"]["numero"] == "4821" and condicoes["cenarios"] == sorteio["cartas"] and condicoes["repeticoes"] == 1
+        diagnosticos = executar_bateria.ler_jsonl(raiz / "qwen2.5_7b" / "diagnosticos__cenarios.jsonl")
+        assert len(diagnosticos) == 4 and all(d["caso"].startswith("carta-") for d in diagnosticos), [d["caso"] for d in diagnosticos]
+        casos = {e.get("trilha") for e in trilha.Trilha.carregar(raiz / "trilha_cenarios.jsonl").eventos if "/qwen2.5_7b/" in str(e.get("trilha"))}
+        assert len(casos) == 5 and all(t.rsplit("/", 1)[-1].startswith("carta-") for t in casos), casos
+        assert all(id_ not in json.dumps([c["prompt"] for c in chamadas], ensure_ascii=False) for id_ in sorteio["cartas"]), "o nome da carta foi ao prompt"
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--gravar-hashes", action="store_true",

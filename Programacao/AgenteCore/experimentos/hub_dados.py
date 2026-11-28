@@ -584,6 +584,84 @@ LIMITE_DE_IDADE_S = 30
 ESTADOS_RODANDO = ("indeterminado", "determinado")
 
 
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 194 a 196) `coletanea_da_corrida` lê a rodada da coletânea de uma pasta de
+# corrida (o `sorteio.json` que o executor grava antes do primeiro erro e o `cenarios.jsonl`) e monta o que a vista "Corrida ao vivo" mostra: o
+# número, de onde veio, a posição na pilha e quantas cartas faltam; um cartão por carta, escondido até a resposta, e depois com o que foi ligado,
+# a causa e o campo certos, o que o agente disse e se acertou; a grade das 64 cartas por grupo, com as reveladas e as das rodadas anteriores do
+# mesmo número acesas; a lista e o comando que refaz o sorteio, só no fim; e a conferência do mesmo agente da medida (os códigos do prompt fixo
+# e da biblioteca contra os da corrida 28b).
+# ! Motivo: a banca tem de comparar a resposta com o erro na hora, sem ver o erro antes. Por isso nada da carta escondida sai daqui: o cartão só
+# tem a posição, e o quadrado apagado da grade não leva o nome (um quadrado apagado tanto pode ser carta escondida quanto carta não tirada). A
+# carta se revela quando a linha dela entra no `cenarios.jsonl`, o que o executor faz só depois do diagnóstico e da cura.
+CORRIDA_DA_MEDIDA = "fase5_agente_b"
+
+
+def _ler_json(arq: Path):
+    try:
+        return json.loads(Path(arq).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def _veredito_da_carta(carta: dict, registro: dict) -> str:
+    if carta["tipo"] == "sem_erro":
+        return "errado: acusou falha onde não havia" if registro.get("detectou") else "certo: nada foi acusado"
+    if not registro.get("detectou"):
+        return "não detectou"
+    return "acertou" if registro.get("task_success") else "errou"
+
+
+def _mesmo_agente(pasta: Path) -> dict | None:
+    esta, medida = _ler_json(pasta / "condicoes_fase4.json"), _ler_json(pasta.parent / CORRIDA_DA_MEDIDA / "condicoes_fase4.json")
+    if not isinstance(esta, dict) or not isinstance(medida, dict):
+        return None
+    biblioteca = lambda c: (c.get("biblioteca") or {}).get("hash") if isinstance(c.get("biblioteca"), dict) else None
+    return {"prompt_fixo": bool(esta.get("hash_prompt_fixo")) and esta.get("hash_prompt_fixo") == medida.get("hash_prompt_fixo"),
+            "biblioteca": bool(biblioteca(esta)) and biblioteca(esta) == biblioteca(medida), "referencia": CORRIDA_DA_MEDIDA}
+
+
+def coletanea_da_corrida(pasta: Path, registro: Path) -> dict | None:
+    """A rodada da coletânea gravada nesta pasta, pronta para a página; None quando a pasta não é de uma rodada da coletânea."""
+    import coletanea as cl
+    pasta = Path(pasta)
+    s = _ler_json(pasta / cl.ARQUIVO_DO_SORTEIO)
+    if not isinstance(s, dict) or not s.get("cartas"):
+        return None
+    respondidas = {r.get("cenario"): r for r in (_registros_dos_cenarios(pasta) or [])}
+    nome_do_grupo = {g["classe"]: g["nome"] for g in cl.GRUPOS}
+    rodada, reveladas = [], set()
+    for i, id_ in enumerate(s["cartas"]):
+        posicao = s["posicao"] + i + 1
+        base = {"posicao": posicao, "nome": f"carta-{posicao:02d}"}
+        r = respondidas.get(id_)
+        try:
+            c = cl.carta(id_)
+        except KeyError:
+            c = None
+        if r is None or c is None:
+            rodada.append({**base, "revelada": False})
+            continue
+        reveladas.add(id_)
+        rodada.append({**base, "revelada": True, "id": id_, "tipo": c["tipo"], "grupo": nome_do_grupo.get(c["classe"]), "o_que_foi_ligado": cl.descricao(c),
+                       "causa_certa": c["causa"], "campo_certo": c["campo"], "medido_na_fase_5": c["medido_na_fase_5"], "veredito": _veredito_da_carta(c, r),
+                       "agente": {"detectou": bool(r.get("detectou")), "rotulo": r.get("rotulo"), "campo": (r.get("conferencia") or {}).get("campo"),
+                                  "curado": (r.get("cura") or {}).get("curado") if c["tipo"] == "localizador" else None, "mttr_s": r.get("mttr_s")}})
+    antes = {id_ for x in cl.sorteios_do_numero(s["numero"], registro, s.get("codigo_da_coletanea")) if x.get("posicao", 0) < s["posicao"] for id_ in x.get("cartas") or []}
+    grade = []
+    for g in cl.GRUPOS:
+        quadrados = []
+        for c in cl.cartas():
+            if c["classe"] != g["classe"]:
+                continue
+            marca = "revelada" if c["id"] in reveladas else "antes" if c["id"] in antes else ""
+            quadrados.append({"marca": marca, "id": c["id"] if marca else None, "descricao": cl.descricao(c) if marca else None})
+        grade.append({"classe": g["classe"], "nome": g["nome"], "pergunta": g["pergunta"], "cartas": quadrados})
+    fim = len(reveladas) == len(s["cartas"])
+    return {"corrida": pasta.name, "quando": s.get("quando"), "numero": s["numero"], "origem": s.get("origem"), "de": s["posicao"] + 1, "ate": s["proxima"],
+            "total": s["total"], "faltam": s["total"] - s["proxima"], "quantas": s.get("quantas"), "cartas_da_rodada": rodada, "grade": grade,
+            "lista": list(s["cartas"]) if fim else None, "comando": s.get("comando") if fim else None, "mesmo_agente": _mesmo_agente(pasta)}
+
+
 class AoVivo:
     """A corrida que gravou o estado da barra por último, lida da pasta dela; nada é escrito."""
 
@@ -665,7 +743,10 @@ class AoVivo:
             elif pela_marca:
                 etapa_agora, caso_agora = ultima["etapa"], ultima.get("caso")
             ultimo, quantos = self._ultimo_diagnostico(pasta)
-            return {"ha_corrida": True, "pasta": pasta.name, "progresso": progresso if isinstance(progresso, dict) else None,
+            # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) a leitura ao vivo traz também a rodada da coletânea, quando a corrida é uma.
+            # ! Motivo: a vista "Corrida ao vivo" mostra a pilha, a grade e o cartão de cada carta; nas outras corridas a chave vem vazia (None).
+            coletanea = coletanea_da_corrida(pasta, self.raiz / "hub" / "sorteios.jsonl")
+            return {"ha_corrida": True, "pasta": pasta.name, "progresso": progresso if isinstance(progresso, dict) else None, "coletanea": coletanea,
                     "idade_s": round(idade if idade is not None else (idade_das_marcas or 0.0), 1), "em_andamento": bool(rodando or pela_marca),
                     "etapa_agora": etapa_agora, "caso_agora": caso_agora,
                     "tempos_agora": ea.tempos_por_caso(marcas).get(str(caso_agora), {}) if caso_agora is not None else {},

@@ -342,6 +342,10 @@ No Windows e no macOS, a prova em máquina nova é a do GitHub Actions (`.github
      ! Motivo: o launcher deixou de abrir o site e a documentação da API em duas abas; abre uma só, no hub, que leva às duas. Se o hub não subir, ele abre o site e a API, como antes. -->
 **No Windows, o caminho mais curto** é dar dois cliques em `Cobaia.exe`: ele instala, sobe tudo e abre o navegador no hub central (`http://127.0.0.1:8765`), de onde se chega ao site, à API, às métricas e ao botão de rodar os cenários. Na primeira vez, o Windows pode mostrar "Windows protegeu seu PC", porque o arquivo não é assinado; clique em "Mais informações" e depois em "Executar assim mesmo".
 
+<!-- ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 193 a 197) parágrafo novo: os erros sorteados da coletânea no botão do hub.
+     ! Motivo: o botão rodava sempre os mesmos dez cenários; sem o parágrafo, quem abre o hub não saberia que pode sortear os erros, nem como a lista se refaz. -->
+**Erros sorteados, para quem quer ver o agente sem roteiro.** No hub, em "Corrida ao vivo", a opção "O que rodar" tem também os erros sorteados de uma coletânea de 64 cartas: os 58 erros já provados nas corridas (42 de contrato da API e 16 quebras de localizador do site) e 6 cartas sem erro nenhum, em que o certo é não acusar nada. Quem assiste diz um número, só com algarismos, e esse número embaralha a pilha; cada rodada tira os próximos casos dela (3, 5 ou 10), e nenhum se repete até a pilha acabar. O sorteio é gravado antes de o primeiro erro ser ligado, e cada erro só aparece na tela depois de o agente responder, ao lado do que ele disse. A lista de qualquer rodada se refaz em qualquer máquina com `python coletanea.py --sortear --numero <N> --quantas <k> --posicao <p>`, na pasta `Programacao/AgenteCore/experimentos`. A rodada é uso do produto, não medida do TCC, e o agente é o mesmo da medida.
+
 **Por partes**, na raiz do repositório:
 
 ```

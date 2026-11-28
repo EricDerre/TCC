@@ -277,8 +277,12 @@ def linha_do_roadmap(road: dict, fase: dict):
 def fase_da_corrida(numero: str) -> str | None:
     """O grupo (a fase) de uma corrida do roadmap, pelo número: "18b" é da faixa do 18; as de letra Q são da Pós-Fase 4."""
     m = re.match(r"\d+", numero.strip())
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) a corrida "CB", a rodada da coletânea de erros sorteados pelo botão do hub, também é
+    # da Pós-Fase 4.
+    # ! Motivo: ela entrou no roadmap §2 depois do fechamento da fase, como continuação da central aberta pelo `Cobaia.exe` (decisões 193 a 197), e
+    # `testar_painel_fases.py` recusa corrida sem fase; sem a regra, o cartão da rodada que falta não apareceria na visão da Pós-Fase 4.
     if not m:
-        return "Pós-Fase 4" if numero.strip().upper().startswith("Q") else None
+        return "Pós-Fase 4" if numero.strip().upper().startswith(("Q", "CB")) else None
     n = int(m.group())
     return next((grupo for ini, fim, grupo in FAIXAS_DE_CORRIDAS if ini <= n <= fim), None)
 

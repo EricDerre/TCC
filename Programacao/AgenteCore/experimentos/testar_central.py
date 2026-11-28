@@ -856,6 +856,193 @@ def teste_painel_do_projeto_abre_pelo_hub_e_desenha_os_graficos_sem_internet():
         assert de_script == [], de_script
 
 
+# ------------------------------------------------------------------ a coletânea de erros sorteados para a banca (decisões 193 a 197)
+
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) os testes do hub com a coletânea: as opções novas do botão e o comando que elas
+# montam, a recusa fora do `Cobaia.exe` e com a pilha vazia, o log escondido enquanto a rodada roda, a leitura da rodada que esconde a carta
+# até a resposta, a grade que só acende as reveladas e as das rodadas anteriores, a conferência do mesmo agente da medida e, na página, os
+# campos e o bloco da coletânea. Escritos antes do código: a primeira rodada falhou por ValueError em `opcoes_da_corrida` ("coletanea").
+# ! Motivo: plano aprovado da coletânea, seção 4.4. A banca não pode ver o erro antes de o agente responder; se o nome de uma carta escondida
+# chegar à página (no bloco, na grade ou no log da corrida), o sorteio deixa de provar alguma coisa. Nada aqui sobe o site, a API ou o modelo.
+def _corrida_da_coletanea(raiz: Path, nome: str = "hub_20261204_193000", numero: str = "4821", antes: int = 0, respondidas: int = 2) -> tuple[Path, dict]:
+    """Uma rodada da coletânea como o executor grava: o sorteio na pasta e no registro (com `antes` rodadas anteriores do mesmo número) e o
+    `cenarios.jsonl` com as `respondidas` primeiras cartas, todas com Task Success."""
+    import coletanea as cl
+    reg = raiz / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+    for i in range(antes):
+        cl.gravar_sorteio(cl.sortear(numero, 5, reg, f"hub_antes_{i}", "digitado"), raiz / f"hub_antes_{i}", reg)
+    s = cl.sortear(numero, 5, reg, nome, "digitado", quando="2026-12-04T19:30:00")
+    pasta = raiz / nome
+    cl.gravar_sorteio(s, pasta, reg)
+    linhas = []
+    for id_ in s["cartas"][:respondidas]:
+        c = cl.carta(id_)
+        linhas.append({"cenario": id_, "tipo": c["tipo"], "roteiro": c["cenario"], "modo": c["modo"], "campo": c["campo"], "causa_esperada": c["causa"],
+                       "classe": c["classe"], "repeticao": 1, "detectou": c["tipo"] != "sem_erro", "task_success": True,
+                       "rotulo": c["causa"] if c["tipo"] != "sem_erro" else None, "conferencia": {"conferido": True, "campo": c["campo"]} if c["tipo"] == "contrato" else None,
+                       "cura": {"curado": True} if c["tipo"] == "localizador" else None, "mttr_s": 60.0 if c["tipo"] != "sem_erro" else None})
+    (pasta / "cenarios.jsonl").write_text("".join(json.dumps(x, ensure_ascii=False) + "\n" for x in linhas), encoding="utf-8")
+    return pasta, s
+
+
+def teste_coletanea_opcoes_do_botao_e_comando_da_corrida():
+    import executar_fase4 as ex
+    assert hub.opcoes_da_corrida() == {"repeticoes": 1, "selecao": "todos", "desde": None}, "sem a coletânea, as opções de sempre"
+    assert hub.opcoes_da_corrida(selecao="coletanea") == {"repeticoes": 1, "selecao": "coletanea", "desde": None, "quantas": 5, "numero": None}
+    o = hub.opcoes_da_corrida(selecao="coletanea", quantas=3, numero=" 4821 ")
+    assert (o["quantas"], o["numero"]) == (3, "4821")
+    for ruim in ({"selecao": "coletanea", "quantas": 4}, {"selecao": "coletanea", "numero": "48a1"}, {"selecao": "todos", "numero": "4821"},
+                 {"selecao": "coletanea", "desde": "abc1234"}, {"selecao": "coletanea", "quantas": True}):
+        try:
+            hub.opcoes_da_corrida(**ruim)
+        except ValueError:
+            continue
+        raise AssertionError(f"{ruim} deveria ser recusado")
+    direto = hub.comando_direto("hub_x", o, python="py")
+    assert direto == ["py", "executar_fase4.py", "--modo", "cenarios", "--saida", "hub_x", "--coletanea", "--quantas", "3", "--numero", "4821",
+                      "--cobaias-no-ar", "--etapas-ao-vivo"], direto
+    assert "--numero" not in hub.comando_direto("hub_x", hub.opcoes_da_corrida(selecao="coletanea"), python="py"), "sem número, vale a hora do clique"
+    args = ex.montar_parser().parse_args(direto[2:])
+    assert args.coletanea and args.quantas == 3 and args.numero == "4821" and args.cobaias_no_ar and args.casos == 0, "o executor entende o comando do hub"
+
+
+def teste_coletanea_so_roda_pelo_exe_recusa_a_pilha_vazia_e_esconde_o_log():
+    import coletanea as cl
+    acervo, raiz = _acervo_de_teste()
+    lancados = []
+
+    def lancador(saida, opcoes):
+        lancados.append(opcoes)
+        return [sys.executable, "-c", "import time; print('localizador/front-busca/id_renomeado', flush=True); time.sleep(1.5)"]
+
+    with _hub_no_ar(acervo, permitir_execucao=True, comando_da_corrida=lancador) as (base, _, _srv):
+        status, r = _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 1, "selecao": "coletanea"})
+        assert status == 409 and "Cobaia.exe" in r["erro"] and lancados == [], r
+    reg = raiz / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+    while True:
+        s = cl.sortear("77", 10, reg, "hub_antes", "digitado")
+        cl.gravar_sorteio(s, tp4._temp(), reg)
+        if s["acabou"]:
+            break
+    with _hub_no_ar(acervo, pelo_exe=True, comando_da_corrida=lancador) as (base, _, _srv):
+        status, r = _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 1, "selecao": "coletanea", "numero": "77"})
+        assert status == 409 and "acabou" in r["erro"] and lancados == [], r
+        e = _json(base, "GET", "/api/execucao?selecao=coletanea&quantas=3&numero=4821")[1]
+        assert "--coletanea" in e["comando_sugerido"] and "--numero 4821" in e["comando_sugerido"] and e["quantas"] == [3, 5, 10], e
+        assert _json(base, "POST", "/api/execucao", {"acao": "rodar", "repeticoes": 1, "selecao": "coletanea", "quantas": 3, "numero": "4821"})[0] == 200
+        assert lancados and lancados[-1]["quantas"] == 3 and lancados[-1]["numero"] == "4821"
+        rodando = _json(base, "GET", "/api/execucao")[1]
+        assert rodando["em_andamento"] and rodando["coletanea"] is True and "front-busca" not in rodando["log"], "o log entrega a carta antes da resposta"
+        fim = _ate(lambda: _json(base, "GET", "/api/execucao")[1], lambda d: d["terminou"])
+        assert "localizador/front-busca/id_renomeado" in fim["log"], "terminada a rodada, o log volta a aparecer"
+
+
+def teste_coletanea_da_corrida_esconde_a_carta_ate_a_resposta():
+    import coletanea as cl
+    raiz = tp4._temp()
+    assert hd.coletanea_da_corrida(raiz, raiz / "hub" / cl.ARQUIVO_DOS_SORTEIOS) is None, "pasta sem sorteio não é rodada da coletânea"
+    pasta, s = _corrida_da_coletanea(raiz, antes=1, respondidas=2)
+    reg = raiz / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+    d = hd.coletanea_da_corrida(pasta, reg)
+    assert (d["numero"], d["origem"], d["de"], d["ate"], d["total"], d["faltam"]) == ("4821", "digitado", 6, 10, 64, 54), d
+    cartas = d["cartas_da_rodada"]
+    assert [c["nome"] for c in cartas] == ["carta-06", "carta-07", "carta-08", "carta-09", "carta-10"]
+    assert [c["revelada"] for c in cartas] == [True, True, False, False, False]
+    primeira = cl.carta(s["cartas"][0])
+    assert cartas[0]["id"] == primeira["id"] and cartas[0]["causa_certa"] == primeira["causa"] and cartas[0]["o_que_foi_ligado"] == cl.descricao(primeira)
+    assert cartas[0]["veredito"] in ("acertou", "certo: nada foi acusado")
+    tudo = json.dumps(d, ensure_ascii=False)
+    for id_ in s["cartas"][2:]:
+        assert id_ not in tudo and cl.descricao(cl.carta(id_)) not in tudo, "a carta escondida foi para a página"
+    grade = d["grade"]
+    assert sum(len(g["cartas"]) for g in grade) == 64 and [g["nome"] for g in grade][-1] == "sem erro"
+    marca = {x["id"]: x["marca"] for g in grade for x in g["cartas"] if x["marca"]}
+    assert all(marca.get(i) == "antes" for i in cl.ordem_da_pilha("4821")[:5]), "as cartas da rodada anterior do mesmo número ficam acesas"
+    assert [marca.get(i, "") for i in s["cartas"]] == ["revelada", "revelada", "", "", ""], "a grade não pode acender a carta ainda escondida"
+    assert all(x["id"] is None for g in grade for x in g["cartas"] if not x["marca"]), "quadrado apagado não leva o nome da carta"
+    assert d["lista"] is None and d["comando"] is None, "a lista e o comando só aparecem no fim da rodada"
+    pasta5, s5 = _corrida_da_coletanea(tp4._temp(), respondidas=5)
+    d5 = hd.coletanea_da_corrida(pasta5, pasta5.parent / "hub" / cl.ARQUIVO_DOS_SORTEIOS)
+    assert d5["lista"] == s5["cartas"] and d5["comando"] == s5["comando"] and all(c["revelada"] for c in d5["cartas_da_rodada"])
+    sem = next(c for c in d5["cartas_da_rodada"] if c["tipo"] == "sem_erro")
+    assert sem["veredito"] == "certo: nada foi acusado", sem
+
+
+def teste_coletanea_confere_o_mesmo_agente_da_medida():
+    import coletanea as cl
+    raiz = tp4._temp()
+    pasta, _ = _corrida_da_coletanea(raiz)
+    reg = raiz / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+    assert hd.coletanea_da_corrida(pasta, reg)["mesmo_agente"] is None, "sem as condições das duas corridas, não há o que conferir"
+    (raiz / hd.CORRIDA_DA_MEDIDA).mkdir()
+    medida = {"hash_prompt_fixo": "p1", "biblioteca": {"hash": "b1"}}
+    (raiz / hd.CORRIDA_DA_MEDIDA / "condicoes_fase4.json").write_text(json.dumps(medida), encoding="utf-8")
+    (pasta / "condicoes_fase4.json").write_text(json.dumps(medida), encoding="utf-8")
+    assert hd.coletanea_da_corrida(pasta, reg)["mesmo_agente"] == {"prompt_fixo": True, "biblioteca": True, "referencia": hd.CORRIDA_DA_MEDIDA}
+    (pasta / "condicoes_fase4.json").write_text(json.dumps({"hash_prompt_fixo": "p2", "biblioteca": {"hash": "b1"}}), encoding="utf-8")
+    assert hd.coletanea_da_corrida(pasta, reg)["mesmo_agente"]["prompt_fixo"] is False
+    assert hd.CORRIDA_DA_MEDIDA == "fase5_agente_b" and (RA / "fase5_agente_b" / "condicoes_fase4.json").exists()
+
+
+def teste_ao_vivo_traz_a_coletanea_da_corrida_mais_recente():
+    raiz = tp4._temp()
+    pasta, _ = _corrida_da_coletanea(raiz)
+    (pasta / "progresso.json").write_text(json.dumps({"estado": "concluido", "etapa": "carta-07#1@tela · diagnóstico"}), encoding="utf-8")
+    vivo = hd.AoVivo(raiz).ler()
+    assert vivo["ha_corrida"] and vivo["coletanea"]["numero"] == "4821" and len(vivo["coletanea"]["cartas_da_rodada"]) == 5
+
+
+def teste_pagina_mostra_os_campos_e_o_bloco_da_coletanea():
+    with _navegador() as (pagina, erros):
+        if pagina is None:
+            return
+        acervo, raiz = _acervo_que_descobre()
+        pasta, s = _corrida_da_coletanea(raiz, respondidas=2)
+        (pasta / "progresso.json").write_text(json.dumps({"estado": "concluido"}), encoding="utf-8")
+        with _hub_no_ar(acervo, pelo_exe=True, garantir_ollama=lambda: "sem Ollama no teste",
+                        comando_da_corrida=lambda saida, opcoes: [sys.executable, "-c", "print('nunca roda')"]) as (base, _, _srv):
+            pagina.goto(base + "/")
+            pagina.wait_for_selector("#inicio .servico")
+            pagina.click("#ir-para-rodar")
+            pagina.wait_for_selector("#rodar-cenarios:visible")
+            assert pagina.is_hidden("#campo-das-quantas") and pagina.is_hidden("#campo-do-numero")
+            pagina.select_option("#selecao-da-corrida", "coletanea")
+            pagina.wait_for_selector("#campo-do-numero:visible")
+            assert pagina.is_visible("#campo-das-quantas") and pagina.is_hidden("#campo-das-repeticoes") and pagina.is_visible("#nota-da-coletanea")
+            assert pagina.locator("#quantas-da-corrida option").count() == 3
+            pagina.wait_for_selector("#coletanea .carta-da-rodada")
+            bloco = pagina.inner_text("#coletanea")
+            assert "4821" in bloco and pagina.locator("#coletanea .carta-da-rodada").count() == 5
+            assert pagina.locator("#coletanea .carta-da-rodada.escondida").count() == 3 and pagina.locator("#coletanea .quadrado").count() == 64
+            assert pagina.locator("#coletanea .quadrado.revelada").count() == 2
+            assert cl_descricao(s["cartas"][0]).replace("`", "") in bloco, "o cartão revelado diz o que foi ligado: " + bloco
+            html = pagina.content()
+            assert all(id_ not in html for id_ in s["cartas"][2:]), "a carta escondida está no HTML"
+            pagina.fill("#numero-da-corrida", "48a1")
+            pagina.click("#rodar-cenarios")
+            _esperar_texto(pagina, "#erro", "algarismos")
+        assert [e for e in erros if "status of 400" not in e] == [], erros       # o navegador anota a recusa (400) do número com letra, que o teste provocou
+
+
+def teste_resumo_do_botao_separa_as_cartas_sem_erro_da_coletanea():
+    raiz = tp4._temp()
+    pasta, s = _corrida_da_coletanea(raiz, respondidas=5)
+    dado, md = hub.prova_do_botao(raiz)
+    u = dado["corridas"][-1]
+    sem = sum(1 for i in s["cartas"] if i.startswith("sem-erro/"))
+    assert u["coletanea"] == {"numero": "4821", "cartas_com_erro": 5 - sem, "cartas_sem_erro": sem, "sem_erro_nada_acusado": sem}, u
+    assert u["detectou"] == 5 - sem and f"detectada em {5 - sem} de {5 - sem}" in md and "número 4821" in md, md
+    _, raiz_dos_dez = _acervo_de_teste()
+    _corrida_do_hub(raiz_dos_dez)
+    v = hub.prova_do_botao(raiz_dos_dez)[0]["corridas"][-1]
+    assert "coletanea" not in v and v["detectou"] == 2, "a corrida dos dez cenários sai como antes, sem chave nova"
+
+
+def cl_descricao(id_: str) -> str:
+    import coletanea as cl
+    return cl.descricao(cl.carta(id_))
+
+
 def main() -> None:
     argparse.ArgumentParser(description=__doc__).parse_args()
     modulo = sys.modules[__name__]

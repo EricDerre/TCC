@@ -135,15 +135,30 @@ REPETICOES_PERMITIDAS = (1, 2, 3, 4, 5)
 TAMANHO_DO_LOG = 4000
 
 
+
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) as quantidades de cartas da rodada, lidas da coletânea.
+# ! Motivo: a página oferece só as quantidades que `coletanea.sortear` aceita; lidas de lá, as duas listas não se desencontram.
+def _quantas_permitidas() -> tuple:
+    """As quantidades de cartas que uma rodada da coletânea pode tirar (de `coletanea.QUANTAS_PERMITIDAS`)."""
+    import coletanea as cl
+    return cl.QUANTAS_PERMITIDAS
+
+
 # ! Alteração de IA - Revisar: (25/11/2026, Pós-Fase 4, pacote Q7) o comando da corrida ganhou `-Selecao git` e `-Desde <commit>`, e `opcoes_da_corrida`
 # confere as três opções que a página pode mandar (repetições, seleção e commit de partida) antes de qualquer uma virar parte da linha de comando.
 # ! Motivo: plano, seção 3.7 (a seleção pelo Git ligada ao hub). O `desde` vem digitado pelo analista e entra numa linha de comando: só passa se
 # for o identificador de um commit (de 7 a 40 caracteres hexadecimais), e só junto com a seleção pelo Git.
-SELECOES = ("todos", "git")
+# ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 193 a 197) `SELECOES` ganha "coletanea" (erros sorteados da coletânea), e
+# `opcoes_da_corrida` confere as duas opções que só ela usa: quantas cartas a rodada tira (3, 5 ou 10; padrão 5) e o número dito pela banca (só
+# algarismos, de 1 a 18; vazio, vale a hora do clique, decidida pelo executor). Com a coletânea, as repetições são sempre 1.
+# ! Motivo: o número vem digitado na página e entra na linha de comando: só passa depois de `coletanea.normalizar_numero`, como o commit do
+# `desde` só passa pelo `_COMMIT`. Sem a coletânea, o dicionário devolvido é o de sempre, sem chaves novas.
+SELECOES = ("todos", "git", "coletanea")
 _COMMIT = re.compile(r"^[0-9a-fA-F]{7,40}$")
 
 
-def opcoes_da_corrida(repeticoes=1, selecao="todos", desde=None) -> dict:
+def opcoes_da_corrida(repeticoes=1, selecao="todos", desde=None, quantas=None, numero=None) -> dict:
+    import coletanea as cl
     if isinstance(repeticoes, bool) or not isinstance(repeticoes, int) or repeticoes not in REPETICOES_PERMITIDAS:
         raise ValueError(f"repeticoes: esperava um inteiro entre {REPETICOES_PERMITIDAS[0]} e {REPETICOES_PERMITIDAS[-1]}")
     selecao = selecao or "todos"
@@ -154,10 +169,26 @@ def opcoes_da_corrida(repeticoes=1, selecao="todos", desde=None) -> dict:
         raise ValueError("desde: esperava o identificador de um commit (de 7 a 40 caracteres hexadecimais)")
     if desde is not None and selecao != "git":
         raise ValueError("desde: o commit de partida só vale com a seleção pelo Git")
-    return {"repeticoes": repeticoes, "selecao": selecao, "desde": desde}
+    numero = numero if numero not in (None, "") else None
+    if selecao != "coletanea":
+        if numero is not None:
+            raise ValueError("numero: o número da banca só vale com os erros sorteados da coletânea")
+        return {"repeticoes": repeticoes, "selecao": selecao, "desde": desde}
+    quantas = 5 if quantas in (None, "") else quantas
+    if isinstance(quantas, bool) or quantas not in cl.QUANTAS_PERMITIDAS:
+        raise ValueError(f"quantas: esperava uma de {cl.QUANTAS_PERMITIDAS}")
+    if numero is not None:
+        numero = cl.normalizar_numero(numero)
+    return {"repeticoes": 1, "selecao": "coletanea", "desde": None, "quantas": quantas, "numero": numero}
 
 
 def comando_padrao(saida: str, opcoes: dict) -> list[str]:
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) a coletânea não passa pelo `rodar_fase4.ps1`: o comando mostrado é o do
+    # executor chamado direto, para quem roda na própria janela com o site e a API no ar.
+    # ! Motivo: a coletânea usa as cobaias que o `Cobaia.exe` subiu (`--cobaias-no-ar`), e o lançador `.ps1` sobe as dele e roda a leitura da
+    # medida no fim, que não vale para uma rodada de uso do produto.
+    if opcoes.get("selecao") == "coletanea":
+        return comando_direto(saida, opcoes, python="python")
     comando = ["powershell", "-ExecutionPolicy", "Bypass", "-File", "rodar_fase4.ps1", "-Modo", "cenarios", "-Saida", saida,
                "-Repeticoes", str(opcoes["repeticoes"]), "-LeituraNaPasta"]
     if opcoes.get("selecao") == "git":
@@ -182,6 +213,12 @@ CENARIOS_DA_CORRIDA_DO_HUB = 10
 
 
 def comando_direto(saida: str, opcoes: dict, python: str | None = None) -> list[str]:
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) com a coletânea, o executor recebe `--coletanea`, `--quantas` e, se a banca disse
+    # um, `--numero`, no lugar de `--casos 10` e das repetições.
+    # ! Motivo: a rodada roda as cartas tiradas da pilha, não os dez da medida; o executor já a trata como parcial (uso do produto, não medida).
+    if opcoes.get("selecao") == "coletanea":
+        return ([python or sys.executable, "executar_fase4.py", "--modo", "cenarios", "--saida", saida, "--coletanea", "--quantas", str(opcoes["quantas"])]
+                + (["--numero", opcoes["numero"]] if opcoes.get("numero") else []) + ["--cobaias-no-ar", "--etapas-ao-vivo"])
     comando = [python or sys.executable, "executar_fase4.py", "--modo", "cenarios", "--saida", saida, "--casos", str(CENARIOS_DA_CORRIDA_DO_HUB),
                "--repeticoes", str(opcoes["repeticoes"]), "--cobaias-no-ar", "--etapas-ao-vivo"]      # a hora de cada etapa, só nas corridas do botão (decisão 176)
     if opcoes.get("selecao") == "git":
@@ -295,15 +332,32 @@ class Execucao:
             u = self._ultima
             rodando = bool(u and u["codigo"] is None)
             sugerido = " ".join(self._padrao(self._nome_da_saida(), opcoes))
+            # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisão 196) o estado diz se a última corrida é da coletânea, traz as
+            # quantidades de cartas que a página oferece e não manda o log enquanto uma rodada da coletânea está rodando.
+            # ! Motivo: o log da corrida diz, logo no começo de cada carta, a página e o produto da referência e, no fim dela, o modo ligado; com
+            # ele na tela, a banca veria o erro antes de o agente responder. Terminada a rodada, o log volta, e o cartão de cada carta já revelou tudo.
+            coletanea = bool(u and u.get("selecao") == "coletanea")
             return {"permitida": self.permitida, "pelo_exe": self.pelo_exe, "em_andamento": rodando, "terminou": bool(u and u["codigo"] is not None), "codigo": u["codigo"] if u else None,
                     "saida": u["saida"] if u else None, "inicio": u["inicio"] if u else None, "fim": u["fim"] if u else None,
                     "parada_pelo_hub": bool(u and u["parada_pelo_hub"]), "comando": u["comando"] if u else sugerido, "comando_sugerido": sugerido,
-                    "repeticoes": list(REPETICOES_PERMITIDAS), "selecoes": list(SELECOES), "log": self._log()}
+                    "repeticoes": list(REPETICOES_PERMITIDAS), "selecoes": list(SELECOES), "quantas": list(_quantas_permitidas()), "coletanea": coletanea,
+                    "log": "" if (rodando and coletanea) else self._log()}
 
-    def rodar(self, repeticoes, selecao="todos", desde=None) -> dict:
+    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisões 194 e 197) `rodar` recebe as opções da coletânea; recusa a rodada fora
+    # do hub aberto pelo `Cobaia.exe` e, quando a banca disse um número, recusa a pilha desse número já vazia, antes de lançar qualquer coisa.
+    # ! Motivo: a coletânea usa o site e a API que o `.exe` subiu; e, com a pilha vazia, o executor pararia logo no começo e a página só mostraria
+    # o fim do log. A recusa diz o que fazer (dizer um número novo).
+    def rodar(self, repeticoes, selecao="todos", desde=None, quantas=None, numero=None) -> dict:
         if not self.permitida:
             raise Recusa(403, "o hub foi aberto sem --permitir-execucao: copie o comando e rode na sua janela, na pasta experimentos")
-        opcoes = opcoes_da_corrida(repeticoes, selecao, desde)
+        opcoes = opcoes_da_corrida(repeticoes, selecao, desde, quantas, numero)
+        if opcoes["selecao"] == "coletanea":
+            import coletanea as cl
+            if not self.pelo_exe:
+                raise Recusa(409, "os erros sorteados da coletânea rodam pelo hub aberto pelo Cobaia.exe, com o site e a API no ar")
+            registro = self.raiz / "hub" / cl.ARQUIVO_DOS_SORTEIOS
+            if opcoes["numero"] and cl.proxima_posicao(opcoes["numero"], registro) >= len(cl.cartas()):
+                raise Recusa(409, f"a pilha do número {opcoes['numero']} acabou: diga um número novo")
         n = opcoes["repeticoes"]
 
         def recusar_se_rodando() -> None:
@@ -332,7 +386,8 @@ class Execucao:
             self._arquivo_do_log = arquivo.open("wb")
             self._processo = subprocess.Popen(comando, cwd=str(EXP), stdout=self._arquivo_do_log, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, env=ambiente)
             self._ultima = {"saida": saida, "comando": " ".join(comando) if self._comando is self._padrao else "(lançador de teste)", "inicio": dt.datetime.now().isoformat(timespec="seconds"),
-                            "fim": None, "codigo": None, "parada_pelo_hub": False, "arquivo_do_log": str(arquivo), "repeticoes": n}
+                            "fim": None, "codigo": None, "parada_pelo_hub": False, "arquivo_do_log": str(arquivo), "repeticoes": n,
+                            "selecao": opcoes["selecao"]}     # a coletânea esconde o log enquanto roda (decisão 196)
         return self.estado()
 
     def parar(self) -> dict:
@@ -419,7 +474,7 @@ class Hub:
         if not isinstance(pedido, dict):
             raise ValueError("pedido: esperava um objeto")  # noqa: TRY004 - toda recusa de um pedido é ValueError, que o servidor traduz em 400
         if pedido.get("acao") == "rodar":
-            return self.execucao.rodar(pedido.get("repeticoes"), pedido.get("selecao"), pedido.get("desde"))
+            return self.execucao.rodar(pedido.get("repeticoes"), pedido.get("selecao"), pedido.get("desde"), pedido.get("quantas"), pedido.get("numero"))
         if pedido.get("acao") == "parar":
             return self.execucao.parar()
         raise ValueError(f"acao: {pedido.get('acao')!r} não é uma ação da execução")
@@ -628,7 +683,13 @@ def _tratador(hub: Hub, falar: bool):
                         repeticoes = int(um("repeticoes") or 1)
                     except ValueError:
                         raise ValueError("repeticoes: esperava um inteiro") from None
-                    self._json(200, hub.execucao.estado(opcoes_da_corrida(repeticoes, um("selecao"), um("desde"))))
+                    # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca) a quantidade de cartas e o número da banca também vêm na consulta.
+                    # ! Motivo: o comando sugerido que a página mostra muda com eles; a quantidade chega como texto e vira inteiro aqui.
+                    try:
+                        quantas = int(um("quantas")) if um("quantas") else None
+                    except ValueError:
+                        raise ValueError("quantas: esperava um inteiro") from None
+                    self._json(200, hub.execucao.estado(opcoes_da_corrida(repeticoes, um("selecao"), um("desde"), quantas, um("numero"))))
                 elif partes.path == "/api/selecao":
                     self._json(200, hub.selecao((consulta.get("desde") or [None])[0]))
                 elif partes.path == "/api/trace":
@@ -761,10 +822,21 @@ def prova_do_botao(raiz: Path) -> tuple[dict, str]:
         # (26/11/2026, decisão 176) as marcas da hora de cada etapa, quando a corrida as gravou: quantas são e em quantos casos dão o tempo das seis etapas
         marcas = ea.ler(pasta)
         com_as_seis = sum(1 for t in ea.tempos_por_caso(marcas).values() if all(e in t for e in ("roteiro", "deteccao", "poda", "busca", "modelo", "selo")))
-        corridas.append({"pasta": pasta.name, "inicio": cab.get("inicio"), "fim": cab.get("fim"), "modelo": cab.get("modelo"), "versao_ollama": cab.get("versao_ollama"),
-                         "marcas": len(marcas), "casos_com_o_tempo_das_seis_etapas": com_as_seis,
-                         "execucoes": len(registros), "cenarios": len({r.get("cenario") for r in registros}),
-                         "task_success": sum(1 for r in registros if r.get("task_success") is True), "detectou": sum(1 for r in registros if r.get("detectou") is True)})
+        # ! Alteração de IA - Revisar: (27/11/2026, coletânea da banca, decisão 195) "a falha foi detectada" conta só as execuções com erro ligado, e a
+        # corrida da coletânea (a que tem `sorteio.json`, ou cartas sem erro) ganha o número da pilha e a conta das cartas sem erro em que nada foi acusado.
+        # ! Motivo: na carta sem erro o certo é não detectar; somada às outras, ela faria a frase dizer que o agente deixou de detectar uma falha que não
+        # existia. As corridas sem a coletânea saem iguais, sem chave nova, e o `--check` do registro gravado continua batendo.
+        com_erro = [r for r in registros if r.get("tipo") != "sem_erro"]
+        item = {"pasta": pasta.name, "inicio": cab.get("inicio"), "fim": cab.get("fim"), "modelo": cab.get("modelo"), "versao_ollama": cab.get("versao_ollama"),
+                "marcas": len(marcas), "casos_com_o_tempo_das_seis_etapas": com_as_seis,
+                "execucoes": len(registros), "cenarios": len({r.get("cenario") for r in registros}),
+                "task_success": sum(1 for r in registros if r.get("task_success") is True), "detectou": sum(1 for r in com_erro if r.get("detectou") is True)}
+        sorteio = hd._ler_json(pasta / "sorteio.json")
+        if isinstance(sorteio, dict) or len(com_erro) != len(registros):
+            sem_erro = [r for r in registros if r.get("tipo") == "sem_erro"]
+            item["coletanea"] = {"numero": sorteio.get("numero") if isinstance(sorteio, dict) else None, "cartas_com_erro": len(com_erro), "cartas_sem_erro": len(sem_erro),
+                                 "sem_erro_nada_acusado": sum(1 for r in sem_erro if not r.get("detectou"))}
+        corridas.append(item)
     dado = {"metadados": {"gerado_em": dt.datetime.now().isoformat(timespec="seconds"), "gerado_por": "hub.py --botao",
                           "fonte": "as pastas hub_<data>_<hora> de resultados_alvo/ (cenarios.jsonl e o cabeçalho da trilha)"},
             "total": len(corridas), "corridas": corridas}
@@ -774,8 +846,13 @@ def prova_do_botao(raiz: Path) -> tuple[dict, str]:
         quando = (f"em {u['inicio'][8:10]}/{u['inicio'][5:7]}/{u['inicio'][:4]}, das {u['inicio'][11:16]}" + (f" às {u['fim'][11:16]}" if u.get("fim") else "")) if u.get("inicio") else "sem hora gravada"
         linhas += ["", (f"O botão de rodar os cenários do hub lançou {len(corridas)} {'corrida' if len(corridas) == 1 else 'corridas'} nesta máquina. A última, {quando}, rodou "
                         f"{u['execucoes']} execuções de {u['cenarios']} cenários com o modelo `{u['modelo']}` (Ollama {u['versao_ollama']}): o agente chegou ao resultado em "
-                        f"{u['task_success']} de {u['execucoes']}, e a falha foi detectada em {u['detectou']} de {u['execucoes']}. As corridas do botão são uso do produto, não medida "
-                        "do TCC, e as pastas delas ficam fora do git (decisão 171): este arquivo é o registro versionado.")]
+                        f"{u['task_success']} de {u['execucoes']}, e a falha foi detectada em {u['detectou']} de {(u.get('coletanea') or {}).get('cartas_com_erro', u['execucoes'])}. "
+                        "As corridas do botão são uso do produto, não medida do TCC, e as pastas delas ficam fora do git (decisão 171): este arquivo é o registro versionado.")]
+        if u.get("coletanea"):
+            k = u["coletanea"]
+            linhas += ["", (f"Foi uma rodada da coletânea de erros sorteados (decisões 193 a 197), com o número {k['numero']}: {k['cartas_com_erro']} cartas com erro e "
+                            f"{k['cartas_sem_erro']} sem erro, e em {k['sem_erro_nada_acusado']} das sem erro nada foi acusado. O sorteio de cada rodada está em "
+                            "`resultados_alvo/hub/sorteios.jsonl`.")]
         com_marcas = [c for c in corridas if c["marcas"]]
         if com_marcas:
             m = com_marcas[-1]
